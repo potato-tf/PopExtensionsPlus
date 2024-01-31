@@ -14,8 +14,11 @@ local popext_funcs =
     }
     popext_altfire = function(args)
     {
-        bot.PressAltFireButton(99999)
-    }    
+        if (args.len() == 1)
+            bot.PressAltFireButton(99999)
+        else if (args.len() >= 2)
+            bot.PressAltFireButton(args[1].tointeger())
+    }
 }
 
 function BotBehavior(bot) {
@@ -41,6 +44,26 @@ function BotBehavior(bot) {
         if (!bot.IsBotOfType(1337)) return
 
         EntFireByHandle(bot, "RunScriptCode", "BotBehavior(self)", -1, null, null);
+    }
+
+    function OnGameEvent_player_builtobject(params) {
+        local bot = GetPlayerFromUserID(params.userid)
+        if (!IsBotOfType(1337)) return
+
+        if (bot.HasBotTag("popext_dispenserasteleporter") && params.object == 1) //OBJ_TELEPORTER
+        {
+            SpawnEntityFromTable("obj_dispenser", {
+
+            })
+            EntIndexToHScript(params.index)
+        }
+        else if (bot.HasBotTag("popext_dispenserassentry") && params.object == 2) //OBJ_SENTRYGUN
+        {
+
+            SpawnEntityFromTable("obj_dispenser", {
+                
+            })
+        }
     }
 }
 __CollectGameEventCallbacks(__PopExt_Behavior)
