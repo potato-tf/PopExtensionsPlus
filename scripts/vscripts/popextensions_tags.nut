@@ -21,7 +21,7 @@ local popext_funcs =
     }
 }
 
-function BotBehavior(bot) {
+::GetBotBehaviorFromTags <- function(bot) {
     local tags = {}
     bot.GetAllBotTags(tags)
     
@@ -43,7 +43,7 @@ function BotBehavior(bot) {
         local bot = GetPlayerFromUserID(params.userid)
         if (!bot.IsBotOfType(1337)) return
 
-        EntFireByHandle(bot, "RunScriptCode", "BotBehavior(self)", -1, null, null);
+        EntFireByHandle(bot, "RunScriptCode", "GetBotBehaviorFromTags(self)", -1, null, null);
     }
 
     function OnGameEvent_player_builtobject(params) {
