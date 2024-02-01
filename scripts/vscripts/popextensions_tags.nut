@@ -4,14 +4,14 @@ local popext_funcs =
 {
     popext_addcond = function(args)
     {
-        if (args.len() == 2)
-            if (args[1].tointeger() == 43)
+        if (args.len() == 1)
+            if (args[0].tointeger() == 43)
                 bot.ForceChangeTeam(2, false)
             else 
-                bot.AddCond(args[1].tointeger())
+                bot.AddCond(args[0].tointeger())
                 
-        else if (args.len() >= 3)
-            bot.AddCondEx(args[1].tointeger(), args[2].tointeger(), null)
+        else if (args.len() >= 2)
+            bot.AddCondEx(args[0].tointeger(), args[1].tointeger(), null)
     }
     popext_reprogrammed = function(args)
     {
@@ -63,7 +63,7 @@ local popext_funcs =
         {
             switch(bot.GetPlayerClass())
             {
-            case (1): //TF_CLASS_SCOUT
+            case 1: //TF_CLASS_SCOUT
 
                 //scout and pyro's UseBestWeapon is inverted
                 //switch them to secondaries, then back to primary when enemies are close
@@ -80,7 +80,7 @@ local popext_funcs =
                 }
                 break
 
-            case (2): //TF_CLASS_SNIPER
+            case 2: //TF_CLASS_SNIPER
                 for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), 750);)
                 {
                     if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().GetSlot() == 2) continue //potentially not break sniper ai
@@ -91,7 +91,7 @@ local popext_funcs =
                 }
                 break
             
-            case (3): //TF_CLASS_SOLDIER
+            case 3: //TF_CLASS_SOLDIER
                 for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
                     if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().Clip1() != 0) continue
@@ -106,6 +106,7 @@ local popext_funcs =
             
                 //scout and pyro's UseBestWeapon is inverted
                 //switch them to secondaries, then back to primary when enemies are close
+                //TODO: check if we're targetting a soldier with a simple raycaster, or wait for more bot functions to be exposed
                 if (bot.GetActiveWeapon() != NetProps.GetPropEntityArray(bot, "m_hMyWeapons", 1))
                     bot.Weapon_Switch(NetProps.GetPropEntityArray(bot, "m_hMyWeapons", 1))
 
@@ -145,6 +146,9 @@ local popext_funcs =
         local bot = GetPlayerFromUserID(params.userid)
         if (!bot.IsBotOfType(1337)) return
 
+        local thinktable = {}
+        bot.ValidateScriptScope()
+        bot.GetScriptScope().thinktable <- thinktable
         EntFireByHandle(bot, "RunScriptCode", "GetBotBehaviorFromTags(self)", -1, null, null);
     }
 
