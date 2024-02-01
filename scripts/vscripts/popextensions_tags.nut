@@ -2,7 +2,7 @@ local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro",
 //behavior tags
 local popext_funcs =
 {
-    popext_addcond = function(args)
+    popext_addcond = function(bot, args)
     {
         if (args.len() == 1)
             if (args[0].tointeger() == 43)
@@ -13,30 +13,30 @@ local popext_funcs =
         else if (args.len() >= 2)
             bot.AddCondEx(args[0].tointeger(), args[1].tointeger(), null)
     }
-    popext_reprogrammed = function(args)
+    popext_reprogrammed = function(bot, args)
     {
         bot.ForceChangeTeam(2, false)
     }
-    popext_reprogrammed_neutral = function(args)
+    popext_reprogrammed_neutral = function(bot, args)
     {
         bot.ForceChangeTeam(0, false)
     }
-    popext_altfire = function(args)
+    popext_altfire = function(bot, args)
     {
         if (args.len() == 1)
             bot.PressAltFireButton(99999)
         else if (args.len() >= 2)
             bot.PressAltFireButton(args[1].tointeger())
     }
-    popext_usehumanmodel = function(args)
+    popext_usehumanmodel = function(bot, args)
     {
         bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classes[bot.GetPlayerClass()]))
     }
-    popext_alwaysglow = function(args)
+    popext_alwaysglow = function(bot, args)
     {
         NetProps.SetPropBool(bot, "m_bGlowEnabled", true)
     }
-    popext_stripslot = function(args)
+    popext_stripslot = function(bot, args)
     {
         if (args.len() == 1) args.append(-1)
         local slot = args[1].tointeger()
@@ -53,11 +53,11 @@ local popext_funcs =
             break;
         }
     }
-    popext_fireweapon = function(args)
+    popext_fireweapon = function(bot, args)
     {
         //think function
     }
-    popext_usebestweapon = function(args)
+    popext_usebestweapon = function(bot, args)
     {
         function BestWeaponThink(bot)
         {
@@ -136,7 +136,7 @@ local popext_funcs =
         if (args.len() == 0) continue
         local func = args.remove(0)
         if (func in popext_funcs)
-            popext_funcs[func](args)
+            popext_funcs[func](bot, args)
     }
 }
 
