@@ -1,4 +1,21 @@
 local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
+
+// it's a table cuz much faster
+local validProjectiles =
+{
+	tf_projectile_arrow				= 1
+	tf_projectile_energy_ball		= 1 // Cow Mangler
+	tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
+	tf_projectile_lightningorb		= 1 // Lightning Orb Spell
+	tf_projectile_mechanicalarmorb	= 1 // Short Circuit
+	tf_projectile_rocket			= 1
+	tf_projectile_sentryrocket		= 1
+	tf_projectile_spellfireball		= 1
+	tf_projectile_energy_ring		= 1 // Bison
+	tf_projectile_flare				= 1
+}
+
+
 //behavior tags
 local popext_funcs =
 {
@@ -7,9 +24,9 @@ local popext_funcs =
         if (args.len() == 1)
             if (args[0].tointeger() == 43)
                 bot.ForceChangeTeam(2, false)
-            else 
+            else
                 bot.AddCond(args[0].tointeger())
-                
+
         else if (args.len() >= 2)
             bot.AddCondEx(args[0].tointeger(), args[1].tointeger(), null)
     }
@@ -46,9 +63,9 @@ local popext_funcs =
         for (local i = 0; i < SLOT_COUNT; i++)
         {
             local weapon = GetWeaponInSlot(player, i);
-    
+
             if (weapon == null || weapon.GetSlot() != slot) continue;
-    
+
             weapon.Destroy();
             break;
         }
@@ -90,7 +107,7 @@ local popext_funcs =
                     secondary.ReapplyProvision();
                 }
                 break
-            
+
             case 3: //TF_CLASS_SOLDIER
                 for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
@@ -101,9 +118,9 @@ local popext_funcs =
                     secondary.ReapplyProvision();
                 }
                 break
-            
+
             case (7): //TF_CLASS_PYRO
-            
+
                 //scout and pyro's UseBestWeapon is inverted
                 //switch them to secondaries, then back to primary when enemies are close
                 //TODO: check if we're targetting a soldier with a simple raycaster, or wait for more bot functions to be exposed
@@ -122,15 +139,159 @@ local popext_funcs =
             }
         }
     }
+    popext_homingprojectile = function(bot, args) {
+        // Ensure there are enough arguments for configuration
+        if (args.len() < 4) return
+
+        local ignoreDisguisedSpies = args[0].tointeger()
+        local ignoreStealthedSpies = args[1].tointeger()
+        local speed_mult = args[2].tofloat()
+        local turn_power = args[3].tofloat()
+
+        function SetupHomingProjectilesForBot(bot)
+        {
+            local projectile
+            while ((projectile = Entities.FindByClassname(projectile, "tf_projectile_*")) != null) {
+
+                if (!IsValidProjectile(projectile)) continue
+
+                if (projectile.GetOwner() != bot) continue
+
+        		if (projectile.GetScriptThinkFunc() == "ProjectileThink") continue
+
+                // Any other parameters needed by the projectile thinker can be set here
+                AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
+            }
+        }
+    }
+}
+
+// Modify the AttachProjectileThinker function to accept projectile speed adjustment if needed
+::AttachProjectileThinker <- function(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
+{
+	local projectile_speed = projectile.GetAbsVelocity().Norm()
+
+    projectile_speed *= speedMult
+
+	projectile.ValidateScriptScope()
+    local projectile_scope = projectile.GetScriptScope()
+	projectile_scope.turn_power           <- turn_power
+    projectile_scope.projectile_speed     <- projectile_speed
+	projectile_scope.ignoreDisguisedSpies <- ignoreDisguisedSpies
+	projectile_scope.ignoreStealthedSpies <- ignoreStealthedSpies
+
+	AddThinkToEnt(projectile, "ProjectileThink")
+}
+
+::ProjectileThink <- function()
+{
+	local new_target = SelectVictim(self)
+	if (new_target != null && IsLookingAt(self, new_target))
+		FaceTowards(new_target, self, projectile_speed)
+
+	return -1
+}
+
+::SelectVictim <- function(projectile)
+{
+	local target
+	local min_distance = 32768.0
+	for (local i = 1; i <= MaxClients(); i++)
+	{
+		local player = PlayerInstanceFromIndex(i)
+
+		if (player == null)
+			continue
+
+		local distance = (projectile.GetOrigin() - player.GetOrigin()).Length()
+
+		if (IsValidTarget(player, distance, min_distance, projectile))
+		{
+			target = player
+			min_distance = distance
+		}
+	}
+
+	return target
+}
+
+
+::IsValidTarget <- function(victim, distance, min_distance, projectile) {
+
+    // Early out if basic conditions aren't met
+    if (distance > min_distance || victim.GetTeam() == projectile.GetTeam() || !victim.IsAlive()) {
+        return false
+    }
+
+    // Check for conditions based on the projectile's configuration
+    if (victim.IsPlayer()) {
+        if (victim.InCond(TF_COND_HALLOWEEN_GHOST_MODE)) {
+            return false
+        }
+
+        // Check for stealth and disguise conditions if not ignored
+        if (!ignoreStealthedSpies && (victim.IsStealthed() || victim.IsFullyInvisible())) {
+            return false
+        }
+        if (!ignoreDisguisedSpies && victim.GetDisguiseTarget() != null) {
+            return false
+        }
+    }
+
+    return true
+}
+
+
+::FaceTowards <- function(new_target, projectile, projectile_speed)
+{
+	local desired_dir = new_target.EyePosition() - projectile.GetOrigin()
+		desired_dir.Norm()
+
+	local current_dir = projectile.GetForwardVector()
+	local new_dir = current_dir + (desired_dir - current_dir) * turn_power
+		new_dir.Norm()
+
+	local move_ang = VectorAngles(new_dir)
+	local projectile_velocity = move_ang.Forward() * projectile_speed
+
+	projectile.SetAbsVelocity(projectile_velocity)
+	projectile.SetLocalAngles(move_ang)
+}
+
+::IsLookingAt <- function(projectile, new_target)
+{
+	local target_origin = new_target.GetOrigin()
+	local projectile_owner = projectile.GetOwner()
+	local projectile_owner_pos = projectile_owner.EyePosition()
+
+	if (TraceLine(projectile_owner_pos, target_origin, projectile_owner))
+	{
+		local direction = (target_origin - projectile_owner.EyePosition())
+			direction.Norm()
+		local product = projectile_owner.EyeAngles().Forward().Dot(direction)
+
+		if (product > 0.6)
+			return true
+	}
+
+	return false
+}
+
+::IsValidProjectile <- function(projectile)
+{
+	if (projectile.GetClassname() in validProjectiles)
+		return true
+
+	return false
 }
 
 ::GetBotBehaviorFromTags <- function(bot) {
     local tags = {}
     bot.GetAllBotTags(tags)
-    
+
     if (tags.len() == 0) return
-    
-    foreach (tag in tags) 
+
+    foreach (tag in tags)
     {
         local args = split(tag, "|")
         if (args.len() == 0) continue
