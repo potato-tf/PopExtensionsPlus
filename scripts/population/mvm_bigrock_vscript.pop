@@ -24,6 +24,12 @@ WaveSchedule
 				// Load popextensions script
 				IncludeScript(`popextensions`)
 
+				//load popextensions tags script
+				IncludeScript(`popextensions_tags`)
+
+				//load general mission attributes
+				IncludeScript(`popextensions_missionattributes`)
+
 				// If you are hitting the 4096 character limit inside this script, it would be required to put hooks into separate file
 				// IncludeScript(`mypophooks`)
 				// Add event hooks for bots with specifed Tag.
@@ -106,7 +112,10 @@ WaveSchedule
 			TotalCurrency 200
 			TFBot
 			{
-				Tag abc
+				Tag "popext_addcond|32|10"
+				Tag "popext_usehumanmodel"
+				Tag "popext_alwaysglow"
+				Tag "popext_usebestweapon"
 				Class Soldier
 				WeaponRestrictions MeleeOnly
 			}
