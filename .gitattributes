@@ -1,2 +1,12 @@
-# Auto detect text files and perform LF normalization
-* text=auto
+# Source files
+*.nut text eol=lf diff=cpp
+
+# Documentation files
+*.pop text eol=lf diff=cpp
+*.md text eol=lf diff=markdown
+
+# Linguist configuration
+*.nut linguist-detectable=true
+*.nut linguist-language=Squirrel
+*.pop linguist-detectable=true
+*.pop linguist-language=vdf
