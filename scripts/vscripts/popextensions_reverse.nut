@@ -36,6 +36,33 @@ local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro",
 	scope.curmetal <- GetPropIntArray(player, "m_iAmmo", 3);
 }
 
+::SetReserveAmmo <- function(wep, amount = 999, slot = -1, nounderflow = true)
+{
+    //allow for just passing a single player variable to set primary + secondary reserve ammo to 999
+    if (wep != null && wep.IsPlayer() && slot == -1)
+    {
+        if (nounderflow && amount < 0) amount = 0;
+        SetPropIntArray(wep, "m_iAmmo", amount, SLOT_PRIMARY);
+        SetPropIntArray(wep, "m_iAmmo", amount, SLOT_SECONDARY);
+        return;
+    }
+
+    local player;
+    if (wep == null) return;
+    if (wep.IsPlayer())
+        { player = wep; wep = wep.GetActiveWeapon() }
+    else
+        player = wep.GetOwner();
+
+    if (wep == null) return;
+
+    if (slot == -1) slot = wep.GetSlot();
+
+    if (nounderflow && amount < 0) amount = 0;
+
+    SetPropIntArray(player, "m_iAmmo", amount, slot+1);
+}
+
 ::GivePackReverse <- function(player, pack)
 {
     if (GetPropInt(pack, "m_fEffects") == EF_NODRAW || player.GetTeam() != TF_TEAM_PVE_INVADERS) return;
@@ -229,7 +256,6 @@ local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro",
 		//spy is fucked
 		if (player.GetPlayerClass() == TF_CLASS_SPY)
 			SetReserveAmmo(activegun, ammoslot - scope.drainedamount, activegun.GetSlot() + 1);
-		// scope.numsequenceframes = 0; //don't queue the ammo drain until we've been playing the reload animation for a few ticks first
 		return;
 	}
 

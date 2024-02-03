@@ -13,14 +13,17 @@ local popext_funcs =
         else if (args.len() >= 2)
             bot.AddCondEx(args[0].tointeger(), args[1].tointeger(), null)
     }
+
     popext_reprogrammed = function(bot, args)
     {
         bot.ForceChangeTeam(2, false)
     }
+
     popext_reprogrammed_neutral = function(bot, args)
     {
         bot.ForceChangeTeam(0, false)
     }
+
     popext_altfire = function(bot, args)
     {
         if (args.len() == 1)
@@ -28,14 +31,17 @@ local popext_funcs =
         else if (args.len() >= 2)
             bot.PressAltFireButton(args[1].tointeger())
     }
+
     popext_usehumanmodel = function(bot, args)
     {
         bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classes[bot.GetPlayerClass()]))
     }
+
     popext_alwaysglow = function(bot, args)
     {
         NetProps.SetPropBool(bot, "m_bGlowEnabled", true)
     }
+
     popext_stripslot = function(bot, args)
     {
         if (args.len() == 1) args.append(-1)
@@ -45,18 +51,54 @@ local popext_funcs =
 
         for (local i = 0; i < SLOT_COUNT; i++)
         {
-            local weapon = GetWeaponInSlot(player, i);
+            local weapon = GetWeaponInSlot(player, i)
     
-            if (weapon == null || weapon.GetSlot() != slot) continue;
+            if (weapon == null || weapon.GetSlot() != slot) continue
     
-            weapon.Destroy();
-            break;
+            weapon.Destroy()
+            break
         }
     }
+
     popext_fireweapon = function(bot, args)
     {
         //think function
+        function FireWeaponThink(bot)
+        {
+
+        }
+
     }
+
+    //this is a very simple method for giving bots weapons. 
+    popext_giveweapon = function(bot, args)
+    {
+        local weapon = Entities.CreateByClassname(args[0])
+        NetProps.SetPropInt(weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", args[1])
+        NetProps.SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
+        NetProps.SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
+        weapon.SetTeam(player.GetTeam())
+        Entities.DispatchSpawn(weapon)
+        
+        player.Weapon_Equip(weapon)
+        
+        for (local i = 0; i < 7; i++)
+        {
+            local heldWeapon = NetProps.GetPropEntityArray(player, "m_hMyWeapons", i)
+            if (heldWeapon == null)
+                continue
+            if (heldWeapon.GetSlot() != weapon.GetSlot())
+                continue
+            heldWeapon.Destroy()
+            NetProps.SetPropEntityArray(player, "m_hMyWeapons", weapon, i)
+            break
+        }
+        
+        player.Weapon_Switch(weapon)
+    
+        return weapon
+    }
+
     popext_usebestweapon = function(bot, args)
     {
         function BestWeaponThink(bot)
@@ -73,10 +115,10 @@ local popext_funcs =
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
                     if (p.GetTeam() == bot.GetTeam()) continue
-                    local primary = GetPropEntityArray(bot, "m_hMyWeapons", 0); //SLOT_PRIMARY
-                    bot.Weapon_Switch(primary);
-                    primary.AddCustomAttribute("disable weapon switch", 1, 1);
-                    primary.ReapplyProvision();
+                    local primary = GetPropEntityArray(bot, "m_hMyWeapons", 0) //SLOT_PRIMARY
+                    bot.Weapon_Switch(primary)
+                    primary.AddCustomAttribute("disable weapon switch", 1, 1)
+                    primary.ReapplyProvision()
                 }
                 break
 
@@ -84,10 +126,10 @@ local popext_funcs =
                 for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), 750);)
                 {
                     if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().GetSlot() == 2) continue //potentially not break sniper ai
-                    local secondary = GetPropEntityArray(bot, "m_hMyWeapons", 1); //SLOT_SECONDARY
-                    bot.Weapon_Switch(secondary);
-                    secondary.AddCustomAttribute("disable weapon switch", 1, 1);
-                    secondary.ReapplyProvision();
+                    local secondary = GetPropEntityArray(bot, "m_hMyWeapons", 1) //SLOT_SECONDARY
+                    bot.Weapon_Switch(secondary)
+                    secondary.AddCustomAttribute("disable weapon switch", 1, 1)
+                    secondary.ReapplyProvision()
                 }
                 break
             
@@ -95,10 +137,10 @@ local popext_funcs =
                 for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
                     if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().Clip1() != 0) continue
-                    local secondary = GetPropEntityArray(bot, "m_hMyWeapons", 1); //SLOT_SECONDARY
-                    bot.Weapon_Switch(secondary);
-                    secondary.AddCustomAttribute("disable weapon switch", 1, 2);
-                    secondary.ReapplyProvision();
+                    local secondary = GetPropEntityArray(bot, "m_hMyWeapons", 1) //SLOT_SECONDARY
+                    bot.Weapon_Switch(secondary)
+                    secondary.AddCustomAttribute("disable weapon switch", 1, 2)
+                    secondary.ReapplyProvision()
                 }
                 break
             
@@ -113,19 +155,40 @@ local popext_funcs =
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
                     if (p.GetTeam() == bot.GetTeam()) continue
-                    local primary = GetPropEntityArray(bot, "m_hMyWeapons", 0); //SLOT_PRIMARY
-                    bot.Weapon_Switch(primary);
-                    primary.AddCustomAttribute("disable weapon switch", 1, 1);
-                    primary.ReapplyProvision();
+                    local primary = GetPropEntityArray(bot, "m_hMyWeapons", 0) //SLOT_PRIMARY
+                    bot.Weapon_Switch(primary)
+                    primary.AddCustomAttribute("disable weapon switch", 1, 1)
+                    primary.ReapplyProvision()
                 }
                 break
             }
         }
+        bot.GetScriptScope().thinktable.BestWeaponThink <- BestWeaponThink
     }
 }
 
-::GetBotBehaviorFromTags <- function(bot) {
+//override the default think function
+::_AddThinkToEnt <- AddThinkToEnt
+::AddThinkToEnt <- function(entity, func)
+{
+    if (entity.IsPlayer())
+        entity.GetScriptScope().thinktable.func <- func
+    else
+        _AddThinkToEnt(entity, func) 
+}
+
+// ::AddThinkToEnt <- function(entity, func)
+// {
+//     if (entity.IsPlayer())
+//         // add to think table
+//     else
+//         OrigAddThinkToEnt(entity, func) 
+// }
+
+::GetBotBehaviorFromTags <- function(bot) 
+{
     local tags = {}
+    local scope = bot.GetScriptScope()
     bot.GetAllBotTags(tags)
     
     if (tags.len() == 0) return
@@ -138,9 +201,17 @@ local popext_funcs =
         if (func in popext_funcs)
             popext_funcs[func](bot, args)
     }
+    function PopExt_BotThinks()
+    {
+        if (scope.thinktable.len() < 1) return;
+
+        foreach (think in scope.thinktable)
+           scope.thinktable[think](bot)
+    }
+    AddThinkToEnt(bot, "PopExt_BotThinks")
 }
 
-::PopExt_Behavior <- {
+::_PopExt_Behavior <- {
 
     function OnGameEvent_player_spawn(params) {
         local bot = GetPlayerFromUserID(params.userid)
@@ -170,4 +241,4 @@ local popext_funcs =
         }
     }
 }
-__CollectGameEventCallbacks(__PopExt_Behavior)
+__CollectGameEventCallbacks(_PopExt_Behavior)
