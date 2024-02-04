@@ -116,8 +116,9 @@ WaveSchedule
 				Tag "popext_usehumanmodel"
 				Tag "popext_alwaysglow"
 				Tag "popext_usebestweapon"
+				Tag "popext_giveweapon|tf_weapon_shotgun_soldier|425" //family business
 				Class Soldier
-				WeaponRestrictions MeleeOnly
+				WeaponRestrictions SecondaryOnly
 			}
 		}
 	}
