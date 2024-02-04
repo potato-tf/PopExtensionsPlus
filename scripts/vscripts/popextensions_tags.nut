@@ -183,6 +183,7 @@ local popext_funcs =
         bot.GetScriptScope().thinktable.BestWeaponThink <- BestWeaponThink
     }
     popext_homingprojectile = function(bot, args) {
+
         // Ensure there are enough arguments for configuration
         if (args.len() < 4) return
 
@@ -205,6 +206,18 @@ local popext_funcs =
                 // Any other parameters needed by the projectile thinker can be set here
                 AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
             }
+        }
+
+        function PopExt_OnScriptHook_OnTakeDamage(params)
+        {
+            if (params.const_entity == worldspawn)
+                return
+
+            local classname = params.inflictor.GetClassname()
+            if (classname != "tf_projectile_flare" && classname != "tf_projectile_energy_ring")
+                return
+
+            EntFireByHandle(params.inflictor, "Kill", null, 0.5, null, null)
         }
     }
 }
@@ -374,7 +387,7 @@ local popext_funcs =
 
 ::_PopExt_Behavior <- {
 
-    function OnGameEvent_player_spawn(params) {
+    function PopExt_OnGameEvent_player_spawn(params) {
         local bot = GetPlayerFromUserID(params.userid)
         if (!bot.IsBotOfType(1337)) return
 
@@ -384,7 +397,7 @@ local popext_funcs =
         EntFireByHandle(bot, "RunScriptCode", "GetBotBehaviorFromTags(self)", -1, null, null);
     }
 
-    function OnGameEvent_player_builtobject(params) {
+    function PopExt_OnGameEvent_player_builtobject(params) {
         local bot = GetPlayerFromUserID(params.userid)
         if (!IsBotOfType(1337)) return
 
@@ -402,4 +415,4 @@ local popext_funcs =
         }
     }
 }
-__CollectGameEventCallbacks(_PopExt_Behavior)
+PopExt_CollectGameEventCallbacks(this)

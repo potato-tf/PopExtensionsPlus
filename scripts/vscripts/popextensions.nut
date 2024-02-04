@@ -1,4 +1,8 @@
 ::popExtensionsVersion <- 6;
+
+::worldspawn <- Entities.FindByClassname(null, "worldspawn")
+::gamerules <- Entities.FindByClassname(null, "tf_gamerules")
+
 popExtEntity <- Entities.FindByName(null, "pop_extension_ent");
 
 if (popExtEntity == null) {
