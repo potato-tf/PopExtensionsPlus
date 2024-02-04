@@ -1,3 +1,29 @@
+::PopExt_GameEventCallbacks <- {}
+::PopExt_ScriptHookCallbacks <- {}
+
+::__RunGameEventCallbacks <- function(event, params)
+{
+    __RunEventCallbacks(event, params, "PopExt_OnGameEvent_", "PopExt_GameEventCallbacks", false)
+
+    if ("GameEventCallbacks" in getroottable())
+        __RunEventCallbacks(event, params, "OnGameEvent_", "GameEventCallbacks", true)
+}
+
+::__RunScriptHookCallbacks <- function(event, params)
+{
+    __RunEventCallbacks(event, params, "PopExt_OnScriptHook_", "PopExt_ScriptHookCallbacks", false)
+
+    if ("ScriptHookCallbacks" in getroottable())
+        __RunEventCallbacks(event, params, "OnScriptHook_", "ScriptHookCallbacks", true)
+}
+
+::PopExt_CollectEventCallbacks <- function(scope)
+{
+    __CollectEventCallbacks(scope, "PopExt_OnGameEvent_", "PopExt_GameEventCallbacks", ::RegisterScriptGameEventListener)
+    __CollectEventCallbacks(scope, "PopExt_OnScriptHook_", "PopExt_ScriptHookCallbacks", ::RegisterScriptHookListener)
+}
+
+
 function AddHooksToScope(name, table, scope)
 {
 	foreach (hookName, func in table) {
@@ -161,7 +187,7 @@ function PopulatorThink()
 			}
 		}
 	}
-	for (local i = 1; i <= Constants.Server.MAX_PLAYERS; i++)
+	for (local i = 1; i <= MaxClients(); i++)
 	{
 		local player = PlayerInstanceFromIndex(i);
 		if (player == null) continue;
@@ -194,7 +220,7 @@ function PopulatorThink()
 	return 0.00;
 }
 
-function OnScriptHook_OnTakeDamage(params)
+function PopExt_OnScriptHook_OnTakeDamage(params)
 {
 	local victim = params.const_entity;
 	if (victim != null && ((victim.IsPlayer() && victim.IsBotOfType(1337)) || victim.GetClassname() == "tank_boss")) {
@@ -208,7 +234,7 @@ function OnScriptHook_OnTakeDamage(params)
 	}
 }
 
-function OnGameEvent_player_spawn(params)
+function PopExt_OnGameEvent_player_spawn(params)
 {
 	local player = GetPlayerFromUserID(params.userid);
 
@@ -242,7 +268,7 @@ function OnGameEvent_player_spawn(params)
 	}
 }
 
-function OnGameEvent_player_hurt(params)
+function PopExt_OnGameEvent_player_hurt(params)
 {
 	local victim = GetPlayerFromUserID(params.userid);
 	if (victim != null && victim.IsBotOfType(1337)) {
@@ -256,7 +282,7 @@ function OnGameEvent_player_hurt(params)
 	}
 }
 
-function OnGameEvent_player_death(params)
+function PopExt_OnGameEvent_player_death(params)
 {
 	local player = GetPlayerFromUserID(params.userid);
 	if (player != null && player.IsBotOfType(1337)) {
@@ -280,7 +306,7 @@ function OnGameEvent_player_death(params)
 	}
 }
 
-function OnGameEvent_npc_hurt(params)
+function PopExt_OnGameEvent_npc_hurt(params)
 {
 	local victim = EntIndexToHScript(params.entindex);
 	if (victim != null && victim.GetClassname() == "tank_boss") {
@@ -315,7 +341,7 @@ function OnGameEvent_npc_hurt(params)
 }
 tankIcons <- [];
 icons <- [];
-function OnGameEvent_mvm_begin_wave(params)
+function PopExt_OnGameEvent_mvm_begin_wave(params)
 {
 	if ("waveIconsFunction" in this) {
 		this.waveIconsFunction();
@@ -327,7 +353,7 @@ function OnGameEvent_mvm_begin_wave(params)
 		_PopIncrementIcon(v);
 	}
 }
-function OnGameEvent_teamplay_round_start(params)
+function PopExt_OnGameEvent_teamplay_round_start(params)
 {
 	if ("waveIconsFunction" in this) {
 		delete waveIconsFunction;
@@ -335,4 +361,4 @@ function OnGameEvent_teamplay_round_start(params)
 	tankIcons <- [];
 	icons <- [];
 }
-__CollectGameEventCallbacks(this);
+PopExt_CollectGameEventCallbacks(this)
