@@ -182,8 +182,9 @@ local popext_funcs =
         }
         bot.GetScriptScope().thinktable.BestWeaponThink <- BestWeaponThink
     }
-    popext_homingprojectile = function(bot, args) {
 
+    popext_homingprojectile = function(bot, args)
+    {
         // Ensure there are enough arguments for configuration
         if (args.len() < 4) return
 
@@ -218,6 +219,47 @@ local popext_funcs =
                 return
 
             EntFireByHandle(params.inflictor, "Kill", null, 0.5, null, null)
+        }
+    }
+    popext_addcondonhit = function(bot, args)
+    {
+        // Tag addcondonhit |cond|duration|threshold
+
+        // Leave Duration blank for infinite duration
+        // Leave Threshold blank to apply effect on any hit
+
+        local cond = args[0].tointeger()
+        local duration = (args.len() >= 2) ? args[1].tofloat() : -1.0
+        local dmgthreshold = (args.len() >= 3) ? args[2].tofloat() : 0.0
+
+        // Add the new variables to the bot's scope
+        local bot_scope = bot.GetScriptScope()
+        bot_scope.CondOnHit = true
+        bot_scope.CondOnHitVal = cond
+        bot_scope.CondOnHitDur = duration
+        bot_scope.CondOnHitDmgThres = dmgthreshold
+
+        function PopExt_OnGameEvent_player_hurt(params)
+        {
+            local victim = GetPlayerFromUserID(params.userid);
+            if (victim == null)
+                return
+
+            local attacker = GetPlayerFromUserID(params.attacker)
+            if (attacker != null && victim != attacker)
+            {
+                local hurt_damage = params.damageamount
+                local victim_health = victim.GetHealth() - hurt_damage
+
+                if (victim_health <= 0) return
+
+                local attacker_scope = attacker.GetScriptScope()
+
+                if (attacker_scope.CondOnHit) return
+
+                if (hurt_damage >= attacker_scope.CondOnHitDmgThres)
+                    bot.AddCondEx(attacker_scope.CondOnHitVal, attacker_scope.CondOnHitDur, null)
+            }
         }
     }
 }
