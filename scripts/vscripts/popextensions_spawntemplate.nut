@@ -24,7 +24,7 @@ popExtScope.globalTemplateSpawnCount <- 0
 }
 
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
-::SpawnTemplate <- function(pointtemplate, parent = null, origin = Vector(0, 0, 0), angles = QAngle(0, 0, 0))
+::SpawnTemplate <- function(pointtemplate, parent = null, origin = Vector(), angles = QAngle())
 {
     // credit to ficool2
     popExtScope.globalTemplateSpawnCount <- popExtScope.globalTemplateSpawnCount + 1
@@ -258,8 +258,8 @@ popExtScope.globalTemplateSpawnCount <- 0
                     //needed for brush entities
                     if ("mins" in keyvalues || "maxs" in keyvalues)
                     {
-                        local mins = ("mins" in keyvalues) ? keyvalues.mins : Vector(0, 0, 0)
-                        local maxs = ("maxs" in keyvalues) ? keyvalues.maxs : Vector(0, 0, 0)
+                        local mins = ("mins" in keyvalues) ? keyvalues.mins : Vector()
+                        local maxs = ("maxs" in keyvalues) ? keyvalues.maxs : Vector()
 
                         //overwrite responsecontext even if someone fills it in for some reason
                         keyvalues.responsecontext <- mins.ToKVString() + " " + maxs.ToKVString()
@@ -281,7 +281,7 @@ popExtScope.globalTemplateSpawnCount <- 0
 }
 
 //simplifed version of SpawnTemplate, accepts whether or not to perform name fixup as a boolean parameter
-::SpawnTemplateSimple <- function(pointtemplate, parent = null, origin = Vector(0, 0, 0), angles = QAngle(0, 0, 0), fixup = true)
+::SpawnTemplateSimple <- function(pointtemplate, parent = null, origin = Vector(), angles = QAngle(), fixup = true)
 {
     // credit to ficool2
     popExtScope.globalTemplateSpawnCount <- popExtScope.globalTemplateSpawnCount + 1
@@ -379,8 +379,8 @@ popExtScope.globalTemplateSpawnCount <- 0
                 //needed for brush entities
                 if ("mins" in keyvalues || "maxs" in keyvalues)
                 {
-                    local mins = ("mins" in keyvalues) ? keyvalues.mins : Vector(0, 0, 0)
-                    local maxs = ("maxs" in keyvalues) ? keyvalues.maxs : Vector(0, 0, 0)
+                    local mins = ("mins" in keyvalues) ? keyvalues.mins : Vector()
+                    local maxs = ("maxs" in keyvalues) ? keyvalues.maxs : Vector()
 
                     //overwrite responsecontext even if someone fills it in for some reason
                     keyvalues.responsecontext <- mins.ToKVString() + " " + maxs.ToKVString()
