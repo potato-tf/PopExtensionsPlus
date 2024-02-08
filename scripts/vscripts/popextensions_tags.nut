@@ -221,6 +221,18 @@ local popext_funcs =
             EntFireByHandle(params.inflictor, "Kill", null, 0.5, null, null)
         }
     }
+    popext_addcont = function(bot, args)
+    {
+
+        // Tag addcondonhit |cond|duration|threshold|crit
+
+        // Leave Duration blank for infinite duration
+
+        local cond = args[0].tointeger()
+        local duration = (args.len() >= 2) ? args[1].tofloat() : -1.0
+    
+        bot.AddCondEx(cond, duration, null)
+    }
     popext_addcondonhit = function(bot, args)
     {
         // Tag addcondonhit |cond|duration|threshold|crit
@@ -229,7 +241,6 @@ local popext_funcs =
         // Leave Threshold blank to apply effect on any hit
         
         local args_len = args.len()
-
 
         local cond = args[0].tointeger()
         local duration = (args_len >= 2) ? args[1].tofloat() : -1.0
@@ -246,7 +257,7 @@ local popext_funcs =
 		
         function PopExt_OnGameEvent_player_hurt(params)
         {
-            local victim = GetPlayerFromUserID(params.userid);
+            local victim = GetPlayerFromUserID(params.userid)
             if (victim == null)
                 return
 
@@ -267,7 +278,7 @@ local popext_funcs =
                 if ((attacker_scope.CondOnHitCritOnly == 1 && isCrit) || 
                    (attacker_scope.CondOnHitDmgThres == 0.0 || hurt_damage >= attacker_scope.CondOnHitDmgThres))
                 {
-                   victim.AddCondEx(attacker_scope.CondOnHitVal, attacker_scope.CondOnHitDur, null);
+                   victim.AddCondEx(attacker_scope.CondOnHitVal, attacker_scope.CondOnHitDur, null)
                 }
 	}
     }
