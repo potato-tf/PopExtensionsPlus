@@ -30,6 +30,11 @@ WaveSchedule
 				//load general mission attributes
 				IncludeScript(`popextensions_missionattributes`)
 
+				//load mission attributes 
+				MissionAttr(`NoReanimators`)
+				MissionAttr(`ZombiesNoWave666`)
+				MissionAttr(`ForceHoliday`, `2`)
+
 				// If you are hitting the 4096 character limit inside this script, it would be required to put hooks into separate file
 				// IncludeScript(`mypophooks`)
 				// Add event hooks for bots with specifed Tag.

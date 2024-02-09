@@ -2,7 +2,9 @@
 MissionAttributes.CurrAttrs <- [];       // Array storing currently modified attributes.
 MissionAttributes.DebugText <- false;     // Print debug text.
 MissionAttributes.RaisedParseError <- false;
-local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl")
+
+local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl");
+local crumpkinCond = Constants.ETFCond.TF_COND_CRITBOOSTED_PUMPKIN;
 // Mission Attribute Functions
 // =========================================================
 // Function is called in popfile by mission maker to modify mission attributes.
@@ -12,6 +14,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     switch(attr) {
     
     // =========================================================
+
     case "ForceHoliday":
     // Replicates sigsegv-mvm: ForceHoliday.
     // Forces a tf_holiday for the mission.
@@ -33,28 +36,120 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         
         local ent = Entities.FindByName(null, "MissionAttrHoliday");
         if (ent != null) ent.Kill();
-        SpawnEntityFromTable("tf_logic_holiday", 
-        {
-            targetname = "MissionAttrHoliday",
-            holiday_type = value
-        });
+        SpawnEntityFromTable("tf_logic_holiday", { targetname = "MissionAttrHoliday", holiday_type = value });
         
         break;
+
     // ========================================================
     
     case "NoCritPumpkins":
 
-        function MissionAttributes::OnGameEvent_player_death(_)
+        function MissionAttributes::PopExt_OnGameEvent_player_death(_)
         {
             for (local pumpkin; pumpkin = Entities.FindByClassname(pumpkin, "tf_ammo_pack");)
                 if (pumpkin.GetModelIndex() == pumpkinIndex)
                     EntFireByHandle(pumpkin, "Kill", "", -1, null, null); //can't do .Kill() in the loop
+                
+            for (local i = 1, player; i <= MaxClients(); i++)
+                if (player = PlayerInstanceFromIndex(i), player && player.InCond(33)) //TF_COND_CRITBOOSTED_PUMPKIN
+                    EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(33)", -1, null, null); 
+        }
+        break;
+
+    // =========================================================
+
+    case "NoReanimators":
+
+        function MissionAttributes::PopExt_OnGameEvent_player_death(params)
+        {
+            if (GetPlayerFromUserID(params.userid).IsBotOfType(1337)) return;
+
+            for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");) 
+                revivemarker.Kill();
+        }
+        break;
+
+    // =========================================================
+
+    case "ZombiesNoWave666":
+        NetProps.SetPropInt(__objectiveresource, "m_nMvMEventPopfileType", 0);
+        break;
+
+    // =========================================================
+
+    //all of these could just be set directly in the pop easily, however popfile's have a 4096 character limit for vscript so might as well save space
+    case "DisableRefunds":
+
+        Convars.SetValue("tf_mvm_respec_enabled", 0);
+        break;
+
+    case "RefundLimit":
+        
+        Convars.SetValue("tf_mvm_respec_enabled", 1);
+        Convars.SetValue("tf_mvm_respec_limit", value);
+        break;
+
+    case "RefundGoal":
+        Convars.SetValue("tf_mvm_respec_enabled", 1);
+        Convars.SetValue("tf_mvm_respec_credit_goal", value);
+        break;
+
+    case "FixedBuybacks":
+        Convars.SetValue("tf_mvm_buybacks_method", 1);
+        break;
+
+    case "BuybacksPerWave":
+        Convars.SetValue("tf_mvm_buybacks_per_wave", value);
+        break;
+
+    case "DeathPenalty":
+        Convars.SetValue("tf_mvm_death_penalty", value);
+        break;
+
+    case "BonusRatioHalf":
+        Convars.SetValue("tf_mvm_currency_bonus_ratio_min", value);
+        break;
+
+    case "BonusRatioFull":
+        Convars.SetValue("tf_mvm_currency_bonus_ratio_max", value);
+        break;
+
+    case "UpgradeFile":
+        DoEntFire("tf_gamerules", "SetCustomUpgradesFile", value, -1, null, null);
+        break;
+
+    case "FlagEscortCount":
+        Convars.SetValue("tf_bot_flag_escort_max_count", value);
+        break;
+
+    // =========================================================
+
+    case "SniperHideLasers":
+        local think = SpawnEntityFromTable("logic_relay", {});
+        function KillLasers()
+        {
+            for (local dot; dot = Entities.FindByClassname(dot, "env_sniperdot");)
+                if (dot.GetOwner().GetTeam() == 3)
+                    EntFireByHandle(dot, "Kill", "", -1, null, null);
+        }
+        think.ValidateScriptScope();
+        think.GetScriptScope().KillLasers <- KillLasers;
+        AddThinkToEnt(think, "KillLasers");
+
+    // =========================================================
+    case "NoBusterFriendlyFire":
+        function MissionAttributes::PopExt_OnScriptHook_OnTakeDamage(params)
+        {
+            local attacker = params.attacker, victim = params.const_entity;
+            if (IsPlayer(victim) && IsPlayerABot(attacker) && IsPlayerABot(victim) && victim.GetTeam() == attacker.GetTeam() )
+                return false;
         }
 
     // Don't add attribute to clean-up list if it could not be found.
     default:
         ParseError(format("Could not find mission attribute '%s'", attr));
         success = false;
+    
     }
     
     // Add attribute to clean-up list if its modification was successful.
@@ -80,7 +175,7 @@ function MissionAttributes::DoCleanupMethod(attr)
     switch(attr) {
     case "ForceHoliday":
         // tf_logic_holiday will be removed by the game. 
-        SendToServerConsole("tf_forced_holiday 0");
+        Convars.SetValue("tf_forced_holiday", 0);
         break;
     default:
         // Raise an exception if clean-up method is missing
@@ -98,8 +193,10 @@ function MissionAttributes::OnGameEvent_teamplay_round_start(params)
 }
 
 // Hook all wave inits to reset parsing error counter.
-function MissionAttributes::OnGameEvent_mvm_reset_stats(params)
+function MissionAttributes::recalculate_holidays(_)
 {
+    if (GetRoundState() != 3) return;
+
     MissionAttributes.RaisedParseError = false;
 }
 
