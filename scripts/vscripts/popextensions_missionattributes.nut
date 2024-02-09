@@ -2,11 +2,11 @@
 MissionAttributes.CurrAttrs <- [];       // Array storing currently modified attributes.
 MissionAttributes.DebugText <- false;     // Print debug text.
 MissionAttributes.RaisedParseError <- false;
-
+local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl")
 // Mission Attribute Functions
 // =========================================================
 // Function is called in popfile by mission maker to modify mission attributes.
-function MissionAttributes::MissionAttr(attr, value)
+function MissionAttributes::MissionAttr(attr, value = 0)
 {
     local success = true;
     switch(attr) {
@@ -28,7 +28,7 @@ function MissionAttributes::MissionAttr(attr, value)
         if (value < 0 || value > 2) {RaiseIndexError(attr); success = false; break;}
         
         // Set Holiday logic
-        SendToServerConsole(format("tf_forced_holiday %d", value));
+        Convars.SetValue("tf_forced_holiday", value);
         if (value == 0) break;
         
         local ent = Entities.FindByName(null, "MissionAttrHoliday");
@@ -42,6 +42,15 @@ function MissionAttributes::MissionAttr(attr, value)
         break;
     // ========================================================
     
+    case "NoCritPumpkins":
+
+        function MissionAttributes::OnGameEvent_player_death(_)
+        {
+            for (local pumpkin; pumpkin = Entities.FindByClassname(pumpkin, "tf_ammo_pack");)
+                if (pumpkin.GetModelIndex() == pumpkinIndex)
+                    EntFireByHandle(pumpkin, "Kill", "", -1, null, null); //can't do .Kill() in the loop
+        }
+
     // Don't add attribute to clean-up list if it could not be found.
     default:
         ParseError(format("Could not find mission attribute '%s'", attr));
@@ -54,6 +63,7 @@ function MissionAttributes::MissionAttr(attr, value)
         DebugLog(format("Added mission attribute %s", attr));
         MissionAttributes.CurrAttrs.append(attr);
     }
+    
 }
 
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
