@@ -335,4 +335,8 @@ function OnGameEvent_teamplay_round_start(params)
 	tankIcons <- [];
 	icons <- [];
 }
+<<<<<<< Updated upstream
 __CollectGameEventCallbacks(this);
+=======
+PopExt_CollectEventCallbacks(this)
+>>>>>>> Stashed changes

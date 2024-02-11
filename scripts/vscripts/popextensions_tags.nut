@@ -1,4 +1,25 @@
+<<<<<<< Updated upstream
 local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
+=======
+local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
+
+// it's a table cuz much faster
+local validProjectiles =
+{
+	tf_projectile_arrow				= 1
+	tf_projectile_energy_ball		= 1 // Cow Mangler
+	tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
+	tf_projectile_lightningorb		= 1 // Lightning Orb Spell
+	tf_projectile_mechanicalarmorb	= 1 // Short Circuit
+	tf_projectile_rocket			= 1
+	tf_projectile_sentryrocket		= 1
+	tf_projectile_spellfireball		= 1
+	tf_projectile_energy_ring		= 1 // Bison
+	tf_projectile_flare				= 1
+}
+
+
+>>>>>>> Stashed changes
 //behavior tags
 local popext_funcs =
 {
@@ -67,7 +88,6 @@ local popext_funcs =
         {
 
         }
-
     }
 
     //this is a very simple method for giving bots weapons. 
