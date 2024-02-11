@@ -1,4 +1,5 @@
-local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
+local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
+
 //max ammo values
 ::popExtensionsMaxAmmo <- {
     scout = [32, 36],
@@ -87,7 +88,7 @@ local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro",
             break
 
             case 4: //TF_CLASS_DEMOMAN
-            
+
             if (GetPropInt(NetProps.GetPropEntityArray(self, "m_hMyWeapons", 1), "m_AttributeManager.m_Item.m_iItemDefinitionIndex") == 130) //scotres index
                 scope.maxammo.demo[1] *= 1.5
             break
@@ -100,7 +101,7 @@ local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro",
             case 7: //TF_CLASS_PYRO
             if (NetProps.GetPropEntityArray(self, "m_hMyWeapons", 0).GetClassname() == "tf_weapon_flaregun")
                 scope.maxammo.pyro[1] *= 0.5
-            break       
+            break
         }
 		//engi metal
 		if (player.GetPlayerClass() == TF_CLASS_ENGINEER) ammo.append(scope.maxmetal);
@@ -124,7 +125,7 @@ local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro",
 			if (GetPropIntArray(player, "m_iAmmo", i+1) > ammo[i])
 				EntFireByHandle(player, "RunScriptCode", "SetReserveAmmo(self, "+ammo[i]+","+i+")", -1, null, null);
 
-		if (refill) 
+		if (refill)
 		{
 			EmitSoundOnClient("AmmoPack.Touch", player);
 			pack.SetOrigin(pack.GetOrigin() - Vector(0, 0, 2000));

@@ -1,36 +1,20 @@
 ::MissionAttributes <- {};              // MissionAttributes namespace.
 MissionAttributes.CurrAttrs <- [];       // Array storing currently modified attributes.
 MissionAttributes.DebugText <- false;     // Print debug text.
-MissionAttributes.ConVars <- {}; //table storing original convar values
 MissionAttributes.RaisedParseError <- false;
+
 local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl");
-local resource = Entities.FindByClassname(null, "tf_objective_resource");
+local crumpkinCond = Constants.ETFCond.TF_COND_CRITBOOSTED_PUMPKIN;
 // Mission Attribute Functions
 // =========================================================
 // Function is called in popfile by mission maker to modify mission attributes.
-
-function MissionAttributes::SetConvar(convar, value)
-{
-    //save original values to restore later
-    if (!(convar in MissionAttributes.ConVars))
-        MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
-    
-    Convars.SetValue(convar, value);
-}
-
-function MissionAttributes::ResetConvars()
-{
-    foreach (convar, value in MissionAttributes.ConVars)
-        Convars.SetValue(convar, value);
-    MissionAttributes.ConVars.clear()
-}
-
 function MissionAttributes::MissionAttr(attr, value = 0)
 {
     local success = true;
     switch(attr) {
-    
+
     // =========================================================
+
     case "ForceHoliday":
     // Replicates sigsegv-mvm: ForceHoliday.
     // Forces a tf_holiday for the mission.
@@ -45,22 +29,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         // Error Handling
         if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break;}
         if (value < 0 || value > 2) {RaiseIndexError(attr); success = false; break;}
-        
+
         // Set Holiday logic
-        SetConvar("tf_forced_holiday", value);
+        Convars.SetValue("tf_forced_holiday", value);
         if (value == 0) break;
-        
+
         local ent = Entities.FindByName(null, "MissionAttrHoliday");
         if (ent != null) ent.Kill();
-        SpawnEntityFromTable("tf_logic_holiday", 
-        {
-            targetname = "MissionAttrHoliday",
-            holiday_type = value
-        });
-        
+        SpawnEntityFromTable("tf_logic_holiday", { targetname = "MissionAttrHoliday", holiday_type = value });
+
         break;
+
     // ========================================================
-    
+
     case "NoCritPumpkins":
 
         function MissionAttributes::PopExt_OnGameEvent_player_death(_)
@@ -68,10 +49,10 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             for (local pumpkin; pumpkin = Entities.FindByClassname(pumpkin, "tf_ammo_pack");)
                 if (pumpkin.GetModelIndex() == pumpkinIndex)
                     EntFireByHandle(pumpkin, "Kill", "", -1, null, null); //can't do .Kill() in the loop
-                
+
             for (local i = 1, player; i <= MaxClients(); i++)
                 if (player = PlayerInstanceFromIndex(i), player && player.InCond(33)) //TF_COND_CRITBOOSTED_PUMPKIN
-                    EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(33)", -1, null, null); 
+                    EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(33)", -1, null, null);
         }
         break;
 
@@ -83,7 +64,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         {
             if (GetPlayerFromUserID(params.userid).IsBotOfType(1337)) return;
 
-            for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");) 
+            for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");)
                 revivemarker.Kill();
         }
         break;
@@ -91,7 +72,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "ZombiesNoWave666":
-        NetProps.SetPropInt(resource, "m_nMvMEventPopfileType", value);
+        NetProps.SetPropInt(__objectiveresource, "m_nMvMEventPopfileType", 0);
         break;
 
     // =========================================================
@@ -99,38 +80,38 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     //all of these could just be set directly in the pop easily, however popfile's have a 4096 character limit for vscript so might as well save space
     case "DisableRefunds":
 
-        SetConvar("tf_mvm_respec_enabled", 0);
+        Convars.SetValue("tf_mvm_respec_enabled", 0);
         break;
 
     case "RefundLimit":
-        
-        SetConvar("tf_mvm_respec_enabled", 1);
-        SetConvar("tf_mvm_respec_limit", value);
+
+        Convars.SetValue("tf_mvm_respec_enabled", 1);
+        Convars.SetValue("tf_mvm_respec_limit", value);
         break;
 
     case "RefundGoal":
-        SetConvar("tf_mvm_respec_enabled", 1);
-        SetConvar("tf_mvm_respec_credit_goal", value);
+        Convars.SetValue("tf_mvm_respec_enabled", 1);
+        Convars.SetValue("tf_mvm_respec_credit_goal", value);
         break;
 
     case "FixedBuybacks":
-        SetConvar("tf_mvm_buybacks_method", 1);
+        Convars.SetValue("tf_mvm_buybacks_method", 1);
         break;
 
     case "BuybacksPerWave":
-        SetConvar("tf_mvm_buybacks_per_wave", value);
+        Convars.SetValue("tf_mvm_buybacks_per_wave", value);
         break;
 
     case "DeathPenalty":
-        SetConvar("tf_mvm_death_penalty", value);
+        Convars.SetValue("tf_mvm_death_penalty", value);
         break;
 
     case "BonusRatioHalf":
-        SetConvar("tf_mvm_currency_bonus_ratio_min", value);
+        Convars.SetValue("tf_mvm_currency_bonus_ratio_min", value);
         break;
 
     case "BonusRatioFull":
-        SetConvar("tf_mvm_currency_bonus_ratio_max", value);
+        Convars.SetValue("tf_mvm_currency_bonus_ratio_max", value);
         break;
 
     case "UpgradeFile":
@@ -138,7 +119,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         break;
 
     case "FlagEscortCount":
-        SetConvar("tf_bot_flag_escort_max_count", value);
+        Convars.SetValue("tf_bot_flag_escort_max_count", value);
         break;
 
     // =========================================================
@@ -160,63 +141,24 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         function MissionAttributes::PopExt_OnScriptHook_OnTakeDamage(params)
         {
             local attacker = params.attacker, victim = params.const_entity;
-            if (IsPlayer(victim) && IsPlayerABot(attacker) && IsPlayerABot(victim) && victim.GetTeam() == attacker.GetTeam() && attacker.GetPlayerClass() == 4 && attacker.IsMiniBoss()) //4 = TF_CLASS_DEMOMAN
-            {
-                params.early_out = true;
+            if (IsPlayer(victim) && IsPlayerABot(attacker) && IsPlayerABot(victim) && victim.GetTeam() == attacker.GetTeam() )
                 return false;
-            }
         }
-        break;
-    
-    case "BluPlayersAreRobots":
-        function MissionAttributes::PopExt_OnGameEvent_player_spawn(params)
-        {
-            local player = GetPlayerFromUserID(params.userid)
-            if (player.IsBotOfType(1337) || player.GetTeam() != 3) return;
-            EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[bot.GetPlayerClass()]), -1, null, null);
-        }
-        break;
 
-    case "RedPlayersAreRobots":
-        function MissionAttributes::PopExt_OnGameEvent_player_spawn(params)
-        {
-            local player = GetPlayerFromUserID(params.userid)
-            if (player.IsBotOfType(1337) || player.GetTeam() != 2) return;
-            EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[bot.GetPlayerClass()]), -1, null, null);
-        }
-        break;
-
-    case "BotsAreHumans":
-        function MissionAttributes::PopExt_OnGameEvent_player_spawn(params)
-        {
-            local player = GetPlayerFromUserID(params.userid)
-            if (!player.IsBotOfType(1337)) return;
-            EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[bot.GetPlayerClass()]), -1, null, null);
-        }
-        break;
-    
-    case "NoRomeVision":
-        function MissionAttributes::PopExt_OnGameEvent_post_inventory_application(params)
-        {
-            if (!GetPlayerFromUserID(params.userid).IsBotOfType(1337)) return;
-
-            for (local child = GetPlayerFromUserID(params.userid).FirstMoveChild(); child != null; child = child.NextMovePeer())
-                if (child.GetClassname() == "tf_wearable" && startswith(child.GetModelName(), "tw_"))
-                    EntFireByHandle(child, "Kill", "", -1, null, null);
-        }
-        break;
     // Don't add attribute to clean-up list if it could not be found.
     default:
         ParseError(format("Could not find mission attribute '%s'", attr));
         success = false;
+
     }
-    
+
     // Add attribute to clean-up list if its modification was successful.
     if (success)
     {
         DebugLog(format("Added mission attribute %s", attr));
         MissionAttributes.CurrAttrs.append(attr);
     }
+
 }
 
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
@@ -230,32 +172,31 @@ function MissionAttr(attr, value)
 // Function runs the appropriate clean-up method for the provided attribute.
 function MissionAttributes::DoCleanupMethod(attr)
 {
-    // switch(attr) {
-    // case "ForceHoliday":
-    //     // tf_logic_holiday will be removed by the game. 
-    //     SetConvar("tf_forced_holiday", 0);
-    //     break;
-    // default:
-    //     // Raise an exception if clean-up method is missing
-    //     RaiseException(format("Clean-up method not found for %s", attr));
-    // }
-    
-    //restore old cvars
-    ResetConvars()
-    
-    // DebugLog(format("Cleaned up mission attribute %s", attr));
+    switch(attr) {
+    case "ForceHoliday":
+        // tf_logic_holiday will be removed by the game.
+        Convars.SetValue("tf_forced_holiday", 0);
+        break;
+    default:
+        // Raise an exception if clean-up method is missing
+        RaiseException(format("Clean-up method not found for %s", attr));
+    }
+
+    DebugLog(format("Cleaned up mission attribute %s", attr));
 }
 
 // Hook first wave init to run clean-up.
-function MissionAttributes::OnGameEvent_teamplay_round_start(_)
+function MissionAttributes::OnGameEvent_teamplay_round_start(params)
 {
     ResetDefaults();
     this = {};
 }
 
 // Hook all wave inits to reset parsing error counter.
-function MissionAttributes::OnGameEvent_mvm_reset_stats(params)
+function MissionAttributes::recalculate_holidays(_)
 {
+    if (GetRoundState() != 3) return;
+
     MissionAttributes.RaisedParseError = false;
 }
 
