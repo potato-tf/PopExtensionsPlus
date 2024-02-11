@@ -210,7 +210,7 @@ local popext_funcs =
 
         function PopExt_OnScriptHook_OnTakeDamage(params)
         {
-            if (params.const_entity == worldspawn)
+            if (params.const_entity == __worldspawn)
                 return
 
             local classname = params.inflictor.GetClassname()
@@ -222,14 +222,17 @@ local popext_funcs =
     }
     popext_addcondonhit = function(bot, args)
     {
-        // Tag addcondonhit |cond|duration|threshold
+        // Tag addcondonhit |cond|duration|threshold|crit
 
         // Leave Duration blank for infinite duration
         // Leave Threshold blank to apply effect on any hit
+        
+        local args_len = args.len()
 
         local cond = args[0].tointeger()
-        local duration = (args.len() >= 2) ? args[1].tofloat() : -1.0
-        local dmgthreshold = (args.len() >= 3) ? args[2].tofloat() : 0.0
+        local duration = (args_len >= 2) ? args[1].tofloat() : -1.0
+        local dmgthreshold = (args_len >= 3) ? args[2].tofloat() : 0.0
+        local critOnly = (args_len >= 4) ? args[3].tointeger() : 0
 
         // Add the new variables to the bot's scope
         local bot_scope = bot.GetScriptScope()
@@ -237,29 +240,35 @@ local popext_funcs =
         bot_scope.CondOnHitVal = cond
         bot_scope.CondOnHitDur = duration
         bot_scope.CondOnHitDmgThres = dmgthreshold
-
+        bot_scope.CondOnHitCritOnly    = critOnly
+		
         function PopExt_OnGameEvent_player_hurt(params)
         {
-            local victim = GetPlayerFromUserID(params.userid);
+            local victim = GetPlayerFromUserID(params.userid)
             if (victim == null)
                 return
 
             local attacker = GetPlayerFromUserID(params.attacker)
+
             if (attacker != null && victim != attacker)
             {
-                local hurt_damage = params.damageamount
-                local victim_health = victim.GetHealth() - hurt_damage
-
-                if (victim_health <= 0) return
-
                 local attacker_scope = attacker.GetScriptScope()
+                    if (!attacker_scope.CondOnHit) return
+                
+                    local hurt_damage = params.damageamount
+                    local victim_health = victim.GetHealth() - hurt_damage
+                    local isCrit = params.crit
+                
+                    if (victim_health <= 0) return
 
-                if (attacker_scope.CondOnHit) return
-
-                if (hurt_damage >= attacker_scope.CondOnHitDmgThres)
-                    bot.AddCondEx(attacker_scope.CondOnHitVal, attacker_scope.CondOnHitDur, null)
+                if (attacker_scope.CondOnHitCritOnly == 1 && !isCrit) return
+            
+                if ((attacker_scope.CondOnHitCritOnly == 1 && isCrit) || (attacker_scope.CondOnHitDmgThres == 0.0 || hurt_damage >= attacker_scope.CondOnHitDmgThres)) 
+                    victim.AddCondEx(attacker_scope.CondOnHitVal, attacker_scope.CondOnHitDur, null)
+      
             }
         }
+    
     }
 }
 
@@ -446,7 +455,7 @@ local popext_funcs =
         if ((bot.HasBotTag("popext_dispenserasteleporter") && params.object == 1) || (bot.HasBotTag("popext_dispenserassentry") && params.object == 2))
         {
             local dispenser = SpawnEntityFromTable("obj_dispenser", {
-                targetname = "dispenserasteleporter"+params.index,
+                targetname = "dispenserreplacement"+params.index,
                 defaultupgrade = 3,
                 origin = building.GetOrigin()
             })

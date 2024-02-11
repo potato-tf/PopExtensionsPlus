@@ -1,7 +1,6 @@
 ::popExtensionsVersion <- 6;
 
-::worldspawn <- Entities.FindByClassname(null, "worldspawn")
-::gamerules <- Entities.FindByClassname(null, "tf_gamerules")
+local resource = Entities.FindByClassname(null, "tf_objective_resource");
 
 popExtEntity <- Entities.FindByName(null, "pop_extension_ent");
 
@@ -148,8 +147,6 @@ PrecacheModel("models/weapons/w_models/w_rocket.mdl");
 	ClientPrint(null, 2, line);
 }
 
-local objective = Entities.FindByClassname(null,"tf_objective_resource");
-
 function AddRobotTag(tag, table)
 {
 	if (!popExtThinkFuncSet) {
@@ -239,9 +236,6 @@ function SetWaveIconsFunction(func)
 ::MVM_CLASS_FLAG_MINIBOSS <-		1 << 3; // Giant icon flag. Support and mission icons do not display red background when set
 ::MVM_CLASS_FLAG_ALWAYSCRIT <-		1 << 4; // Crit icon flag. Support and mission icons do not display crit outline when set
 ::MVM_CLASS_FLAG_SUPPORT_LIMITED <-	1 << 5; // Support limited flag. Game uses it together with support flag
-
-
-local resource = Entities.FindByClassname(null, "tf_objective_resource");
 
 // Get wavebar spawn count of an icon with specified name and flags
 ::GetWaveIconSpawnCount <- function(name, flags)
