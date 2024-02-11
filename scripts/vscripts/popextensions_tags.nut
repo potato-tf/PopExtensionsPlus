@@ -1,4 +1,4 @@
-local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
+local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
 
 // it's a table cuz much faster
 local validProjectiles =
@@ -84,7 +84,6 @@ local popext_funcs =
         {
 
         }
-
     }
 
     //this is a very simple method for giving bots weapons.

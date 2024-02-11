@@ -361,4 +361,4 @@ function PopExt_OnGameEvent_teamplay_round_start(params)
 	tankIcons <- [];
 	icons <- [];
 }
-PopExt_CollectGameEventCallbacks(this)
+__CollectGameEventCallbacks(this);
