@@ -226,7 +226,7 @@ local popext_funcs =
 
         // Leave Duration blank for infinite duration
         // Leave Threshold blank to apply effect on any hit
-        
+
         local args_len = args.len()
 
         local cond = args[0].tointeger()
@@ -241,8 +241,8 @@ local popext_funcs =
         bot_scope.CondOnHitDur = duration
         bot_scope.CondOnHitDmgThres = dmgthreshold
         bot_scope.CondOnHitCritOnly    = critOnly
-		
-        function PopExt_OnGameEvent_player_hurt(params)
+
+        function OnGameEvent_player_hurt(params)
         {
             local victim = GetPlayerFromUserID(params.userid)
             if (victim == null)
@@ -253,22 +253,21 @@ local popext_funcs =
             if (attacker != null && victim != attacker)
             {
                 local attacker_scope = attacker.GetScriptScope()
-                    if (!attacker_scope.CondOnHit) return
-                
-                    local hurt_damage = params.damageamount
-                    local victim_health = victim.GetHealth() - hurt_damage
-                    local isCrit = params.crit
-                
-                    if (victim_health <= 0) return
+
+                if (!attacker_scope.CondOnHit) return
+
+                local hurt_damage = params.damageamount
+                local victim_health = victim.GetHealth() - hurt_damage
+                local isCrit = params.crit
+
+                if (victim_health <= 0) return
 
                 if (attacker_scope.CondOnHitCritOnly == 1 && !isCrit) return
-            
-                if ((attacker_scope.CondOnHitCritOnly == 1 && isCrit) || (attacker_scope.CondOnHitDmgThres == 0.0 || hurt_damage >= attacker_scope.CondOnHitDmgThres)) 
+
+                if ((attacker_scope.CondOnHitCritOnly == 1 && isCrit) || (attacker_scope.CondOnHitDmgThres == 0.0 || hurt_damage >= attacker_scope.CondOnHitDmgThres))
                     victim.AddCondEx(attacker_scope.CondOnHitVal, attacker_scope.CondOnHitDur, null)
-      
             }
         }
-    
     }
 }
 
@@ -465,4 +464,4 @@ local popext_funcs =
         }
     }
 }
-PopExt_CollectGameEventCallbacks(this)
+__CollectGameEventCallbacks(this)
