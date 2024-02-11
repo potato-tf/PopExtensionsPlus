@@ -1,6 +1,3 @@
-<<<<<<< Updated upstream
-local classes = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
-=======
 local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
 
 // it's a table cuz much faster
@@ -19,7 +16,6 @@ local validProjectiles =
 }
 
 
->>>>>>> Stashed changes
 //behavior tags
 local popext_funcs =
 {

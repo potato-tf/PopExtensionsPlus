@@ -25,7 +25,7 @@ WaveSchedule
 				IncludeScript(`popextensions`)
 
 				//load popextensions tags script
-				IncludeScript(`popextensions_tags`)
+				// IncludeScript(`popextensions_tags`)
 
 				//load general mission attributes
 				IncludeScript(`popextensions_missionattributes`)

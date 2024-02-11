@@ -3,13 +3,6 @@ MissionAttributes.CurrAttrs <- [];       // Array storing currently modified att
 MissionAttributes.DebugText <- false;     // Print debug text.
 MissionAttributes.ConVars <- {}; //table storing original convar values
 MissionAttributes.RaisedParseError <- false;
-<<<<<<< Updated upstream
-
-// Mission Attribute Functions
-// =========================================================
-// Function is called in popfile by mission maker to modify mission attributes.
-function MissionAttributes::MissionAttr(attr, value)
-=======
 local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl");
 local resource = Entities.FindByClassname(null, "tf_objective_resource");
 // Mission Attribute Functions
@@ -33,7 +26,6 @@ function MissionAttributes::ResetConvars()
 }
 
 function MissionAttributes::MissionAttr(attr, value = 0)
->>>>>>> Stashed changes
 {
     local success = true;
     switch(attr) {
@@ -55,11 +47,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         if (value < 0 || value > 2) {RaiseIndexError(attr); success = false; break;}
         
         // Set Holiday logic
-<<<<<<< Updated upstream
-        SendToServerConsole(format("tf_forced_holiday %d", value));
-=======
         SetConvar("tf_forced_holiday", value);
->>>>>>> Stashed changes
         if (value == 0) break;
         
         local ent = Entities.FindByName(null, "MissionAttrHoliday");
@@ -73,8 +61,6 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         break;
     // ========================================================
     
-<<<<<<< Updated upstream
-=======
     case "NoCritPumpkins":
 
         function MissionAttributes::PopExt_OnGameEvent_player_death(_)
@@ -219,7 +205,6 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     EntFireByHandle(child, "Kill", "", -1, null, null);
         }
         break;
->>>>>>> Stashed changes
     // Don't add attribute to clean-up list if it could not be found.
     default:
         ParseError(format("Could not find mission attribute '%s'", attr));
@@ -245,17 +230,6 @@ function MissionAttr(attr, value)
 // Function runs the appropriate clean-up method for the provided attribute.
 function MissionAttributes::DoCleanupMethod(attr)
 {
-<<<<<<< Updated upstream
-    switch(attr) {
-    case "ForceHoliday":
-        // tf_logic_holiday will be removed by the game. 
-        SendToServerConsole("tf_forced_holiday 0");
-        break;
-    default:
-        // Raise an exception if clean-up method is missing
-        RaiseException(format("Clean-up method not found for %s", attr));
-    }
-=======
     // switch(attr) {
     // case "ForceHoliday":
     //     // tf_logic_holiday will be removed by the game. 
@@ -265,7 +239,6 @@ function MissionAttributes::DoCleanupMethod(attr)
     //     // Raise an exception if clean-up method is missing
     //     RaiseException(format("Clean-up method not found for %s", attr));
     // }
->>>>>>> Stashed changes
     
     //restore old cvars
     ResetConvars()
