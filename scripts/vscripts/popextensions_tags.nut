@@ -221,8 +221,8 @@ local popext_funcs =
     {
         if (scope.thinktable.len() < 1) return;
 
-        foreach (think in scope.thinktable)
-           scope.thinktable[think](bot)
+        foreach (_, func in scope.thinktable)
+           func(bot)
     }
     AddThinkToEnt(bot, "PopExt_BotThinks")
 }

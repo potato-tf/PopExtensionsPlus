@@ -161,7 +161,7 @@ function PopulatorThink()
 			}
 		}
 	}
-	for (local i = 1; i <= Constants.Server.MAX_PLAYERS; i++)
+	for (local i = 1; i <= MaxClients().tointeger(); i++)
 	{
 		local player = PlayerInstanceFromIndex(i);
 		if (player == null) continue;
