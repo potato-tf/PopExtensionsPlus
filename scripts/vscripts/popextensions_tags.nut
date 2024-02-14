@@ -217,7 +217,7 @@ local popext_funcs =
                 break
             }
         }
-        bot.GetScriptScope().thinktable.BestWeaponThink <- BestWeaponThink
+        bot.GetScriptScope().ThinkTable.BestWeaponThink <- BestWeaponThink
     }
     popext_homingprojectile = function(bot, args)
     {
@@ -245,9 +245,9 @@ local popext_funcs =
             }
         }
 
-        bot.GetScriptScope().thinktable.HomingProjectileScanner <- HomingProjectileScanner
+        bot.GetScriptScope().ThinkTable.HomingProjectileScanner <- HomingProjectileScanner
 
-        function OnScriptHook_OnTakeDamage(params)
+        function HomingTakeDamage(params)
         {
             if (params.const_entity == __worldspawn)
                 return
@@ -258,6 +258,7 @@ local popext_funcs =
 
             EntFireByHandle(params.inflictor, "Kill", null, 0.5, null, null)
         }
+        bot.GetScriptScope().TakeDamageTable.HomingTakeDamage <- HomingTakeDamage
     }
     popext_addcondonhit = function(bot, args)
     {
@@ -281,13 +282,12 @@ local popext_funcs =
         bot_scope.CondOnHitDmgThres = dmgthreshold
         bot_scope.CondOnHitCritOnly    = critOnly
 
-        function OnGameEvent_player_hurt(params)
+        function AddCondOnHitTakeDamage(params)
         {
-            local victim = GetPlayerFromUserID(params.userid)
-            if (victim == null)
-                return
+            if (!params.const_entity.IsPlayer()) return
 
-            local attacker = GetPlayerFromUserID(params.attacker)
+            local victim = params.const_entity
+            local attacker = params.attacker
 
             if (attacker != null && victim != attacker)
             {
@@ -295,7 +295,7 @@ local popext_funcs =
 
                 if (!attacker_scope.CondOnHit) return
 
-                local hurt_damage = params.damageamount
+                local hurt_damage = params.damage
                 local victim_health = victim.GetHealth() - hurt_damage
                 local isCrit = params.crit
 
@@ -307,6 +307,8 @@ local popext_funcs =
                     victim.AddCondEx(attacker_scope.CondOnHitVal, attacker_scope.CondOnHitDur, null)
             }
         }
+
+        bot.GetScriptScope().TakeDamageTable.AddCondOnHitTakeDamage <- AddCondOnHitTakeDamage
     }
 }
 
@@ -450,9 +452,9 @@ local popext_funcs =
     // function PopExt_BotThinks()
     // {
     //     local scope = self.GetScriptScope()
-    //     if (scope.thinktable.len() < 1) return;
+    //     if (scope.ThinkTable.len() < 1) return;
 
-    //     foreach (_, func in scope.thinktable)
+    //     foreach (_, func in scope.ThinkTable)
     //        func(self)
     // }
 //     AddThinkToEnt(bot, "PopExt_BotThinks")
@@ -472,10 +474,10 @@ local tagtest = "popext_usebestweapon"
     function PopExt_BotThinks()
     {
         local scope = self.GetScriptScope()
-        if (scope.thinktable.len() < 1) return;
+        if (scope.ThinkTable.len() < 1) return;
 
-        foreach (_, func in scope.thinktable)
-           func(self)
+        foreach (_, func in scope.ThinkTable) func(self)
+
         return -1
     }
     AddThinkToEnt(bot, "PopExt_BotThinks")
@@ -487,13 +489,24 @@ local tagtest = "popext_usebestweapon"
     {
         local bot = GetPlayerFromUserID(params.userid)
         if (!bot.IsBotOfType(1337)) return
-
-        local thinktable = {}
+		local items = {
+	
+			ThinkTable = {}
+            TakeDamageTable = {}
+            DeathHookTable = {}
+		}
         bot.ValidateScriptScope()
-        bot.GetScriptScope().thinktable <- thinktable
+        local scope = bot.GetScriptScope()
+        foreach (k,v in items) if (!(k in scope)) scope[k] <- v
         EntFireByHandle(bot, "RunScriptCode", "GetBotBehaviorFromTags(self)", -1, null, null);
     }
+    function OnScriptHook_OnTakeDamage(params) 
+    {
+        if (!("TakeDamageTable" in params.attacker.GetScriptScope())) return;
 
+        foreach (_, func in params.attacker.GetScriptScope().TakeDamageTable) 
+            func(params)
+    }
     function OnGameEvent_player_builtobject(params)
     {
         local bot = GetPlayerFromUserID(params.userid)
