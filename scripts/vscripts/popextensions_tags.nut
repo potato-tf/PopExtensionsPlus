@@ -197,9 +197,9 @@ local popext_funcs =
             local projectile
             while ((projectile = Entities.FindByClassname(projectile, "tf_projectile_*")) != null) {
 
-                if (!IsValidProjectile(projectile)) continue
-
                 if (projectile.GetOwner() != bot) continue
+
+                if (!IsValidProjectile(projectile)) continue
 
         		if (projectile.GetScriptThinkFunc() == "ProjectileThink") continue
 
@@ -208,7 +208,9 @@ local popext_funcs =
             }
         }
 
-        function PopExt_OnScriptHook_OnTakeDamage(params)
+        bot.GetScriptScope().thinktable.BestWeaponThink <- BestWeaponThink
+
+        function OnScriptHook_OnTakeDamage(params)
         {
             if (params.const_entity == __worldspawn)
                 return
@@ -428,15 +430,15 @@ local popext_funcs =
     {
         if (scope.thinktable.len() < 1) return;
 
-        foreach (think in scope.thinktable)
-           scope.thinktable[think](bot)
+        foreach (_, func in scope.thinktable)
+           func(bot)
     }
     AddThinkToEnt(bot, "PopExt_BotThinks")
 }
 
 ::_PopExt_Behavior <- {
 
-    function PopExt_OnGameEvent_player_spawn(params) {
+    function OnGameEvent_player_spawn(params) {
         local bot = GetPlayerFromUserID(params.userid)
         if (!bot.IsBotOfType(1337)) return
 
@@ -446,7 +448,7 @@ local popext_funcs =
         EntFireByHandle(bot, "RunScriptCode", "GetBotBehaviorFromTags(self)", -1, null, null);
     }
 
-    function PopExt_OnGameEvent_player_builtobject(params) {
+    function OnGameEvent_player_builtobject(params) {
         local bot = GetPlayerFromUserID(params.userid)
         if (!IsBotOfType(1337)) return
 
@@ -454,7 +456,7 @@ local popext_funcs =
         if ((bot.HasBotTag("popext_dispenserasteleporter") && params.object == 1) || (bot.HasBotTag("popext_dispenserassentry") && params.object == 2))
         {
             local dispenser = SpawnEntityFromTable("obj_dispenser", {
-                targetname = "dispenserreplacement"+params.index,
+                targetname = "dispenserasteleporter"+params.index,
                 defaultupgrade = 3,
                 origin = building.GetOrigin()
             })
@@ -464,4 +466,5 @@ local popext_funcs =
         }
     }
 }
-__CollectGameEventCallbacks(this)
+
+__CollectGameEventCallbacks(_PopExt_Behavior)
