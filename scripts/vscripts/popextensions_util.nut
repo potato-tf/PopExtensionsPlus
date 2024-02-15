@@ -6,10 +6,7 @@ if (!("ConstantNamingConvention" in CONST))
 {
 	foreach (a,b in Constants)
 		foreach (k,v in b)
-			if (v == null)
-				CONST[k] <- 0;
-			else
-				CONST[k] <- v;
+            CONST[k] <- v != null ? v : 0;
 
 	foreach (k, v in ::NetProps.getclass())
 		if (k != "IsValid")
