@@ -5,7 +5,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
     CurrAttrs = [] // Array storing currently modified attributes.
 
     ConVars = {} //table storing original convar values
-    
+
     ThinkTable = { //sub-think table.  Pre-fill with some global fixes
 
         //remove with MissionAttr("ReflectableDF", 1)
@@ -15,13 +15,13 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
                 fireball.RemoveFlag(2097152); //FL_GRENADE
         }
     }
-    
+
     TakeDamageTable = {}
     SpawnHookTable = {}
     DeathHookTable = {}
     InitWaveTable = {}
     DisconnectTable = {}
-   
+
     DebugText = false
     RaisedParseError = false
 };
@@ -41,9 +41,9 @@ function MissionAttributes::SetConvar(convar, value, hideChatMessage = true)
     //save original values to restore later
     if (!(convar in MissionAttributes.ConVars))
         MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
-    
+
     if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value);
-    
+
     EntFireByHandle(commentaryNode, "Kill", "", 1.1, null, null)
 }
 
@@ -58,7 +58,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 {
     local success = true;
     switch(attr) {
-    
+
     // =========================================================
     case "ForceHoliday":
     // Replicates sigsegv-mvm: ForceHoliday.
@@ -74,42 +74,41 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         // Error Handling
         if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break;}
         if (value < 0 || value > 2) {RaiseIndexError(attr); success = false; break;}
-        
+
         // Set Holiday logic
         SetConvar("tf_forced_holiday", value);
         if (value == 0) break;
-        
+
         local ent = Entities.FindByName(null, "MissionAttrHoliday");
         if (ent != null) ent.Kill();
-        SpawnEntityFromTable("tf_logic_holiday", 
+        SpawnEntityFromTable("tf_logic_holiday",
         {
             targetname = "MissionAttrHoliday",
             holiday_type = value
         });
-        
+
         break;
 
     // ========================================================
-    
+
     case "NoCrumpkins":
 
         local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl");
         function MissionAttributes::NoCrumpkins()
         {
-
             // printl("NoCrumpkins")
             switch(value)
             {
-            
+
                 case 1:
-    
+
                 for (local pumpkin; pumpkin = Entities.FindByClassname(pumpkin, "tf_ammo_pack");)
                     if (NetProps.GetPropInt(pumpkin, "m_nModelIndex") == pumpkinIndex)
                         EntFireByHandle(pumpkin, "Kill", "", -1, null, null); //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
-            }                    
+            }
             for (local i = 1, player; i <= MaxClients(); i++)
                 if (player = PlayerInstanceFromIndex(i), player && player.InCond(33)) //TF_COND_CRITBOOSTED_PUMPKIN
-                    EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(33)", -1, null, null); 
+                    EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(33)", -1, null, null);
         }
         MissionAttributes.ThinkTable.NoCrumpkins <- MissionAttributes.NoCrumpkins;
         break;
@@ -120,7 +119,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
         function MissionAttributes::NoReanimators(params)
         {
-            for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");) 
+            for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");)
                 EntFireByHandle(revivemarker, "Kill", "", -1, null, null);
         }
         MissionAttributes.DeathHookTable.NoReanimators <- MissionAttributes.NoReanimators;
@@ -128,7 +127,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
     // =========================================================
 
-    case "666Wavebar":
+    case "666Wavebar": //doesn't work until wave switches, won't work on W1
 
         NetProps.SetPropInt(resource, "m_nMvMEventPopfileType", value);
         break;
@@ -144,7 +143,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "RefundLimit":
-        
+
         SetConvar("tf_mvm_respec_enabled", 1);
         SetConvar("tf_mvm_respec_limit", value);
         break;
@@ -208,6 +207,12 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
     // =========================================================
 
+    case "BombMovementPenalty":
+        SetConvar("tf_mvm_bot_flag_carrier_movement_penalty", value);
+        break;
+
+    // =========================================================
+
     case "SniperHideLasers":
         function MissionAttributes::SniperHideLasers()
         {
@@ -241,7 +246,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         if (!(MissionAttributes.NoBusterFF in MissionAttributes.TakeDamageTable))
             MissionAttributes.TakeDamageTable.NoBusterFF <- MissionAttributes.NoBusterFF;
         break;
-    
+
     // =========================================================
 
     //set to 1 for RED players, 2 for BLU players
@@ -272,7 +277,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         if (!(MissionAttributes.BotsAreHumans in MissionAttributes.SpawnHookTable))
             MissionAttributes.SpawnHookTable.BotsAreHumans <- MissionAttributes.BotsAreHumans;
         break;
-    
+
     // =========================================================
 
     case "NoRome":
@@ -288,7 +293,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
             //set value to 2 to also kill the carrier tank addon model
             if (value < 2) return
-            
+
             local carrier = Entities.FindByName(null, "botship_dynamic") //some maps have a targetname for it
 
             if (carrier == null)
@@ -296,7 +301,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 for (local props; props = Entities.FindByClassname(props, "prop_dynamic");)
                 {
                     if (NetProps.GetPropInt(props, "m_nModelIndex") != carrierPartsIndex) continue;
-                    
+
                     carrier = props
                     break;
                 }
@@ -307,7 +312,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         if (!(MissionAttributes.NoRome in MissionAttributes.SpawnHookTable))
             MissionAttributes.SpawnHookTable.NoRome <- MissionAttributes.NoRome;
         break;
-    
+
     // =========================================================
 
     case "SpellDropRateCommon":
@@ -318,7 +323,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             if (RandomFloat(0, 1) > value) return;
 
             local bot = GetPlayerFromUserID(params.userid);
-            
+
             if (!bot.IsBotOfType(1337) || bot.IsMiniBoss()) return;
 
             local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" });
@@ -337,7 +342,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             if (RandomFloat(0, 1) > value) return;
 
             local bot = GetPlayerFromUserID(params.userid);
-            
+
             if (!bot.IsBotOfType(1337) || !bot.IsMiniBoss()) return;
 
             local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" });
@@ -353,7 +358,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         SetConvar("tf_spells_enabled", 1)
         function MissionAttributes::GiantsRareSpells()
         {
-            for (local spells; spells = Entities.FindByName(spells, "_giantspell");) 
+            for (local spells; spells = Entities.FindByName(spells, "_giantspell");)
                 NetProps.SetPropInt(spells, "m_nTier", 1)
         }
 
@@ -364,14 +369,14 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "GrapplingHookEnable":
-        
+
         SetConvar("tf_grapplinghook_enable", value);
         break;
 
     // =========================================================
 
     case "MiniBossScale":
-        
+
         SetConvar("tf_mvm_miniboss_scale", value);
         break;
 
@@ -409,7 +414,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 // foreach (a in areas)
                 // {
                 //     if (a.GetPlayerCount(TF_TEAM_PVE_DEFENDERS) < 1) continue;
-                    
+
                 //     skeles.ClearImmobileStatus();
                 //     locomotion.SetDesiredSpeed(280.0);
                 //     locomotion.Approach(a.FindRandomSpot(), 999.0);
@@ -423,28 +428,29 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
     // =========================================================
     case "WaveStartCountdown":
+
         local gamerules = Entities.FindByClassname(null, "tf_gamerules")
         local resource = Entities.FindByClassname(null, "tf_objective_resource")
         local playerarray = []
         function MissionAttributes::PlayerCounter(params)
         {
             local player = GetPlayerFromUserID(params.userid)
-            
+
             if (player.IsBotOfType(1337)) return;
 
-            if (playerarray.find(player) == null) 
+            if (playerarray.find(player) == null)
                 playerarray.append(player);
         }
 
         if (!(MissionAttributes.PlayerCounter in MissionAttributes.SpawnHookTable))
             MissionAttributes.SpawnHookTable.PlayerCounter <- MissionAttributes.PlayerCounter;
-        
+
         function MissionAttributes::PlayerUnCounter(params)
         {
             local player = GetPlayerFromUserID(params.userid)
-            
+
             for (local i = playerarray.len() - 1; i >= 0; i--)
-                if (playerarray[i] == null || playerarray[i] == player) 
+                if (playerarray[i] == null || playerarray[i] == player)
                     playerarray.remove(i);
         }
 
@@ -478,7 +484,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "ReflectableDF":
-        
+
         if ("DragonsFuryFix" in MissionAttributes.ThinkTable)
             delete MissionAttributes.ThinkTable.DragonsFuryFix
         break;
@@ -488,7 +494,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         ParseError(format("Could not find mission attribute '%s'", attr));
         success = false;
     }
-    
+
     // Add attribute to clean-up list if its modification was successful.
     if (success)
     {
@@ -554,7 +560,7 @@ function MissionAttributes::ResetDefaults()
 {
     foreach (attr in MissionAttributes.CurrAttrs)
         DoCleanupMethod(attr);
-    
+
     ResetConvars();
     MissionAttributes.CurrAttrs.clear();
 }
