@@ -1,4 +1,6 @@
-local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
+local root = getroottable();
+IncludeScript("popextensions_util", root)
+
 
 // it's a table cuz much faster
 local validProjectiles =
@@ -52,7 +54,7 @@ local popext_funcs =
 
     popext_usehumanmodel = function(bot, args)
     {
-        bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classes[bot.GetPlayerClass()]))
+        bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", Classes[bot.GetPlayerClass()]))
     }
 
     popext_alwaysglow = function(bot, args)
@@ -356,15 +358,13 @@ local popext_funcs =
 			min_distance = distance
 		}
 	}
-
 	return target
 }
-
 
 ::IsValidTarget <- function(victim, distance, min_distance, projectile) {
 
     // Early out if basic conditions aren't met
-    if (distance > min_distance || victim.GetTeam() == projectile.GetTeam() || NetProps.GetPropInt(victim, "m_lifeState") != 0) {
+    if (distance > min_distance || victim.GetTeam() == projectile.GetTeam() || !IsAlive(victim)) {
         return false
     }
 
