@@ -1,15 +1,19 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 
 ::ROOT <- getroottable()
-if (!("ConstantNamingConvention" in ROOT))
+::CONST <- getconsttable()
+if (!("ConstantNamingConvention" in CONST))
 {
 	foreach (a,b in Constants)
 		foreach (k,v in b)
-			ROOT[k] <- v != null ? v : 0;
+			if (v == null)
+				CONST[k] <- 0;
+			else
+				CONST[k] <- v;
 
-    foreach (k, v in ::NetProps.getclass())
-    if (k != "IsValid")
-        getroottable()[k] <- ::NetProps[k].bindenv(::NetProps)
+	foreach (k, v in ::NetProps.getclass())
+		if (k != "IsValid")
+			ROOT[k] <- ::NetProps[k].bindenv(::NetProps)
 }
 
 ::Classes <- ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
