@@ -31,22 +31,22 @@ if (!("ConstantNamingConvention" in ROOT))
 
 ::DeflectableProjectiles <-
 {
-    tf_projectile_arrow                 = 0, // Huntsman arrow, Rescue Ranger bolt
-    tf_projectile_ball_ornament         = 0, // Wrap Assassin
-    tf_projectile_cleaver               = 0, // Flying Guillotine
-    tf_projectile_energy_ball           = 0, // Cow Mangler charge shot
-    tf_projectile_flare                 = 0, // Flare guns projectile
-    tf_projectile_healing_bolt          = 0, // Crusader's Crossbow
-    tf_projectile_jar                   = 0, // Jarate
-    tf_projectile_jar_gas               = 0, // Gas Passer explosion
-    tf_projectile_jar_milk              = 0, // Mad Milk
-    tf_projectile_lightningorb          = 0, // Spell Variant from Short Circuit
-    tf_projectile_mechanicalarmorb      = 0, // Short Circuit energy ball
-    tf_projectile_pipe                  = 0, // Grenade Launcher bomb
-    tf_projectile_pipe_remote           = 0, // Stickybomb Launcher bomb
-    tf_projectile_rocket                = 0, // Rocket Launcher rocket
-    tf_projectile_sentryrocket          = 0, // Sentry gun rocket
-    tf_projectile_stun_ball             = 0, // Baseball
+    tf_projectile_arrow                 = 1 // Huntsman arrow, Rescue Ranger bolt
+    tf_projectile_ball_ornament         = 1 // Wrap Assassin
+    tf_projectile_cleaver               = 1 // Flying Guillotine
+    tf_projectile_energy_ball           = 1 // Cow Mangler charge shot
+    tf_projectile_flare                 = 1 // Flare guns projectile
+    tf_projectile_healing_bolt          = 1 // Crusader's Crossbow
+    tf_projectile_jar                   = 1 // Jarate
+    tf_projectile_jar_gas               = 1 // Gas Passer explosion
+    tf_projectile_jar_milk              = 1 // Mad Milk
+    tf_projectile_lightningorb          = 1 // Spell Variant from Short Circuit
+    tf_projectile_mechanicalarmorb      = 1 // Short Circuit energy ball
+    tf_projectile_pipe                  = 1 // Grenade Launcher bomb
+    tf_projectile_pipe_remote           = 1 // Stickybomb Launcher bomb
+    tf_projectile_rocket                = 1 // Rocket Launcher rocket
+    tf_projectile_sentryrocket          = 1 // Sentry gun rocket
+    tf_projectile_stun_ball             = 1 // Baseball
 }
 
 function IsAlive(player)
