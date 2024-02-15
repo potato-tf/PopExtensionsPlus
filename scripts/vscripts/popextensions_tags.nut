@@ -221,23 +221,15 @@ local popext_funcs =
     }
     popext_homingprojectile = function(bot, args)
     {
-        // Ensure there are enough arguments for configuration
-        if (args.len() < 2) return
+        // Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
 
-        local turn_power = args[0].tofloat()
-        local speed_mult = args[1].tofloat()
-        local ignoreStealthedSpies; ignoreDisguisedSpies
+        local args_len = args.len()
 
-        if (args.len() < 3)
-            ignoreStealthedSpies = 1
-        else
-            ignoreStealthedSpies = args[2].tointeger()
-        
-        if (args.len() < 4)
-            ignoreDisguisedSpies = 1
-        else
-            ignoreDisguisedSpies = args[3].tointeger()
-        
+        local turn_power = (args_len > 0) ? args[0].tofloat() : 0.75
+        local speed_mult = (args_len > 1) ? args[1].tofloat() : 1.0
+        local ignoreStealthedSpies = (args_len > 2) ? args[2].tointeger() : 1
+        local ignoreDisguisedSpies = (args_len > 3) ? args[3].tointeger() : 1
+
         function HomingProjectileScanner(bot)
         {
             local projectile
@@ -521,7 +513,7 @@ local tagtest = "popext_homingprojectile|0.2|0.2"
         local bot = GetPlayerFromUserID(params.userid)
         if (!bot.IsBotOfType(1337)) return
 		local items = {
-	
+
 			ThinkTable = {}
             TakeDamageTable = {}
             DeathHookTable = {}
@@ -531,11 +523,11 @@ local tagtest = "popext_homingprojectile|0.2|0.2"
         foreach (k,v in items) if (!(k in scope)) scope[k] <- v
         EntFireByHandle(bot, "RunScriptCode", "GetBotBehaviorFromTags(self)", -1, null, null);
     }
-    function OnScriptHook_OnTakeDamage(params) 
+    function OnScriptHook_OnTakeDamage(params)
     {
         if (!("TakeDamageTable" in params.attacker.GetScriptScope())) return;
 
-        foreach (_, func in params.attacker.GetScriptScope().TakeDamageTable) 
+        foreach (_, func in params.attacker.GetScriptScope().TakeDamageTable)
             func(params)
     }
     function OnGameEvent_player_builtobject(params)
