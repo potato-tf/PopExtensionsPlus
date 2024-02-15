@@ -525,9 +525,11 @@ local tagtest = "popext_homingprojectile|0.2|0.2"
     }
     function OnScriptHook_OnTakeDamage(params)
     {
-        if (!("TakeDamageTable" in params.attacker.GetScriptScope())) return;
+        local attacker_scope = params.attacker.GetScriptScope()
 
-        foreach (_, func in params.attacker.GetScriptScope().TakeDamageTable)
+        if (!("TakeDamageTable" in attacker_scope)) return;
+
+        foreach (_, func in attacker_scope.TakeDamageTable)
             func(params)
     }
     function OnGameEvent_player_builtobject(params)
