@@ -12,15 +12,123 @@ if (!("ConstantNamingConvention" in ROOT))
         getroottable()[k] <- ::NetProps[k].bindenv(::NetProps)
 }
 
-
-
 ::Classes <- ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
 
+// it's a table cuz much faster
+::HomingProjectiles <-
+{
+	tf_projectile_arrow				= 1
+	tf_projectile_energy_ball		= 1 // Cow Mangler
+	tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
+	tf_projectile_lightningorb		= 1 // Lightning Orb Spell
+	tf_projectile_mechanicalarmorb	= 1 // Short Circuit
+	tf_projectile_rocket			= 1
+	tf_projectile_sentryrocket		= 1
+	tf_projectile_spellfireball		= 1
+	tf_projectile_energy_ring		= 1 // Bison
+	tf_projectile_flare				= 1
+}
+
+::DeflectableProjectiles <-
+{
+    tf_projectile_arrow                 = 0, // Huntsman arrow, Rescue Ranger bolt
+    tf_projectile_ball_ornament         = 0, // Wrap Assassin
+    tf_projectile_cleaver               = 0, // Flying Guillotine
+    tf_projectile_energy_ball           = 0, // Cow Mangler charge shot
+    tf_projectile_flare                 = 0, // Flare guns projectile
+    tf_projectile_healing_bolt          = 0, // Crusader's Crossbow
+    tf_projectile_jar                   = 0, // Jarate
+    tf_projectile_jar_gas               = 0, // Gas Passer explosion
+    tf_projectile_jar_milk              = 0, // Mad Milk
+    tf_projectile_lightningorb          = 0, // Spell Variant from Short Circuit
+    tf_projectile_mechanicalarmorb      = 0, // Short Circuit energy ball
+    tf_projectile_pipe                  = 0, // Grenade Launcher bomb
+    tf_projectile_pipe_remote           = 0, // Stickybomb Launcher bomb
+    tf_projectile_rocket                = 0, // Rocket Launcher rocket
+    tf_projectile_sentryrocket          = 0, // Sentry gun rocket
+    tf_projectile_stun_ball             = 0, // Baseball
+}
 
 function IsAlive(player)
 {
 	return GetPropInt(player, "m_lifeState") == 0
 }
+
+function IsEntityClassnameInList(entity, list)
+{
+    local classname = entity.GetClassname()
+    local listType = typeof(list)
+
+    switch (listType)
+    {
+        case "table":
+            return (classname in list)
+
+        case "array":
+            return (list.find(classname) != null)
+
+        default:
+            printl("Error: list is neither an array nor a table.")
+            return false
+    }
+}
+
+function SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = null)
+{
+    local teleport_origin, teleport_angles, teleport_velocity
+
+    if (!location_set)
+        teleport_origin = player.GetOrigin()
+    else
+        teleport_origin = location_set
+    teleport_angles = player.EyeAngles()
+    teleport_velocity = player.GetAbsVelocity()
+    SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", playerclass)
+
+    player.ForceRegenerateAndRespawn()
+
+    player.Teleport(true, teleport_origin, true, teleport_angles, true, teleport_velocity)
+}
+
+function GetPlayerName(player)
+{
+	return GetPropString(player, "m_szNetname")
+}
+
+function GetPlayerUserID(player)
+{
+    return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex())
+}
+
+function PlayerRespawn()
+{
+	self.ForceRegenerateAndRespawn();
+}
+
+function PlaySoundOnClient(player, name, volume = 1.0, pitch = 100)
+{
+	EmitSoundEx(
+	{
+		sound_name = name,
+		volume = volume
+		pitch = pitch,
+		entity = player,
+		filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
+	})
+}
+
+function PlaySoundOnAllClients(name)
+{
+	EmitSoundEx(
+	{
+		sound_name = name,
+		filter_type = RECIPIENT_FILTER_GLOBAL
+	})
+}
+
+
+
+// MATH
 
 function Min(a, b)
 {
@@ -136,69 +244,4 @@ function QAngleDistance(a, b)
   local dy = a.y - b.y
   local dz = a.z - b.z
   return sqrt(dx*dx + dy*dy + dz*dz)
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-function SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = null)
-{
-    local teleport_origin, teleport_angles, teleport_velocity
-
-    if (!location_set)
-        teleport_origin = player.GetOrigin()
-    else
-        teleport_origin = location_set
-    teleport_angles = player.EyeAngles()
-    teleport_velocity = player.GetAbsVelocity()
-    SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", playerclass)
-
-    player.ForceRegenerateAndRespawn()
-
-    player.Teleport(true, teleport_origin, true, teleport_angles, true, teleport_velocity);
-}
-
-function GetPlayerName(player)
-{
-	return GetPropString(player, "m_szNetname");
-}
-function GetPlayerUserID(player)
-{
-    return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex());
-}
-function PlayerRespawn()
-{
-	self.ForceRegenerateAndRespawn();
-}
-function PlaySoundOnClient(player, name, volume = 1.0, pitch = 100)
-{
-	EmitSoundEx(
-	{
-		sound_name = name,
-		volume = volume
-		pitch = pitch,
-		entity = player,
-		filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
-	});
-}
-
-function PlaySoundOnAllClients(name)
-{
-	EmitSoundEx(
-	{
-		sound_name = name,
-		filter_type = RECIPIENT_FILTER_GLOBAL
-	});
 }

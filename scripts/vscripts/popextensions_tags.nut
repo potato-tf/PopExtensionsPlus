@@ -1,22 +1,5 @@
-local root = getroottable();
+local root = getroottable()
 IncludeScript("popextensions_util", root)
-
-
-// it's a table cuz much faster
-local validProjectiles =
-{
-	tf_projectile_arrow				= 1
-	tf_projectile_energy_ball		= 1 // Cow Mangler
-	tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
-	tf_projectile_lightningorb		= 1 // Lightning Orb Spell
-	tf_projectile_mechanicalarmorb	= 1 // Short Circuit
-	tf_projectile_rocket			= 1
-	tf_projectile_sentryrocket		= 1
-	tf_projectile_spellfireball		= 1
-	tf_projectile_energy_ring		= 1 // Bison
-	tf_projectile_flare				= 1
-}
-
 
 //behavior tags
 local popext_funcs =
@@ -386,29 +369,6 @@ local popext_funcs =
     return true
 }
 
-::VectorAngles <- function(forward)
-{
-    local yaw, pitch
-    if ( forward.y == 0.0 && forward.x == 0.0 )
-    {
-        yaw = 0.0
-        if (forward.z > 0.0)
-            pitch = 270.0
-        else
-            pitch = 90.0
-    }
-    else
-    {
-        yaw = (atan2(forward.y, forward.x) * 180.0 / Constants.Math.Pi)
-        if (yaw < 0.0)
-            yaw += 360.0
-        pitch = (atan2(-forward.z, forward.Length2D()) * 180.0 / Constants.Math.Pi)
-        if (pitch < 0.0)
-            pitch += 360.0
-    }
-
-    return QAngle(pitch, yaw, 0.0)
-}
 
 ::FaceTowards <- function(new_target, projectile, projectile_speed)
 {
@@ -447,13 +407,11 @@ local popext_funcs =
 
 ::IsValidProjectile <- function(projectile)
 {
-	if (projectile.GetClassname() in validProjectiles)
+	if (projectile.GetClassname() in HomingProjectiles)
 		return true
 
 	return false
 }
-
-
 
 // ::GetBotBehaviorFromTags <- function(bot)
 // {
