@@ -222,13 +222,22 @@ local popext_funcs =
     popext_homingprojectile = function(bot, args)
     {
         // Ensure there are enough arguments for configuration
-        if (args.len() < 4) return
+        if (args.len() < 2) return
 
-        local ignoreDisguisedSpies = args[0].tointeger()
-        local ignoreStealthedSpies = args[1].tointeger()
-        local speed_mult = args[2].tofloat()
-        local turn_power = args[3].tofloat()
+        local turn_power = args[0].tofloat()
+        local speed_mult = args[1].tofloat()
+        local ignoreStealthedSpies; ignoreDisguisedSpies
 
+        if (args.len() < 3)
+            ignoreStealthedSpies = 1
+        else
+            ignoreStealthedSpies = args[2].tointeger()
+        
+        if (args.len() < 4)
+            ignoreDisguisedSpies = 1
+        else
+            ignoreDisguisedSpies = args[3].tointeger()
+        
         function HomingProjectileScanner(bot)
         {
             local projectile
@@ -244,13 +253,11 @@ local popext_funcs =
                 AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
             }
         }
-
         bot.GetScriptScope().ThinkTable.HomingProjectileScanner <- HomingProjectileScanner
 
         function HomingTakeDamage(params)
         {
-            if (params.const_entity == __worldspawn)
-                return
+            if (!params.const_entity.IsPlayer()) return
 
             local classname = params.inflictor.GetClassname()
             if (classname != "tf_projectile_flare" && classname != "tf_projectile_energy_ring")
@@ -317,7 +324,7 @@ local popext_funcs =
 {
 	local projectile_speed = projectile.GetAbsVelocity().Norm()
 
-    projectile_speed *= speedMult
+    projectile_speed *= speed_mult
 
 	projectile.ValidateScriptScope()
     local projectile_scope = projectile.GetScriptScope()
@@ -365,13 +372,13 @@ local popext_funcs =
 ::IsValidTarget <- function(victim, distance, min_distance, projectile) {
 
     // Early out if basic conditions aren't met
-    if (distance > min_distance || victim.GetTeam() == projectile.GetTeam() || !victim.IsAlive()) {
+    if (distance > min_distance || victim.GetTeam() == projectile.GetTeam() || NetProps.GetPropInt(victim, "m_lifeState") != 0) {
         return false
     }
 
     // Check for conditions based on the projectile's configuration
     if (victim.IsPlayer()) {
-        if (victim.InCond(TF_COND_HALLOWEEN_GHOST_MODE)) {
+        if (victim.InCond(77)) { //TF_COND_HALLOWEEN_GHOST_MODE
             return false
         }
 
@@ -387,6 +394,29 @@ local popext_funcs =
     return true
 }
 
+::VectorAngles <- function(forward)
+{
+    local yaw, pitch
+    if ( forward.y == 0.0 && forward.x == 0.0 )
+    {
+        yaw = 0.0
+        if (forward.z > 0.0)
+            pitch = 270.0
+        else
+            pitch = 90.0
+    }
+    else
+    {
+        yaw = (atan2(forward.y, forward.x) * 180.0 / Constants.Math.Pi)
+        if (yaw < 0.0)
+            yaw += 360.0
+        pitch = (atan2(-forward.z, forward.Length2D()) * 180.0 / Constants.Math.Pi)
+        if (pitch < 0.0)
+            pitch += 360.0
+    }
+
+    return QAngle(pitch, yaw, 0.0)
+}
 
 ::FaceTowards <- function(new_target, projectile, projectile_speed)
 {
@@ -460,7 +490,8 @@ local popext_funcs =
 //     AddThinkToEnt(bot, "PopExt_BotThinks")
 // }
 
-local tagtest = "popext_usebestweapon"
+// local tagtest = "popext_usebestweapon"
+local tagtest = "popext_homingprojectile|0.2|0.2"
 ::GetBotBehaviorFromTags <- function(bot)
 {
     if (bot.HasBotTag(tagtest))
