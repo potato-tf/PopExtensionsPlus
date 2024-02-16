@@ -244,6 +244,27 @@ local popext_funcs =
         }
         bot.GetScriptScope().TakeDamageTable.HomingTakeDamage <- HomingTakeDamage
     }
+    // popext_rocketcustomtrail = function (bot, args)
+    // {
+    //     local projectile;
+    //     while (projectile = Entities.FindByClassname(null, "tf_projectile_rocket"))
+    //     {
+    //         if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
+            
+    //         EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
+    //     }
+    // }
+    popext_rocketcustomparticle = function (bot, args)
+    {
+        local projectile;
+        while (projectile = Entities.FindByClassname(null, "tf_projectile_rocket"))
+        {
+            if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
+
+            EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
+            EntFireByHandle(projectile, "RunScriptCode", format("self.DispatchParticleEffect(%s, self.GetOrigin(), self.GetAbsAngles())", args), -1, null, null)
+        }
+    }
     popext_addcondonhit = function(bot, args)
     {
         // Tag addcondonhit |cond|duration|threshold|crit
@@ -441,7 +462,7 @@ local popext_funcs =
 // }
 
 // local tagtest = "popext_usebestweapon"
-local tagtest = "popext_homingprojectile|0.2|0.2"
+local tagtest = "popext_homingprojectile|1.0|1.0"
 ::GetBotBehaviorFromTags <- function(bot)
 {
     if (bot.HasBotTag(tagtest))
