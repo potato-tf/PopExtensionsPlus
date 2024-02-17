@@ -539,10 +539,8 @@ AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
     function OnGameEvent_post_inventory_application(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) } //majority of mvm maps do not have a resupply cabinet anyway
     function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
     function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
-
-    function GameEvent_mvm_wave_complete(params) { ResetDefaults(); }
-
     // Hook all wave inits to reset parsing error counter.
+    
     function OnGameEvent_recalculate_holidays(params)
     {
         if (GetRoundState() != 3) return;
@@ -552,6 +550,9 @@ AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
         foreach (a in MissionAttributes.CurrAttrs) printl(a)
         MissionAttributes.RaisedParseError = false;
     }
+
+    function GameEvent_mvm_wave_complete(params) { ResetDefaults(); }
+
 }
 
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
