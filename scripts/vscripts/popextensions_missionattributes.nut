@@ -55,6 +55,7 @@ function MissionAttributes::ResetConvars()
     MissionAttributes.ConVars.clear()
 }
 
+local noRomeCarrier = false;
 function MissionAttributes::MissionAttr(attr, value = 0)
 {
     local success = true;
@@ -234,11 +235,11 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         {
             // printl("SniperHideLasers")
             for (local dot; dot = Entities.FindByClassname(dot, "env_sniperdot");)
-                if (dot.GetOwner().GetTeam() == 3)
+                if (dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS)
                     EntFireByHandle(dot, "Kill", "", -1, null, null);
 
             for (local dot; dot = Entities.FindByClassname(dot, "env_laserdot");)
-                if (dot.GetOwner().GetTeam() == 3)
+                if (dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS)
                     EntFireByHandle(dot, "Kill", "", -1, null, null);
             return -1;
         }
@@ -254,7 +255,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         {
             local attacker = params.attacker, victim = params.const_entity;
             //should probably check playermodel instead.  Edge cases with non-buster giant demos may cause problems
-            if (IsPlayer(victim) && IsPlayerABot(attacker) && IsPlayerABot(victim) && victim.GetTeam() == attacker.GetTeam() && attacker.GetPlayerClass() == 4 && attacker.IsMiniBoss()) //4 = TF_CLASS_DEMOMAN
+            if (IsPlayer(victim) && IsPlayerABot(attacker) && IsPlayerABot(victim) && victim.GetTeam() == attacker.GetTeam() && attacker.GetPlayerClass() == TF_CLASS_DEMOMAN && attacker.IsMiniBoss())
             {
                 params.early_out = true;
                 return false;
@@ -309,10 +310,10 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                         EntFireByHandle(child, "Kill", "", -1, null, null);
 
             //set value to 2 to also kill the carrier tank addon model
-            if (value < 2) return
+            if (value < 2 || noRomeCarrier) return
 
             local carrier = Entities.FindByName(null, "botship_dynamic") //some maps have a targetname for it
-
+    
             if (carrier == null)
             {
                 for (local props; props = Entities.FindByClassname(props, "prop_dynamic");)
@@ -325,6 +326,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
             }
             NetProps.SetPropIntArray(carrier, "m_nModelIndexOverrides", carrierPartsIndex, 3);
+            noRomeCarrier = true;
         }
         if (!(MissionAttributes.NoRome in MissionAttributes.SpawnHookTable))
             MissionAttributes.SpawnHookTable.NoRome <- MissionAttributes.NoRome;

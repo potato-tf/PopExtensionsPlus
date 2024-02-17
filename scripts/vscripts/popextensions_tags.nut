@@ -9,7 +9,7 @@ local popext_funcs =
         printl(args[0])
         if (args.len() == 1)
             if (args[0].tointeger() == 43)
-                bot.ForceChangeTeam(2, false)
+                bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
             else
                 bot.AddCond(args[0].tointeger())
 
@@ -19,12 +19,12 @@ local popext_funcs =
 
     popext_reprogrammed = function(bot, args)
     {
-        bot.ForceChangeTeam(2, false)
+        bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
     }
 
     popext_reprogrammed_neutral = function(bot, args)
     {
-        bot.ForceChangeTeam(0, false)
+        bot.ForceChangeTeam(TEAM_UNASSIGNED, false)
     }
 
     popext_altfire = function(bot, args)
@@ -533,14 +533,14 @@ local tagtest = "popext_homingprojectile|1.0|1.0"
     function OnGameEvent_player_team(params)
     {
         local bot = GetPlayerFromUserID(params.userid)
-        if (bot.IsBotOfType(1337) || params.team == 1)
+        if (bot.IsBotOfType(1337) || params.team == TEAM_SPECTATOR)
             AddThinkToEnt(bot, null)
     }
 
     function OnGameEvent_player_death(params)
     {
         local bot = GetPlayerFromUserID(params.userid)
-        if (bot.IsBotOfType(1337) || params.team == 1)
+        if (bot.IsBotOfType(1337))
             AddThinkToEnt(bot, null)
     }
 }
