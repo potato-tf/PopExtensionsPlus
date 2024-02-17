@@ -1,5 +1,12 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 
+const STRING_NETPROP_ITEMDEF  = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
+const COLOR_LIME       = "22FF22"
+const COLOR_YELLOW     = "FFFF66"
+const TF_COLOR_RED     = "FF3F3F"
+const TF_COLOR_BLUE    = "99CCFF"
+const TF_COLOR_SPEC    = "CCCCCC"
+const TF_COLOR_DEFAULT = "FBECCB"
 
 // Allow expression constants
 ::CONST <- getconsttable()
@@ -58,6 +65,74 @@ if (!("ConstantNamingConvention" in CONST))
 
 
 
+
+function ShowMessage(message)
+{
+	ClientPrint(null, HUD_PRINTCENTER , message)
+}
+
+
+function ShowChatMessage(target, fmt, ...)
+{
+    local result = "\x07FFCC22[Map] ";
+    local start = 0;
+    local end = fmt.find("{");
+    local i = 0;
+    while (end != null)
+    {
+        result += fmt.slice(start, end);
+        start = end + 1;
+        end = fmt.find("}", start);
+        if (end == null)
+            break;
+        local word = fmt.slice(start, end);
+
+        if (word == "player")
+        {
+            local player = vargv[i++];
+
+            local team = player.GetTeam();
+            if (team == TF_TEAM_RED)
+                result += "\x07" + TF_COLOR_RED;
+            else if (team == TF_TEAM_BLUE)
+                result += "\x07" + TF_COLOR_BLUE;
+            else
+                result += "\x07" + TF_COLOR_SPEC;
+            result += GetPlayerName(player);
+        }
+        else if (word == "color")
+        {
+            result += "\x07" + vargv[i++];
+        }
+        else if (word == "int" || word == "float")
+        {
+            result += vargv[i++].tostring();
+        }
+        else if (word == "str")
+        {
+            result += vargv[i++];
+        }
+        else
+        {
+            result += "{" + word + "}";
+        }
+
+        start = end + 1;
+        end = fmt.find("{", start);
+    }
+
+    result += fmt.slice(start);
+
+    ClientPrint(target, HUD_PRINTTALK, result)
+}
+
+// example
+// ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT);
+
+
+
+
+
 function IsAlive(player)
 {
 	return GetPropInt(player, "m_lifeState") == 0
@@ -105,6 +180,12 @@ function LockInPlace(player, enable = true)
         player.RemoveCustomAttribute("disable weapon switch")
     }
 }
+
+function GetWeaponIndex(weapon)
+{
+    return GetPropInt(weapon, STRING_NETPROP_ITEMDEF)
+}
+
 
 
 function PrecacheParticle(name)
