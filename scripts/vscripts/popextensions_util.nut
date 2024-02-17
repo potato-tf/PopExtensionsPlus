@@ -1,7 +1,12 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 
-::ROOT <- getroottable()
+
+// Allow expression constants
 ::CONST <- getconsttable()
+::ROOT <- getroottable()
+CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
+
+
 if (!("ConstantNamingConvention" in CONST))
 {
 	foreach (a,b in Constants)
