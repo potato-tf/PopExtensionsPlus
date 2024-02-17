@@ -33,6 +33,7 @@ local resource = Entities.FindByClassname(null, "tf_objective_resource");
 // Function is called in popfile by mission maker to modify mission attributes.
 
 local MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "popext_missionattr_ent"});
+
 function MissionAttributes::SetConvar(convar, value, hideChatMessage = true)
 {
     local commentaryNode = Entities.FindByClassname(null, "point_commentary_node")
@@ -159,18 +160,21 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "FixedBuybacks":
+
         SetConvar("tf_mvm_buybacks_method", 1);
         break;
 
     // =========================================================
 
     case "BuybacksPerWave":
+
         SetConvar("tf_mvm_buybacks_per_wave", value);
         break;
 
     // =========================================================
 
     case "NoBuybacks":
+
         SetConvar("tf_mvm_buybacks_method", value);
         SetConvar("tf_mvm_buybacks_per_wave", 0);
         break;
@@ -178,42 +182,54 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "DeathPenalty":
+
         SetConvar("tf_mvm_death_penalty", value);
         break;
 
     // =========================================================
 
     case "BonusRatioHalf":
+
         SetConvar("tf_mvm_currency_bonus_ratio_min", value);
         break;
 
     // =========================================================
 
     case "BonusRatioFull":
+
         SetConvar("tf_mvm_currency_bonus_ratio_max", value);
         break;
 
     // =========================================================
 
     case "UpgradeFile":
+
         DoEntFire("tf_gamerules", "SetCustomUpgradesFile", value, -1, null, null);
         break;
 
     // =========================================================
 
     case "FlagEscortCount":
+
         SetConvar("tf_bot_flag_escort_max_count", value);
         break;
 
     // =========================================================
 
     case "BombMovementPenalty":
+        
         SetConvar("tf_mvm_bot_flag_carrier_movement_penalty", value);
+        break;
+
+    case "MaxSkeletons":
+
+        SetConvar("tf_max_active_zombie", value);
         break;
 
     // =========================================================
 
     case "SniperHideLasers":
+
         function MissionAttributes::SniperHideLasers()
         {
             // printl("SniperHideLasers")
@@ -233,6 +249,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "NoBusterFF":
+
         function MissionAttributes::NoBusterFF(params)
         {
             local attacker = params.attacker, victim = params.const_entity;
@@ -517,15 +534,11 @@ AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
     function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
     // function OnGameEvent_player_spawn(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) }
-    function OnGameEvent_post_inventory_application(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) }
+    function OnGameEvent_post_inventory_application(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) } //majority of mvm maps do not have a resupply cabinet anyway
     function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
     function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 
-    function GameEvent_teamplay_round_start(params)
-    {
-        ResetDefaults();
-        delete MissionAttrEvents;
-    }
+    function GameEvent_mvm_wave_complete(params) { ResetDefaults(); }
 
     // Hook all wave inits to reset parsing error counter.
     function OnGameEvent_recalculate_holidays(params)
@@ -534,8 +547,7 @@ AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
         foreach (_, func in MissionAttributes.InitWaveTable) func(params)
 
-        foreach (a in MissionAttributes.CurrAttrs)
-            printl(a)
+        foreach (a in MissionAttributes.CurrAttrs) printl(a)
         MissionAttributes.RaisedParseError = false;
     }
 }
@@ -549,20 +561,15 @@ function MissionAttr(attr, value)
 // Clean-up Functions
 // =========================================================
 // Function runs the appropriate clean-up method for the provided attribute.
-function MissionAttributes::DoCleanupMethod(attr)
-{
-    //restore old cvars
-    DebugLog(format("Cleaned up mission attribute %s", attr));
-}
 
 // Function resets and clears all registered changed attributes.
 function MissionAttributes::ResetDefaults()
 {
-    foreach (attr in MissionAttributes.CurrAttrs)
-        DoCleanupMethod(attr);
-
     ResetConvars();
-    MissionAttributes.CurrAttrs.clear();
+    // MissionAttributes.CurrAttrs.clear();
+    delete ::PopExt_MissionAttrEvents;
+    delete ::MissionAttributes
+    DebugLog(format("Cleaned up mission attribute %s", attr));
 }
 
 // Logging Functions
