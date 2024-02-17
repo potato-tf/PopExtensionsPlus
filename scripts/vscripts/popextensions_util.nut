@@ -13,6 +13,32 @@ const TF_COLOR_DEFAULT = "FBECCB"
 ::ROOT <- getroottable()
 CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
 
+::AllNavAreas <- {};
+NavMesh.GetAllAreas(AllNavAreas);
+
+//check a global variable instead of accessing a netprop every time to check if we are between waves.
+::IsWaveStarted <- false;
+::PopExt_UtilEvents <- {
+    function OnGameEvent_mvm_wave_complete(params) { IsWaveStarted = false; }
+    function OnGameEvent_mvm_wave_failed(params) { IsWaveStarted = false; }
+    function OnGameEvent_mvm_begin_wave(params) { IsWaveStarted = true; }
+};
+__CollectGameEventCallbacks(PopExt_UtilEvents);
+
+::CurrentWaveNum <- GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount");
+
+//useful ents
+::GameRules <- FindByClassname(null, "tf_gamerules");
+::ObjectiveResource <- FindByClassname(null, "tf_objective_resource");
+::MonsterResource <- FindByClassname(null, "monster_resource");
+::MvMLogicEnt <- FindByClassname(null, "tf_logic_mann_vs_machine");
+::PlayerManager <- FindByClassname(null, "tf_player_manager");
+::Worldspawn <- FindByClassname(null, "worldspawn");
+::StartRelay <- FindByName(null, "wave_start_relay");
+::FinishedRelay <- FindByName(null, "wave_finished_relay");
+
+//spawn a point_clientcommand
+::ClientCommand <- CreateByClassname("point_clientcommand"); DispatchSpawn(ClientCommand);
 
 if (!("ConstantNamingConvention" in CONST))
 {
@@ -62,15 +88,14 @@ if (!("ConstantNamingConvention" in CONST))
     tf_projectile_stun_ball             = 1 // Baseball
 }
 
-
-
-
-
+function IsLinuxServer() 
+{
+	return RAND_MAX != 32767
+}
 function ShowMessage(message)
 {
 	ClientPrint(null, HUD_PRINTCENTER , message)
 }
-
 
 function ShowChatMessage(target, fmt, ...)
 {
@@ -130,9 +155,6 @@ function ShowChatMessage(target, fmt, ...)
 // ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT);
 
 
-
-
-
 function IsAlive(player)
 {
 	return GetPropInt(player, "m_lifeState") == 0
@@ -155,6 +177,55 @@ function RemoveAmmo(player)
         SetPropIntArray(player, "m_iAmmo", 0, i)
     }
 }
+function GetAllEnts()
+{
+    local entdata = { "entlist": [], "numents": 0 };
+	for (local i = MAX_CLIENTS, ent; i <= MAX_EDICTS; i++)
+	{
+        if (ent = EntIndexToHScript(i))
+        {
+            entdata.numents++;
+            entdata.entlist.append(ent)
+        }
+    }
+    return entdata
+}
+
+//sets m_hOwnerEntity and m_hOwner to the same value
+function _SetOwner(ent, owner)
+{
+	//incase we run into an ent that for some reason uses both of these netprops for two different entities
+    if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwnerEntity"))
+    {
+        ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+        ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+        ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+        ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+        ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+    }
+    ent.SetOwner(owner);
+    SetPropEntity(ent, "m_hOwnerEntity", owner);
+}
+
+function ShowAnnotation(text = "This is an annotation", lifetime = 10, pos = Vector(), id = 0, distance = true, sound = "misc/null.wav", entindex = 0, visbit = 0, effect = true)
+{
+    SendGlobalGameEvent("show_annotation", {
+        text = text
+        lifetime = lifetime
+        worldPosX = pos.x
+        worldPosY = pos.y
+        worldPosZ = pos.z
+        id = id
+        play_sound = sound
+        show_distance = distance
+        show_effect = effect
+        follow_entindex = entindex
+        visibilityBitfield = visbit
+    })
+}
+
+//This may not be necessary and hide_annotation may work, but whatever this works too.
+function HideAnnotation(id) { ShowAnnotation("", 0.0000001, Vector(), id = id) }
 
 function GetPlayerName(player)
 {
@@ -182,6 +253,109 @@ function DisableCloak(player)
 	SetPropFloat(player, "m_Shared.m_flStealthNextChangeTime", Time() * 99999)
 }
 
+function InUpgradeZone(player) 
+{ 
+	return GetPropBool(player, "m_Shared.m_bInUpgradeZone"); 
+}
+
+function InButton(player, button) 
+{ 
+	return (GetPropInt(player, "m_nButtons") & button) 
+}
+
+function PressButton(player, button) 
+{ 
+	SetPropInt(player, "m_afButtonForced") | button; SetPropInt(player, "m_nButtons") | button 
+}
+
+//assumes user is using the SLOT_ constants
+function SwitchWeaponSlot(player, slot) 
+{ 
+	EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player); 
+}
+
+function HasEffect(ent, value)
+{ 
+	return GetPropInt(ent, "m_fEffects") == value
+}
+
+function SetEffect(ent, value) 
+{ 
+	SetPropInt(ent, "m_fEffects", value); 
+}
+
+function StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5)
+{
+	SpawnEntityFromTable("trigger_stun", {
+		targetname = "__utilstun",
+		stun_type = type,
+		stun_duration = duration,
+		move_speed_reduction = speedreduce,
+		trigger_delay = delay,
+		StartDisabled = 0,
+		spawnflags = 1,
+		"OnStunPlayer#1": "!self,Kill,,-1,-1"
+	});
+	__utilstun.SetSolid(2)
+	__utilstun.SetSize(Vector(-1, -1, -1), Vector())
+
+	EntFireByHandle(__utilstun, "EndTouch", "", -1, player, player);
+}
+
+function ShowHudHint(player, text = "This is a hud hint", duration = 5)
+{
+    local hudhint = FindByName(null, "__hudhint") != null
+
+    local flags = (player == null) ? 1 : 0;
+
+    if (!hudhint) ::__hudhint <- SpawnEntityFromTable("env_hudhint", { targetname = "__hudhint", spawnflags = flags, message = text })
+
+    __hudhint.KeyValueFromString("message", text);
+
+    EntFireByHandle(__hudhint, "ShowHudHint", "", -1, player, player);
+    EntFireByHandle(__hudhint, "HideHudHint", "", duration, player, player);
+}
+
+function SetEntityColor(entity, r, g, b, a)
+{
+    local color = (r) | (g << 8) | (b << 16) | (a << 24);
+    SetPropInt(entity, "m_clrRender", color);
+}
+
+function GetEntityColor(entity)
+{
+    local color = GetPropInt(entity, "m_clrRender");
+    local clr = {}
+    clr.r <- color & 0xFF;
+    clr.g <- (color >> 8) & 0xFF;
+    clr.b <- (color >> 16) & 0xFF;
+    clr.a <- (color >> 24) & 0xFF;
+    return clr;
+}
+
+function ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = 9999.0)
+{
+    PrecacheModel(model[0])
+    local proxy_entity = CreateByClassname("obj_teleporter"); // use obj_teleporter to set bodygroups.  not using SpawnEntityFromTable as that creates spawning noises
+    proxy_entity.SetAbsOrigin(pos);
+    proxy_entity.SetAbsAngles(ang);
+    DispatchSpawn(proxy_entity);
+
+    proxy_entity.SetModel(model[0]);
+    proxy_entity.SetSkin(model[1]);
+    proxy_entity.AddEFlags(EFL_NO_THINK_FUNCTION); // EFL_NO_THINK_FUNCTION prevents the entity from disappearing
+    proxy_entity.SetSolid(SOLID_NONE);
+
+    SetPropBool(proxy_entity, "m_bPlacing", true);
+    SetPropInt(proxy_entity, "m_fObjectFlags", 2); // sets "attachment" flag, prevents entity being snapped to player feet
+
+    // m_hBuilder is the player who the entity will be networked to only
+    SetPropEntity(proxy_entity, "m_hBuilder", player);
+    EntFireByHandle(proxy_entity, "Kill", "", duration, player, player);
+    return proxy_entity;
+}
+
+
 function LockInPlace(player, enable = true)
 {
     if (enable)
@@ -203,12 +377,35 @@ function LockInPlace(player, enable = true)
     }
 }
 
-function GetWeaponIndex(weapon)
-{
-    return GetPropInt(weapon, STRING_NETPROP_ITEMDEF)
+function GetItemIndex (item) 
+{ 
+	return GetPropInt(item, STRING_NETPROP_ITEMDEF) 
 }
 
+function SetItemIndex (item, index) 
+{ 
+	SetPropInt(item, STRING_NETPROP_ITEMDEF, index)
+}
+s
+function SetTargetname(ent, name)
+{ 
+	SetPropString(ent, "m_iName", name) 
+}
 
+function GetPlayerSteamID(player) 
+{ 
+	return GetPropString(player, "m_szNetworkIDString") 
+}
+
+function GetHammerID (ent) 
+{ 
+	return GetPropInt(ent, "m_iHammerID") 
+}
+
+function GetSpawnFlags(ent) 
+{ 
+	return GetPropInt(self, "m_spawnflags") 
+}
 
 function PrecacheParticle(name)
 {
@@ -225,6 +422,18 @@ function SpawnEffect(player,  effect)
     return
 }
 
+function RemoveOutputAll(ent, output)
+{
+    local outputs = [];
+    for (local i = GetNumElements(ent, output); i >= 0; i--)
+    {
+        local t = {};
+        GetOutputTable(ent, output, t, i);
+        outputs.append(t);
+    }
+    foreach (o in outputs) foreach(_ in o) RemoveOutput(ent, output, o.target, o.input, o.parameter);
+}
+
 function RemovePlayerWearables(player)
 {
     for (local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer())
@@ -234,8 +443,6 @@ function RemovePlayerWearables(player)
     }
     return
 }
-
-
 
 function IsEntityClassnameInList(entity, list)
 {
@@ -272,8 +479,6 @@ function SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = nu
 
     player.Teleport(true, teleport_origin, true, teleport_angles, true, teleport_velocity)
 }
-
-
 
 function PlaySoundOnClient(player, name, volume = 1.0, pitch = 100)
 {
