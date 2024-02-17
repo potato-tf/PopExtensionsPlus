@@ -1,5 +1,6 @@
 // ::popExtensionsVersion <- 6; //don't bother with versioning for now since we're constantly updating it
-IncludeScript("popextensions_util")
+local root = getroottable()
+IncludeScript("popextensions_util",  root)
 popExtEntity <- Entities.FindByName(null, "_popextensions_hooks");
 if (popExtEntity == null) {
 	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", {targetname = "_popextensions_hooks", vscripts="popextensions_hooks"});

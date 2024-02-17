@@ -142,16 +142,38 @@ function IsDucking(player)
 {
 	return player.GetFlags() & FL_DUCKING
 }
+
 function IsOnGround(player)
 {
 	return player.GetFlags() & FL_ONGROUND
 }
+
 function RemoveAmmo(player)
 {
 	for ( local i = 0; i < 32; i++ )
     {
         SetPropIntArray(player, "m_iAmmo", 0, i)
     }
+}
+
+function GetPlayerName(player)
+{
+	return GetPropString(player, "m_szNetname")
+}
+
+function SetPlayerName(player,  name)
+{
+	return SetPropString(player, "m_szNetname", name)
+}
+
+function GetPlayerUserID(player)
+{
+    return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex()) //TODO replace PlayerManager with the actual entity name
+}
+
+function PlayerRespawn()
+{
+	self.ForceRegenerateAndRespawn();
 }
 
 function DisableCloak(player)
@@ -251,20 +273,7 @@ function SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = nu
     player.Teleport(true, teleport_origin, true, teleport_angles, true, teleport_velocity)
 }
 
-function GetPlayerName(player)
-{
-	return GetPropString(player, "m_szNetname")
-}
 
-function GetPlayerUserID(player)
-{
-    return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex()) //TODO replace PlayerManager with the actual entity name
-}
-
-function PlayerRespawn()
-{
-	self.ForceRegenerateAndRespawn();
-}
 
 function PlaySoundOnClient(player, name, volume = 1.0, pitch = 100)
 {
