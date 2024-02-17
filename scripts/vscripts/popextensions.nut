@@ -1,8 +1,8 @@
 // ::popExtensionsVersion <- 6; //don't bother with versioning for now since we're constantly updating it
-popExtEntity <- Entities.FindByName(null, "pop_extension_ent");
-
+IncludeScript("popextensions_util")
+popExtEntity <- Entities.FindByName(null, "_popextensions_hooks");
 if (popExtEntity == null) {
-	popExtEntity <- SpawnEntityFromTable("move_rope", {targetname = "pop_extension_ent", vscripts="popextensions_hooks"});
+	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", {targetname = "_popextensions_hooks", vscripts="popextensions_hooks"});
 }
 
 popExtEntity.ValidateScriptScope();
