@@ -374,7 +374,7 @@ local popext_funcs =
 
     // Check for conditions based on the projectile's configuration
     if (victim.IsPlayer()) {
-        if (victim.InCond(77)) { //TF_COND_HALLOWEEN_GHOST_MODE
+        if (victim.InCond(TF_COND_HALLOWEEN_GHOST_MODE)) {
             return false
         }
 
