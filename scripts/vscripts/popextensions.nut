@@ -1,4 +1,4 @@
-::popExtensionsVersion <- 6;
+// ::popExtensionsVersion <- 6; //don't bother with versioning for now since we're constantly updating it
 popExtEntity <- Entities.FindByName(null, "pop_extension_ent");
 
 if (popExtEntity == null) {
