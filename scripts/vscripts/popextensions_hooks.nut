@@ -103,6 +103,7 @@ function PopulatorThink()
 
 					local replace_model = -1;
 					local replace_model_str = "";
+					local is_track = false;
 					local childModelName = child.GetModelName();
 					if ("Bomb" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/bomb_mechanism.mdl") {
 						replace_model = scope.popProperty.TankModelPrecached.Bomb;
@@ -111,15 +112,29 @@ function PopulatorThink()
 					else if ("LeftTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_L.mdl") {
 						replace_model = scope.popProperty.TankModelPrecached.LeftTrack;
 						replace_model_str = scope.popProperty.TankModel.LeftTrack;
+						is_track = true;
 					}
 					else if ("RightTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_R.mdl") {
 						replace_model = scope.popProperty.TankModelPrecached.RightTrack;
 						replace_model_str = scope.popProperty.TankModel.RightTrack;
+						is_track = true;
 					}
 					if (replace_model != -1) {
 						child.SetModel(replace_model_str);
 						NetProps.SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 0);
 						NetProps.SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 3);
+					}
+					if (is_track) {
+						child.ValidateScriptScope();
+						child.GetScriptScope().RestartTrackAnim <- function() {
+							local animSequence = self.LookupSequence("forward");
+							if (animSequence != -1) {
+								self.SetSequence(animSequence);
+								self.SetPlaybackRate(1.0);
+								self.SetCycle(0);
+							}
+						}
+						EntFireByHandle(child, "CallScriptFunction", "RestartTrackAnim", -1, null, null);
 					}
 				}
 			}
@@ -158,6 +173,7 @@ function PopulatorThink()
 					NetProps.SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 3);
 				}
 				scope.lastHealth = tank.GetHealth();
+				scope.lastHealthStage = health_stage;
 			}
 		}
 	}
