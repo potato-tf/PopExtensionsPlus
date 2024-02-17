@@ -1,13 +1,9 @@
-# VScript-Popfile-Extensions
+# PopfileExtensions+
 VScript extensions for use inside population files
-Should make embedding VScripts into population files easier
 
-Provides OnSpawn, OnDeath, OnTakeDamage, OnTakeDamagePost, OnDealDamage, OnDealDamagePost hooks to spawned bots with specified Tags
+This is a greatly expanded fork of the original PopExtensions that aims to recreate many of the features in sigsegv/rafradek's server plugins.
 
-Provides OnSpawn, OnDeath, OnTakeDamage, OnTakeDamagePost hooks to spawned tanks with specified Name
-
-Provides functions:
-SetParentLocalOrigin, CreatePlayerWearable, SetupTriggerBounds, GetWaveIconSpawnCount, SetWaveIconSpawnCount, IncrementWaveIconSpawnCount, DecrementWaveIconSpawnCount, SetWaveIconActive, GetWaveIconActive
+The roadmap for what needs to be added to this script can be found [here](https://trello.com/b/rHmwlmCL/popextensions-todo-list).  We encourage anyone and everyone to submit pull requests to recreate the missing features in VScript. 
 
 How to install:
 put scripts directory inside tf directory, merge if necessary
