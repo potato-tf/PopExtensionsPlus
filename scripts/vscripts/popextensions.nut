@@ -144,8 +144,6 @@ PrecacheModel("models/weapons/w_models/w_rocket.mdl");
 	ClientPrint(null, 2, line);
 }
 
-local objective = Entities.FindByClassname(null,"tf_objective_resource");
-
 function AddRobotTag(tag, table)
 {
 	if (!popExtThinkFuncSet) {
