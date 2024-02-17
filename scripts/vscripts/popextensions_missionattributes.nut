@@ -171,7 +171,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "NoBuybacks":
-        SetConvar("tf_mvm_buybacks_method", 1);
+        SetConvar("tf_mvm_buybacks_method", value);
         SetConvar("tf_mvm_buybacks_per_wave", 0);
         break;
 
