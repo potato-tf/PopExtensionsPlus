@@ -55,10 +55,84 @@ if (!("ConstantNamingConvention" in CONST))
     tf_projectile_stun_ball             = 1 // Baseball
 }
 
+
+
+
 function IsAlive(player)
 {
 	return GetPropInt(player, "m_lifeState") == 0
 }
+
+function IsDucking(player)
+{
+	return player.GetFlags() & FL_DUCKING
+}
+function IsOnGround(player)
+{
+	return player.GetFlags() & FL_ONGROUND
+}
+function RemoveAmmo(player)
+{
+	for ( local i = 0; i < 32; i++ )
+    {
+        SetPropIntArray(player, "m_iAmmo", 0, i)
+    }
+}
+
+function DisableCloak(player)
+{
+	// High Number to Prevent Player from Cloaking
+	SetPropFloat(player, "m_Shared.m_flStealthNextChangeTime", Time() * 99999)
+}
+
+::LockInPlace <- function(player, enable = true)
+{
+    if (enable)
+    {
+        player.AddFlag(FL_ATCONTROLS)
+        player.AddCustomAttribute("no_jump", 1, -1)
+        player.AddCustomAttribute("no_duck", 1, -1)
+        player.AddCustomAttribute("no_attack", 1, -1)
+        player.AddCustomAttribute("disable weapon switch", 1, -1)
+
+    }
+    else
+    {
+        player.RemoveFlag(FL_ATCONTROLS)
+        player.RemoveCustomAttribute("no_jump")
+        player.RemoveCustomAttribute("no_duck")
+        player.RemoveCustomAttribute("no_attack")
+        player.RemoveCustomAttribute("disable weapon switch")
+    }
+}
+
+
+function PrecacheParticle(name)
+{
+    PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = name })
+}
+
+
+function SpawnEffect(player,  effect)
+{
+    local player_angle     =  player.GetLocalAngles()
+    local player_angle_vec =  Vector( player_angle.x, player_angle.y, player_angle.z)
+
+    DispatchParticleEffect(effect, player.GetLocalOrigin(), player_angle_vec)
+    return
+}
+
+RemovePlayerWearables <- function(player)
+{
+    for (local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer())
+    {
+        if (wearable.GetClassname() == "tf_wearable")
+		    wearable.Destroy()
+    }
+    return
+}
+
+
 
 function IsEntityClassnameInList(entity, list)
 {
@@ -103,7 +177,7 @@ function GetPlayerName(player)
 
 function GetPlayerUserID(player)
 {
-    return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex())
+    return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex()) //TODO replace PlayerManager with the actual entity name
 }
 
 function PlayerRespawn()
