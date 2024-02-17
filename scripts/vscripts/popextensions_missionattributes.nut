@@ -560,7 +560,11 @@ function MissionAttr(attr, value)
 {
     MissionAttr.call(MissionAttributes, attr, value)
 }
-
+//super truncated version incase the pop character limit becomes an issue.
+function MAtr(attr, value)
+{
+    MissionAttr.call(MissionAttributes, attr, value)
+}
 // Clean-up Functions
 // =========================================================
 // Function runs the appropriate clean-up method for the provided attribute.
@@ -571,7 +575,7 @@ function MissionAttributes::ResetDefaults()
     ResetConvars();
     // MissionAttributes.CurrAttrs.clear();
     delete ::PopExt_MissionAttrEvents;
-    delete ::MissionAttributes
+    delete ::MissionAttributes;
     DebugLog(format("Cleaned up mission attribute %s", attr));
 }
 
