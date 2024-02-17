@@ -12,7 +12,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
         DragonsFuryFix = function()
         {
             for (local fireball; fireball = Entities.FindByClassname(fireball, "tf_projectile_balloffire");)
-                fireball.RemoveFlag(2097152); //FL_GRENADE
+                fireball.RemoveFlag(FL_GRENADE);
         }
     }
 
@@ -108,8 +108,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                         EntFireByHandle(pumpkin, "Kill", "", -1, null, null); //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
             }
             for (local i = 1, player; i <= MaxClients(); i++)
-                if (player = PlayerInstanceFromIndex(i), player && player.InCond(33)) //TF_COND_CRITBOOSTED_PUMPKIN
-                    EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(33)", -1, null, null);
+                if (player = PlayerInstanceFromIndex(i), player && player.InCond(TF_COND_CRITBOOSTED_PUMPKIN)) //TF_COND_CRITBOOSTED_PUMPKIN
+                    EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null);
         }
         MissionAttributes.ThinkTable.NoCrumpkins <- MissionAttributes.NoCrumpkins;
         break;
