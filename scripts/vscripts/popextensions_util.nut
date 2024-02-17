@@ -85,7 +85,7 @@ function DisableCloak(player)
 	SetPropFloat(player, "m_Shared.m_flStealthNextChangeTime", Time() * 99999)
 }
 
-::LockInPlace <- function(player, enable = true)
+function LockInPlace(player, enable = true)
 {
     if (enable)
     {
@@ -122,7 +122,7 @@ function SpawnEffect(player,  effect)
     return
 }
 
-RemovePlayerWearables <- function(player)
+function RemovePlayerWearables(player)
 {
     for (local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer())
     {
