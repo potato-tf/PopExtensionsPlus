@@ -13,6 +13,21 @@ const TF_COLOR_DEFAULT = "FBECCB"
 ::ROOT <- getroottable()
 CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
 
+if (!("ConstantNamingConvention" in CONST))
+{
+	foreach (a,b in Constants)
+		foreach (k,v in b)
+            CONST[k] <- v != null ? v : 0;
+
+	foreach (k, v in ::NetProps.getclass())
+		if (k != "IsValid")
+			ROOT[k] <- ::NetProps[k].bindenv(::NetProps)
+
+	foreach (k, v in ::Entities.getclass())
+		if (k != "IsValid")
+			ROOT[k] <- ::Entities[k].bindenv(::Entities)
+}
+
 ::AllNavAreas <- {};
 NavMesh.GetAllAreas(AllNavAreas);
 
@@ -39,21 +54,6 @@ __CollectGameEventCallbacks(PopExt_UtilEvents);
 
 //spawn a point_clientcommand
 ::ClientCommand <- CreateByClassname("point_clientcommand"); DispatchSpawn(ClientCommand);
-
-if (!("ConstantNamingConvention" in CONST))
-{
-	foreach (a,b in Constants)
-		foreach (k,v in b)
-            CONST[k] <- v != null ? v : 0;
-
-	foreach (k, v in ::NetProps.getclass())
-		if (k != "IsValid")
-			ROOT[k] <- ::NetProps[k].bindenv(::NetProps)
-
-	foreach (k, v in ::Entities.getclass())
-		if (k != "IsValid")
-			ROOT[k] <- ::Entities[k].bindenv(::Entities)
-}
 
 ::Classes <- ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
 
@@ -381,16 +381,16 @@ function LockInPlace(player, enable = true)
     }
 }
 
-function GetItemIndex (item) 
+function GetItemIndex(item) 
 { 
 	return GetPropInt(item, STRING_NETPROP_ITEMDEF) 
 }
 
-function SetItemIndex (item, index) 
+function SetItemIndex(item, index) 
 { 
 	SetPropInt(item, STRING_NETPROP_ITEMDEF, index)
 }
-s
+
 function SetTargetname(ent, name)
 { 
 	SetPropString(ent, "m_iName", name) 
@@ -401,7 +401,7 @@ function GetPlayerSteamID(player)
 	return GetPropString(player, "m_szNetworkIDString") 
 }
 
-function GetHammerID (ent) 
+function GetHammerID(ent) 
 { 
 	return GetPropInt(ent, "m_iHammerID") 
 }
