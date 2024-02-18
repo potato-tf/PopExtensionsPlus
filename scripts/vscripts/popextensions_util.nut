@@ -49,6 +49,10 @@ if (!("ConstantNamingConvention" in CONST))
 	foreach (k, v in ::NetProps.getclass())
 		if (k != "IsValid")
 			ROOT[k] <- ::NetProps[k].bindenv(::NetProps)
+
+	foreach (k, v in ::Entities.getclass())
+		if (k != "IsValid")
+			ROOT[k] <- ::Entities[k].bindenv(::Entities)
 }
 
 ::Classes <- ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
