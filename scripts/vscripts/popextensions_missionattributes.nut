@@ -5,16 +5,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
     CurAttrs = {} // Array storing currently modified attributes.
     ConVars = {} //table storing original convar values
 
-    ThinkTable = { //sub-think table.  Pre-fill with some global fixes
-
-        //remove with MissionAttr("ReflectableDF", 1)
-        DragonsFuryFix = function()
-        {
-            for (local fireball; fireball = Entities.FindByClassname(fireball, "tf_projectile_balloffire");)
-                fireball.RemoveFlag(FL_GRENADE);
-        }
-    }
-
+    ThinkTable = {}
     TakeDamageTable = {}
     SpawnHookTable = {}
     DeathHookTable = {}
@@ -23,7 +14,49 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 
     DebugText = false
     RaisedParseError = false
+
+    Events = {
+        function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
+        // function OnGameEvent_player_spawn(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) }
+        function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
+        function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
+        function OnGameEvent_post_inventory_application(params) 
+        {
+            local player = GetPlayerFromUserID(params.userid)
+            player.ValidateScriptScope()
+            local scope = player.GetScriptScope()
+            if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+    
+            function PlayerThinks()
+            {
+                foreach (_, func in scope.PlayerThinkTable) func()
+            }
+            scope.PlayerThinks <- PlayerThinks
+            AddThinkToEnt(player, "PlayerThinks")
+    
+            foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
+        } 
+        // Hook all wave inits to reset parsing error counter.
+        
+        function OnGameEvent_recalculate_holidays(params)
+        {
+            if (GetRoundState() != 3) return;
+    
+            foreach (_, func in MissionAttributes.InitWaveTable) func(params)
+    
+            foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
+            MissionAttributes.RaisedParseError = false;
+        }
+    
+        function GameEvent_mvm_wave_complete(params) 
+        { 
+            ResetConvars();
+            delete MissionAttributes;
+            DebugLog(format("Cleaned up mission attribute %s", attr));
+        }
+    }
 };
+__CollectGameEventCallbacks(MissionAttributes.Events);
 
 local resource = Entities.FindByClassname(null, "tf_objective_resource");
 
@@ -31,7 +64,8 @@ local resource = Entities.FindByClassname(null, "tf_objective_resource");
 // =========================================================
 // Function is called in popfile by mission maker to modify mission attributes.
 
-local MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "popext_missionattr_ent"});
+local MissionAttrEntity = FindByName(null, "popext_missionattr_ent")
+if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "popext_missionattr_ent"});
 
 function MissionAttributes::SetConvar(convar, value, hideChatMessage = true)
 {
@@ -131,6 +165,29 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         SetPropInt(resource, "m_nMvMEventPopfileType", value);
     break;
 
+    // =========================================================
+
+    case "WaveNum":
+        SetPropInt(resource, "m_nMannVsMachineWaveCount", value);
+    break;
+
+    // =========================================================
+
+    case "MaxWaveNum":
+        SetPropInt(resource, "m_nMannVsMachineMaxWaveCount", value);
+    break;
+
+    // =========================================================
+
+    case "MultiSapper":
+        function MissionAttributes::MultiSapperThink()
+        {
+            for (local sapper; sapper = FindByClassname("obj_attachment_sapper");)
+                SetPropBool(sapper, "m_bDisposableBuilding", true);
+        }
+        MissionAttributes.ThinkTable.MultiSapperThink <- MissionAttributes.MultiSapperThink;
+    break;
+    
     // =========================================================
 
     //all of these could just be set directly in the pop easily, however popfile's have a 4096 character limit for vscript so might as well save space
@@ -354,7 +411,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "NoBusterFF":
-        if (value > 1) RaiseValueError(attr, value)
+        if (value != 1 || value != 0 ) RaiseIndexError(attr)
         SetConvar("tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1)
     break;
 
@@ -721,44 +778,6 @@ MissionAttrEntity.ValidateScriptScope();
 MissionAttrEntity.GetScriptScope().MissionAttrThink <- MissionAttrThink
 AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
-::PopExt_MissionAttrEvents <- {
-
-    function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
-    // function OnGameEvent_player_spawn(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) }
-    function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
-    function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
-    function OnGameEvent_post_inventory_application(params) 
-    {
-        local player = GetPlayerFromUserID(params.userid)
-        player.ValidateScriptScope()
-        local scope = player.GetScriptScope()
-        if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
-
-        function PlayerThinks()
-        {
-            foreach (_, func in scope.PlayerThinkTable) func()
-        }
-        scope.PlayerThinks <- PlayerThinks
-        AddThinkToEnt(player, "PlayerThinks")
-
-        foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
-    } 
-    // Hook all wave inits to reset parsing error counter.
-    
-    function OnGameEvent_recalculate_holidays(params)
-    {
-        if (GetRoundState() != 3) return;
-
-        foreach (_, func in MissionAttributes.InitWaveTable) func(params)
-
-        foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
-        MissionAttributes.RaisedParseError = false;
-    }
-
-    function GameEvent_mvm_wave_complete(params) { ResetDefaults(); }
-
-}
-__CollectGameEventCallbacks(PopExt_MissionAttrEvents);
 
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
 function MissionAttr(attr, value)
@@ -769,19 +788,6 @@ function MissionAttr(attr, value)
 function MAtr(attr, value)
 {
     MissionAttr.call(MissionAttributes, attr, value)
-}
-// Clean-up Functions
-// =========================================================
-// Function runs the appropriate clean-up method for the provided attribute.
-
-// Function resets and clears all registered changed attributes.
-function MissionAttributes::ResetDefaults()
-{
-    ResetConvars();
-    // MissionAttributes.CurAttrs.clear();
-    delete ::PopExt_MissionAttrEvents;
-    delete ::MissionAttributes;
-    DebugLog(format("Cleaned up mission attribute %s", attr));
 }
 
 // Logging Functions
