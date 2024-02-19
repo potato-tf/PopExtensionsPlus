@@ -27,6 +27,8 @@ foreach (k, v in ::NetProps.getclass())
 foreach (k, v in ::Entities.getclass())
     if (k != "IsValid" && !(k in ROOT))
         ROOT[k] <- ::Entities[k].bindenv(::Entities)
+		
+IncludeScript("popextensions_robotvoicelines");
 
 ::AllNavAreas <- {};
 NavMesh.GetAllAreas(AllNavAreas);
@@ -318,17 +320,14 @@ function PlayerRobotModel(player, model)
     wearable.SetOwner(player);
     wearable.DispatchSpawn();
     EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player);
-    SetPropInt(wearable, "m_fEffects", EF_BONEMERGE | EF_BONEMERGE_FASTCULL);
+    SetPropInt(wearable, "m_fEffects", 129);
     scope.wearable <- wearable;
     
-    SetPropInt(player, "m_nRenderMode", kRenderTransColor);
+    SetPropInt(player, "m_nRenderMode", 1);
     SetPropInt(player, "m_clrRender", 0);   
-
-    printl(scope.wearable);
     
     function BotModelThink()
     {
-        // printl(self)
         if (!wearable) return;
         
         if (self.IsTaunting())
