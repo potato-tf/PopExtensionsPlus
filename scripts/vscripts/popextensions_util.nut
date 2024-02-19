@@ -278,6 +278,20 @@ function SwitchWeaponSlot(player, slot)
 	EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player); 
 }
 
+function GetItemInSlot(player, slot)
+{
+    local item;
+    for (local i = 0; i < SLOT_COUNT; i++)
+    {
+        local wep = GetPropEntityArray(player, "m_hMyWeapons", i);
+        if ( wep == null || wep.GetSlot() != slot) continue;
+        
+        item = wep;
+        break;
+    }
+    return item;
+}
+
 function HasEffect(ent, value)
 { 
 	return GetPropInt(ent, "m_fEffects") == value
