@@ -708,3 +708,8 @@ function QAngleDistance(a, b)
   local dz = a.z - b.z
   return sqrt(dx*dx + dy*dy + dz*dz)
 }
+
+function CheckBitwise(num) 
+{
+    return (num != 0 && ((num & (num - 1)) == 0))
+}

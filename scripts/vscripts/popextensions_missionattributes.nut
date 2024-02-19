@@ -73,12 +73,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // @error TypeError     If type is not an integer.
     // @error IndexError    If invalid holiday number is passed.
         // Error Handling
-        if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break;}
-        if (value < 0 || value > 2) {RaiseIndexError(attr); success = false; break;}
+    try (value.tointeger()) catch(_) {RaiseTypeError(attr, "int"); success = false; break;}
+    if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break;}
+    if (value < 0 || value > 2) {RaiseIndexError(attr); success = false; break;}
 
         // Set Holiday logic
         SetConvar("tf_forced_holiday", value);
-        if (value == 0) break;
+    if (value == 0) break;
 
         local ent = Entities.FindByName(null, "MissionAttrHoliday");
         if (ent != null) ent.Kill();
@@ -88,12 +89,11 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             holiday_type = value
         });
 
-        break;
+    break;
 
     // ========================================================
 
     case "NoCrumpkins":
-
         local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl");
         function MissionAttributes::NoCrumpkins()
         {
@@ -111,262 +111,257 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null);
         }
         MissionAttributes.ThinkTable.NoCrumpkins <- MissionAttributes.NoCrumpkins;
-        break;
+    break;
 
     // =========================================================
 
     case "NoReanimators":
-
+        if (value < 1) return;
         function MissionAttributes::NoReanimators(params)
         {
             for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");)
                 EntFireByHandle(revivemarker, "Kill", "", -1, null, null);
         }
         MissionAttributes.DeathHookTable.NoReanimators <- MissionAttributes.NoReanimators;
-        break;
+    break;
 
     // =========================================================
 
     case "666Wavebar": //doesn't work until wave switches, won't work on W1
-
         SetPropInt(resource, "m_nMvMEventPopfileType", value);
-        break;
+    break;
 
     // =========================================================
 
     //all of these could just be set directly in the pop easily, however popfile's have a 4096 character limit for vscript so might as well save space
     case "NoRefunds":
-
         SetConvar("tf_mvm_respec_enabled", 0);
-        break;
+    break;
 
     // =========================================================
 
     case "RefundLimit":
-
         SetConvar("tf_mvm_respec_enabled", 1);
         SetConvar("tf_mvm_respec_limit", value);
-        break;
+    break;
 
     // =========================================================
 
     case "RefundGoal":
-
         SetConvar("tf_mvm_respec_enabled", 1);
         SetConvar("tf_mvm_respec_credit_goal", value);
-        break;
+    break;
 
     // =========================================================
 
     case "FixedBuybacks":
-
         SetConvar("tf_mvm_buybacks_method", 1);
-        break;
+    break;
 
     // =========================================================
 
     case "BuybacksPerWave":
-
         SetConvar("tf_mvm_buybacks_per_wave", value);
-        break;
+    break;
 
     // =========================================================
 
     case "NoBuybacks":
-
         SetConvar("tf_mvm_buybacks_method", value);
         SetConvar("tf_mvm_buybacks_per_wave", 0);
-        break;
+    break;
 
     // =========================================================
 
     case "DeathPenalty":
-
         SetConvar("tf_mvm_death_penalty", value);
-        break;
+    break;
 
     // =========================================================
 
     case "BonusRatioHalf":
-
         SetConvar("tf_mvm_currency_bonus_ratio_min", value);
-        break;
+    break;
 
     // =========================================================
 
     case "BonusRatioFull":
-
         SetConvar("tf_mvm_currency_bonus_ratio_max", value);
-        break;
+    break;
 
     // =========================================================
 
     case "UpgradeFile":
-
         DoEntFire("tf_gamerules", "SetCustomUpgradesFile", value, -1, null, null);
-        break;
+    break;
 
     // =========================================================
 
     case "FlagEscortCount":
-
         SetConvar("tf_bot_flag_escort_max_count", value);
-        break;
+    break;
 
     // =========================================================
 
     case "BombMovementPenalty":
-        
         SetConvar("tf_mvm_bot_flag_carrier_movement_penalty", value);
-        break;
+    break;
 
     // =========================================================
     
     case "MaxSkeletons":
-
         SetConvar("tf_max_active_zombie", value);
-        break;
+    break;
 
     // =========================================================
 
     case "TurboPhysics":
         SetConvar("sv_turbophysics", value);
-        break;
+    break;
         
     // =========================================================
 
     case "Accelerate":
         SetConvar("sv_accelerate", value);
-        break;
+    break;
         
     // =========================================================
 
     case "AirAccelerate":
         SetConvar("sv_airaccelerate", value);
-        break;
+    break;
         
     // =========================================================
 
     case "BotPushaway":
         SetConvar("tf_avoidteammates_pushaway", value);
-        break;
+    break;
 
     // =========================================================
 
     case "TeleUberDuration":
         SetConvar("tf_mvm_engineer_teleporter_uber_duration", value);
-        break;
+    break;
 
     // =========================================================
 
     case "RedMaxPlayers":
         SetConvar("tf_mvm_defenders_team_size", value);
-        break;
+    break;
 
     // =========================================================
 
     case "MaxVelocity":
         SetConvar("sv_maxvelocity", value);
-        break;
+    break;
 
     // =========================================================
 
     case "ConchHealthOnHitRegen":
         SetConvar("tf_dev_health_on_damage_recover_percentage", value);
-        break;
+    break;
 
     // =========================================================
 
     case "MarkForDeathLifetime":
         SetConvar("tf_dev_marked_for_death_lifetime", value);
-        break;
+    break;
 
     // =========================================================
 
     case "VacNumCharges":
         SetConvar("weapon_medigun_resist_num_chunks", value);
-        break;
+    break;
 
     // =========================================================
 
     case "DoubleDonkWindow":
         SetConvar("tf_double_donk_window", value);
-        break;
+    break;
 
     // =========================================================
 
     case "ConchSpeedBoost":
         SetConvar("tf_whip_speed_increase", value);
-        break;
+    break;
 
     // =========================================================
 
     case "StealthDmgReduction":
         SetConvar("tf_stealth_damage_reduction", value);
-        break;
+    break;
 
     // =========================================================
 
     case "FlagCarrierCanFight":
         SetConvar("tf_mvm_bot_allow_flag_carrier_to_fight", value);
-        break;
+    break;
 
     // =========================================================
     
     case "HHHChaseRange":
         SetConvar("tf_halloween_bot_chase_range", value);
-        break;
+    break;
 
     // =========================================================
     
     case "HHHAttackRange":
         SetConvar("tf_halloween_bot_attack_range", value);
-        break;
+    break;
 
     // =========================================================
     
     case "HHHQuitRange":
         SetConvar("tf_halloween_bot_quit_range", value);
-        break;
+    break;
 
     // =========================================================
     
     case "HHHTerrifyRange":
         SetConvar("tf_halloween_bot_terrify_radius", value);
-        break;
+    break;
 
     // =========================================================
     
     case "HHHHealthBase":
         SetConvar("tf_halloween_bot_health_base", value);
-        break;
+    break;
 
     // =========================================================
     
     case "HHHHealthPerPlayer":
         SetConvar("tf_halloween_bot_health_per_player", value);
-        break;
+    break;
 
     // =========================================================
 
     case "SentryHintBombForwardRange":
         SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_forward_range", value);
-        break;
+    break;
 
     // =========================================================
 
     case "SentryHintBombBackwardRange":
         SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_backward_range", value);
-        break;
+    break;
+
+    // =========================================================
 
     case "SentryHintMinDistanceFromBomb":
         SetConvar("tf_bot_engineer_mvm_hint_min_distance_from_bomb", value);
-        break;
+    break;
+
+    // =========================================================
+
+    case "NoBusterFF":
+        if (value > 1) RaiseValueError(attr, value)
+        SetConvar("tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1)
+    break;
 
     // =========================================================
 
     case "SniperHideLasers":
-
+        if (value < 1) return;
         function MissionAttributes::SniperHideLasers()
         {
             for (local dot; dot = Entities.FindByClassname(dot, "env_sniperdot");)
@@ -378,29 +373,38 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     EntFireByHandle(dot, "Kill", "", -1, null, null);
             return -1;
         }
-        if (!(MissionAttributes.SniperHideLasers in MissionAttributes.ThinkTable))
+        // if (!(MissionAttributes.SniperHideLasers in MissionAttributes.ThinkTable))
             MissionAttributes.ThinkTable.SniperHideLasers <- MissionAttributes.SniperHideLasers;
-        break;
+    break;
 
     // =========================================================
 
-    case "NoBusterFF":
-        //I'm stupid
-        // function MissionAttributes::NoBusterFF(params)
-        // {
-        //     local attacker = params.attacker, victim = params.const_entity;
-        //     //should probably check playermodel instead.  Edge cases with non-buster giant demos may cause problems
-        //     if (IsPlayer(victim) && IsPlayerABot(attacker) && IsPlayerABot(victim) && victim.GetTeam() == attacker.GetTeam() && attacker.GetPlayerClass() == TF_CLASS_DEMOMAN && attacker.IsMiniBoss())
-        //     {
-        //         params.early_out = true;
-        //         return false;
-        //     }
-        // }
-        // if (!(MissionAttributes.NoBusterFF in MissionAttributes.TakeDamageTable))
-        //     MissionAttributes.TakeDamageTable.NoBusterFF <- MissionAttributes.NoBusterFF;
-
-        SetConvar("tf_bot_suicide_bomb_friendly_fire", value)
-        break;
+    case "BotHeadshots":
+        if (value < 1) return;
+        function MissionAttributes::BotHeadshots(params)
+        {
+            local player = params.attacker, victim = params.const_entity;
+        
+            // //gib bots on explosive/crit dmg, doesn't work
+            // if (!victim.IsMiniBoss() && (params.damage_type & DMG_CRITICAL || params.damage_type & DMG_BLAST))
+            // {
+            // 	victim.SetModelScale(1.00000001, 0.0);
+            // 	// EntFireByHandle(victim, "CallScriptFunction", "dmg", -1, null, null); //wait 1 frame
+            // 	return;
+            // }
+            
+            //re-enable headshots for snipers and ambassador
+            if (!player.IsPlayer() || !victim.IsPlayer() || IsPlayerABot(player)) return; //check if non-bot victim
+            if (player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER) return; //check if we're spy/sniper
+            if (GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD) return; //check for headshot
+            if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || GetItemIndex(player.GetActiveWeapon()) == ITEMINDEX_THE_SYDNEY_SLEEPER)) return; //ignore sydney sleeper and SMGs
+            if (player.GetPlayerClass() == TF_CLASS_SPY && GetItemIndex(player.GetActiveWeapon()) != ITEMINDEX_THE_AMBASSADOR) return; //ambassador only
+            params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL) //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
+            return true;
+        }
+        // if (!(MissionAttributes.SniperHideLasers in MissionAttributes.TakeDamageTable))
+            MissionAttributes.TakeDamageTable.BotHeadshots <- MissionAttributes.BotHeadshots;
+    break;
 
     // =========================================================
 
@@ -413,74 +417,73 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     //example: MissionAttr(`PlayersAreRobots`, 6) - Human animations and footsteps enabled
 
     case "PlayersAreRobots":
-
-    function MissionAttributes::PlayersAreRobots(params)
-    {
-        
-        local player = GetPlayerFromUserID(params.userid)
-        if (player.IsBotOfType(1337)) return;
-
-        
-        player.ValidateScriptScope();
-        local scope = player.GetScriptScope();
-
-        if ("wearable" in scope && scope.wearable != null)
+        function MissionAttributes::PlayersAreRobots(params)
         {
-            scope.wearable.Destroy();
-            scope.wearable <- null;
-        }
-        
-        local playerclass  = player.GetPlayerClass();
-        local class_string = classes[playerclass];
-        local model = format("models/bots/%s/bot_%s.mdl", class_string, class_string);
-        printl(model)
-        
-        if (value & 1)
-        {
-            //sticky anims and thruster anims are particularly problematic
-            if ((playerclass == TF_CLASS_DEMOMAN && GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && HasItemIndex(player, 1179))) 
+            
+            local player = GetPlayerFromUserID(params.userid)
+            if (player.IsBotOfType(1337)) return;
+
+            if (!CheckBitwise(value)) RaiseValueError(attr, value, "  Value must be a power of 2.")
+            
+            player.ValidateScriptScope();
+            local scope = player.GetScriptScope();
+
+            if ("wearable" in scope && scope.wearable != null)
             {
+                scope.wearable.Destroy();
+                scope.wearable <- null;
+            }
+            
+            local playerclass  = player.GetPlayerClass();
+            local class_string = classes[playerclass];
+            local model = format("models/bots/%s/bot_%s.mdl", class_string, class_string);
+            printl(model)
+            
+            if (value & 1)
+            {
+                //sticky anims and thruster anims are particularly problematic
+                if ((playerclass == TF_CLASS_DEMOMAN && GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && HasItemIndex(player, 1179))) 
+                {
+                    PlayerRobotModel(player, model);
+                    return;
+                }
+                EntFireByHandle(player, "SetCustomModelWithClassAnimations", model, 1, null, null);
+                SetEntityColor(player, 255, 255, 255, 255);
+                SetPropInt(player, "m_nRenderMode", kRenderFxNone) //dangerous constant name lol
+
+            }
+
+            if (value & 2)
+            {   
+                if (value & 1) value | 1 //incompatible flags
                 PlayerRobotModel(player, model);
-                return;
             }
-            EntFireByHandle(player, "SetCustomModelWithClassAnimations", model, 1, null, null);
-            SetEntityColor(player, 255, 255, 255, 255);
-            SetPropInt(player, "m_nRenderMode", kRenderFxNone) //dangerous constant name lol
 
-        }
-
-        if (value & 2)
-        {   
-            if (value & 1) value | 1 //incompatible flags
-            PlayerRobotModel(player, model);
-        }
-
-        if (value & 4)
-        {
-            scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
-
-            function StepThink()
+            if (value & 4)
             {
-                if (GetPropInt(self,"m_Local.m_nStepside") != stepside)
-                    EmitSoundOn("MVM.BotStep", self)
+                scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
 
-                scope.stepside = GetPropInt(self,"m_Local.m_nStepside")
-                return -1
-            }
-            if (!(StepThink in scope.PlayerThinkTable)) 
-                scope.PlayerThinkTable.StepThink <- StepThink
+                function StepThink()
+                {
+                    if (GetPropInt(self,"m_Local.m_nStepside") != stepside)
+                        EmitSoundOn("MVM.BotStep", self)
 
-        } else delete scope.PlayerThinkTable.StepThink
+                    scope.stepside = GetPropInt(self,"m_Local.m_nStepside")
+                    return -1
+                }
+                if (!(StepThink in scope.PlayerThinkTable)) 
+                    scope.PlayerThinkTable.StepThink <- StepThink
+
+            } else delete scope.PlayerThinkTable.StepThink
+            
+        }
         
-    }
-    
-    MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots;
+        MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots;
     break;
 
     // =========================================================
 
     case "BotsAreHumans":
-
         function MissionAttributes::BotsAreHumans(params)
         {
             local player = GetPlayerFromUserID(params.userid)
@@ -488,14 +491,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[bot.GetPlayerClass()]), -1, null, null);
         }
 
-        if (!(MissionAttributes.BotsAreHumans in MissionAttributes.SpawnHookTable))
+        // if (!(MissionAttributes.BotsAreHumans in MissionAttributes.SpawnHookTable))
             MissionAttributes.SpawnHookTable.BotsAreHumans <- MissionAttributes.BotsAreHumans;
-        break;
+    break;
 
     // =========================================================
 
     case "NoRome":
-
         local carrierPartsIndex = GetModelIndex("models/bots/boss_bot/carrier_parts.mdl")
         function MissionAttributes::NoRome(params)
         {
@@ -517,21 +519,20 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     if (GetPropInt(props, "m_nModelIndex") != carrierPartsIndex) continue;
 
                     carrier = props
-                    break;
+                break;
                 }
 
             }
             SetPropIntArray(carrier, "m_nModelIndexOverrides", carrierPartsIndex, 3);
             noRomeCarrier = true;
         }
-        if (!(MissionAttributes.NoRome in MissionAttributes.SpawnHookTable))
+        // if (!(MissionAttributes.NoRome in MissionAttributes.SpawnHookTable))
             MissionAttributes.SpawnHookTable.NoRome <- MissionAttributes.NoRome;
-        break;
+    break;
 
     // =========================================================
 
     case "SpellDropRateCommon":
-
         SetConvar("tf_spells_enabled", 1)
         function MissionAttributes::SpellDropRateCommon(params)
         {
@@ -543,14 +544,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
             local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" });
         }
-        if (!(MissionAttributes.SpellDropRateCommon in MissionAttributes.DeathHookTable))
+        // if (!(MissionAttributes.SpellDropRateCommon in MissionAttributes.DeathHookTable))
             MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
-        break;
+    break;
 
     // =========================================================
 
     case "SpellDropRateGiant":
-
         SetConvar("tf_spells_enabled", 1)
         function MissionAttributes::SpellDropRateCommon(params)
         {
@@ -562,14 +562,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
             local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" });
         }
-        if (!(MissionAttributes.SpellDropRateCommon in MissionAttributes.DeathHookTable))
+        // if (!(MissionAttributes.SpellDropRateCommon in MissionAttributes.DeathHookTable))
             MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
-        break;
+    break;
 
     // =========================================================
 
     case "GiantsRareSpells":
-
         SetConvar("tf_spells_enabled", 1)
         function MissionAttributes::GiantsRareSpells()
         {
@@ -577,28 +576,25 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 SetPropInt(spells, "m_nTier", 1)
         }
 
-        if (!(MissionAttributes.GiantsRareSpells in MissionAttributes.ThinkTable))
+        // if (!(MissionAttributes.GiantsRareSpells in MissionAttributes.ThinkTable))
             MissionAttributes.ThinkTable.GiantsRareSpells <- MissionAttributes.GiantsRareSpells;
-        break;
+    break;
 
     // =========================================================
 
     case "GrapplingHookEnable":
-
         SetConvar("tf_grapplinghook_enable", value);
-        break;
+    break;
 
     // =========================================================
 
     case "GiantScale":
-
         SetConvar("tf_mvm_miniboss_scale", value);
-        break;
+    break;
 
     // =========================================================
 
     case "NoSkeleSplit":
-
         function MissionAttributes::NoSkeleSplit()
         {
             //kill skele spawners before they split from tf_zombie_spawner
@@ -636,14 +632,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 // }
             }
         }
-        if (!(MissionAttributes.NoSkeleSplit in MissionAttributes.ThinkTable))
+        // if (!(MissionAttributes.NoSkeleSplit in MissionAttributes.ThinkTable))
             MissionAttributes.ThinkTable.NoSkeleSplit <- MissionAttributes.NoSkeleSplit;
 
-        break;
+    break;
 
     // =========================================================
     case "WaveStartCountdown":
-
         local gamerules = Entities.FindByClassname(null, "tf_gamerules")
         local resource = Entities.FindByClassname(null, "tf_objective_resource")
         local playerarray = []
@@ -657,7 +652,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 playerarray.append(player);
         }
 
-        if (!(MissionAttributes.PlayerCounter in MissionAttributes.SpawnHookTable))
+        // if (!(MissionAttributes.PlayerCounter in MissionAttributes.SpawnHookTable))
             MissionAttributes.SpawnHookTable.PlayerCounter <- MissionAttributes.PlayerCounter;
 
         function MissionAttributes::PlayerUnCounter(params)
@@ -669,7 +664,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     playerarray.remove(i);
         }
 
-        if (!(MissionAttributes.PlayerUnCounter in MissionAttributes.DisconnectTable))
+        // if (!(MissionAttributes.PlayerUnCounter in MissionAttributes.DisconnectTable))
             MissionAttributes.DisconnectTable.PlayerUnCounter <- MissionAttributes.PlayerUnCounter;
 
         function MissionAttributes::WaveStartCountdown()
@@ -691,17 +686,16 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             }
 
         }
-        if (!(MissionAttributes.WaveStartCountdown in MissionAttributes.ThinkTable))
+        // if (!(MissionAttributes.WaveStartCountdown in MissionAttributes.ThinkTable))
             MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown;
-        break;
+    break;
 
     // =========================================================
 
     case "ReflectableDF":
-
         if ("DragonsFuryFix" in MissionAttributes.ThinkTable)
             delete MissionAttributes.ThinkTable.DragonsFuryFix
-        break;
+    break;
 
     // Don't add attribute to clean-up list if it could not be found.
     default:
@@ -811,7 +805,7 @@ function MissionAttributes::RaiseTypeError(attr, type) ParseError(format("Bad ty
 
 // Raises an error if the user passes an invalid argument
 
-function MissionAttributes::RaiseValueError(attr, value) ParseError(format("Bad value %s passed to %s", value, attr))
+function MissionAttributes::RaiseValueError(attr, value, extra = "") ParseError(format("Bad value %s passed to %s.%s", value, attr, extra))
 
 // Raises a template parsing error, if nothing else fits.
 function MissionAttributes::ParseError(ErrorMsg)
