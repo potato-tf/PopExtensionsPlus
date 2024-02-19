@@ -220,9 +220,147 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         SetConvar("tf_mvm_bot_flag_carrier_movement_penalty", value);
         break;
 
+    // =========================================================
+    
     case "MaxSkeletons":
 
         SetConvar("tf_max_active_zombie", value);
+        break;
+
+    // =========================================================
+
+    case "TurboPhysics":
+        SetConvar("sv_turbophysics", value);
+        break;
+        
+    // =========================================================
+
+    case "Accelerate":
+        SetConvar("sv_accelerate", value);
+        break;
+        
+    // =========================================================
+
+    case "AirAccelerate":
+        SetConvar("sv_airaccelerate", value);
+        break;
+        
+    // =========================================================
+
+    case "BotPushaway":
+        SetConvar("tf_avoidteammates_pushaway", value);
+        break;
+
+    // =========================================================
+
+    case "TeleUberDuration":
+        SetConvar("tf_mvm_engineer_teleporter_uber_duration", value);
+        break;
+
+    // =========================================================
+
+    case "RedMaxPlayers":
+        SetConvar("tf_mvm_defenders_team_size", value);
+        break;
+
+    // =========================================================
+
+    case "MaxVelocity":
+        SetConvar("sv_maxvelocity", value);
+        break;
+
+    // =========================================================
+
+    case "ConchHealthOnHitRegen":
+        SetConvar("tf_dev_health_on_damage_recover_percentage", value);
+        break;
+
+    // =========================================================
+
+    case "MarkForDeathLifetime":
+        SetConvar("tf_dev_marked_for_death_lifetime", value);
+        break;
+
+    // =========================================================
+
+    case "VacNumCharges":
+        SetConvar("weapon_medigun_resist_num_chunks", value);
+        break;
+
+    // =========================================================
+
+    case "DoubleDonkWindow":
+        SetConvar("tf_double_donk_window", value);
+        break;
+
+    // =========================================================
+
+    case "ConchSpeedBoost":
+        SetConvar("tf_whip_speed_increase", value);
+        break;
+
+    // =========================================================
+
+    case "StealthDmgReduction":
+        SetConvar("tf_stealth_damage_reduction", value);
+        break;
+
+    // =========================================================
+
+    case "FlagCarrierCanFight":
+        SetConvar("tf_mvm_bot_allow_flag_carrier_to_fight", value);
+        break;
+
+    // =========================================================
+    
+    case "HHHChaseRange":
+        SetConvar("tf_halloween_bot_chase_range", value);
+        break;
+
+    // =========================================================
+    
+    case "HHHAttackRange":
+        SetConvar("tf_halloween_bot_attack_range", value);
+        break;
+
+    // =========================================================
+    
+    case "HHHQuitRange":
+        SetConvar("tf_halloween_bot_quit_range", value);
+        break;
+
+    // =========================================================
+    
+    case "HHHTerrifyRange":
+        SetConvar("tf_halloween_bot_terrify_radius", value);
+        break;
+
+    // =========================================================
+    
+    case "HHHHealthBase":
+        SetConvar("tf_halloween_bot_health_base", value);
+        break;
+
+    // =========================================================
+    
+    case "HHHHealthPerPlayer":
+        SetConvar("tf_halloween_bot_health_per_player", value);
+        break;
+
+    // =========================================================
+
+    case "SentryHintBombForwardRange":
+        SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_forward_range", value);
+        break;
+
+    // =========================================================
+
+    case "SentryHintBombBackwardRange":
+        SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_backward_range", value);
+        break;
+
+    case "SentryHintMinDistanceFromBomb":
+        SetConvar("tf_bot_engineer_mvm_hint_min_distance_from_bomb", value);
         break;
 
     // =========================================================
@@ -247,19 +385,21 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "NoBusterFF":
+        //I'm stupid
+        // function MissionAttributes::NoBusterFF(params)
+        // {
+        //     local attacker = params.attacker, victim = params.const_entity;
+        //     //should probably check playermodel instead.  Edge cases with non-buster giant demos may cause problems
+        //     if (IsPlayer(victim) && IsPlayerABot(attacker) && IsPlayerABot(victim) && victim.GetTeam() == attacker.GetTeam() && attacker.GetPlayerClass() == TF_CLASS_DEMOMAN && attacker.IsMiniBoss())
+        //     {
+        //         params.early_out = true;
+        //         return false;
+        //     }
+        // }
+        // if (!(MissionAttributes.NoBusterFF in MissionAttributes.TakeDamageTable))
+        //     MissionAttributes.TakeDamageTable.NoBusterFF <- MissionAttributes.NoBusterFF;
 
-        function MissionAttributes::NoBusterFF(params)
-        {
-            local attacker = params.attacker, victim = params.const_entity;
-            //should probably check playermodel instead.  Edge cases with non-buster giant demos may cause problems
-            if (IsPlayer(victim) && IsPlayerABot(attacker) && IsPlayerABot(victim) && victim.GetTeam() == attacker.GetTeam() && attacker.GetPlayerClass() == TF_CLASS_DEMOMAN && attacker.IsMiniBoss())
-            {
-                params.early_out = true;
-                return false;
-            }
-        }
-        if (!(MissionAttributes.NoBusterFF in MissionAttributes.TakeDamageTable))
-            MissionAttributes.TakeDamageTable.NoBusterFF <- MissionAttributes.NoBusterFF;
+        SetConvar("tf_bot_suicide_bomb_friendly_fire", value)
         break;
 
     // =========================================================
@@ -450,7 +590,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
     // =========================================================
 
-    case "MiniBossScale":
+    case "GiantScale":
 
         SetConvar("tf_mvm_miniboss_scale", value);
         break;
