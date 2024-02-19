@@ -2,8 +2,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 
 ::MissionAttributes <- {
 
-    CurrAttrs = [] // Array storing currently modified attributes.
-
+    CurAttrs = {} // Array storing currently modified attributes.
     ConVars = {} //table storing original convar values
 
     ThinkTable = { //sub-think table.  Pre-fill with some global fixes
@@ -98,14 +97,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl");
         function MissionAttributes::NoCrumpkins()
         {
-            // printl("NoCrumpkins")
             switch(value)
             {
 
                 case 1:
 
                 for (local pumpkin; pumpkin = Entities.FindByClassname(pumpkin, "tf_ammo_pack");)
-                    if (NetProps.GetPropInt(pumpkin, "m_nModelIndex") == pumpkinIndex)
+                    if (GetPropInt(pumpkin, "m_nModelIndex") == pumpkinIndex)
                         EntFireByHandle(pumpkin, "Kill", "", -1, null, null); //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
             }
             for (local i = 1, player; i <= MaxClients(); i++)
@@ -131,7 +129,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
     case "666Wavebar": //doesn't work until wave switches, won't work on W1
 
-        NetProps.SetPropInt(resource, "m_nMvMEventPopfileType", value);
+        SetPropInt(resource, "m_nMvMEventPopfileType", value);
         break;
 
     // =========================================================
@@ -233,7 +231,6 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
         function MissionAttributes::SniperHideLasers()
         {
-            // printl("SniperHideLasers")
             for (local dot; dot = Entities.FindByClassname(dot, "env_sniperdot");)
                 if (dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS)
                     EntFireByHandle(dot, "Kill", "", -1, null, null);
@@ -267,18 +264,78 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
     // =========================================================
 
-    //set to 1 for RED players, 2 for BLU players
+    //Uses bitflags to enable certain behavior 
+    // 1 = Robot animations (excluding sticky demo and jetpack pyro)
+    // 2 = Human animations
+    // 4 = Enable footstep sfx
+    // 8 = Enable voicelines (WIP)
+
+    //example: MissionAttr(`PlayersAreRobots`, 6) - Human animations and footsteps enabled
+
     case "PlayersAreRobots":
 
-        function MissionAttributes::PlayersAreRobots(params)
+    function MissionAttributes::PlayersAreRobots(params)
+    {
+        
+        local player = GetPlayerFromUserID(params.userid)
+        if (player.IsBotOfType(1337)) return;
+
+        
+        player.ValidateScriptScope();
+        local scope = player.GetScriptScope();
+
+        if ("wearable" in scope && scope.wearable != null)
         {
-            local player = GetPlayerFromUserID(params.userid)
-            if (player.IsBotOfType(1337) || player.GetTeam() != value + 1) return;
-            EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[bot.GetPlayerClass()]), -1, null, null);
+            scope.wearable.Destroy();
+            scope.wearable <- null;
         }
-        if (!(MissionAttributes.PlayersAreRobots in MissionAttributes.SpawnHookTable))
-            MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots;
-        break;
+        
+        local playerclass  = player.GetPlayerClass();
+        local class_string = classes[playerclass];
+        local model = format("models/bots/%s/bot_%s.mdl", class_string, class_string);
+        printl(model)
+        
+        if (value & 1)
+        {
+            //sticky anims and thruster anims are particularly problematic
+            if ((playerclass == TF_CLASS_DEMOMAN && GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && HasItemIndex(player, 1179))) 
+            {
+                PlayerRobotModel(player, model);
+                return;
+            }
+            EntFireByHandle(player, "SetCustomModelWithClassAnimations", model, 1, null, null);
+            SetEntityColor(player, 255, 255, 255, 255);
+            SetPropInt(player, "m_nRenderMode", kRenderFxNone) //dangerous constant name lol
+
+        }
+
+        if (value & 2)
+        {   
+            if (value & 1) value | 1 //incompatible flags
+            PlayerRobotModel(player, model);
+        }
+
+        if (value & 4)
+        {
+            scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
+
+            function StepThink()
+            {
+                if (GetPropInt(self,"m_Local.m_nStepside") != stepside)
+                    EmitSoundOn("MVM.BotStep", self)
+
+                scope.stepside = GetPropInt(self,"m_Local.m_nStepside")
+                return -1
+            }
+            if (!(StepThink in scope.PlayerThinkTable)) 
+                scope.PlayerThinkTable.StepThink <- StepThink
+
+        } else delete scope.PlayerThinkTable.StepThink
+        
+    }
+    
+    MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots;
+    break;
 
     // =========================================================
 
@@ -286,7 +343,6 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
         function MissionAttributes::BotsAreHumans(params)
         {
-            printl("BotsAreHumans")
             local player = GetPlayerFromUserID(params.userid)
             if (!player.IsBotOfType(1337)) return;
             EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[bot.GetPlayerClass()]), -1, null, null);
@@ -318,14 +374,14 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             {
                 for (local props; props = Entities.FindByClassname(props, "prop_dynamic");)
                 {
-                    if (NetProps.GetPropInt(props, "m_nModelIndex") != carrierPartsIndex) continue;
+                    if (GetPropInt(props, "m_nModelIndex") != carrierPartsIndex) continue;
 
                     carrier = props
                     break;
                 }
 
             }
-            NetProps.SetPropIntArray(carrier, "m_nModelIndexOverrides", carrierPartsIndex, 3);
+            SetPropIntArray(carrier, "m_nModelIndexOverrides", carrierPartsIndex, 3);
             noRomeCarrier = true;
         }
         if (!(MissionAttributes.NoRome in MissionAttributes.SpawnHookTable))
@@ -378,7 +434,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         function MissionAttributes::GiantsRareSpells()
         {
             for (local spells; spells = Entities.FindByName(spells, "_giantspell");)
-                NetProps.SetPropInt(spells, "m_nTier", 1)
+                SetPropInt(spells, "m_nTier", 1)
         }
 
         if (!(MissionAttributes.GiantsRareSpells in MissionAttributes.ThinkTable))
@@ -407,14 +463,14 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         {
             //kill skele spawners before they split from tf_zombie_spawner
             for (local skelespell; skelespell = FindByClassname(skelespell, "tf_projectile_spellspawnzombie"); )
-                if (NetProps.GetPropEntity(skelespell, "m_hThrower") == null)
+                if (GetPropEntity(skelespell, "m_hThrower") == null)
                     EntFireByHandle(skelespell, "Kill", "", -1, null, null);
 
             // m_hThrower does not change when the skeletons split for spell-casted skeles, just need to kill them after spawning
             for (local skeles; skeles = FindByClassname(skeles, "tf_zombie");  )
             {
                 //kill blu split skeles
-                if (skeles.GetModelScale() == 0.5 && NetProps.GetPropEntity(skelespell, "m_hThrower").IsBotOfType(1337))
+                if (skeles.GetModelScale() == 0.5 && GetPropEntity(skelespell, "m_hThrower").IsBotOfType(1337))
                 {
                     EntFireByHandle(skeles, "Kill", "", -1, null, null);
                     return;
@@ -478,20 +534,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
         function MissionAttributes::WaveStartCountdown()
         {
-            local roundtime = NetProps.GetPropFloat(gamerules, "m_flRestartRoundTime")
-            if (!NetProps.GetPropBool(resource, "m_bMannVsMachineBetweenWaves")) return;
+            local roundtime = GetPropFloat(gamerules, "m_flRestartRoundTime")
+            if (!GetPropBool(resource, "m_bMannVsMachineBetweenWaves")) return;
             local ready = 0
 
             if (roundtime > Time() + value)
             {
-                for (local i = 0; i < NetProps.GetPropArraySize(gamerules, "m_bPlayerReady"); i++)
+                for (local i = 0; i < GetPropArraySize(gamerules, "m_bPlayerReady"); i++)
                 {
-                    if (!NetProps.GetPropBoolArray(gamerules, "m_bPlayerReady", i)) continue;
-                    printl(playerarray.len())
+                    if (!GetPropBoolArray(gamerules, "m_bPlayerReady", i)) continue;
                     ready++;
                     // printl(ready +" : "+ CountAllPlayers());
                     if (ready >= playerarray.len() || (roundtime <= 12.0))
-                        NetProps.SetPropFloat(gamerules, "m_flRestartRoundTime", Time() + value);
+                        SetPropFloat(gamerules, "m_flRestartRoundTime", Time() + value);
                 }
             }
 
@@ -518,7 +573,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     if (success)
     {
         DebugLog(format("Added mission attribute %s", attr));
-        MissionAttributes.CurrAttrs.append(attr);
+        MissionAttributes.CurAttrs[attr] <- value;
     }
 }
 
@@ -536,9 +591,24 @@ AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
     function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
     // function OnGameEvent_player_spawn(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) }
-    function OnGameEvent_post_inventory_application(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) } //majority of mvm maps do not have a resupply cabinet anyway
     function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
     function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
+    function OnGameEvent_post_inventory_application(params) 
+    {
+        local player = GetPlayerFromUserID(params.userid)
+        player.ValidateScriptScope()
+        local scope = player.GetScriptScope()
+        if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+
+        function PlayerThinks()
+        {
+            foreach (_, func in scope.PlayerThinkTable) func()
+        }
+        scope.PlayerThinks <- PlayerThinks
+        AddThinkToEnt(player, "PlayerThinks")
+
+        foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
+    } 
     // Hook all wave inits to reset parsing error counter.
     
     function OnGameEvent_recalculate_holidays(params)
@@ -547,13 +617,14 @@ AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
         foreach (_, func in MissionAttributes.InitWaveTable) func(params)
 
-        foreach (a in MissionAttributes.CurrAttrs) printl(a)
+        foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
         MissionAttributes.RaisedParseError = false;
     }
 
     function GameEvent_mvm_wave_complete(params) { ResetDefaults(); }
 
 }
+__CollectGameEventCallbacks(PopExt_MissionAttrEvents);
 
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
 function MissionAttr(attr, value)
@@ -573,7 +644,7 @@ function MAtr(attr, value)
 function MissionAttributes::ResetDefaults()
 {
     ResetConvars();
-    // MissionAttributes.CurrAttrs.clear();
+    // MissionAttributes.CurAttrs.clear();
     delete ::PopExt_MissionAttrEvents;
     delete ::MissionAttributes;
     DebugLog(format("Cleaned up mission attribute %s", attr));
@@ -598,6 +669,10 @@ function MissionAttributes::RaiseIndexError(attr) ParseError(format("Index out o
 // Example: Allowed values are strings, but user passed a float.
 function MissionAttributes::RaiseTypeError(attr, type) ParseError(format("Bad type for %s (should be %s)", attr, type));
 
+// Raises an error if the user passes an invalid argument
+
+function MissionAttributes::RaiseValueError(attr, value) ParseError(format("Bad value %s passed to %s", value, attr))
+
 // Raises a template parsing error, if nothing else fits.
 function MissionAttributes::ParseError(ErrorMsg)
 {
@@ -615,7 +690,3 @@ function MissionAttributes::RaiseException(ExceptionMsg)
 {
     Assert(false, format("MissionAttr EXCEPTION: %s.", ExceptionMsg));
 }
-
-// =========================================================
-// Register MissionAttributes callbacks.
-__CollectGameEventCallbacks(PopExt_MissionAttrEvents);

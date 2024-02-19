@@ -18,15 +18,15 @@ if (!("ConstantNamingConvention" in CONST))
 	foreach (a,b in Constants)
 		foreach (k,v in b)
             CONST[k] <- v != null ? v : 0;
-
-	foreach (k, v in ::NetProps.getclass())
-		if (k != "IsValid")
-			ROOT[k] <- ::NetProps[k].bindenv(::NetProps)
-
-	foreach (k, v in ::Entities.getclass())
-		if (k != "IsValid")
-			ROOT[k] <- ::Entities[k].bindenv(::Entities)
 }
+
+foreach (k, v in ::NetProps.getclass())
+    if (k != "IsValid" && !(k in ROOT))
+        ROOT[k] <- ::NetProps[k].bindenv(::NetProps)
+
+foreach (k, v in ::Entities.getclass())
+    if (k != "IsValid" && !(k in ROOT))
+        ROOT[k] <- ::Entities[k].bindenv(::Entities)
 
 ::AllNavAreas <- {};
 NavMesh.GetAllAreas(AllNavAreas);
@@ -300,6 +300,76 @@ function HasEffect(ent, value)
 function SetEffect(ent, value) 
 { 
 	SetPropInt(ent, "m_fEffects", value); 
+}
+
+function PlayerRobotModel(player, model)
+{
+    player.ValidateScriptScope();
+    local scope = player.GetScriptScope();
+    scope.parentedmodel <- false;
+    
+    local wearable = CreateByClassname("tf_wearable");
+    SetPropString(wearable, "m_iName", "__bot_bonemerge_model");
+    SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model));
+    SetPropBool(wearable, "m_bValidatedAttachedEntity", true);
+    SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true);
+    SetPropEntity(wearable, "m_hOwnerEntity", player);
+    wearable.SetTeam(player.GetTeam());
+    wearable.SetOwner(player);
+    wearable.DispatchSpawn();
+    EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player);
+    SetPropInt(wearable, "m_fEffects", EF_BONEMERGE | EF_BONEMERGE_FASTCULL);
+    scope.wearable <- wearable;
+    
+    SetPropInt(player, "m_nRenderMode", kRenderTransColor);
+    SetPropInt(player, "m_clrRender", 0);   
+
+    printl(scope.wearable);
+    
+    function BotModelThink()
+    {
+        // printl(self)
+        if (!wearable) return;
+        
+        if (self.IsTaunting())
+        {
+            if (!parentedmodel)
+            {
+                EntFireByHandle(wearable, "SetParent", "", -1, null, null);
+                EntFireByHandle(wearable, "SetParent", "!activator", 0.015, self, self);
+                parentedmodel = true;
+            }
+            return -1
+        }
+        parentedmodel = false;
+        return -1
+    }
+    if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+
+    if (!(BotModelThink in scope.PlayerThinkTable))
+        scope.PlayerThinkTable.BotModelThink <- BotModelThink
+
+    function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func() }
+
+    if (!("PlayerThinks" in scope))
+    {
+        scope.PlayerThinks <- PlayerThinks
+        AddThinkToEnt(player, "PlayerThinks")
+    }         
+}
+
+function HasItemIndex(player, index)
+{
+    local t = false;
+    for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer())
+    {
+        if (GetItemIndex(child) == index)
+        {
+            t = true;
+            break;
+        }
+    }
+    return t;
 }
 
 function StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5)
@@ -610,10 +680,10 @@ function VectorAngles(forward)
 	}
 	else
 	{
-		yaw = (atan2(forward.y, forward.x) * 180.0 / Constants.Math.Pi);
+		yaw = (atan2(forward.y, forward.x) * 180.0 / Pi);
 		if (yaw < 0.0)
 			yaw += 360.0;
-		pitch = (atan2(-forward.z, forward.Length2D()) * 180.0 / Constants.Math.Pi);
+		pitch = (atan2(-forward.z, forward.Length2D()) * 180.0 / Pi);
 		if (pitch < 0.0)
 			pitch += 360.0;
 	}
@@ -623,8 +693,8 @@ function VectorAngles(forward)
 
 function AnglesToVector(angles)
 {
-    local pitch = angles.x * Constants.Math.Pi / 180.0
-    local yaw = angles.y * Constants.Math.Pi / 180.0
+    local pitch = angles.x * Pi / 180.0
+    local yaw = angles.y * Pi / 180.0
     local x = cos(pitch) * cos(yaw)
     local y = cos(pitch) * sin(yaw)
     local z = sin(pitch)
