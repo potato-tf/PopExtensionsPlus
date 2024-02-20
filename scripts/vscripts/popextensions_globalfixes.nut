@@ -6,6 +6,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 ::GlobalFixes <- {
     //remove with MissionAttr("ReflectableDF", 1)
+    InitWaveTable = {}
+    TakeDamageTable = {}
     ThinkTable = {
 
         function DragonsFuryFix()
@@ -37,7 +39,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
                 for (local money; money = FindByClassnameWithin(money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS);)
                     money.SetOrigin(player.GetOrigin())
             }
-            player.GetScriptScope().ThinkTable.MoneyThink <- MoneyThink
+            player.GetScriptScope().PlayerThinkTable.MoneyThink <- MoneyThink
         }
     }
     Events = {
@@ -68,9 +70,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
             if (GetRoundState() != 3) return;
     
             foreach (_, func in GlobalFixes.InitWaveTable) func(params)
-    
-            foreach (attr, value in GlobalFixes.CurAttrs) printl(attr+" = "+value)
-            GlobalFixes.RaisedParseError = false;
         }
     
         function GameEvent_mvm_wave_complete(params) { delete GlobalFixes }

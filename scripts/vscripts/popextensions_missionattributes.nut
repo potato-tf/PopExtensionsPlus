@@ -617,7 +617,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             local bot = GetPlayerFromUserID(params.userid)
             if (bot.IsBotOfType(1337))
                 for (local child = bot.FirstMoveChild(); child != null; child = child.NextMovePeer())
-                    if (child.GetClassname() == "tf_wearable" && startswith(child.GetModelName(), "models/workshop/player/items/"+classes[bot.GetPlayerClass()]+"/tw"))
+                    if (!bot.HasBotTag("popext_forceromevision") && child.GetClassname() == "tf_wearable" && startswith(child.GetModelName(), "models/workshop/player/items/"+classes[bot.GetPlayerClass()]+"/tw"))
                         EntFireByHandle(child, "Kill", "", -1, null, null);
 
             //set value to 2 to also kill the carrier tank addon model
