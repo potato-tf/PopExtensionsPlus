@@ -23,21 +23,19 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 	}
 
     Events = {
+
         function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
         // function OnGameEvent_player_spawn(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) }
         function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
         function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
-        function OnGameEvent_post_inventory_application(params) 
-        {
+
+        function OnGameEvent_post_inventory_application(params) { 
             local player = GetPlayerFromUserID(params.userid)
             player.ValidateScriptScope()
             local scope = player.GetScriptScope()
             if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
     
-            function PlayerThinks()
-            {
-                foreach (_, func in scope.PlayerThinkTable) func()
-            }
+            function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func() }
             scope.PlayerThinks <- PlayerThinks
             AddThinkToEnt(player, "PlayerThinks")
     
@@ -61,8 +59,6 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
     }
 };
 __CollectGameEventCallbacks(MissionAttributes.Events);
-
-local resource = Entities.FindByClassname(null, "tf_objective_resource");
 
 // Mission Attribute Functions
 // =========================================================
@@ -113,7 +109,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         // Error Handling
     try (value.tointeger()) catch(_) {RaiseTypeError(attr, "int"); success = false; break;}
     if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break;}
-    if (value < 0 || value > 2) {RaiseIndexError(attr); success = false; break;}
+    if (value < 0 || value > 11) {RaiseIndexError(attr, [0, 11]); success = false; break;}
 
         // Set Holiday logic
         SetConvar("tf_forced_holiday", value);
@@ -166,19 +162,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "666Wavebar": //doesn't work until wave switches, won't work on W1
-        SetPropInt(resource, "m_nMvMEventPopfileType", value);
+        SetPropInt(ObjectiveResource, "m_nMvMEventPopfileType", value);
     break;
 
     // =========================================================
 
     case "WaveNum":
-        SetPropInt(resource, "m_nMannVsMachineWaveCount", value);
+        SetPropInt(ObjectiveResource, "m_nMannVsMachineWaveCount", value);
     break;
 
     // =========================================================
 
     case "MaxWaveNum":
-        SetPropInt(resource, "m_nMannVsMachineMaxWaveCount", value);
+        SetPropInt(ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value);
     break;
 
     // =========================================================
@@ -483,8 +479,9 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             
             local player = GetPlayerFromUserID(params.userid)
             if (player.IsBotOfType(1337)) return;
-
+          
             //if (!CheckBitwise(value)) RaiseValueError(attr, value, "  Value must be a power of 2.")
+
             
             player.ValidateScriptScope();
             local scope = player.GetScriptScope();
@@ -533,8 +530,9 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     scope.stepside = GetPropInt(self,"m_Local.m_nStepside")
                     return -1
                 }
-                if (!(StepThink in scope.PlayerThinkTable)) 
+                if (!("StepThink" in scope.PlayerThinkTable)) 
                     scope.PlayerThinkTable.StepThink <- StepThink
+
 
             } else delete scope.PlayerThinkTable.StepThink
 			
@@ -589,6 +587,9 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				if (!(RobotVOThink in MissionAttributes.ThinkTable))
 					MissionAttributes.ThinkTable.RobotVOThink <- RobotVOThink;
 			}
+
+            } else if ("StepThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.StepThink
+            
         }
         
         MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots;
@@ -753,37 +754,11 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
     case "WaveStartCountdown":
         local gamerules = Entities.FindByClassname(null, "tf_gamerules")
-        local resource = Entities.FindByClassname(null, "tf_objective_resource")
-        local playerarray = []
-        function MissionAttributes::PlayerCounter(params)
-        {
-            local player = GetPlayerFromUserID(params.userid)
-
-            if (player.IsBotOfType(1337)) return;
-
-            if (playerarray.find(player) == null)
-                playerarray.append(player);
-        }
-
-        // if (!(MissionAttributes.PlayerCounter in MissionAttributes.SpawnHookTable))
-            MissionAttributes.SpawnHookTable.PlayerCounter <- MissionAttributes.PlayerCounter;
-
-        function MissionAttributes::PlayerUnCounter(params)
-        {
-            local player = GetPlayerFromUserID(params.userid)
-
-            for (local i = playerarray.len() - 1; i >= 0; i--)
-                if (playerarray[i] == null || playerarray[i] == player)
-                    playerarray.remove(i);
-        }
-
-        // if (!(MissionAttributes.PlayerUnCounter in MissionAttributes.DisconnectTable))
-            MissionAttributes.DisconnectTable.PlayerUnCounter <- MissionAttributes.PlayerUnCounter;
 
         function MissionAttributes::WaveStartCountdown()
         {
             local roundtime = GetPropFloat(gamerules, "m_flRestartRoundTime")
-            if (!GetPropBool(resource, "m_bMannVsMachineBetweenWaves")) return;
+            if (!GetPropBool(ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return;
             local ready = 0
 
             if (roundtime > Time() + value)
@@ -859,15 +834,15 @@ function MissionAttributes::DebugLog(LogMsg)
 }
 // Raises an error if the user passes an index that is out of range.
 // Example: Allowed values are 1-2, but user passed 3.
-function MissionAttributes::RaiseIndexError(attr) ParseError(format("Index out of range for %s", attr));
+function MissionAttributes::RaiseIndexError(attr, max = [0, 1]) ParseError(format("Index out of range for %s, value range: %d - %d", attr, max[0], max[1]));
 
 // Raises an error if the user passes an argument of the wrong type.
 // Example: Allowed values are strings, but user passed a float.
 function MissionAttributes::RaiseTypeError(attr, type) ParseError(format("Bad type for %s (should be %s)", attr, type));
 
 // Raises an error if the user passes an invalid argument
-
-function MissionAttributes::RaiseValueError(attr, value, extra = "") ParseError(format("Bad value %s passed to %s.%s", value, attr, extra))
+// Example: Attribute expects a bitwise operator but value cannot be evenly split into a power of 2
+function MissionAttributes::RaiseValueError(attr, value, extra = "") ParseError(format("Bad value   %s  passed to %s.%s", value.tostring(), attr, extra));
 
 // Raises a template parsing error, if nothing else fits.
 function MissionAttributes::ParseError(ErrorMsg)
@@ -877,7 +852,15 @@ function MissionAttributes::ParseError(ErrorMsg)
         MissionAttributes.RaisedParseError = true;
         ClientPrint(null, 3, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details.");
     }
-    ClientPrint(null, 2, format("MissionAttr ERROR: %s.", ErrorMsg));
+    ClientPrint(null, 2, format("%s %s.\n", MATTR_ERROR, ErrorMsg));
+
+    foreach (player in PlayerArray)
+    {
+        if (player == null) continue;
+
+        EntFireByHandle(ClientCommand, "Command", format("echo %s %s.\n", MATTR_ERROR, ErrorMsg), -1, player, player)
+    }
+    printf("%s %s.\n", MATTR_ERROR, ErrorMsg);
 }
 
 // Raises an exception.

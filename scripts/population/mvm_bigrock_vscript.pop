@@ -25,10 +25,18 @@ WaveSchedule
 				IncludeScript(`popextensions`)
 
 				//load popextensions tags script
-				// IncludeScript(`popextensions_tags`)
+				IncludeScript(`popextensions_tags`)
 
 				//load general mission attributes
 				IncludeScript(`popextensions_missionattributes`)
+
+				//load mission attributes 
+				MissionAttr(`NoReanimators`, 1)
+				MissionAttr(`666Wavebar`, 1)
+				MissionAttr(`ForceHoliday`, 2)
+				MissionAttr(`NoRome`, 2)
+				MissionAttr(`WaveStartCountdown`, 5)
+				MissionAttr(`PlayersAreRobots`, 2)
 
 				// If you are hitting the 4096 character limit inside this script, it would be required to put hooks into separate file
 				// IncludeScript(`mypophooks`)
@@ -107,7 +115,7 @@ WaveSchedule
 			TotalCount 19
 			MaxActive 19
 			SpawnCount 19
-			WaitBeforeStarting 3
+			WaitBeforeStarting 1
 			WaitBetweenSpawns 5
 			TotalCurrency 200
 			TFBot
@@ -117,8 +125,9 @@ WaveSchedule
 				Tag "popext_alwaysglow"
 				Tag "popext_usebestweapon"
 				Tag "popext_giveweapon|tf_weapon_shotgun_soldier|425" //family business
+				Tag "popext_homingprojectile|1.0|1.0"
 				Class Soldier
-				WeaponRestrictions SecondaryOnly
+				WeaponRestrictions PrimaryOnly
 			}
 		}
 	}
