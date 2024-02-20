@@ -163,19 +163,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "666Wavebar": //doesn't work until wave switches, won't work on W1
-        SetPropInt(ObjectiveResource, "m_nMvMEventPopfileType", value);
+        SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMEventPopfileType", value);
     break;
 
     // =========================================================
 
     case "WaveNum":
-        SetPropInt(ObjectiveResource, "m_nMannVsMachineWaveCount", value);
+        SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value);
     break;
 
     // =========================================================
 
     case "MaxWaveNum":
-        SetPropInt(ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value);
+        SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value);
     break;
 
     // =========================================================
@@ -499,13 +499,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             if (value & 1)
             {
                 //sticky anims and thruster anims are particularly problematic
-                if ((playerclass == TF_CLASS_DEMOMAN && GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && HasItemIndex(player, 1179))) 
+                if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemIndex(player, 1179))) 
                 {
-                    PlayerRobotModel(player, model);
+                    PopExtUtil.PlayerRobotModel(player, model);
                     return;
                 }
                 EntFireByHandle(player, "SetCustomModelWithClassAnimations", model, 1, null, null);
-                SetEntityColor(player, 255, 255, 255, 255);
+                PopExtUtil.SetEntityColor(player, 255, 255, 255, 255);
                 SetPropInt(player, "m_nRenderMode", kRenderFxNone) //dangerous constant name lol
 
             }
@@ -513,7 +513,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             if (value & 2)
             {   
                 if (value & 1) value | 1 //incompatible flags
-                PlayerRobotModel(player, model);
+                PopExtUtil.PlayerRobotModel(player, model);
             }
 
             if (value & 4)
@@ -545,7 +545,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 						if (ent.GetEFlags() & CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE) continue;
 						ent.AddEFlags(CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE);
 						
-						local owner = NetProps.GetPropEntity(ent, "m_hOwner");
+						local owner = GetPropEntity(ent, "m_hOwner");
 						if (owner != null && !owner.IsBotOfType(1337))
 						{
 						  
@@ -752,23 +752,22 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
     // =========================================================
     case "WaveStartCountdown":
-        local gamerules = Entities.FindByClassname(null, "tf_gamerules")
 
         function MissionAttributes::WaveStartCountdown()
         {
-            local roundtime = GetPropFloat(gamerules, "m_flRestartRoundTime")
-            if (!GetPropBool(ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return;
+            local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
+            if (!GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return;
             local ready = 0
 
             if (roundtime > Time() + value)
             {
-                for (local i = 0; i < GetPropArraySize(gamerules, "m_bPlayerReady"); i++)
+                for (local i = 0; i < GetPropArraySize(PopExtUtil.GameRules, "m_bPlayerReady"); i++)
                 {
-                    if (!GetPropBoolArray(gamerules, "m_bPlayerReady", i)) continue;
+                    if (!GetPropBoolArray(PopExtUtil.GameRules, "m_bPlayerReady", i)) continue;
                     ready++;
                     // printl(ready +" : "+ CountAllPlayers());
-                    if (ready >= playerarray.len() || (roundtime <= 12.0))
-                        SetPropFloat(gamerules, "m_flRestartRoundTime", Time() + value);
+                    if (ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
+                        SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time() + value);
                 }
             }
 
@@ -853,7 +852,7 @@ function MissionAttributes::ParseError(ErrorMsg)
     }
     ClientPrint(null, 2, format("%s %s.\n", MATTR_ERROR, ErrorMsg));
 
-    foreach (player in PlayerArray)
+    foreach (player in PopExtUtil.PlayerArray)
     {
         if (player == null) continue;
 

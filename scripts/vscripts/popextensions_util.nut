@@ -22,108 +22,102 @@ foreach (k, v in ::Entities.getclass())
     if (k != "IsValid" && !(k in ROOT))
         ROOT[k] <- ::Entities[k].bindenv(::Entities)
 
-::AllNavAreas <- {};
-NavMesh.GetAllAreas(AllNavAreas);
-
-::Global_Time <- Time()
-
 //check a global variable instead of accessing a netprop every time to check if we are between waves.
-::IsWaveStarted <- false;
-::PopExt_UtilEvents <- {
-    function OnGameEvent_mvm_wave_complete(params) { IsWaveStarted = false; }
-    function OnGameEvent_mvm_wave_failed(params) { IsWaveStarted = false; }
-    function OnGameEvent_mvm_begin_wave(params) { IsWaveStarted = true; }
+::PopExtUtil <- {
 
-    function OnGameEvent_post_inventory_application(params)
-    {
-        local player = GetPlayerFromUserID(params.userid)
+    PlayerArray = []
+    Classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
+    IsWaveStarted = false
+    AllNavAreas = {}
 
-        if (player.IsBotOfType(1337)) return;
-
-        if (PlayerArray.find(player) == null) PlayerArray.append(player);
+    DeflectableProjectiles = {
+        tf_projectile_arrow                 = 1 // Huntsman arrow, Rescue Ranger bolt
+        tf_projectile_ball_ornament         = 1 // Wrap Assassin
+        tf_projectile_cleaver               = 1 // Flying Guillotine
+        tf_projectile_energy_ball           = 1 // Cow Mangler charge shot
+        tf_projectile_flare                 = 1 // Flare guns projectile
+        tf_projectile_healing_bolt          = 1 // Crusader's Crossbow
+        tf_projectile_jar                   = 1 // Jarate
+        tf_projectile_jar_gas               = 1 // Gas Passer explosion
+        tf_projectile_jar_milk              = 1 // Mad Milk
+        tf_projectile_lightningorb          = 1 // Spell Variant from Short Circuit
+        tf_projectile_mechanicalarmorb      = 1 // Short Circuit energy ball
+        tf_projectile_pipe                  = 1 // Grenade Launcher bomb
+        tf_projectile_pipe_remote           = 1 // Stickybomb Launcher bomb
+        tf_projectile_rocket                = 1 // Rocket Launcher rocket
+        tf_projectile_sentryrocket          = 1 // Sentry gun rocket
+        tf_projectile_stun_ball             = 1 // Baseball
+    }
+    HomingProjectiles = {
+        tf_projectile_arrow				= 1
+        tf_projectile_energy_ball		= 1 // Cow Mangler
+        tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
+        tf_projectile_lightningorb		= 1 // Lightning Orb Spell
+        tf_projectile_mechanicalarmorb	= 1 // Short Circuit
+        tf_projectile_rocket			= 1
+        tf_projectile_sentryrocket		= 1
+        tf_projectile_spellfireball		= 1
+        tf_projectile_energy_ring		= 1 // Bison
+        tf_projectile_flare				= 1
     }
 
-    function OnGameEvent_player_disconnect(params)
-    {
-        local player = GetPlayerFromUserID(params.userid)
+    Global_Time = Time()
+    GameRules = FindByClassname(null, "tf_gamerules")
+    ObjectiveResource = FindByClassname(null, "tf_objective_resource")
+    MonsterResource = FindByClassname(null, "monster_resource")
+    MvMLogicEnt = FindByClassname(null, "tf_logic_mann_vs_machine")
+    PlayerManager = FindByClassname(null, "tf_player_manager")
+    Worldspawn = FindByClassname(null, "worldspawn")
+    StartRelay = FindByName(null, "wave_start_relay")
+    FinishedRelay = FindByName(null, "wave_finished_relay")
+    CurrentWaveNum = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
+    ClientCommand = SpawnEntityFromTable("point_clientcommand", {})
 
-        for (local i = PlayerArray.len() - 1; i >= 0; i--)
-            if (PlayerArray[i] == null || PlayerArray[i] == player)
-                PlayerArray.remove(i);
+    Events = {
+        function OnGameEvent_mvm_wave_complete(params) { PopExtUtil.IsWaveStarted = false }
+        function OnGameEvent_mvm_wave_failed(params) { PopExtUtil.IsWaveStarted = false }
+        function OnGameEvent_mvm_begin_wave(params) { PopExtUtil.IsWaveStarted = true }
+    
+        function OnGameEvent_post_inventory_application(params)
+        {
+            local player = GetPlayerFromUserID(params.userid)
+    
+            if (player.IsBotOfType(1337)) return
+    
+            if (PopExtUtil.PlayerArray.find(player) == null) PopExtUtil.PlayerArray.append(player)
+        }
+    
+        function OnGameEvent_player_disconnect(params)
+        {
+            local player = GetPlayerFromUserID(params.userid)
+    
+            for (local i = PopExtUtil.PlayerArray.len() - 1; i >= 0; i--)
+                if (PopExtUtil.PlayerArray[i] == null || PopExtUtil.PlayerArray[i] == player)
+                    PopExtUtil.PlayerArray.remove(i)
+        }
     }
 };
-__CollectGameEventCallbacks(PopExt_UtilEvents);
+
+NavMesh.GetAllAreas(PopExtUtil.AllNavAreas);
+
+__CollectGameEventCallbacks(PopExtUtil.Events);
 
 //HACK: forces post_inventory_application to fire on pop load
 for (local i = 1; i <= MaxClients(); i++)
     if (PlayerInstanceFromIndex(i) != null)
         EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", -1, null, null);
 
-::CurrentWaveNum <- GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount");
-
-//useful ents
-::GameRules <- FindByClassname(null, "tf_gamerules");
-::ObjectiveResource <- FindByClassname(null, "tf_objective_resource");
-::MonsterResource <- FindByClassname(null, "monster_resource");
-::MvMLogicEnt <- FindByClassname(null, "tf_logic_mann_vs_machine");
-::PlayerManager <- FindByClassname(null, "tf_player_manager");
-::Worldspawn <- FindByClassname(null, "worldspawn");
-::StartRelay <- FindByName(null, "wave_start_relay");
-::FinishedRelay <- FindByName(null, "wave_finished_relay");
-
-//spawn a point_clientcommand
-::ClientCommand <- SpawnEntityFromTable("point_clientcommand", {})
-
-::Classes <- ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
-
-// it's a table cuz much faster
-::HomingProjectiles <-
-{
-	tf_projectile_arrow				= 1
-	tf_projectile_energy_ball		= 1 // Cow Mangler
-	tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
-	tf_projectile_lightningorb		= 1 // Lightning Orb Spell
-	tf_projectile_mechanicalarmorb	= 1 // Short Circuit
-	tf_projectile_rocket			= 1
-	tf_projectile_sentryrocket		= 1
-	tf_projectile_spellfireball		= 1
-	tf_projectile_energy_ring		= 1 // Bison
-	tf_projectile_flare				= 1
-}
-
-::DeflectableProjectiles <-
-{
-    tf_projectile_arrow                 = 1 // Huntsman arrow, Rescue Ranger bolt
-    tf_projectile_ball_ornament         = 1 // Wrap Assassin
-    tf_projectile_cleaver               = 1 // Flying Guillotine
-    tf_projectile_energy_ball           = 1 // Cow Mangler charge shot
-    tf_projectile_flare                 = 1 // Flare guns projectile
-    tf_projectile_healing_bolt          = 1 // Crusader's Crossbow
-    tf_projectile_jar                   = 1 // Jarate
-    tf_projectile_jar_gas               = 1 // Gas Passer explosion
-    tf_projectile_jar_milk              = 1 // Mad Milk
-    tf_projectile_lightningorb          = 1 // Spell Variant from Short Circuit
-    tf_projectile_mechanicalarmorb      = 1 // Short Circuit energy ball
-    tf_projectile_pipe                  = 1 // Grenade Launcher bomb
-    tf_projectile_pipe_remote           = 1 // Stickybomb Launcher bomb
-    tf_projectile_rocket                = 1 // Rocket Launcher rocket
-    tf_projectile_sentryrocket          = 1 // Sentry gun rocket
-    tf_projectile_stun_ball             = 1 // Baseball
-}
-
-::PlayerArray <- []
-
-function IsLinuxServer()
+function PopExtUtil::IsLinuxServer()
 {
 	return RAND_MAX != 32767
 }
 
-function ShowMessage(message)
+function PopExtUtil::ShowMessage(message)
 {
 	ClientPrint(null, HUD_PRINTCENTER , message)
 }
 
-function ShowChatMessage(target, fmt, ...)
+function PopExtUtil::ShowChatMessage(target, fmt, ...)
 {
     local result = "\x07FFCC22[Map] ";
     local start = 0;
@@ -180,7 +174,7 @@ function ShowChatMessage(target, fmt, ...)
 // example
 // ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT);
 
-function Explanation(message, textPrintTime = 5, textScanTime = 0.02)
+function PopExtUtil::Explanation(message, textPrintTime = 5, textScanTime = 0.02)
 {
     local txtent = SpawnEntityFromTable("game_text", {
         effect = 2,
@@ -210,7 +204,7 @@ function Explanation(message, textPrintTime = 5, textScanTime = 0.02)
 
         //    DoEntFire("!activator", "SetScriptOverlayMaterial", "", -1, player, player);
 
-           // foreach (player in playerarray) DoEntFire("command", "Command", "r_screenoverlay vgui/pauling_text", -1, player, player);
+           // foreach (player in PopExtUtil.PlayerArray) DoEntFire("command", "Command", "r_screenoverlay vgui/pauling_text", -1, player, player);
 
            SetPropString(txtent, "m_iszMessage", "");
            EntFireByHandle(txtent, "Display", "", -1, player, player);
@@ -272,29 +266,29 @@ function Explanation(message, textPrintTime = 5, textScanTime = 0.02)
    AddThinkToEnt(txtent, "ExplanationTextThink");
 }
 
-function IsAlive(player)
+function PopExtUtil::IsAlive(player)
 {
 	return GetPropInt(player, "m_lifeState") == 0
 }
 
-function IsDucking(player)
+function PopExtUtil::IsDucking(player)
 {
 	return player.GetFlags() & FL_DUCKING
 }
 
-function IsOnGround(player)
+function PopExtUtil::IsOnGround(player)
 {
 	return player.GetFlags() & FL_ONGROUND
 }
 
-function RemoveAmmo(player)
+function PopExtUtil::RemoveAmmo(player)
 {
 	for ( local i = 0; i < 32; i++ )
     {
         SetPropIntArray(player, "m_iAmmo", 0, i)
     }
 }
-function GetAllEnts()
+function PopExtUtil::GetAllEnts()
 {
     local entdata = { "entlist": [], "numents": 0 };
 	for (local i = MAX_CLIENTS, ent; i <= MAX_EDICTS; i++)
@@ -309,7 +303,7 @@ function GetAllEnts()
 }
 
 //sets m_hOwnerEntity and m_hOwner to the same value
-function _SetOwner(ent, owner)
+function PopExtUtil::_SetOwner(ent, owner)
 {
 	//incase we run into an ent that for some reason uses both of these netprops for two different entities
     if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwnerEntity"))
@@ -324,7 +318,7 @@ function _SetOwner(ent, owner)
     SetPropEntity(ent, "m_hOwnerEntity", owner);
 }
 
-function ShowAnnotation(text = "This is an annotation", lifetime = 10, pos = Vector(), id = 0, distance = true, sound = "misc/null.wav", entindex = 0, visbit = 0, effect = true)
+function PopExtUtil::ShowAnnotation(text = "This is an annotation", lifetime = 10, pos = Vector(), id = 0, distance = true, sound = "misc/null.wav", entindex = 0, visbit = 0, effect = true)
 {
     SendGlobalGameEvent("show_annotation", {
         text = text
@@ -342,56 +336,56 @@ function ShowAnnotation(text = "This is an annotation", lifetime = 10, pos = Vec
 }
 
 //This may not be necessary and hide_annotation may work, but whatever this works too.
-function HideAnnotation(id) { ShowAnnotation("", 0.0000001, Vector(), id = id) }
+function PopExtUtil::HideAnnotation(id) { ShowAnnotation("", 0.0000001, Vector(), id = id) }
 
-function GetPlayerName(player)
+function PopExtUtil::GetPlayerName(player)
 {
 	return GetPropString(player, "m_szNetname")
 }
 
-function SetPlayerName(player,  name)
+function PopExtUtil::SetPlayerName(player,  name)
 {
 	return SetPropString(player, "m_szNetname", name)
 }
 
-function GetPlayerUserID(player)
+function PopExtUtil::GetPlayerUserID(player)
 {
     return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex()) //TODO replace PlayerManager with the actual entity name
 }
 
-function PlayerRespawn()
+function PopExtUtil::PlayerRespawn()
 {
 	self.ForceRegenerateAndRespawn();
 }
 
-function DisableCloak(player)
+function PopExtUtil::DisableCloak(player)
 {
 	// High Number to Prevent Player from Cloaking
 	SetPropFloat(player, "m_Shared.m_flStealthNextChangeTime", Time() * 99999)
 }
 
-function InUpgradeZone(player)
+function PopExtUtil::InUpgradeZone(player)
 {
 	return GetPropBool(player, "m_Shared.m_bInUpgradeZone");
 }
 
-function InButton(player, button)
+function PopExtUtil::InButton(player, button)
 {
 	return (GetPropInt(player, "m_nButtons") & button)
 }
 
-function PressButton(player, button)
+function PopExtUtil::PressButton(player, button)
 {
 	SetPropInt(player, "m_afButtonForced") | button; SetPropInt(player, "m_nButtons") | button
 }
 
 //assumes user is using the SLOT_ constants
-function SwitchWeaponSlot(player, slot)
+function PopExtUtil::SwitchWeaponSlot(player, slot)
 {
 	EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player);
 }
 
-function GetItemInSlot(player, slot)
+function PopExtUtil::GetItemInSlot(player, slot)
 {
     local item;
     for (local i = 0; i < SLOT_COUNT; i++)
@@ -405,17 +399,17 @@ function GetItemInSlot(player, slot)
     return item;
 }
 
-function HasEffect(ent, value)
+function PopExtUtil::HasEffect(ent, value)
 {
 	return GetPropInt(ent, "m_fEffects") == value
 }
 
-function SetEffect(ent, value)
+function PopExtUtil::SetEffect(ent, value)
 {
 	SetPropInt(ent, "m_fEffects", value);
 }
 
-function PlayerRobotModel(player, model)
+function PopExtUtil::PlayerRobotModel(player, model)
 {
     player.ValidateScriptScope();
     local scope = player.GetScriptScope();
@@ -437,7 +431,7 @@ function PlayerRobotModel(player, model)
     SetPropInt(player, "m_nRenderMode", 1);
     SetPropInt(player, "m_clrRender", 0);
 
-    function BotModelThink()
+    function PopExtUtil::BotModelThink()
     {
         if (!wearable) return;
 
@@ -459,7 +453,7 @@ function PlayerRobotModel(player, model)
     if (!(BotModelThink in scope.PlayerThinkTable))
         scope.PlayerThinkTable.BotModelThink <- BotModelThink
 
-    function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func() }
+    function PopExtUtil::PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func() }
 
     if (!("PlayerThinks" in scope))
     {
@@ -468,7 +462,7 @@ function PlayerRobotModel(player, model)
     }
 }
 
-function HasItemIndex(player, index)
+function PopExtUtil::HasItemIndex(player, index)
 {
     local t = false;
     for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer())
@@ -482,7 +476,7 @@ function HasItemIndex(player, index)
     return t;
 }
 
-function StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5)
+function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5)
 {
 	SpawnEntityFromTable("trigger_stun", {
 		targetname = "__utilstun",
@@ -500,7 +494,7 @@ function StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5
 	EntFireByHandle(__utilstun, "EndTouch", "", -1, player, player);
 }
 
-function ShowHudHint(player, text = "This is a hud hint", duration = 5)
+function PopExtUtil::ShowHudHint(player, text = "This is a hud hint", duration = 5)
 {
     local hudhint = FindByName(null, "__hudhint") != null
 
@@ -514,13 +508,13 @@ function ShowHudHint(player, text = "This is a hud hint", duration = 5)
     EntFireByHandle(__hudhint, "HideHudHint", "", duration, player, player);
 }
 
-function SetEntityColor(entity, r, g, b, a)
+function PopExtUtil::SetEntityColor(entity, r, g, b, a)
 {
     local color = (r) | (g << 8) | (b << 16) | (a << 24);
     SetPropInt(entity, "m_clrRender", color);
 }
 
-function GetEntityColor(entity)
+function PopExtUtil::GetEntityColor(entity)
 {
     local color = GetPropInt(entity, "m_clrRender");
     local clr = {}
@@ -531,7 +525,7 @@ function GetEntityColor(entity)
     return clr;
 }
 
-function ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = 9999.0)
+function PopExtUtil::ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = 9999.0)
 {
     PrecacheModel(model[0])
     local proxy_entity = CreateByClassname("obj_teleporter"); // use obj_teleporter to set bodygroups.  not using SpawnEntityFromTable as that creates spawning noises
@@ -541,7 +535,7 @@ function ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos =
 
     proxy_entity.SetModel(model[0]);
     proxy_entity.SetSkin(model[1]);
-    proxy_entity.AddEFlags(EFL_NO_THINK_FUNCTION); // EFL_NO_THINK_FUNCTION prevents the entity from disappearing
+    proxy_entity.AddEFlags(EFL_NO_THINK_FUNCTION); // EFL_NO_THINK_function PopExtUtil::prevents the entity from disappearing
     proxy_entity.SetSolid(SOLID_NONE);
 
     SetPropBool(proxy_entity, "m_bPlacing", true);
@@ -554,7 +548,7 @@ function ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos =
 }
 
 
-function LockInPlace(player, enable = true)
+function PopExtUtil::LockInPlace(player, enable = true)
 {
     if (enable)
     {
@@ -575,43 +569,48 @@ function LockInPlace(player, enable = true)
     }
 }
 
-function GetItemIndex(item)
+function PopExtUtil::GetItemIndex(item)
 {
 	return GetPropInt(item, STRING_NETPROP_ITEMDEF)
 }
 
-function SetItemIndex(item, index)
+function PopExtUtil::SetItemIndex(item, index)
 {
 	SetPropInt(item, STRING_NETPROP_ITEMDEF, index)
 }
 
-function SetTargetname(ent, name)
+function PopExtUtil::SetTargetname(ent, name)
 {
 	SetPropString(ent, "m_iName", name)
 }
 
-function GetPlayerSteamID(player)
+function PopExtUtil::GetPlayerSteamID(player)
 {
 	return GetPropString(player, "m_szNetworkIDString")
 }
 
-function GetHammerID(ent)
+function PopExtUtil::GetHammerID(ent)
 {
 	return GetPropInt(ent, "m_iHammerID")
 }
 
-function GetSpawnFlags(ent)
+function PopExtUtil::GetSpawnFlags(ent)
 {
 	return GetPropInt(self, "m_spawnflags")
 }
 
-function PrecacheParticle(name)
+function PopExtUtil::GetPopfileName()
+{
+    return GetPropString(PopExtUtil.ObjectiveResource, "m_iszMvMPopfileName")
+}
+
+function PopExtUtil::PrecacheParticle(name)
 {
     PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = name })
 }
 
 
-function SpawnEffect(player,  effect)
+function PopExtUtil::SpawnEffect(player,  effect)
 {
     local player_angle     =  player.GetLocalAngles()
     local player_angle_vec =  Vector( player_angle.x, player_angle.y, player_angle.z)
@@ -620,7 +619,7 @@ function SpawnEffect(player,  effect)
     return
 }
 
-function RemoveOutputAll(ent, output)
+function PopExtUtil::RemoveOutputAll(ent, output)
 {
     local outputs = [];
     for (local i = GetNumElements(ent, output); i >= 0; i--)
@@ -632,7 +631,7 @@ function RemoveOutputAll(ent, output)
     foreach (o in outputs) foreach(_ in o) RemoveOutput(ent, output, o.target, o.input, o.parameter);
 }
 
-function RemovePlayerWearables(player)
+function PopExtUtil::RemovePlayerWearables(player)
 {
     for (local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer())
     {
@@ -642,7 +641,7 @@ function RemovePlayerWearables(player)
     return
 }
 
-function IsEntityClassnameInList(entity, list)
+function PopExtUtil::IsEntityClassnameInList(entity, list)
 {
     local classname = entity.GetClassname()
     local listType = typeof(list)
@@ -661,7 +660,7 @@ function IsEntityClassnameInList(entity, list)
     }
 }
 
-function SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = null)
+function PopExtUtil::SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = null)
 {
     local teleport_origin, teleport_angles, teleport_velocity
 
@@ -678,7 +677,7 @@ function SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = nu
     player.Teleport(true, teleport_origin, true, teleport_angles, true, teleport_velocity)
 }
 
-function PlaySoundOnClient(player, name, volume = 1.0, pitch = 100)
+function PopExtUtil::PlaySoundOnClient(player, name, volume = 1.0, pitch = 100)
 {
 	EmitSoundEx(
 	{
@@ -690,7 +689,7 @@ function PlaySoundOnClient(player, name, volume = 1.0, pitch = 100)
 	})
 }
 
-function PlaySoundOnAllClients(name)
+function PopExtUtil::PlaySoundOnAllClients(name)
 {
 	EmitSoundEx(
 	{
@@ -703,22 +702,22 @@ function PlaySoundOnAllClients(name)
 
 // MATH
 
-function Min(a, b)
+function PopExtUtil::Min(a, b)
 {
     return (a <= b) ? a : b;
 }
 
-function Max(a, b)
+function PopExtUtil::Max(a, b)
 {
     return (a >= b) ? a : b;
 }
 
-function Clamp(x, a, b)
+function PopExtUtil::Clamp(x, a, b)
 {
     return Min(b, Max(a, x));
 }
 
-function RemapVal(v, A, B, C, D)
+function PopExtUtil::RemapVal(v, A, B, C, D)
 {
 	if (A == B)
 	{
@@ -729,7 +728,7 @@ function RemapVal(v, A, B, C, D)
 	return C + (D - C) * (v - A) / (B - A);
 }
 
-function RemapValClamped(v, A, B, C, D)
+function PopExtUtil::RemapValClamped(v, A, B, C, D)
 {
 	if (A == B)
 	{
@@ -745,7 +744,7 @@ function RemapValClamped(v, A, B, C, D)
 	return C + (D - C) * cv;
 }
 
-function IntersectionPointBox(pos, mins, maxs)
+function PopExtUtil::IntersectionPointBox(pos, mins, maxs)
 {
 	if (pos.x < mins.x || pos.x > maxs.x ||
 		pos.y < mins.y || pos.y > maxs.y ||
@@ -755,7 +754,7 @@ function IntersectionPointBox(pos, mins, maxs)
 	return true;
 }
 
-function NormalizeAngle(target)
+function PopExtUtil::NormalizeAngle(target)
 {
 	target %= 360.0;
 	if (target > 180.0)
@@ -765,7 +764,7 @@ function NormalizeAngle(target)
 	return target;
 }
 
-function ApproachAngle(target, value, speed)
+function PopExtUtil::ApproachAngle(target, value, speed)
 {
 	target = NormalizeAngle(target);
 	value = NormalizeAngle(value);
@@ -777,7 +776,7 @@ function ApproachAngle(target, value, speed)
 	return target;
 }
 
-function VectorAngles(forward)
+function PopExtUtil::VectorAngles(forward)
 {
 	local yaw, pitch;
 	if ( forward.y == 0.0 && forward.x == 0.0 )
@@ -801,7 +800,7 @@ function VectorAngles(forward)
 	return QAngle(pitch, yaw, 0.0);
 }
 
-function AnglesToVector(angles)
+function PopExtUtil::AnglesToVector(angles)
 {
     local pitch = angles.x * Pi / 180.0
     local yaw = angles.y * Pi / 180.0
@@ -811,7 +810,7 @@ function AnglesToVector(angles)
     return Vector(x, y, z)
 }
 
-function QAngleDistance(a, b)
+function PopExtUtil::QAngleDistance(a, b)
 {
   local dx = a.x - b.x
   local dy = a.y - b.y
@@ -819,7 +818,7 @@ function QAngleDistance(a, b)
   return sqrt(dx*dx + dy*dy + dz*dz)
 }
 
-function CheckBitwise(num)
+function PopExtUtil::CheckBitwise(num)
 {
     return (num != 0 && ((num & (num - 1)) == 0))
 }

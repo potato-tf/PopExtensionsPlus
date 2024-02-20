@@ -223,7 +223,7 @@ local popext_funcs =
 
                 if (projectile.GetOwner() != bot) continue
 
-                if (!IsValidProjectile(projectile, HomingProjectiles)) continue
+                if (!IsValidProjectile(projectile, PopExtUtil.HomingProjectiles)) continue
 
         		if (projectile.GetScriptThinkFunc() == "HomingProjectileThink") continue
 
@@ -273,7 +273,7 @@ local popext_funcs =
             local projectile
             while ((projectile = FindByClassname(projectile, "tf_projectile_*")) != null)
             {
-                if (projectile.GetTeam() == team || !IsValidProjectile(projectile, DeflectableProjectiles))
+                if (projectile.GetTeam() == team || !IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
                     continue
 
                 local dist = GetThreatDistanceSqr(projectile)
@@ -533,7 +533,7 @@ local tagtest = "popext_improvedairblast"
     return -1
 }
 
-::PopExt_Tags <- {
+::PopExtTags <- {
 
     function OnGameEvent_post_inventory_application(params)
     {
@@ -594,4 +594,4 @@ local tagtest = "popext_improvedairblast"
             AddThinkToEnt(bot, null)
     }
 }
-__CollectGameEventCallbacks(PopExt_Tags)
+__CollectGameEventCallbacks(PopExtTags)
