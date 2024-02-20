@@ -482,7 +482,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             local player = GetPlayerFromUserID(params.userid)
             if (player.IsBotOfType(1337)) return;
 
-            if (!CheckBitwise(value)) RaiseValueError(attr, value, "  Value must be a power of 2.")
+            // if (!CheckBitwise(value)) MissionAttributes.RaiseValueError(attr, value, "  Value must be a power of 2") //wrong, fix this 
             
             player.ValidateScriptScope();
             local scope = player.GetScriptScope();
@@ -530,10 +530,10 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     scope.stepside = GetPropInt(self,"m_Local.m_nStepside")
                     return -1
                 }
-                if (!(StepThink in scope.PlayerThinkTable)) 
+                if (!("StepThink" in scope.PlayerThinkTable)) 
                     scope.PlayerThinkTable.StepThink <- StepThink
 
-            } else delete scope.PlayerThinkTable.StepThink
+            } else if ("StepThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.StepThink
             
         }
         
@@ -813,7 +813,7 @@ function MissionAttributes::RaiseTypeError(attr, type) ParseError(format("Bad ty
 
 // Raises an error if the user passes an invalid argument
 // Example: Attribute expects a bitwise operator but value cannot be evenly split into a power of 2
-function MissionAttributes::RaiseValueError(attr, value, extra = "") ParseError(format("Bad value %s passed to %s.%s", value, attr, extra));
+function MissionAttributes::RaiseValueError(attr, value, extra = "") ParseError(format("Bad value   %s  passed to %s.%s", value.tostring(), attr, extra));
 
 // Raises a template parsing error, if nothing else fits.
 function MissionAttributes::ParseError(ErrorMsg)
@@ -823,7 +823,8 @@ function MissionAttributes::ParseError(ErrorMsg)
         MissionAttributes.RaisedParseError = true;
         ClientPrint(null, 3, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details.");
     }
-    ClientPrint(null, 2, format("MissionAttr ERROR: %s.", ErrorMsg));
+    // ClientPrint(null, 2, format("MissionAttr ERROR: %s.", ErrorMsg));
+    printf("MissionAttr ERROR: %s.\n", ErrorMsg);
 }
 
 // Raises an exception.

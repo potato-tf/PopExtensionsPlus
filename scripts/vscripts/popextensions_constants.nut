@@ -21,15 +21,24 @@ const SPELL_COUNT = 16;
 
 //clientprint chat colors
 //can be put into the constant table like this? "const" declaration does not allow for newlines in strings
-CONST.COLOR_END <- "\x07";
-CONST.COLOR_DEFAULT <- "\x07FBECCB";
-CONST.COLOR_BLUE <- "\x07FF3F3F";
-CONST.COLOR_RED <- "\x07FF3F3F";
-CONST.COLOR_SPECTATOR <- "\x07CCCCCC";
-CONST.COLOR_NAVY_BLUE <- "\x071337AD";
-CONST.COLOR_DEEP_RED <- "\x07FF0000";
-CONST.COLOR_LIME <- "\x0722FF22";
-CONST.COLOR_YELLOW <- "\x07FFFF66";
+const MATTR_ERROR = "MissionAttr ERROR: "
+const STRING_NETPROP_ITEMDEF  = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
+const COLOR_LIME       = "22FF22"
+const COLOR_YELLOW     = "FFFF66"
+const TF_COLOR_RED     = "FF3F3F"
+const TF_COLOR_BLUE    = "99CCFF"
+const TF_COLOR_SPEC    = "CCCCCC"
+const TF_COLOR_DEFAULT = "FBECCB"
+
+// CONST.COLOR_END <- "\x07";
+// CONST.COLOR_DEFAULT <- "\x07FBECCB";
+// CONST.COLOR_BLUE <- "\x07FF3F3F";
+// CONST.COLOR_RED <- "\x07FF3F3F";
+// CONST.COLOR_SPECTATOR <- "\x07CCCCCC";
+// CONST.COLOR_NAVY_BLUE <- "\x071337AD";
+// CONST.COLOR_DEEP_RED <- "\x07FF0000";
+// CONST.COLOR_LIME <- "\x0722FF22";
+// CONST.COLOR_YELLOW <- "\x07FFFF66";
 
 //wep slot constants
 const SLOT_PRIMARY = 0;
