@@ -14,6 +14,13 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 
     DebugText = false
     RaisedParseError = false
+	
+	InitWave = function() {
+		foreach (_, func in MissionAttributes.InitWaveTable) func()
+
+		foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
+		MissionAttributes.RaisedParseError = false;
+	}
 
     Events = {
 
@@ -39,11 +46,8 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
         function OnGameEvent_recalculate_holidays(params)
         {
             if (GetRoundState() != 3) return;
-    
-            foreach (_, func in MissionAttributes.InitWaveTable) func(params)
-    
-            foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
-            MissionAttributes.RaisedParseError = false;
+			
+			MissionAttributes.InitWave();
         }
     
         function GameEvent_mvm_wave_complete(params) 
@@ -475,8 +479,9 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             
             local player = GetPlayerFromUserID(params.userid)
             if (player.IsBotOfType(1337)) return;
+          
+            //if (!CheckBitwise(value)) RaiseValueError(attr, value, "  Value must be a power of 2.")
 
-            if (!CheckBitwise(value)) MissionAttributes.RaiseValueError(attr, value, "  Value must be a power of 2") //wrong, fix this 
             
             player.ValidateScriptScope();
             local scope = player.GetScriptScope();
@@ -490,7 +495,6 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             local playerclass  = player.GetPlayerClass();
             local class_string = classes[playerclass];
             local model = format("models/bots/%s/bot_%s.mdl", class_string, class_string);
-            printl(model)
             
             if (value & 1)
             {
@@ -518,6 +522,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
                 function StepThink()
                 {
+					if (self.GetPlayerClass() == TF_CLASS_MEDIC) return;
+					
                     if (GetPropInt(self,"m_Local.m_nStepside") != stepside)
                         EmitSoundOn("MVM.BotStep", self)
 
@@ -526,6 +532,61 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 }
                 if (!("StepThink" in scope.PlayerThinkTable)) 
                     scope.PlayerThinkTable.StepThink <- StepThink
+
+
+            } else delete scope.PlayerThinkTable.StepThink
+			
+			if (value & 8)
+			{
+				function RobotVOThink()
+				{
+					for (local ent; ent = Entities.FindByClassname(ent, "instanced_scripted_scene"); )
+					{
+						if (ent.GetEFlags() & CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE) continue;
+						ent.AddEFlags(CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE);
+						
+						local owner = NetProps.GetPropEntity(ent, "m_hOwner");
+						if (owner != null && !owner.IsBotOfType(1337))
+						{
+						  
+							local vcdpath = NetProps.GetPropString(ent, "m_szInstanceFilename");
+							if (!vcdpath || vcdpath == "") return -1;
+							
+							local dotindex   = vcdpath.find(".");
+							local slashindex = null;
+							for (local i = dotindex; i >= 0; --i)
+							{
+								if (vcdpath[i] == '/' || vcdpath[i] == '\\')
+								{
+									slashindex = i;
+									break;
+								}
+							}
+							
+							owner.ValidateScriptScope();
+							local scope = owner.GetScriptScope();
+							scope.soundtable <- VCD_SOUNDSCRIPT_MAP[owner.GetPlayerClass()];
+							scope.vcdname    <- vcdpath.slice(slashindex+1, dotindex);
+							
+							if (scope.vcdname in scope.soundtable)
+							{
+								EntFireByHandle(owner, "RunScriptCode", "self.StopSound(soundtable[vcdname]);", -1, null, null);
+								
+								local sound    =  scope.soundtable[scope.vcdname];
+								dotindex       =  sound.find(".");
+								scope.mvmsound <- sound.slice(0, dotindex+1) + "MVM_" + sound.slice(dotindex+1);
+								
+								EntFireByHandle(owner, "RunScriptCode", "self.EmitSound(mvmsound);", 0.015, null, null);
+							}
+						}
+					}
+
+					return -1;					
+				}
+
+				if (!(RobotVOThink in MissionAttributes.ThinkTable))
+					MissionAttributes.ThinkTable.RobotVOThink <- RobotVOThink;
+			}
 
             } else if ("StepThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.StepThink
             
