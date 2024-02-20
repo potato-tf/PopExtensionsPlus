@@ -1,18 +1,11 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 
-const STRING_NETPROP_ITEMDEF  = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
-const COLOR_LIME       = "22FF22"
-const COLOR_YELLOW     = "FFFF66"
-const TF_COLOR_RED     = "FF3F3F"
-const TF_COLOR_BLUE    = "99CCFF"
-const TF_COLOR_SPEC    = "CCCCCC"
-const TF_COLOR_DEFAULT = "FBECCB"
-
 // Allow expression constants
 ::CONST <- getconsttable()
 ::ROOT <- getroottable()
+
 CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
-CONST.MAX_CLIENTS <- MaxClients().tointeger();
+CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
 if (!("ConstantNamingConvention" in CONST))
 {
@@ -38,8 +31,31 @@ NavMesh.GetAllAreas(AllNavAreas);
     function OnGameEvent_mvm_wave_complete(params) { IsWaveStarted = false; }
     function OnGameEvent_mvm_wave_failed(params) { IsWaveStarted = false; }
     function OnGameEvent_mvm_begin_wave(params) { IsWaveStarted = true; }
+
+    function OnGameEvent_post_inventory_application(params)
+    {
+        local player = GetPlayerFromUserID(params.userid)
+
+        if (player.IsBotOfType(1337)) return;
+
+        if (PlayerArray.find(player) == null) PlayerArray.append(player);
+    }
+
+    function OnGameEvent_player_disconnect(params)
+    {
+        local player = GetPlayerFromUserID(params.userid)
+
+        for (local i = PlayerArray.len() - 1; i >= 0; i--)
+            if (PlayerArray[i] == null || PlayerArray[i] == player)
+                PlayerArray.remove(i);
+    }
 };
 __CollectGameEventCallbacks(PopExt_UtilEvents);
+
+//HACK: forces post_inventory_application to fire on pop load
+for (local i = 1; i <= MaxClients(); i++)
+    if (PlayerInstanceFromIndex(i) != null)
+        EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", -1, null, null);
 
 ::CurrentWaveNum <- GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount");
 
@@ -54,7 +70,7 @@ __CollectGameEventCallbacks(PopExt_UtilEvents);
 ::FinishedRelay <- FindByName(null, "wave_finished_relay");
 
 //spawn a point_clientcommand
-::ClientCommand <- CreateByClassname("point_clientcommand"); DispatchSpawn(ClientCommand);
+::ClientCommand <- SpawnEntityFromTable("point_clientcommand", {})
 
 ::Classes <- ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
 
@@ -93,10 +109,13 @@ __CollectGameEventCallbacks(PopExt_UtilEvents);
     tf_projectile_stun_ball             = 1 // Baseball
 }
 
+::PlayerArray <- []
+
 function IsLinuxServer() 
 {
 	return RAND_MAX != 32767
 }
+
 function ShowMessage(message)
 {
 	ClientPrint(null, HUD_PRINTCENTER , message)

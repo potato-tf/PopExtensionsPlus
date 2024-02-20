@@ -22,22 +22,18 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
         function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
         function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 
-        //HACK: player_spawn and post_inventory_application will not fire when the first player loads in.  Manually call this on wave init
-        function PlayerSpawnFunc(params)
-        {
+        function OnGameEvent_post_inventory_application(params) { 
             local player = GetPlayerFromUserID(params.userid)
             player.ValidateScriptScope()
             local scope = player.GetScriptScope()
             if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
     
-            function PlayerThinks()
-            { foreach (_, func in scope.PlayerThinkTable) func() }
+            function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func() }
             scope.PlayerThinks <- PlayerThinks
             AddThinkToEnt(player, "PlayerThinks")
     
             foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
-        }
-        function OnGameEvent_post_inventory_application(params) { PlayerSpawnFunc(params) } 
+        } 
         // Hook all wave inits to reset parsing error counter.
         
         function OnGameEvent_recalculate_holidays(params)
@@ -59,8 +55,6 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
     }
 };
 __CollectGameEventCallbacks(MissionAttributes.Events);
-
-local resource = Entities.FindByClassname(null, "tf_objective_resource");
 
 // Mission Attribute Functions
 // =========================================================
@@ -164,19 +158,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "666Wavebar": //doesn't work until wave switches, won't work on W1
-        SetPropInt(resource, "m_nMvMEventPopfileType", value);
+        SetPropInt(ObjectiveResource, "m_nMvMEventPopfileType", value);
     break;
 
     // =========================================================
 
     case "WaveNum":
-        SetPropInt(resource, "m_nMannVsMachineWaveCount", value);
+        SetPropInt(ObjectiveResource, "m_nMannVsMachineWaveCount", value);
     break;
 
     // =========================================================
 
     case "MaxWaveNum":
-        SetPropInt(resource, "m_nMannVsMachineMaxWaveCount", value);
+        SetPropInt(ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value);
     break;
 
     // =========================================================
@@ -482,7 +476,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             local player = GetPlayerFromUserID(params.userid)
             if (player.IsBotOfType(1337)) return;
 
-            // if (!CheckBitwise(value)) MissionAttributes.RaiseValueError(attr, value, "  Value must be a power of 2") //wrong, fix this 
+            if (!CheckBitwise(value)) MissionAttributes.RaiseValueError(attr, value, "  Value must be a power of 2") //wrong, fix this 
             
             player.ValidateScriptScope();
             local scope = player.GetScriptScope();
@@ -699,37 +693,11 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
     case "WaveStartCountdown":
         local gamerules = Entities.FindByClassname(null, "tf_gamerules")
-        local resource = Entities.FindByClassname(null, "tf_objective_resource")
-        local playerarray = []
-        function MissionAttributes::PlayerCounter(params)
-        {
-            local player = GetPlayerFromUserID(params.userid)
-
-            if (player.IsBotOfType(1337)) return;
-
-            if (playerarray.find(player) == null)
-                playerarray.append(player);
-        }
-
-        // if (!(MissionAttributes.PlayerCounter in MissionAttributes.SpawnHookTable))
-            MissionAttributes.SpawnHookTable.PlayerCounter <- MissionAttributes.PlayerCounter;
-
-        function MissionAttributes::PlayerUnCounter(params)
-        {
-            local player = GetPlayerFromUserID(params.userid)
-
-            for (local i = playerarray.len() - 1; i >= 0; i--)
-                if (playerarray[i] == null || playerarray[i] == player)
-                    playerarray.remove(i);
-        }
-
-        // if (!(MissionAttributes.PlayerUnCounter in MissionAttributes.DisconnectTable))
-            MissionAttributes.DisconnectTable.PlayerUnCounter <- MissionAttributes.PlayerUnCounter;
 
         function MissionAttributes::WaveStartCountdown()
         {
             local roundtime = GetPropFloat(gamerules, "m_flRestartRoundTime")
-            if (!GetPropBool(resource, "m_bMannVsMachineBetweenWaves")) return;
+            if (!GetPropBool(ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return;
             local ready = 0
 
             if (roundtime > Time() + value)
@@ -823,8 +791,15 @@ function MissionAttributes::ParseError(ErrorMsg)
         MissionAttributes.RaisedParseError = true;
         ClientPrint(null, 3, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details.");
     }
-    // ClientPrint(null, 2, format("MissionAttr ERROR: %s.", ErrorMsg));
-    printf("MissionAttr ERROR: %s.\n", ErrorMsg);
+    ClientPrint(null, 2, format("%s %s.\n", MATTR_ERROR, ErrorMsg));
+
+    foreach (player in PlayerArray)
+    {
+        if (player == null) continue;
+
+        EntFireByHandle(ClientCommand, "Command", format("echo %s %s.\n", MATTR_ERROR, ErrorMsg), -1, player, player)
+    }
+    printf("%s %s.\n", MATTR_ERROR, ErrorMsg);
 }
 
 // Raises an exception.
