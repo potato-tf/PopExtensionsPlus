@@ -8,6 +8,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
     //remove with MissionAttr("ReflectableDF", 1)
     InitWaveTable = {}
     TakeDamageTable = {}
+    DisconnectTable = {}
     ThinkTable = {
 
         function DragonsFuryFix()
