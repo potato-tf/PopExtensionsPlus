@@ -586,9 +586,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 				if (!(RobotVOThink in MissionAttributes.ThinkTable))
 					MissionAttributes.ThinkTable.RobotVOThink <- RobotVOThink;
-			}
 
-            } else if ("StepThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.StepThink
+            } else if ("StepThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.StepThink
             
         }
         
