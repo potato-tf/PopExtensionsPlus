@@ -1,5 +1,6 @@
 local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
 
+IncludeScript("popextensions_robotvoicelines")
 ::MissionAttributes <- {
 
     CurAttrs = {} // Array storing currently modified attributes.
@@ -472,6 +473,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // 8 = Enable voicelines (WIP)
 
     //example: MissionAttr(`PlayersAreRobots`, 6) - Human animations and footsteps enabled
+    //example: MissionAttr(`PlayersAreRobots`, 2 | 4) - Same thing if you are lazy
 
     case "PlayersAreRobots":
         function MissionAttributes::PlayersAreRobots(params)
@@ -479,8 +481,6 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             
             local player = GetPlayerFromUserID(params.userid)
             if (player.IsBotOfType(1337)) return;
-          
-            //if (!CheckBitwise(value)) RaiseValueError(attr, value, "  Value must be a power of 2.")
 
             
             player.ValidateScriptScope();

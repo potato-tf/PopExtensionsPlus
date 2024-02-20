@@ -22,8 +22,6 @@ foreach (k, v in ::Entities.getclass())
     if (k != "IsValid" && !(k in ROOT))
         ROOT[k] <- ::Entities[k].bindenv(::Entities)
 
-IncludeScript("popextensions_robotvoicelines");
-
 ::AllNavAreas <- {};
 NavMesh.GetAllAreas(AllNavAreas);
 
@@ -182,6 +180,97 @@ function ShowChatMessage(target, fmt, ...)
 // example
 // ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT);
 
+function Explanation(message, textPrintTime = 5, textScanTime = 0.02)
+{
+    local txtent = SpawnEntityFromTable("game_text", {
+        effect = 2,
+        spawnflags = playerfilter,
+        color = "255 254 255",
+        color2 = "255 254 255",
+        fxtime = 0.02,
+        // holdtime = 5,
+        fadeout = 0.01,
+        fadein = 0.01,
+        channel = 3,
+        x = 0.3,
+        y = 0.345
+    });
+    SetPropBool(txtent, "m_bForcePurgeFixedupStrings", true);
+    SetTargetname(txtent, format("__ExplanationText%d",txtent.entindex()))
+    
+   local i = -1
+   function ExplanationTextThink()
+   {
+       if (textcooldown > Time()) return;
+
+       i++;
+       if (i == strarray.len())
+       {
+           SetPropString(txtent, "m_iszScriptThinkFunction", "");
+
+        //    DoEntFire("!activator", "SetScriptOverlayMaterial", "", -1, player, player);
+
+           // foreach (player in playerarray) DoEntFire("command", "Command", "r_screenoverlay vgui/pauling_text", -1, player, player);
+
+           SetPropString(txtent, "m_iszMessage", "");
+           EntFireByHandle(txtent, "Display", "", -1, player, player);
+           EntFireByHandle(txtent, "Kill", "", 0.1, null, null);
+           return;
+       }
+       local s = strarray[i]
+
+       //make text display slightly longer depending on string length
+       local delaybetweendisplays = s.len() / 10;
+
+       if (delaybetweendisplays < 2) delaybetweendisplays = 2; else if (delaybetweendisplays > 12) delaybetweendisplays = 12;
+
+       //allow for pauses in the announcement
+       if (startswith(s, "PAUSE"))
+       {
+           local pause = split(s, " ")[1].tofloat()
+        //    DoEntFire("player", "SetScriptOverlayMaterial", "", -1, player, player);
+           SetPropString(txtent, "m_iszMessage", "");
+
+           SetPropInt(txtent, "m_textParms.holdTime", pause);
+           txtent.KeyValueFromInt("holdtime", pause);
+
+           EntFireByHandle(txtent, "Display", "", -1, player, player);
+           textcooldown = Time() + pause;
+           return REDUCED_THINK_INTERVAL;
+       }
+
+       //shits fucked
+       function calculate_x(string) {
+           local len = string.len();
+           local t = 1 - (len.tofloat() / 48);
+           local x = 1 * (1 - t);
+           x = (1 - (x / 3)) / 2.1;
+           if (x > 0.4) x = 0.4; else if (x < 0.28) x = 0.28;
+           return x;
+       }
+
+       SetPropFloat(txtent, "m_textParms.x", calculate_x(s))
+       txtent.KeyValueFromFloat("x", calculate_x(s))
+
+       SetPropString(txtent, "m_iszMessage", s);
+
+       SetPropInt(txtent, "m_textParms.holdTime", delaybetweendisplays);
+       txtent.KeyValueFromInt("holdtime", delaybetweendisplays);
+
+       EntFireByHandle(txtent, "Display", "", -1, player, player);
+
+    //    DoEntFire("player", "SetScriptOverlayMaterial", "vgui/pauling_text", -1, player, player);
+    //    DoEntFire("player", "SetScriptOverlayMaterial", "", delaybetweendisplays, player, player);
+        // ShowChatMessage(null, format("{color}Wave Explanation: %s", s), TF_COLOR_DEFAULT);
+        ClientPrint(null, 3, format("%sWave Explanation%s: %s", COLOR_YELLOW, TF_COLOR_DEFAULT, s));
+        textcooldown = Time() + delaybetweendisplays;
+
+       return REDUCED_THINK_INTERVAL;
+   }
+   txtent.ValidateScriptScope();
+   txtent.GetScriptScope().ExplanationTextThink <- ExplanationTextThink;
+   AddThinkToEnt(txtent, "ExplanationTextThink");
+}
 
 function IsAlive(player)
 {
