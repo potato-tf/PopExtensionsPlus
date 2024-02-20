@@ -534,7 +534,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     scope.PlayerThinkTable.StepThink <- StepThink
 
 
-            } else delete scope.PlayerThinkTable.StepThink
+            } else if ("StepThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.StepThink
 			
 			if (value & 8)
 			{
