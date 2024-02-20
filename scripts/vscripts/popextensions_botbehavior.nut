@@ -2,7 +2,6 @@ class AI_Bot
 {
 	function constructor(bot)
 	{
-        printl(bot)
 		this.bot = bot;
 		this.scope = bot.GetScriptScope();
 		this.team = bot.GetTeam();
