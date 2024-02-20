@@ -262,9 +262,9 @@ class AI_Bot
 		cur_eye_pos = bot.EyePosition();
 		cur_eye_ang = bot.EyeAngles();
 		cur_eye_fwd = cur_eye_ang.Forward();
-		time = Global_Time;
+		time = Time();
 
-        foreach (_, func in scope.BehaviorAttribs) func()
+        foreach (_, func in scope.ThinkTable) func()
 
 		//SwitchToBestWeapon()
 		//DrawDebugInfo()
