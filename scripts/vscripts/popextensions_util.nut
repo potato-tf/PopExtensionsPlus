@@ -12,6 +12,7 @@ const TF_COLOR_DEFAULT = "FBECCB"
 ::CONST <- getconsttable()
 ::ROOT <- getroottable()
 CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
+CONST.MAX_CLIENTS <- MaxClients().tointeger();
 
 if (!("ConstantNamingConvention" in CONST))
 {
