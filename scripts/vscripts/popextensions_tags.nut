@@ -1,5 +1,6 @@
 local root = getroottable()
 IncludeScript("popextensions_util", root)
+IncludeScript("popextensions_botbehavior", root)
 
 //behavior tags
 local popext_funcs =
@@ -222,7 +223,7 @@ local popext_funcs =
 
                 if (projectile.GetOwner() != bot) continue
 
-                if (!IsValidProjectile(projectile)) continue
+                if (!IsValidProjectile(projectile, HomingProjectiles)) continue
 
         		if (projectile.GetScriptThinkFunc() == "HomingProjectileThink") continue
 
@@ -250,7 +251,7 @@ local popext_funcs =
     //     while (projectile = Entities.FindByClassname(null, "tf_projectile_rocket"))
     //     {
     //         if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
-            
+
     //         EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
     //     }
     // }
@@ -264,6 +265,45 @@ local popext_funcs =
             EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
             EntFireByHandle(projectile, "RunScriptCode", format("self.DispatchParticleEffect(%s, self.GetOrigin(), self.GetAbsAngles())", args), -1, null, null)
         }
+    }
+    popext_improvedairblast = function (bot, args)
+    {
+        function ImprovedAirblastThink()
+        {
+            local projectile
+            while ((projectile = FindByClassname(projectile, "tf_projectile_*")) != null)
+            {
+                if (projectile.GetTeam() == team || !IsValidProjectile(projectile, DeflectableProjectiles))
+                    continue
+
+                local dist = GetThreatDistanceSqr(projectile)
+                if (dist <= 67000 && IsVisible(projectile)) //67700
+                {
+                    switch (botLevel) {
+                        case 1: // Basic Airblast, only deflect if in FOV
+
+                            if (!IsInFieldOfView(projectile))
+                                return
+                            break
+                        case 2: // Advanced Airblast, deflect regardless of FOV
+
+                            LookAt(projectile.GetOrigin(), 9999, 9999)
+                            break
+                        case 3: // Expert Airblast, deflect regardless of FOV back to Sender
+
+                            local owner = projectile.GetOwner()
+                            if (owner != null)
+                            {
+                                local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
+                                LookAt(owner_head, 9999, 9999)
+                            }
+                            break
+                    }
+                    bot.PressAltFireButton(0.0)
+                }
+            }
+        }
+        bot.GetScriptScope().ThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
     }
     popext_addcondonhit = function(bot, args)
     {
@@ -426,9 +466,9 @@ local popext_funcs =
 	return false
 }
 
-::IsValidProjectile <- function(projectile)
+::IsValidProjectile <-  function(projectile, table)
 {
-	if (projectile.GetClassname() in HomingProjectiles)
+	if (projectile.GetClassname() in table)
 		return true
 
 	return false
@@ -462,9 +502,16 @@ local popext_funcs =
 // }
 
 // local tagtest = "popext_usebestweapon"
-local tagtest = "popext_homingprojectile|1.0|1.0"
-::GetBotBehaviorFromTags <- function(bot)
+//local tagtest = "popext_homingprojectile|1.0|1.0"
+local tagtest = "popext_improvedairblast"
+
+::AI_BotSpawn <- function(bot)
 {
+	local scope = bot.GetScriptScope()
+
+	scope.bot <- AI_Bot(bot)
+	scope.BehaviorAttribs <- {}
+
     if (bot.HasBotTag(tagtest))
     {
         local args = split(tagtest, "|")
@@ -473,16 +520,17 @@ local tagtest = "popext_homingprojectile|1.0|1.0"
         if (func in popext_funcs)
             popext_funcs[func](bot, args)
     }
-    function PopExt_BotThinks()
-    {
-        local scope = self.GetScriptScope()
-        if (scope.ThinkTable.len() < 1) return;
 
-        foreach (_, func in scope.ThinkTable) func(self)
+	//bot.AddBotAttribute(1024); // IGNORE_ENEMIES
 
-        return -1
-    }
-    AddThinkToEnt(bot, "PopExt_BotThinks")
+    AddThinkToEnt(bot, "BotThink")
+}
+
+::BotThink <- function()
+{
+    bot.OnUpdate()
+
+    return -1
 }
 
 ::PopExt_Tags <- {
@@ -490,17 +538,19 @@ local tagtest = "popext_homingprojectile|1.0|1.0"
     function OnGameEvent_post_inventory_application(params)
     {
         local bot = GetPlayerFromUserID(params.userid)
-        if (!bot.IsBotOfType(1337)) return
+
+        bot.ValidateScriptScope()
+        local scope = bot.GetScriptScope()
+
+        if ("ThinkTable" in scope || !bot.IsBotOfType(1337)) return
 		local items = {
 
 			ThinkTable = {}
             TakeDamageTable = {}
             DeathHookTable = {}
 		}
-        bot.ValidateScriptScope()
-        local scope = bot.GetScriptScope()
         foreach (k,v in items) if (!(k in scope)) scope[k] <- v
-        EntFireByHandle(bot, "RunScriptCode", "GetBotBehaviorFromTags(self)", -1, null, null);
+        EntFireByHandle(bot, "RunScriptCode", "AI_BotSpawn(self)", -1, null, null);
     }
     function OnScriptHook_OnTakeDamage(params)
     {
