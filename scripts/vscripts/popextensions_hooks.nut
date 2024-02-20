@@ -53,6 +53,7 @@ function FireHooksParam(entity, scope, name, param) {
 
 function PopulatorThink()
 {
+	Global_Time = Time()
 	for (local tank = null; (tank = Entities.FindByClassname(tank, "tank_boss")) != null;) {
 		tank.ValidateScriptScope();
 		local scope = tank.GetScriptScope();

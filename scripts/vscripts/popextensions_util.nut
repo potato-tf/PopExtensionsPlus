@@ -21,11 +21,13 @@ foreach (k, v in ::NetProps.getclass())
 foreach (k, v in ::Entities.getclass())
     if (k != "IsValid" && !(k in ROOT))
         ROOT[k] <- ::Entities[k].bindenv(::Entities)
-		
+
 IncludeScript("popextensions_robotvoicelines");
 
 ::AllNavAreas <- {};
 NavMesh.GetAllAreas(AllNavAreas);
+
+::Global_Time <- Time()
 
 //check a global variable instead of accessing a netprop every time to check if we are between waves.
 ::IsWaveStarted <- false;
@@ -113,7 +115,7 @@ for (local i = 1; i <= MaxClients(); i++)
 
 ::PlayerArray <- []
 
-function IsLinuxServer() 
+function IsLinuxServer()
 {
 	return RAND_MAX != 32767
 }
@@ -279,25 +281,25 @@ function DisableCloak(player)
 	SetPropFloat(player, "m_Shared.m_flStealthNextChangeTime", Time() * 99999)
 }
 
-function InUpgradeZone(player) 
-{ 
-	return GetPropBool(player, "m_Shared.m_bInUpgradeZone"); 
+function InUpgradeZone(player)
+{
+	return GetPropBool(player, "m_Shared.m_bInUpgradeZone");
 }
 
-function InButton(player, button) 
-{ 
-	return (GetPropInt(player, "m_nButtons") & button) 
+function InButton(player, button)
+{
+	return (GetPropInt(player, "m_nButtons") & button)
 }
 
-function PressButton(player, button) 
-{ 
-	SetPropInt(player, "m_afButtonForced") | button; SetPropInt(player, "m_nButtons") | button 
+function PressButton(player, button)
+{
+	SetPropInt(player, "m_afButtonForced") | button; SetPropInt(player, "m_nButtons") | button
 }
 
 //assumes user is using the SLOT_ constants
-function SwitchWeaponSlot(player, slot) 
-{ 
-	EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player); 
+function SwitchWeaponSlot(player, slot)
+{
+	EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player);
 }
 
 function GetItemInSlot(player, slot)
@@ -307,7 +309,7 @@ function GetItemInSlot(player, slot)
     {
         local wep = GetPropEntityArray(player, "m_hMyWeapons", i);
         if ( wep == null || wep.GetSlot() != slot) continue;
-        
+
         item = wep;
         break;
     }
@@ -315,13 +317,13 @@ function GetItemInSlot(player, slot)
 }
 
 function HasEffect(ent, value)
-{ 
+{
 	return GetPropInt(ent, "m_fEffects") == value
 }
 
-function SetEffect(ent, value) 
-{ 
-	SetPropInt(ent, "m_fEffects", value); 
+function SetEffect(ent, value)
+{
+	SetPropInt(ent, "m_fEffects", value);
 }
 
 function PlayerRobotModel(player, model)
@@ -329,7 +331,7 @@ function PlayerRobotModel(player, model)
     player.ValidateScriptScope();
     local scope = player.GetScriptScope();
     scope.parentedmodel <- false;
-    
+
     local wearable = CreateByClassname("tf_wearable");
     SetPropString(wearable, "m_iName", "__bot_bonemerge_model");
     SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model));
@@ -342,14 +344,14 @@ function PlayerRobotModel(player, model)
     EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player);
     SetPropInt(wearable, "m_fEffects", 129);
     scope.wearable <- wearable;
-    
+
     SetPropInt(player, "m_nRenderMode", 1);
-    SetPropInt(player, "m_clrRender", 0);   
-    
+    SetPropInt(player, "m_clrRender", 0);
+
     function BotModelThink()
     {
         if (!wearable) return;
-        
+
         if (self.IsTaunting())
         {
             if (!parentedmodel)
@@ -374,7 +376,7 @@ function PlayerRobotModel(player, model)
     {
         scope.PlayerThinks <- PlayerThinks
         AddThinkToEnt(player, "PlayerThinks")
-    }         
+    }
 }
 
 function HasItemIndex(player, index)
@@ -484,34 +486,34 @@ function LockInPlace(player, enable = true)
     }
 }
 
-function GetItemIndex(item) 
-{ 
-	return GetPropInt(item, STRING_NETPROP_ITEMDEF) 
+function GetItemIndex(item)
+{
+	return GetPropInt(item, STRING_NETPROP_ITEMDEF)
 }
 
-function SetItemIndex(item, index) 
-{ 
+function SetItemIndex(item, index)
+{
 	SetPropInt(item, STRING_NETPROP_ITEMDEF, index)
 }
 
 function SetTargetname(ent, name)
-{ 
-	SetPropString(ent, "m_iName", name) 
+{
+	SetPropString(ent, "m_iName", name)
 }
 
-function GetPlayerSteamID(player) 
-{ 
-	return GetPropString(player, "m_szNetworkIDString") 
+function GetPlayerSteamID(player)
+{
+	return GetPropString(player, "m_szNetworkIDString")
 }
 
-function GetHammerID(ent) 
-{ 
-	return GetPropInt(ent, "m_iHammerID") 
+function GetHammerID(ent)
+{
+	return GetPropInt(ent, "m_iHammerID")
 }
 
-function GetSpawnFlags(ent) 
-{ 
-	return GetPropInt(self, "m_spawnflags") 
+function GetSpawnFlags(ent)
+{
+	return GetPropInt(self, "m_spawnflags")
 }
 
 function PrecacheParticle(name)
@@ -728,7 +730,7 @@ function QAngleDistance(a, b)
   return sqrt(dx*dx + dy*dy + dz*dz)
 }
 
-function CheckBitwise(num) 
+function CheckBitwise(num)
 {
     return (num != 0 && ((num & (num - 1)) == 0))
 }
