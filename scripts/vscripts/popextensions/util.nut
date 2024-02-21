@@ -1,11 +1,6 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 
-// Allow expression constants
-::CONST <- getconsttable()
 ::ROOT <- getroottable()
-
-CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
-CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
 if (!("ConstantNamingConvention" in CONST))
 {

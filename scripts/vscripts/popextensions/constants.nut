@@ -1,3 +1,9 @@
+// Allow expression constants
+::CONST <- getconsttable()
+
+CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
+CONST.MAX_CLIENTS <- MaxClients().tointeger()
+
 //spell constants
 const SPELL_ROLLING = -2;
 const SPELL_EMPTY = -1;
