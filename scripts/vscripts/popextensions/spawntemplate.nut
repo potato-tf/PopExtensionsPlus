@@ -1,4 +1,3 @@
-IncludeScript("popextensions")
 #by washy
 popExtScope.waveSchedulePointTemplates <- []
 popExtScope.wavePointTemplates <- []

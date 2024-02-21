@@ -1,7 +1,4 @@
 local root = getroottable()
-IncludeScript("popextensions_util", root)
-IncludeScript("popextensions_botbehavior", root)
-
 //behavior tags
 local popext_funcs =
 {

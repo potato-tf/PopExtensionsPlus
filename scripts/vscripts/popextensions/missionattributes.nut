@@ -1,6 +1,5 @@
 local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
 
-IncludeScript("popextensions_robotvoicelines")
 ::MissionAttributes <- {
 
     CurAttrs = {} // Array storing currently modified attributes.

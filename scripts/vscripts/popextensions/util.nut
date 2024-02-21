@@ -22,12 +22,11 @@ foreach (k, v in ::Entities.getclass())
     if (k != "IsValid" && !(k in ROOT))
         ROOT[k] <- ::Entities[k].bindenv(::Entities)
 
-//check a global variable instead of accessing a netprop every time to check if we are between waves.
 ::PopExtUtil <- {
 
     PlayerArray = []
     Classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
-    IsWaveStarted = false
+    IsWaveStarted = false //check a global variable instead of accessing a netprop every time to check if we are between waves.
     AllNavAreas = {}
 
     DeflectableProjectiles = {
