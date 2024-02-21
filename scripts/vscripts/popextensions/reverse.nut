@@ -12,7 +12,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
     spy = [32, -1],
     engineer = [32, 200]
 }
-::ChangePlayerTeamMvM <- (player, teamnum = 3)
+::ChangePlayerTeamMvM <- function(player, teamnum = 3)
 {
     SetPropBool(FindByClassname(null, "tf_gamerules"), "m_bPlayingMannVsMachine", false);
     player.ForceChangeTeam(teamnum, false);
