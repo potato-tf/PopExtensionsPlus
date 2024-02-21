@@ -3,7 +3,7 @@ local root = getroottable()
 
 popExtEntity <- Entities.FindByName(null, "_popextensions_hooks");
 if (popExtEntity == null) {
-	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", {targetname = "_popextensions_hooks", vscripts="popextensions_hooks"});
+	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", {targetname = "_popextensions_hooks", vscripts="popextensions/hooks"});
 }
 
 popExtEntity.ValidateScriptScope();
