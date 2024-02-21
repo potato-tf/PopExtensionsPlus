@@ -16,4 +16,4 @@ local scripts = [
     "popextensions/reverse.nut"
 ]
 
-foreach (script in scripts) try IncludeScript(script) catch(e);
+foreach (script in scripts) try IncludeScript(script) catch(e) printl(e);
