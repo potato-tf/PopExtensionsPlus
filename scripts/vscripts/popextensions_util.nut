@@ -174,11 +174,25 @@ function PopExtUtil::ShowChatMessage(target, fmt, ...)
 // example
 // ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT);
 
-function PopExtUtil::Explanation(message, textPrintTime = -1, textScanTime = 0.02)
+function PopExtUtil::HexToRgb(hex) {
+
+    // Extract the RGB values
+    local r = hex.slice(0, 2).tointeger(16);
+    local g = hex.slice(2, 4).tointeger(16);
+    local b = hex.slice(4, 6).tointeger(16);
+
+    // Return the RGB values as an array
+    return [r, g, b];
+}
+
+function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, textPrintTime = -1, textScanTime = 0.02)
 {
+    printl(printColor)
+    local rgb = PopExtUtil.HexToRgb("FFFF66")
     local txtent = SpawnEntityFromTable("game_text", {
         effect = 2,
-        color = "255 254 255",
+        spawnflags = 1,
+        color = format("%d %d %d", rgb[0], rgb[1], rgb[2]),
         color2 = "255 254 255",
         fxtime = 0.02,
         // holdtime = 5,
@@ -186,7 +200,7 @@ function PopExtUtil::Explanation(message, textPrintTime = -1, textScanTime = 0.0
         fadein = 0.01,
         channel = 3,
         x = 0.3,
-        y = 0.645
+        y = 0.3
     });
     SetPropBool(txtent, "m_bForcePurgeFixedupStrings", true);
     SetTargetname(txtent, format("__ExplanationText%d",txtent.entindex()))
@@ -199,6 +213,8 @@ function PopExtUtil::Explanation(message, textPrintTime = -1, textScanTime = 0.0
         if (n.len() > 0)
         {
             strarray.append(n);
+            if (!startswith(n, "PAUSE"))
+                ClientPrint(null, 3, format("\x07%s Explanation\x07%s: %s", COLOR_YELLOW, TF_COLOR_DEFAULT, n));
         }
 
     local i = -1
@@ -252,7 +268,7 @@ function PopExtUtil::Explanation(message, textPrintTime = -1, textScanTime = 0.0
             local t = 1 - (len.tofloat() / 48);
             local x = 1 * (1 - t);
             x = (1 - (x / 3)) / 2.1;
-            if (x > 0.4) x = 0.4; else if (x < 0.28) x = 0.28;
+            // if (x > 0.5) x = 0.5; else if (x < 0.28) x = 0.28;
             return x;
         }
 
@@ -265,8 +281,6 @@ function PopExtUtil::Explanation(message, textPrintTime = -1, textScanTime = 0.0
         txtent.KeyValueFromInt("holdtime", delaybetweendisplays);
 
         EntFireByHandle(txtent, "Display", "", -1, null, null);
-        ClientPrint(null, 3, format("%sWave Explanation%s: %s", COLOR_YELLOW, TF_COLOR_DEFAULT, s));
-        printl(s)
         textcooldown = Time() + delaybetweendisplays;
 
         return 0.033;
@@ -274,6 +288,11 @@ function PopExtUtil::Explanation(message, textPrintTime = -1, textScanTime = 0.0
    txtent.ValidateScriptScope();
    txtent.GetScriptScope().ExplanationTextThink <- ExplanationTextThink;
    AddThinkToEnt(txtent, "ExplanationTextThink");
+}
+
+function Explanation(message, textPrintTime = -1, textScanTime = 0.02)
+{
+    Explanation.call(PopExtUtil, message, textPrintTime, textScanTime)
 }
 
 function Info(message, textPrintTime = -1, textScanTime = 0.02)
