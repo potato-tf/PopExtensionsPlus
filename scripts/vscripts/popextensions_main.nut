@@ -12,7 +12,7 @@ local scripts = [
     "popextensions/tags.nut"
 
     "popextensions/globalfixes.nut"
-    "popextensions/spawntemplates.nut"
+    "popextensions/spawntemplate.nut"
     "popextensions/reverse.nut"
 ]
 

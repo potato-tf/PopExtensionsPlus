@@ -563,7 +563,7 @@ local tagtest = "popext_improvedairblast"
         local bot = GetPlayerFromUserID(params.userid)
         if (!bot.IsBotOfType(1337)) return
 
-        local building = EntIndexToHScript(params.entindex)
+        local building = EntIndexToHScript(params.index)
         if ((bot.HasBotTag("popext_dispenserasteleporter") && params.object == 1) || (bot.HasBotTag("popext_dispenserassentry") && params.object == 2))
         {
             local dispenser = SpawnEntityFromTable("obj_dispenser", {
