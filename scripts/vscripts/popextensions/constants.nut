@@ -1,15 +1,22 @@
 // Allow expression constants
 ::CONST <- getconsttable()
-
 if (!("ConstantNamingConvention" in CONST))
 {
 	foreach (a,b in Constants)
 		foreach (k,v in b)
             CONST[k] <- v != null ? v : 0;
 }
-
 CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
+
+::ROOT <- getroottable()
+foreach (k, v in ::NetProps.getclass())
+    if (k != "IsValid" && !(k in ROOT))
+        ROOT[k] <- ::NetProps[k].bindenv(::NetProps)
+
+foreach (k, v in ::Entities.getclass())
+    if (k != "IsValid" && !(k in ROOT))
+        ROOT[k] <- ::Entities[k].bindenv(::Entities)
 
 //spell constants
 const SPELL_ROLLING = -2;

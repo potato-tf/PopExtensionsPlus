@@ -1,15 +1,5 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 
-::ROOT <- getroottable()
-
-foreach (k, v in ::NetProps.getclass())
-    if (k != "IsValid" && !(k in ROOT))
-        ROOT[k] <- ::NetProps[k].bindenv(::NetProps)
-
-foreach (k, v in ::Entities.getclass())
-    if (k != "IsValid" && !(k in ROOT))
-        ROOT[k] <- ::Entities[k].bindenv(::Entities)
-
 ::PopExtUtil <- {
 
     PlayerArray = []
