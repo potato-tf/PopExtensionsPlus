@@ -563,17 +563,40 @@ local tagtest = "popext_improvedairblast"
         local bot = GetPlayerFromUserID(params.userid)
         if (!bot.IsBotOfType(1337)) return
 
-        local building = EntIndexToHScript(params.index)
+        //EntFireByHandle(building, "RunScriptCode", "ClientPrint(null, 3, `` + self.GetSequence());", 0.5, null, null);
         if ((bot.HasBotTag("popext_dispenserasteleporter") && params.object == 1) || (bot.HasBotTag("popext_dispenserassentry") && params.object == 2))
         {
-            local dispenser = SpawnEntityFromTable("obj_dispenser", {
-                targetname = "dispenserasteleporter"+params.index,
-                defaultupgrade = 3,
-                origin = building.GetOrigin()
-            })
-            NetProps.SetPropEntity(dispenser, "m_hBuilder", bot)
-            dispenser.SetOwner(bot)
-            building.Kill()
+            local building = EntIndexToHScript(params.index);
+            local hint =  GetPropEntity(building, "m_hOwnerEntity");
+            
+            building.SetModelScale(0.01, 0.0);
+            building.SetHealth(999999);
+            PopExtUtil.SetTargetname(building, format("building%d"+building.entindex()));
+            EntFireByHandle(building, "Disable", "", -1, null, null);
+
+            local dispenser = CreateByClassname("obj_dispenser");
+
+            SetPropEntity(dispenser, "m_hBuilder", bot);
+            SetPropEntity(dispenser, "m_hOwnerEntity", hint);
+            SetPropInt(dispenser, "m_nDefaultUpgradeLevel", 2)
+            SetPropInt(dispenser, "m_iHealth", 1);
+
+            dispenser.SetHealth(1);
+            PopExtUtil.SetTargetname(dispenser, format("dispenser%d"+dispenser.entindex()));
+
+            dispenser.DispatchSpawn();
+            dispenser.SetTeam(bot.GetTeam());
+            dispenser.SetSkin(1);
+            SetPropBool(dispenser, "m_bBuilding", true);
+            SetPropBool(dispenser, "m_bPlacing", false);
+            SetPropFloat(dispenser, "m_flPercentageConstructed", 0.0);
+            
+            
+            dispenser.SetOrigin(building.GetLocalOrigin());
+            dispenser.SetAbsAngles(building.GetLocalAngles());
+            
+            EntityOutputs.AddOutput(dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1)
+            EntityOutputs.AddOutput(building, "OnDestroyed", dispenser.GetName(), "Kill", "", -1, -1)
         }
     }
 

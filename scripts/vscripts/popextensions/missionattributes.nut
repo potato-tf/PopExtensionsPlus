@@ -678,7 +678,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     if (GetPropInt(props, "m_nModelIndex") != carrierPartsIndex) continue;
 
                     carrier = props
-                break;
+                    break;
                 }
 
             }

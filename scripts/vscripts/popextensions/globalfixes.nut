@@ -37,6 +37,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
             
             function MoneyThink()
             {
+                if (player.GetPlayerClass() != TF_CLASS_SCOUT) return
                 for (local money; money = FindByClassnameWithin(money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS);)
                     money.SetOrigin(player.GetOrigin())
             }
