@@ -1,11 +1,6 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 
-// Allow expression constants
-::CONST <- getconsttable()
 ::ROOT <- getroottable()
-
-CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
-CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
 if (!("ConstantNamingConvention" in CONST))
 {
@@ -854,4 +849,60 @@ function PopExtUtil::QAngleDistance(a, b)
 function PopExtUtil::CheckBitwise(num)
 {
     return (num != 0 && ((num & (num - 1)) == 0))
+}
+
+function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT)
+{
+	if (player == null || !player.IsPlayer()) return;
+	
+	function FindTargetPlayer(passcond)
+	{
+		local target = null;
+		for (local i = 1; i <= MAX_CLIENTS ; i++)
+		{
+			local potentialtarget = PlayerInstanceFromIndex(i)
+			if (potentialtarget == null || potentialtarget == player) continue
+
+			if (passcond(potentialtarget))
+			{
+				target = potentialtarget;
+				break;
+			}
+		}
+		return target;
+	}
+	
+	if (target == null)
+	{
+		// Find disguise target
+		target = FindTargetPlayer(@(p) p.GetTeam() == tfteam && p.GetPlayerClass() == tfclass);
+		// Couldn't find any targets of tfclass, look for any class this time
+		if (target == null)
+			target = FindTargetPlayer(@(p) p.GetTeam() == tfteam);
+	}
+	
+	// Disguise as this player
+	if (target != null)
+	{
+		SetPropInt(player, "m_Shared.m_nDisguiseTeam", target.GetTeam());
+		SetPropInt(player, "m_Shared.m_nDisguiseClass", target.GetPlayerClass());
+		SetPropInt(player, "m_Shared.m_iDisguiseHealth", target.GetHealth());
+		SetPropEntity(player, "m_Shared.m_hDisguiseTarget", target);
+		// When we drop our disguise, the player we disguised as gets this weapon removed for some reason
+		//SetPropEntity(player, "m_Shared.m_hDisguiseWeapon", target.GetActiveWeapon())
+	}
+	// No valid targets, just give us a generic disguise
+	else
+	{
+		SetPropInt(player, "m_Shared.m_nDisguiseTeam", tfteam);
+		SetPropInt(player, "m_Shared.m_nDisguiseClass", tfclass);		
+	}
+	
+	player.AddCond(TF_COND_DISGUISED);
+	
+	// Hack to get our movespeed set correctly for our disguise
+	player.AddCond(TF_COND_SPEED_BOOST);
+	player.RemoveCond(TF_COND_SPEED_BOOST);
+	
+	//player.AddCondEx(TF_COND_STEALTHED_USER_BUFF_FADING, 1, null);
 }
