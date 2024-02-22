@@ -1,4 +1,4 @@
-# PopfileExtensions+
+# PopExtensions+
 VScript extensions for use inside population files
 
 This is a greatly expanded fork of the original PopExtensions that aims to recreate many of the features in sigsegv/rafradek's server plugins.
