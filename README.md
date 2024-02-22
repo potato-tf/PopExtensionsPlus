@@ -98,5 +98,3 @@ Example below makes all tanks that begin with name abc red and spawn with a prop
             "
         }
 ```
-## TODO
-Maybe a way to easily create point templates and spawn them on bots, if someone makes it would be welcome
