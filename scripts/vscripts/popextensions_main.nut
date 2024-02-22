@@ -1,19 +1,18 @@
-local scripts = [
-    "popextensions/constants.nut" //must be included first
-    "popextensions/util.nut" //must be included second
+local root = getroottable()
 
-    "popextensions/hooks.nut" //must be included before popextensions
-    "popextensions/popextensions.nut" //must be included here, other files may depend on this one
+function Include(path)
+{
+    IncludeScript(format("popextensions/%s", path), root)
+}
 
-    "popextensions/robotvoicelines.nut" //must be included before missionattributes.nut
-    "popextensions/missionattributes.nut"
-    
-    "popextensions/botbehavior.nut" //must be included before tags.nut
-    "popextensions/tags.nut"
-
-    "popextensions/globalfixes.nut"
-    "popextensions/spawntemplate.nut"
-    "popextensions/reverse.nut"
-]
-
-foreach (script in scripts) try IncludeScript(script) catch(e) printl(e);
+Include("constants.nut");
+Include("util.nut");
+Include("hooks.nut");
+Include("popextensions.nut");
+Include("robotvoicelines.nut");
+Include("missionattributes.nut");
+Include("botbehavior.nut");
+Include("tags.nut");
+Include("globalfixes.nut");
+Include("spawntemplate.nut");
+Include("reverse.nut");
