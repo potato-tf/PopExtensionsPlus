@@ -267,14 +267,14 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, textPrintTi
    AddThinkToEnt(txtent, "ExplanationTextThink");
 }
 
-function Explanation(message, textPrintTime = -1, textScanTime = 0.02)
+function Explanation(message, printColor = COLOR_YELLOW, textPrintTime = -1, textScanTime = 0.02)
 {
-    Explanation.call(PopExtUtil, message, textPrintTime, textScanTime)
+    Explanation.call(PopExtUtil, message, printColor, textPrintTime, textScanTime)
 }
 
-function Info(message, textPrintTime = -1, textScanTime = 0.02)
+function Info(message, printColor = COLOR_YELLOW, textPrintTime = -1, textScanTime = 0.02)
 {
-    Explanation.call(PopExtUtil, message, textPrintTime, textScanTime)
+    Explanation.call(PopExtUtil, message, printColor, textPrintTime, textScanTime)
 }
 
 function PopExtUtil::IsAlive(player)
