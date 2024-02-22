@@ -18,6 +18,9 @@ foreach (k, v in ::Entities.getclass())
     if (k != "IsValid" && !(k in ROOT))
         ROOT[k] <- ::Entities[k].bindenv(::Entities)
 
+//string constants are apparently significantly faster than raw strings
+const THINK_ADDED = "ProjectileThinkAdded"
+
 //spell constants
 const SPELL_ROLLING = -2;
 const SPELL_EMPTY = -1;

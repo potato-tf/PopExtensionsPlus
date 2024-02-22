@@ -633,7 +633,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 // if (!("ArmThink" in MissionAttributes.SpawnHookTable))
                     // MissionAttributes.SpawnHookTable.ArmThink <- ArmThink
 
-            } else if ("ArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.ArmThink    
+            } else if ("ArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.ArmThink
             
         }
         
