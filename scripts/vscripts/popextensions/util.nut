@@ -162,9 +162,8 @@ function PopExtUtil::HexToRgb(hex) {
     return [r, g, b];
 }
 
-function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, textPrintTime = -1, textScanTime = 0.02)
+function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02)
 {
-    printl(printColor)
     local rgb = PopExtUtil.HexToRgb("FFFF66")
     local txtent = SpawnEntityFromTable("game_text", {
         effect = 2,
@@ -190,8 +189,8 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, textPrintTi
         if (n.len() > 0)
         {
             strarray.append(n);
-            if (!startswith(n, "PAUSE"))
-                ClientPrint(null, 3, format("\x07%s Explanation\x07%s: %s", COLOR_YELLOW, TF_COLOR_DEFAULT, n));
+            if (!startswith(n, "PAUSE") && !syncChatWithGameText)
+                ClientPrint(null, 3, format("\x07%s %s\x07%s %s", COLOR_YELLOW, messagePrefix, TF_COLOR_DEFAULT, n));
         }
 
     local i = -1
@@ -235,6 +234,7 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, textPrintTi
             txtent.KeyValueFromInt("holdtime", pause);
 
             EntFireByHandle(txtent, "Display", "", -1, null, null);
+
             textcooldown = Time() + pause;
             return 0.033;
         }
@@ -258,6 +258,8 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, textPrintTi
         txtent.KeyValueFromInt("holdtime", delaybetweendisplays);
 
         EntFireByHandle(txtent, "Display", "", -1, null, null);
+        if (syncChatWithGameText) ClientPrint(null, 3, format("\x07%s %s\x07%s %s", COLOR_YELLOW, messagePrefix, TF_COLOR_DEFAULT, s));
+
         textcooldown = Time() + delaybetweendisplays;
 
         return 0.033;
@@ -267,14 +269,14 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, textPrintTi
    AddThinkToEnt(txtent, "ExplanationTextThink");
 }
 
-function Explanation(message, printColor = COLOR_YELLOW, textPrintTime = -1, textScanTime = 0.02)
+function Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02)
 {
-    Explanation.call(PopExtUtil, message, printColor, textPrintTime, textScanTime)
+    Explanation.call(PopExtUtil, message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
 }
 
-function Info(message, printColor = COLOR_YELLOW, textPrintTime = -1, textScanTime = 0.02)
+function Info(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02)
 {
-    Explanation.call(PopExtUtil, message, printColor, textPrintTime, textScanTime)
+    Explanation.call(PopExtUtil, message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
 }
 
 function PopExtUtil::IsAlive(player)

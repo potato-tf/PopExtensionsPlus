@@ -86,6 +86,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
             function PlayerThinks()
             {
                 foreach (_, func in scope.PlayerThinkTable) func()
+                return -1
             }
             scope.PlayerThinks <- PlayerThinks
             AddThinkToEnt(player, "PlayerThinks")

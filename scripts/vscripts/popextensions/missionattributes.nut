@@ -35,7 +35,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
             local scope = player.GetScriptScope()
             if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
     
-            function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func() }
+            function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
             scope.PlayerThinks <- PlayerThinks
             AddThinkToEnt(player, "PlayerThinks")
     

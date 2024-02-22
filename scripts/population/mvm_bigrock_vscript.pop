@@ -8,8 +8,24 @@ WaveSchedule
 
 	StartingCurrency		1200
 	RespawnWaveTime 		2
-	CanBotsAttackWhileInSpawnRoom 0
+	CanBotsAttackWhileInSpawnRoom 1
 
+	Mission
+	{
+		Objective Engineer  
+
+		InitialCooldown 0
+		Where spawnbot
+		BeginAtWave 1
+		RunForThisManyWaves 4
+		CooldownTime 10
+		DesiredCount 1
+
+		TFBot
+		{
+			Template T_TFBot_Engineer_Sentry_Teleporter
+		}
+	}
 	Wave
 	{
 		// Add or replace existing InitWaveOutput with code below
@@ -22,21 +38,17 @@ WaveSchedule
 				EntFire(`wave_init_relay`, `Trigger`)
 
 				// Load popextensions script
-				IncludeScript(`popextensions`)
-
-				//load popextensions tags script
-				IncludeScript(`popextensions_tags`)
-
-				//load general mission attributes
-				IncludeScript(`popextensions_missionattributes`)
+				IncludeScript(`popextensions_main`)
 
 				//load mission attributes 
 				MissionAttr(`NoReanimators`, 1)
 				MissionAttr(`666Wavebar`, 1)
-				MissionAttr(`ForceHoliday`, 2)
+				MissionAttr(`ForceHoliday`, 8)
 				MissionAttr(`NoRome`, 2)
 				MissionAttr(`WaveStartCountdown`, 5)
-				MissionAttr(`PlayersAreRobots`, 2)
+				MissionAttr(`PlayersAreRobots`, 2|4|8) //can also pre-combine into 14
+
+				Info(`This is an explanation text example|PAUSE 2|Explanation text can support pauses, and optionally syncing chat prints with the game_text|By default, text lifetime is determined by the length of the sentence|See PopExtUtil::Explanation in util.nut for more info`, COLOR_YELLOW, `Explanation: `, true)
 
 				// If you are hitting the 4096 character limit inside this script, it would be required to put hooks into separate file
 				// IncludeScript(`mypophooks`)

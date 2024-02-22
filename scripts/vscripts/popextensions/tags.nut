@@ -1,5 +1,7 @@
 local root = getroottable()
 //behavior tags
+
+IncludeScript("popextensions/botbehavior.nut")
 local popext_funcs =
 {
     popext_addcond = function(bot, args)
@@ -594,6 +596,7 @@ local tagtest = "popext_improvedairblast"
             
             dispenser.SetOrigin(building.GetLocalOrigin());
             dispenser.SetAbsAngles(building.GetLocalAngles());
+            dispenser.ResetSequence(1);
             
             EntityOutputs.AddOutput(dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1)
             EntityOutputs.AddOutput(building, "OnDestroyed", dispenser.GetName(), "Kill", "", -1, -1)

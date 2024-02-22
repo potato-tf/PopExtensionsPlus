@@ -208,7 +208,16 @@ function PopulatorThink()
 			}
 		}
 	}
-	return 0.00;
+
+	//add think table to all projectiles
+	for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
+	{
+		projectile.ValidateScriptScope()
+		local scope = projectile.GetScriptScope()
+		if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <- {}
+	}
+
+	return -1;
 }
 
 function OnScriptHook_OnTakeDamage(params)
