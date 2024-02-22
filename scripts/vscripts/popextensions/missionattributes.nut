@@ -592,7 +592,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			// for some reason these instantly get applied on first load but not on reloads
             if (value & 16)
             {
-				local vmodel   = ROBOT_ARM_PATHS[player.GetPlayerClass()];
+				local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()];
 				local playervm = GetPropEntity(player, "m_hViewModel")
 				playervm.SetModelSimple(vmodel);
 				

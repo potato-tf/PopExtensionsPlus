@@ -6,7 +6,21 @@
     Classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
     IsWaveStarted = false //check a global variable instead of accessing a netprop every time to check if we are between waves.
     AllNavAreas = {}
-
+    ROBOT_ARM_PATHS = [
+        "", // Dummy
+        "models/weapons/c_models/c_scout_bot_arms.mdl",
+        "models/weapons/c_models/c_sniper_bot_arms.mdl",
+        "models/weapons/c_models/c_soldier_bot_arms.mdl",
+        "models/weapons/c_models/c_demo_bot_arms.mdl",
+        "models/weapons/c_models/c_medic_bot_arms.mdl",
+        "models/weapons/c_models/c_heavy_bot_arms.mdl",
+        "models/weapons/c_models/c_pyro_bot_arms.mdl",
+        "models/weapons/c_models/c_spy_bot_arms.mdl",
+        "models/weapons/c_models/c_engineer_bot_arms.mdl",
+        "", // Civilian
+    ]
+    
+    ROBOT_ARM_INDEXES = []
     DeflectableProjectiles = {
         tf_projectile_arrow                 = 1 // Huntsman arrow, Rescue Ranger bolt
         tf_projectile_ball_ornament         = 1 // Wrap Assassin
@@ -74,6 +88,9 @@
         }
     }
 };
+
+foreach (i, path in ROBOT_ARM_PATHS)
+    ROBOT_ARM_INDEXES.append( ((path != "") ? PrecacheModel(path) : null) );
 
 NavMesh.GetAllAreas(PopExtUtil.AllNavAreas);
 
