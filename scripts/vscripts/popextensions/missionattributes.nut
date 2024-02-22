@@ -466,10 +466,11 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     //Uses bitflags to enable certain behavior 
-    // 1 = Robot animations (excluding sticky demo and jetpack pyro)
-    // 2 = Human animations
-    // 4 = Enable footstep sfx
-    // 8 = Enable voicelines (WIP)
+    // 1  = Robot animations (excluding sticky demo and jetpack pyro)
+    // 2  = Human animations
+    // 4  = Enable footstep sfx
+    // 8  = Enable voicelines (WIP)
+	// 16 = Enable viewmodels (WIP)
 
     //example: MissionAttr(`PlayersAreRobots`, 6) - Human animations and footsteps enabled
     //example: MissionAttr(`PlayersAreRobots`, 2 | 4) - Same thing if you are lazy
@@ -587,54 +588,23 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					MissionAttributes.ThinkTable.RobotVOThink <- RobotVOThink;
 
             } else if ("StepThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.StepThink
+			
+			// for some reason these instantly get applied on first load but not on reloads
             if (value & 16)
             {
-                // function ArmThink(params)
-                function ArmThink()
-                {
-                    // local vmodel = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()];
-                    // local vmindex = PopExtUtil.ROBOT_ARM_INDEXES[player.GetPlayerClass()];
-                    local vmodel      = "models/weapons/c_models/c_heavy_arms.mdl"
-                    local vmindex = PrecacheModel(vmodel)
-                    local weapon  = GetPropEntity(player, "m_hActiveWeapon");
-                    local playervm = GetPropEntity(player, "m_hViewModel")
+				local vmodel   = ROBOT_ARM_PATHS[player.GetPlayerClass()];
+				local playervm = GetPropEntity(player, "m_hViewModel")
+				playervm.SetModelSimple(vmodel);
+				
+				for (local i = 0; i < SLOT_COUNT; i++)
+				{
+					local wep = GetPropEntityArray(player, "m_hMyWeapons", i);
+					if (wep == null) continue;
 
-                    if ("wearablevm" in scope && scope.wearablevm.IsValid()) scope.wearablevm.Destroy();
-
-                    local wearablevm = Entities.CreateByClassname("tf_wearable_vm");
-
-                    wearablevm.SetModelSimple(vmodel)
-                    SetPropInt(wearablevm, "m_iViewModelIndex", vmindex);
-                    SetPropInt(wearablevm, "m_nModelIndex", vmindex);
-                    SetPropBool(wearablevm, "m_bValidatedAttachedEntity", true);
-                    SetPropBool(wearablevm, "m_AttributeManager.m_Item.m_bInitialized", true)
-                    PopExtUtil._SetOwner(wearablevm, player)
-                    wearablevm.SetTeam(player.GetTeam())
-
-                    wearablevm.DispatchSpawn();
-
-                    SetPropEntity(weapon, "m_hExtraWearableViewModel", wearablevm);
-                    SetPropInt(weapon, "m_iViewModelIndex", vmindex);
-                    SetPropInt(weapon, "m_nModelIndex", vmindex);
-                    SetPropInt(weapon, "m_nRenderMode", kRenderTransColor);
-                    SetPropInt(weapon, "m_clrRender", 0);
-                    
-                    playervm.SetModelSimple(vmodel);
-                    weapon.SetCustomViewModelModelIndex(vmindex);
-
-                    player.EquipWearableViewModel(wearablevm);
-
-                    scope.wearablevm <- wearablevm;
-                    
-                    return -1
-                }
-                if (!(ArmThink in scope.PlayerThinkTable)) 
-                    scope.PlayerThinkTable.ArmThink <- ArmThink
-                // if (!("ArmThink" in MissionAttributes.SpawnHookTable))
-                    // MissionAttributes.SpawnHookTable.ArmThink <- ArmThink
-
-            } else if ("ArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.ArmThink
-            
+					wep.SetModelSimple(vmodel);
+					wep.SetCustomViewModel(vmodel);
+				}
+            }
         }
         
         MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots;
