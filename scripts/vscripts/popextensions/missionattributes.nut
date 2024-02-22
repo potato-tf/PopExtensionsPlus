@@ -822,12 +822,23 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown;
     break;
 
+    //Options to revert global fixes below:
+
     // =========================================================
 
     case "ReflectableDF":
-        if ("DragonsFuryFix" in MissionAttributes.ThinkTable)
-            delete MissionAttributes.ThinkTable.DragonsFuryFix
+        if ("DragonsFuryFix" in GlobalFixes.ThinkTable)
+            delete GlobalFixes.ThinkTable.DragonsFuryFix
     break;
+    
+    // =========================================================
+
+    case "RestoreYERNerf":
+        if ("YERDisguiseFix" in GlobalFixes.TakeDamageTable)
+            delete GlobalFixes.TakeDamageTable.YERDisguiseFix
+    break;
+
+    // =========================================================
 
     // Don't add attribute to clean-up list if it could not be found.
     default:

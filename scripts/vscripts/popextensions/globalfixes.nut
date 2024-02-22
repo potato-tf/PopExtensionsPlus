@@ -8,16 +8,15 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
     //remove with MissionAttr("ReflectableDF", 1)
     InitWaveTable = {}
     TakeDamageTable = {
-		function YERDisguiseFix
+		function YERDisguiseFix()
 		{
 			local victim   = params.const_entity;
 			local attacker = params.inflictor;
 			
-			if (victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB &&
-				attacker != null && !attacker.IsBotOfType(1337))
+			if (victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB && attacker != null && !attacker.IsBotOfType(1337))
 			{
-				attacker.GetScriptScope().stabvictim <- victim;
-				EntFireByHandle(attacker, "RunScriptCode", "PopExtUtil.SilentDisguise(self, stabvictim);", -1, null, null);
+				attacker.GetScriptScope().stabvictim <- victim
+				EntFireByHandle(attacker, "RunScriptCode", "PopExtUtil.SilentDisguise(self, stabvictim);", -1, null, null)
 			}
 		}
 	}
@@ -35,7 +34,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
         {
             local player = GetPlayerFromUserID(params.userid)
             
-            if (!player.IsBotOfType(1337)) return;
+            if (!player.IsBotOfType(1337)) return
 
             for (local money; money = FindByClassname(money, "item_currencypack*");)
                 money.SetAbsVelocity(Vector())
@@ -46,11 +45,15 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
         {
             local player = GetPlayerFromUserID(params.userid)
 
-            if (player.IsBotOfType(1337) || player.GetPlayerClass() != TF_CLASS_SCOUT) return;
+            if (player.IsBotOfType(1337) || player.GetPlayerClass() != TF_CLASS_SCOUT) return
             
             function MoneyThink()
             {
-                if (player.GetPlayerClass() != TF_CLASS_SCOUT) return
+                if (player.GetPlayerClass() != TF_CLASS_SCOUT)
+                {
+                    delete player.GetScriptScope().PlayerThinkTable.MoneyThink
+                    return
+                }
                 for (local money; money = FindByClassnameWithin(money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS);)
                     money.SetOrigin(player.GetOrigin())
             }
@@ -59,13 +62,13 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function RemoveYERAttribute(params)
 		{
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return;
+			if (player.IsBotOfType(1337)) return
 			
 			local wep   = PopExtUtil.GetItemInSlot(player, SLOT_MELEE);
-			local index = GetPropInt(wep, "m_AttributeManager.m_Item.m_iItemDefinitionIndex");
+			local index = GetPropInt(wep, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
 			
 			if (index == 225 || index == 574)
-				wep.RemoveAttribute("disguise on backstab");
+				wep.RemoveAttribute("disguise on backstab")
 		}
     }
     Events = {
@@ -93,7 +96,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
         
         function OnGameEvent_recalculate_holidays(params)
         {
-            if (GetRoundState() != 3) return;
+            if (GetRoundState() != 3) return
     
             foreach (_, func in GlobalFixes.InitWaveTable) func(params)
         }
