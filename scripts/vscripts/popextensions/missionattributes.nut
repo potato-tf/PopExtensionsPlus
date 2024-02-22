@@ -548,7 +548,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 						if (owner != null && !owner.IsBotOfType(1337))
 						{
 						  
-							local vcdpath = NetProps.GetPropString(ent, "m_szInstanceFilename");
+							local vcdpath = GetPropString(ent, "m_szInstanceFilename");
 							if (!vcdpath || vcdpath == "") return -1;
 							
 							local dotindex   = vcdpath.find(".");
@@ -587,6 +587,53 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					MissionAttributes.ThinkTable.RobotVOThink <- RobotVOThink;
 
             } else if ("StepThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.StepThink
+            if (value & 16)
+            {
+                // function ArmThink(params)
+                function ArmThink()
+                {
+                    // local vmodel = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()];
+                    // local vmindex = PopExtUtil.ROBOT_ARM_INDEXES[player.GetPlayerClass()];
+                    local vmodel      = "models/weapons/c_models/c_heavy_arms.mdl"
+                    local vmindex = PrecacheModel(vmodel)
+                    local weapon  = GetPropEntity(player, "m_hActiveWeapon");
+                    local playervm = GetPropEntity(player, "m_hViewModel")
+
+                    if ("wearablevm" in scope && scope.wearablevm.IsValid()) scope.wearablevm.Destroy();
+
+                    local wearablevm = Entities.CreateByClassname("tf_wearable_vm");
+
+                    wearablevm.SetModelSimple(vmodel)
+                    SetPropInt(wearablevm, "m_iViewModelIndex", vmindex);
+                    SetPropInt(wearablevm, "m_nModelIndex", vmindex);
+                    SetPropBool(wearablevm, "m_bValidatedAttachedEntity", true);
+                    SetPropBool(wearablevm, "m_AttributeManager.m_Item.m_bInitialized", true)
+                    PopExtUtil._SetOwner(wearablevm, player)
+                    wearablevm.SetTeam(player.GetTeam())
+
+                    wearablevm.DispatchSpawn();
+
+                    SetPropEntity(weapon, "m_hExtraWearableViewModel", wearablevm);
+                    SetPropInt(weapon, "m_iViewModelIndex", vmindex);
+                    SetPropInt(weapon, "m_nModelIndex", vmindex);
+                    SetPropInt(weapon, "m_nRenderMode", kRenderTransColor);
+                    SetPropInt(weapon, "m_clrRender", 0);
+                    
+                    playervm.SetModelSimple(vmodel);
+                    weapon.SetCustomViewModelModelIndex(vmindex);
+
+                    player.EquipWearableViewModel(wearablevm);
+
+                    scope.wearablevm <- wearablevm;
+                    
+                    return -1
+                }
+                if (!(ArmThink in scope.PlayerThinkTable)) 
+                    scope.PlayerThinkTable.ArmThink <- ArmThink
+                // if (!("ArmThink" in MissionAttributes.SpawnHookTable))
+                    // MissionAttributes.SpawnHookTable.ArmThink <- ArmThink
+
+            } else if ("ArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.ArmThink    
             
         }
         
