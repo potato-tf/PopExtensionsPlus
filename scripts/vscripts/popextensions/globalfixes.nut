@@ -7,7 +7,20 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 ::GlobalFixes <- {
     //remove with MissionAttr("ReflectableDF", 1)
     InitWaveTable = {}
-    TakeDamageTable = {}
+    TakeDamageTable = {
+		function YERDisguiseFix
+		{
+			local victim   = params.const_entity;
+			local attacker = params.inflictor;
+			
+			if (victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB &&
+				attacker != null && !attacker.IsBotOfType(1337))
+			{
+				attacker.GetScriptScope().stabvictim <- victim;
+				EntFireByHandle(attacker, "RunScriptCode", "PopExtUtil.SilentDisguise(self, stabvictim);", -1, null, null);
+			}
+		}
+	}
     DisconnectTable = {}
     ThinkTable = {
 
@@ -42,6 +55,17 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
             }
             player.GetScriptScope().PlayerThinkTable.MoneyThink <- MoneyThink
         }
+		function RemoveYERAttribute(params)
+		{
+			local player = GetPlayerFromUserID(params.userid)
+			if (player.IsBotOfType(1337)) return;
+			
+			local wep   = PopExtUtil.GetItemInSlot(player, SLOT_MELEE);
+			local index = GetPropInt(wep, "m_AttributeManager.m_Item.m_iItemDefinitionIndex");
+			
+			if (index == 225 || index == 574)
+				wep.RemoveAttribute("disguise on backstab");
+		}
     }
     Events = {
         function OnScriptHook_OnTakeDamage(params) { foreach (_, func in GlobalFixes.TakeDamageTable) func(params) }
