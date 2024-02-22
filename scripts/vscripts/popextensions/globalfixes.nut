@@ -8,7 +8,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
     //remove with MissionAttr("ReflectableDF", 1)
     InitWaveTable = {}
     TakeDamageTable = {
-		function YERDisguiseFix()
+		function YERDisguiseFix(params)
 		{
 			local victim   = params.const_entity;
 			local attacker = params.inflictor;
