@@ -37,12 +37,12 @@ local popext_funcs =
 
     popext_usehumanmodel = function(bot, args)
     {
-        bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", Classes[bot.GetPlayerClass()]))
+        bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", PopExtUtil.Classes[bot.GetPlayerClass()]))
     }
 
     popext_alwaysglow = function(bot, args)
     {
-        NetProps.SetPropBool(bot, "m_bGlowEnabled", true)
+        SetPropBool(bot, "m_bGlowEnabled", true)
     }
 
     popext_stripslot = function(bot, args)
@@ -76,9 +76,9 @@ local popext_funcs =
     popext_giveweapon = function(bot, args)
     {
         local weapon = Entities.CreateByClassname(args[0])
-        NetProps.SetPropInt(weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", args[1].tointeger())
-        NetProps.SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
-        NetProps.SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
+        SetPropInt(weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", args[1].tointeger())
+        SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
+        SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
         weapon.SetTeam(bot.GetTeam())
         Entities.DispatchSpawn(weapon)
 
@@ -86,13 +86,13 @@ local popext_funcs =
 
         for (local i = 0; i < 7; i++)
         {
-            local heldWeapon = NetProps.GetPropEntityArray(bot, "m_hMyWeapons", i)
+            local heldWeapon = GetPropEntityArray(bot, "m_hMyWeapons", i)
             if (heldWeapon == null)
                 continue
             if (heldWeapon.GetSlot() != weapon.GetSlot())
                 continue
             heldWeapon.Destroy()
-            NetProps.SetPropEntityArray(bot, "m_hMyWeapons", weapon, i)
+            SetPropEntityArray(bot, "m_hMyWeapons", weapon, i)
             break
         }
 
@@ -109,8 +109,8 @@ local popext_funcs =
 
                 //scout and pyro's UseBestWeapon is inverted
                 //switch them to secondaries, then back to primary when enemies are close
-                if (bot.GetActiveWeapon() != NetProps.GetPropEntityArray(bot, "m_hMyWeapons", 1))
-                    bot.Weapon_Switch(NetProps.GetPropEntityArray(bot, "m_hMyWeapons", 1))
+                if (bot.GetActiveWeapon() != GetPropEntityArray(bot, "m_hMyWeapons", 1))
+                    bot.Weapon_Switch(GetPropEntityArray(bot, "m_hMyWeapons", 1))
 
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
@@ -119,7 +119,7 @@ local popext_funcs =
 
                     for (local i = 0; i < 7; i++)
                     {
-                        local wep = NetProps.GetPropEntityArray(bot, "m_hMyWeapons", i)
+                        local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
                         if ( wep == null || wep.GetSlot() != 0) continue
 
                         primary = wep
@@ -139,7 +139,7 @@ local popext_funcs =
 
                     for (local i = 0; i < 7; i++)
                     {
-                        local wep = NetProps.GetPropEntityArray(bot, "m_hMyWeapons", i)
+                        local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
                         if ( wep == null || wep.GetSlot() != 1) continue
 
                         secondary = wep
@@ -161,7 +161,7 @@ local popext_funcs =
 
                     for (local i = 0; i < 7; i++)
                     {
-                        local wep = NetProps.GetPropEntityArray(bot, "m_hMyWeapons", i)
+                        local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
                         if ( wep == null || wep.GetSlot() != 1) continue
 
                         secondary = wep
@@ -179,8 +179,8 @@ local popext_funcs =
                 //scout and pyro's UseBestWeapon is inverted
                 //switch them to secondaries, then back to primary when enemies are close
                 //TODO: check if we're targetting a soldier with a simple raycaster, or wait for more bot functions to be exposed
-                if (bot.GetActiveWeapon() != NetProps.GetPropEntityArray(bot, "m_hMyWeapons", 1))
-                    bot.Weapon_Switch(NetProps.GetPropEntityArray(bot, "m_hMyWeapons", 1))
+                if (bot.GetActiveWeapon() != GetPropEntityArray(bot, "m_hMyWeapons", 1))
+                    bot.Weapon_Switch(GetPropEntityArray(bot, "m_hMyWeapons", 1))
 
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
@@ -189,7 +189,7 @@ local popext_funcs =
 
                     for (local i = 0; i < 7; i++)
                     {
-                        local wep = NetProps.GetPropEntityArray(bot, "m_hMyWeapons", i)
+                        local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
                         if ( wep == null || wep.GetSlot() != 0) continue
 
                         primary = wep

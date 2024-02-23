@@ -38,7 +38,7 @@ WaveSchedule
 				EntFire(`wave_init_relay`, `Trigger`)
 
 				// Load popextensions script
-				IncludeScript(`popextensions_main`)
+				IncludeScript(`popextensions_main`, getroottable())
 
 				//load mission attributes 
 				MissionAttr(`NoReanimators`, 1)
@@ -48,7 +48,7 @@ WaveSchedule
 				MissionAttr(`WaveStartCountdown`, 5)
 				MissionAttr(`PlayersAreRobots`, 2|4|8) //can also pre-combine into 14
 
-				Info(`This is an explanation text example|PAUSE 2|Explanation text can support pauses, and optionally syncing chat prints with the game_text|By default, text lifetime is determined by the length of the sentence|See PopExtUtil::Explanation in util.nut for more info`, COLOR_YELLOW, `Explanation: `, true)
+				Info(`This is an explanation text example|PAUSE 2|Explanation text can support pauses, and optionally syncing chat prints with the game_text|By default, text lifetime is determined by the length of the sentence|See PopExtUtil::Explanation in util.nut for more info`, `FFFF66`, `Explanation: `, true)
 
 				// If you are hitting the 4096 character limit inside this script, it would be required to put hooks into separate file
 				// IncludeScript(`mypophooks`)

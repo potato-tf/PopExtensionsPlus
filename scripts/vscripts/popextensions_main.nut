@@ -5,14 +5,18 @@ function Include(path)
     IncludeScript(format("popextensions/%s", path), root)
 }
 
-Include("constants.nut");
-Include("util.nut");
-Include("hooks.nut");
+Include("constants.nut"); //must include first
+Include("util.nut"); //must include second
+
+Include("hooks.nut"); //must include before popextensions
 Include("popextensions.nut");
-Include("robotvoicelines.nut");
+
+Include("robotvoicelines.nut"); //must include before missionattributes
 Include("missionattributes.nut");
-Include("botbehavior.nut");
+
+Include("botbehavior.nut"); //must include before tags
 Include("tags.nut");
+
 Include("globalfixes.nut");
 Include("spawntemplate.nut");
 Include("reverse.nut");

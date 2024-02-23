@@ -1,5 +1,3 @@
-local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
-
 ::MissionAttributes <- {
 
     CurAttrs = {} // Array storing currently modified attributes.
@@ -493,7 +491,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             }
             
             local playerclass  = player.GetPlayerClass();
-            local class_string = classes[playerclass];
+            local class_string = PopExtUtil.Classes[playerclass];
             local model = format("models/bots/%s/bot_%s.mdl", class_string, class_string);
             
             if (value & 1)
@@ -617,7 +615,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         {
             local player = GetPlayerFromUserID(params.userid)
             if (!player.IsBotOfType(1337)) return;
-            EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[bot.GetPlayerClass()]), -1, null, null);
+            EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[bot.GetPlayerClass()]), -1, null, null);
         }
 
         // if (!(MissionAttributes.BotsAreHumans in MissionAttributes.SpawnHookTable))
@@ -633,7 +631,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             local bot = GetPlayerFromUserID(params.userid)
             if (bot.IsBotOfType(1337))
                 for (local child = bot.FirstMoveChild(); child != null; child = child.NextMovePeer())
-                    if (!bot.HasBotTag("popext_forceromevision") && child.GetClassname() == "tf_wearable" && startswith(child.GetModelName(), "models/workshop/player/items/"+classes[bot.GetPlayerClass()]+"/tw"))
+                    if (!bot.HasBotTag("popext_forceromevision") && child.GetClassname() == "tf_wearable" && startswith(child.GetModelName(), "models/workshop/player/items/"+PopExtUtil.Classes[bot.GetPlayerClass()]+"/tw"))
                         EntFireByHandle(child, "Kill", "", -1, null, null);
 
             //set value to 2 to also kill the carrier tank addon model

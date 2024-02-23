@@ -89,8 +89,8 @@
     }
 };
 
-foreach (i, path in ROBOT_ARM_PATHS)
-    ROBOT_ARM_INDEXES.append( ((path != "") ? PrecacheModel(path) : null) );
+foreach (i, path in PopExtUtil.ROBOT_ARM_PATHS)
+    PopExtUtil.ROBOT_ARM_INDEXES.append( ((path != "") ? PrecacheModel(path) : null) );
 
 NavMesh.GetAllAreas(PopExtUtil.AllNavAreas);
 

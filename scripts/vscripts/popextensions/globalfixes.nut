@@ -64,7 +64,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 			
-			local wep   = PopExtUtil.GetItemInSlot(player, SLOT_MELEE);
+			local wep = PopExtUtil.GetItemInSlot(player, SLOT_MELEE);
 			local index = GetPropInt(wep, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
 			
 			if (index == 225 || index == 574)
