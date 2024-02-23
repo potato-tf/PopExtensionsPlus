@@ -33,7 +33,7 @@
             local scope = player.GetScriptScope()
             if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
     
-            function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
+			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
             scope.PlayerThinks <- PlayerThinks
             AddThinkToEnt(player, "PlayerThinks")
     
@@ -582,27 +582,33 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					return -1;					
 				}
 
-				if (!(RobotVOThink in MissionAttributes.ThinkTable))
+				if (!("RobotVOThink" in MissionAttributes.ThinkTable))
 					MissionAttributes.ThinkTable.RobotVOThink <- RobotVOThink;
 
-            } else if ("StepThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.StepThink
+            } else if ("RobotVOThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotVOThink
 			
-			// for some reason these instantly get applied on first load but not on reloads
             if (value & 16)
             {
-				local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()];
-				local playervm = GetPropEntity(player, "m_hViewModel")
-				playervm.SetModelSimple(vmodel);
-				
-				for (local i = 0; i < SLOT_COUNT; i++)
+				function RobotArmThink()
 				{
-					local wep = GetPropEntityArray(player, "m_hMyWeapons", i);
-					if (wep == null) continue;
+					local vmodel   = ROBOT_ARM_PATHS[player.GetPlayerClass()];
+					local playervm = GetPropEntity(player, "m_hViewModel")
+					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel);
+					
+					for (local i = 0; i < SLOT_COUNT; i++)
+					{
+						local wep = GetPropEntityArray(player, "m_hMyWeapons", i);
+						if (wep == null || (wep.GetModelName() == vmodel)) continue;
 
-					wep.SetModelSimple(vmodel);
-					wep.SetCustomViewModel(vmodel);
+						wep.SetModelSimple(vmodel);
+						wep.SetCustomViewModel(vmodel);
+					}
 				}
-            }
+				
+				if (!("RobotArmThink" in MissionAttributes.ThinkTable))
+					MissionAttributes.ThinkTable.RobotArmThink <- RobotArmThink;
+				
+            } else if ("RobotArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotArmThink
         }
         
         MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots;
