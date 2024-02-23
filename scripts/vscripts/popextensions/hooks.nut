@@ -211,13 +211,13 @@ function PopulatorThink()
 
 	//add think table to all projectiles
 	//there is apparently no better way to do this lol
-	for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
-	{
-		projectile.ValidateScriptScope()
-		local scope = projectile.GetScriptScope()
-		if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <- {}
-		SetPropString(projectile, "m_iClassname", THINK_ADDED)
-	}
+    for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
+    {
+        projectile.ValidateScriptScope()
+        local scope = projectile.GetScriptScope()
+        if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <- {}
+        SetPropString(projectile, "m_iClassname", format("%s%s", THINK_ADDED, projectile.GetClassname()))
+    }
 
 	return -1;
 }

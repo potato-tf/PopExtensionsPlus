@@ -19,7 +19,7 @@ foreach (k, v in ::Entities.getclass())
         ROOT[k] <- ::Entities[k].bindenv(::Entities)
 
 //string constants are apparently significantly faster than raw strings
-const THINK_ADDED = "ProjectileThinkAdded"
+const THINK_ADDED = "THINKADDED_"
 
 //spell constants
 const SPELL_ROLLING = -2;
@@ -53,13 +53,13 @@ const TF_COLOR_BLUE    = "99CCFF"
 const TF_COLOR_SPEC    = "CCCCCC"
 const TF_COLOR_DEFAULT = "FBECCB"
 
-CONST.COLOR_END <- "\x07";
-CONST.COLOR_DEFAULT <- "\x07FBECCB";
-CONST.COLOR_BLUE <- "\x07FF3F3F";
-CONST.COLOR_RED <- "\x07FF3F3F";
-CONST.COLOR_SPECTATOR <- "\x07CCCCCC";
-CONST.COLOR_NAVY_BLUE <- "\x071337AD";
-CONST.COLOR_DEEP_RED <- "\x07FF0000";
+// CONST.COLOR_END <- "\x07";
+// CONST.COLOR_DEFAULT <- "\x07FBECCB";
+// CONST.COLOR_BLUE <- "\x07FF3F3F";
+// CONST.COLOR_RED <- "\x07FF3F3F";
+// CONST.COLOR_SPECTATOR <- "\x07CCCCCC";
+// CONST.COLOR_NAVY_BLUE <- "\x071337AD";
+// CONST.COLOR_DEEP_RED <- "\x07FF0000";
 // CONST.COLOR_LIME <- "\x0722FF22";
 // CONST.COLOR_YELLOW <- "\x07FFFF66";
 
