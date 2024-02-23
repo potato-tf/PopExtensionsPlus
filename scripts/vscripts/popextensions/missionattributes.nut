@@ -17,7 +17,7 @@
 		foreach (_, func in MissionAttributes.InitWaveTable) func()
 
 		foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
-		MissionAttributes.RaisedParseError = false;
+		MissionAttributes.RaisedParseError = false
 	}
 
     Events = {
@@ -43,16 +43,16 @@
         
         function OnGameEvent_recalculate_holidays(params)
         {
-            if (GetRoundState() != 3) return;
+            if (GetRoundState() != 3) return
 			
 			MissionAttributes.InitWave();
         }
     
         function GameEvent_mvm_wave_complete(params) 
         { 
-            ResetConvars();
-            delete ::MissionAttributes;
-            DebugLog(format("Cleaned up mission attribute %s", attr));
+            ResetConvars()
+            delete ::MissionAttributes
+            DebugLog(format("Cleaned up mission attribute %s", attr))
         }
     }
 };
@@ -86,10 +86,10 @@ function MissionAttributes::ResetConvars()
     MissionAttributes.ConVars.clear()
 }
 
-local noRomeCarrier = false;
+local noRomeCarrier = false
 function MissionAttributes::MissionAttr(attr, value = 0)
 {
-    local success = true;
+    local success = true
     switch(attr) {
 
     // =========================================================
@@ -105,9 +105,9 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // @error TypeError     If type is not an integer.
     // @error IndexError    If invalid holiday number is passed.
         // Error Handling
-    try (value.tointeger()) catch(_) {RaiseTypeError(attr, "int"); success = false; break;}
-    if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break;}
-    if (value < 0 || value > 11) {RaiseIndexError(attr, [0, 11]); success = false; break;}
+    try (value.tointeger()) catch(_) {RaiseTypeError(attr, "int"); success = false; break}
+    if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break}
+    if (value < 0 || value > 11) {RaiseIndexError(attr, [0, 11]); success = false; break}
 
         // Set Holiday logic
         SetConvar("tf_forced_holiday", value)
@@ -136,25 +136,25 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
                 for (local pumpkin; pumpkin = Entities.FindByClassname(pumpkin, "tf_ammo_pack");)
                     if (GetPropInt(pumpkin, "m_nModelIndex") == pumpkinIndex)
-                        EntFireByHandle(pumpkin, "Kill", "", -1, null, null); //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
+                        EntFireByHandle(pumpkin, "Kill", "", -1, null, null) //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
             }
             for (local i = 1, player; i <= MaxClients(); i++)
                 if (player = PlayerInstanceFromIndex(i), player && player.InCond(TF_COND_CRITBOOSTED_PUMPKIN)) //TF_COND_CRITBOOSTED_PUMPKIN
-                    EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null);
+                    EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null)
         }
-        MissionAttributes.ThinkTable.NoCrumpkins <- MissionAttributes.NoCrumpkins;
+        MissionAttributes.ThinkTable.NoCrumpkins <- MissionAttributes.NoCrumpkins
     break;
 
     // =========================================================
 
     case "NoReanimators":
-        if (value < 1) return;
+        if (value < 1) return
         function MissionAttributes::NoReanimators(params)
         {
             for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");)
-                EntFireByHandle(revivemarker, "Kill", "", -1, null, null);
+                EntFireByHandle(revivemarker, "Kill", "", -1, null, null)
         }
-        MissionAttributes.DeathHookTable.NoReanimators <- MissionAttributes.NoReanimators;
+        MissionAttributes.DeathHookTable.NoReanimators <- MissionAttributes.NoReanimators
     break;
 
     // =========================================================
@@ -175,7 +175,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             }
             player.GetScriptScope().PlayerThinkTable.StandableHeads <- StandableHeads
         }
-        MissionAttributes.SpawnHookTable.StandableHeads <- MissionAttributes.StandableHeads;
+        MissionAttributes.SpawnHookTable.StandableHeads <- MissionAttributes.StandableHeads
     break
 
     // =========================================================
@@ -204,7 +204,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             for (local sapper; sapper = FindByClassname("obj_attachment_sapper");)
                 SetPropBool(sapper, "m_bDisposableBuilding", true)
         }
-        MissionAttributes.ThinkTable.MultiSapperThink <- MissionAttributes.MultiSapperThink;
+        MissionAttributes.ThinkTable.MultiSapperThink <- MissionAttributes.MultiSapperThink
     break;
     
     // =========================================================
@@ -437,7 +437,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "SniperHideLasers":
-        if (value < 1) return;
+        if (value < 1) return
         function MissionAttributes::SniperHideLasers()
         {
             for (local dot; dot = Entities.FindByClassname(dot, "env_sniperdot");)
@@ -456,7 +456,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // =========================================================
 
     case "BotHeadshots":
-        if (value < 1) return;
+        if (value < 1) return
         function MissionAttributes::BotHeadshots(params)
         {
             local player = params.attacker, victim = params.const_entity
@@ -466,17 +466,17 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             // {
             // 	victim.SetModelScale(1.00000001, 0.0);
             // 	// EntFireByHandle(victim, "CallScriptFunction", "dmg", -1, null, null); //wait 1 frame
-            // 	return;
+            // 	return
             // }
             
             //re-enable headshots for snipers and ambassador
-            if (!player.IsPlayer() || !victim.IsPlayer() || IsPlayerABot(player)) return; //check if non-bot victim
-            if (player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER) return; //check if we're spy/sniper
-            if (GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD) return; //check for headshot
-            if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || GetItemIndex(player.GetActiveWeapon()) == ITEMINDEX_THE_SYDNEY_SLEEPER)) return; //ignore sydney sleeper and SMGs
-            if (player.GetPlayerClass() == TF_CLASS_SPY && GetItemIndex(player.GetActiveWeapon()) != ITEMINDEX_THE_AMBASSADOR) return; //ambassador only
+            if (!player.IsPlayer() || !victim.IsPlayer() || IsPlayerABot(player)) return //check if non-bot victim
+            if (player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER) return //check if we're spy/sniper
+            if (GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD) return //check for headshot
+            if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || GetItemIndex(player.GetActiveWeapon()) == ITEMINDEX_THE_SYDNEY_SLEEPER)) return //ignore sydney sleeper and SMGs
+            if (player.GetPlayerClass() == TF_CLASS_SPY && GetItemIndex(player.GetActiveWeapon()) != ITEMINDEX_THE_AMBASSADOR) return //ambassador only
             params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL) //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
-            return true;
+            return true
         }
         // if (!(MissionAttributes.SniperHideLasers in MissionAttributes.TakeDamageTable))
             MissionAttributes.TakeDamageTable.BotHeadshots <- MissionAttributes.BotHeadshots
@@ -521,7 +521,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemIndex(player, 1179))) 
                 {
                     PopExtUtil.PlayerRobotModel(player, model)
-                    return;
+                    return
                 }
                 EntFireByHandle(player, "SetCustomModelWithClassAnimations", model, 1, null, null)
                 PopExtUtil.SetEntityColor(player, 255, 255, 255, 255)
@@ -561,7 +561,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				{
 					for (local ent; ent = Entities.FindByClassname(ent, "instanced_scripted_scene"); )
 					{
-						if (ent.GetEFlags() & CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE) continue;
+						if (ent.GetEFlags() & CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE) continue
 						ent.AddEFlags(CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE)
 						
 						local owner = GetPropEntity(ent, "m_hOwner")
@@ -619,7 +619,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					for (local i = 0; i < SLOT_COUNT; i++)
 					{
 						local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
-						if (wep == null || (wep.GetModelName() == vmodel)) continue;
+						if (wep == null || (wep.GetModelName() == vmodel)) continue
 
 						wep.SetModelSimple(vmodel)
 						wep.SetCustomViewModel(vmodel)
@@ -731,7 +731,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         }
 
         // if (!(MissionAttributes.GiantsRareSpells in MissionAttributes.ThinkTable))
-            MissionAttributes.ThinkTable.GiantsRareSpells <- MissionAttributes.GiantsRareSpells;
+            MissionAttributes.ThinkTable.GiantsRareSpells <- MissionAttributes.GiantsRareSpells
     break;
 
     // =========================================================
@@ -763,7 +763,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 if (skeles.GetModelScale() == 0.5 && GetPropEntity(skelespell, "m_hThrower").IsBotOfType(1337))
                 {
                     EntFireByHandle(skeles, "Kill", "", -1, null, null)
-                    return;
+                    return
                 }
                 if (skeles.GetTeam() == 5)
                 {
@@ -778,7 +778,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 // locomotion.ComputeUpdateInterval(); //not necessary
                 // foreach (a in areas)
                 // {
-                //     if (a.GetPlayerCount(TF_TEAM_PVE_DEFENDERS) < 1) continue;
+                //     if (a.GetPlayerCount(TF_TEAM_PVE_DEFENDERS) < 1) continue
 
                 //     skeles.ClearImmobileStatus();
                 //     locomotion.SetDesiredSpeed(280.0);
@@ -797,14 +797,14 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         function MissionAttributes::WaveStartCountdown()
         {
             local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
-            if (!GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return;
+            if (!GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return
             local ready = 0
 
             if (roundtime > Time() + value)
             {
                 for (local i = 0; i < GetPropArraySize(PopExtUtil.GameRules, "m_bPlayerReady"); i++)
                 {
-                    if (!GetPropBoolArray(PopExtUtil.GameRules, "m_bPlayerReady", i)) continue;
+                    if (!GetPropBoolArray(PopExtUtil.GameRules, "m_bPlayerReady", i)) continue
                     ready++;
                     // printl(ready +" : "+ CountAllPlayers());
                     if (ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
@@ -814,7 +814,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
         }
         // if (!(MissionAttributes.WaveStartCountdown in MissionAttributes.ThinkTable))
-            MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown;
+            MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown
     break;
 
     //Options to revert global fixes below:
@@ -838,7 +838,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     // Don't add attribute to clean-up list if it could not be found.
     default:
         ParseError(format("Could not find mission attribute '%s'", attr))
-        success = false;
+        success = false
     }
 
     // Add attribute to clean-up list if its modification was successful.
@@ -899,7 +899,7 @@ function MissionAttributes::ParseError(ErrorMsg)
 {
     if (!MissionAttributes.RaisedParseError)
     {
-        MissionAttributes.RaisedParseError = true;
+        MissionAttributes.RaisedParseError = true
         ClientPrint(null, 3, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details.")
     }
     ClientPrint(null, 2, format("%s %s.\n", MATTR_ERROR, ErrorMsg))
