@@ -158,6 +158,23 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     break;
 
     // =========================================================
+    
+    case "StandableHeads":
+        function MissionAttributes::StandableHeads(params)
+        {
+            local player = GetPlayerFromUserID(params.userid)
+            if (player.IsBotOfType(1337)) return
+
+            function StandableHeads()
+            {
+                if (GetPropEntity(player, "m_hGroundEntity").IsPlayer()) SetPropEntity(player, "m_hGroundEntity", Worldspawn)
+            }
+            player.GetScriptScope().PlayerThinkTable.StandableHeads <- StandableHeads
+        }
+        MissionAttributes.SpawnHookTable.StandableHeads <- MissionAttributes.StandableHeads;
+    break
+
+    // =========================================================
 
     case "666Wavebar": //doesn't work until wave switches, won't work on W1
         SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMEventPopfileType", value);
