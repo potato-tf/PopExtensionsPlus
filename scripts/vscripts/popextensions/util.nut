@@ -39,34 +39,34 @@
     ROMEVISION_MODELINDEXES = []
 
     DeflectableProjectiles = {
-        tf_projectile_arrow                 = 1 // Huntsman arrow, Rescue Ranger bolt
-        tf_projectile_ball_ornament         = 1 // Wrap Assassin
-        tf_projectile_cleaver               = 1 // Flying Guillotine
-        tf_projectile_energy_ball           = 1 // Cow Mangler charge shot
-        tf_projectile_flare                 = 1 // Flare guns projectile
-        tf_projectile_healing_bolt          = 1 // Crusader's Crossbow
-        tf_projectile_jar                   = 1 // Jarate
-        tf_projectile_jar_gas               = 1 // Gas Passer explosion
-        tf_projectile_jar_milk              = 1 // Mad Milk
-        tf_projectile_lightningorb          = 1 // Spell Variant from Short Circuit
-        tf_projectile_mechanicalarmorb      = 1 // Short Circuit energy ball
-        tf_projectile_pipe                  = 1 // Grenade Launcher bomb
-        tf_projectile_pipe_remote           = 1 // Stickybomb Launcher bomb
-        tf_projectile_rocket                = 1 // Rocket Launcher rocket
-        tf_projectile_sentryrocket          = 1 // Sentry gun rocket
-        tf_projectile_stun_ball             = 1 // Baseball
+        THINKADDED_tf_projectile_arrow                 = 1 // Huntsman arrow, Rescue Ranger bolt
+        THINKADDED_tf_projectile_ball_ornament         = 1 // Wrap Assassin
+        THINKADDED_tf_projectile_cleaver               = 1 // Flying Guillotine
+        THINKADDED_tf_projectile_energy_ball           = 1 // Cow Mangler charge shot
+        THINKADDED_tf_projectile_flare                 = 1 // Flare guns projectile
+        THINKADDED_tf_projectile_healing_bolt          = 1 // Crusader's Crossbow
+        THINKADDED_tf_projectile_jar                   = 1 // Jarate
+        THINKADDED_tf_projectile_jar_gas               = 1 // Gas Passer explosion
+        THINKADDED_tf_projectile_jar_milk              = 1 // Mad Milk
+        THINKADDED_tf_projectile_lightningorb          = 1 // Spell Variant from Short Circuit
+        THINKADDED_tf_projectile_mechanicalarmorb      = 1 // Short Circuit energy ball
+        THINKADDED_tf_projectile_pipe                  = 1 // Grenade Launcher bomb
+        THINKADDED_tf_projectile_pipe_remote           = 1 // Stickybomb Launcher bomb
+        THINKADDED_tf_projectile_rocket                = 1 // Rocket Launcher rocket
+        THINKADDED_tf_projectile_sentryrocket          = 1 // Sentry gun rocket
+        THINKADDED_tf_projectile_stun_ball             = 1 // Baseball
     }
     HomingProjectiles = {
-        tf_projectile_arrow				= 1
-        tf_projectile_energy_ball		= 1 // Cow Mangler
-        tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
-        tf_projectile_lightningorb		= 1 // Lightning Orb Spell
-        tf_projectile_mechanicalarmorb	= 1 // Short Circuit
-        tf_projectile_rocket			= 1
-        tf_projectile_sentryrocket		= 1
-        tf_projectile_spellfireball		= 1
-        tf_projectile_energy_ring		= 1 // Bison
-        tf_projectile_flare				= 1
+        THINKADDED_tf_projectile_arrow				= 1
+        THINKADDED_tf_projectile_energy_ball		= 1 // Cow Mangler
+        THINKADDED_tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
+        THINKADDED_tf_projectile_lightningorb		= 1 // Lightning Orb Spell
+        THINKADDED_tf_projectile_mechanicalarmorb	= 1 // Short Circuit
+        THINKADDED_tf_projectile_rocket			= 1
+        THINKADDED_tf_projectile_sentryrocket		= 1
+        THINKADDED_tf_projectile_spellfireball		= 1
+        THINKADDED_tf_projectile_energy_ring		= 1 // Bison
+        THINKADDED_tf_projectile_flare				= 1
     }
 
     Global_Time = Time()
@@ -89,10 +89,27 @@
         function OnGameEvent_post_inventory_application(params)
         {
             local player = GetPlayerFromUserID(params.userid)
-    
+            
+            player.ValidateScriptScope()
+            local scope = player.GetScriptScope()
+
+            if (!("MyWeaponsArray" in scope)) scope.MyWeaponsArray <- {}
+
+            for (local i = 0; i < SLOT_COUNT; i++)
+            {
+                local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+
+                if (wep == null) continue
+
+                scope.MyWeaponsArray[wep.GetSlot()] <- wep
+
+            }
+
+            foreach (k, v in scope.MyWeaponsArray) printl(k + " : " +  v)
             if (player.IsBotOfType(1337)) return
     
             if (PopExtUtil.PlayerArray.find(player) == null) PopExtUtil.PlayerArray.append(player)
+            
         }
     
         function OnGameEvent_player_disconnect(params)
@@ -812,9 +829,9 @@ function PopExtUtil::NormalizeAngle(target)
 
 function PopExtUtil::ApproachAngle(target, value, speed)
 {
-	target = NormalizeAngle(target)
-	value = NormalizeAngle(value)
-	local delta = NormalizeAngle(target - value)
+	target = PopExtUtil.NormalizeAngle(target)
+	value = PopExtUtil.NormalizeAngle(value)
+	local delta = PopExtUtil.NormalizeAngle(target - value)
 	if (delta > speed)
 		return value + speed
 	else if (delta < -speed)

@@ -154,21 +154,21 @@ class AI_Bot
 		dir.Norm()
 		local dot = cur_eye_fwd.Dot(dir)
 
-		local desired_angles = VectorAngles(dir)
+		local desired_angles = PopExtUtil.VectorAngles(dir)
 
-		local rate_x = RemapValClamped(fabs(NormalizeAngle(cur_eye_ang.x) - NormalizeAngle(desired_angles.x)), 0.0, 180.0, min_rate, max_rate)
-		local rate_y = RemapValClamped(fabs(NormalizeAngle(cur_eye_ang.y) - NormalizeAngle(desired_angles.y)), 0.0, 180.0, min_rate, max_rate)
+		local rate_x = PopExtUtil.RemapValClamped(fabs(PopExtUtil.NormalizeAngle(cur_eye_ang.x) - PopExtUtil.NormalizeAngle(desired_angles.x)), 0.0, 180.0, min_rate, max_rate)
+		local rate_y = PopExtUtil.RemapValClamped(fabs(PopExtUtil.NormalizeAngle(cur_eye_ang.y) - PopExtUtil.NormalizeAngle(desired_angles.y)), 0.0, 180.0, min_rate, max_rate)
 
 		if (dot > 0.7)
 		{
-			local t = RemapValClamped(dot, 0.7, 1.0, 1.0, 0.05)
+			local t = PopExtUtil.RemapValClamped(dot, 0.7, 1.0, 1.0, 0.05)
 			local d = sin(1.57 * t) // pi/2
 			rate_x *= d
 			rate_y *= d
 		}
 
-		cur_eye_ang.x = NormalizeAngle(ApproachAngle(desired_angles.x, cur_eye_ang.x, rate_x * dt))
-		cur_eye_ang.y = NormalizeAngle(ApproachAngle(desired_angles.y, cur_eye_ang.y, rate_y * dt))
+		cur_eye_ang.x = PopExtUtil.NormalizeAngle(PopExtUtil.ApproachAngle(desired_angles.x, cur_eye_ang.x, rate_x * dt))
+		cur_eye_ang.y = PopExtUtil.NormalizeAngle(PopExtUtil.ApproachAngle(desired_angles.y, cur_eye_ang.y, rate_y * dt))
 
 		bot.SnapEyeAngles(cur_eye_ang)
 	}

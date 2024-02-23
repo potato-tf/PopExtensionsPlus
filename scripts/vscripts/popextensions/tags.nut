@@ -51,16 +51,7 @@ local popext_funcs =
         local slot = args[1].tointeger()
 
         if (slot == -1) slot = player.GetActiveWeapon().GetSlot()
-
-        for (local i = 0; i < SLOT_COUNT; i++)
-        {
-            local weapon = GetWeaponInSlot(player, i)
-
-            if (weapon == null || weapon.GetSlot() != slot) continue
-
-            weapon.Destroy()
-            break
-        }
+        PopExtUtil.GetItemInSlot(player, slot).Kill()
     }
 
     popext_fireweapon = function(bot, args)
@@ -76,25 +67,15 @@ local popext_funcs =
     popext_giveweapon = function(bot, args)
     {
         local weapon = Entities.CreateByClassname(args[0])
-        SetPropInt(weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", args[1].tointeger())
+        SetPropInt(weapon, STRING_NETPROP_ITEMDEF, args[1].tointeger())
         SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
         SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
         weapon.SetTeam(bot.GetTeam())
         Entities.DispatchSpawn(weapon)
 
-        bot.Weapon_Equip(weapon)
+        PopExtUtil.GetItemInSlot(bot, weapon.GetSlot()).Destroy()
 
-        for (local i = 0; i < SLOT_COUNT; i++)
-        {
-            local heldWeapon = GetPropEntityArray(bot, "m_hMyWeapons", i)
-            if (heldWeapon == null)
-                continue
-            if (heldWeapon.GetSlot() != weapon.GetSlot())
-                continue
-            heldWeapon.Destroy()
-            SetPropEntityArray(bot, "m_hMyWeapons", weapon, i)
-            break
-        }
+        bot.Weapon_Equip(weapon)
 
         return weapon
     }
@@ -109,97 +90,66 @@ local popext_funcs =
 
                 //scout and pyro's UseBestWeapon is inverted
                 //switch them to secondaries, then back to primary when enemies are close
-                if (bot.GetActiveWeapon() != GetPropEntityArray(bot, "m_hMyWeapons", 1))
-                    bot.Weapon_Switch(GetPropEntityArray(bot, "m_hMyWeapons", 1))
+
+                if (bot.GetActiveWeapon() != PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY))
+                    bot.Weapon_Switch(PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY))
 
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
                     if (p.GetTeam() == bot.GetTeam()) continue
-                    local primary
-
-                    for (local i = 0; i < SLOT_COUNT; i++)
-                    {
-                        local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
-                        if ( wep == null || wep.GetSlot() != 0) continue
-
-                        primary = wep
-                        break
-                    }
+                    local primary = PopExtUtil.GetItemInSlot(bot, SLOT_PRIMARY)
+                    
                     bot.Weapon_Switch(primary)
                     primary.AddAttribute("disable weapon switch", 1, 1)
                     primary.ReapplyProvision()
                 }
-                break
+            break
 
             case 2: //TF_CLASS_SNIPER
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 750);)
                 {
                     if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().GetSlot() == 2) continue //potentially not break sniper ai
-                    local secondary
-
-                    for (local i = 0; i < SLOT_COUNT; i++)
-                    {
-                        local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
-                        if ( wep == null || wep.GetSlot() != 1) continue
-
-                        secondary = wep
-                        break
-                    }
+                   
+                    local secondary = PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY)
 
                     bot.Weapon_Switch(secondary)
                     secondary.AddAttribute("disable weapon switch", 1, 1)
                     secondary.ReapplyProvision()
                 }
-                break
+            break
 
             case 3: //TF_CLASS_SOLDIER
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
                     if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().Clip1() != 0) continue
 
-                    local secondary
+                    local secondary = PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY)
 
-                    for (local i = 0; i < SLOT_COUNT; i++)
-                    {
-                        local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
-                        if ( wep == null || wep.GetSlot() != 1) continue
-
-                        secondary = wep
-                        break
-                    }
                     bot.Weapon_Switch(secondary)
-
                     secondary.AddAttribute("disable weapon switch", 1, 2)
                     secondary.ReapplyProvision()
                 }
-                break
+            break
 
             case 7: //TF_CLASS_PYRO
 
                 //scout and pyro's UseBestWeapon is inverted
                 //switch them to secondaries, then back to primary when enemies are close
                 //TODO: check if we're targetting a soldier with a simple raycaster, or wait for more bot functions to be exposed
-                if (bot.GetActiveWeapon() != GetPropEntityArray(bot, "m_hMyWeapons", 1))
-                    bot.Weapon_Switch(GetPropEntityArray(bot, "m_hMyWeapons", 1))
+                if (bot.GetActiveWeapon() != PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY))
+                    bot.Weapon_Switch(PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY))
 
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
                     if (p.GetTeam() == bot.GetTeam()) continue
-                    local primary
 
-                    for (local i = 0; i < SLOT_COUNT; i++)
-                    {
-                        local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
-                        if ( wep == null || wep.GetSlot() != 0) continue
+                    local primary = PopExtUtil.GetItemInSlot(bot, SLOT_PRIMARY)
 
-                        primary = wep
-                        break
-                    }
                     bot.Weapon_Switch(primary)
                     primary.AddAttribute("disable weapon switch", 1, 1)
                     primary.ReapplyProvision()
                 }
-                break
+            break
             }
         }
         bot.GetScriptScope().ThinkTable.BestWeaponThink <- BestWeaponThink
@@ -270,7 +220,7 @@ local popext_funcs =
         function ImprovedAirblastThink()
         {
             local projectile
-            while ((projectile = FindByClassname(projectile, "tf_projectile_*")) != null)
+            while ((projectile = FindByClassname(projectile, "THINKADDED_tf_projectile_*")) != null)
             {
                 if (projectile.GetTeam() == team || !IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
                     continue
@@ -502,6 +452,7 @@ local popext_funcs =
 
 // local tagtest = "popext_usebestweapon"
 //local tagtest = "popext_homingprojectile|1.0|1.0"
+// local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
 local tagtest = "popext_improvedairblast"
 
 ::AI_BotSpawn <- function(bot)
