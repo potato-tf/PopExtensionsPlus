@@ -870,6 +870,41 @@ function PopExtUtil::CheckBitwise(num)
     return (num != 0 && ((num & (num - 1)) == 0))
 }
 
+function PopExtUtil::StringReplace(str, findwhat, replace)
+{
+	local returnstring = ""
+	local findwhatlen  = findwhat.len()
+	local splitlist    = [];
+	
+	local start = 0
+	local previndex = 0
+	while (start < str.len())
+	{
+		local index = str.find(findwhat, start)
+		if (index == null)
+		{
+			if (start < str.len() - 1)
+				splitlist.append(str.slice(start))
+			break
+		}
+		
+		splitlist.append(str.slice(previndex, index))
+		
+		start = index + findwhatlen
+		previndex = start
+	}
+	
+	foreach (index, s in splitlist)
+	{
+		if (index < splitlist.len() - 1)
+			returnstring += s + replace;
+		else
+			returnstring += s
+	}
+	
+	return returnstring
+}
+
 function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT)
 {
 	if (player == null || !player.IsPlayer()) return

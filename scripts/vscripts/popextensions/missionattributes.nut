@@ -493,14 +493,14 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
     //example: MissionAttr(`PlayersAreRobots`, 6) - Human animations and footsteps enabled
     //example: MissionAttr(`PlayersAreRobots`, 2 | 4) - Same thing if you are lazy
+	
+	// TODO: Make PlayersAreRobots 16 and HandModelOverride incompatible
 
     case "PlayersAreRobots":
         function MissionAttributes::PlayersAreRobots(params)
         {
-            
             local player = GetPlayerFromUserID(params.userid)
             if (player.IsBotOfType(1337)) return
-
             
             player.ValidateScriptScope()
             local scope = player.GetScriptScope()
@@ -612,7 +612,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             {
 				function RobotArmThink()
 				{
-					local vmodel   = ROBOT_ARM_PATHS[player.GetPlayerClass()]
+					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 					local playervm = GetPropEntity(player, "m_hViewModel")
 					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 					
@@ -626,8 +626,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					}
 				}
 				
-				if (!("RobotArmThink" in MissionAttributes.ThinkTable))
-					MissionAttributes.ThinkTable.RobotArmThink <- RobotArmThink
+				if (!("RobotArmThink" in scope.PlayerThinkTable))
+					scope.PlayerThinkTable.RobotArmThink <- RobotArmThink
 				
             } else if ("RobotArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotArmThink
         }
@@ -792,8 +792,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     break;
 
     // =========================================================
-    case "WaveStartCountdown":
 
+    case "WaveStartCountdown":
         function MissionAttributes::WaveStartCountdown()
         {
             local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
@@ -815,6 +815,68 @@ function MissionAttributes::MissionAttr(attr, value = 0)
         }
         // if (!(MissionAttributes.WaveStartCountdown in MissionAttributes.ThinkTable))
             MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown
+    break;
+	
+    // =========================================================
+
+	// MissionAttr("HandModelOverride", "path")
+	// MissionAttr("HandModelOverride", ["defaultpath", "scoutpath", "sniperpath"])
+	// "path" and "defaultpath" will have %class in the string replaced with the player class
+    case "HandModelOverride":
+		function MissionAttributes::HandModelOverride(params)
+		{
+            local player = GetPlayerFromUserID(params.userid)
+            if (player.IsBotOfType(1337)) return
+            
+            player.ValidateScriptScope()
+            local scope = player.GetScriptScope()
+
+			function ArmThink()
+			{
+				local tfclass      = player.GetPlayerClass()
+				local class_string = PopExtUtil.Classes[tfclass]
+				
+				local vmodel   = null
+				local playervm = GetPropEntity(player, "m_hViewModel")
+				
+				if (typeof value == "string")
+					vmodel = PopExtUtil.StringReplace(value, "%class", class_string);
+				else if (typeof value == "array")
+				{
+					if (value.len() == 0) return
+					
+					if (tfclass >= value.len())
+						vmodel = PopExtUtil.StringReplace(value[0], "%class", class_string);
+					else
+						vmodel = value[tfclass]
+				}
+				else
+				{
+					// do we need to do anything special for thinks??
+					MissionAttributes.RaiseValueError("HandModelOverride", value, extra = "Value must be string or list of strings")
+					return
+				}
+
+				if (vmodel == null) return
+				
+				if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
+				
+				for (local i = 0; i < SLOT_COUNT; i++)
+				{
+					local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+					if (wep == null || (wep.GetModelName() == vmodel)) continue
+
+					wep.SetModelSimple(vmodel)
+					wep.SetCustomViewModel(vmodel)
+				}
+			}
+			
+			if (!("ArmThink" in scope.PlayerThinkTable))
+				scope.PlayerThinkTable.ArmThink <- ArmThink	
+		}
+		
+		if (!("HandModelOverride" in MissionAttributes.SpawnHookTable))
+			MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
     break;
 
     //Options to revert global fixes below:
