@@ -235,9 +235,7 @@ function PopulatorThink()
 						AddHooksToScope(tag, table, scope)
 
 						if ("OnSpawn" in table) 
-						{
 							table.OnSpawn(player, tag)
-						}
 					}
 				}
 			}
@@ -261,7 +259,7 @@ function PopulatorThink()
         projectile.ValidateScriptScope()
         local scope = projectile.GetScriptScope()
         if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <-{}
-		
+
         SetPropString(projectile, "m_iClassname", format("%s%s", THINK_ADDED, projectile.GetClassname()))
     }
 
