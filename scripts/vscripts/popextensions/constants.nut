@@ -4,7 +4,7 @@ if (!("ConstantNamingConvention" in CONST))
 {
 	foreach (a,b in Constants)
 		foreach (k,v in b)
-            CONST[k] <- v != null ? v : 0;
+            CONST[k] <- v != null ? v : 0
 }
 CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
@@ -22,25 +22,25 @@ foreach (k, v in ::Entities.getclass())
 const THINK_ADDED = "THINKADDED_"
 
 //spell constants
-const SPELL_ROLLING = -2;
-const SPELL_EMPTY = -1;
-const SPELL_FIREBALL = 0;
-const SPELL_BATS = 1;
-const SPELL_OVERHEAL = 2;
-const SPELL_PUMPKIN = 3;
-const SPELL_SUPERJUMP = 4;
-const SPELL_STEALTH = 5;
-const SPELL_TELEPORT = 6;
-const SPELL_ENERGYORB = 7;
-const SPELL_MINIFY = 8;
-const SPELL_METEOR = 9;
-const SPELL_MONOCULOUS = 10;
-const SPELL_SKELETON = 11;
-const SPELL_BUMPER_BOXING_ROCKET = 12;
-const SPELL_BUMPER_PARACHUTE = 13;
-const SPELL_BUMPER_OVERHEAL = 14;
-const SPELL_BUMPER_BOMBHEAD = 15;
-const SPELL_COUNT = 16;
+const SPELL_ROLLING = -2
+const SPELL_EMPTY = -1
+const SPELL_FIREBALL = 0
+const SPELL_BATS = 1
+const SPELL_OVERHEAL = 2
+const SPELL_PUMPKIN = 3
+const SPELL_SUPERJUMP = 4
+const SPELL_STEALTH = 5
+const SPELL_TELEPORT = 6
+const SPELL_ENERGYORB = 7
+const SPELL_MINIFY = 8
+const SPELL_METEOR = 9
+const SPELL_MONOCULOUS = 10
+const SPELL_SKELETON = 11
+const SPELL_BUMPER_BOXING_ROCKET = 12
+const SPELL_BUMPER_PARACHUTE = 13
+const SPELL_BUMPER_OVERHEAL = 14
+const SPELL_BUMPER_BOMBHEAD = 15
+const SPELL_COUNT = 16
 
 //clientprint chat colors
 //can be put into the constant table like this? "const" declaration does not allow for newlines in strings
@@ -53,25 +53,25 @@ const TF_COLOR_BLUE    = "99CCFF"
 const TF_COLOR_SPEC    = "CCCCCC"
 const TF_COLOR_DEFAULT = "FBECCB"
 
-// CONST.COLOR_END <- "\x07";
-// CONST.COLOR_DEFAULT <- "\x07FBECCB";
-// CONST.COLOR_BLUE <- "\x07FF3F3F";
-// CONST.COLOR_RED <- "\x07FF3F3F";
-// CONST.COLOR_SPECTATOR <- "\x07CCCCCC";
-// CONST.COLOR_NAVY_BLUE <- "\x071337AD";
-// CONST.COLOR_DEEP_RED <- "\x07FF0000";
-// CONST.COLOR_LIME <- "\x0722FF22";
-// CONST.COLOR_YELLOW <- "\x07FFFF66";
+// CONST.COLOR_END <- "\x07"
+// CONST.COLOR_DEFAULT <- "\x07FBECCB"
+// CONST.COLOR_BLUE <- "\x07FF3F3F"
+// CONST.COLOR_RED <- "\x07FF3F3F"
+// CONST.COLOR_SPECTATOR <- "\x07CCCCCC"
+// CONST.COLOR_NAVY_BLUE <- "\x071337AD"
+// CONST.COLOR_DEEP_RED <- "\x07FF0000"
+// CONST.COLOR_LIME <- "\x0722FF22"
+// CONST.COLOR_YELLOW <- "\x07FFFF66"
 
 //wep slot constants
-const SLOT_PRIMARY = 0;
-const SLOT_SECONDARY = 1;
-const SLOT_MELEE = 2;
-const SLOT_UTILITY = 3;
-const SLOT_BUILDING = 4;
-const SLOT_PDA = 5;
-const SLOT_PDA2 = 6;
-const SLOT_COUNT = 7;
+const SLOT_PRIMARY = 0
+const SLOT_SECONDARY = 1
+const SLOT_MELEE = 2
+const SLOT_UTILITY = 3
+const SLOT_BUILDING = 4
+const SLOT_PDA = 5
+const SLOT_PDA2 = 6
+const SLOT_COUNT = 7
 
 //cosmetic slot constants (UNTESTED)
 const LOADOUT_POSITION_HEAD = 8
@@ -90,27 +90,27 @@ const LOADOUT_POSITION_TAUNT7 = 18
 const LOADOUT_POSITION_TAUNT8 = 19
 
 //m_bloodColor constants
-const DONT_BLEED = -1;
-const BLOOD_COLOR_RED = 0;
-const BLOOD_COLOR_YELLOW = 1;
-const BLOOD_COLOR_GREEN = 2;
-const BLOOD_COLOR_MECH = 3;
+const DONT_BLEED = -1
+const BLOOD_COLOR_RED = 0
+const BLOOD_COLOR_YELLOW = 1
+const BLOOD_COLOR_GREEN = 2
+const BLOOD_COLOR_MECH = 3
 
 //m_iTeleportType constants
 const TTYPE_NONE = 0
-const TTYPE_ENTRANCE = 1;
-const TTYPE_EXIT = 2;
+const TTYPE_ENTRANCE = 1
+const TTYPE_EXIT = 2
 
 //tf_gamerules m_iRoundState
-const GR_STATE_BONUS = 9;
-const GR_STATE_BETWEEN_RNDS = 10;
+const GR_STATE_BONUS = 9
+const GR_STATE_BETWEEN_RNDS = 10
 
 //m_lifeState constants
-const LIFE_ALIVE = 0; // alive
-const LIFE_DYING = 1; // playing death animation or still falling off of a ledge waiting to hit ground
-const LIFE_DEAD = 2; // dead. lying still.
-const LIFE_RESPAWNABLE = 3;
-const LIFE_DISCARDBODY = 4;
+const LIFE_ALIVE = 0 // alive
+const LIFE_DYING = 1 // playing death animation or still falling off of a ledge waiting to hit ground
+const LIFE_DEAD = 2 // dead. lying still.
+const LIFE_RESPAWNABLE = 3
+const LIFE_DISCARDBODY = 4
 
 //emitsoundex flags
 const SND_NOFLAGS = 0
@@ -182,8 +182,8 @@ const OBJ_ATTACHMENT_SAPPER = 3
 
 //m_iTeleportType constants
 const TTYPE_NONE = 0
-const TTYPE_ENTRANCE = 1;
-const TTYPE_EXIT = 2;
+const TTYPE_ENTRANCE = 1
+const TTYPE_EXIT = 2
 
 //trigger entity spawnflags
 const SF_TRIGGER_ALLOW_CLIENTS = 1
@@ -406,8 +406,8 @@ const MAXAMMO_BASE_SNIPER_SECONDARY = 75
 const MAXAMMO_BASE_SPY_PRIMARY = 24
 
 //random useful constants
-const FLT_SMALL = 0.0000001;
-const FLT_MIN = 1.175494e-38;
-const FLT_MAX = 3.402823466e+38;
-const INT_MIN = -2147483648;
-const INT_MAX = 2147483647;
+const FLT_SMALL = 0.0000001
+const FLT_MIN = 1.175494e-38
+const FLT_MAX = 3.402823466e+38
+const INT_MIN = -2147483648
+const INT_MAX = 2147483647

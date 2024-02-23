@@ -28,30 +28,30 @@ popExtScope.globalTemplateSpawnCount <- 0
     // credit to ficool2
     popExtScope.globalTemplateSpawnCount <- popExtScope.globalTemplateSpawnCount + 1
 
-    local template = SpawnEntityFromTable("point_script_template", {});
-    local scope = template.GetScriptScope();
+    local template = SpawnEntityFromTable("point_script_template", {})
+    local scope = template.GetScriptScope()
 
     local nofixup = false
     local keepalive = false
     local removeifkilled = ""
 
     scope.parent <- parent
-    scope.Entities <- [];
-    scope.EntityFixedUpTargetName <- [];
-    scope.OnSpawnOutputArray <- [];
-    scope.OnParentKilledOutputArray <- [];
-    scope.SpawnedEntities <- [];
+    scope.Entities <- []
+    scope.EntityFixedUpTargetName <- []
+    scope.OnSpawnOutputArray <- []
+    scope.OnParentKilledOutputArray <- []
+    scope.SpawnedEntities <- []
 
-    scope.__EntityMakerResult <- {entities = scope.Entities}.setdelegate({_newslot = function(_, value) {entities.append(value)}});
+    scope.__EntityMakerResult <- {entities = scope.Entities}.setdelegate({_newslot = function(_, value) {entities.append(value)}})
     scope.PostSpawn <- function(named_entities)
     {
         //can only set bounding box size for brush entities after they spawn
         foreach (entity in Entities) {
-            local buf = split(NetProps.GetPropString(entity, "m_iszResponseContext"), ",");
+            local buf = split(NetProps.GetPropString(entity, "m_iszResponseContext"), ",")
             if (buf.len() == 6)
             {
-                entity.SetSize(Vector(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger()), Vector(buf[3].tointeger(), buf[4].tointeger(), buf[5].tointeger()));
-                entity.SetSolid(2);
+                entity.SetSize(Vector(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger()), Vector(buf[3].tointeger(), buf[4].tointeger(), buf[5].tointeger()))
+                entity.SetSolid(2)
             }
 
             scope.SpawnedEntities.append(entity)
@@ -68,12 +68,12 @@ popExtScope.globalTemplateSpawnCount <- 0
                     if (keepalive == false)
                     {
                         parent.ValidateScriptScope()
-                        local scope = parent.GetScriptScope();
+                        local scope = parent.GetScriptScope()
                         // reused from CreatePlayerWearable function
                         if (!("popWearablesToDestroy" in scope)) {
-                            scope.popWearablesToDestroy <- [];
+                            scope.popWearablesToDestroy <- []
                         }
-                        scope.popWearablesToDestroy.append(entity);
+                        scope.popWearablesToDestroy.append(entity)
                     }
                 }
             }
@@ -90,7 +90,7 @@ popExtScope.globalTemplateSpawnCount <- 0
                         playerscope["popHooks"] <- {};
                     }
                     if (!("OnDeath" in playerscope.popHooks)) {
-                        playerscope.popHooks["OnDeath"] <- [];
+                        playerscope.popHooks["OnDeath"] <- []
                     }
                     
                     local FireOnParentKilledOutputs = function(bot, params) { 
@@ -288,8 +288,8 @@ popExtScope.globalTemplateSpawnCount <- 0
     local template = SpawnEntityFromTable("point_script_template", {});
     local scope = template.GetScriptScope();
 
-    scope.Entities <- [];
-    scope.EntityFixedUpTargetName <- [];
+    scope.Entities <- []
+    scope.EntityFixedUpTargetName <- []
 
     scope.__EntityMakerResult <- {entities = scope.Entities}.setdelegate({_newslot = function(_, value) {entities.append(value)}});
     scope.PostSpawn <- function(named_entities)

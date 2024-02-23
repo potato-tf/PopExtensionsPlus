@@ -2,7 +2,7 @@ const SCOUT_MONEY_COLLECTION_RADIUS = 288
 const HUNTSMAN_DAMAGE_FIX_MOD = 1.263157
 
 local GlobalFixesEntity = FindByName(null, "popext_globalfixes_ent")
-if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "popext_globalfixes_ent"});
+if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "popext_globalfixes_ent"})
 
 ::GlobalFixes <- {
     //remove with MissionAttr("ReflectableDF", 1)
@@ -10,8 +10,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
     TakeDamageTable = {
 		function YERDisguiseFix(params)
 		{
-			local victim   = params.const_entity;
-			local attacker = params.inflictor;
+			local victim   = params.const_entity
+			local attacker = params.inflictor
 			
 			if (victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB && attacker != null && !attacker.IsBotOfType(1337))
 			{
@@ -32,12 +32,12 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		// Quick hacky non-GetAttribute version
 		function HuntsmanDamageBonusFix(params)
 		{
-			local wep = params.weapon;
-			local classname = GetPropString(wep, "m_iClassname");
+			local wep = params.weapon
+			local classname = GetPropString(wep, "m_iClassname")
 			if (classname != "tf_weapon_compound_bow") return
 
 			if ( (params.damage_custom == TF_DMG_CUSTOM_HEADSHOT && params.damage > 360.0 ) || params.damage > 120.0)
-				params.damage *= HUNTSMAN_DAMAGE_FIX_MOD;
+				params.damage *= HUNTSMAN_DAMAGE_FIX_MOD
 		}
 		/*
 		function HuntsmanDamageBonusFix(params)
@@ -53,54 +53,54 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		*/
 		function HolidayPunchFix(params)
 		{
-			local wep   = params.weapon;
+			local wep   = params.weapon
 			local index = PopExtUtil.GetItemIndex(wep);	
 			if (index != 656 || !(params.damage_type & DMG_ACID)) return
 
-			local victim = params.const_entity;
+			local victim = params.const_entity
 			if (victim != null && victim.IsBotOfType(1337))
 			{
-				victim.Taunt(TAUNT_MISC_ITEM, 92);
+				victim.Taunt(TAUNT_MISC_ITEM, 92)
 				
-				local tfclass  = victim.GetPlayerClass();
-				local class_string = PopExtUtil.Classes[tfclass];
-				local botmodel = format("models/bots/%s/bot_%s.mdl", class_string, class_string);
+				local tfclass  = victim.GetPlayerClass()
+				local class_string = PopExtUtil.Classes[tfclass]
+				local botmodel = format("models/bots/%s/bot_%s.mdl", class_string, class_string)
 				
-				victim.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string));
+				victim.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string))
 		
-				victim.ValidateScriptScope();
-				local scope = victim.GetScriptScope();
+				victim.ValidateScriptScope()
+				local scope = victim.GetScriptScope()
 
-				local wearable = CreateByClassname("tf_wearable");
-				SetPropString(wearable, "m_iName", "__bot_bonemerge_model");
-				SetPropInt(wearable, "m_nModelIndex", PrecacheModel(botmodel));
-				SetPropBool(wearable, "m_bValidatedAttachedEntity", true);
-				SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true);
-				SetPropEntity(wearable, "m_hOwnerEntity", victim);
-				wearable.SetTeam(victim.GetTeam());
-				wearable.SetOwner(victim);
-				wearable.DispatchSpawn();
-				EntFireByHandle(wearable, "SetParent", "!activator", -1, victim, victim);
-				SetPropInt(wearable, "m_fEffects", 129);
+				local wearable = CreateByClassname("tf_wearable")
+				SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
+				SetPropInt(wearable, "m_nModelIndex", PrecacheModel(botmodel))
+				SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
+				SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+				SetPropEntity(wearable, "m_hOwnerEntity", victim)
+				wearable.SetTeam(victim.GetTeam())
+				wearable.SetOwner(victim)
+				wearable.DispatchSpawn()
+				EntFireByHandle(wearable, "SetParent", "!activator", -1, victim, victim)
+				SetPropInt(wearable, "m_fEffects", 129)
 
-				SetPropInt(victim, "m_nRenderMode", 1);
-				SetPropInt(victim, "m_clrRender", 0);
+				SetPropInt(victim, "m_nRenderMode", 1)
+				SetPropInt(victim, "m_clrRender", 0)
 
 				scope.Think <- function()
 				{
 					if (Time() > victim.GetTauntRemoveTime())
 					{
-						if (wearable != null) wearable.Destroy();
-						SetPropInt(self, "m_clrRender", 0xFFFFFF);
-						SetPropInt(self, "m_nRenderMode", 0);
+						if (wearable != null) wearable.Destroy()
+						SetPropInt(self, "m_clrRender", 0xFFFFFF)
+						SetPropInt(self, "m_nRenderMode", 0)
 						self.SetCustomModelWithClassAnimations(botmodel);
 						
-						SetPropString(self, "m_iszScriptThinkFunction", "");
+						SetPropString(self, "m_iszScriptThinkFunction", "")
 					}
 					
 					return -1;
 				}
-				AddThinkToEnt(victim, "Think");				
+				AddThinkToEnt(victim, "Think")		
 			}
 		}
 	}
@@ -110,7 +110,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
         function DragonsFuryFix()
         {
             for (local fireball; fireball = FindByClassname(fireball, "tf_projectile_balloffire");)
-                fireball.RemoveFlag(FL_GRENADE);
+                fireball.RemoveFlag(FL_GRENADE)
         }
     }
     DeathHookTable = {
@@ -148,8 +148,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 			
-			local wep   = PopExtUtil.GetItemInSlot(player, SLOT_MELEE);
-			local index = PopExtUtil.GetItemIndex(wep);	
+			local wep   = PopExtUtil.GetItemInSlot(player, SLOT_MELEE)
+			local index = PopExtUtil.GetItemIndex(wep)
 			
 			if (index == 225 || index == 574)
 				wep.RemoveAttribute("disguise on backstab")
@@ -170,7 +170,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
             function PlayerThinks()
             {
                 foreach (_, func in scope.PlayerThinkTable) func()
-				return -1;
+				return -1
             }
             scope.PlayerThinks <- PlayerThinks
             AddThinkToEnt(player, "PlayerThinks")

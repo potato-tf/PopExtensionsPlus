@@ -2,49 +2,49 @@ class AI_Bot
 {
 	function constructor(bot)
 	{
-		this.bot = bot;
-		this.scope = bot.GetScriptScope();
-		this.team = bot.GetTeam();
-		this.cur_ammo = 0;
-		this.cur_melee = false;
+		this.bot = bot
+		this.scope = bot.GetScriptScope()
+		this.team = bot.GetTeam()
+		this.cur_ammo = 0
+		this.cur_melee = false
 
-		this.threat_time = 0.0;
-		this.threat_lost_time = 0.0;
-		this.threat_aim_time = 0.0;
-		this.threat_behind_time = 0.0;
-		this.threat_visible = false;
-		this.fire_next_time = 0.0;
-		this.aim_time = 1e30;
-		this.random_aim_time = 0.0;
+		this.threat_time = 0.0
+		this.threat_lost_time = 0.0
+		this.threat_aim_time = 0.0
+		this.threat_behind_time = 0.0
+		this.threat_visible = false
+		this.fire_next_time = 0.0
+		this.aim_time = 1e30
+		this.random_aim_time = 0.0
 
 		this.botLevel = bot.GetDifficulty()
 	}
 
 	function IsLookingTowards(target, cos_tolerance)
 	{
-		local to_target = target - bot.EyePosition();
-		to_target.Norm();
-		local dot = cur_eye_fwd.Dot(to_target);
-		return (dot >= cos_tolerance);
+		local to_target = target - bot.EyePosition()
+		to_target.Norm()
+		local dot = cur_eye_fwd.Dot(to_target)
+		return (dot >= cos_tolerance)
 	}
 
 	function IsInFieldOfView(target)
 	{
-		local tolerance = 0.5736; // cos(110/2)
+		local tolerance = 0.5736 // cos(110/2)
 
-		local delta = target.GetOrigin() - cur_eye_pos;
-		delta.Norm();
+		local delta = target.GetOrigin() - cur_eye_pos
+		delta.Norm()
 		if (cur_eye_fwd.Dot(target) >= tolerance)
-			return true;
+			return true
 
-		delta = target.GetCenter() - cur_eye_pos;
-		delta.Norm();
+		delta = target.GetCenter() - cur_eye_pos
+		delta.Norm()
 		if (cur_eye_fwd.Dot(delta) >= tolerance)
-			return true;
+			return true
 
-		delta = target.EyePosition() - cur_eye_pos;
-		delta.Norm();
-		return (cur_eye_fwd.Dot(delta) >= tolerance);
+		delta = target.EyePosition() - cur_eye_pos
+		delta.Norm()
+		return (cur_eye_fwd.Dot(delta) >= tolerance)
 	}
 
 	function IsVisible(target)
@@ -56,48 +56,48 @@ class AI_Bot
 			mask = 16513, // CONTENTS_SOLID|CONTENTS_OPAQUE|CONTENTS_MOVEABLE
 			ignore = bot
 		};
-		TraceLineEx(trace);
-		return !trace.hit;
+		TraceLineEx(trace)
+		return !trace.hit
 	}
 
 	function IsThreatVisible(target)
 	{
-		return IsInFieldOfView(target) && IsVisible(target);
+		return IsInFieldOfView(target) && IsVisible(target)
 	}
 
 	function GetThreatDistanceSqr(target)
 	{
-		return (target.GetOrigin() - cur_pos).LengthSqr();
+		return (target.GetOrigin() - cur_pos).LengthSqr()
 	}
 
 	function FindThreat(min_dist_sqr)
 	{
-		local closestThreat = null;
-		local closestThreatDist = min_dist_sqr;
+		local closestThreat = null
+		local closestThreatDist = min_dist_sqr
 
 		for (local i = 1; i <= MaxClients; i++)
 		{
-			local player = PlayerInstanceFromIndex(i);
+			local player = PlayerInstanceFromIndex(i)
 			if (player == null)
-				continue;
+				continue
 			if (player == bot)
-				continue;
+				continue
 			if (GetPropInt(player, "m_lifeState") != 0)
-				continue;
+				continue
 			if (player.GetTeam() == team)
-				continue;
+				continue
 			if (!IsThreatVisible(player))
-				continue;
+				continue
 
-			local dist = GetThreatDistanceSqr(player);
+			local dist = GetThreatDistanceSqr(player)
 			if (dist < closestThreatDist)
 			{
-				closestThreat = player;
-				closestThreatDist = dist;
+				closestThreat = player
+				closestThreatDist = dist
 			}
 		}
 
-		return closestThreat;
+		return closestThreat
 	}
 
 	function SetThreat(target, visible)
@@ -149,15 +149,15 @@ class AI_Bot
 	}
 	function LookAt(target_pos, min_rate, max_rate)
 	{
-		local dt = FrameTime();
-		local dir = target_pos - cur_eye_pos;
-		dir.Norm();
-		local dot = cur_eye_fwd.Dot(dir);
+		local dt = FrameTime()
+		local dir = target_pos - cur_eye_pos
+		dir.Norm()
+		local dot = cur_eye_fwd.Dot(dir)
 
-		local desired_angles = VectorAngles(dir);
+		local desired_angles = VectorAngles(dir)
 
-		local rate_x = RemapValClamped(fabs(NormalizeAngle(cur_eye_ang.x) - NormalizeAngle(desired_angles.x)), 0.0, 180.0, min_rate, max_rate);
-		local rate_y = RemapValClamped(fabs(NormalizeAngle(cur_eye_ang.y) - NormalizeAngle(desired_angles.y)), 0.0, 180.0, min_rate, max_rate);
+		local rate_x = RemapValClamped(fabs(NormalizeAngle(cur_eye_ang.x) - NormalizeAngle(desired_angles.x)), 0.0, 180.0, min_rate, max_rate)
+		local rate_y = RemapValClamped(fabs(NormalizeAngle(cur_eye_ang.y) - NormalizeAngle(desired_angles.y)), 0.0, 180.0, min_rate, max_rate)
 
 		if (dot > 0.7)
 		{
@@ -167,8 +167,8 @@ class AI_Bot
 			rate_y *= d
 		}
 
-		cur_eye_ang.x = NormalizeAngle(ApproachAngle(desired_angles.x, cur_eye_ang.x, rate_x * dt));
-		cur_eye_ang.y = NormalizeAngle(ApproachAngle(desired_angles.y, cur_eye_ang.y, rate_y * dt));
+		cur_eye_ang.x = NormalizeAngle(ApproachAngle(desired_angles.x, cur_eye_ang.x, rate_x * dt))
+		cur_eye_ang.y = NormalizeAngle(ApproachAngle(desired_angles.y, cur_eye_ang.y, rate_y * dt))
 
 		bot.SnapEyeAngles(cur_eye_ang)
 	}
@@ -179,48 +179,48 @@ class AI_Bot
 		{
 			if (threat != null)
 			{
-				local threat_dist = GetThreatDistanceSqr(threat);
+				local threat_dist = GetThreatDistanceSqr(threat)
 				if (threat_dist < 16384.0) // 128
-					bot.PressFireButton(0.2);
+					bot.PressFireButton(0.2)
 			}
 
-			return true;
+			return true
 		}
 
 		if (fire_next_time > time)
 		{
-			bot.AddBotAttribute(8); // SUPPRESS_FIRE
-			bot.PressFireButton(0.0);
-			bot.RemoveBotAttribute(8); // SUPPRESS_FIRE
-			return false;
+			bot.AddBotAttribute(SUPPRESS_FIRE)
+			bot.PressFireButton(0.0)
+			bot.RemoveBotAttribute(SUPPRESS_FIRE)
+			return false
 		}
 
 		if (cur_ammo == 0)
-			return false;
+			return false
 
-		local duration = 0.11;
-		local velocity_max = 50.0;
+		local duration = 0.11
+		local velocity_max = 50.0
 
 		if (1)
 		{
 			if (cur_vel.Length() < velocity_max)
-				bot.PressFireButton(duration);
+				bot.PressFireButton(duration)
 		}
 		else
 		{
-			fire_next_time = time + RandomFloat(0.3, 0.6);
+			fire_next_time = time + RandomFloat(0.3, 0.6)
 		}
 
-		return true;
+		return true
 	}
 
 	function StartAimWithWeapon()
 	{
 		if (aim_time != 1e30)
-			return;
+			return
 
-		bot.PressAltFireButton(9999.0);
-		aim_time = time;
+		bot.PressAltFireButton(9999.0)
+		aim_time = time
 	}
 
 	function EndAimWithWeapon()
@@ -228,10 +228,10 @@ class AI_Bot
 		if (aim_time == 1e30)
 			return;
 
-		bot.AddBotAttribute(8); // SUPPRESS_FIRE
-		bot.PressAltFireButton(0.0);
-		bot.RemoveBotAttribute(8); // SUPPRESS_FIRE
-		aim_time = 1e30;
+		bot.AddBotAttribute(SUPPRESS_FIRE)
+		bot.PressAltFireButton(0.0)
+		bot.RemoveBotAttribute(SUPPRESS_FIRE)
+		aim_time = 1e30
 	}
 
 	function OnTakeDamage(params)
@@ -240,67 +240,67 @@ class AI_Bot
 		{
 			if (threat != null && threat.IsValid())
 			{
-				local threat_dist = GetThreatDistanceSqr(threat) * 0.8;
+				local threat_dist = GetThreatDistanceSqr(threat) * 0.8
 				if (threat_dist > 16384.0) // 128
 				{
-					local attacker_dist = GetThreatDistanceSqr(params.attacker);
-					local threat_dist = GetThreatDistanceSqr(threat) * 0.8;
+					local attacker_dist = GetThreatDistanceSqr(params.attacker)
+					local threat_dist = GetThreatDistanceSqr(threat) * 0.8
 					if (attacker_dist > threat_dist)
-						return;
+						return
 				}
 			}
 
-			SetThreat(params.attacker, true);
+			SetThreat(params.attacker, true)
 		}
 	}
 
 	function OnUpdate()
 	{
-		cur_pos = bot.GetOrigin();
-		cur_vel = bot.GetAbsVelocity();
-		cur_speed = cur_vel.Length();
-		cur_eye_pos = bot.EyePosition();
-		cur_eye_ang = bot.EyeAngles();
-		cur_eye_fwd = cur_eye_ang.Forward();
-		time = PopExtUtil.Global_Time;
+		cur_pos = bot.GetOrigin()
+		cur_vel = bot.GetAbsVelocity()
+		cur_speed = cur_vel.Length()
+		cur_eye_pos = bot.EyePosition()
+		cur_eye_ang = bot.EyeAngles()
+		cur_eye_fwd = cur_eye_ang.Forward()
+		time = PopExtUtil.Global_Time
 
         foreach (_, func in scope.ThinkTable) func()
 
 		//SwitchToBestWeapon()
 		//DrawDebugInfo()
 
-		return 0.0;
+		return 0.0
 	}
 
-	bot					= null;
-	scope				= null;
-	team				= null;
-	time				= null;
+	bot					= null
+	scope				= null
+	team				= null
+	time				= null
 
-    botLevel            = null;
+    botLevel            = null
 
-	cur_pos				= null;
-	cur_vel				= null;
-	cur_speed			= null;
-	cur_eye_pos			= null;
-	cur_eye_ang			= null;
-	cur_eye_fwd			= null;
-	cur_weapon			= null;
-	cur_ammo			= null;
-	cur_melee			= null;
+	cur_pos				= null
+	cur_vel				= null
+	cur_speed			= null
+	cur_eye_pos			= null
+	cur_eye_ang			= null
+	cur_eye_fwd			= null
+	cur_weapon			= null
+	cur_ammo			= null
+	cur_melee			= null
 
-	threat				= null;
-	threat_time			= null;
-	threat_lost_time	= null;
-	threat_aim_time		= null;
-	threat_behind_time	= null;
-	threat_visible		= null;
-	threat_pos			= null;
+	threat				= null
+	threat_time			= null
+	threat_lost_time	= null
+	threat_aim_time		= null
+	threat_behind_time	= null
+	threat_visible		= null
+	threat_pos			= null
 
-	fire_next_time		= null;
-	aim_time			= null;
-	random_aim_pos		= null;
-	random_aim_time		= null;
+	fire_next_time		= null
+	aim_time			= null
+	random_aim_pos		= null
+	random_aim_time		= null
 
-	cosmetic			= null;
+	cosmetic			= null
 }

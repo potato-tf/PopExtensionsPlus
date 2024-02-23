@@ -84,7 +84,7 @@ local popext_funcs =
 
         bot.Weapon_Equip(weapon)
 
-        for (local i = 0; i < 7; i++)
+        for (local i = 0; i < SLOT_COUNT; i++)
         {
             local heldWeapon = GetPropEntityArray(bot, "m_hMyWeapons", i)
             if (heldWeapon == null)
@@ -115,9 +115,9 @@ local popext_funcs =
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
                     if (p.GetTeam() == bot.GetTeam()) continue
-                    local primary;
+                    local primary
 
-                    for (local i = 0; i < 7; i++)
+                    for (local i = 0; i < SLOT_COUNT; i++)
                     {
                         local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
                         if ( wep == null || wep.GetSlot() != 0) continue
@@ -135,9 +135,9 @@ local popext_funcs =
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 750);)
                 {
                     if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().GetSlot() == 2) continue //potentially not break sniper ai
-                    local secondary;
+                    local secondary
 
-                    for (local i = 0; i < 7; i++)
+                    for (local i = 0; i < SLOT_COUNT; i++)
                     {
                         local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
                         if ( wep == null || wep.GetSlot() != 1) continue
@@ -157,9 +157,9 @@ local popext_funcs =
                 {
                     if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().Clip1() != 0) continue
 
-                    local secondary;
+                    local secondary
 
-                    for (local i = 0; i < 7; i++)
+                    for (local i = 0; i < SLOT_COUNT; i++)
                     {
                         local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
                         if ( wep == null || wep.GetSlot() != 1) continue
@@ -185,9 +185,9 @@ local popext_funcs =
                 for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);)
                 {
                     if (p.GetTeam() == bot.GetTeam()) continue
-                    local primary;
+                    local primary
 
-                    for (local i = 0; i < 7; i++)
+                    for (local i = 0; i < SLOT_COUNT; i++)
                     {
                         local wep = GetPropEntityArray(bot, "m_hMyWeapons", i)
                         if ( wep == null || wep.GetSlot() != 0) continue
@@ -246,7 +246,7 @@ local popext_funcs =
     }
     // popext_rocketcustomtrail = function (bot, args)
     // {
-    //     local projectile;
+    //     local projectile
     //     while (projectile = Entities.FindByClassname(null, "tf_projectile_rocket"))
     //     {
     //         if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
@@ -256,7 +256,7 @@ local popext_funcs =
     // }
     popext_rocketcustomparticle = function (bot, args)
     {
-        local projectile;
+        local projectile
         while (projectile = Entities.FindByClassname(null, "tf_projectile_rocket"))
         {
             if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
@@ -386,7 +386,7 @@ local popext_funcs =
 {
 	local target
 	local min_distance = 32768.0
-	for (local i = 1; i <= MaxClients(); i++)
+	foreach (player in PopExtUtil.PlayerArray)
 	{
 		local player = PlayerInstanceFromIndex(i)
 
@@ -492,7 +492,7 @@ local popext_funcs =
     // function PopExt_BotThinks()
     // {
     //     local scope = self.GetScriptScope()
-    //     if (scope.ThinkTable.len() < 1) return;
+    //     if (scope.ThinkTable.len() < 1) return
 
     //     foreach (_, func in scope.ThinkTable)
     //        func(self)
@@ -520,7 +520,7 @@ local tagtest = "popext_improvedairblast"
             popext_funcs[func](bot, args)
     }
 
-	//bot.AddBotAttribute(1024); // IGNORE_ENEMIES
+	//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
 
     AddThinkToEnt(bot, "BotThink")
 }
@@ -549,13 +549,13 @@ local tagtest = "popext_improvedairblast"
             DeathHookTable = {}
 		}
         foreach (k,v in items) if (!(k in scope)) scope[k] <- v
-        EntFireByHandle(bot, "RunScriptCode", "AI_BotSpawn(self)", -1, null, null);
+        EntFireByHandle(bot, "RunScriptCode", "AI_BotSpawn(self)", -1, null, null)
     }
     function OnScriptHook_OnTakeDamage(params)
     {
         local attacker_scope = params.attacker.GetScriptScope()
 
-        if (!("TakeDamageTable" in attacker_scope)) return;
+        if (!("TakeDamageTable" in attacker_scope)) return
 
         foreach (_, func in attacker_scope.TakeDamageTable)
             func(params)
@@ -565,38 +565,38 @@ local tagtest = "popext_improvedairblast"
         local bot = GetPlayerFromUserID(params.userid)
         if (!bot.IsBotOfType(1337)) return
 
-        //EntFireByHandle(building, "RunScriptCode", "ClientPrint(null, 3, `` + self.GetSequence());", 0.5, null, null);
+        //EntFireByHandle(building, "RunScriptCode", "ClientPrint(null, 3, `` + self.GetSequence())", 0.5, null, null)
         if ((bot.HasBotTag("popext_dispenserasteleporter") && params.object == 1) || (bot.HasBotTag("popext_dispenserassentry") && params.object == 2))
         {
-            local building = EntIndexToHScript(params.index);
-            local hint =  GetPropEntity(building, "m_hOwnerEntity");
+            local building = EntIndexToHScript(params.index)
+            local hint =  GetPropEntity(building, "m_hOwnerEntity")
             
-            building.SetModelScale(0.01, 0.0);
-            building.SetHealth(999999);
-            PopExtUtil.SetTargetname(building, format("building%d"+building.entindex()));
-            EntFireByHandle(building, "Disable", "", -1, null, null);
+            building.SetModelScale(0.01, 0.0)
+            building.SetHealth(999999)
+            PopExtUtil.SetTargetname(building, format("building%d"+building.entindex()))
+            EntFireByHandle(building, "Disable", "", -1, null, null)
 
-            local dispenser = CreateByClassname("obj_dispenser");
+            local dispenser = CreateByClassname("obj_dispenser")
 
-            SetPropEntity(dispenser, "m_hBuilder", bot);
-            SetPropEntity(dispenser, "m_hOwnerEntity", hint);
+            SetPropEntity(dispenser, "m_hBuilder", bot)
+            SetPropEntity(dispenser, "m_hOwnerEntity", hint)
             SetPropInt(dispenser, "m_nDefaultUpgradeLevel", 2)
-            SetPropInt(dispenser, "m_iHealth", 1);
+            SetPropInt(dispenser, "m_iHealth", 1)
 
-            dispenser.SetHealth(1);
-            PopExtUtil.SetTargetname(dispenser, format("dispenser%d"+dispenser.entindex()));
+            dispenser.SetHealth(1)
+            PopExtUtil.SetTargetname(dispenser, format("dispenser%d"+dispenser.entindex()))
 
-            dispenser.DispatchSpawn();
-            dispenser.SetTeam(bot.GetTeam());
-            dispenser.SetSkin(1);
-            SetPropBool(dispenser, "m_bBuilding", true);
-            SetPropBool(dispenser, "m_bPlacing", false);
-            SetPropFloat(dispenser, "m_flPercentageConstructed", 0.0);
+            dispenser.DispatchSpawn()
+            dispenser.SetTeam(bot.GetTeam())
+            dispenser.SetSkin(1)
+            SetPropBool(dispenser, "m_bBuilding", true)
+            SetPropBool(dispenser, "m_bPlacing", false)
+            SetPropFloat(dispenser, "m_flPercentageConstructed", 0.0)
             
             
-            dispenser.SetOrigin(building.GetLocalOrigin());
-            dispenser.SetAbsAngles(building.GetLocalAngles());
-            dispenser.ResetSequence(1);
+            dispenser.SetOrigin(building.GetLocalOrigin())
+            dispenser.SetAbsAngles(building.GetLocalAngles())
+            dispenser.ResetSequence(1)
             
             EntityOutputs.AddOutput(dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1)
             EntityOutputs.AddOutput(building, "OnDestroyed", dispenser.GetName(), "Kill", "", -1, -1)

@@ -1,39 +1,39 @@
 // ::popExtensionsVersion <- 6; //don't bother with versioning for now since we're constantly updating it
 local root = getroottable()
 
-popExtEntity <- Entities.FindByName(null, "_popextensions_hooks");
+popExtEntity <- Entities.FindByName(null, "_popextensions_hooks")
 if (popExtEntity == null) {
-	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", {targetname = "_popextensions_hooks", vscripts="popextensions/hooks"});
+	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", {targetname = "_popextensions_hooks", vscripts="popextensions/hooks"})
 }
 
-popExtEntity.ValidateScriptScope();
-popExtScope <- popExtEntity.GetScriptScope();
+popExtEntity.ValidateScriptScope()
+popExtScope <- popExtEntity.GetScriptScope()
 
-popExtScope.robotTags <- {};
-popExtScope.tankNames <- {};
-popExtScope.tankNamesWildcard <- {};
-popExtThinkFuncSet <- false;
-AddThinkToEnt(popExtEntity, null);
+popExtScope.robotTags <- {}
+popExtScope.tankNames <- {}
+popExtScope.tankNamesWildcard <- {}
+popExtThinkFuncSet <- false
+AddThinkToEnt(popExtEntity, null)
 
 ::SetParentLocalOriginDo <- function(child, parent, attachment = null)
 {
-	NetProps.SetPropEntity(child, "m_hMovePeer", parent.FirstMoveChild());
-	NetProps.SetPropEntity(parent, "m_hMoveChild", child);
-	NetProps.SetPropEntity(child, "m_hMoveParent", parent);
-	local origPos = child.GetLocalOrigin();
-	child.SetLocalOrigin(origPos + Vector(0, 0, 1));
-	child.SetLocalOrigin(origPos);
-	local origAngles = child.GetLocalAngles();
-	child.SetLocalAngles(origAngles + QAngle(0, 0, 1));
-	child.SetLocalAngles(origAngles);
-	local origVel = child.GetVelocity();
-	child.SetVelocity(origVel + Vector(0, 0, 1));
-	child.SetVelocity(origVel);
+	NetProps.SetPropEntity(child, "m_hMovePeer", parent.FirstMoveChild())
+	NetProps.SetPropEntity(parent, "m_hMoveChild", child)
+	NetProps.SetPropEntity(child, "m_hMoveParent", parent)
+	local origPos = child.GetLocalOrigin()
+	child.SetLocalOrigin(origPos + Vector(0, 0, 1))
+	child.SetLocalOrigin(origPos)
+	local origAngles = child.GetLocalAngles()
+	child.SetLocalAngles(origAngles + QAngle(0, 0, 1))
+	child.SetLocalAngles(origAngles)
+	local origVel = child.GetVelocity()
+	child.SetVelocity(origVel + Vector(0, 0, 1))
+	child.SetVelocity(origVel)
 
-	EntFireByHandle(child, "SetParent", "!activator", 0, parent, parent);
+	EntFireByHandle(child, "SetParent", "!activator", 0, parent, parent)
 	if (attachment != null) {
-		NetProps.SetPropEntity(child, "m_iParentAttachment", parent.LookupAttachment(attachment));
-		EntFireByHandle(child, "SetParentAttachmentMaintainOffset", attachment, 0, parent, parent);
+		NetProps.SetPropEntity(child, "m_iParentAttachment", parent.LookupAttachment(attachment))
+		EntFireByHandle(child, "SetParentAttachmentMaintainOffset", attachment, 0, parent, parent)
 	}
 }
 // Sets parent immediately in a dirty way. Does not retain absolute origin, retains local origin instead.
@@ -53,177 +53,177 @@ AddThinkToEnt(popExtEntity, null);
 // Make a wearable that is attached to the player. The wearable is automatically removed when the owner is killed or respawned
 ::CreatePlayerWearable <- function(player, model, bonemerge = true, attachment = null, autoDestroy = true)
 {
-	local modelIndex = GetModelIndex(model);
+	local modelIndex = GetModelIndex(model)
 	if (modelIndex == -1) {
-		modelIndex = PrecacheModel(model);
+		modelIndex = PrecacheModel(model)
 	}
-	local wearable = Entities.CreateByClassname("tf_wearable");
-	NetProps.SetPropInt(wearable, "m_nModelIndex", modelIndex);
-	wearable.SetSkin(player.GetTeam());
-	wearable.SetTeam(player.GetTeam());
-	wearable.SetSolidFlags(4);
-	wearable.SetCollisionGroup(11);
-	NetProps.SetPropBool(wearable, "m_bValidatedAttachedEntity", true);
-	NetProps.SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true);
-	NetProps.SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityQuality", 0);
-	NetProps.SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityLevel", 1);
-	NetProps.SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDLow", 2048);
-	NetProps.SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDHigh", 0);
+	local wearable = Entities.CreateByClassname("tf_wearable")
+	NetProps.SetPropInt(wearable, "m_nModelIndex", modelIndex)
+	wearable.SetSkin(player.GetTeam())
+	wearable.SetTeam(player.GetTeam())
+	wearable.SetSolidFlags(4)
+	wearable.SetCollisionGroup(11)
+	NetProps.SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
+	NetProps.SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+	NetProps.SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityQuality", 0)
+	NetProps.SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityLevel", 1)
+	NetProps.SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDLow", 2048)
+	NetProps.SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDHigh", 0)
 
-	wearable.SetOwner(player);
-	Entities.DispatchSpawn(wearable);
-	NetProps.SetPropInt(wearable, "m_fEffects", bonemerge ? 129 : 0);
-	SetParentLocalOrigin(wearable, player, attachment);
-	player.ValidateScriptScope();
-	local scope = player.GetScriptScope();
+	wearable.SetOwner(player)
+	Entities.DispatchSpawn(wearable)
+	NetProps.SetPropInt(wearable, "m_fEffects", bonemerge ? 129 : 0)
+	SetParentLocalOrigin(wearable, player, attachment)
+	player.ValidateScriptScope()
+	local scope = player.GetScriptScope()
 	if (autoDestroy) {
 		if (!("popWearablesToDestroy" in scope)) {
-			scope.popWearablesToDestroy <- [];
+			scope.popWearablesToDestroy <- []
 		}
-		scope.popWearablesToDestroy.append(wearable);
+		scope.popWearablesToDestroy.append(wearable)
 	}
-	return wearable;
+	return wearable
 }
 
-PrecacheModel("models/weapons/w_models/w_rocket.mdl");
+PrecacheModel("models/weapons/w_models/w_rocket.mdl")
 // Setup collision bounds of a trigger entity
 ::SetupTriggerBounds <- function(trigger, mins = null, maxs = null)
 {
-	trigger.SetModel("models/weapons/w_models/w_rocket.mdl");
+	trigger.SetModel("models/weapons/w_models/w_rocket.mdl")
 	if (mins != null) {
-		NetProps.SetPropVector(trigger, "m_Collision.m_vecMinsPreScaled", mins);
-		NetProps.SetPropVector(trigger, "m_Collision.m_vecMins", mins);
+		NetProps.SetPropVector(trigger, "m_Collision.m_vecMinsPreScaled", mins)
+		NetProps.SetPropVector(trigger, "m_Collision.m_vecMins", mins)
 	}
 	if (maxs != null) {
-		NetProps.SetPropVector(trigger, "m_Collision.m_vecMaxsPreScaled", maxs);
-		NetProps.SetPropVector(trigger, "m_Collision.m_vecMaxs", maxs);
+		NetProps.SetPropVector(trigger, "m_Collision.m_vecMaxsPreScaled", maxs)
+		NetProps.SetPropVector(trigger, "m_Collision.m_vecMaxs", maxs)
 	}
-	trigger.SetSolid(Constants.ESolidType.SOLID_BBOX);
+	trigger.SetSolid(Constants.ESolidType.SOLID_BBOX)
 }
 
 ::PrintTable <- function (table)
 {
 	if (table == null) return;
-	DoPrintTable(table, 0);
+	DoPrintTable(table, 0)
 }
 ::DoPrintTable <- function (table, indent)
 {
-	local line = "";
+	local line = ""
 	for(local i = 0; i < indent; i++) {
-		line += " ";
+		line += " "
 	}
 	line += typeof table == "array" ? "[" : "{";
-	ClientPrint(null, 2, line);
-	indent+=2;
+	ClientPrint(null, 2, line)
+	indent+=2
 	foreach (k,v in table) {
 		line = "";
 		for(local i = 0; i < indent; i++) {
-			line += " ";
+			line += " "
 		}
-		line += k.tostring();
+		line += k.tostring()
 		line += " = "
 		if (typeof v == "table" || typeof v == "array") {
-			ClientPrint(null, 2, line);
-			DoPrintTable(v, indent);
+			ClientPrint(null, 2, line)
+			DoPrintTable(v, indent)
 		}
 		else {
 			try {
-				line += v.tostring();
+				line += v.tostring()
 			}
 			catch (e){
-				line += typeof v;
+				line += typeof v
 			}
-			ClientPrint(null, 2, line);
+			ClientPrint(null, 2, line)
 		}
 	}
-	indent-=2;
-	line = "";
+	indent-=2
+	line = ""
 	for(local i = 0; i < indent; i++) {
 		line += " ";
 	}
 	line += typeof table == "array" ? "]" : "}";
-	ClientPrint(null, 2, line);
+	ClientPrint(null, 2, line)
 }
 
 function AddRobotTag(tag, table)
 {
 	if (!popExtThinkFuncSet) {
-		AddThinkToEnt(popExtEntity, "PopulatorThink");
-		popExtThinkFuncSet = true;
+		AddThinkToEnt(popExtEntity, "PopulatorThink")
+		popExtThinkFuncSet = true
 	}
-	popExtScope.robotTags[tag] <- table;
+	popExtScope.robotTags[tag] <- table
 }
 
 function AddTankName(name, table)
 {
 	if (!popExtThinkFuncSet) {
-		AddThinkToEnt(popExtEntity, "PopulatorThink");
-		popExtThinkFuncSet = true;
+		AddThinkToEnt(popExtEntity, "PopulatorThink")
+		popExtThinkFuncSet = true
 	}
-	name = name.tolower();
-	local wildcard = name[name.len()-1] == '*';
+	name = name.tolower()
+	local wildcard = name[name.len()-1] == '*'
 	if (wildcard) {
-		name = name.slice(0, name.len()-1);
-		popExtScope.tankNamesWildcard[name] <- table;
+		name = name.slice(0, name.len()-1)
+		popExtScope.tankNamesWildcard[name] <- table
 	}
 	else {
-		popExtScope.tankNames[name] <- table;
+		popExtScope.tankNames[name] <- table
 	}
 }
 
 ::_PopIncrementTankIcon <- function(icon) {
 	local flags = MVM_CLASS_FLAG_NORMAL;
 	if (icon.isCrit) {
-		flags = flags | MVM_CLASS_FLAG_ALWAYSCRIT;
+		flags = flags | MVM_CLASS_FLAG_ALWAYSCRIT
 	}
 	if (icon.isBoss) {
-		flags = flags | MVM_CLASS_FLAG_MINIBOSS;
+		flags = flags | MVM_CLASS_FLAG_MINIBOSS
 	}
 	if (icon.isSupport) {
-		flags = flags | MVM_CLASS_FLAG_SUPPORT;
+		flags = flags | MVM_CLASS_FLAG_SUPPORT
 	}
 	if (icon.isSupportLimited) {
-		flags = flags | MVM_CLASS_FLAG_SUPPORT_LIMITED;
+		flags = flags | MVM_CLASS_FLAG_SUPPORT_LIMITED
 	}
-	DecrementWaveIconSpawnCount("tank", MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS | (icon.isSupport ? MVM_CLASS_FLAG_SUPPORT : 0) | (icon.isSupportLimited ? MVM_CLASS_FLAG_SUPPORT_LIMITED : 0), icon.count, false);
-	IncrementWaveIconSpawnCount(icon.name, flags, icon.count, false);
+	DecrementWaveIconSpawnCount("tank", MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS | (icon.isSupport ? MVM_CLASS_FLAG_SUPPORT : 0) | (icon.isSupportLimited ? MVM_CLASS_FLAG_SUPPORT_LIMITED : 0), icon.count, false)
+	IncrementWaveIconSpawnCount(icon.name, flags, icon.count, false)
 }
 
 ::_PopIncrementIcon <- function(icon) {
-	local flags = MVM_CLASS_FLAG_NORMAL;
+	local flags = MVM_CLASS_FLAG_NORMAL
 	if (icon.isCrit) {
-		flags = flags | MVM_CLASS_FLAG_ALWAYSCRIT;
+		flags = flags | MVM_CLASS_FLAG_ALWAYSCRIT
 	}
 	if (icon.isBoss) {
-		flags = flags | MVM_CLASS_FLAG_MINIBOSS;
+		flags = flags | MVM_CLASS_FLAG_MINIBOSS
 	}
 	if (icon.isSupport) {
-		flags = flags | MVM_CLASS_FLAG_SUPPORT;
+		flags = flags | MVM_CLASS_FLAG_SUPPORT
 	}
 	if (icon.isSupportLimited) {
-		flags = flags | MVM_CLASS_FLAG_SUPPORT_LIMITED;
+		flags = flags | MVM_CLASS_FLAG_SUPPORT_LIMITED
 	}
-	IncrementWaveIconSpawnCount(icon.name, flags, icon.count, true);
+	IncrementWaveIconSpawnCount(icon.name, flags, icon.count, true)
 }
 
 function AddCustomTankIcon(name, count, isCrit = false, isBoss = true, isSupport = false, isSupportLimited = false)
 {
-	local icon = {name = name, count = count, isCrit = isCrit, isBoss = isBoss, isSupport = isSupport, isSupportLimited = isSupportLimited};
-	popExtScope.tankIcons.append(icon);
-	_PopIncrementTankIcon(icon);
+	local icon = {name = name, count = count, isCrit = isCrit, isBoss = isBoss, isSupport = isSupport, isSupportLimited = isSupportLimited}
+	popExtScope.tankIcons.append(icon)
+	_PopIncrementTankIcon(icon)
 }
 
 function AddCustomIcon(name, count, isCrit = false, isBoss = false, isSupport = false, isSupportLimited = false)
 {
-	local icon = {name = name, count = count, isCrit = isCrit, isBoss = isBoss, isSupport = isSupport, isSupportLimited = isSupportLimited};
-	popExtScope.icons.append(icon);
-	_PopIncrementIcon(icon);
+	local icon = {name = name, count = count, isCrit = isCrit, isBoss = isBoss, isSupport = isSupport, isSupportLimited = isSupportLimited}
+	popExtScope.icons.append(icon)
+	_PopIncrementIcon(icon)
 }
 
 function SetWaveIconsFunction(func)
 {
 	popExtScope.waveIconsFunction <- func;
-	func();
+	func()
 }
 
 // Flags for wavebar functions below
@@ -236,19 +236,19 @@ function SetWaveIconsFunction(func)
 ::MVM_CLASS_FLAG_SUPPORT_LIMITED <-	1 << 5; // Support limited flag. Game uses it together with support flag
 
 
-local resource = Entities.FindByClassname(null, "tf_objective_resource");
+local resource = Entities.FindByClassname(null, "tf_objective_resource")
 
 // Get wavebar spawn count of an icon with specified name and flags
 ::GetWaveIconSpawnCount <- function(name, flags)
 {
-	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts");
+	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 	for (local a = 0; a < 2; a++) {
-		local suffix = a == 0 ? "" : "2";
+		local suffix = a == 0 ? "" : "2"
 		for (local i = 0; i < sizeArray * 2; i++) {
 			if (NetProps.GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i) == name &&
 				(flags == 0 || NetProps.GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
 
-				return NetProps.GetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, i);
+				return NetProps.GetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, i)
 			}
 		}
 	}
@@ -260,31 +260,31 @@ local resource = Entities.FindByClassname(null, "tf_objective_resource");
 // Can be used to put custom icons on a wavebar
 ::SetWaveIconSpawnCount <- function(name, flags, count, changeMaxEnemyCount = true)
 {
-	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts");
+	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 
 	for (local a = 0; a < 2; a++) {
 		local suffix = a == 0 ? "" : "2";
 		for (local i = 0; i < sizeArray; i++) {
-			local nameSlot = NetProps.GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i);
+			local nameSlot = NetProps.GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i)
 			if (nameSlot == "" && count > 0) {
-				NetProps.SetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, name, i);
-				NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, count, i);
-				NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, flags, i);
+				NetProps.SetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, name, i)
+				NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, count, i)
+				NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, flags, i)
 				if (changeMaxEnemyCount && (flags & (MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS))) {
-					NetProps.SetPropInt(resource, "m_nMannVsMachineWaveEnemyCount", NetProps.GetPropInt(resource, "m_nMannVsMachineWaveEnemyCount") + count);
+					NetProps.SetPropInt(resource, "m_nMannVsMachineWaveEnemyCount", NetProps.GetPropInt(resource, "m_nMannVsMachineWaveEnemyCount") + count)
 				}
 				return;
 			}
 			if (nameSlot == name && (flags == 0 || NetProps.GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
 				local preCount = NetProps.GetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, i)
-				NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, count, i);
+				NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, count, i)
 				if (changeMaxEnemyCount && (flags & (MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS))) {
-					NetProps.SetPropInt(resource, "m_nMannVsMachineWaveEnemyCount", NetProps.GetPropInt(resource, "m_nMannVsMachineWaveEnemyCount") + count - preCount);
+					NetProps.SetPropInt(resource, "m_nMannVsMachineWaveEnemyCount", NetProps.GetPropInt(resource, "m_nMannVsMachineWaveEnemyCount") + count - preCount)
 				}
 				if (count <= 0) {
-					NetProps.SetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, "", i);
-					NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, 0, i);
-					NetProps.SetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, false, i);
+					NetProps.SetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, "", i)
+					NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, 0, i)
+					NetProps.SetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, false, i)
 				}
 				return;
 			}
@@ -295,7 +295,7 @@ local resource = Entities.FindByClassname(null, "tf_objective_resource");
 // Can be used to put custom icons on a wavebar
 ::IncrementWaveIconSpawnCount <- function(name, flags, count = 1, changeMaxEnemyCount = true)
 {
-	SetWaveIconSpawnCount(name, flags, GetWaveIconSpawnCount(name, flags) + count, changeMaxEnemyCount);
+	SetWaveIconSpawnCount(name, flags, GetWaveIconSpawnCount(name, flags) + count, changeMaxEnemyCount)
 	return 0;
 }
 
@@ -303,22 +303,22 @@ local resource = Entities.FindByClassname(null, "tf_objective_resource");
 // Use it to decrement the spawn count when the enemy is killed. Should not be used for support type icons
 ::DecrementWaveIconSpawnCount <- function(name, flags, count = 1, changeMaxEnemyCount = false)
 {
-	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts");
+	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 
 	for (local a = 0; a < 2; a++) {
 		local suffix = a == 0 ? "" : "2";
 		for (local i = 0; i < sizeArray; i++) {
-			local nameSlot = NetProps.GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i);
+			local nameSlot = NetProps.GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i)
 			if (nameSlot == name && (flags == 0 || NetProps.GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
 				local preCount = NetProps.GetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, i)
-				NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, preCount - count > 0 ? preCount - count : 0, i);
+				NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, preCount - count > 0 ? preCount - count : 0, i)
 				if (changeMaxEnemyCount && (flags & (MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS))) {
-					NetProps.SetPropInt(resource, "m_nMannVsMachineWaveEnemyCount", NetProps.GetPropInt(resource, "m_nMannVsMachineWaveEnemyCount") - (count > preCount ? preCount : count));
+					NetProps.SetPropInt(resource, "m_nMannVsMachineWaveEnemyCount", NetProps.GetPropInt(resource, "m_nMannVsMachineWaveEnemyCount") - (count > preCount ? preCount : count))
 				}
 				if (preCount - count <= 0) {
-					NetProps.SetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, "", i);
-					NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, 0, i);
-					NetProps.SetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, false, i);
+					NetProps.SetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, "", i)
+					NetProps.SetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, 0, i)
+					NetProps.SetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, false, i)
 				}
 				return;
 			}
@@ -330,13 +330,13 @@ local resource = Entities.FindByClassname(null, "tf_objective_resource");
 // Used for mission and support limited bots to display them on a wavebar during the wave, set by the game automatically when an enemy with this icon spawn
 ::SetWaveIconActive <- function(name, flags, active)
 {
-	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts");
+	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 	for (local a = 0; a < 2; a++) {
 		local suffix = a == 0 ? "" : "2";
 		for (local i = 0; i < sizeArray; i++) {
-			local nameSlot = NetProps.GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i);
+			local nameSlot = NetProps.GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i)
 			if (nameSlot == name && (flags == 0 || NetProps.GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
-				NetProps.SetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, active, i);
+				NetProps.SetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, active, i)
 				return;
 			}
 		}
@@ -346,15 +346,15 @@ local resource = Entities.FindByClassname(null, "tf_objective_resource");
 // Used for mission and support limited bots to display them on a wavebar during the wave, set by the game automatically when an enemy with this icon spawn
 ::GetWaveIconActive <- function(name, flags)
 {
-	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts");
+	local sizeArray = NetProps.GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 	for (local a = 0; a < 2; a++) {
 		local suffix = a == 0 ? "" : "2";
 		for (local i = 0; i < sizeArray; i++) {
-			local nameSlot = NetProps.GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i);
+			local nameSlot = NetProps.GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i)
 			if (nameSlot == name && (flags == 0 || NetProps.GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
-				return NetProps.GetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, i);
+				return NetProps.GetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, i)
 			}
 		}
 	}
-	return false;
+	return false
 }
