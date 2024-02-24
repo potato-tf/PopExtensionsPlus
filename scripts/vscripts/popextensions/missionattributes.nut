@@ -449,8 +449,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                     EntFireByHandle(dot, "Kill", "", -1, null, null)
             return -1;
         }
-        // if (!(MissionAttributes.SniperHideLasers in MissionAttributes.ThinkTable))
-            MissionAttributes.ThinkTable.SniperHideLasers <- MissionAttributes.SniperHideLasers
+
+		MissionAttributes.ThinkTable.SniperHideLasers <- MissionAttributes.SniperHideLasers
     break;
 
     // =========================================================
@@ -478,8 +478,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL) //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
             return true
         }
-        // if (!(MissionAttributes.SniperHideLasers in MissionAttributes.TakeDamageTable))
-            MissionAttributes.TakeDamageTable.BotHeadshots <- MissionAttributes.BotHeadshots
+
+		MissionAttributes.TakeDamageTable.BotHeadshots <- MissionAttributes.BotHeadshots
     break;
 
     // =========================================================
@@ -644,8 +644,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[bot.GetPlayerClass()]), -1, null, null)
         }
 
-        // if (!(MissionAttributes.BotsAreHumans in MissionAttributes.SpawnHookTable))
-            MissionAttributes.SpawnHookTable.BotsAreHumans <- MissionAttributes.BotsAreHumans
+		MissionAttributes.SpawnHookTable.BotsAreHumans <- MissionAttributes.BotsAreHumans
     break;
 
     // =========================================================
@@ -679,8 +678,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             SetPropIntArray(carrier, "m_nModelIndexOverrides", carrierPartsIndex, 3)
             noRomeCarrier = true
         }
-        // if (!(MissionAttributes.NoRome in MissionAttributes.SpawnHookTable))
-            MissionAttributes.SpawnHookTable.NoRome <- MissionAttributes.NoRome
+
+		MissionAttributes.SpawnHookTable.NoRome <- MissionAttributes.NoRome
     break;
 
     // =========================================================
@@ -697,8 +696,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
             local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
         }
-        // if (!(MissionAttributes.SpellDropRateCommon in MissionAttributes.DeathHookTable))
-            MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
+
+		MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
     break;
 
     // =========================================================
@@ -715,8 +714,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
             local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
         }
-        // if (!(MissionAttributes.SpellDropRateCommon in MissionAttributes.DeathHookTable))
-            MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
+		
+		MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
     break;
 
     // =========================================================
@@ -729,8 +728,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 SetPropInt(spells, "m_nTier", 1)
         }
 
-        // if (!(MissionAttributes.GiantsRareSpells in MissionAttributes.ThinkTable))
-            MissionAttributes.ThinkTable.GiantsRareSpells <- MissionAttributes.GiantsRareSpells
+		MissionAttributes.ThinkTable.GiantsRareSpells <- MissionAttributes.GiantsRareSpells
     break;
 
     // =========================================================
@@ -785,9 +783,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
                 // }
             }
         }
-        // if (!(MissionAttributes.NoSkeleSplit in MissionAttributes.ThinkTable))
-            MissionAttributes.ThinkTable.NoSkeleSplit <- MissionAttributes.NoSkeleSplit
-
+		
+		MissionAttributes.ThinkTable.NoSkeleSplit <- MissionAttributes.NoSkeleSplit
     break;
 
     // =========================================================
@@ -812,8 +809,8 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             }
 
         }
-        // if (!(MissionAttributes.WaveStartCountdown in MissionAttributes.ThinkTable))
-            MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown
+		
+		MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown
     break;
 	
     // =========================================================
@@ -852,7 +849,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				else
 				{
 					// do we need to do anything special for thinks??
-					MissionAttributes.RaiseValueError("HandModelOverride", value, extra = "Value must be string or list of strings")
+					MissionAttributes.RaiseValueError("HandModelOverride", value, extra = "Value must be string or array of strings")
 					return
 				}
 
@@ -874,8 +871,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				scope.PlayerThinkTable.ArmThink <- ArmThink	
 		}
 		
-		if (!("HandModelOverride" in MissionAttributes.SpawnHookTable))
-			MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
+		MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
     break;
 	
     // =========================================================
@@ -885,13 +881,11 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		{
             local player = GetPlayerFromUserID(params.userid)
             if (player.IsBotOfType(1337)) return
-            
-            player.ValidateScriptScope()
-            local scope = player.GetScriptScope()
 			
 			if (typeof value != "table")
 			{
 				MissionAttributes.RaiseValueError("PlayerAttributes", value, "Value must be table")
+				success = false
 				return
 			}
 			
@@ -902,52 +896,38 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			foreach (key, val in table)
             {
                 local valformat = ""
-                printl(typeof val + ", " + key +", "+ val)
                 if (typeof val == "integer")
                     valformat = format("self.AddCustomAttribute(`%s`, %d, -1)", key, val)
 
                 else if (typeof val == "string")
+				{
                     MissionAttributes.RaiseValueError("PlayerAttributes", val, "Cannot set string attributes!")
-                    // valformat = format("self.AddCustomAttribute(`%s`, `%s`, -1)", key, val)
+					success = false
+					return
+				}
 
                 else if (typeof val == "float")
                     valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", key, val)
-                
+
                 EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
-                    
             }
 		}
 		
-		if (!("PlayerAttributes" in MissionAttributes.SpawnHookTable))
-			MissionAttributes.SpawnHookTable.PlayerAttributes <- MissionAttributes.PlayerAttributes
+		MissionAttributes.SpawnHookTable.PlayerAttributes <- MissionAttributes.PlayerAttributes
     break;
 	
     // =========================================================
-	/*
-	MissionAttr("ItemAttributes", {
-		"tf_weapon_scattergun" : {
-			"max health additive bonus" : 100,
-			"fire rate bonus" : 0.5,
-			"Reload time decreased" : 0.5,
-		},
-		"tf_weapon_rocketlauncher" : {
-			"fire rate penalty" : 3,
-			"damage bonus" : 10,
-		},
-	});
-	*/
+
     case "ItemAttributes":
 		function MissionAttributes::ItemAttributes(params)
 		{
             local player = GetPlayerFromUserID(params.userid)
             if (player.IsBotOfType(1337)) return
-            
-            player.ValidateScriptScope()
-            local scope = player.GetScriptScope()
 			
 			if (typeof value != "table")
 			{
 				MissionAttributes.RaiseValueError("ItemAttributes", value, extra = "Value must be table")
+				success = false
 				return
 			}
 			
@@ -963,9 +943,85 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			}
 		}
 		
-		if (!("ItemAttributes" in MissionAttributes.SpawnHookTable))
-			MissionAttributes.SpawnHookTable.ItemAttributes <- MissionAttributes.ItemAttributes
+		MissionAttributes.SpawnHookTable.ItemAttributes <- MissionAttributes.ItemAttributes
     break;
+	
+	// =========================================================
+
+	case "ItemWhitelist":
+		if (typeof value != "array")
+		{
+			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
+			success = false
+			break				
+		}
+		
+		PopExtUtil.ItemWhitelist = value;
+		
+		function MissionAttributes::ItemWhitelist(params)
+		{
+
+            local player = GetPlayerFromUserID(params.userid)
+            if (player.IsBotOfType(1337)) return
+            
+            player.ValidateScriptScope()
+            local scope = player.GetScriptScope()
+			
+			function HasVal(arr, val) foreach (v in arr) if (v == val) return true
+			for (local i = 0; i < SLOT_COUNT; i++)
+			{
+				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+				if (wep == null) continue
+				
+				local cls   = wep.GetClassname()
+				local index = PopExtUtil.GetItemIndex(wep)
+				
+				if ( !(HasVal(value, cls) || HasVal(value, index)) )
+					wep.Kill()
+			}
+			
+			if (PopExtUtil.ItemBlacklist.len() == 0)
+				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", 0.015, null, null)
+		}
+	
+		MissionAttributes.SpawnHookTable.ItemWhitelist <- MissionAttributes.ItemWhitelist
+	break;
+	
+	// =========================================================
+
+	case "ItemBlacklist":
+		if (typeof value != "array")
+		{
+			MissionAttributes.RaiseValueError("ItemBlacklist", value, extra = "Value must be array")
+			success = false
+			break				
+		}
+		
+		PopExtUtil.ItemBlacklist = value;
+		
+		function MissionAttributes::ItemBlacklist(params)
+		{
+            local player = GetPlayerFromUserID(params.userid)
+            if (player.IsBotOfType(1337)) return
+			
+			function HasVal(arr, val) foreach (v in arr) if (v == val) return true
+			for (local i = 0; i < SLOT_COUNT; i++)
+			{
+				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+				if (wep == null) continue
+				
+				local cls   = wep.GetClassname()
+				local index = PopExtUtil.GetItemIndex(wep)
+				
+				if ( HasVal(value, cls) || HasVal(value, index) )
+					wep.Kill()
+			}
+			
+			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", 0.015, null, null)
+		}
+	
+		MissionAttributes.SpawnHookTable.ItemBlacklist <- MissionAttributes.ItemBlacklist
+	break;
 
     //Options to revert global fixes below:
 
@@ -1032,6 +1088,9 @@ function MissionAttributes::DebugLog(LogMsg)
         ClientPrint(null, 2, format("MissionAttr: %s.", LogMsg))
     }
 }
+
+// TODO: implement a try catch raise system instead of this
+
 // Raises an error if the user passes an index that is out of range.
 // Example: Allowed values are 1-2, but user passed 3.
 function MissionAttributes::RaiseIndexError(attr, max = [0, 1]) ParseError(format("Index out of range for %s, value range: %d - %d", attr, max[0], max[1]))

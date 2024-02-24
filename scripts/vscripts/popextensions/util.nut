@@ -20,7 +20,8 @@
         "", // Civilian
     ]
 
-    ROBOT_ARM_INDEXES = []
+	ItemWhitelist = []
+	ItemBlacklist = []
 
     ROMEVISION_MODELS = {
 
@@ -122,9 +123,6 @@
         }
     }
 }
-
-foreach (i, path in PopExtUtil.ROBOT_ARM_PATHS)
-    PopExtUtil.ROBOT_ARM_INDEXES.append( ((path != "") ? PrecacheModel(path) : null) )
 
 NavMesh.GetAllAreas(PopExtUtil.AllNavAreas)
 
@@ -461,6 +459,18 @@ function PopExtUtil::GetItemInSlot(player, slot)
         break
     }
     return item
+}
+
+function PopExtUtil::SwitchToFirstValidWeapon(player)
+{
+    for (local i = 0; i < SLOT_COUNT; i++)
+    {
+        local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+        if ( wep == null) continue
+
+        player.Weapon_Switch(wep)
+        return wep
+    }	
 }
 
 function PopExtUtil::HasEffect(ent, value)
