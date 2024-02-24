@@ -87,8 +87,7 @@
 		function OnGameEvent_mvm_wave_failed(params) { PopExtUtil.IsWaveStarted = false }
 		function OnGameEvent_mvm_begin_wave(params) { PopExtUtil.IsWaveStarted = true }
 	
-		function OnGameEvent_post_inventory_application(params)
-		{
+		function OnGameEvent_post_inventory_application(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			
 			player.ValidateScriptScope()
@@ -96,8 +95,7 @@
 
 			if (!("MyWeaponsArray" in scope)) scope.MyWeaponsArray <- {}
 
-			for (local i = 0; i < SLOT_COUNT; i++)
-			{
+			for (local i = 0; i < SLOT_COUNT; i++) {
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 
 				if (wep == null) continue
@@ -113,8 +111,7 @@
 			
 		}
 	
-		function OnGameEvent_player_disconnect(params)
-		{
+		function OnGameEvent_player_disconnect(params) {
 			local player = GetPlayerFromUserID(params.userid)
 	
 			for (local i = PopExtUtil.PlayerArray.len() - 1; i >= 0; i--)
@@ -133,24 +130,20 @@ for (local i = 1; i <= MAX_CLIENTS; i++)
 	if (PlayerInstanceFromIndex(i) != null)
 		EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", -1, null, null)
 
-function PopExtUtil::IsLinuxServer()
-{
+function PopExtUtil::IsLinuxServer() {
 	return RAND_MAX != 32767
 }
 
-function PopExtUtil::ShowMessage(message)
-{
+function PopExtUtil::ShowMessage(message) {
 	ClientPrint(null, HUD_PRINTCENTER , message)
 }
 
-function PopExtUtil::ShowChatMessage(target, fmt, ...)
-{
+function PopExtUtil::ShowChatMessage(target, fmt, ...) {
 	local result = "\x07FFCC22[Map] "
 	local start = 0
 	local end = fmt.find("{")
 	local i = 0
-	while (end != null)
-	{
+	while (end != null) {
 		result += fmt.slice(start, end)
 		start = end + 1
 		end = fmt.find("}", start)
@@ -158,8 +151,7 @@ function PopExtUtil::ShowChatMessage(target, fmt, ...)
 			break
 		local word = fmt.slice(start, end)
 
-		if (word == "player")
-		{
+		if (word == "player") {
 			local player = vargv[i++]
 
 			local team = player.GetTeam()
@@ -171,20 +163,16 @@ function PopExtUtil::ShowChatMessage(target, fmt, ...)
 				result += "\x07" + TF_COLOR_SPEC
 			result += GetPlayerName(player)
 		}
-		else if (word == "color")
-		{
+		else if (word == "color") {
 			result += "\x07" + vargv[i++]
 		}
-		else if (word == "int" || word == "float")
-		{
+		else if (word == "int" || word == "float") {
 			result += vargv[i++].tostring()
 		}
-		else if (word == "str")
-		{
+		else if (word == "str") {
 			result += vargv[i++]
 		}
-		else
-		{
+		else {
 			result += "{" + word + "}"
 		}
 
@@ -347,8 +335,7 @@ function PopExtUtil::CreatePlayerWearable(player, model, bonemerge = true, attac
 }
 
 
-function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02)
-{
+function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
 	local rgb = PopExtUtil.HexToRgb("FFFF66")
 	local txtent = SpawnEntityFromTable("game_text", {
 		effect = 2,
@@ -371,8 +358,7 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePref
 	local newlines = split(message, "|")
 
 	foreach (n in newlines)
-		if (n.len() > 0)
-		{
+		if (n.len() > 0) {
 			strarray.append(n)
 			if (!startswith(n, "PAUSE") && !syncChatWithGameText)
 				ClientPrint(null, 3, format("\x07%s %s\x07%s %s", COLOR_YELLOW, messagePrefix, TF_COLOR_DEFAULT, n))
@@ -380,13 +366,11 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePref
 
 	local i = -1
 	local textcooldown = 0
-	function ExplanationTextThink()
-	{
+	function ExplanationTextThink() {
 		if (textcooldown > Time()) return
 
 		i++
-		if (i == strarray.len())
-		{
+		if (i == strarray.len()) {
 			SetPropString(txtent, "m_iszScriptThinkFunction", "")
 
 		//	  DoEntFire("!activator", "SetScriptOverlayMaterial", "", -1, player, player)
@@ -402,15 +386,13 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePref
 
 		//make text display slightly longer depending on string length
 		local delaybetweendisplays = textPrintTime
-		if (delaybetweendisplays == -1)
-		{
+		if (delaybetweendisplays == -1) {
 			delaybetweendisplays = s.len() / 10 
 			if (delaybetweendisplays < 2) delaybetweendisplays = 2; else if (delaybetweendisplays > 12) delaybetweendisplays = 12
 		}
 		
 		//allow for pauses in the announcement
-		if (startswith(s, "PAUSE"))
-		{
+		if (startswith(s, "PAUSE")) {
 			local pause = split(s, " ")[1].tofloat()
 		//	  DoEntFire("player", "SetScriptOverlayMaterial", "", -1, player, player)
 			SetPropString(txtent, "m_iszMessage", "")
@@ -454,45 +436,35 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePref
    AddThinkToEnt(txtent, "ExplanationTextThink")
 }
 
-function Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02)
-{
+function Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
 	Explanation.call(PopExtUtil, message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
 }
 
-function Info(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02)
-{
+function Info(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
 	Explanation.call(PopExtUtil, message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
 }
 
-function PopExtUtil::IsAlive(player)
-{
+function PopExtUtil::IsAlive(player) {
 	return GetPropInt(player, "m_lifeState") == 0
 }
 
-function PopExtUtil::IsDucking(player)
-{
+function PopExtUtil::IsDucking(player) {
 	return player.GetFlags() & FL_DUCKING
 }
 
-function PopExtUtil::IsOnGround(player)
-{
+function PopExtUtil::IsOnGround(player) {
 	return player.GetFlags() & FL_ONGROUND
 }
 
-function PopExtUtil::RemoveAmmo(player)
-{
-	for ( local i = 0; i < 32; i++ )
-	{
+function PopExtUtil::RemoveAmmo(player) {
+	for ( local i = 0; i < 32; i++ ) {
 		SetPropIntArray(player, "m_iAmmo", 0, i)
 	}
 }
-function PopExtUtil::GetAllEnts()
-{
+function PopExtUtil::GetAllEnts() {
 	local entdata = { "entlist": [], "numents": 0 }
-	for (local i = MAX_CLIENTS, ent; i <= MAX_EDICTS; i++)
-	{
-		if (ent = EntIndexToHScript(i))
-		{
+	for (local i = MAX_CLIENTS, ent; i <= MAX_EDICTS; i++) {
+		if (ent = EntIndexToHScript(i)) {
 			entdata.numents++
 			entdata.entlist.append(ent)
 		}
@@ -501,11 +473,9 @@ function PopExtUtil::GetAllEnts()
 }
 
 //sets m_hOwnerEntity and m_hOwner to the same value
-function PopExtUtil::_SetOwner(ent, owner)
-{
+function PopExtUtil::_SetOwner(ent, owner) {
 	//incase we run into an ent that for some reason uses both of these netprops for two different entities
-	if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwnerEntity"))
-	{
+	if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwnerEntity")) {
 		ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
 		ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
 		ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
@@ -516,8 +486,7 @@ function PopExtUtil::_SetOwner(ent, owner)
 	SetPropEntity(ent, "m_hOwnerEntity", owner)
 }
 
-function PopExtUtil::ShowAnnotation(text = "This is an annotation", lifetime = 10, pos = Vector(), id = 0, distance = true, sound = "misc/null.wav", entindex = 0, visbit = 0, effect = true)
-{
+function PopExtUtil::ShowAnnotation(text = "This is an annotation", lifetime = 10, pos = Vector(), id = 0, distance = true, sound = "misc/null.wav", entindex = 0, visbit = 0, effect = true) {
 	SendGlobalGameEvent("show_annotation", {
 		text = text
 		lifetime = lifetime
@@ -536,58 +505,47 @@ function PopExtUtil::ShowAnnotation(text = "This is an annotation", lifetime = 1
 //This may not be necessary and hide_annotation may work, but whatever this works too.
 function PopExtUtil::HideAnnotation(id) { ShowAnnotation("", 0.0000001, Vector(), id = id) }
 
-function PopExtUtil::GetPlayerName(player)
-{
+function PopExtUtil::GetPlayerName(player) {
 	return GetPropString(player, "m_szNetname")
 }
 
-function PopExtUtil::SetPlayerName(player,	name)
-{
+function PopExtUtil::SetPlayerName(player,	name) {
 	return SetPropString(player, "m_szNetname", name)
 }
 
-function PopExtUtil::GetPlayerUserID(player)
-{
+function PopExtUtil::GetPlayerUserID(player) {
 	return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex()) //TODO replace PlayerManager with the actual entity name
 }
 
-function PopExtUtil::PlayerRespawn()
-{
+function PopExtUtil::PlayerRespawn() {
 	self.ForceRegenerateAndRespawn()
 }
 
-function PopExtUtil::DisableCloak(player)
-{
+function PopExtUtil::DisableCloak(player) {
 	// High Number to Prevent Player from Cloaking
 	SetPropFloat(player, "m_Shared.m_flStealthNextChangeTime", Time() * 99999)
 }
 
-function PopExtUtil::InUpgradeZone(player)
-{
+function PopExtUtil::InUpgradeZone(player) {
 	return GetPropBool(player, "m_Shared.m_bInUpgradeZone")
 }
 
-function PopExtUtil::InButton(player, button)
-{
+function PopExtUtil::InButton(player, button) {
 	return (GetPropInt(player, "m_nButtons") & button)
 }
 
-function PopExtUtil::PressButton(player, button)
-{
+function PopExtUtil::PressButton(player, button) {
 	SetPropInt(player, "m_afButtonForced") | button; SetPropInt(player, "m_nButtons") | button
 }
 
 //assumes user is using the SLOT_ constants
-function PopExtUtil::SwitchWeaponSlot(player, slot)
-{
+function PopExtUtil::SwitchWeaponSlot(player, slot) {
 	EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player)
 }
 
-function PopExtUtil::GetItemInSlot(player, slot)
-{
+function PopExtUtil::GetItemInSlot(player, slot) {
 	local item
-	for (local i = 0; i < SLOT_COUNT; i++)
-	{
+	for (local i = 0; i < SLOT_COUNT; i++) {
 		local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 		if ( wep == null || wep.GetSlot() != slot) continue
 
@@ -597,10 +555,8 @@ function PopExtUtil::GetItemInSlot(player, slot)
 	return item
 }
 
-function PopExtUtil::SwitchToFirstValidWeapon(player)
-{
-	for (local i = 0; i < SLOT_COUNT; i++)
-	{
+function PopExtUtil::SwitchToFirstValidWeapon(player) {
+	for (local i = 0; i < SLOT_COUNT; i++) {
 		local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 		if ( wep == null) continue
 
@@ -609,18 +565,15 @@ function PopExtUtil::SwitchToFirstValidWeapon(player)
 	}	
 }
 
-function PopExtUtil::HasEffect(ent, value)
-{
+function PopExtUtil::HasEffect(ent, value) {
 	return GetPropInt(ent, "m_fEffects") == value
 }
 
-function PopExtUtil::SetEffect(ent, value)
-{
+function PopExtUtil::SetEffect(ent, value) {
 	SetPropInt(ent, "m_fEffects", value)
 }
 
-function PopExtUtil::PlayerRobotModel(player, model)
-{
+function PopExtUtil::PlayerRobotModel(player, model) {
 	player.ValidateScriptScope()
 	local scope = player.GetScriptScope()
 
@@ -640,8 +593,7 @@ function PopExtUtil::PlayerRobotModel(player, model)
 	SetPropInt(player, "m_nRenderMode", 1)
 	SetPropInt(player, "m_clrRender", 0)
 
-	function PopExtUtil::BotModelThink()
-	{
+	function PopExtUtil::BotModelThink() {
 		if (wearable && (player.IsTaunting() || wearable.GetMoveParent() != player))
 			EntFireByHandle(wearable, "SetParent", "!activator", -1, self, self)
 		return -1
@@ -653,20 +605,16 @@ function PopExtUtil::PlayerRobotModel(player, model)
 
 	function PopExtUtil::PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func() }
 
-	if (!("PlayerThinks" in scope))
-	{
+	if (!("PlayerThinks" in scope)) {
 		scope.PlayerThinks <- PlayerThinks
 		AddThinkToEnt(player, "PlayerThinks")
 	}
 }
 
-function PopExtUtil::HasItemIndex(player, index)
-{
+function PopExtUtil::HasItemIndex(player, index) {
 	local t = false
-	for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer())
-	{
-		if (GetItemIndex(child) == index)
-		{
+	for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+		if (GetItemIndex(child) == index) {
 			t = true
 			break
 		}
@@ -674,8 +622,7 @@ function PopExtUtil::HasItemIndex(player, index)
 	return t
 }
 
-function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5)
-{
+function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5) {
 	SpawnEntityFromTable("trigger_stun", {
 		targetname = "__utilstun",
 		stun_type = type,
@@ -692,8 +639,7 @@ function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speed
 	EntFireByHandle(__utilstun, "EndTouch", "", -1, player, player)
 }
 
-function PopExtUtil::ShowHudHint(player, text = "This is a hud hint", duration = 5)
-{
+function PopExtUtil::ShowHudHint(player, text = "This is a hud hint", duration = 5) {
 	local hudhint = FindByName(null, "__hudhint") != null
 
 	local flags = (player == null) ? 1 : 0
@@ -706,14 +652,12 @@ function PopExtUtil::ShowHudHint(player, text = "This is a hud hint", duration =
 	EntFireByHandle(__hudhint, "HideHudHint", "", duration, player, player)
 }
 
-function PopExtUtil::SetEntityColor(entity, r, g, b, a)
-{
+function PopExtUtil::SetEntityColor(entity, r, g, b, a) {
 	local color = (r) | (g << 8) | (b << 16) | (a << 24)
 	SetPropInt(entity, "m_clrRender", color)
 }
 
-function PopExtUtil::GetEntityColor(entity)
-{
+function PopExtUtil::GetEntityColor(entity) {
 	local color = GetPropInt(entity, "m_clrRender")
 	local clr = {}
 	clr.r <- color & 0xFF
@@ -723,10 +667,8 @@ function PopExtUtil::GetEntityColor(entity)
 	return clr
 }
 
-function PopExtUtil::AddAttributeToLoadout(player, attribute, value, duration = -1)
-{
-	for (local i = 0; i < SLOT_COUNT; i++)
-	{
+function PopExtUtil::AddAttributeToLoadout(player, attribute, value, duration = -1) {
+	for (local i = 0; i < SLOT_COUNT; i++) {
 		local wep = GetWeaponInSlot(player, i);
 		if (wep == null) continue;
 		wep.AddAttribute(attribute, value, duration);
@@ -734,8 +676,7 @@ function PopExtUtil::AddAttributeToLoadout(player, attribute, value, duration = 
 	}
 }
 
-function PopExtUtil::ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = 9999.0)
-{
+function PopExtUtil::ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = 9999.0) {
 	PrecacheModel(model[0])
 	local proxy_entity = CreateByClassname("obj_teleporter") // use obj_teleporter to set bodygroups.  not using SpawnEntityFromTable as that creates spawning noises
 	proxy_entity.SetAbsOrigin(pos)
@@ -757,10 +698,8 @@ function PopExtUtil::ShowModelToPlayer(player, model = ["models/player/heavy.mdl
 }
 
 
-function PopExtUtil::LockInPlace(player, enable = true)
-{
-	if (enable)
-	{
+function PopExtUtil::LockInPlace(player, enable = true) {
+	if (enable) {
 		player.AddFlag(FL_ATCONTROLS)
 		player.AddCustomAttribute("no_jump", 1, -1)
 		player.AddCustomAttribute("no_duck", 1, -1)
@@ -768,8 +707,7 @@ function PopExtUtil::LockInPlace(player, enable = true)
 		player.AddCustomAttribute("disable weapon switch", 1, -1)
 
 	}
-	else
-	{
+	else {
 		player.RemoveFlag(FL_ATCONTROLS)
 		player.RemoveCustomAttribute("no_jump")
 		player.RemoveCustomAttribute("no_duck")
@@ -778,49 +716,40 @@ function PopExtUtil::LockInPlace(player, enable = true)
 	}
 }
 
-function PopExtUtil::GetItemIndex(item)
-{
+function PopExtUtil::GetItemIndex(item) {
 	return GetPropInt(item, STRING_NETPROP_ITEMDEF)
 }
 
-function PopExtUtil::SetItemIndex(item, index)
-{
+function PopExtUtil::SetItemIndex(item, index) {
 	SetPropInt(item, STRING_NETPROP_ITEMDEF, index)
 }
 
-function PopExtUtil::SetTargetname(ent, name)
-{
+function PopExtUtil::SetTargetname(ent, name) {
 	SetPropString(ent, "m_iName", name)
 }
 
-function PopExtUtil::GetPlayerSteamID(player)
-{
+function PopExtUtil::GetPlayerSteamID(player) {
 	return GetPropString(player, "m_szNetworkIDString")
 }
 
-function PopExtUtil::GetHammerID(ent)
-{
+function PopExtUtil::GetHammerID(ent) {
 	return GetPropInt(ent, "m_iHammerID")
 }
 
-function PopExtUtil::GetSpawnFlags(ent)
-{
+function PopExtUtil::GetSpawnFlags(ent) {
 	return GetPropInt(self, "m_spawnflags")
 }
 
-function PopExtUtil::GetPopfileName()
-{
+function PopExtUtil::GetPopfileName() {
 	return GetPropString(PopExtUtil.ObjectiveResource, "m_iszMvMPopfileName")
 }
 
-function PopExtUtil::PrecacheParticle(name)
-{
+function PopExtUtil::PrecacheParticle(name) {
 	PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = name })
 }
 
 
-function PopExtUtil::SpawnEffect(player,  effect)
-{
+function PopExtUtil::SpawnEffect(player,  effect) {
 	local player_angle	   =  player.GetLocalAngles()
 	local player_angle_vec =  Vector( player_angle.x, player_angle.y, player_angle.z)
 
@@ -828,11 +757,9 @@ function PopExtUtil::SpawnEffect(player,  effect)
 	return
 }
 
-function PopExtUtil::RemoveOutputAll(ent, output)
-{
+function PopExtUtil::RemoveOutputAll(ent, output) {
 	local outputs = []
-	for (local i = GetNumElements(ent, output); i >= 0; i--)
-	{
+	for (local i = GetNumElements(ent, output); i >= 0; i--) {
 		local t = {}
 		GetOutputTable(ent, output, t, i)
 		outputs.append(t)
@@ -840,23 +767,19 @@ function PopExtUtil::RemoveOutputAll(ent, output)
 	foreach (o in outputs) foreach(_ in o) RemoveOutput(ent, output, o.target, o.input, o.parameter)
 }
 
-function PopExtUtil::RemovePlayerWearables(player)
-{
-	for (local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer())
-	{
+function PopExtUtil::RemovePlayerWearables(player) {
+	for (local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer()) {
 		if (wearable.GetClassname() == "tf_wearable")
 			wearable.Destroy()
 	}
 	return
 }
 
-function PopExtUtil::IsEntityClassnameInList(entity, list)
-{
+function PopExtUtil::IsEntityClassnameInList(entity, list) {
 	local classname = entity.GetClassname()
 	local listType = typeof(list)
 
-	switch (listType)
-	{
+	switch (listType) {
 		case "table":
 			return (classname in list)
 
@@ -869,8 +792,7 @@ function PopExtUtil::IsEntityClassnameInList(entity, list)
 	}
 }
 
-function PopExtUtil::SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = null)
-{
+function PopExtUtil::SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = null) {
 	local teleport_origin, teleport_angles, teleport_velocity
 
 	if (!location_set)
@@ -886,10 +808,8 @@ function PopExtUtil::SetPlayerClassRespawnAndTeleport(player, playerclass, locat
 	player.Teleport(true, teleport_origin, true, teleport_angles, true, teleport_velocity)
 }
 
-function PopExtUtil::PlaySoundOnClient(player, name, volume = 1.0, pitch = 100)
-{
-	EmitSoundEx(
-	{
+function PopExtUtil::PlaySoundOnClient(player, name, volume = 1.0, pitch = 100) {
+	EmitSoundEx( {
 		sound_name = name,
 		volume = volume
 		pitch = pitch,
@@ -898,10 +818,8 @@ function PopExtUtil::PlaySoundOnClient(player, name, volume = 1.0, pitch = 100)
 	})
 }
 
-function PopExtUtil::PlaySoundOnAllClients(name)
-{
-	EmitSoundEx(
-	{
+function PopExtUtil::PlaySoundOnAllClients(name) {
+	EmitSoundEx( {
 		sound_name = name,
 		filter_type = RECIPIENT_FILTER_GLOBAL
 	})
@@ -911,25 +829,20 @@ function PopExtUtil::PlaySoundOnAllClients(name)
 
 // MATH
 
-function PopExtUtil::Min(a, b)
-{
+function PopExtUtil::Min(a, b) {
 	return (a <= b) ? a : b
 }
 
-function PopExtUtil::Max(a, b)
-{
+function PopExtUtil::Max(a, b) {
 	return (a >= b) ? a : b
 }
 
-function PopExtUtil::Clamp(x, a, b)
-{
+function PopExtUtil::Clamp(x, a, b) {
 	return Min(b, Max(a, x))
 }
 
-function PopExtUtil::RemapVal(v, A, B, C, D)
-{
-	if (A == B)
-	{
+function PopExtUtil::RemapVal(v, A, B, C, D) {
+	if (A == B) {
 		if (v >= B)
 			return D
 		return C
@@ -937,10 +850,8 @@ function PopExtUtil::RemapVal(v, A, B, C, D)
 	return C + (D - C) * (v - A) / (B - A)
 }
 
-function PopExtUtil::RemapValClamped(v, A, B, C, D)
-{
-	if (A == B)
-	{
+function PopExtUtil::RemapValClamped(v, A, B, C, D) {
+	if (A == B) {
 		if (v >= B)
 			return D
 		return C
@@ -953,8 +864,7 @@ function PopExtUtil::RemapValClamped(v, A, B, C, D)
 	return C + (D - C) * cv
 }
 
-function PopExtUtil::IntersectionPointBox(pos, mins, maxs)
-{
+function PopExtUtil::IntersectionPointBox(pos, mins, maxs) {
 	if (pos.x < mins.x || pos.x > maxs.x ||
 		pos.y < mins.y || pos.y > maxs.y ||
 		pos.z < mins.z || pos.z > maxs.z)
@@ -963,8 +873,7 @@ function PopExtUtil::IntersectionPointBox(pos, mins, maxs)
 	return true
 }
 
-function PopExtUtil::NormalizeAngle(target)
-{
+function PopExtUtil::NormalizeAngle(target) {
 	target %= 360.0
 	if (target > 180.0)
 		target -= 360.0
@@ -973,8 +882,7 @@ function PopExtUtil::NormalizeAngle(target)
 	return target
 }
 
-function PopExtUtil::ApproachAngle(target, value, speed)
-{
+function PopExtUtil::ApproachAngle(target, value, speed) {
 	target = PopExtUtil.NormalizeAngle(target)
 	value = PopExtUtil.NormalizeAngle(value)
 	local delta = PopExtUtil.NormalizeAngle(target - value)
@@ -985,19 +893,16 @@ function PopExtUtil::ApproachAngle(target, value, speed)
 	return target
 }
 
-function PopExtUtil::VectorAngles(forward)
-{
+function PopExtUtil::VectorAngles(forward) {
 	local yaw, pitch
-	if ( forward.y == 0.0 && forward.x == 0.0 )
-	{
+	if ( forward.y == 0.0 && forward.x == 0.0 ) {
 		yaw = 0.0
 		if (forward.z > 0.0)
 			pitch = 270.0
 		else
 			pitch = 90.0
 	}
-	else
-	{
+	else {
 		yaw = (atan2(forward.y, forward.x) * 180.0 / Pi)
 		if (yaw < 0.0)
 			yaw += 360.0
@@ -1009,8 +914,7 @@ function PopExtUtil::VectorAngles(forward)
 	return QAngle(pitch, yaw, 0.0)
 }
 
-function PopExtUtil::AnglesToVector(angles)
-{
+function PopExtUtil::AnglesToVector(angles) {
 	local pitch = angles.x * Pi / 180.0
 	local yaw = angles.y * Pi / 180.0
 	local x = cos(pitch) * cos(yaw)
@@ -1019,21 +923,18 @@ function PopExtUtil::AnglesToVector(angles)
 	return Vector(x, y, z)
 }
 
-function PopExtUtil::QAngleDistance(a, b)
-{
+function PopExtUtil::QAngleDistance(a, b) {
   local dx = a.x - b.x
   local dy = a.y - b.y
   local dz = a.z - b.z
   return sqrt(dx*dx + dy*dy + dz*dz)
 }
 
-function PopExtUtil::CheckBitwise(num)
-{
+function PopExtUtil::CheckBitwise(num) {
 	return (num != 0 && ((num & (num - 1)) == 0))
 }
 
-function PopExtUtil::StopAndPlayMVMSound(player, soundscript, delay)
-{
+function PopExtUtil::StopAndPlayMVMSound(player, soundscript, delay) {
 	player.ValidateScriptScope()
 	local scope = player.GetScriptScope()
 	scope.sound <- soundscript
@@ -1049,19 +950,16 @@ function PopExtUtil::StopAndPlayMVMSound(player, soundscript, delay)
 	EntFireByHandle(player, "RunScriptCode", "self.EmitSound(mvmsound);", delay + 0.015, null, null)
 }
 
-function PopExtUtil::StringReplace(str, findwhat, replace)
-{
+function PopExtUtil::StringReplace(str, findwhat, replace) {
 	local returnstring = ""
 	local findwhatlen  = findwhat.len()
 	local splitlist	   = [];
 	
 	local start = 0
 	local previndex = 0
-	while (start < str.len())
-	{
+	while (start < str.len()) {
 		local index = str.find(findwhat, start)
-		if (index == null)
-		{
+		if (index == null) {
 			if (start < str.len() - 1)
 				splitlist.append(str.slice(start))
 			break
@@ -1073,8 +971,7 @@ function PopExtUtil::StringReplace(str, findwhat, replace)
 		previndex = start
 	}
 	
-	foreach (index, s in splitlist)
-	{
+	foreach (index, s in splitlist) {
 		if (index < splitlist.len() - 1)
 			returnstring += s + replace;
 		else
@@ -1084,20 +981,17 @@ function PopExtUtil::StringReplace(str, findwhat, replace)
 	return returnstring
 }
 
-function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT)
-{
+function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT) {
 	if (player == null || !player.IsPlayer()) return
 	
-	function FindTargetPlayer(passcond)
-	{
+	function FindTargetPlayer(passcond) {
 		local target = null
-		for (local i = 1; i <= MAX_CLIENTS; i++)
-		{
+		for (local i = 1; i <= MAX_CLIENTS; i++) {
 			local potentialtarget = PlayerInstanceFromIndex(i)
 			if (potentialtarget == null || potentialtarget == player) continue
 
 			if (passcond(potentialtarget))
-			{
+ {
 				target = potentialtarget
 				break
 			}
@@ -1105,8 +999,7 @@ function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_
 		return target
 	}
 	
-	if (target == null)
-	{
+	if (target == null) {
 		// Find disguise target
 		target = FindTargetPlayer(@(p) p.GetTeam() == tfteam && p.GetPlayerClass() == tfclass)
 		// Couldn't find any targets of tfclass, look for any class this time
@@ -1115,8 +1008,7 @@ function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_
 	}
 	
 	// Disguise as this player
-	if (target != null)
-	{
+	if (target != null) {
 		SetPropInt(player, "m_Shared.m_nDisguiseTeam", target.GetTeam())
 		SetPropInt(player, "m_Shared.m_nDisguiseClass", target.GetPlayerClass())
 		SetPropInt(player, "m_Shared.m_iDisguiseHealth", target.GetHealth())
@@ -1125,8 +1017,7 @@ function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_
 		//SetPropEntity(player, "m_Shared.m_hDisguiseWeapon", target.GetActiveWeapon())
 	}
 	// No valid targets, just give us a generic disguise
-	else
-	{
+	else {
 		SetPropInt(player, "m_Shared.m_nDisguiseTeam", tfteam)
 		SetPropInt(player, "m_Shared.m_nDisguiseClass", tfclass)		
 	}
