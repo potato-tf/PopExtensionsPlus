@@ -6,6 +6,7 @@ function Include(path)
 }
 
 Include("constants.nut");
+Include("itemdef_constants.nut");
 Include("util.nut");
 Include("hooks.nut");
 Include("popextensions.nut");
