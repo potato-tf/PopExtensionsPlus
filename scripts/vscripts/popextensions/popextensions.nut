@@ -1,9 +1,9 @@
 // ::popExtensionsVersion <- 6; //don't bother with versioning for now since we're constantly updating it
 local root = getroottable()
 
-popExtEntity <- Entities.FindByName(null, "_popextensions_hooks")
+popExtEntity <- FindByName(null, "_popextensions")
 if (popExtEntity == null) {
-	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popextensions_hooks", vscripts = "popextensions/hooks" })
+	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popextensions" })
 }
 
 popExtEntity.ValidateScriptScope()
@@ -20,7 +20,7 @@ PrecacheModel("models/weapons/w_models/w_rocket.mdl")
 
 function PopExtScope::AddRobotTag(tag, table) {
 	if (!popExtThinkFuncSet) {
-		AddThinkToEnt(popExtEntity, "PopulatorThink")
+		AddThinkToEnt(popExtEntity, "PopHooksScope.PopulatorThink")
 		popExtThinkFuncSet = true
 	}
 	PopExtScope.robotTags[tag] <- table
@@ -28,7 +28,7 @@ function PopExtScope::AddRobotTag(tag, table) {
 
 function PopExtScope::AddTankName(name, table) {
 	if (!popExtThinkFuncSet) {
-		AddThinkToEnt(popExtEntity, "PopulatorThink")
+		AddThinkToEnt(popExtEntity, "PopHooksScope.PopulatorThink")
 		popExtThinkFuncSet = true
 	}
 
@@ -120,7 +120,7 @@ function PopExtScope::SetWaveIconsFunction(func) {
 ::MVM_CLASS_FLAG_SUPPORT_LIMITED <- 1 << 5 // Support limited flag. Game uses it together with support flag
 
 
-local resource = Entities.FindByClassname(null, "tf_objective_resource")
+local resource = FindByClassname(null, "tf_objective_resource")
 
 // Get wavebar spawn count of an icon with specified name and flags
 function PopExtScope::GetWaveIconSpawnCount(name, flags) {
