@@ -21,6 +21,9 @@ foreach(k, v in ::Entities.getclass())
 	if (k != "IsValid" && !(k in ROOT))
 		ROOT[k] <- ::Entities[k].bindenv(::Entities)
 
+foreach(k, v in ::EntityOutputs.getclass())
+	if (k != "IsValid" && !(k in ROOT))
+		ROOT[k] <- ::EntityOutputs[k].bindenv(::EntityOutputs)
 
 // String constants are apparently significantly faster than raw strings
 const THINK_ADDED = "THINKADDED_"
