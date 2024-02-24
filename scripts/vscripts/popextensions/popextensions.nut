@@ -110,16 +110,6 @@ function PopExtScope::SetWaveIconsFunction(func) {
 	func()
 }
 
-// Flags for wavebar functions below
-::MVM_CLASS_FLAG_NONE            <- 0
-::MVM_CLASS_FLAG_NORMAL          <- 1 << 0 // Non support or mission icon
-::MVM_CLASS_FLAG_SUPPORT         <- 1 << 1 // Support icon flag. Mission icon does not have this flag
-::MVM_CLASS_FLAG_MISSION         <- 1 << 2 // Mission icon flag. Support icon does not have this flag
-::MVM_CLASS_FLAG_MINIBOSS        <- 1 << 3 // Giant icon flag. Support and mission icons do not display red background when set
-::MVM_CLASS_FLAG_ALWAYSCRIT      <- 1 << 4 // Crit icon flag. Support and mission icons do not display crit outline when set
-::MVM_CLASS_FLAG_SUPPORT_LIMITED <- 1 << 5 // Support limited flag. Game uses it together with support flag
-
-
 local resource = FindByClassname(null, "tf_objective_resource")
 
 // Get wavebar spawn count of an icon with specified name and flags
