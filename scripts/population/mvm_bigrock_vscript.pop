@@ -17,13 +17,16 @@ WaveSchedule
 		InitialCooldown 0
 		Where spawnbot
 		BeginAtWave 1
-		RunForThisManyWaves 4
-		CooldownTime 10
+		RunForThisManyWaves 1
+		CooldownTime 1
 		DesiredCount 1
 
 		TFBot
 		{
-			Template T_TFBot_Engineer_Sentry_Teleporter
+			// Template T_TFBot_Engineer_Sentry_Teleporter
+			Template T_TFBot_Engineer_Sentry_Tele_Battle
+			Tag "popext_dispenseroverride"
+			// Attributes AlwaysFireWeapon
 		}
 	}
 	Wave
@@ -46,7 +49,22 @@ WaveSchedule
 				MissionAttr(`ForceHoliday`, 8)
 				MissionAttr(`NoRome`, 2)
 				MissionAttr(`WaveStartCountdown`, 5)
-				MissionAttr(`PlayersAreRobots`, 2|4|8) //can also pre-combine into 14
+				MissionAttr(`PlayersAreRobots`, 2|4|8|16) //can also pre-combine
+				MissionAttr(`StandableHeads`, 1)
+				MissionAttr(`PlayerAttributes`, {
+					[TF_CLASS_SCOUT] = {
+						`damage bonus` : 5,
+						`fire rate penalty` : 2,
+						`max health additive bonus` : 100,
+					},
+					[TF_CLASS_SOLDIER] = {
+						`damage penalty` : 0.5,
+						`fire rate bonus` : 0.5,
+					},
+					[TF_CLASS_DEMOMAN] = {
+						`fire rate bonus` : 0.5,
+					},
+				});
 
 				Info(`This is an explanation text example|PAUSE 2|Explanation text can support pauses, and optionally syncing chat prints with the game_text|By default, text lifetime is determined by the length of the sentence|See PopExtUtil::Explanation in util.nut for more info`, `FFFF66`, `Explanation: `, true)
 
@@ -124,9 +142,9 @@ WaveSchedule
 
 			Name "Wave1"
 			Where spawnbot
-			TotalCount 19
-			MaxActive 19
-			SpawnCount 19
+			TotalCount 1
+			MaxActive 1
+			SpawnCount 1
 			WaitBeforeStarting 1
 			WaitBetweenSpawns 5
 			TotalCurrency 200
@@ -138,10 +156,18 @@ WaveSchedule
 				Tag "popext_usebestweapon"
 				Tag "popext_giveweapon|tf_weapon_shotgun_soldier|425" //family business
 				Tag "popext_homingprojectile|1.0|1.0"
-				Class Soldier
+				Tag "popext_improvedairblast"
+				Class Pyro
+				Skill Expert
 				WeaponRestrictions PrimaryOnly
 			}
+			// TFBot
+			// {
+			// 	Template T_TFBot_Giant_Soldier
+			// 	Attributes IgnoreEnemies
+			// }
 		}
+		
 	}
 	Wave
 	{
@@ -155,7 +181,7 @@ WaveSchedule
 				EntFire(`wave_init_relay`, `Trigger`)
 
 				// Load popextensions script
-				IncludeScript(`popextensions`)
+				IncludeScript(`popextensions_main`)
 
 				// ALERT! The function below will crash linux servers, remove if the mission is played on them
 				// Add custom tank icon, uses crit outline and white background
