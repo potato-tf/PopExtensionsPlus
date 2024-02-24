@@ -198,25 +198,25 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	// =========================================================
 
-    case "MultiSapper":
-        function MissionAttributes::MultiSapper(params)
-        {
-            local player = GetPlayerFromUserID(params.userid)
-            function MultiSapper(params)
-            {
-                printl("sapper")
-                if (player.IsBotOfType(1337) || params.object != OBJ_ATTACHMENT_SAPPER) return
-                local sapper = EntIndexToHScript(params.index)
-                SetPropBool(sapper, "m_bDisposableBuilding", true)
-                local flags = GetPropInt(sapper, "m_fObjectFlags")
-                printl(flags)
-                SetPropInt(sapper, "m_fObjectFlags", flags | OF_ALLOW_REPEAT_PLACEMENT)
-                printl(flags)
-            }
-            player.GetScriptScope().BuiltObjectTable.MultiSapper <- MultiSapper
-        }
-        MissionAttributes.SpawnHookTable.MultiSapper <- MissionAttributes.MultiSapper
-    break;
+	case "MultiSapper":
+		function MissionAttributes::MultiSapper(params)
+		{
+			local player = GetPlayerFromUserID(params.userid)
+			function MultiSapper(params)
+			{
+				printl("sapper")
+				if (player.IsBotOfType(1337) || params.object != OBJ_ATTACHMENT_SAPPER) return
+				local sapper = EntIndexToHScript(params.index)
+				SetPropBool(sapper, "m_bDisposableBuilding", true)
+				local flags = GetPropInt(sapper, "m_fObjectFlags")
+				printl(flags)
+				SetPropInt(sapper, "m_fObjectFlags", flags | OF_ALLOW_REPEAT_PLACEMENT)
+				printl(flags)
+			}
+			player.GetScriptScope().BuiltObjectTable.MultiSapper <- MultiSapper
+		}
+		MissionAttributes.SpawnHookTable.MultiSapper <- MissionAttributes.MultiSapper
+	break;
 	
 	// =========================================================
 
