@@ -2,21 +2,21 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 
 //max ammo values
 ::popExtensionsMaxAmmo <- {
-    scout = [32, 36],
-    sniper = [25, 75],
-    soldier = [20, 32],
-    demo = [16, 24],
-    medic = [150, -1],
-    heavy = [200, 32],
-    pyro = [200, 32],
-    spy = [32, -1],
-    engineer = [32, 200]
+	scout = [32, 36],
+	sniper = [25, 75],
+	soldier = [20, 32],
+	demo = [16, 24],
+	medic = [150, -1],
+	heavy = [200, 32],
+	pyro = [200, 32],
+	spy = [32, -1],
+	engineer = [32, 200]
 }
 ::ChangePlayerTeamMvM <- function(player, teamnum = 3)
 {
-    SetPropBool(FindByClassname(null, "tf_gamerules"), "m_bPlayingMannVsMachine", false);
-    player.ForceChangeTeam(teamnum, false);
-    SetPropBool(FindByClassname(null, "tf_gamerules"), "m_bPlayingMannVsMachine", true);
+	SetPropBool(FindByClassname(null, "tf_gamerules"), "m_bPlayingMannVsMachine", false);
+	player.ForceChangeTeam(teamnum, false);
+	SetPropBool(FindByClassname(null, "tf_gamerules"), "m_bPlayingMannVsMachine", true);
 }
 
 //set the sequences and max ammo values for the player's current loadout to deal with reloading
@@ -39,34 +39,34 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 
 ::SetReserveAmmo <- function(wep, amount = 999, slot = -1, nounderflow = true)
 {
-    //allow for just passing a single player variable to set primary + secondary reserve ammo to 999
-    if (wep != null && wep.IsPlayer() && slot == -1)
-    {
-        if (nounderflow && amount < 0) amount = 0;
-        SetPropIntArray(wep, "m_iAmmo", amount, SLOT_PRIMARY);
-        SetPropIntArray(wep, "m_iAmmo", amount, SLOT_SECONDARY);
-        return;
-    }
+	//allow for just passing a single player variable to set primary + secondary reserve ammo to 999
+	if (wep != null && wep.IsPlayer() && slot == -1)
+	{
+		if (nounderflow && amount < 0) amount = 0;
+		SetPropIntArray(wep, "m_iAmmo", amount, SLOT_PRIMARY);
+		SetPropIntArray(wep, "m_iAmmo", amount, SLOT_SECONDARY);
+		return;
+	}
 
-    local player;
-    if (wep == null) return;
-    if (wep.IsPlayer())
-        { player = wep; wep = wep.GetActiveWeapon() }
-    else
-        player = wep.GetOwner();
+	local player;
+	if (wep == null) return;
+	if (wep.IsPlayer())
+		{ player = wep; wep = wep.GetActiveWeapon() }
+	else
+		player = wep.GetOwner();
 
-    if (wep == null) return;
+	if (wep == null) return;
 
-    if (slot == -1) slot = wep.GetSlot();
+	if (slot == -1) slot = wep.GetSlot();
 
-    if (nounderflow && amount < 0) amount = 0;
+	if (nounderflow && amount < 0) amount = 0;
 
-    SetPropIntArray(player, "m_iAmmo", amount, slot+1);
+	SetPropIntArray(player, "m_iAmmo", amount, slot+1);
 }
 
 ::GivePackReverse <- function(player, pack)
 {
-    if (GetPropInt(pack, "m_fEffects") == EF_NODRAW || player.GetTeam() != TF_TEAM_PVE_INVADERS) return;
+	if (GetPropInt(pack, "m_fEffects") == EF_NODRAW || player.GetTeam() != TF_TEAM_PVE_INVADERS) return;
 
 	local classname = pack.GetClassname();
 	local refill = false;
@@ -77,32 +77,32 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 		local wep = player.GetActiveWeapon();
 		local scope = player.GetScriptScope();
 
-        switch(player.GetPlayerClass())
-        {
-            case 1: //TF_CLASS_SCOUT
-            if (NetProps.GetPropEntityArray(self, "m_hMyWeapons", 1).GetClassname() == "tf_weapon_jar_milk" || NetProps.GetPropEntityArray(self, "m_hMyWeapons", 1).GetClassname() == "tf_weapon_cleaver")
-                scope.maxammo.scout[1] = -1
-            case 3: //TF_CLASS_SOLDIER
-            if (GetPropInt(NetProps.GetPropEntityArray(self, "m_hMyWeapons", 0), "m_AttributeManager.m_Item.m_iItemDefinitionIndex") == 237)
-                scope.maxammo.soldier[0] *= 3
-            break
+		switch(player.GetPlayerClass())
+		{
+			case 1: //TF_CLASS_SCOUT
+			if (NetProps.GetPropEntityArray(self, "m_hMyWeapons", 1).GetClassname() == "tf_weapon_jar_milk" || NetProps.GetPropEntityArray(self, "m_hMyWeapons", 1).GetClassname() == "tf_weapon_cleaver")
+				scope.maxammo.scout[1] = -1
+			case 3: //TF_CLASS_SOLDIER
+			if (GetPropInt(NetProps.GetPropEntityArray(self, "m_hMyWeapons", 0), "m_AttributeManager.m_Item.m_iItemDefinitionIndex") == 237)
+				scope.maxammo.soldier[0] *= 3
+			break
 
-            case 4: //TF_CLASS_DEMOMAN
+			case 4: //TF_CLASS_DEMOMAN
 
-            if (GetPropInt(NetProps.GetPropEntityArray(self, "m_hMyWeapons", 1), "m_AttributeManager.m_Item.m_iItemDefinitionIndex") == 130) //scotres index
-                scope.maxammo.demo[1] *= 1.5
-            break
+			if (GetPropInt(NetProps.GetPropEntityArray(self, "m_hMyWeapons", 1), "m_AttributeManager.m_Item.m_iItemDefinitionIndex") == 130) //scotres index
+				scope.maxammo.demo[1] *= 1.5
+			break
 
-            case 5: //TF_CLASS_MEDIC
-            if (NetProps.GetPropEntityArray(self, "m_hMyWeapons", 0).GetClassname() == "tf_weapon_crossbow")
-                scope.maxammo.medic[0] *= 0.25
-            break
+			case 5: //TF_CLASS_MEDIC
+			if (NetProps.GetPropEntityArray(self, "m_hMyWeapons", 0).GetClassname() == "tf_weapon_crossbow")
+				scope.maxammo.medic[0] *= 0.25
+			break
 
-            case 7: //TF_CLASS_PYRO
-            if (NetProps.GetPropEntityArray(self, "m_hMyWeapons", 0).GetClassname() == "tf_weapon_flaregun")
-                scope.maxammo.pyro[1] *= 0.5
-            break
-        }
+			case 7: //TF_CLASS_PYRO
+			if (NetProps.GetPropEntityArray(self, "m_hMyWeapons", 0).GetClassname() == "tf_weapon_flaregun")
+				scope.maxammo.pyro[1] *= 0.5
+			break
+		}
 		//engi metal
 		if (player.GetPlayerClass() == TF_CLASS_ENGINEER) ammo.append(scope.maxmetal);
 
@@ -226,8 +226,8 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 		// block reloading if our reserve is less than our current clip
 		// if (ammoslot <= activegun.Clip1())
 		// {
-		// 	activegun.AddAttribute("reload time increased hidden", INT_MAX, -1);
-		// 	activegun.ReapplyProvision();
+		//	activegun.AddAttribute("reload time increased hidden", INT_MAX, -1);
+		//	activegun.ReapplyProvision();
 		// }
 
 		//firing speed changes

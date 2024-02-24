@@ -114,20 +114,20 @@ class AI_Bot
 	}
 	function CheckForProjectileThreat()
 	{
-        local projectile
-        while ((projectile = FindByClassname(projectile, STR_PROJECTILES)) != null)
-        {
+		local projectile
+		while ((projectile = FindByClassname(projectile, STR_PROJECTILES)) != null)
+		{
 			if (projectile.GetTeam() == team || !IsValidProjectile(projectile))
-                continue
+				continue
 
-            local dist = GetThreatDistanceSqr(projectile)
-            if (dist <= 67000 && IsVisible(projectile)) //67700
-            {
+			local dist = GetThreatDistanceSqr(projectile)
+			if (dist <= 67000 && IsVisible(projectile)) //67700
+			{
 				switch (botLevel) {
 					case 1: // Basic Airblast, only deflect if in FOV
 
 						if (!IsInFieldOfView(projectile))
-						    return
+							return
 						break
 					case 2: // Advanced Airblast, deflect regardless of FOV
 
@@ -135,17 +135,17 @@ class AI_Bot
 						break
 					case 3: // Expert Airblast, deflect regardless of FOV back to Sender
 
-                        local owner = projectile.GetOwner()
-                        if (owner != null)
-                        {
+						local owner = projectile.GetOwner()
+						if (owner != null)
+						{
 							local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
-                            LookAt(owner_head, 9999, 9999)
-                        }
+							LookAt(owner_head, 9999, 9999)
+						}
 						break
 				}
 				bot.PressAltFireButton(0.0)
-            }
-        }
+			}
+		}
 	}
 	function LookAt(target_pos, min_rate, max_rate)
 	{
@@ -172,7 +172,7 @@ class AI_Bot
 
 		bot.SnapEyeAngles(cur_eye_ang)
 	}
-    //260 Hammer Units or 67700 SQR
+	//260 Hammer Units or 67700 SQR
 	function FireWeapon()
 	{
 		if (cur_melee)
@@ -264,7 +264,7 @@ class AI_Bot
 		cur_eye_fwd = cur_eye_ang.Forward()
 		time = PopExtUtil.Global_Time
 
-        foreach (_, func in scope.ThinkTable) func()
+		foreach (_, func in scope.ThinkTable) func()
 
 		//SwitchToBestWeapon()
 		//DrawDebugInfo()
@@ -277,7 +277,7 @@ class AI_Bot
 	team				= null
 	time				= null
 
-    botLevel            = null
+	botLevel			= null
 
 	cur_pos				= null
 	cur_vel				= null

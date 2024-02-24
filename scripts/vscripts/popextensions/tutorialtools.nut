@@ -36,10 +36,10 @@ function Clamp360Angle(ang)
 
 function DisableViewcontrolSafe(player, viewcontrol)
 {
-        EntFireByHandle(player, "RunScriptCode", "self.GetScriptScope().__ls<-GetPropInt(self,`m_lifeState`);SetPropInt(self,`m_lifeState`,0)", -1, player, player);
-        EntFireByHandle(viewcontrol, "RunScriptCode", "SetPropEntity(self, `m_hPlayer`, activator)", -1, player, player);
-        EntFireByHandle(viewcontrol, "Disable", null, -1, player, player);
-        EntFireByHandle(player, "RunScriptCode", "SetPropInt(self,`m_lifeState`,self.GetScriptScope().__ls);SetPropInt(self,`m_takedamage`,2)", -1, player, player);    
+		EntFireByHandle(player, "RunScriptCode", "self.GetScriptScope().__ls<-GetPropInt(self,`m_lifeState`);SetPropInt(self,`m_lifeState`,0)", -1, player, player);
+		EntFireByHandle(viewcontrol, "RunScriptCode", "SetPropEntity(self, `m_hPlayer`, activator)", -1, player, player);
+		EntFireByHandle(viewcontrol, "Disable", null, -1, player, player);
+		EntFireByHandle(player, "RunScriptCode", "SetPropInt(self,`m_lifeState`,self.GetScriptScope().__ls);SetPropInt(self,`m_takedamage`,2)", -1, player, player);	
 }
 
 ::PLAYING_VIEWCONTROL <- false;
@@ -87,7 +87,7 @@ function DisableViewcontrolSafe(player, viewcontrol)
 			ScreenFade(player, 20, 20, 20, 255, 0.5, 0.5, 1);
 			EmitSoundEx({
 				sound_name = "replay/exitperformancemode.wav",
-				entity     = player,
+				entity	   = player,
 			});
 			player.RemoveCond(TF_COND_TAUNTING);
 			player.AddCustomAttribute("move speed penalty", 1, -1);
@@ -115,7 +115,7 @@ function DisableViewcontrolSafe(player, viewcontrol)
 		ScreenFade(player, 20, 20, 20, 255, 0.5, 0.5, 1);
 		EmitSoundEx({
 			sound_name = "replay/enterperformancemode.wav",
-			entity     = player,
+			entity	   = player,
 		});
 		player.AddCustomAttribute("move speed penalty", 0.01, -1);
 		
@@ -127,7 +127,7 @@ function DisableViewcontrolSafe(player, viewcontrol)
 	local start_time  = Time();
 	local prev_origin = keyframes[0][1];
 	local prev_angles = keyframes[0][2];
-	local keyframe    = 1;
+	local keyframe	  = 1;
 	
 	camera.SetAbsOrigin(prev_origin);
 	camera.SetAbsAngles(prev_angles);
@@ -165,10 +165,10 @@ function DisableViewcontrolSafe(player, viewcontrol)
 		}
 		
 		local t = keyframes[keyframe];
-		local current_time    = Time();
-		local next_time       = t[0];
-		local next_origin     = t[1];
-		local next_angles     = Clamp360Angle(t[2]);
+		local current_time	  = Time();
+		local next_time		  = t[0];
+		local next_origin	  = t[1];
+		local next_angles	  = Clamp360Angle(t[2]);
 		
 		local should_teleport = (keyframes[keyframe].len() > 3) ? t[3] : false;
 
@@ -187,8 +187,8 @@ function DisableViewcontrolSafe(player, viewcontrol)
 		// We're done with this keyframe
 		if (ticks_left <= 0)
 		{
-			keyframe    = keyframe + 1;
-			start_time  = Time();
+			keyframe	= keyframe + 1;
+			start_time	= Time();
 			prev_origin = next_origin;
 			prev_angles = next_angles;
 			return -1;
@@ -196,12 +196,12 @@ function DisableViewcontrolSafe(player, viewcontrol)
 		
 		// Increment our position and angles based on the total time the keyframe should take
 		local pos_vector  = next_origin - self.GetOrigin();
-		local ang         = Clamp360Angle(self.GetAbsAngles());
+		local ang		  = Clamp360Angle(self.GetAbsAngles());
 		local ang_vector  = QAngle(next_angles.x - ang.x, next_angles.y - ang.y, next_angles.z - ang.z);
-		local incr_pos    = Vector(pos_vector.x / ticks_left, pos_vector.y / ticks_left, pos_vector.z / ticks_left);
-		local incr_ang    = QAngle(ang_vector.x / ticks_left, ang_vector.y / ticks_left, ang_vector.z / ticks_left);
+		local incr_pos	  = Vector(pos_vector.x / ticks_left, pos_vector.y / ticks_left, pos_vector.z / ticks_left);
+		local incr_ang	  = QAngle(ang_vector.x / ticks_left, ang_vector.y / ticks_left, ang_vector.z / ticks_left);
 		
-		self.SetAbsOrigin(self.GetOrigin()    + incr_pos);
+		self.SetAbsOrigin(self.GetOrigin()	  + incr_pos);
 		self.SetAbsAngles(self.GetAbsAngles() + incr_ang);
 		
 		return -1;
@@ -213,7 +213,7 @@ function DisableViewcontrolSafe(player, viewcontrol)
 }
 
 local keyframes = [
-	[ 0.0, Vector(400, -2500, 640),  QAngle(0, 120, 0), ],
+	[ 0.0, Vector(400, -2500, 640),	 QAngle(0, 120, 0), ],
 	[ 8.0, Vector(-900, -300, 640), QAngle(0, 90, 0), ], // set this to QAngle(-10, 90, 0) to view bad rotations
 	[ 2.0, Vector(0, 1800, 480), QAngle(0, 90, 0), true ],
 	[ 4.0, Vector(0, 3000, 480), QAngle(0, 90, 0) ],
