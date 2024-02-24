@@ -34,7 +34,7 @@
 			local scope = player.GetScriptScope()
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
-			if (player.GetPlayerClass() < TF_CLASS_SPY && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
+			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
 			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
 			scope.PlayerThinks <- PlayerThinks
