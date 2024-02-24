@@ -477,7 +477,6 @@ function PopExtUtil::PlayerRobotModel(player, model)
 {
     player.ValidateScriptScope()
     local scope = player.GetScriptScope()
-    scope.parentedmodel <- false
 
     local wearable = CreateByClassname("tf_wearable")
     SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
@@ -497,12 +496,8 @@ function PopExtUtil::PlayerRobotModel(player, model)
 
     function PopExtUtil::BotModelThink()
     {
-		if (wearable && wearable.GetMoveParent() != player)
-        {
-            // EntFireByHandle(wearable, "SetParent", "", -1, null, null)
-            EntFireByHandle(wearable, "SetParent", "!activator", 0.015, self, self)
-        }
-        parentedmodel = false
+        if (wearable && (player.IsTaunting() || wearable.GetMoveParent() != player))
+            EntFireByHandle(wearable, "SetParent", "!activator", -1, self, self)
         return -1
     }
     if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
