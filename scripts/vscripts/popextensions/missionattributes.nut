@@ -124,7 +124,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			holiday_type = value
 		});
 
-	break;
+	break
 
 	// ========================================================
 
