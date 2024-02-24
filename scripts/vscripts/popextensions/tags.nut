@@ -62,6 +62,76 @@ local popext_funcs =
 
         }
     }
+    //doesn't work, engi buildings are not spawned this way
+    popext_dispenseroverride = function(bot, args)
+    {
+        if (args.len() == 0) args.append(1)
+        // printl(args)
+        function DispenserBuildOverride(params)
+        {
+            if ((args[0].tointeger() == 1 && params.object == 2) || (args[0].tointeger() == 2 && params.object == 1))
+            {
+                if (params.object == 2) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
+
+                bot.AddCustomAttribute("upgrade rate decrease", 8, -1)
+                local building = EntIndexToHScript(params.index)
+                local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 200)
+    
+                if (!hint) 
+                {
+                    building.Kill()
+                    return
+                }
+    
+                //hide the building
+                building.SetModelScale(0.01, 0.0)
+                SetPropInt(building, "m_nRenderMode", kRenderTransColor)
+                SetPropInt(building, "m_clrRender", 0)
+                building.SetHealth(999999)
+                building.SetSolid(SOLID_NONE)
+    
+                PopExtUtil.SetTargetname(building, format("building%d", building.entindex()))
+    
+                //create a dispenser
+                local dispenser = CreateByClassname("obj_dispenser")
+    
+                SetPropEntity(dispenser, "m_hBuilder", bot)
+    
+                PopExtUtil.SetTargetname(dispenser, format("dispenser%d", dispenser.entindex()))
+
+                dispenser.SetTeam(bot.GetTeam())
+                dispenser.SetSkin(bot.GetSkin())
+                
+                dispenser.DispatchSpawn()
+                
+                //post-spawn stuff
+                // SetPropBool(dispenser, "m_bPlacing", true)
+    
+                local builder = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
+    
+                SetPropInt(builder, "m_iObjectType", 0)
+                SetPropInt(builder, "m_iBuildState", 2)
+                SetPropEntity(builder, "m_hObjectBeingBuilt", dispenser) //makes dispenser a null reference
+                
+                bot.Weapon_Switch(builder)
+                builder.PrimaryAttack()
+                
+                //m_hObjectBeingBuilt messes with our dispenser reference, do radius check to grab it again
+                for (local d; d = FindByClassnameWithin(d, "obj_dispenser", building.GetOrigin(), 128);)
+                    if (GetPropEntity(d, "m_hBuilder") == bot)
+                        dispenser = d
+    
+                dispenser.SetLocalOrigin(building.GetLocalOrigin())
+                dispenser.SetLocalAngles(building.GetLocalAngles())
+                
+                AddOutput(dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1) //kill it to avoid showing up in killfeed
+                AddOutput(building, "OnDestroyed", dispenser.GetName(), "Destroy", "", -1, -1) //always destroy the dispenser
+                printl(building)
+                EntFireByHandle(building, "Disable", "", 10.6, null, null)
+            }
+        }
+        bot.GetScriptScope().BuiltObjectTable.DispenserBuildOverride <- DispenserBuildOverride
+    }
 
     //this is a very simple method for giving bots weapons.
     popext_giveweapon = function(bot, args)
@@ -453,7 +523,7 @@ local popext_funcs =
 // local tagtest = "popext_usebestweapon"
 //local tagtest = "popext_homingprojectile|1.0|1.0"
 // local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
-local tagtest = "popext_improvedairblast"
+local tagtest = "popext_dispenseroverride"
 
 ::AI_BotSpawn <- function(bot)
 {
@@ -500,58 +570,27 @@ local tagtest = "popext_improvedairblast"
             DeathHookTable = {}
 		}
         foreach (k,v in items) if (!(k in scope)) scope[k] <- v
+
+        if (bot.GetPlayerClass() == TF_CLASS_SPY || bot.GetPlayerClass() == TF_CLASS_ENGINEER)
+        scope.BuiltObjectTable <- {}
+
         EntFireByHandle(bot, "RunScriptCode", "AI_BotSpawn(self)", -1, null, null)
     }
     function OnScriptHook_OnTakeDamage(params)
     {
-        local attacker_scope = params.attacker.GetScriptScope()
+        local scope = params.attacker.GetScriptScope()
 
-        if (!("TakeDamageTable" in attacker_scope)) return
+        if (!("TakeDamageTable" in scope)) return
 
-        foreach (_, func in attacker_scope.TakeDamageTable)
-            func(params)
+        foreach (_, func in scope.TakeDamageTable) func(params)
     }
     function OnGameEvent_player_builtobject(params)
     {
-        local bot = GetPlayerFromUserID(params.userid)
-        if (!bot.IsBotOfType(1337)) return
+        local scope = GetPlayerFromUserID(params.userid).GetScriptScope()
 
-        //EntFireByHandle(building, "RunScriptCode", "ClientPrint(null, 3, `` + self.GetSequence())", 0.5, null, null)
-        if ((bot.HasBotTag("popext_dispenserasteleporter") && params.object == 1) || (bot.HasBotTag("popext_dispenserassentry") && params.object == 2))
-        {
-            local building = EntIndexToHScript(params.index)
-            local hint =  GetPropEntity(building, "m_hOwnerEntity")
-            
-            building.SetModelScale(0.01, 0.0)
-            building.SetHealth(999999)
-            PopExtUtil.SetTargetname(building, format("building%d"+building.entindex()))
-            EntFireByHandle(building, "Disable", "", -1, null, null)
+        if (!("BuiltObjectTable" in scope)) return
 
-            local dispenser = CreateByClassname("obj_dispenser")
-
-            SetPropEntity(dispenser, "m_hBuilder", bot)
-            SetPropEntity(dispenser, "m_hOwnerEntity", hint)
-            SetPropInt(dispenser, "m_nDefaultUpgradeLevel", 2)
-            SetPropInt(dispenser, "m_iHealth", 1)
-
-            dispenser.SetHealth(1)
-            PopExtUtil.SetTargetname(dispenser, format("dispenser%d"+dispenser.entindex()))
-
-            dispenser.DispatchSpawn()
-            dispenser.SetTeam(bot.GetTeam())
-            dispenser.SetSkin(1)
-            SetPropBool(dispenser, "m_bBuilding", true)
-            SetPropBool(dispenser, "m_bPlacing", false)
-            SetPropFloat(dispenser, "m_flPercentageConstructed", 0.0)
-            
-            
-            dispenser.SetOrigin(building.GetLocalOrigin())
-            dispenser.SetAbsAngles(building.GetLocalAngles())
-            dispenser.ResetSequence(1)
-            
-            EntityOutputs.AddOutput(dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1)
-            EntityOutputs.AddOutput(building, "OnDestroyed", dispenser.GetName(), "Kill", "", -1, -1)
-        }
+        foreach (_, func in scope.BuiltObjectTable) func(params)
     }
 
     function OnGameEvent_player_team(params)
