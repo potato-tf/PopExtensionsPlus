@@ -13,7 +13,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			if ( victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB && attacker != null && !attacker.IsBotOfType(1337) ) {
 				attacker.GetScriptScope().stabvictim <- victim
-				EntFireByHandle(attacker, "RunScriptCode", "PopExtUtil.SilentDisguise(self, stabvictim);", -1, null, null)
+				EntFireByHandle(attacker, "RunScriptCode", "PopExtUtil.SilentDisguise(self, stabvictim)", -1, null, null)
 			}
 		}
 
@@ -38,8 +38,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		}
 		/*
 		function HuntsmanDamageBonusFix(params) {
-			local wep       = params.weapon;
-			local classname = GetPropString(wep, "m_iClassname");
+			local wep       = params.weapon
+			local classname = GetPropString(wep, "m_iClassname")
 			if (classname != "tf_weapon_compound_bow") return
 
 			local mod = wep.GetAttribute("damage bonus", 1.0)
@@ -50,7 +50,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 		function HolidayPunchFix(params) {
 			local wep   = params.weapon
-			local index = PopExtUtil.GetItemIndex(wep);
+			local index = PopExtUtil.GetItemIndex(wep)
 			if (index != 656 || !(params.damage_type & DMG_ACID)) return
 
 			local victim = params.const_entity
@@ -91,12 +91,12 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 						SetPropInt(self, "m_clrRender", 0xFFFFFF)
 						SetPropInt(self, "m_nRenderMode", 0)
-						self.SetCustomModelWithClassAnimations(botmodel);
+						self.SetCustomModelWithClassAnimations(botmodel)
 
 						SetPropString(self, "m_iszScriptThinkFunction", "")
 					}
 
-					return -1;
+					return -1
 				}
 				AddThinkToEnt(victim, "Think")
 			}
@@ -188,6 +188,6 @@ function GlobalFixesThink() {
 	return -1
 }
 
-GlobalFixesEntity.ValidateScriptScope();
+GlobalFixesEntity.ValidateScriptScope()
 GlobalFixesEntity.GetScriptScope().GlobalFixesThink <- GlobalFixesThink
 AddThinkToEnt(GlobalFixesEntity, "GlobalFixesThink")

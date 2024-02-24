@@ -437,7 +437,7 @@ const MAXAMMO_BASE_SPY_PRIMARY = 24
 
 //random useful constants
 const FLT_SMALL = 0.0000001
-const FLT_MIN = 1.175494e-38
-const FLT_MAX = 3.402823466e+38
-const INT_MIN = -2147483648
-const INT_MAX = 2147483647
+const FLT_MIN   = 1.175494e-38
+const FLT_MAX   = 3.402823466e+38
+const INT_MIN   = -2147483648
+const INT_MAX   = 2147483647
