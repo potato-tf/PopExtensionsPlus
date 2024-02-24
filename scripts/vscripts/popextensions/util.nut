@@ -62,7 +62,7 @@
         THINKADDED_tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
         THINKADDED_tf_projectile_lightningorb		= 1 // Lightning Orb Spell
         THINKADDED_tf_projectile_mechanicalarmorb	= 1 // Short Circuit
-        THINKADDED_tf_projectile_rocket			= 1
+        THINKADDED_tf_projectile_rocket			    = 1
         THINKADDED_tf_projectile_sentryrocket		= 1
         THINKADDED_tf_projectile_spellfireball		= 1
         THINKADDED_tf_projectile_energy_ring		= 1 // Bison
@@ -105,7 +105,7 @@
 
             }
 
-            foreach (k, v in scope.MyWeaponsArray) printl(k + " : " +  v)
+            foreach (k, v in scope.MyWeaponsArray)
             if (player.IsBotOfType(1337)) return
     
             if (PopExtUtil.PlayerArray.find(player) == null) PopExtUtil.PlayerArray.append(player)
@@ -482,7 +482,7 @@ function PopExtUtil::PlayerRobotModel(player, model)
     SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
     SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model))
     SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
-    SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+    SetPropBool(wearable, STRING_NETPROP_ITEMDEF, true) 
     SetPropEntity(wearable, "m_hOwnerEntity", player)
     wearable.SetTeam(player.GetTeam())
     wearable.SetOwner(player)
@@ -575,6 +575,17 @@ function PopExtUtil::GetEntityColor(entity)
     clr.b <- (color >> 16) & 0xFF
     clr.a <- (color >> 24) & 0xFF
     return clr
+}
+
+function PopExtUtil::AddAttributeToLoadout(player, attribute, value, duration = -1)
+{
+    for (local i = 0; i < SLOT_COUNT; i++)
+    {
+        local wep = GetWeaponInSlot(player, i);
+        if (wep == null) continue;
+        wep.AddAttribute(attribute, value, duration);
+        wep.ReapplyProvision();
+    }
 }
 
 function PopExtUtil::ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = 9999.0)
