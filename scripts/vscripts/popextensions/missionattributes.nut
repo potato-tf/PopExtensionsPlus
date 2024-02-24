@@ -879,20 +879,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     break;
 	
     // =========================================================
-	/*
-	MissionAttr("PlayerAttributes", {
-		[TF_CLASS_SCOUT] = {
-			"damage bonus" : 5,
-			"fire rate penalty" : 2,
-			"max health additive bonus" : 100,
-		},
-		[TF_CLASS_SOLDIER] = {
-			"damage penalty" : 0.5,
-			"fire rate bonus" : 0.5,
-		},
-	});
-	*/
-	// Doesnt fucking work
+
     case "PlayerAttributes":
 		function MissionAttributes::PlayerAttributes(params)
 		{
@@ -904,7 +891,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			
 			if (typeof value != "table")
 			{
-				MissionAttributes.RaiseValueError("PlayerAttributes", value, extra = "Value must be table")
+				MissionAttributes.RaiseValueError("PlayerAttributes", value, "Value must be table")
 				return
 			}
 			
@@ -913,7 +900,22 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			
 			local table = value[tfclass];
 			foreach (key, val in table)
-				player.AddCustomAttribute(key, val, -1)
+            {
+                local valformat = ""
+                printl(typeof val + ", " + key +", "+ val)
+                if (typeof val == "integer")
+                    valformat = format("self.AddCustomAttribute(`%s`, %d, -1)", key, val)
+
+                else if (typeof val == "string")
+                    MissionAttributes.RaiseValueError("PlayerAttributes", val, "Cannot set string attributes!")
+                    // valformat = format("self.AddCustomAttribute(`%s`, `%s`, -1)", key, val)
+
+                else if (typeof val == "float")
+                    valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", key, val)
+                
+                EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
+                    
+            }
 		}
 		
 		if (!("PlayerAttributes" in MissionAttributes.SpawnHookTable))
@@ -1040,7 +1042,7 @@ function MissionAttributes::RaiseTypeError(attr, type) ParseError(format("Bad ty
 
 // Raises an error if the user passes an invalid argument
 // Example: Attribute expects a bitwise operator but value cannot be evenly split into a power of 2
-function MissionAttributes::RaiseValueError(attr, value, extra = "") ParseError(format("Bad value   %s  passed to %s.%s", value.tostring(), attr, extra))
+function MissionAttributes::RaiseValueError(attr, value, extra = "") ParseError(format("Bad value   %s  passed to %s. %s", value.tostring(), attr, extra))
 
 // Raises a template parsing error, if nothing else fits.
 function MissionAttributes::ParseError(ErrorMsg)
