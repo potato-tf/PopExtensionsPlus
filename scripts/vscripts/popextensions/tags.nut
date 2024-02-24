@@ -70,15 +70,15 @@ local popext_funcs =
 		local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
 
 		//force deploy dispenser when leaving spawn and kill it immediately
-		if (!alwaysfire) 
+		if (!alwaysfire)
 			bot.PressFireButton(9999.0)
-		
 
-		function DispenserBuildThink() 
+
+		function DispenserBuildThink()
 		{
 			//start forcing primary attack when near hint
 			local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
-				if (hint && !alwaysfire) 
+				if (hint && !alwaysfire)
 					bot.PressFireButton(0.0)
 		}
 		bot.GetScriptScope().ThinkTable.DispenserBuildThink <- DispenserBuildThink
@@ -93,60 +93,60 @@ local popext_funcs =
 
 				bot.AddCustomAttribute("upgrade rate decrease", 8, -1)
 				local building = EntIndexToHScript(params.index)
-				
+
 				//kill the first alwaysfire built dispenser when leaving spawn
 				local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 16)
-	
-				if (!hint) 
+
+				if (!hint)
 				{
 					building.Kill()
 					return
 				}
-	
+
 				//hide the building
 				building.SetModelScale(0.01, 0.0)
 				SetPropInt(building, "m_nRenderMode", kRenderTransColor)
 				SetPropInt(building, "m_clrRender", 0)
 				building.SetHealth(999999)
 				building.SetSolid(SOLID_NONE)
-	
+
 				PopExtUtil.SetTargetname(building, format("building%d", building.entindex()))
-	
+
 				//create a dispenser
 				local dispenser = CreateByClassname("obj_dispenser")
-	
+
 				SetPropEntity(dispenser, "m_hBuilder", bot)
-	
+
 				PopExtUtil.SetTargetname(dispenser, format("dispenser%d", dispenser.entindex()))
 
 				dispenser.SetTeam(bot.GetTeam())
 				dispenser.SetSkin(bot.GetSkin())
-				
+
 				dispenser.DispatchSpawn()
-				
+
 				//post-spawn stuff
 
 				// SetPropInt(dispenser, "m_iHighestUpgradeLevel", 2) //doesn't work
-	
+
 				local builder = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
-	
+
 				local builtobj = GetPropEntity(builder, "m_hObjectBeingBuilt")
 				SetPropInt(builder, "m_iObjectType", 0)
 				SetPropInt(builder, "m_iBuildState", 2)
 				// if (builtobj && builtobj.GetClassname() != "obj_dispenser") builtobj.Kill()
 				SetPropEntity(builder, "m_hObjectBeingBuilt", dispenser) //makes dispenser a null reference
-				
+
 				bot.Weapon_Switch(builder)
 				builder.PrimaryAttack()
-				
+
 				//m_hObjectBeingBuilt messes with our dispenser reference, do radius check to grab it again
 				for (local d; d = FindByClassnameWithin(d, "obj_dispenser", building.GetOrigin(), 128);)
 					if (GetPropEntity(d, "m_hBuilder") == bot)
 						dispenser = d
-	
+
 				dispenser.SetLocalOrigin(building.GetLocalOrigin())
 				dispenser.SetLocalAngles(building.GetLocalAngles())
-				
+
 				AddOutput(dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1) //kill it to avoid showing up in killfeed
 				AddOutput(building, "OnDestroyed", dispenser.GetName(), "Destroy", "", -1, -1) //always destroy the dispenser
 				EntFireByHandle(building, "Disable", "", 10.6, null, null)
@@ -190,7 +190,7 @@ local popext_funcs =
 				{
 					if (p.GetTeam() == bot.GetTeam()) continue
 					local primary = PopExtUtil.GetItemInSlot(bot, SLOT_PRIMARY)
-					
+
 					bot.Weapon_Switch(primary)
 					primary.AddAttribute("disable weapon switch", 1, 1)
 					primary.ReapplyProvision()
@@ -201,7 +201,7 @@ local popext_funcs =
 				for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 750);)
 				{
 					if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().GetSlot() == 2) continue //potentially not break sniper ai
-				   
+
 					local secondary = PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY)
 
 					bot.Weapon_Switch(secondary)
@@ -593,7 +593,7 @@ local tagtest = "popext_dispenseroverride"
 		}
 		foreach (k,v in items) if (!(k in scope)) scope[k] <- v
 
-		if (bot.GetPlayerClass() == TF_CLASS_SPY || bot.GetPlayerClass() == TF_CLASS_ENGINEER) scope.BuiltObjectTable <- {}
+		if (bot.GetPlayerClass() < TF_CLASS_SPY && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
 		EntFireByHandle(bot, "RunScriptCode", "AI_BotSpawn(self)", -1, null, null)
 	}

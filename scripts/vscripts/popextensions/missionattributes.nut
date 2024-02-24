@@ -12,7 +12,7 @@
 
 	DebugText = false
 	RaisedParseError = false
-	
+
 	InitWave = function() {
 		foreach (_, func in MissionAttributes.InitWaveTable) func()
 
@@ -27,29 +27,32 @@
 		function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 
-		function OnGameEvent_post_inventory_application(params) { 
+		function OnGameEvent_post_inventory_application(params)
+		{
 			local player = GetPlayerFromUserID(params.userid)
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
-	
+
+			if (player.GetPlayerClass() < TF_CLASS_SPY && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
+
 			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
 			scope.PlayerThinks <- PlayerThinks
 			AddThinkToEnt(player, "PlayerThinks")
-	
+
 			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
-		} 
+		}
 		// Hook all wave inits to reset parsing error counter.
-		
+
 		function OnGameEvent_recalculate_holidays(params)
 		{
 			if (GetRoundState() != 3) return
-			
+
 			MissionAttributes.InitWave();
 		}
-	
-		function GameEvent_mvm_wave_complete(params) 
-		{ 
+
+		function GameEvent_mvm_wave_complete(params)
+		{
 			ResetConvars()
 			delete ::MissionAttributes
 			DebugLog(format("Cleaned up mission attribute %s", attr))
@@ -158,7 +161,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	break;
 
 	// =========================================================
-	
+
 	case "StandableHeads":
 		local movekeys = IN_FORWARD | IN_BACK | IN_LEFT | IN_RIGHT
 		function MissionAttributes::StandableHeads(params)
@@ -217,7 +220,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 		MissionAttributes.SpawnHookTable.MultiSapper <- MissionAttributes.MultiSapper
 	break;
-	
+
 	// =========================================================
 
 	//all of these could just be set directly in the pop easily, however popfile's have a 4096 character limit for vscript so might as well save space
@@ -295,7 +298,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	break;
 
 	// =========================================================
-	
+
 	case "MaxSkeletons":
 		SetConvar("tf_max_active_zombie", value)
 	break;
@@ -305,19 +308,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	case "TurboPhysics":
 		SetConvar("sv_turbophysics", value)
 	break;
-		
+
 	// =========================================================
 
 	case "Accelerate":
 		SetConvar("sv_accelerate", value)
 	break;
-		
+
 	// =========================================================
 
 	case "AirAccelerate":
 		SetConvar("sv_airaccelerate", value)
 	break;
-		
+
 	// =========================================================
 
 	case "BotPushaway":
@@ -385,37 +388,37 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	break;
 
 	// =========================================================
-	
+
 	case "HHHChaseRange":
 		SetConvar("tf_halloween_bot_chase_range", value)
 	break;
 
 	// =========================================================
-	
+
 	case "HHHAttackRange":
 		SetConvar("tf_halloween_bot_attack_range", value)
 	break;
 
 	// =========================================================
-	
+
 	case "HHHQuitRange":
 		SetConvar("tf_halloween_bot_quit_range", value)
 	break;
 
 	// =========================================================
-	
+
 	case "HHHTerrifyRange":
 		SetConvar("tf_halloween_bot_terrify_radius", value)
 	break;
 
 	// =========================================================
-	
+
 	case "HHHHealthBase":
 		SetConvar("tf_halloween_bot_health_base", value)
 	break;
 
 	// =========================================================
-	
+
 	case "HHHHealthPerPlayer":
 		SetConvar("tf_halloween_bot_health_per_player", value)
 	break;
@@ -471,7 +474,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		function MissionAttributes::BotHeadshots(params)
 		{
 			local player = params.attacker, victim = params.const_entity
-		
+
 			// //gib bots on explosive/crit dmg, doesn't work
 			// if (!victim.IsMiniBoss() && (params.damage_type & DMG_CRITICAL || params.damage_type & DMG_BLAST))
 			// {
@@ -479,7 +482,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			//	// EntFireByHandle(victim, "CallScriptFunction", "dmg", -1, null, null); //wait 1 frame
 			//	return
 			// }
-			
+
 			//re-enable headshots for snipers and ambassador
 			if (!player.IsPlayer() || !victim.IsPlayer() || IsPlayerABot(player)) return //check if non-bot victim
 			if (player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER) return //check if we're spy/sniper
@@ -495,7 +498,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	// =========================================================
 
-	//Uses bitflags to enable certain behavior 
+	//Uses bitflags to enable certain behavior
 	// 1  = Robot animations (excluding sticky demo and jetpack pyro)
 	// 2  = Human animations
 	// 4  = Enable footstep sfx
@@ -504,7 +507,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	//example: MissionAttr(`PlayersAreRobots`, 6) - Human animations and footsteps enabled
 	//example: MissionAttr(`PlayersAreRobots`, 2 | 4) - Same thing if you are lazy
-	
+
 	// TODO: Make PlayersAreRobots 16 and HandModelOverride incompatible
 
 	case "PlayersAreRobots":
@@ -512,7 +515,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		{
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
@@ -521,15 +524,15 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				scope.wearable.Destroy()
 				scope.wearable <- null
 			}
-			
+
 			local playerclass  = player.GetPlayerClass()
 			local class_string = PopExtUtil.Classes[playerclass]
 			local model = format("models/bots/%s/bot_%s.mdl", class_string, class_string)
-			
+
 			if (value & 1)
 			{
 				//sticky anims and thruster anims are particularly problematic
-				if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemIndex(player, ITEMINDEX_THERMAL_THRUSTER))) 
+				if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemIndex(player, ITEMINDEX_THERMAL_THRUSTER)))
 				{
 					PopExtUtil.PlayerRobotModel(player, model)
 					return
@@ -541,7 +544,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			}
 
 			if (value & 2)
-			{	
+			{
 				if (value & 1) value | 1 //incompatible flags
 				PopExtUtil.PlayerRobotModel(player, model)
 			}
@@ -553,19 +556,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				function StepThink()
 				{
 					if (self.GetPlayerClass() == TF_CLASS_MEDIC) return
-					
+
 					if (GetPropInt(self,"m_Local.m_nStepside") != stepside)
 						EmitSoundOn("MVM.BotStep", self)
 
 					scope.stepside = GetPropInt(self,"m_Local.m_nStepside")
 					return -1
 				}
-				if (!("StepThink" in scope.PlayerThinkTable)) 
+				if (!("StepThink" in scope.PlayerThinkTable))
 					scope.PlayerThinkTable.StepThink <- StepThink
 
 
 			} else if ("StepThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.StepThink
-			
+
 			if (value & 8)
 			{
 				function RobotVOThink()
@@ -574,14 +577,14 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					{
 						if (ent.GetEFlags() & CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE) continue
 						ent.AddEFlags(CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE)
-						
+
 						local owner = GetPropEntity(ent, "m_hOwner")
 						if (owner != null && !owner.IsBotOfType(1337))
 						{
-						  
+
 							local vcdpath = GetPropString(ent, "m_szInstanceFilename");
 							if (!vcdpath || vcdpath == "") return -1
-							
+
 							local dotindex	 = vcdpath.find(".")
 							local slashindex = null;
 							for (local i = dotindex; i >= 0; --i)
@@ -592,12 +595,12 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 									break;
 								}
 							}
-							
+
 							owner.ValidateScriptScope()
 							local scope = owner.GetScriptScope()
 							scope.soundtable <- VCD_SOUNDSCRIPT_MAP[owner.GetPlayerClass()]
 							scope.vcdname	 <- vcdpath.slice(slashindex+1, dotindex)
-							
+
 							if (scope.vcdname in scope.soundtable)
 							{
 								local soundscript = scope.soundtable[scope.vcdname];
@@ -610,14 +613,14 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 						}
 					}
 
-					return -1;					
+					return -1;
 				}
 
 				if (!("RobotVOThink" in MissionAttributes.ThinkTable))
 					MissionAttributes.ThinkTable.RobotVOThink <- RobotVOThink
 
 			} else if ("RobotVOThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotVOThink
-			
+
 			if (value & 16)
 			{
 				function RobotArmThink()
@@ -625,7 +628,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 					local playervm = GetPropEntity(player, "m_hViewModel")
 					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
-					
+
 					for (local i = 0; i < SLOT_COUNT; i++)
 					{
 						local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
@@ -635,13 +638,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 						wep.SetCustomViewModel(vmodel)
 					}
 				}
-				
+
 				if (!("RobotArmThink" in scope.PlayerThinkTable))
 					scope.PlayerThinkTable.RobotArmThink <- RobotArmThink
-				
+
 			} else if ("RobotArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotArmThink
 		}
-		
+
 		MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots
 	break;
 
@@ -674,7 +677,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			if (value < 2 || noRomeCarrier) return
 
 			local carrier = Entities.FindByName(null, "botship_dynamic") //some maps have a targetname for it
-	
+
 			if (carrier == null)
 			{
 				for (local props; props = Entities.FindByClassname(props, "prop_dynamic");)
@@ -725,7 +728,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
 		}
-		
+
 		MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
 	break;
 
@@ -794,7 +797,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				// }
 			}
 		}
-		
+
 		MissionAttributes.ThinkTable.NoSkeleSplit <- MissionAttributes.NoSkeleSplit
 	break;
 
@@ -820,10 +823,10 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			}
 
 		}
-		
+
 		MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown
 	break;
-	
+
 	// =========================================================
 
 	// MissionAttr("HandModelOverride", "path")
@@ -834,7 +837,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		{
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
@@ -842,16 +845,16 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			{
 				local tfclass	   = player.GetPlayerClass()
 				local class_string = PopExtUtil.Classes[tfclass]
-				
+
 				local vmodel   = null
 				local playervm = GetPropEntity(player, "m_hViewModel")
-				
+
 				if (typeof value == "string")
 					vmodel = PopExtUtil.StringReplace(value, "%class", class_string);
 				else if (typeof value == "array")
 				{
 					if (value.len() == 0) return
-					
+
 					if (tfclass >= value.len())
 						vmodel = PopExtUtil.StringReplace(value[0], "%class", class_string);
 					else
@@ -865,9 +868,9 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				}
 
 				if (vmodel == null) return
-				
+
 				if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
-				
+
 				for (local i = 0; i < SLOT_COUNT; i++)
 				{
 					local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
@@ -877,14 +880,14 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					wep.SetCustomViewModel(vmodel)
 				}
 			}
-			
+
 			if (!("ArmThink" in scope.PlayerThinkTable))
-				scope.PlayerThinkTable.ArmThink <- ArmThink	
+				scope.PlayerThinkTable.ArmThink <- ArmThink
 		}
-		
+
 		MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
 	break;
-	
+
 	// =========================================================
 
 	case "PlayerAttributes":
@@ -892,17 +895,17 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		{
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			if (typeof value != "table")
 			{
 				MissionAttributes.RaiseValueError("PlayerAttributes", value, "Value must be table")
 				success = false
 				return
 			}
-			
+
 			local tfclass = player.GetPlayerClass();
 			if (!(tfclass in value)) return
-			
+
 			local table = value[tfclass];
 			foreach (key, val in table)
 			{
@@ -923,10 +926,10 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
 			}
 		}
-		
+
 		MissionAttributes.SpawnHookTable.PlayerAttributes <- MissionAttributes.PlayerAttributes
 	break;
-	
+
 	// =========================================================
 
 	case "ItemAttributes":
@@ -934,29 +937,29 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		{
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			if (typeof value != "table")
 			{
 				MissionAttributes.RaiseValueError("ItemAttributes", value, extra = "Value must be table")
 				success = false
 				return
 			}
-			
+
 			for (local i = 0; i < SLOT_COUNT; i++)
 			{
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 				if (wep == null) continue
-				
+
 				local cls = wep.GetClassname()
 				if (cls in value)
 					foreach (key, val in value[cls])
 						wep.AddAttribute(key, val, -1)
 			}
 		}
-		
+
 		MissionAttributes.SpawnHookTable.ItemAttributes <- MissionAttributes.ItemAttributes
 	break;
-	
+
 	// =========================================================
 
 	case "ItemWhitelist":
@@ -964,40 +967,40 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		{
 			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
 			success = false
-			break				
+			break
 		}
-		
+
 		PopExtUtil.ItemWhitelist = value;
-		
+
 		function MissionAttributes::ItemWhitelist(params)
 		{
 
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-			
+
 			function HasVal(arr, val) foreach (v in arr) if (v == val) return true
 			for (local i = 0; i < SLOT_COUNT; i++)
 			{
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 				if (wep == null) continue
-				
+
 				local cls	= wep.GetClassname()
 				local index = PopExtUtil.GetItemIndex(wep)
-				
+
 				if ( !(HasVal(value, cls) || HasVal(value, index)) )
 					wep.Kill()
 			}
-			
+
 			if (PopExtUtil.ItemBlacklist.len() == 0)
 				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", 0.015, null, null)
 		}
-	
+
 		MissionAttributes.SpawnHookTable.ItemWhitelist <- MissionAttributes.ItemWhitelist
 	break;
-	
+
 	// =========================================================
 
 	case "ItemBlacklist":
@@ -1005,32 +1008,32 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		{
 			MissionAttributes.RaiseValueError("ItemBlacklist", value, extra = "Value must be array")
 			success = false
-			break				
+			break
 		}
-		
+
 		PopExtUtil.ItemBlacklist = value;
-		
+
 		function MissionAttributes::ItemBlacklist(params)
 		{
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			function HasVal(arr, val) foreach (v in arr) if (v == val) return true
 			for (local i = 0; i < SLOT_COUNT; i++)
 			{
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 				if (wep == null) continue
-				
+
 				local cls	= wep.GetClassname()
 				local index = PopExtUtil.GetItemIndex(wep)
-				
+
 				if ( HasVal(value, cls) || HasVal(value, index) )
 					wep.Kill()
 			}
-			
+
 			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", 0.015, null, null)
 		}
-	
+
 		MissionAttributes.SpawnHookTable.ItemBlacklist <- MissionAttributes.ItemBlacklist
 	break;
 
@@ -1042,7 +1045,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		if ("DragonsFuryFix" in GlobalFixes.ThinkTable)
 			delete GlobalFixes.ThinkTable.DragonsFuryFix
 	break;
-	
+
 	// =========================================================
 
 	case "RestoreYERNerf":
