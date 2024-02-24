@@ -65,16 +65,36 @@ local popext_funcs =
     //doesn't work, engi buildings are not spawned this way
     popext_dispenseroverride = function(bot, args)
     {
-        if (args.len() == 0) args.append(1)
-        // printl(args)
+        if (args.len() == 0) args.append(1) //sentry override by default
+
+        local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
+
+        //force deploy dispenser when leaving spawn and kill it immediately
+        if (!alwaysfire) 
+            bot.PressFireButton(9999.0)
+        
+
+        function DispenserBuildThink() 
+        {
+            //start forcing primary attack when near hint
+            local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 200)
+                if (hint && !alwaysfire) 
+                    bot.PressFireButton(0.0)
+        }
+    
         function DispenserBuildOverride(params)
         {
+            //dispenser built, stop force firing
+            if (!alwaysfire) bot.PressFireButton(0.0)
+
             if ((args[0].tointeger() == 1 && params.object == 2) || (args[0].tointeger() == 2 && params.object == 1))
             {
                 if (params.object == 2) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
 
                 bot.AddCustomAttribute("upgrade rate decrease", 8, -1)
                 local building = EntIndexToHScript(params.index)
+                
+                //kill the first alwaysfire built dispenser when leaving spawn
                 local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 200)
     
                 if (!hint) 
@@ -105,12 +125,15 @@ local popext_funcs =
                 dispenser.DispatchSpawn()
                 
                 //post-spawn stuff
-                // SetPropBool(dispenser, "m_bPlacing", true)
+
+                // SetPropInt(dispenser, "m_iHighestUpgradeLevel", 2) //doesn't work
     
                 local builder = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
     
+                local builtobj = GetPropEntity(builder, "m_hObjectBeingBuilt")
                 SetPropInt(builder, "m_iObjectType", 0)
                 SetPropInt(builder, "m_iBuildState", 2)
+                // if (builtobj && builtobj.GetClassname() != "obj_dispenser") builtobj.Kill()
                 SetPropEntity(builder, "m_hObjectBeingBuilt", dispenser) //makes dispenser a null reference
                 
                 bot.Weapon_Switch(builder)
@@ -126,7 +149,6 @@ local popext_funcs =
                 
                 AddOutput(dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1) //kill it to avoid showing up in killfeed
                 AddOutput(building, "OnDestroyed", dispenser.GetName(), "Destroy", "", -1, -1) //always destroy the dispenser
-                printl(building)
                 EntFireByHandle(building, "Disable", "", 10.6, null, null)
             }
         }
@@ -571,8 +593,7 @@ local tagtest = "popext_dispenseroverride"
 		}
         foreach (k,v in items) if (!(k in scope)) scope[k] <- v
 
-        if (bot.GetPlayerClass() == TF_CLASS_SPY || bot.GetPlayerClass() == TF_CLASS_ENGINEER)
-        scope.BuiltObjectTable <- {}
+        if (bot.GetPlayerClass() == TF_CLASS_SPY || bot.GetPlayerClass() == TF_CLASS_ENGINEER) scope.BuiltObjectTable <- {}
 
         EntFireByHandle(bot, "RunScriptCode", "AI_BotSpawn(self)", -1, null, null)
     }
