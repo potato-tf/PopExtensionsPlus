@@ -205,10 +205,11 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		function MissionAttributes::MultiSapper(params)
 		{
 			local player = GetPlayerFromUserID(params.userid)
+			if (player.IsBotOfType(1337) || player.GetPlayerClass() < TF_CLASS_SPY) return
+
 			function MultiSapper(params)
 			{
-				printl("sapper")
-				if (player.IsBotOfType(1337) || params.object != OBJ_ATTACHMENT_SAPPER) return
+				if (params.object != OBJ_ATTACHMENT_SAPPER) return
 				local sapper = EntIndexToHScript(params.index)
 				SetPropBool(sapper, "m_bDisposableBuilding", true)
 				local flags = GetPropInt(sapper, "m_fObjectFlags")
@@ -891,6 +892,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// =========================================================
 
 	case "PlayerAttributes":
+		//setting maxhealth attribs doesn't update current HP
+		local healthattribs = {
+			"max health additive bonus" : null, 
+			"max health additive penalty": null,
+			"SET BONUS: max health additive bonus": null, 
+			"hidden maxhealth non buffed": null, 
+		}
 		function MissionAttributes::PlayerAttributes(params)
 		{
 			local player = GetPlayerFromUserID(params.userid)
@@ -924,6 +932,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", key, val)
 
 				EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
+				if (key in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
 			}
 		}
 
