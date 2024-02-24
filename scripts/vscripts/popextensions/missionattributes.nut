@@ -589,13 +589,12 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 							
 							if (scope.vcdname in scope.soundtable)
 							{
-								EntFireByHandle(owner, "RunScriptCode", "self.StopSound(soundtable[vcdname]);", -1, null, null)
-								
-								local sound    =  scope.soundtable[scope.vcdname]
-								dotindex       =  sound.find(".")
-								scope.mvmsound <- sound.slice(0, dotindex+1) + "MVM_" + sound.slice(dotindex+1)
-								
-								EntFireByHandle(owner, "RunScriptCode", "self.EmitSound(mvmsound);", 0.015, null, null)
+								local soundscript = scope.soundtable[scope.vcdname];
+								if (typeof soundscript == "string")
+									PopExtUtil.StopAndPlayMVMSound(owner, soundscript, 0);
+								else if (typeof soundscript == "array")
+									foreach (sound in soundscript)
+										PopExtUtil.StopAndPlayMVMSound(owner, sound[1], sound[0]);
 							}
 						}
 					}
@@ -614,7 +613,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				{
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 					local playervm = GetPropEntity(player, "m_hViewModel")
-					if (playervm.GetModelName() != vmodel && player.InCond(TF_COND_INVULNERABLE)) playervm.SetModelSimple(vmodel)
+					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 					
 					for (local i = 0; i < SLOT_COUNT; i++)
 					{
@@ -877,6 +876,41 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		
 		if (!("HandModelOverride" in MissionAttributes.SpawnHookTable))
 			MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
+    break;
+	
+    // =========================================================
+
+	// Doesnt fucking work
+    case "PlayerAttributes":
+		function MissionAttributes::PlayerAttributes(params)
+		{
+            local player = GetPlayerFromUserID(params.userid)
+            if (player.IsBotOfType(1337)) return
+            
+            player.ValidateScriptScope()
+            local scope = player.GetScriptScope()
+			
+			if (typeof value != "table")
+			{
+				MissionAttributes.RaiseValueError("PlayerAttributes", value, extra = "Value must be table")
+				return
+			}
+			
+			local tfclass = player.GetPlayerClass();
+			if (!(tfclass in value)) return
+			
+			local table = value[tfclass];
+			foreach (key, val in table)
+			{
+				printl(key + " " + val);
+				scope.key <- key;
+				scope.val <- val;
+				EntFireByHandle(player, "RunScriptCode", "self.AddCustomAttribute(key, val, -1);", -1, null, null);
+			}
+		}
+		
+		if (!("PlayerAttributes" in MissionAttributes.SpawnHookTable))
+			MissionAttributes.SpawnHookTable.PlayerAttributes <- MissionAttributes.PlayerAttributes
     break;
 
     //Options to revert global fixes below:

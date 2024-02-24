@@ -497,7 +497,7 @@ function PopExtUtil::PlayerRobotModel(player, model)
 
     function PopExtUtil::BotModelThink()
     {
-        if (wearable && wearable.GetMoveParent() != player)
+		if (wearable && wearable.GetMoveParent() != player)
         {
             // EntFireByHandle(wearable, "SetParent", "", -1, null, null)
             EntFireByHandle(wearable, "SetParent", "!activator", 0.015, self, self)
@@ -878,6 +878,23 @@ function PopExtUtil::QAngleDistance(a, b)
 function PopExtUtil::CheckBitwise(num)
 {
     return (num != 0 && ((num & (num - 1)) == 0))
+}
+
+function PopExtUtil::StopAndPlayMVMSound(player, soundscript, delay)
+{
+	player.ValidateScriptScope()
+	local scope = player.GetScriptScope()
+	scope.sound <- soundscript
+	
+	EntFireByHandle(player, "RunScriptCode", "self.StopSound(sound);", delay, null, null)
+	
+	local sound    =  scope.sound
+	local dotindex =  sound.find(".")
+	if (dotindex == null) return
+	
+	scope.mvmsound <- sound.slice(0, dotindex+1) + "MVM_" + sound.slice(dotindex+1)
+	
+	EntFireByHandle(player, "RunScriptCode", "self.EmitSound(mvmsound);", delay + 0.015, null, null)
 }
 
 function PopExtUtil::StringReplace(str, findwhat, replace)
