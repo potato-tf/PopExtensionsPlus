@@ -879,7 +879,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
     break;
 	
     // =========================================================
-
+	/*
+	MissionAttr("PlayerAttributes", {
+		[TF_CLASS_SCOUT] = {
+			"damage bonus" : 5,
+			"fire rate penalty" : 2,
+			"max health additive bonus" : 100,
+		},
+		[TF_CLASS_SOLDIER] = {
+			"damage penalty" : 0.5,
+			"fire rate bonus" : 0.5,
+		},
+	});
+	*/
 	// Doesnt fucking work
     case "PlayerAttributes":
 		function MissionAttributes::PlayerAttributes(params)
@@ -901,16 +913,56 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			
 			local table = value[tfclass];
 			foreach (key, val in table)
-			{
-				printl(key + " " + val);
-				scope.key <- key;
-				scope.val <- val;
-				EntFireByHandle(player, "RunScriptCode", "self.AddCustomAttribute(key, val, -1);", -1, null, null);
-			}
+				player.AddCustomAttribute(key, val, -1)
 		}
 		
 		if (!("PlayerAttributes" in MissionAttributes.SpawnHookTable))
 			MissionAttributes.SpawnHookTable.PlayerAttributes <- MissionAttributes.PlayerAttributes
+    break;
+	
+    // =========================================================
+	/*
+	MissionAttr("ItemAttributes", {
+		"tf_weapon_scattergun" : {
+			"max health additive bonus" : 100,
+			"fire rate bonus" : 0.5,
+			"Reload time decreased" : 0.5,
+		},
+		"tf_weapon_rocketlauncher" : {
+			"fire rate penalty" : 3,
+			"damage bonus" : 10,
+		},
+	});
+	*/
+    case "ItemAttributes":
+		function MissionAttributes::ItemAttributes(params)
+		{
+            local player = GetPlayerFromUserID(params.userid)
+            if (player.IsBotOfType(1337)) return
+            
+            player.ValidateScriptScope()
+            local scope = player.GetScriptScope()
+			
+			if (typeof value != "table")
+			{
+				MissionAttributes.RaiseValueError("ItemAttributes", value, extra = "Value must be table")
+				return
+			}
+			
+			for (local i = 0; i < SLOT_COUNT; i++)
+			{
+				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+				if (wep == null) continue
+				
+				local cls = wep.GetClassname()
+				if (cls in value)
+					foreach (key, val in value[cls])
+						wep.AddAttribute(key, val, -1)
+			}
+		}
+		
+		if (!("ItemAttributes" in MissionAttributes.SpawnHookTable))
+			MissionAttributes.SpawnHookTable.ItemAttributes <- MissionAttributes.ItemAttributes
     break;
 
     //Options to revert global fixes below:
