@@ -56,8 +56,6 @@ function FireHooksParam(entity, scope, name, param)
 	if (scope != null && "popHooks" in scope && name in scope.popHooks)
 		foreach (index, func in scope.popHooks[name])
 			func(entity, param)
-		
-	
 }
 
 function PopulatorThink()

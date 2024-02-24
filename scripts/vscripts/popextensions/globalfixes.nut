@@ -151,7 +151,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			local wep   = PopExtUtil.GetItemInSlot(player, SLOT_MELEE)
 			local index = PopExtUtil.GetItemIndex(wep)
 			
-			if (index == 225 || index == 574)
+			if (index == ITEMINDEX_YOUR_ETERNAL_REWARD || index == ITEMINDEX_THE_WANGA_PRICK)
 				wep.RemoveAttribute("disguise on backstab")
 		}
     }

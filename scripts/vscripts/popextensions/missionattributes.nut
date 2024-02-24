@@ -518,7 +518,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
             if (value & 1)
             {
                 //sticky anims and thruster anims are particularly problematic
-                if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemIndex(player, 1179))) 
+                if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemIndex(player, ITEMINDEX_THERMAL_THRUSTER))) 
                 {
                     PopExtUtil.PlayerRobotModel(player, model)
                     return
@@ -614,7 +614,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				{
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 					local playervm = GetPropEntity(player, "m_hViewModel")
-					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
+					if (playervm.GetModelName() != vmodel && player.InCond(TF_COND_INVULNERABLE)) playervm.SetModelSimple(vmodel)
 					
 					for (local i = 0; i < SLOT_COUNT; i++)
 					{
