@@ -211,6 +211,142 @@ function PopExtUtil::HexToRgb(hex) {
 	return [r, g, b]
 }
 
+function PopExtUtil::SetParentLocalOriginDo(child, parent, attachment = null) {
+	SetPropEntity(child, "m_hMovePeer", parent.FirstMoveChild())
+	SetPropEntity(parent, "m_hMoveChild", child)
+	SetPropEntity(child, "m_hMoveParent", parent)
+
+	local origPos = child.GetLocalOrigin()
+	child.SetLocalOrigin(origPos + Vector(0, 0, 1))
+	child.SetLocalOrigin(origPos)
+
+	local origAngles = child.GetLocalAngles()
+	child.SetLocalAngles(origAngles + QAngle(0, 0, 1))
+	child.SetLocalAngles(origAngles)
+
+	local origVel = child.GetVelocity()
+	child.SetVelocity(origVel + Vector(0, 0, 1))
+	child.SetVelocity(origVel)
+
+	EntFireByHandle(child, "SetParent", "!activator", 0, parent, parent)
+	if (attachment != null) {
+		SetPropEntity(child, "m_iParentAttachment", parent.LookupAttachment(attachment))
+		EntFireByHandle(child, "SetParentAttachmentMaintainOffset", attachment, 0, parent, parent)
+	}
+}
+
+// Sets parent immediately in a dirty way. Does not retain absolute origin, retains local origin instead.
+// child parameter may also be an array of entities
+function PopExtUtil::SetParentLocalOrigin(child, parent, attachment = null) {
+	if (typeof child == "array")
+		foreach(i, childIn in child)
+			SetParentLocalOriginDo(childIn, parent, attachment)
+	else
+		SetParentLocalOriginDo(child, parent, attachment)
+}
+
+// Setup collision bounds of a trigger entity
+function PopExtUtil::SetupTriggerBounds(trigger, mins = null, maxs = null) {
+	trigger.SetModel("models/weapons/w_models/w_rocket.mdl")
+
+	if (mins != null) {
+		SetPropVector(trigger, "m_Collision.m_vecMinsPreScaled", mins)
+		SetPropVector(trigger, "m_Collision.m_vecMins", mins)
+	}
+	if (maxs != null) {
+		SetPropVector(trigger, "m_Collision.m_vecMaxsPreScaled", maxs)
+		SetPropVector(trigger, "m_Collision.m_vecMaxs", maxs)
+	}
+
+	trigger.SetSolid(Constants.ESolidType.SOLID_BBOX)
+}
+
+function PopExtUtil::PrintTable(table) {
+	if (table == null) return;
+
+	DoPrintTable(table, 0)
+}
+
+function PopExtUtil::DoPrintTable(table, indent) {
+	local line = ""
+	for (local i = 0; i < indent; i++) {
+		line += " "
+	}
+	line += typeof table == "array" ? "[" : "{";
+
+	ClientPrint(null, 2, line)
+
+	indent += 2
+	foreach(k, v in table) {
+		line = ""
+		for (local i = 0; i < indent; i++) {
+			line += " "
+		}
+		line += k.tostring()
+		line += " = "
+
+		if (typeof v == "table" || typeof v == "array") {
+			ClientPrint(null, 2, line)
+			DoPrintTable(v, indent)
+		}
+		else {
+			try {
+				line += v.tostring()
+			}
+			catch (e) {
+				line += typeof v
+			}
+
+			ClientPrint(null, 2, line)
+		}
+	}
+	indent -= 2
+
+	line = ""
+	for (local i = 0; i < indent; i++) {
+		line += " "
+	}
+	line += typeof table == "array" ? "]" : "}";
+
+	ClientPrint(null, 2, line)
+}
+
+// Make a wearable that is attached to the player. The wearable is automatically removed when the owner is killed or respawned
+function PopExtUtil::CreatePlayerWearable(player, model, bonemerge = true, attachment = null, autoDestroy = true) {
+	local modelIndex = GetModelIndex(model)
+	if (modelIndex == -1)
+		modelIndex = PrecacheModel(model)
+
+	local wearable = Entities.CreateByClassname("tf_wearable")
+	SetPropInt(wearable, "m_nModelIndex", modelIndex)
+	wearable.SetSkin(player.GetTeam())
+	wearable.SetTeam(player.GetTeam())
+	wearable.SetSolidFlags(4)
+	wearable.SetCollisionGroup(11)
+	SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
+	SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+	SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityQuality", 0)
+	SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityLevel", 1)
+	SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDLow", 2048)
+	SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDHigh", 0)
+
+	wearable.SetOwner(player)
+	Entities.DispatchSpawn(wearable)
+	SetPropInt(wearable, "m_fEffects", bonemerge ? 129 : 0)
+	SetParentLocalOrigin(wearable, player, attachment)
+
+	player.ValidateScriptScope()
+	local scope = player.GetScriptScope()
+	if (autoDestroy) {
+		if (!("popWearablesToDestroy" in scope))
+			scope.popWearablesToDestroy <- []
+
+		scope.popWearablesToDestroy.append(wearable)
+	}
+	return wearable
+}
+
+
 function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02)
 {
 	local rgb = PopExtUtil.HexToRgb("FFFF66")
