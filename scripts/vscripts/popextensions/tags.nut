@@ -77,11 +77,11 @@ local popext_funcs =
         function DispenserBuildThink() 
         {
             //start forcing primary attack when near hint
-            local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 200)
+            local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
                 if (hint && !alwaysfire) 
                     bot.PressFireButton(0.0)
         }
-    
+        bot.GetScriptScope().ThinkTable.DispenserBuildThink <- DispenserBuildThink
         function DispenserBuildOverride(params)
         {
             //dispenser built, stop force firing
@@ -95,7 +95,7 @@ local popext_funcs =
                 local building = EntIndexToHScript(params.index)
                 
                 //kill the first alwaysfire built dispenser when leaving spawn
-                local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 200)
+                local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 16)
     
                 if (!hint) 
                 {
