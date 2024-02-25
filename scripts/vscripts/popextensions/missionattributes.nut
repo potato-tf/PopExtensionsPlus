@@ -639,14 +639,20 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	case "NoRome":
 		local carrierPartsIndex = GetModelIndex("models/bots/boss_bot/carrier_parts.mdl")
-		function MissionAttributes::NoRome(params) {
-			local bot = GetPlayerFromUserID(params.userid)
-			if (bot.IsBotOfType(1337))
-				for (local child = bot.FirstMoveChild(); child != null; child = child.NextMovePeer())
-					if (!bot.HasBotTag("popext_forceromevision") && child.GetClassname() == "tf_wearable" && startswith(child.GetModelName(), "models/workshop/player/items/"+PopExtUtil.Classes[bot.GetPlayerClass()]+"/tw"))
-						EntFireByHandle(child, "Kill", "", -1, null, null)
 
-			//set value to 2 to also kill the carrier tank addon model
+		function MissionAttributes::NoRome(params) {
+
+			local bot = GetPlayerFromUserID(params.userid)
+
+			EntFireByHandle(bot, "RunScriptCode", @"
+				if (self.IsBotOfType(1337))
+					if (!self.HasBotTag(`popext_forceromevision`))
+						for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
+							if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
+								EntFireByHandle(child, `Kill`, ``, -1, null, null)
+			", -1, null, null)
+
+			//set value to 2 to also un-rome the carrier tank
 			if (value < 2 || noRomeCarrier) return
 
 			local carrier = Entities.FindByName(null, "botship_dynamic") //some maps have a targetname for it
