@@ -845,6 +845,24 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 	break
 
 	// =========================================================
+	case "ExtraTankPath":
+		if (typeof value != "array") {
+			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
+			success = false
+			break
+		}
+
+		function MissionAttributes::ExtraTankPath()
+		{
+			foreach (i, pos in value)
+			{
+				SpawnEntityFromTable("path_track", {
+					targetname = format("extratankpath%d_%d", pathnum, i)
+				})
+			}
+		}
+		break
+	// =========================================================
 
 	case "PlayerAttributes":
 		//setting maxhealth attribs doesn't update current HP
