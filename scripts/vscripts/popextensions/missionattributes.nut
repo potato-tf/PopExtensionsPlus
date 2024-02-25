@@ -864,7 +864,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				else
 				{
 					// do we need to do anything special for thinks??
-					MissionAttributes.RaiseValueError("HandModelOverride", value, extra = "Value must be string or array of strings")
+					MissionAttributes.RaiseValueError("HandModelOverride", value, "Value must be string or array of strings")
 					return
 				}
 
@@ -949,7 +949,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 			if (typeof value != "table")
 			{
-				MissionAttributes.RaiseValueError("ItemAttributes", value, extra = "Value must be table")
+				MissionAttributes.RaiseValueError("ItemAttributes", value, "Value must be table")
 				success = false
 				return
 			}
@@ -979,11 +979,11 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			break
 		}
 
-		PopExtUtil.ItemWhitelist = value;
+		PopExtUtil.ItemWhitelist = value
+		if (value.len() == 0) return
 
 		function MissionAttributes::ItemWhitelist(params)
 		{
-
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -1015,12 +1015,13 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	case "ItemBlacklist":
 		if (typeof value != "array")
 		{
-			MissionAttributes.RaiseValueError("ItemBlacklist", value, extra = "Value must be array")
+			MissionAttributes.RaiseValueError("ItemBlacklist", value, "Value must be array")
 			success = false
 			break
 		}
 
-		PopExtUtil.ItemBlacklist = value;
+		PopExtUtil.ItemBlacklist = value
+		if (value.len() == 0) return
 
 		function MissionAttributes::ItemBlacklist(params)
 		{
@@ -1045,6 +1046,42 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 		MissionAttributes.SpawnHookTable.ItemBlacklist <- MissionAttributes.ItemBlacklist
 	break;
+	
+	// =========================================================
+	
+	case "HumansMustJoinTeam":
+		if (value != TF_TEAM_RED && value != TF_TEAM_BLUE) {
+			MissionAttributes.RaiseValueError("HumansMustJoinTeam", value, "Value must be 2 or 3")
+			success = false
+			break			
+		}
+		
+		function MissionAttributes::HumansMustJoinTeam(params) {
+			local player = GetPlayerFromUserID(params.userid)
+			if (player.IsBotOfType(1337)) return
+			
+			if (player.GetTeam() != value) {
+				EntFireByHandle(player, "RunScriptCode", format("ChangePlayerTeamMvM(self, %d)", value), 0.015, null, null)
+				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
+			}
+		}
+		
+		function BlueTeamReadyThink() {
+			if (value != TF_TEAM_BLUE || !GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return
+			
+			local ready = 0
+			for (local i = 0; i < GetPropArraySize(PopExtUtil.GameRules, "m_bPlayerReady"); i++)
+			{
+				if (!GetPropBoolArray(PopExtUtil.GameRules, "m_bPlayerReady", i)) continue
+				
+				if (++ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
+					SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
+			}		
+		}
+		MissionAttributes.ThinkTable.BlueTeamReadyThink <- MissionAttributes.BlueTeamReadyThink
+		
+		MissionAttributes.SpawnHookTable.HumansMustJoinTeam <- MissionAttributes.HumansMustJoinTeam
+	break
 
 	//Options to revert global fixes below:
 
