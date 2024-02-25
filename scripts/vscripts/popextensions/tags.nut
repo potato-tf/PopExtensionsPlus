@@ -506,25 +506,6 @@ local popext_funcs =
 // local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
 local tagtest = "popext_dispenseroverride"
 
-function PopExtTags::AI_BotSpawn(bot) {
-	local scope = bot.GetScriptScope()
-
-	scope.bot <- AI_Bot(bot)
-	scope.BehaviorAttribs <- {}
-
-	if (bot.HasBotTag(tagtest)) {
-		local args = split(tagtest, "|")
-		local func = args.remove(0)
-		// printl(popext_funcs[func] + " : " + bot + " : " + args[1])
-		if (func in popext_funcs)
-			popext_funcs[func](bot, args)
-	}
-
-	//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
-
-	AddThinkToEnt(bot, "BotThink")
-}
-
 ::BotThink <- function()
 {
 	bot.OnUpdate()
@@ -533,7 +514,25 @@ function PopExtTags::AI_BotSpawn(bot) {
 }
 
 ::PopExtTags <- {
-
+	
+	function AI_BotSpawn(bot) {
+		local scope = bot.GetScriptScope()
+	
+		scope.bot <- AI_Bot(bot)
+		scope.BehaviorAttribs <- {}
+	
+		if (bot.HasBotTag(tagtest)) {
+			local args = split(tagtest, "|")
+			local func = args.remove(0)
+			// printl(popext_funcs[func] + " : " + bot + " : " + args[1])
+			if (func in popext_funcs)
+				popext_funcs[func](bot, args)
+		}
+	
+		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
+	
+		AddThinkToEnt(bot, "BotThink")
+	}
 	function OnGameEvent_post_inventory_application(params) {
 		local bot = GetPlayerFromUserID(params.userid)
 
