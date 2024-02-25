@@ -84,7 +84,8 @@ function MissionAttributes::ResetConvars() {
 	MissionAttributes.ConVars.clear()
 }
 
-local noRomeCarrier = false
+local noromecarrier = false
+local pathnum = 0
 function MissionAttributes::MissionAttr(attr, value = 0) {
 	local success = true
 	switch(attr) {
@@ -647,7 +648,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			", -1, null, null)
 
 			//set value to 2 to also un-rome the carrier tank
-			if (value < 2 || noRomeCarrier) return
+			if (value < 2 || noromecarrier) return
 
 			local carrier = Entities.FindByName(null, "botship_dynamic") //some maps have a targetname for it
 
@@ -661,7 +662,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 			}
 			SetPropIntArray(carrier, "m_nModelIndexOverrides", carrierPartsIndex, 3)
-			noRomeCarrier = true
+			noromecarrier = true
 		}
 
 		MissionAttributes.SpawnHookTable.NoRome <- MissionAttributes.NoRome
@@ -846,18 +847,19 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	// =========================================================
 	case "ExtraTankPath":
+
 		if (typeof value != "array") {
 			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
 			success = false
 			break
 		}
 
-		function MissionAttributes::ExtraTankPath()
-		{
-			foreach (i, pos in value)
-			{
+		pathnum++
+		function MissionAttributes::ExtraTankPath() {
+			foreach (i, pos in value) {
 				SpawnEntityFromTable("path_track", {
-					targetname = format("extratankpath%d_%d", pathnum, i)
+					targetname = format("extratankpath%d_%d", pathnum, i+1)
+					target = format("extratankpath%d_%d", pathnum, i+2)
 				})
 			}
 		}
