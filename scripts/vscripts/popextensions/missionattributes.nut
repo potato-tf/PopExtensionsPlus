@@ -550,24 +550,20 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 			if (value & 8) {
 				function RobotVOThink() {
-					for (local ent; ent = Entities.FindByClassname(ent, "instanced_scripted_scene"); )
-			 {
+					for (local ent; ent = Entities.FindByClassname(ent, "instanced_scripted_scene"); ) {
 						if (ent.GetEFlags() & CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE) continue
 						ent.AddEFlags(CONST.EFL_IS_BEING_LIFTED_BY_BARNACLE)
 
 						local owner = GetPropEntity(ent, "m_hOwner")
-						if (owner != null && !owner.IsBotOfType(1337))
-				 {
+						if (owner != null && !owner.IsBotOfType(1337)) {
 
 							local vcdpath = GetPropString(ent, "m_szInstanceFilename");
 							if (!vcdpath || vcdpath == "") return -1
 
 							local dotindex	 = vcdpath.find(".")
 							local slashindex = null;
-							for (local i = dotindex; i >= 0; --i)
-					 {
-								if (vcdpath[i] == '/' || vcdpath[i] == '\\')
-						 {
+							for (local i = dotindex; i >= 0; --i) {
+								if (vcdpath[i] == '/' || vcdpath[i] == '\\') {
 									slashindex = i
 									break
 								}
@@ -578,8 +574,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 							scope.soundtable <- VCD_SOUNDSCRIPT_MAP[owner.GetPlayerClass()]
 							scope.vcdname	 <- vcdpath.slice(slashindex+1, dotindex)
 
-							if (scope.vcdname in scope.soundtable)
-					 {
+							if (scope.vcdname in scope.soundtable) {
 								local soundscript = scope.soundtable[scope.vcdname];
 								if (typeof soundscript == "string")
 									PopExtUtil.StopAndPlayMVMSound(owner, soundscript, 0);
@@ -604,8 +599,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 					local playervm = GetPropEntity(player, "m_hViewModel")
 					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 
-					for (local i = 0; i < SLOT_COUNT; i++)
-			 {
+					for (local i = 0; i < SLOT_COUNT; i++) {
 						local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 						if (wep == null || (wep.GetModelName() == vmodel)) continue
 
