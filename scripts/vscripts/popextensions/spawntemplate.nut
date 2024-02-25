@@ -33,7 +33,7 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 		function scope::PostSpawn(named_entities) {
 			//can only set bounding box size for brush entities after they spawn
 			foreach(entity in Entities) {
-				local buf = split(NetProps.GetPropString(entity, "m_iszResponseContext"), ",")
+				local buf = split(GetPropString(entity, "m_iszResponseContext"), ",")
 				if (buf.len() == 6) {
 					entity.SetSize(Vector(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger()), Vector(buf[3].tointeger(), buf[4].tointeger(), buf[5].tointeger()))
 					entity.SetSolid(2)
@@ -112,7 +112,7 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 								EntFire(target, action, param, delay, null)
 							}
 						}
-						NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
+						SetPropString(self, "m_iszScriptThinkFunction", "")
 					}
 
 					if (removeifkilled != "") {
@@ -121,7 +121,7 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 								if (entity.IsValid())
 									entity.Kill()
 
-							NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
+							SetPropString(self, "m_iszScriptThinkFunction", "")
 						}
 					}
 					return -1
@@ -249,7 +249,7 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 		function scope::PostSpawn(named_entities) {
 			//can only set bounding box size for brush entities after they spawn
 			foreach(entity in Entities) {
-				local buf = split(NetProps.GetPropString(entity, "m_iszResponseContext"), ",");
+				local buf = split(GetPropString(entity, "m_iszResponseContext"), ",");
 				if (buf.len() == 6) {
 					entity.SetSize(Vector(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger()), Vector(buf[3].tointeger(), buf[4].tointeger(), buf[5].tointeger()));
 					entity.SetSolid(2)
@@ -326,7 +326,7 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 		}
 		EntFireByHandle(template, "ForceSpawn", "", -1, null, null)
 	}
-	
+
 	//hook to both of these events to emulate OnWaveInit
 	Events = {
 		function OnGameEvent_mvm_wave_complete(params) {
