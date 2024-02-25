@@ -370,7 +370,7 @@
 			foreach(i, v in PopHooksScope.tankIcons)
 				_PopIncrementTankIcon(v)
 		
-			foreach(i, v in icons)
+			foreach(i, v in PopHooksScope.icons)
 				_PopIncrementIcon(v)
 		
 		}
