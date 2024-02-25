@@ -27,8 +27,7 @@
 		function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 
-		function OnGameEvent_post_inventory_application(params)
-		{
+		function OnGameEvent_post_inventory_application(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -44,15 +43,13 @@
 		}
 		// Hook all wave inits to reset parsing error counter.
 
-		function OnGameEvent_recalculate_holidays(params)
-		{
+		function OnGameEvent_recalculate_holidays(params) {
 			if (GetRoundState() != 3) return
 
 			MissionAttributes.InitWave();
 		}
 
-		function GameEvent_mvm_wave_complete(params)
-		{
+		function GameEvent_mvm_wave_complete(params) {
 			ResetConvars()
 			delete ::MissionAttributes
 			DebugLog(format("Cleaned up mission attribute %s", attr))
@@ -130,8 +127,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "NoCrumpkins":
 		local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl");
-		function MissionAttributes::NoCrumpkins()
-		{
+		function MissionAttributes::NoCrumpkins() {
 			switch(value)
 			{
 
@@ -152,8 +148,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "NoReanimators":
 		if (value < 1) return
-		function MissionAttributes::NoReanimators(params)
-		{
+		function MissionAttributes::NoReanimators(params) {
 			for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");)
 				EntFireByHandle(revivemarker, "Kill", "", -1, null, null)
 		}
@@ -164,8 +159,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "StandableHeads":
 		local movekeys = IN_FORWARD | IN_BACK | IN_LEFT | IN_RIGHT
-		function MissionAttributes::StandableHeads(params)
-		{
+		function MissionAttributes::StandableHeads(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -202,8 +196,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// =========================================================
 
 	case "MultiSapper":
-		function MissionAttributes::MultiSapper(params)
-		{
+		function MissionAttributes::MultiSapper(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337) || player.GetPlayerClass() < TF_CLASS_SPY) return
 
@@ -453,8 +446,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "SniperHideLasers":
 		if (value < 1) return
-		function MissionAttributes::SniperHideLasers()
-		{
+		function MissionAttributes::SniperHideLasers() {
 			for (local dot; dot = Entities.FindByClassname(dot, "env_sniperdot");)
 				if (dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS)
 					EntFireByHandle(dot, "Kill", "", -1, null, null)
@@ -472,8 +464,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "BotHeadshots":
 		if (value < 1) return
-		function MissionAttributes::BotHeadshots(params)
-		{
+		function MissionAttributes::BotHeadshots(params) {
 			local player = params.attacker, victim = params.const_entity
 
 			// //gib bots on explosive/crit dmg, doesn't work
@@ -512,8 +503,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// TODO: Make PlayersAreRobots 16 and HandModelOverride incompatible
 
 	case "PlayersAreRobots":
-		function MissionAttributes::PlayersAreRobots(params)
-		{
+		function MissionAttributes::PlayersAreRobots(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -652,8 +642,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// =========================================================
 
 	case "BotsAreHumans":
-		function MissionAttributes::BotsAreHumans(params)
-		{
+		function MissionAttributes::BotsAreHumans(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (!player.IsBotOfType(1337)) return
 			EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[bot.GetPlayerClass()]), -1, null, null)
@@ -666,8 +655,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "NoRome":
 		local carrierPartsIndex = GetModelIndex("models/bots/boss_bot/carrier_parts.mdl")
-		function MissionAttributes::NoRome(params)
-		{
+		function MissionAttributes::NoRome(params) {
 			local bot = GetPlayerFromUserID(params.userid)
 			if (bot.IsBotOfType(1337))
 				for (local child = bot.FirstMoveChild(); child != null; child = child.NextMovePeer())
@@ -701,8 +689,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "SpellDropRateCommon":
 		SetConvar("tf_spells_enabled", 1)
-		function MissionAttributes::SpellDropRateCommon(params)
-		{
+		function MissionAttributes::SpellDropRateCommon(params) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
@@ -719,8 +706,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "SpellDropRateGiant":
 		SetConvar("tf_spells_enabled", 1)
-		function MissionAttributes::SpellDropRateCommon(params)
-		{
+		function MissionAttributes::SpellDropRateCommon(params) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
@@ -737,8 +723,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "GiantsRareSpells":
 		SetConvar("tf_spells_enabled", 1)
-		function MissionAttributes::GiantsRareSpells()
-		{
+		function MissionAttributes::GiantsRareSpells() {
 			for (local spells; spells = Entities.FindByName(spells, "_giantspell");)
 				SetPropInt(spells, "m_nTier", 1)
 		}
@@ -761,8 +746,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// =========================================================
 
 	case "NoSkeleSplit":
-		function MissionAttributes::NoSkeleSplit()
-		{
+		function MissionAttributes::NoSkeleSplit() {
 			//kill skele spawners before they split from tf_zombie_spawner
 			for (local skelespell; skelespell = FindByClassname(skelespell, "tf_projectile_spellspawnzombie"); )
 				if (GetPropEntity(skelespell, "m_hThrower") == null)
@@ -805,8 +789,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// =========================================================
 
 	case "WaveStartCountdown":
-		function MissionAttributes::WaveStartCountdown()
-		{
+		function MissionAttributes::WaveStartCountdown() {
 			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
 			if (!GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return
 			local ready = 0
@@ -834,8 +817,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// MissionAttr("HandModelOverride", ["defaultpath", "scoutpath", "sniperpath"])
 	// "path" and "defaultpath" will have %class in the string replaced with the player class
 	case "HandModelOverride":
-		function MissionAttributes::HandModelOverride(params)
-		{
+		function MissionAttributes::HandModelOverride(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -894,13 +876,12 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	case "PlayerAttributes":
 		//setting maxhealth attribs doesn't update current HP
 		local healthattribs = {
-			"max health additive bonus" : null, 
+			"max health additive bonus" : null,
 			"max health additive penalty": null,
-			"SET BONUS: max health additive bonus": null, 
-			"hidden maxhealth non buffed": null, 
+			"SET BONUS: max health additive bonus": null,
+			"hidden maxhealth non buffed": null,
 		}
-		function MissionAttributes::PlayerAttributes(params)
-		{
+		function MissionAttributes::PlayerAttributes(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -942,8 +923,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// =========================================================
 
 	case "ItemAttributes":
-		function MissionAttributes::ItemAttributes(params)
-		{
+		function MissionAttributes::ItemAttributes(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -972,8 +952,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// =========================================================
 
 	case "ItemWhitelist":
-		if (typeof value != "array")
-		{
+		if (typeof value != "array") {
 			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
 			success = false
 			break
@@ -982,8 +961,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		PopExtUtil.ItemWhitelist = value
 		if (value.len() == 0) return
 
-		function MissionAttributes::ItemWhitelist(params)
-		{
+		function MissionAttributes::ItemWhitelist(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -1013,8 +991,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	// =========================================================
 
 	case "ItemBlacklist":
-		if (typeof value != "array")
-		{
+		if (typeof value != "array") {
 			MissionAttributes.RaiseValueError("ItemBlacklist", value, "Value must be array")
 			success = false
 			break
@@ -1023,8 +1000,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		PopExtUtil.ItemBlacklist = value
 		if (value.len() == 0) return
 
-		function MissionAttributes::ItemBlacklist(params)
-		{
+		function MissionAttributes::ItemBlacklist(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -1046,40 +1022,40 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 		MissionAttributes.SpawnHookTable.ItemBlacklist <- MissionAttributes.ItemBlacklist
 	break;
-	
+
 	// =========================================================
-	
+
 	case "HumansMustJoinTeam":
 		if (value != TF_TEAM_RED && value != TF_TEAM_BLUE) {
 			MissionAttributes.RaiseValueError("HumansMustJoinTeam", value, "Value must be 2 or 3")
 			success = false
-			break			
+			break
 		}
-		
+
 		function MissionAttributes::HumansMustJoinTeam(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			if (player.GetTeam() != value) {
 				EntFireByHandle(player, "RunScriptCode", format("ChangePlayerTeamMvM(self, %d)", value), 0.015, null, null)
 				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
 			}
 		}
-		
+
 		function BlueTeamReadyThink() {
 			if (value != TF_TEAM_BLUE || !GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return
-			
+
 			local ready = 0
 			for (local i = 0; i < GetPropArraySize(PopExtUtil.GameRules, "m_bPlayerReady"); i++)
 			{
 				if (!GetPropBoolArray(PopExtUtil.GameRules, "m_bPlayerReady", i)) continue
-				
+
 				if (++ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
 					SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
-			}		
+			}
 		}
 		MissionAttributes.ThinkTable.BlueTeamReadyThink <- MissionAttributes.BlueTeamReadyThink
-		
+
 		MissionAttributes.SpawnHookTable.HumansMustJoinTeam <- MissionAttributes.HumansMustJoinTeam
 	break
 
