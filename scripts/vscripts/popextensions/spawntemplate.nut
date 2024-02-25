@@ -1,7 +1,7 @@
 // By washy
-popExtScope.waveSchedulePointTemplates <- []
-popExtScope.wavePointTemplates         <- []
-popExtScope.globalTemplateSpawnCount   <- 0
+PopExtScope.waveSchedulePointTemplates <- []
+PopExtScope.wavePointTemplates         <- []
+PopExtScope.globalTemplateSpawnCount   <- 0
 
 ::CopyTable <- function(table) {
 	if (table == null) return
@@ -21,7 +21,7 @@ popExtScope.globalTemplateSpawnCount   <- 0
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
 ::SpawnTemplate <- function(pointtemplate, parent = null, origin = Vector(), angles = QAngle()) {
 	// credit to ficool2
-	popExtScope.globalTemplateSpawnCount <- popExtScope.globalTemplateSpawnCount + 1
+	PopExtScope.globalTemplateSpawnCount <- PopExtScope.globalTemplateSpawnCount + 1
 
 	local template = SpawnEntityFromTable("point_script_template", {})
 	local scope = template.GetScriptScope()
@@ -54,7 +54,7 @@ popExtScope.globalTemplateSpawnCount   <- 0
 			}
 
 			scope.SpawnedEntities.append(entity)
-			popExtScope.wavePointTemplates.append(entity)
+			PopExtScope.wavePointTemplates.append(entity)
 
 			if (parent != null) {
 				//this function is defined in popextensions.nut
@@ -193,14 +193,14 @@ popExtScope.globalTemplateSpawnCount   <- 0
 							foreach(targetname in scope.EntityFixedUpTargetName) {
 								if (value.find(targetname) != null && value.find("/") == null) //ignore potential file paths, also ignores targetnames with "/"
 								{
-									keyvalues[key] <- value.slice(0, targetname.len()) + popExtScope.globalTemplateSpawnCount + value.slice(targetname.len())
+									keyvalues[key] <- value.slice(0, targetname.len()) + PopExtScope.globalTemplateSpawnCount + value.slice(targetname.len())
 								}
 							}
 						}
 					}
 				}
 			}
-			if (index == "RemoveIfKilled") scope.removeifkilled <- entity + popExtScope.globalTemplateSpawnCount
+			if (index == "RemoveIfKilled") scope.removeifkilled <- entity + PopExtScope.globalTemplateSpawnCount
 		}
 	}
 
@@ -242,13 +242,13 @@ popExtScope.globalTemplateSpawnCount   <- 0
 //altenative version of SpawnTemplate that will recreate itself only after wave resets (after failure, after voting, after using tf_mvm_jump_to_wave) to imitate spawning in WaveSchedule
 //does not accept parent parameter, does not allow parenting entities
 ::SpawnTemplateWaveSchedule <- function(pointtemplate, origin = null, angles = null) {
-	popExtScope.waveSchedulePointTemplates.append([pointtemplate, origin, angles])
+	PopExtScope.waveSchedulePointTemplates.append([pointtemplate, origin, angles])
 }
 
 //simplifed version of SpawnTemplate, accepts whether or not to perform name fixup as a boolean parameter
 ::SpawnTemplateSimple <- function(pointtemplate, parent = null, origin = Vector(), angles = QAngle(), fixup = true) {
 	// credit to ficool2
-	popExtScope.globalTemplateSpawnCount <- popExtScope.globalTemplateSpawnCount + 1
+	PopExtScope.globalTemplateSpawnCount <- PopExtScope.globalTemplateSpawnCount + 1
 
 	local template = SpawnEntityFromTable("point_script_template", {})
 	local scope    = template.GetScriptScope()
@@ -305,7 +305,7 @@ popExtScope.globalTemplateSpawnCount   <- 0
 							foreach(targetname in scope.EntityFixedUpTargetName) {
 								if (value.find(targetname) != null && value.find("/") == null) //ignore potential file paths, also ignores targetnames with "/"
 								{
-									keyvalues[key] <- value.slice(0, targetname.len()) + popExtScope.globalTemplateSpawnCount + value.slice(targetname.len())
+									keyvalues[key] <- value.slice(0, targetname.len()) + PopExtScope.globalTemplateSpawnCount + value.slice(targetname.len())
 								}
 							}
 						}
@@ -343,17 +343,17 @@ popExtScope.globalTemplateSpawnCount   <- 0
 
 //hook to both of these events to emulate OnWaveInit
 function OnGameEvent_mvm_wave_complete(params) {
-	foreach(entity in popExtScope.wavePointTemplates)
+	foreach(entity in PopExtScope.wavePointTemplates)
 		if (entity.IsValid())
 			entity.Kill()
 
-	popExtScope.wavePointTemplates.clear()
+	PopExtScope.wavePointTemplates.clear()
 }
 
 function OnGameEvent_mvm_wave_failed(params) //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
 {
 	//messy
-	foreach(param in popExtScope.waveSchedulePointTemplates) {
+	foreach(param in PopExtScope.waveSchedulePointTemplates) {
 		SpawnTemplate(param[0], null, param[1], param[2])
 	}
 }
