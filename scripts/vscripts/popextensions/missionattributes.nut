@@ -111,7 +111,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 		// Set Holiday logic
 		SetConvar("tf_forced_holiday", value)
-	if (value == 0) break;
+	if (value == 0) break
 
 		local ent = Entities.FindByName(null, "MissionAttrHoliday");
 		if (ent != null) ent.Kill();
@@ -142,7 +142,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null)
 		}
 		MissionAttributes.ThinkTable.NoCrumpkins <- MissionAttributes.NoCrumpkins
-	break;
+	break
 
 	// =========================================================
 
@@ -153,7 +153,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 				EntFireByHandle(revivemarker, "Kill", "", -1, null, null)
 		}
 		MissionAttributes.DeathHookTable.NoReanimators <- MissionAttributes.NoReanimators
-	break;
+	break
 
 	// =========================================================
 
@@ -179,19 +179,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 
 	case "666Wavebar": //doesn't work until wave switches, won't work on W1
 		SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMEventPopfileType", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "WaveNum":
 		SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "MaxWaveNum":
 		SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value)
-	break;
+	break
 
 	// =========================================================
 
@@ -213,234 +213,234 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 			player.GetScriptScope().BuiltObjectTable.MultiSapper <- MultiSapper
 		}
 		MissionAttributes.SpawnHookTable.MultiSapper <- MissionAttributes.MultiSapper
-	break;
+	break
 
 	// =========================================================
 
 	//all of these could just be set directly in the pop easily, however popfile's have a 4096 character limit for vscript so might as well save space
 	case "NoRefunds":
 		SetConvar("tf_mvm_respec_enabled", 0);
-	break;
+	break
 
 	// =========================================================
 
 	case "RefundLimit":
 		SetConvar("tf_mvm_respec_enabled", 1)
 		SetConvar("tf_mvm_respec_limit", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "RefundGoal":
 		SetConvar("tf_mvm_respec_enabled", 1)
 		SetConvar("tf_mvm_respec_credit_goal", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "FixedBuybacks":
 		SetConvar("tf_mvm_buybacks_method", 1)
-	break;
+	break
 
 	// =========================================================
 
 	case "BuybacksPerWave":
 		SetConvar("tf_mvm_buybacks_per_wave", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "NoBuybacks":
 		SetConvar("tf_mvm_buybacks_method", value)
 		SetConvar("tf_mvm_buybacks_per_wave", 0)
-	break;
+	break
 
 	// =========================================================
 
 	case "DeathPenalty":
 		SetConvar("tf_mvm_death_penalty", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "BonusRatioHalf":
 		SetConvar("tf_mvm_currency_bonus_ratio_min", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "BonusRatioFull":
 		SetConvar("tf_mvm_currency_bonus_ratio_max", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "UpgradeFile":
 		DoEntFire("tf_gamerules", "SetCustomUpgradesFile", value, -1, null, null);
-	break;
+	break
 
 	// =========================================================
 
 	case "FlagEscortCount":
 		SetConvar("tf_bot_flag_escort_max_count", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "BombMovementPenalty":
 		SetConvar("tf_mvm_bot_flag_carrier_movement_penalty", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "MaxSkeletons":
 		SetConvar("tf_max_active_zombie", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "TurboPhysics":
 		SetConvar("sv_turbophysics", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "Accelerate":
 		SetConvar("sv_accelerate", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "AirAccelerate":
 		SetConvar("sv_airaccelerate", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "BotPushaway":
 		SetConvar("tf_avoidteammates_pushaway", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "TeleUberDuration":
 		SetConvar("tf_mvm_engineer_teleporter_uber_duration", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "RedMaxPlayers":
 		SetConvar("tf_mvm_defenders_team_size", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "MaxVelocity":
 		SetConvar("sv_maxvelocity", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "ConchHealthOnHitRegen":
 		SetConvar("tf_dev_health_on_damage_recover_percentage", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "MarkForDeathLifetime":
 		SetConvar("tf_dev_marked_for_death_lifetime", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "VacNumCharges":
 		SetConvar("weapon_medigun_resist_num_chunks", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "DoubleDonkWindow":
 		SetConvar("tf_double_donk_window", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "ConchSpeedBoost":
 		SetConvar("tf_whip_speed_increase", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "StealthDmgReduction":
 		SetConvar("tf_stealth_damage_reduction", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "FlagCarrierCanFight":
 		SetConvar("tf_mvm_bot_allow_flag_carrier_to_fight", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "HHHChaseRange":
 		SetConvar("tf_halloween_bot_chase_range", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "HHHAttackRange":
 		SetConvar("tf_halloween_bot_attack_range", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "HHHQuitRange":
 		SetConvar("tf_halloween_bot_quit_range", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "HHHTerrifyRange":
 		SetConvar("tf_halloween_bot_terrify_radius", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "HHHHealthBase":
 		SetConvar("tf_halloween_bot_health_base", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "HHHHealthPerPlayer":
 		SetConvar("tf_halloween_bot_health_per_player", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "SentryHintBombForwardRange":
 		SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_forward_range", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "SentryHintBombBackwardRange":
 		SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_backward_range", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "SentryHintMinDistanceFromBomb":
 		SetConvar("tf_bot_engineer_mvm_hint_min_distance_from_bomb", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "NoBusterFF":
 		if (value != 1 || value != 0 ) RaiseIndexError(attr)
 		SetConvar("tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1)
-	break;
+	break
 
 	// =========================================================
 
@@ -458,7 +458,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.ThinkTable.SniperHideLasers <- MissionAttributes.SniperHideLasers
-	break;
+	break
 
 	// =========================================================
 
@@ -486,7 +486,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.TakeDamageTable.BotHeadshots <- MissionAttributes.BotHeadshots
-	break;
+	break
 
 	// =========================================================
 
@@ -583,7 +583,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 								if (vcdpath[i] == '/' || vcdpath[i] == '\\')
 								{
 									slashindex = i
-									break;
+									break
 								}
 							}
 
@@ -637,7 +637,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots
-	break;
+	break
 
 	// =========================================================
 
@@ -649,7 +649,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.SpawnHookTable.BotsAreHumans <- MissionAttributes.BotsAreHumans
-	break;
+	break
 
 	// =========================================================
 
@@ -674,7 +674,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 					if (GetPropInt(props, "m_nModelIndex") != carrierPartsIndex) continue
 
 					carrier = props
-					break;
+					break
 				}
 
 			}
@@ -683,7 +683,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.SpawnHookTable.NoRome <- MissionAttributes.NoRome
-	break;
+	break
 
 	// =========================================================
 
@@ -700,7 +700,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
-	break;
+	break
 
 	// =========================================================
 
@@ -717,7 +717,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
-	break;
+	break
 
 	// =========================================================
 
@@ -729,19 +729,19 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.ThinkTable.GiantsRareSpells <- MissionAttributes.GiantsRareSpells
-	break;
+	break
 
 	// =========================================================
 
 	case "GrapplingHookEnable":
 		SetConvar("tf_grapplinghook_enable", value)
-	break;
+	break
 
 	// =========================================================
 
 	case "GiantScale":
 		SetConvar("tf_mvm_miniboss_scale", value)
-	break;
+	break
 
 	// =========================================================
 
@@ -784,7 +784,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.ThinkTable.NoSkeleSplit <- MissionAttributes.NoSkeleSplit
-	break;
+	break
 
 	// =========================================================
 
@@ -809,7 +809,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown
-	break;
+	break
 
 	// =========================================================
 
@@ -869,7 +869,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
-	break;
+	break
 
 	// =========================================================
 
@@ -918,7 +918,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.SpawnHookTable.PlayerAttributes <- MissionAttributes.PlayerAttributes
-	break;
+	break
 
 	// =========================================================
 
@@ -947,7 +947,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.SpawnHookTable.ItemAttributes <- MissionAttributes.ItemAttributes
-	break;
+	break
 
 	// =========================================================
 
@@ -986,7 +986,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.SpawnHookTable.ItemWhitelist <- MissionAttributes.ItemWhitelist
-	break;
+	break
 
 	// =========================================================
 
@@ -1021,7 +1021,7 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 		}
 
 		MissionAttributes.SpawnHookTable.ItemBlacklist <- MissionAttributes.ItemBlacklist
-	break;
+	break
 
 	// =========================================================
 
@@ -1066,14 +1066,14 @@ function MissionAttributes::MissionAttr(attr, value = 0)
 	case "ReflectableDF":
 		if ("DragonsFuryFix" in GlobalFixes.ThinkTable)
 			delete GlobalFixes.ThinkTable.DragonsFuryFix
-	break;
+	break
 
 	// =========================================================
 
 	case "RestoreYERNerf":
 		if ("YERDisguiseFix" in GlobalFixes.TakeDamageTable)
 			delete GlobalFixes.TakeDamageTable.YERDisguiseFix
-	break;
+	break
 
 	// =========================================================
 
