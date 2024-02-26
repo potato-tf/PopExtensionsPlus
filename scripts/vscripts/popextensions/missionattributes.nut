@@ -30,9 +30,11 @@
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 
 		function OnGameEvent_post_inventory_application(params) {
+			
 			local player = GetPlayerFromUserID(params.userid)
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
+
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
 			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
@@ -46,6 +48,7 @@
 		// Hook all wave inits to reset parsing error counter.
 
 		function OnGameEvent_recalculate_holidays(params) {
+			
 			if (GetRoundState() != GR_STATE_PREROUND) return
 
 			MissionAttributes.ResetConvars()
@@ -55,13 +58,20 @@
 			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 		}
 
-		function GameEvent_mvm_wave_complete(params) {
+		function OnGameEvent_mvm_wave_complete(params) {
 
 			MissionAttributes.ResetConvars()
 			if ("MissionAttrs" in ROOT) delete ::MissionAttrs
 			MissionAttributes.PathNum = 0
 
 			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
+		}
+
+		function OnGameEvent_mvm_mission_complete(params) {
+			
+			MissionAttributes.ResetConvars()
+			if (FindByName(null, "popext_missionattr_ent") != null) MissionAttrEntity.Kill()
+			delete ::MissionAttributes
 		}
 	}
 };
