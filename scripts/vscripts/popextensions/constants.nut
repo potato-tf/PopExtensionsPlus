@@ -1,5 +1,14 @@
 // Allow expression constants
-::CONST <- getconsttable()
+// ::CONST <- getconsttable()
+
+//my disappointment is immeasureable, and my day is ruined.
+
+//"reminder that constants are resolved at preprocessor level and not runtime"
+//"if you add them dynamically to the table they wont show up until you execute a new script as the preprocessor isnt aware yet"
+
+//the performance difference here is not worth refactoring everything around using the constant table so whatever
+
+::CONST <- getroottable()
 
 if (!("ConstantNamingConvention" in CONST)) {
 	foreach(a, b in Constants)
