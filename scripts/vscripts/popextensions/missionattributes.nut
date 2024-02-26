@@ -1,16 +1,16 @@
 ::MissionAttributes <- {
 
 	CurAttrs = {} // Array storing currently modified attributes.
-	ConVars = {} //table storing original convar values
+	ConVars  = {} //table storing original convar values
 
-	ThinkTable = {}
+	ThinkTable      = {}
 	TakeDamageTable = {}
-	SpawnHookTable = {}
-	DeathHookTable = {}
+	SpawnHookTable  = {}
+	DeathHookTable  = {}
 	// InitWaveTable = {}
 	DisconnectTable = {}
 
-	DebugText = false
+	DebugText        = false
 	RaisedParseError = false
 
 	PathNum = 0
@@ -30,7 +30,7 @@
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 
 		function OnGameEvent_post_inventory_application(params) {
-			
+
 			local player = GetPlayerFromUserID(params.userid)
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -48,7 +48,7 @@
 		// Hook all wave inits to reset parsing error counter.
 
 		function OnGameEvent_recalculate_holidays(params) {
-			
+
 			if (GetRoundState() != GR_STATE_PREROUND) return
 
 			MissionAttributes.ResetConvars()
@@ -68,7 +68,7 @@
 		}
 
 		function OnGameEvent_mvm_mission_complete(params) {
-			
+
 			MissionAttributes.ResetConvars()
 			if (FindByName(null, "popext_missionattr_ent") != null) MissionAttrEntity.Kill()
 			delete ::MissionAttributes
@@ -116,30 +116,30 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	// =========================================================
 	case "ForceHoliday":
-	// Replicates sigsegv-mvm: ForceHoliday.
-	// Forces a tf_holiday for the mission.
-	// Supported Holidays are:
-	//	0 - None
-	//	1 - Birthday
-	//	2 - Halloween
-	//	3 - Christmas
-	// @param Holiday		Holiday number to force.
-	// @error TypeError		If type is not an integer.
-	// @error IndexError	If invalid holiday number is passed.
-		// Error Handling
-	try (value.tointeger()) catch(_) {RaiseTypeError(attr, "int"); success = false; break}
-	if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break}
-	if (value < 0 || value > 11) {RaiseIndexError(attr, [0, 11]); success = false; break}
+		// Replicates sigsegv-mvm: ForceHoliday.
+		// Forces a tf_holiday for the mission.
+		// Supported Holidays are:
+		//	0 - None
+		//	1 - Birthday
+		//	2 - Halloween
+		//	3 - Christmas
+		// @param Holiday		Holiday number to force.
+		// @error TypeError		If type is not an integer.
+		// @error IndexError	If invalid holiday number is passed.
+			// Error Handling
+		try (value.tointeger()) catch(_) {RaiseTypeError(attr, "int"); success = false; break}
+		if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break}
+		if (value < 0 || value > 11) {RaiseIndexError(attr, [0, 11]); success = false; break}
 
 		// Set Holiday logic
 		SetConvar("tf_forced_holiday", value)
-	if (value == 0) break
+		if (value == 0) break
 
 		local ent = Entities.FindByName(null, "MissionAttrHoliday");
 		if (ent != null) ent.Kill();
-		SpawnEntityFromTable("tf_logic_holiday",
- {
-			targetname = "MissionAttrHoliday",
+
+		SpawnEntityFromTable("tf_logic_holiday", {
+			targetname   = "MissionAttrHoliday",
 			holiday_type = value
 		});
 
@@ -151,17 +151,17 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 		local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl");
 		function MissionAttributes::NoCrumpkins() {
 			switch(value) {
-
-				case 1:
-
+			case 1:
 				for (local pumpkin; pumpkin = Entities.FindByClassname(pumpkin, "tf_ammo_pack");)
 					if (GetPropInt(pumpkin, "m_nModelIndex") == pumpkinIndex)
 						EntFireByHandle(pumpkin, "Kill", "", -1, null, null) //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
 			}
+
 			for (local i = 1, player; i <= MaxClients(); i++)
 				if (player = PlayerInstanceFromIndex(i), player && player.InCond(TF_COND_CRITBOOSTED_PUMPKIN)) //TF_COND_CRITBOOSTED_PUMPKIN
 					EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null)
 		}
+
 		MissionAttributes.ThinkTable.NoCrumpkins <- MissionAttributes.NoCrumpkins
 	break
 
@@ -169,10 +169,12 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	case "NoReanimators":
 		if (value < 1) return
+
 		function MissionAttributes::NoReanimators(params) {
 			for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");)
 				EntFireByHandle(revivemarker, "Kill", "", -1, null, null)
 		}
+
 		MissionAttributes.DeathHookTable.NoReanimators <- MissionAttributes.NoReanimators
 	break
 
@@ -465,6 +467,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	case "SniperHideLasers":
 		if (value < 1) return
+
 		function MissionAttributes::SniperHideLasers() {
 			for (local dot; dot = Entities.FindByClassname(dot, "env_sniperdot");)
 				if (dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS)
@@ -483,6 +486,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	case "BotHeadshots":
 		if (value < 1) return
+
 		function MissionAttributes::BotHeadshots(params) {
 			local player = params.attacker, victim = params.const_entity
 
@@ -544,10 +548,10 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 					PopExtUtil.PlayerRobotModel(player, model)
 					return
 				}
+
 				EntFireByHandle(player, "SetCustomModelWithClassAnimations", model, 1, null, null)
 				PopExtUtil.SetEntityColor(player, 255, 255, 255, 255)
 				SetPropInt(player, "m_nRenderMode", kRenderFxNone) //dangerous constant name lol
-
 			}
 
 			if (value & 2) {
@@ -700,7 +704,6 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
-
 			if (!bot.IsBotOfType(1337) || bot.IsMiniBoss()) return
 
 			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
@@ -717,7 +720,6 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
-
 			if (!bot.IsBotOfType(1337) || !bot.IsMiniBoss()) return
 
 			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
@@ -734,7 +736,6 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
-
 			if (!bot.IsBotOfType(1337) || bot.IsMiniBoss()) return
 
 			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })
@@ -751,7 +752,6 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
-
 			if (!bot.IsBotOfType(1337) || !bot.IsMiniBoss()) return
 
 			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })

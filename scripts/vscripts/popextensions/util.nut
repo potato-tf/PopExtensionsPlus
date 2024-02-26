@@ -1,5 +1,7 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 
+EFL_USER <- 1048576 // EFL_IS_BEING_LIFTED_BY_BARNACLE
+
 ::PopExtUtil <- {
 
 	PlayerArray = []
@@ -36,7 +38,7 @@
 		[9] = ["models/workshop/player/items/engineer/tw_engineerbot_armor/tw_engineerbot_armor.mdl", "models/workshop/player/items/engineer/tw_engineerbot_helmet/tw_engineerbot_helmet.mdl"],
 
 	}
-	
+
 	ROMEVISION_MODELINDEXES = []
 
 	DeflectableProjectiles = {
@@ -86,10 +88,10 @@
 		function OnGameEvent_mvm_wave_complete(params) { PopExtUtil.IsWaveStarted = false }
 		function OnGameEvent_mvm_wave_failed(params) { PopExtUtil.IsWaveStarted = false }
 		function OnGameEvent_mvm_begin_wave(params) { PopExtUtil.IsWaveStarted = true }
-	
+
 		function OnGameEvent_post_inventory_application(params) {
 			local player = GetPlayerFromUserID(params.userid)
-			
+
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
@@ -106,14 +108,14 @@
 
 			foreach (k, v in scope.MyWeaponsArray)
 			if (player.IsBotOfType(1337)) return
-	
+
 			if (PopExtUtil.PlayerArray.find(player) == null) PopExtUtil.PlayerArray.append(player)
-			
+
 		}
-	
+
 		function OnGameEvent_player_disconnect(params) {
 			local player = GetPlayerFromUserID(params.userid)
-	
+
 			for (local i = PopExtUtil.PlayerArray.len() - 1; i >= 0; i--)
 				if (PopExtUtil.PlayerArray[i] == null || PopExtUtil.PlayerArray[i] == player)
 					PopExtUtil.PlayerArray.remove(i)
@@ -387,10 +389,10 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePref
 		//make text display slightly longer depending on string length
 		local delaybetweendisplays = textPrintTime
 		if (delaybetweendisplays == -1) {
-			delaybetweendisplays = s.len() / 10 
+			delaybetweendisplays = s.len() / 10
 			if (delaybetweendisplays < 2) delaybetweendisplays = 2; else if (delaybetweendisplays > 12) delaybetweendisplays = 12
 		}
-		
+
 		//allow for pauses in the announcement
 		if (startswith(s, "PAUSE")) {
 			local pause = split(s, " ")[1].tofloat()
@@ -562,7 +564,7 @@ function PopExtUtil::SwitchToFirstValidWeapon(player) {
 
 		player.Weapon_Switch(wep)
 		return wep
-	}	
+	}
 }
 
 function PopExtUtil::HasEffect(ent, value) {
@@ -581,7 +583,7 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 	SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
 	SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model))
 	SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
-	SetPropBool(wearable, STRING_NETPROP_ITEMDEF, true) 
+	SetPropBool(wearable, STRING_NETPROP_ITEMDEF, true)
 	SetPropEntity(wearable, "m_hOwnerEntity", player)
 	wearable.SetTeam(player.GetTeam())
 	wearable.SetOwner(player)
@@ -938,15 +940,15 @@ function PopExtUtil::StopAndPlayMVMSound(player, soundscript, delay) {
 	player.ValidateScriptScope()
 	local scope = player.GetScriptScope()
 	scope.sound <- soundscript
-	
+
 	EntFireByHandle(player, "RunScriptCode", "self.StopSound(sound);", delay, null, null)
-	
+
 	local sound	   =  scope.sound
 	local dotindex =  sound.find(".")
 	if (dotindex == null) return
-	
+
 	scope.mvmsound <- sound.slice(0, dotindex+1) + "MVM_" + sound.slice(dotindex+1)
-	
+
 	EntFireByHandle(player, "RunScriptCode", "self.EmitSound(mvmsound);", delay + 0.015, null, null)
 }
 
@@ -954,7 +956,7 @@ function PopExtUtil::StringReplace(str, findwhat, replace) {
 	local returnstring = ""
 	local findwhatlen  = findwhat.len()
 	local splitlist	   = [];
-	
+
 	local start = 0
 	local previndex = 0
 	while (start < str.len()) {
@@ -964,26 +966,26 @@ function PopExtUtil::StringReplace(str, findwhat, replace) {
 				splitlist.append(str.slice(start))
 			break
 		}
-		
+
 		splitlist.append(str.slice(previndex, index))
-		
+
 		start = index + findwhatlen
 		previndex = start
 	}
-	
+
 	foreach (index, s in splitlist) {
 		if (index < splitlist.len() - 1)
 			returnstring += s + replace;
 		else
 			returnstring += s
 	}
-	
+
 	return returnstring
 }
 
 function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT) {
 	if (player == null || !player.IsPlayer()) return
-	
+
 	function FindTargetPlayer(passcond) {
 		local target = null
 		for (local i = 1; i <= MAX_CLIENTS; i++) {
@@ -998,7 +1000,7 @@ function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_
 		}
 		return target
 	}
-	
+
 	if (target == null) {
 		// Find disguise target
 		target = FindTargetPlayer(@(p) p.GetTeam() == tfteam && p.GetPlayerClass() == tfclass)
@@ -1006,7 +1008,7 @@ function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_
 		if (target == null)
 			target = FindTargetPlayer(@(p) p.GetTeam() == tfteam)
 	}
-	
+
 	// Disguise as this player
 	if (target != null) {
 		SetPropInt(player, "m_Shared.m_nDisguiseTeam", target.GetTeam())
@@ -1019,14 +1021,14 @@ function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_
 	// No valid targets, just give us a generic disguise
 	else {
 		SetPropInt(player, "m_Shared.m_nDisguiseTeam", tfteam)
-		SetPropInt(player, "m_Shared.m_nDisguiseClass", tfclass)		
+		SetPropInt(player, "m_Shared.m_nDisguiseClass", tfclass)
 	}
-	
+
 	player.AddCond(TF_COND_DISGUISED)
-	
+
 	// Hack to get our movespeed set correctly for our disguise
 	player.AddCond(TF_COND_SPEED_BOOST)
 	player.RemoveCond(TF_COND_SPEED_BOOST)
-	
+
 	//player.AddCondEx(TF_COND_STEALTHED_USER_BUFF_FADING, 1, null)
 }
