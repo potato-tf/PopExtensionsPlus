@@ -49,7 +49,6 @@ const SPELL_BUMPER_OVERHEAL      = 14
 const SPELL_BUMPER_BOMBHEAD      = 15
 const SPELL_COUNT = 16
 
-// Can be put into the constant table like this? "const" declaration does not allow for newlines in strings
 const MATTR_ERROR = "MissionAttr ERROR: "
 const STRING_NETPROP_ITEMDEF = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
 

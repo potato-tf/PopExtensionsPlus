@@ -46,10 +46,11 @@
 		// Hook all wave inits to reset parsing error counter.
 
 		function OnGameEvent_recalculate_holidays(params) {
-			if (GetRoundState() != 3) return
+			if (GetRoundState() != GR_STATE_PREROUND) return
 
 			MissionAttributes.ResetConvars()
 			if ("MissionAttrs" in ROOT) delete ::MissionAttrs
+			MissionAttributes.PathNum = 0
 
 			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 		}
@@ -58,6 +59,7 @@
 
 			MissionAttributes.ResetConvars()
 			if ("MissionAttrs" in ROOT) delete ::MissionAttrs
+			MissionAttributes.PathNum = 0
 
 			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 		}
