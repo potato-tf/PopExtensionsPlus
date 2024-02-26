@@ -670,9 +670,9 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	// =========================================================
 
-	case "SpellDropRateCommon":
+	case "SpellRateCommon":
 		SetConvar("tf_spells_enabled", 1)
-		function MissionAttributes::SpellDropRateCommon(params) {
+		function MissionAttributes::SpellRateCommon(params) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
@@ -682,14 +682,14 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
 		}
 
-		MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
+		MissionAttributes.DeathHookTable.SpellRateCommon <- MissionAttributes.SpellRateCommon
 	break
 
 	// =========================================================
 
-	case "SpellDropRateGiant":
+	case "SpellRateGiant":
 		SetConvar("tf_spells_enabled", 1)
-		function MissionAttributes::SpellDropRateCommon(params) {
+		function MissionAttributes::SpellRateGiant(params) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
@@ -699,19 +699,41 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
 		}
 
-		MissionAttributes.DeathHookTable.SpellDropRateCommon <- MissionAttributes.SpellDropRateCommon
+		MissionAttributes.DeathHookTable.SpellRateGiant <- MissionAttributes.SpellRateGiant
 	break
 
 	// =========================================================
 
-	case "GiantsRareSpells":
+	case "RareSpellRateCommon":
 		SetConvar("tf_spells_enabled", 1)
-		function MissionAttributes::GiantsRareSpells() {
-			for (local spells; spells = Entities.FindByName(spells, "_giantspell");)
-				SetPropInt(spells, "m_nTier", 1)
+		function MissionAttributes::RareSpellRateCommon(params) {
+			if (RandomFloat(0, 1) > value) return
+
+			local bot = GetPlayerFromUserID(params.userid)
+
+			if (!bot.IsBotOfType(1337) || bot.IsMiniBoss()) return
+
+			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })
 		}
 
-		MissionAttributes.ThinkTable.GiantsRareSpells <- MissionAttributes.GiantsRareSpells
+		MissionAttributes.DeathHookTable.RareSpellRateCommon <- MissionAttributes.RareSpellRateCommon
+	break
+
+	// =========================================================
+
+	case "RareSpellRateGiant":
+		SetConvar("tf_spells_enabled", 1)
+		function MissionAttributes::RareSpellRateGiant(params) {
+			if (RandomFloat(0, 1) > value) return
+
+			local bot = GetPlayerFromUserID(params.userid)
+
+			if (!bot.IsBotOfType(1337) || !bot.IsMiniBoss()) return
+
+			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })
+		}
+
+		MissionAttributes.DeathHookTable.RareSpellRateGiant <- MissionAttributes.RareSpellRateGiant
 	break
 
 	// =========================================================
@@ -857,10 +879,11 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 		pathnum++
 		function MissionAttributes::ExtraTankPath() {
 			foreach (i, pos in value) {
-				SpawnEntityFromTable("path_track", {
+				local track = SpawnEntityFromTable("path_track", {
 					targetname = format("extratankpath%d_%d", pathnum, i+1)
 					target = format("extratankpath%d_%d", pathnum, i+2)
 				})
+				printf("Spawning track at %s", pos)
 			}
 		}
 		break
