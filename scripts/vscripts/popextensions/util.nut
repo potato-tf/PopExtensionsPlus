@@ -992,8 +992,7 @@ function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_
 			local potentialtarget = PlayerInstanceFromIndex(i)
 			if (potentialtarget == null || potentialtarget == player) continue
 
-			if (passcond(potentialtarget))
- {
+			if (passcond(potentialtarget)) {
 				target = potentialtarget
 				break
 			}
@@ -1029,6 +1028,17 @@ function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_
 	// Hack to get our movespeed set correctly for our disguise
 	player.AddCond(TF_COND_SPEED_BOOST)
 	player.RemoveCond(TF_COND_SPEED_BOOST)
+}
 
-	//player.AddCondEx(TF_COND_STEALTHED_USER_BUFF_FADING, 1, null)
+function PopExtUtil::GetPlayerReadyCount() {
+	local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
+	if (!GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return 0
+	local ready = 0
+
+	for (local i = 0; i < GetPropArraySize(PopExtUtil.GameRules, "m_bPlayerReady"); ++i) {
+		if (!GetPropBoolArray(PopExtUtil.GameRules, "m_bPlayerReady", i)) continue
+		++ready
+	}
+
+	return ready
 }

@@ -816,20 +816,14 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	case "WaveStartCountdown":
 		function MissionAttributes::WaveStartCountdown() {
-			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
 			if (!GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return
-			local ready = 0
 
+			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
 			if (roundtime > Time() + value) {
-				for (local i = 0; i < GetPropArraySize(PopExtUtil.GameRules, "m_bPlayerReady"); i++) {
-					if (!GetPropBoolArray(PopExtUtil.GameRules, "m_bPlayerReady", i)) continue
-					ready++;
-					// printl(ready +" : "+ CountAllPlayers());
-					if (ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
-						SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time() + value)
-				}
+				local ready = PopExtUtil.GetPlayerReadyCount()
+				if (ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
+					SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time() + value)
 			}
-
 		}
 
 		MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown
@@ -1092,13 +1086,9 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 		function BlueTeamReadyThink() {
 			if (value != TF_TEAM_BLUE || !GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return
 
-			local ready = 0
-			for (local i = 0; i < GetPropArraySize(PopExtUtil.GameRules, "m_bPlayerReady"); i++) {
-				if (!GetPropBoolArray(PopExtUtil.GameRules, "m_bPlayerReady", i)) continue
-
-				if (++ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
-					SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
-			}
+			local ready = PopExtUtil.GetPlayerReadyCount()
+			if (ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
+				SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
 		}
 		MissionAttributes.ThinkTable.BlueTeamReadyThink <- MissionAttributes.BlueTeamReadyThink
 
