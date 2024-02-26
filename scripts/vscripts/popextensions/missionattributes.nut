@@ -7,18 +7,20 @@
 	TakeDamageTable = {}
 	SpawnHookTable = {}
 	DeathHookTable = {}
-	InitWaveTable = {}
+	// InitWaveTable = {}
 	DisconnectTable = {}
 
 	DebugText = false
 	RaisedParseError = false
 
-	InitWave = function() {
-		foreach (_, func in MissionAttributes.InitWaveTable) func()
+	PathNum = 0
 
-		foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
-		MissionAttributes.RaisedParseError = false
-	}
+	// function InitWave() {
+	// 	foreach (_, func in MissionAttributes.InitWaveTable) func()
+
+	// 	foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
+	// 	MissionAttributes.RaisedParseError = false
+	// }
 
 	Events = {
 
@@ -46,13 +48,18 @@
 		function OnGameEvent_recalculate_holidays(params) {
 			if (GetRoundState() != 3) return
 
-			MissionAttributes.InitWave();
+			MissionAttributes.ResetConvars()
+			if ("MissionAttrs" in ROOT) delete ::MissionAttrs
+
+			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 		}
 
 		function GameEvent_mvm_wave_complete(params) {
-			ResetConvars()
-			delete ::MissionAttributes
-			DebugLog(format("Cleaned up mission attribute %s", attr))
+
+			MissionAttributes.ResetConvars()
+			delete ::MissionAttrs
+
+			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 		}
 	}
 };
@@ -66,26 +73,31 @@ local MissionAttrEntity = FindByName(null, "popext_missionattr_ent")
 if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "popext_missionattr_ent"});
 
 function MissionAttributes::SetConvar(convar, value, hideChatMessage = true) {
+
 	local commentaryNode = Entities.FindByClassname(null, "point_commentary_node")
 	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {})
 
 	//save original values to restore later
-	if (!(convar in MissionAttributes.ConVars))
-		MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
+	if (!(convar in MissionAttributes.ConVars)) MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
 
 	if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value)
+
+	foreach(convar, value in MissionAttributes.ConVars) printl(convar + " = " + value)
 
 	EntFireByHandle(commentaryNode, "Kill", "", 1.1, null, null)
 }
 
-function MissionAttributes::ResetConvars() {
-	foreach (convar, value in MissionAttributes.ConVars)
-		Convars.SetValue(convar, value)
+function MissionAttributes::ResetConvars(hideChatMessage = true) {
+
+	local commentaryNode = Entities.FindByClassname(null, "point_commentary_node")
+
+	foreach (convar, value in MissionAttributes.ConVars) Convars.SetValue(convar, value)
 	MissionAttributes.ConVars.clear()
+
+	EntFireByHandle(commentaryNode, "Kill", "", 1.1, null, null)
 }
 
 local noromecarrier = false
-local pathnum = 0
 function MissionAttributes::MissionAttr(attr, value = 0) {
 	local success = true
 	switch(attr) {
@@ -813,9 +825,43 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	// =========================================================
 
+	case "ExtraTankPath":
+		local tracks = []
+		if (typeof value != "array") {
+			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
+			success = false
+			break
+		}
+
+		MissionAttributes.PathNum++
+
+		foreach (i, pos in value) {
+
+			local org = split(pos, " ")
+
+			local track = SpawnEntityFromTable("path_track", {
+				targetname = format("extratankpath%d_%d", MissionAttributes.PathNum, i+1)
+				origin = Vector(org[0].tointeger(), org[1].tointeger(), org[2].tointeger())
+			})
+			tracks.append(track)
+
+			// printf("%s spawned at %s\n", track.GetName(), track.GetOrigin().ToKVString())
+		}
+
+		tracks.append(null) //dummy value to put at the end
+
+		for (local i = 0; i < tracks.len() - 1; i++)
+			if (tracks[i] != null)
+				SetPropEntity(tracks[i], "m_pnext", tracks[i+1])
+
+		break
+
+	// =========================================================
+
 	// MissionAttr("HandModelOverride", "path")
 	// MissionAttr("HandModelOverride", ["defaultpath", "scoutpath", "sniperpath"])
 	// "path" and "defaultpath" will have %class in the string replaced with the player class
+
 	case "HandModelOverride":
 		function MissionAttributes::HandModelOverride(params) {
 			local player = GetPlayerFromUserID(params.userid)
@@ -867,26 +913,6 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 		MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
 	break
 
-	// =========================================================
-	case "ExtraTankPath":
-
-		if (typeof value != "array") {
-			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
-			success = false
-			break
-		}
-
-		pathnum++
-		function MissionAttributes::ExtraTankPath() {
-			foreach (i, pos in value) {
-				local track = SpawnEntityFromTable("path_track", {
-					targetname = format("extratankpath%d_%d", pathnum, i+1)
-					target = format("extratankpath%d_%d", pathnum, i+2)
-				})
-				printf("Spawning track at %s", pos)
-			}
-		}
-		break
 	// =========================================================
 
 	case "PlayerAttributes":
@@ -1093,7 +1119,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	// Add attribute to clean-up list if its modification was successful.
 	if (success) {
-		DebugLog(format("Added mission attribute %s", attr))
+		MissionAttributes.DebugLog(format("Added mission attribute %s", attr))
 		MissionAttributes.CurAttrs[attr] <- value
 	}
 }
@@ -1107,11 +1133,15 @@ MissionAttrEntity.ValidateScriptScope();
 MissionAttrEntity.GetScriptScope().MissionAttrThink <- MissionAttrThink
 AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
-
+function CollectMissionAttrs() {
+	foreach (attr, value in MissionAttrs)
+		MissionAttributes.MissionAttr(attr, value)
+}
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
 function MissionAttr(attr, value) {
 	MissionAttr.call(MissionAttributes, attr, value)
 }
+
 //super truncated version incase the pop character limit becomes an issue.
 function MAtr(attr, value) {
 	MissionAttr.call(MissionAttributes, attr, value)
