@@ -57,7 +57,7 @@
 		function GameEvent_mvm_wave_complete(params) {
 
 			MissionAttributes.ResetConvars()
-			delete ::MissionAttrs
+			if ("MissionAttrs" in ROOT) delete ::MissionAttrs
 
 			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 		}
@@ -82,7 +82,7 @@ function MissionAttributes::SetConvar(convar, value, hideChatMessage = true) {
 
 	if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value)
 
-	foreach(convar, value in MissionAttributes.ConVars) printl(convar + " = " + value)
+	// foreach(convar, value in MissionAttributes.ConVars) printl(convar + " = " + value)
 
 	EntFireByHandle(commentaryNode, "Kill", "", 1.1, null, null)
 }
