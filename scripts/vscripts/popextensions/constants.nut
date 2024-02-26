@@ -1,5 +1,5 @@
 // Allow expression constants
-// ::CONST <- getconsttable()
+::CONST <- getconsttable()
 
 //my disappointment is immeasureable, and my day is ruined.
 
@@ -8,19 +8,16 @@
 
 //the performance difference here is not worth refactoring everything around using the constant table so whatever
 
-::CONST <- getroottable()
+::ROOT <- getroottable()
 
-if (!("ConstantNamingConvention" in CONST)) {
+if (!("ConstantNamingConvention" in ROOT)) {
 	foreach(a, b in Constants)
 		foreach(k, v in b)
-			CONST[k] <- v != null ? v : 0
+			ROOT[k] <- v != null ? v : 0
 }
 
 CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
-
-
-::ROOT <- getroottable()
 
 foreach(k, v in ::NetProps.getclass())
 	if (k != "IsValid" && !(k in ROOT))
