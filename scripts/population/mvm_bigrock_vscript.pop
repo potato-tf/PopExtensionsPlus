@@ -45,15 +45,15 @@ WaveSchedule
 
 				//load mission attributes
 				::MissionAttrs <- {
-					`NoReanimators`: 1,
-					`666Wavebar`: 1,
-					`ForceHoliday`: 8,
-					`NoRome`: 2,
-					`WaveStartCountdown`: 5,
-					`PlayersAreRobots`: 2|4|8|16,
-					`SpellRateCommon`: 0.5,
-					`StandableHeads`: 1,
-					`ExtraTankPath`: [`951 689 388`, `1011 274 388`, `884 -701 389`],
+					`NoReanimators`: 1
+					`666Wavebar`: 1
+					`ForceHoliday`: 8
+					`NoRome`: 2
+					`WaveStartCountdown`: 5
+					`PlayersAreRobots`: 2|4|8|16
+					`SpellRateCommon`: 0.5
+					`StandableHeads`: 1
+					`ExtraTankPath`: [`951 689 388`, `1011 274 388`, `884 -701 389`]
 					`PlayerAttributes`: {
 						[TF_CLASS_SCOUT] = {
 							`damage bonus` : 5,
@@ -66,7 +66,7 @@ WaveSchedule
 						},
 						[TF_CLASS_DEMOMAN] = {
 							`fire rate bonus` : 0.5,
-						},
+						}
 					}
 				}
 
