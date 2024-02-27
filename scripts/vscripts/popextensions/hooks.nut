@@ -268,7 +268,7 @@
 			if (player.GetScriptScope() != null && "popWearablesToDestroy" in player.GetScriptScope()) {
 				foreach(i, wearable in player.GetScriptScope().popWearablesToDestroy)
 					if (wearable.IsValid())
-						wearable.Kill()
+						EntFireByHandle(wearable, "Kill", "", -1, null, null)
 	
 				delete player.GetScriptScope().popWearablesToDestroy
 			}
