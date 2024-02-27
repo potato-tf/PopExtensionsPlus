@@ -63,11 +63,9 @@ local popext_funcs =
 		killrome[1].Kill()
 
 		local cosmetics = PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()]
-		
+
 		foreach (cosmetic in cosmetics) PopExtUtil.CreatePlayerWearable(self, cosmetic)
 		", -1, null, null)
-
-		// PopExtUtil.CreatePlayerWearable
 	}
 
 	popext_fireweapon = function(bot, args) {
@@ -76,22 +74,18 @@ local popext_funcs =
 
 		}
 	}
-	//doesn't work, engi buildings are not spawned this way
 	popext_dispenseroverride = function(bot, args) {
 		if (args.len() == 0) args.append(1) //sentry override by default
 
 		local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
 
 		//force deploy dispenser when leaving spawn and kill it immediately
-		if (!alwaysfire)
-			bot.PressFireButton(9999.0)
-
+		if (!alwaysfire) bot.PressFireButton(9999.0)
 
 		function DispenserBuildThink() {
 			//start forcing primary attack when near hint
 			local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
-				if (hint && !alwaysfire)
-					bot.PressFireButton(0.0)
+				if (hint && !alwaysfire) bot.PressFireButton(0.0)
 		}
 		bot.GetScriptScope().ThinkTable.DispenserBuildThink <- DispenserBuildThink
 		function DispenserBuildOverride(params) {
