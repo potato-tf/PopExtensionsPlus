@@ -1218,6 +1218,139 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 		MissionAttributes.SpawnHookTable.HumansMustJoinTeam <- MissionAttributes.HumansMustJoinTeam
 	break
+	
+	case "BotsRandomCrit":
+		if (value == 0.0) return
+		
+		// Simplified rare high moments
+		local base_ranged_crit_chance = 0.0005
+		local max_ranged_crit_chance  = 0.0020
+		local base_melee_crit_chance  = 0.15
+		local max_melee_crit_chance   = 0.60
+		// 4 kills to reach max chance
+
+		function MissionAttributes::BotsRandomCritThink() {
+			for (local i = 1; i <= MAX_CLIENTS ; i++) {
+				local player = PlayerInstanceFromIndex(i)
+				if (player == null || !player.IsBotOfType(1337)) continue
+				
+				player.ValidateScriptScope()
+				local scope = player.GetScriptScope()
+				if (!("crit_weapon" in scope))
+					scope.crit_weapon <- null
+				
+				if (!("ranged_crit_chance" in scope) || !("melee_crit_chance" in scope)) {
+					scope.ranged_crit_chance <- base_ranged_crit_chance
+					scope.melee_crit_chance <- base_melee_crit_chance
+				}
+				
+				if (!PopExtUtil.IsAlive(player) || player.GetTeam() == TEAM_SPECTATOR) continue
+				
+				// Wait for bot to use its crits
+				if (scope.crit_weapon != null && player.InCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)) continue
+
+				local wep       = player.GetActiveWeapon()
+				local index     = PopExtUtil.GetItemIndex(wep)
+				local classname = GetPropString(wep, "m_iClassname")
+				
+				// We handle melee weapons elsewhere in OnTakeDamage
+				if (wep == null || wep.IsMeleeWeapon()) continue
+				// Certain weapon types never receive random crits
+				if (classname == "tf_weapon_sniperrifle" || index == 402 || classname == "tf_weapon_medigun" || wep.GetSlot() > 2) continue
+				// Ignore weapons with certain attributes
+				// if (wep.GetAttribute("crit mod disabled", 1) == 0 || wep.GetAttribute("crit mod disabled hidden", 1) == 0) continue
+				
+				// Lose the crits if we switch weapons
+				if (scope.crit_weapon != null && scope.crit_weapon != wep)
+					player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+				
+				local crit_chance_override = (value > 0) ? value : null
+				local chance_to_use        = (crit_chance_override != null) ? crit_chance_override : scope.ranged_crit_chance
+
+				// Roll for random crits
+				if (RandomFloat(0, 1) < chance_to_use) {
+					player.AddCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+					scope.crit_weapon <- wep
+					
+					// Detect weapon fire to remove our crits
+					wep.ValidateScriptScope()
+					wep.GetScriptScope().last_fire_time <- Time()
+					wep.GetScriptScope().Think <- function() {
+						local fire_time = NetProps.GetPropFloat(self, "m_flLastFireTime");
+						if (fire_time > last_fire_time) {
+							player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+							
+							// Continuous fire weapons get 3 seconds of crits once they fire
+							if (classname == "tf_weapon_minigun" || classname == "tf_weapon_flamethrower") {
+								player.AddCondEx(TF_COND_CRITBOOSTED_CTF_CAPTURE, 3, null)
+								EntFireByHandle(player, "RunScriptCode", format("crit_weapon <- null; ranged_crit_chance <- %f", base_ranged_crit_chance), 3, null, null)
+							}
+							else {
+								scope.crit_weapon <- null
+								scope.ranged_crit_chance <- base_ranged_crit_chance
+							}
+							
+							NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
+						}
+						return -1
+					}
+					AddThinkToEnt(wep, "Think")
+				}
+			}			
+		}
+		MissionAttributes.ThinkTable.BotsRandomCritThink <- MissionAttributes.BotsRandomCritThink
+		
+		function MissionAttributes::BotsRandomCritKill(params) {
+			local attacker = GetPlayerFromUserID(params.attacker)
+			if (attacker == null || !attacker.IsBotOfType(1337)) return
+
+			attacker.ValidateScriptScope()
+			local scope = attacker.GetScriptScope()
+			if (!("ranged_crit_chance" in scope) || !("melee_crit_chance" in scope)) return
+			
+			if (scope.ranged_crit_chance + base_ranged_crit_chance > max_ranged_crit_chance)
+				scope.ranged_crit_chance <- max_ranged_crit_chance
+			else
+				scope.ranged_crit_chance <- scope.ranged_crit_chance + base_ranged_crit_chance
+			
+			if (scope.melee_crit_chance + base_melee_crit_chance > max_melee_crit_chance)
+				scope.melee_crit_chance <- max_melee_crit_chance
+			else
+				scope.melee_crit_chance <- scope.melee_crit_chance + base_melee_crit_chance
+		}
+		MissionAttributes.DeathHookTable.BotsRandomCritKill <- MissionAttributes.BotsRandomCritKill
+		
+		function MissionAttributes::BotsRandomCritTakeDamage(params) {
+			if (!("inflictor" in params)) return
+			
+			local attacker = params.inflictor
+			if (attacker == null || !attacker.IsPlayer() || !attacker.IsBotOfType(1337)) return
+			
+			attacker.ValidateScriptScope()
+			local scope = attacker.GetScriptScope()
+			if (!("melee_crit_chance" in scope)) return
+			
+			// Already a crit
+			if (params.damage_type & DMG_ACID) return
+			
+			// Only Melee weapons
+			local wep = attacker.GetActiveWeapon()
+			if (!wep.IsMeleeWeapon()) return
+			
+			// Certain weapon types never receive random crits
+			if (attacker.GetPlayerClass() == TF_CLASS_SPY) return
+			// Ignore weapons with certain attributes
+			// if (wep.GetAttribute("crit mod disabled", 1) == 0 || wep.GetAttribute("crit mod disabled hidden", 1) == 0) return
+			
+			// Roll our crit chance
+			if (RandomFloat(0, 1) < scope.melee_crit_chance) {
+				params.damage_type = params.damage_type | DMG_ACID
+				// We delay here to allow death code to run so the reset doesn't get overriden
+				EntFireByHandle(attacker, "RunScriptCode", format("melee_crit_chance <- %f", base_melee_crit_chance), 0.015, null, null)
+			}
+		}
+		MissionAttributes.TakeDamageTable.BotsRandomCritTakeDamage <- MissionAttributes.BotsRandomCritTakeDamage
+	break
 
 	//Options to revert global fixes below:
 
