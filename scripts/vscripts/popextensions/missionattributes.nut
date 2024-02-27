@@ -776,7 +776,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 			EntFireByHandle(bot, "RunScriptCode", @"
 				if (self.IsBotOfType(1337))
-					if (!self.HasBotTag(`popext_forceromevision`))
+					// if (!self.HasBotTag(`popext_forceromevision`)) //handle these elsewhere
 						for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
 							if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
 								EntFireByHandle(child, `Kill`, ``, -1, null, null)
@@ -1195,7 +1195,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
 			local ready     = PopExtUtil.GetPlayerReadyCount()
-			if (ready >= PopExtUtil.PlayerArray.len()
+			if (ready >= PopExtUtil.PlayerArray.len())
 				SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
 		}
 		MissionAttributes.ThinkTable.BlueTeamReadyThink <- MissionAttributes.BlueTeamReadyThink

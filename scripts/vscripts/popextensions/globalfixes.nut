@@ -164,8 +164,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			local scope = player.GetScriptScope()
 			scope.holdingfire <- false
-			function HoldFireThink()
-			{
+			function HoldFireThink() {
+				
 				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
 				local activegun = player.GetActiveWeapon()
@@ -174,7 +174,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				{
 					// SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time + FLT_MAX)
 					// activegun.AddAttribute("auto fires when full", 1, -1)
-					activegun.AddAttribute("auto fires full clip", 1, -1)
+					// activegun.AddAttribute("auto fires full clip", 1, -1)
+					activegun.AddAttribute("no_attack" 1, 1, -1)
 					activegun.ReapplyProvision()
 					// printl(activegun.Clip1())
 					scope.holdingfire = true
@@ -184,7 +185,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				else if (activegun.Clip1() == activegun.GetMaxClip1() && scope.holdingfire)
 				{
 					// SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time)
-					activegun.RemoveAttribute("auto fires full clip")
+					activegun.RemoveAttribute("no_attack" 1)
 					activegun.ReapplyProvision()
 					scope.holdingfire = false
 					return -1

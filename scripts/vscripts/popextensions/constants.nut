@@ -57,6 +57,7 @@ const SPELL_COUNT = 16
 
 const MATTR_ERROR = "MissionAttr ERROR: "
 const STRING_NETPROP_ITEMDEF = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
+const TEST = "m_AttributeManager.m_Item.m_AttributeList.m_Attributes"
 
 // Clientprint chat colors
 const COLOR_LIME       = "22FF22"

@@ -47,6 +47,19 @@ local popext_funcs =
 		PopExtUtil.GetItemInSlot(player, slot).Kill()
 	}
 
+	popext_forceromevision = function(bot, args) {
+
+		//kill the existing romevision
+		EntFireByHandle(bot, "RunScriptCode", @"
+		if (self.IsBotOfType(1337))
+				for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
+					if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
+						EntFireByHandle(child, `Kill`, ``, -1, null, null)
+		", -1, null, null)
+
+		// PopExtUtil.CreatePlayerWearable
+	}
+
 	popext_fireweapon = function(bot, args) {
 		//think function
 		function FireWeaponThink(bot) {
