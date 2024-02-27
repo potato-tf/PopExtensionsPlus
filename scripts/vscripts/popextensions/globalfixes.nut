@@ -72,7 +72,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
 				SetPropInt(wearable, "m_nModelIndex", PrecacheModel(botmodel))
 				SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
-				SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+				SetPropBool(wearable, STRING_NETPROP_ITEMDEF, true)
 				SetPropEntity(wearable, "m_hOwnerEntity", victim) // TODO: is this needed? we set owner below
 
 				wearable.SetTeam(victim.GetTeam())
@@ -156,23 +156,36 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function HoldFireUntilFullReloadFix(params) {
 			
 			local player = GetPlayerFromUserID(params.userid)
-			if (!player.IsBotOfType(1337) || !player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
-			local activegun = player.GetActiveWeapon()
+			// printl(player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD))
+			
+			// if (!player.IsBotOfType(1337) || !player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
+			if (!player.IsBotOfType(1337)) return
+
 			local scope = player.GetScriptScope()
-			scope.holdingfire = false
+			scope.holdingfire <- false
 			function HoldFireThink()
 			{
+				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
+
+				local activegun = player.GetActiveWeapon()
+
 				if (activegun.Clip1() == 0)
 				{
-					SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time + FLT_MAX)
+					// SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time + FLT_MAX)
+					// activegun.AddAttribute("auto fires when full", 1, -1)
+					activegun.AddAttribute("auto fires full clip", 1, -1)
+					activegun.ReapplyProvision()
+					// printl(activegun.Clip1())
 					scope.holdingfire = true
 					return -1 
 				}
 
 				else if (activegun.Clip1() == activegun.GetMaxClip1() && scope.holdingfire)
 				{
-					SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time)
+					// SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time)
+					activegun.RemoveAttribute("auto fires full clip")
+					activegun.ReapplyProvision()
 					scope.holdingfire = false
 					return -1
 				}
@@ -183,6 +196,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 	}
 
 	Events = {
+
 		function OnScriptHook_OnTakeDamage(params) { foreach(_, func in GlobalFixes.TakeDamageTable) func(params) }
 		// function OnGameEvent_player_spawn(params) { foreach (_, func in GlobalFixes.SpawnHookTable) func(params) }
 		function OnGameEvent_player_death(params) { foreach(_, func in GlobalFixes.DeathHookTable) func(params) }

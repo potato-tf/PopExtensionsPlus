@@ -537,7 +537,7 @@ function PopExtUtil::InButton(player, button) {
 }
 
 function PopExtUtil::PressButton(player, button) {
-	SetPropInt(player, "m_afButtonForced") | button; SetPropInt(player, "m_nButtons") | button
+	SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") | button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") | button)
 }
 
 //assumes user is using the SLOT_ constants
