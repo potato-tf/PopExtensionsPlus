@@ -7,6 +7,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 ::GlobalFixes <- {
 	InitWaveTable = {}
 	TakeDamageTable = {
+
 		function YERDisguiseFix(params) {
 			local victim   = params.const_entity
 			local attacker = params.inflictor
@@ -102,17 +103,20 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			}
 		}
 	}
+
 	DisconnectTable = {}
+
 	ThinkTable = {
 		function DragonsFuryFix() {
 			for (local fireball; fireball = FindByClassname(fireball, "tf_projectile_balloffire");)
 				fireball.RemoveFlag(FL_GRENADE)
 		}
 	}
+
 	DeathHookTable = {
 		function NoCreditVelocity(params) {
-			local player = GetPlayerFromUserID(params.userid)
 
+			local player = GetPlayerFromUserID(params.userid)
 			if (!player.IsBotOfType(1337)) return
 
 			for (local money; money = FindByClassname(money, "item_currencypack*");)
@@ -120,9 +124,10 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		}
 	}
 	SpawnHookTable = {
-		function ScoutBetterMoneyCollection(params) {
-			local player = GetPlayerFromUserID(params.userid)
 
+		function ScoutBetterMoneyCollection(params) {
+
+			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337) || player.GetPlayerClass() != TF_CLASS_SCOUT) return
 
 			function MoneyThink() {
@@ -137,6 +142,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		}
 
 		function RemoveYERAttribute(params) {
+
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -146,7 +152,36 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			if (index == ITEMINDEX_YOUR_ETERNAL_REWARD || index == ITEMINDEX_THE_WANGA_PRICK)
 				wep.RemoveAttribute("disguise on backstab")
 		}
+
+		function HoldFireUntilFullReloadFix(params) {
+			
+			local player = GetPlayerFromUserID(params.userid)
+			if (!player.IsBotOfType(1337) || !player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
+
+			local activegun = player.GetActiveWeapon()
+			local scope = player.GetScriptScope()
+			scope.holdingfire = false
+			function HoldFireThink()
+			{
+				if (activegun.Clip1() == 0)
+				{
+					SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time + FLT_MAX)
+					scope.holdingfire = true
+					return -1 
+				}
+
+				else if (activegun.Clip1() == activegun.GetMaxClip1() && scope.holdingfire)
+				{
+					SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time)
+					scope.holdingfire = false
+					return -1
+				}
+			}
+
+			player.GetScriptScope().PlayerThinkTable.HoldFireThink <- HoldFireThink
+		}
 	}
+
 	Events = {
 		function OnScriptHook_OnTakeDamage(params) { foreach(_, func in GlobalFixes.TakeDamageTable) func(params) }
 		// function OnGameEvent_player_spawn(params) { foreach (_, func in GlobalFixes.SpawnHookTable) func(params) }

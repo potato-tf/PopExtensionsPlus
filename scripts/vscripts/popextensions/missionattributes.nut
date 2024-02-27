@@ -647,6 +647,113 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 	break
 
 	// =========================================================
+	case "Testing":
+		PrecacheScriptSound("MVM.MoneyPickup")
+		// Find suitable spot to spawn our IRS wannabe entity
+		for ( local ent; ent = Entities.FindByClassname(ent, "info_player_teamspawn"); )
+		{
+			if (ent.GetTeam() != TF_TEAM_RED) continue
+			
+			local area = NavMesh.GetNavArea(ent.GetOrigin(), 128)
+			if (area == null)
+			{
+				// Just get the first one we iterate on
+				foreach(str, handle in PopExtUtil.AllNavAreas)
+					area = handle
+					break
+			}
+			
+			local trigger_hurt = SpawnEntityFromTable("trigger_hurt", {
+				name = "_money_collector"
+				damage = 5
+				origin = area.GetCenter()
+			});
+			
+			trigger_hurt.SetSolid(2)
+			trigger_hurt.SetSize(Vector(-32, -32, -32), Vector(32, 32, 32))
+			//trigger_hurt.SetAbsOrigin(Vector(-1500, 4200, 500))
+			//trigger_hurt.SetSize(Vector(-128, -128, -1000), Vector(128, 128, 1000))
+			
+			break
+		}
+		
+		function MissionAttributes::Testing()
+		{
+			for ( local ent; ent = Entities.FindByClassname(ent, "item_currencypack_custom"); )
+			{
+				if (ent.GetEFlags() & EFL_USER) continue
+				ent.AddEFlags(EFL_USER)
+				
+				local origin = ent.GetOrigin()
+				ent.SetAbsOrigin(Vector(-1500, 4200, 500)) // testing
+				
+				local pickup = SpawnEntityFromTable("tf_halloween_pickup", {
+					pickup_sound = "MVM.MoneyPickup"
+					pickup_particle = ""
+				})
+				
+				pickup.SetModelSimple("models/items/currencypack_medium.mdl")
+				
+				local trace = {
+					start = origin
+					end   = origin + Vector(0, 0, -16384)
+					mask  = 16395 // MASK_SOLID_BRUSHONLY
+				}
+				if (TraceLineEx(trace))
+					pickup.SetAbsOrigin(trace.pos + Vector(0, 0, 16))
+				else
+					pickup.SetAbsOrigin(origin)
+				
+				pickup.ValidateScriptScope()
+				local pscope = pickup.GetScriptScope()
+				
+				pscope.currency_entity <- ent
+				pscope.Think <- function() {
+					// Need to implement blinking at 25s + particle effect(s)
+					if (currency_entity == null || !currency_entity.IsValid())
+					{
+						self.Destroy()
+						return -1
+					}
+					for ( local ent; ent = Entities.FindByClassnameWithin(ent, "player", pickup.GetOrigin(), 64); )
+					{
+						if (ent == null || ent.GetTeam() != TF_TEAM_BLUE || ent.IsBotOfType(1337)) continue
+
+						currency_entity.GetScriptScope().should_delay_collection <- false
+						self.EmitSound("MVM.MoneyPickup")
+						self.Destroy()
+						
+						return -1
+					}
+					return -1
+				}
+				AddThinkToEnt(pickup, "Think")
+				
+				ent.ValidateScriptScope()
+				local scope = ent.GetScriptScope()
+				
+				scope.should_delay_collection <- true
+				scope.Think <- function() {
+					self.SetAbsVelocity(Vector())
+					if (should_delay_collection)
+					{
+						//self.SetAbsOrigin(trigger_hurt.GetOrigin() + Vector(0, 0, 128))
+					}
+					else
+					{
+						printl("DONE DELAYING");
+						//self.SetAbsOrigin(trigger_hurt.GetOrigin() + Vector(0, 0, 8))
+						NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
+					}
+					return -1
+				}
+				AddThinkToEnt(ent, "Think")
+			}
+		}
+		
+		MissionAttributes.ThinkTable.Testing <- MissionAttributes.Testing
+	break
+	// =========================================================
 
 	case "BotsAreHumans":
 		function MissionAttributes::BotsAreHumans(params) {
