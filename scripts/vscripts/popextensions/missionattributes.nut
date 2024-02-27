@@ -1193,8 +1193,9 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 		function BlueTeamReadyThink() {
 			if (value != TF_TEAM_BLUE || !GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return
 
-			local ready = PopExtUtil.GetPlayerReadyCount()
-			if (ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
+			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
+			local ready     = PopExtUtil.GetPlayerReadyCount()
+			if (ready >= PopExtUtil.PlayerArray.len()
 				SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
 		}
 		MissionAttributes.ThinkTable.BlueTeamReadyThink <- MissionAttributes.BlueTeamReadyThink
