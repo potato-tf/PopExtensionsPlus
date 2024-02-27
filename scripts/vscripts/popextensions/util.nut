@@ -671,10 +671,13 @@ function PopExtUtil::GetEntityColor(entity) {
 
 function PopExtUtil::AddAttributeToLoadout(player, attribute, value, duration = -1) {
 	for (local i = 0; i < SLOT_COUNT; i++) {
-		local wep = GetWeaponInSlot(player, i);
-		if (wep == null) continue;
-		wep.AddAttribute(attribute, value, duration);
-		wep.ReapplyProvision();
+		
+		local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+
+		if (wep == null) continue
+
+		wep.AddAttribute(attribute, value, duration)
+		wep.ReapplyProvision()
 	}
 }
 

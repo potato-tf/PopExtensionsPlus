@@ -51,10 +51,17 @@ local popext_funcs =
 
 		//kill the existing romevision
 		EntFireByHandle(bot, "RunScriptCode", @"
+		local killrome = []
 		if (self.IsBotOfType(1337))
 				for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
 					if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
-						EntFireByHandle(child, `Kill`, ``, -1, null, null)
+						killrome.append(child)
+
+		for (local i = killrome.len(); i > 0; i--) printl(killrome[i]) //killrome[i].Kill()
+
+		local cosmetics = PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()]
+		foreach (cosmetic in cosmetics) printl(cosmetic)
+			// PopExtUtil.CreatePlayerWearable(self, cosmetic)
 		", -1, null, null)
 
 		// PopExtUtil.CreatePlayerWearable
@@ -517,7 +524,8 @@ local popext_funcs =
 // local tagtest = "popext_usebestweapon"
 //local tagtest = "popext_homingprojectile|1.0|1.0"
 // local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
-local tagtest = "popext_dispenseroverride"
+// local tagtest = "popext_dispenseroverride"
+local tagtest = "popext_forceromevision"
 
 ::BotThink <- function()
 {

@@ -40,8 +40,12 @@
 			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
 			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
-			scope.PlayerThinks <- PlayerThinks
-			AddThinkToEnt(player, "PlayerThinks")
+
+			if (!("PlayerThinks" in scope))
+			{
+				scope.PlayerThinks <- PlayerThinks
+				AddThinkToEnt(player, "PlayerThinks")
+			}
 
 			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 		}
@@ -145,6 +149,18 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	break
 
+	// ========================================================
+	
+	case "RedBotsNoRandomCrit":
+		function MissionAttributes::RedBotsNoRandomCrit(params)
+		{
+			local player = GetPlayerFromUserID(params.userid)
+			if (!player.IsBotOfType(1337) && player.GetTeam() != TF_TEAM_PVE_DEFENDERS) return
+
+			PopExtUtil.AddAttributeToLoadout(player, "crit mod disabled hidden", 0)
+		}
+		MissionAttributes.SpawnHookTable.RedBotsNoRandomCrit <- MissionAttributes.RedBotsNoRandomCrit
+		
 	// ========================================================
 
 	case "NoCrumpkins":

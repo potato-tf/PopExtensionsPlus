@@ -157,36 +157,27 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			
 			local player = GetPlayerFromUserID(params.userid)
 
-			// printl(player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD))
-			
-			// if (!player.IsBotOfType(1337) || !player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 			if (!player.IsBotOfType(1337)) return
 
 			local scope = player.GetScriptScope()
 			scope.holdingfire <- false
+
 			function HoldFireThink() {
-				
+
 				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
 				local activegun = player.GetActiveWeapon()
 
 				if (activegun.Clip1() == 0)
 				{
-					// SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time + FLT_MAX)
-					// activegun.AddAttribute("auto fires when full", 1, -1)
-					// activegun.AddAttribute("auto fires full clip", 1, -1)
-					activegun.AddAttribute("no_attack" 1, 1, -1)
-					activegun.ReapplyProvision()
-					// printl(activegun.Clip1())
+					player.AddBotAttribute(SUPPRESS_FIRE)
 					scope.holdingfire = true
 					return -1 
 				}
 
 				else if (activegun.Clip1() == activegun.GetMaxClip1() && scope.holdingfire)
 				{
-					// SetPropFloat(activegun, "m_flNextPrimaryAttack", PopExtUtil.Global_Time)
-					activegun.RemoveAttribute("no_attack" 1)
-					activegun.ReapplyProvision()
+					player.RemoveBotAttribute(SUPPRESS_FIRE)
 					scope.holdingfire = false
 					return -1
 				}
@@ -211,12 +202,11 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
-			function PlayerThinks() {
-				foreach(_, func in scope.PlayerThinkTable) func()
-				return -1
-			}
+			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
+
 			scope.PlayerThinks <- PlayerThinks
 			AddThinkToEnt(player, "PlayerThinks")
+
 
 			foreach(_, func in GlobalFixes.SpawnHookTable) func(params)
 		}
