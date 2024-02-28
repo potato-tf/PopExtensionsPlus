@@ -1,7 +1,6 @@
 local root = getroottable()
 //behavior tags
 
-IncludeScript("popextensions/botbehavior.nut")
 local popext_funcs =
 {
 	popext_addcond = function(bot, args) {
@@ -90,7 +89,7 @@ local popext_funcs =
 		}
 		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- DispenserBuildThink
 		function DispenserBuildOverride(params) {
-			
+
 			//dispenser built, stop force firing
 			if (!alwaysfire) bot.PressFireButton(0.0)
 
@@ -334,6 +333,13 @@ local popext_funcs =
 		}
 		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
 	}
+	popext_aimat = function(bot, args) {
+		function AimAtThink()
+		{
+			//TODO: get current aim target somehow
+		}
+		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- AimAtThink
+	}
 	popext_addcondonhit = function(bot, args) {
 		// Tag addcondonhit |cond|duration|threshold|crit
 
@@ -534,13 +540,13 @@ local tagtest = "popext_forceromevision"
 }
 
 ::PopExtTags <- {
-	
+
 	function AI_BotSpawn(bot) {
 		local scope = bot.GetScriptScope()
-	
+
 		scope.bot <- AI_Bot(bot)
 		scope.BehaviorAttribs <- {}
-	
+
 		if (bot.HasBotTag(tagtest)) {
 			local args = split(tagtest, "|")
 			local func = args.remove(0)
@@ -548,9 +554,9 @@ local tagtest = "popext_forceromevision"
 			if (func in popext_funcs)
 				popext_funcs[func](bot, args)
 		}
-	
+
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
-	
+
 		AddThinkToEnt(bot, "BotThink")
 	}
 	function OnGameEvent_post_inventory_application(params) {
