@@ -83,12 +83,14 @@ local popext_funcs =
 		if (!alwaysfire) bot.PressFireButton(9999.0)
 
 		function DispenserBuildThink() {
+
 			//start forcing primary attack when near hint
 			local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
 				if (hint && !alwaysfire) bot.PressFireButton(0.0)
 		}
-		bot.GetScriptScope().ThinkTable.DispenserBuildThink <- DispenserBuildThink
+		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- DispenserBuildThink
 		function DispenserBuildOverride(params) {
+			
 			//dispenser built, stop force firing
 			if (!alwaysfire) bot.PressFireButton(0.0)
 
@@ -239,7 +241,7 @@ local popext_funcs =
 			break
 			}
 		}
-		bot.GetScriptScope().ThinkTable.BestWeaponThink <- BestWeaponThink
+		bot.GetScriptScope().PlayerThinkTable.BestWeaponThink <- BestWeaponThink
 	}
 	popext_homingprojectile = function(bot, args) {
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
@@ -265,7 +267,7 @@ local popext_funcs =
 				Homing.AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
 			}
 		}
-		bot.GetScriptScope().ThinkTable.HomingProjectileScanner <- HomingProjectileScanner
+		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- HomingProjectileScanner
 
 		function HomingTakeDamage(params) {
 			if (!params.const_entity.IsPlayer()) return
@@ -330,7 +332,7 @@ local popext_funcs =
 				}
 			}
 		}
-		bot.GetScriptScope().ThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
+		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
 	}
 	popext_addcondonhit = function(bot, args) {
 		// Tag addcondonhit |cond|duration|threshold|crit
@@ -510,9 +512,9 @@ local popext_funcs =
 	// function PopExt_BotThinks()
 	// {
 	//	   local scope = self.GetScriptScope()
-	//	   if (scope.ThinkTable.len() < 1) return
+	//	   if (scope.PlayerThinkTable.len() < 1) return
 
-	//	   foreach (_, func in scope.ThinkTable)
+	//	   foreach (_, func in scope.PlayerThinkTable)
 	//		  func(self)
 	// }
 //	   AddThinkToEnt(bot, "PopExt_BotThinks")
@@ -557,10 +559,10 @@ local tagtest = "popext_forceromevision"
 		bot.ValidateScriptScope()
 		local scope = bot.GetScriptScope()
 
-		if ("ThinkTable" in scope || !bot.IsBotOfType(1337)) return
+		if ("PlayerThinkTable" in scope || !bot.IsBotOfType(1337)) return
 		local items = {
 
-			ThinkTable = {}
+			PlayerThinkTable = {}
 			TakeDamageTable = {}
 			DeathHookTable = {}
 		}
