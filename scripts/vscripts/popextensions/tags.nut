@@ -35,6 +35,12 @@ local popext_funcs =
 		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", PopExtUtil.Classes[bot.GetPlayerClass()]))
 	}
 
+	popext_usehumananims = function(bot, args) {
+		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
+		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string))
+		PopExtUtil.PlayerRobotModel(bot, format("models/bots/%s/bot_%s.mdl", class_string, class_string))
+	}
+
 	popext_alwaysglow = function(bot, args) {
 		SetPropBool(bot, "m_bGlowEnabled", true)
 	}

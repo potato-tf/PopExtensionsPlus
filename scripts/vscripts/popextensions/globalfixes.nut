@@ -52,11 +52,11 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function HolidayPunchFix(params) {
 			local wep   = params.weapon
 			local index = PopExtUtil.GetItemIndex(wep)
-			if (index != 656 || !(params.damage_type & DMG_ACID)) return
+			if (index != 656 || !(params.damage_type & DMG_CRITICAL)) return
 
 			local victim = params.const_entity
 			if (victim != null && victim.IsBotOfType(1337)) {
-				victim.Taunt(TAUNT_MISC_ITEM, 92)
+				victim.Taunt(TAUNT_MISC_ITEM, MP_CONCEPT_TAUNT_LAUGH)
 
 				local tfclass      = victim.GetPlayerClass()
 				local class_string = PopExtUtil.Classes[tfclass]
@@ -64,29 +64,11 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 				victim.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string))
 
-				victim.ValidateScriptScope()
-				local scope = victim.GetScriptScope()
+				PopExtUtil.PlayerRobotModel(player, botmodel)
 
-				local wearable = CreateByClassname("tf_wearable")
-
-				SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
-				SetPropInt(wearable, "m_nModelIndex", PrecacheModel(botmodel))
-				SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
-				SetPropBool(wearable, STRING_NETPROP_ITEMDEF, true)
-				SetPropEntity(wearable, "m_hOwnerEntity", victim) // TODO: is this needed? we set owner below
-
-				wearable.SetTeam(victim.GetTeam())
-				wearable.SetOwner(victim)
-
-				wearable.DispatchSpawn()
-
-				EntFireByHandle(wearable, "SetParent", "!activator", -1, victim, victim)
-				SetPropInt(wearable, "m_fEffects", 129)
-
-				SetPropInt(victim, "m_nRenderMode", 1)
-				SetPropInt(victim, "m_clrRender", 0)
-
-				scope.Think <-  function() {
+				//overwrite the existing bot model think to remove it after taunt 
+				function BotModelThink() {
+					
 					if (Time() > victim.GetTauntRemoveTime()) {
 						if (wearable != null) wearable.Destroy()
 

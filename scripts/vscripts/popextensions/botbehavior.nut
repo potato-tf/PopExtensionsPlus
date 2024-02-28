@@ -66,17 +66,10 @@ class AI_Bot {
 		local closestThreat = null
 		local closestThreatDist = min_dist_sqr
 
-		for (local i = 1; i <= MaxClients; i++) {
+		for (local i = 1; i <= MAX_CLIENTS; i++) {
 			local player = PlayerInstanceFromIndex(i)
-			if (player == null)
-				continue
-			if (player == bot)
-				continue
-			if (GetPropInt(player, "m_lifeState") != 0)
-				continue
-			if (player.GetTeam() == team)
-				continue
-			if (!IsThreatVisible(player))
+
+			if (player == null || player == bot || !PopExtUtil.IsAlive(player) || player.GetTeam() == team || !IsThreatVisible(player))
 				continue
 
 			local dist = GetThreatDistanceSqr(player)
@@ -191,7 +184,7 @@ class AI_Bot {
 	}
 
 	function StartAimWithWeapon() {
-		if (aim_time != 1e30)
+		if (aim_time != FLT_MAX)
 			return
 
 		bot.PressAltFireButton(9999.0)
@@ -199,13 +192,13 @@ class AI_Bot {
 	}
 
 	function EndAimWithWeapon() {
-		if (aim_time == 1e30)
+		if (aim_time == FLT_MAX)
 			return
 
 		bot.AddBotAttribute(SUPPRESS_FIRE)
 		bot.PressAltFireButton(0.0)
 		bot.RemoveBotAttribute(SUPPRESS_FIRE)
-		aim_time = 1e30
+		aim_time = FLT_MAX
 	}
 
 	function OnTakeDamage(params) {

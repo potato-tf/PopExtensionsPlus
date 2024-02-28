@@ -608,7 +608,7 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 	function PopExtUtil::PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func() }
 
 	if (!("PlayerThinks" in scope)) {
-		scope.PlayerThinks <- PlayerThinks
+		scope.PlayerThinks <- PopExtUtil.PlayerThinks
 		AddThinkToEnt(player, "PlayerThinks")
 	}
 }
