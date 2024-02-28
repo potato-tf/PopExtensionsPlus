@@ -489,9 +489,6 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 				if (dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS)
 					EntFireByHandle(dot, "Kill", "", -1, null, null)
 
-			for (local dot; dot = Entities.FindByClassname(dot, "env_laserdot");)
-				if (dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS)
-					EntFireByHandle(dot, "Kill", "", -1, null, null)
 			return -1;
 		}
 
@@ -771,15 +768,33 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 	break
 	// =========================================================
 
-	case "BotsAreHumans":
-		function MissionAttributes::BotsAreHumans(params) {
-			local player = GetPlayerFromUserID(params.userid)
-			if (!player.IsBotOfType(1337)) return
-			EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[bot.GetPlayerClass()]), -1, null, null)
-		}
+		//Uses bitflags to change behavior:
+		// 1 = Blu bots use human models.
+		// 2 = Blu bots use zombie models. Overrides human models.
+		// 4 = Red bots use human models.
+		// 4 = Red bots use zombie models. Overrides human models.
 
-		MissionAttributes.SpawnHookTable.BotsAreHumans <- MissionAttributes.BotsAreHumans
-	break
+		case "BotsAreHumans":
+			function MissionAttributes::BotsAreHumans(params)
+			{
+				local player = GetPlayerFromUserID(params.userid)
+				if (!player.IsBotOfType(1337)) return
+				
+				if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value & 1)
+				{
+					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[player.GetPlayerClass()]), -1, null, null)
+					if (value & 2) activator.GenerateAndWearItem(format("Zombie %s",classes[player.GetPlayerClass()]))
+				}
+				
+				if (player.GetTeam() == TF_TEAM_PVE_DEFENDERS && value & 4)
+				{
+					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[player.GetPlayerClass()]), -1, null, null)
+					if (value & 8) activator.GenerateAndWearItem(format("Zombie %s",classes[player.GetPlayerClass()]))
+				}
+			}
+
+				MissionAttributes.SpawnHookTable.BotsAreHumans <- MissionAttributes.BotsAreHumans
+		break
 
 	// =========================================================
 
@@ -992,6 +1007,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 	// "path" and "defaultpath" will have %class in the string replaced with the player class
 
 	case "HandModelOverride":
+
 		function MissionAttributes::HandModelOverride(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return

@@ -1,5 +1,6 @@
 local root = getroottable()
 //behavior tags
+IncludeScript("popextensions/botbehavior")
 
 local popext_funcs =
 {
@@ -63,7 +64,7 @@ local popext_funcs =
 
 		local cosmetics = PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()]
 
-		foreach (cosmetic in cosmetics) PopExtUtil.CreatePlayerWearable(self, cosmetic)
+		foreach (cosmetic in cosmetics) self.GenerateAndWearItem(cosmetic)
 		", -1, null, null)
 	}
 
@@ -291,7 +292,8 @@ local popext_funcs =
 	// }
 	popext_rocketcustomparticle = function (bot, args) {
 		local projectile
-		while (projectile = Entities.FindByClassname(null, "tf_projectile_rocket")) {
+
+		for (local projectile; projectile = FindByClassname(projectile, "THINKADDED_tf_projectile_*");) {
 
 			if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
 
@@ -300,10 +302,12 @@ local popext_funcs =
 		}
 	}
 	popext_improvedairblast = function (bot, args) {
+
 		function ImprovedAirblastThink() {
-			local projectile
-			while ((projectile = FindByClassname(projectile, "THINKADDED_tf_projectile_*")) != null) {
-				if (projectile.GetTeam() == team || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
+
+			for (local projectile; projectile = FindByClassname(projectile, "THINKADDED_tf_projectile_*");) {
+				printl("test")
+				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
 				local dist = GetThreatDistanceSqr(projectile)
@@ -333,10 +337,34 @@ local popext_funcs =
 		}
 		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
 	}
+	/* valid attachment points for most playermodels:
+		- head
+		- eyes
+		- righteye/lefteye
+		- foot_L/_R
+		- back_upper/lower
+		- hand_L/R
+		- partyhat
+		- doublejumpfx (scout)
+		- eyeglow_L/R
+		- weapon_bone
+		- weapon_bone_2/3/4
+		- effect_hand_R
+		- flag
+		- prop_bone
+		- prop_bone_1/2/3/4/5/6
+	*/
 	popext_aimat = function(bot, args) {
 		function AimAtThink()
 		{
-			//TODO: get current aim target somehow
+			foreach (player in PopExtUtil.PlayerArray)
+			{
+				if (bot.IsInFieldOfView(player))
+				{
+					LookAt(player.GetAttachmentOrigin(player.LookupAttachment(args[0])))
+					break
+				}
+			}
 		}
 		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- AimAtThink
 	}
@@ -530,7 +558,9 @@ local popext_funcs =
 //local tagtest = "popext_homingprojectile|1.0|1.0"
 // local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
 // local tagtest = "popext_dispenseroverride"
-local tagtest = "popext_forceromevision"
+// local tagtest = "popext_forceromevision"
+// local tagtest = "popext_aimat|head"
+local tagtest = "popext_improvedairblast"
 
 ::BotThink <- function()
 {
@@ -557,7 +587,11 @@ local tagtest = "popext_forceromevision"
 
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
 
-		AddThinkToEnt(bot, "BotThink")
+		if (!("PlayerThinks" in scope))
+		{
+			scope.PlayerThinks <- PlayerThinks
+			AddThinkToEnt(player, "PlayerThinks")
+		}
 	}
 	function OnGameEvent_post_inventory_application(params) {
 		local bot = GetPlayerFromUserID(params.userid)
@@ -565,7 +599,8 @@ local tagtest = "popext_forceromevision"
 		bot.ValidateScriptScope()
 		local scope = bot.GetScriptScope()
 
-		if ("PlayerThinkTable" in scope || !bot.IsBotOfType(1337)) return
+		if (!bot.IsBotOfType(1337)) return
+
 		local items = {
 
 			PlayerThinkTable = {}
