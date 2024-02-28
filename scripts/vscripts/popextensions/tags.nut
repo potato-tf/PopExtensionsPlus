@@ -1,6 +1,6 @@
 local root = getroottable()
 //behavior tags
-IncludeScript("popextensions/botbehavior")
+IncludeScript("popextensions/botbehavior.nut", root)
 
 local popext_funcs =
 {
@@ -297,7 +297,6 @@ local popext_funcs =
 	//	   }
 	// }
 	popext_rocketcustomparticle = function (bot, args) {
-		local projectile
 
 		for (local projectile; projectile = FindByClassname(projectile, "THINKADDED_tf_projectile_*");) {
 
@@ -306,6 +305,16 @@ local popext_funcs =
 			EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 			EntFireByHandle(projectile, "RunScriptCode", format("self.DispatchParticleEffect(%s, self.GetOrigin(), self.GetAbsAngles())", args), -1, null, null)
 		}
+	}
+	popext_spawnhere = function(bot, args) {
+		
+		local org = split(args[0], " ")
+		bot.Teleport(true, Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()), true, QAngle(), true, bot.GetAbsVelocity())
+		
+		if (args.len() < 2) return
+		
+		local spawnubertime = args[1].tofloat()
+		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, spawnubertime, null)
 	}
 	popext_improvedairblast = function (bot, args) {
 
@@ -566,7 +575,8 @@ local popext_funcs =
 // local tagtest = "popext_dispenseroverride"
 // local tagtest = "popext_forceromevision"
 // local tagtest = "popext_aimat|head"
-local tagtest = "popext_improvedairblast"
+// local tagtest = "popext_improvedairblast"
+local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 ::BotThink <- function()
 {
