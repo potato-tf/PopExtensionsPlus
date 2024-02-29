@@ -53,7 +53,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function HolidayPunchFix(params) {
 			local wep   = params.weapon
 			local index = PopExtUtil.GetItemIndex(wep)
-			if (index != 656 || !(params.damage_type & DMG_CRITICAL)) return
+			if (index != ID_HOLIDAY_PUNCH || !(params.damage_type & DMG_CRITICAL)) return
 
 			local victim = params.const_entity
 			if (victim != null && victim.IsBotOfType(1337)) {
