@@ -1,5 +1,7 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 
+EFL_USER <- 1048576 // EFL_IS_BEING_LIFTED_BY_BARNACLE
+
 ::PopExtUtil <- {
 
 	PlayerArray = []
@@ -87,21 +89,21 @@
 		function OnGameEvent_mvm_wave_failed(params) { PopExtUtil.IsWaveStarted = false }
 		function OnGameEvent_mvm_begin_wave(params) { PopExtUtil.IsWaveStarted = true }
 		function OnGameEvent_mvm_reset_stats(params) { PopExtUtil.IsWaveStarted = true } //used for manually jumping waves
-
+		
 		function OnGameEvent_teamplay_round_start(params)
 		{
 			for (local i = 1; i <= MAX_CLIENTS; i++)
 			{
 				local player = PlayerInstanceFromIndex(i)
-
+	
 				if (player == null || !player.IsBotOfType(1337) || PopExtUtil.BotArray.find(player) != null) continue;
-
+	
 				PopExtUtil.BotArray.append(player)
 			}
 		}
 
 		function OnGameEvent_post_inventory_application(params) {
-
+			
 			local player = GetPlayerFromUserID(params.userid)
 
 			player.ValidateScriptScope()
@@ -110,20 +112,20 @@
 			if (!("MyWeaponsArray" in scope)) scope.MyWeaponsArray <- {}
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
-			function PlayerThinks() {
+			function PlayerThinks() { 
 				local times = []
 				foreach (name, func in scope.PlayerThinkTable) {
 					BeginBenchmark()
-
+			
 					func();
-
+					
 					local time = EndBenchmark();
 					times.append({ name = name, time = time })
 					total_time += time;
 				}
-
+				
 				if (time > 1.5) {
-
+					
 					printl("Expensive think func!")
 					foreach (time in times)
 					{
@@ -132,7 +134,7 @@
 				}
 				return -1
 			}
-
+		
 			if (!("PlayerThinks" in scope)) {
 				scope.PlayerThinks <- PlayerThinks
 				AddThinkToEnt(player, "PlayerThinks")
@@ -151,12 +153,12 @@
 
 				if (wep != null) wep.Kill()
 				SetPropEntityArray(player, "m_hMyWeapons", wep, slot)
-			}
+			}	
 
 			if (player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
 				PopExtUtil.BotArray.append(player)
-
-			else if (PopExtUtil.PlayerArray.find(player) == null)
+				
+			else if (PopExtUtil.PlayerArray.find(player) == null) 
 				PopExtUtil.PlayerArray.append(player)
 
 		}
@@ -573,7 +575,7 @@ function PopExtUtil::PlayerRespawn() {
 
 function PopExtUtil::DisableCloak(player) {
 	// High Number to Prevent Player from Cloaking
-	SetPropFloat(player, "m_Shared.m_flStealthNextChangeTime", Time() * INT_MAX)
+	SetPropFloat(player, "m_Shared.m_flStealthNextChangeTime", Time() * 99999)
 }
 
 function PopExtUtil::InUpgradeZone(player) {
@@ -721,7 +723,7 @@ function PopExtUtil::GetEntityColor(entity) {
 
 function PopExtUtil::AddAttributeToLoadout(player, attribute, value, duration = -1) {
 	for (local i = 0; i < SLOT_COUNT; i++) {
-
+		
 		local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 
 		if (wep == null) continue
@@ -731,7 +733,7 @@ function PopExtUtil::AddAttributeToLoadout(player, attribute, value, duration = 
 	}
 }
 
-function PopExtUtil::ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = INT_MAX) {
+function PopExtUtil::ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = 9999.0) {
 	PrecacheModel(model[0])
 	local proxy_entity = CreateByClassname("obj_teleporter") // use obj_teleporter to set bodygroups.  not using SpawnEntityFromTable as that creates spawning noises
 	proxy_entity.SetAbsOrigin(pos)
