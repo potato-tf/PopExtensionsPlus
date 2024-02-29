@@ -12,7 +12,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 		if (a == 0)
 			ammo[i] = 1
 
-	local scope = player.GetScriptScope().PopExtPlayerScope
+	local scope = player.GetScriptScope()
 
 	// if (IsSigmod()) sequence.clear() //use rafmod ammo draining instead
 
@@ -60,7 +60,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 	//AMMO PACKS
 	if (startswith(classname, "item_ammopack_")) {
 		local wep   = player.GetActiveWeapon()
-		local scope = player.GetScriptScope().PopExtPlayerScope
+		local scope = player.GetScriptScope()
 
 		switch (player.GetPlayerClass()) {
 		case 1: //TF_CLASS_SCOUT
@@ -158,7 +158,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 //ammo draining think function
 ::DrainAmmo <-  function(player) {
 
-	local scope     = player.GetScriptScope().PopExtPlayerScope
+	local scope     = player.GetScriptScope()
 	local activegun = player.GetActiveWeapon()
 	if (activegun == null) return
 

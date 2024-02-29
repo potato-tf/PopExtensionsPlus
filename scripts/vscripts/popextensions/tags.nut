@@ -94,7 +94,7 @@ local popext_funcs =
 			local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
 				if (hint && !alwaysfire) bot.PressFireButton(0.0)
 		}
-		bot.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.DispenserBuildThink <- DispenserBuildThink
+		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- DispenserBuildThink
 		function DispenserBuildOverride(params) {
 
 			//dispenser built, stop force firing
@@ -163,7 +163,7 @@ local popext_funcs =
 				EntFireByHandle(building, "Disable", "", 10.6, null, null)
 			}
 		}
-		bot.GetScriptScope().PopExtPlayerScope.BuiltObjectTable.DispenserBuildOverride <- DispenserBuildOverride
+		bot.GetScriptScope().BuiltObjectTable.DispenserBuildOverride <- DispenserBuildOverride
 	}
 
 	//this is a very simple method for giving bots weapons.
@@ -247,7 +247,7 @@ local popext_funcs =
 			break
 			}
 		}
-		bot.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.BestWeaponThink <- BestWeaponThink
+		bot.GetScriptScope().PlayerThinkTable.BestWeaponThink <- BestWeaponThink
 	}
 	popext_homingprojectile = function(bot, args) {
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
@@ -273,7 +273,7 @@ local popext_funcs =
 				Homing.AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
 			}
 		}
-		bot.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.HomingProjectileScanner <- HomingProjectileScanner
+		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- HomingProjectileScanner
 
 		function HomingTakeDamage(params) {
 			if (!params.const_entity.IsPlayer()) return
@@ -284,7 +284,7 @@ local popext_funcs =
 
 			EntFireByHandle(params.inflictor, "Kill", null, 0.5, null, null)
 		}
-		bot.GetScriptScope().PopExtPlayerScope.TakeDamageTable.HomingTakeDamage <- HomingTakeDamage
+		bot.GetScriptScope().TakeDamageTable.HomingTakeDamage <- HomingTakeDamage
 	}
 	// popext_rocketcustomtrail = function (bot, args)
 	// {
@@ -321,9 +321,8 @@ local popext_funcs =
 		function ImprovedAirblastThink() {
 
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
-
-
-				if (projectile.GetTeam() == team || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
+				printl("test")
+				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
 				local dist = GetThreatDistanceSqr(projectile)
@@ -351,7 +350,7 @@ local popext_funcs =
 				}
 			}
 		}
-		bot.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
+		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
 	}
 	/* valid attachment points for most playermodels:
 		- head
@@ -382,9 +381,8 @@ local popext_funcs =
 				}
 			}
 		}
-		bot.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.AimAtThink <- AimAtThink
+		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- AimAtThink
 	}
-
 	popext_addcondonhit = function(bot, args) {
 		// Tag addcondonhit |cond|duration|threshold|crit
 
@@ -430,7 +428,7 @@ local popext_funcs =
 			}
 		}
 
-		bot.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.AddCondOnHitTakeDamage <- AddCondOnHitTakeDamage
+		bot.GetScriptScope().TakeDamageTable.AddCondOnHitTakeDamage <- AddCondOnHitTakeDamage
 	}
 }
 
@@ -562,7 +560,7 @@ local popext_funcs =
 //	   }
 	// function PopExt_BotThinks()
 	// {
-	//	   local scope = self.GetScriptScope().PopExtPlayerScope
+	//	   local scope = self.GetScriptScope()
 	//	   if (scope.PlayerThinkTable.len() < 1) return
 
 	//	   foreach (_, func in scope.PlayerThinkTable)
@@ -577,8 +575,8 @@ local popext_funcs =
 // local tagtest = "popext_dispenseroverride"
 // local tagtest = "popext_forceromevision"
 // local tagtest = "popext_aimat|head"
-local tagtest = "popext_improvedairblast"
-// local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
+// local tagtest = "popext_improvedairblast"
+local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 ::BotThink <- function()
 {
@@ -605,55 +603,51 @@ local tagtest = "popext_improvedairblast"
 
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
 
-		// if (!("PlayerThinks" in scope))
-		// {
-		// 	scope.PlayerThinks <- PlayerThinks
-		// 	AddThinkToEnt(player, "PlayerThinks")
-		// }
+		if (!("PlayerThinks" in scope))
+		{
+			scope.PlayerThinks <- PlayerThinks
+			AddThinkToEnt(player, "PlayerThinks")
+		}
 	}
 	function OnGameEvent_post_inventory_application(params) {
 		local bot = GetPlayerFromUserID(params.userid)
 
 		bot.ValidateScriptScope()
-		if (!("PopExtPlayerScope" in bot.GetScriptScope()))
+		local scope = bot.GetScriptScope()
+
+		if (!bot.IsBotOfType(1337)) return
+
+		local items = {
+
+			PlayerThinkTable = {}
+			TakeDamageTable = {}
+			DeathHookTable = {}
+		}
+		foreach (k,v in items) if (!(k in scope)) scope[k] <- v
+
+		if (bot.GetPlayerClass() < TF_CLASS_SPY && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
+
+		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+
+		function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
+
+		if (!("PlayerThinks" in scope))
 		{
-			local PopExtPlayerScope = {
-				PlayerThinkTable = {}
-				TakeDamageTable = {}
-				DeathHookTable = {}
-			}
-			bot.GetScriptScope().PopExtPlayerScope <- PopExtPlayerScope
-		}
-		local scope = bot.GetScriptScope().PopExtPlayerScope
-
-		function PlayerThinks() {
-			foreach (name, func in scope.PlayerThinkTable) { printl(name + " : " + func); func(); return -1 }
-		}
-
-		if (!("PlayerThinks" in scope)) {
 			scope.PlayerThinks <- PlayerThinks
 			AddThinkToEnt(player, "PlayerThinks")
 		}
 
-		if (!bot.IsBotOfType(1337)) return
-
-		if (bot.GetPlayerClass() < TF_CLASS_SPY && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
-
 		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 	}
 	function OnScriptHook_OnTakeDamage(params) {
-
 		local scope = params.attacker.GetScriptScope()
-
-		if ("PopExtPlayerScope" in scope)
-		scope = scope.PopExtPlayerScope
 
 		if (!("TakeDamageTable" in scope)) return
 
 		foreach (_, func in scope.TakeDamageTable) func(params)
 	}
 	function OnGameEvent_player_builtobject(params) {
-		local scope = GetPlayerFromUserID(params.userid).GetScriptScope().PopExtPlayerScope.BuiltObjectTable
+		local scope = GetPlayerFromUserID(params.userid).GetScriptScope()
 
 		if (!("BuiltObjectTable" in scope)) return
 

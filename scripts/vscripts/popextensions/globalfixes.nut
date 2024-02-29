@@ -1,6 +1,7 @@
 const SCOUT_MONEY_COLLECTION_RADIUS = 288
 const HUNTSMAN_DAMAGE_FIX_MOD       = 1.263157
 const EFL_USER = 1048576
+
 local GlobalFixesEntity = FindByName(null, "popext_globalfixes_ent")
 if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "popext_globalfixes_ent" })
 
@@ -52,7 +53,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function HolidayPunchFix(params) {
 			local wep   = params.weapon
 			local index = PopExtUtil.GetItemIndex(wep)
-			if (index != ID_HOLIDAY_PUNCH || !(params.damage_type & DMG_CRITICAL)) return
+			if (index != 656 || !(params.damage_type & DMG_CRITICAL)) return
 
 			local victim = params.const_entity
 			if (victim != null && victim.IsBotOfType(1337)) {
@@ -130,14 +131,14 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			function MoneyThink() {
 				if (player.GetPlayerClass() != TF_CLASS_SCOUT) {
-					delete player.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.MoneyThink
+					delete player.GetScriptScope().PlayerThinkTable.MoneyThink
 					return
 				}
 				local origin = player.GetOrigin()
 				for (local money; money = FindByClassnameWithin(money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS);)
 					money.SetOrigin(origin)
 			}
-			player.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.MoneyThink <- MoneyThink
+			player.GetScriptScope().PlayerThinkTable.MoneyThink <- MoneyThink
 		}
 
 		function RemoveYERAttribute(params) {
@@ -158,7 +159,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			if (!player.IsBotOfType(1337)) return
 
-			local scope = player.GetScriptScope().PopExtPlayerScope
+			local scope = player.GetScriptScope()
 			scope.holdingfire <- false
 
 			function HoldFireThink() {
@@ -182,7 +183,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				}
 			}
 
-			player.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.HoldFireThink <- HoldFireThink
+			player.GetScriptScope().PlayerThinkTable.HoldFireThink <- HoldFireThink
 		}
 	}
 
@@ -195,31 +196,13 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 		function OnGameEvent_post_inventory_application(params) {
 			local player = GetPlayerFromUserID(params.userid)
+
 			player.ValidateScriptScope()
-			if (!("PopExtPlayerScope" in player.GetScriptScope()))
-			{
-				local PopExtPlayerScope = {
-					PlayerThinkTable = {}
-					TakeDamageTable = {}
-					DeathHookTable = {}
-				}
-				GetPlayerFromUserID(params.userid).GetScriptScope().PopExtPlayerScope <- PopExtPlayerScope
-			}
-			local scope = player.GetScriptScope().PopExtPlayerScope
-			foreach(k, v in scope)
-				printl(k+ " : " + v)
-			function PlayerThinks() {
+			local scope = player.GetScriptScope()
 
-				foreach (name, func in scope.PlayerThinkTable) { printl(name); func(); return -1 }
-			}
-
-			if (!("PlayerThinks" in scope)) {
-				scope.PlayerThinks <- PlayerThinks
-				AddThinkToEnt(player, "PlayerThinks")
-			}
+			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
 			foreach(_, func in GlobalFixes.SpawnHookTable) func(params)
-
 		}
 		// Hook all wave inits to reset parsing error counter.
 

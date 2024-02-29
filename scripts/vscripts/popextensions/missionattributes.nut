@@ -33,28 +33,19 @@
 
 			local player = GetPlayerFromUserID(params.userid)
 			player.ValidateScriptScope()
-			if (!("PopExtPlayerScope" in player.GetScriptScope()))
+			local scope = player.GetScriptScope()
+
+			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+
+			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
+
+			if (!("PlayerThinks" in scope))
 			{
-				local PopExtPlayerScope = {
-					PlayerThinkTable = {}
-					TakeDamageTable = {}
-					DeathHookTable = {}
-				}
-				player.GetScriptScope().PopExtPlayerScope <- PopExtPlayerScope
-			}
-			local scope = player.GetScriptScope().PopExtPlayerScope
-			foreach(k, v in scope.PlayerThinkTable)
-				printl(k+ " : " + v)
-			function PlayerThinks() {
-
-				foreach (name, func in scope.PlayerThinkTable) { printl(name); func(); return -1 }
-			}
-
-			if (!("PlayerThinks" in scope)) {
 				scope.PlayerThinks <- PlayerThinks
 				AddThinkToEnt(player, "PlayerThinks")
 			}
-			local scope = player.GetScriptScope().PopExtPlayerScope
+
+			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
 			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 		}
@@ -65,6 +56,7 @@
 			if (GetRoundState() != GR_STATE_PREROUND) return
 
 			MissionAttributes.ResetConvars()
+			if ("MissionAttrs" in ROOT) delete ::MissionAttrs
 			MissionAttributes.PathNum = 0
 
 			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
@@ -73,6 +65,7 @@
 		function OnGameEvent_mvm_wave_complete(params) {
 
 			MissionAttributes.ResetConvars()
+			if ("MissionAttrs" in ROOT) delete ::MissionAttrs
 			MissionAttributes.PathNum = 0
 
 			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
@@ -213,7 +206,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 				if (!groundent || !groundent.IsPlayer() || PopExtUtil.InButton(player, movekeys)) return
 				player.SetAbsVelocity(Vector())
 			}
-			player.GetScriptScope().PopExtPlayerScope.PlayerThinkTable.StandableHeads <- StandableHeads
+			player.GetScriptScope().PlayerThinkTable.StandableHeads <- StandableHeads
 		}
 		MissionAttributes.SpawnHookTable.StandableHeads <- MissionAttributes.StandableHeads
 	break
@@ -252,7 +245,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 				SetPropInt(sapper, "m_fObjectFlags", flags | OF_ALLOW_REPEAT_PLACEMENT)
 				printl(flags)
 			}
-			player.GetScriptScope().PopExtPlayerScope.BuiltObjectTable.MultiSapper <- MultiSapper
+			player.GetScriptScope().BuiltObjectTable.MultiSapper <- MultiSapper
 		}
 		MissionAttributes.SpawnHookTable.MultiSapper <- MissionAttributes.MultiSapper
 	break
@@ -549,7 +542,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (player.IsBotOfType(1337)) return
 
 			player.ValidateScriptScope()
-			local scope = player.GetScriptScope().PopExtPlayerScope
+			local scope = player.GetScriptScope()
 
 			if ("wearable" in scope && scope.wearable != null) {
 				scope.wearable.Destroy()
@@ -647,6 +640,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 
 					for (local i = 0; i < SLOT_COUNT; i++) {
+
 						local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 						if (wep == null || (wep.GetModelName() == vmodel)) continue
 
@@ -1018,7 +1012,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (player.IsBotOfType(1337)) return
 
 			player.ValidateScriptScope()
-			local scope = player.GetScriptScope().PopExtPlayerScope
+			local scope = player.GetScriptScope()
 
 			function ArmThink() {
 				local tfclass	   = player.GetPlayerClass()
@@ -1153,7 +1147,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (player.IsBotOfType(1337)) return
 
 			player.ValidateScriptScope()
-			local scope = player.GetScriptScope().PopExtPlayerScope
+			local scope = player.GetScriptScope()
 
 			function HasVal(arr, val) foreach (v in arr) if (v == val) return true
 			for (local i = 0; i < SLOT_COUNT; i++) {
@@ -1256,7 +1250,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 				if (player == null || !player.IsBotOfType(1337)) continue
 
 				player.ValidateScriptScope()
-				local scope = player.GetScriptScope().PopExtPlayerScope
+				local scope = player.GetScriptScope()
 				if (!("crit_weapon" in scope))
 					scope.crit_weapon <- null
 
@@ -1413,9 +1407,12 @@ MissionAttrEntity.ValidateScriptScope();
 MissionAttrEntity.GetScriptScope().MissionAttrThink <- MissionAttrThink
 AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
-function CollectMissionAttrs(attrs) {
+function CollectMissionAttrs(attrs = {}) {
 	foreach (attr, value in attrs)
+	{
 		MissionAttributes.MissionAttr(attr, value)
+		printl(attr + " : " + value)
+	}
 }
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
 function MissionAttr(attr, value) {

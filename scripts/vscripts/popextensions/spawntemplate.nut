@@ -50,7 +50,7 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 					if (parent.IsPlayer()) {
 						if (keepalive == false) {
 							parent.ValidateScriptScope()
-							local scope = parent.GetScriptScope().PopExtPlayerScope
+							local scope = parent.GetScriptScope()
 
 							// reused from CreatePlayerWearable function
 							if (!("popWearablesToDestroy" in scope))
@@ -65,7 +65,7 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 				if (parent.IsPlayer()) {
 					// copied from popextensions_hooks.nut
 					if (scope.OnParentKilledOutputArray.len() > 0) {
-						local playerscope = parent.GetScriptScope().PopExtPlayerScope
+						local playerscope = parent.GetScriptScope()
 
 						if (!("popHooks" in playerscope)) {
 							playerscope["popHooks"] <- {}
@@ -333,10 +333,10 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 			foreach(entity in PopExtScope.wavePointTemplates)
 				if (entity.IsValid())
 					entity.Kill()
-
+	
 			PopExtScope.wavePointTemplates.clear()
 		}
-
+	
 		function OnGameEvent_mvm_wave_failed(params) //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
 		{
 			//messy
