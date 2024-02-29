@@ -94,6 +94,7 @@
 			{
 				local player = PlayerInstanceFromIndex(i)
 
+				//make a player array to avoid constantly iterating through MAX_CLIENTS
 				if (player == null || !player.IsBotOfType(1337) || PopExtUtil.BotArray.find(player) != null) continue;
 
 				PopExtUtil.BotArray.append(player)
@@ -105,14 +106,23 @@
 			local player = GetPlayerFromUserID(params.userid)
 
 			player.ValidateScriptScope()
-			local scope = player.GetScriptScope()
+			if (!("PopExtPlayerScope" in player.GetScriptScope()))
+			{
+				local PopExtPlayerScope = {
+					PlayerThinkTable = {}
+					TakeDamageTable = {}
+					DeathHookTable = {}
+				}
+				GetPlayerFromUserID(params.userid).GetScriptScope().PopExtPlayerScope <- PopExtPlayerScope
+			}
 
-			if (!("MyWeaponsArray" in scope)) scope.MyWeaponsArray <- {}
-			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+			local scope = player.GetScriptScope().PopExtPlayerScope
+
+			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
 			function PlayerThinks() {
-				local times = []
-				foreach (name, func in scope.PlayerThinkTable) { func(); return -1 }
+
+				foreach (name, func in scope.PlayerThinkTable) { printl(name + " : " + func); func(); return -1 }
 			}
 
 			if (!("PlayerThinks" in scope)) {
@@ -120,21 +130,21 @@
 				AddThinkToEnt(player, "PlayerThinks")
 			}
 
+			//sort m_hMyWeapons  by slot
 			local myweapons = {}
 			for (local i = 0; i < SLOT_COUNT; i++) {
+
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 
 				if (wep == null) continue
 
 				myweapons[wep.GetSlot()] <- wep
 			}
+
 			foreach(slot, wep in myweapons)
-			{
-				local wep = GetPropEntityArray(player, "m_hMyWeapons", slot)
-
 				SetPropEntityArray(player, "m_hMyWeapons", wep, slot)
-			}
 
+			//make a player array to avoid constantly iterating through MAX_CLIENTS
 			if (player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
 				PopExtUtil.BotArray.append(player)
 
@@ -356,7 +366,7 @@ function PopExtUtil::CreatePlayerWearable(player, model, bonemerge = true, attac
 	SetParentLocalOrigin(wearable, player, attachment)
 
 	player.ValidateScriptScope()
-	local scope = player.GetScriptScope()
+	local scope = player.GetScriptScope().PopExtPlayerScope
 	if (autoDestroy) {
 		if (!("popWearablesToDestroy" in scope))
 			scope.popWearablesToDestroy <- []
@@ -576,15 +586,17 @@ function PopExtUtil::SwitchWeaponSlot(player, slot) {
 }
 
 function PopExtUtil::GetItemInSlot(player, slot) {
-	local item
-	for (local i = 0; i < SLOT_COUNT; i++) {
-		local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
-		if ( wep == null || wep.GetSlot() != slot) continue
+	// local item
+	// for (local i = 0; i < SLOT_COUNT; i++) {
+	// 	local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+	// 	if ( wep == null || wep.GetSlot() != slot) continue
 
-		item = wep
-		break
-	}
-	return item
+	// 	item = wep
+	// 	break
+	// }
+	// return item
+	//m_hMyWeapons is now sorted by slot
+	return GetPropEntityArray(player, "m_hMyWeapons", slot)
 }
 
 function PopExtUtil::SwitchToFirstValidWeapon(player) {
@@ -607,7 +619,7 @@ function PopExtUtil::SetEffect(ent, value) {
 
 function PopExtUtil::PlayerRobotModel(player, model) {
 	player.ValidateScriptScope()
-	local scope = player.GetScriptScope()
+	local scope = player.GetScriptScope().PopExtPlayerScope
 
 	local wearable = CreateByClassname("tf_wearable")
 	SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
@@ -973,7 +985,7 @@ function PopExtUtil::CheckBitwise(num) {
 
 function PopExtUtil::StopAndPlayMVMSound(player, soundscript, delay) {
 	player.ValidateScriptScope()
-	local scope = player.GetScriptScope()
+	local scope = player.GetScriptScope().PopExtPlayerScope
 	scope.sound <- soundscript
 
 	EntFireByHandle(player, "RunScriptCode", "self.StopSound(sound);", delay, null, null)

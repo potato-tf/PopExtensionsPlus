@@ -36,10 +36,10 @@ function Clamp360Angle(ang)
 
 function DisableViewcontrolSafe(player, viewcontrol)
 {
-		EntFireByHandle(player, "RunScriptCode", "self.GetScriptScope().__ls<-GetPropInt(self,`m_lifeState`);SetPropInt(self,`m_lifeState`,0)", -1, player, player)
+		EntFireByHandle(player, "RunScriptCode", "self.GetScriptScope().PopExtPlayerScope.__ls<-GetPropInt(self,`m_lifeState`);SetPropInt(self,`m_lifeState`,0)", -1, player, player)
 		EntFireByHandle(viewcontrol, "RunScriptCode", "SetPropEntity(self, `m_hPlayer`, activator)", -1, player, player)
 		EntFireByHandle(viewcontrol, "Disable", null, -1, player, player)
-		EntFireByHandle(player, "RunScriptCode", "SetPropInt(self,`m_lifeState`,self.GetScriptScope().__ls);SetPropInt(self,`m_takedamage`,2)", -1, player, player)
+		EntFireByHandle(player, "RunScriptCode", "SetPropInt(self,`m_lifeState`,self.GetScriptScope().PopExtPlayerScope.__ls);SetPropInt(self,`m_takedamage`,2)", -1, player, player)
 }
 
 ::PLAYING_VIEWCONTROL <- false
@@ -73,7 +73,7 @@ function DisableViewcontrolSafe(player, viewcontrol)
 		foreach (player in PopExtUtil.PlayerArray)
 		{
 			player.ValidateScriptScope()
-			local scope = player.GetScriptScope()
+			local scope = player.GetScriptScope().PopExtPlayerScope
 
 			// Disable camera
 			if (camera && camera.IsValid())
@@ -100,7 +100,7 @@ function DisableViewcontrolSafe(player, viewcontrol)
 	foreach (player in PopExtUtil.PlayerArray)
 	{
 		player.ValidateScriptScope()
-		player.GetScriptScope().__position <- player.GetOrigin()
+		player.GetScriptScope().PopExtPlayerScope.__position <- player.GetOrigin()
 
 		// Allow us to see ourselves while in viewcontrol
 		EntFireByHandle(player, "RunScriptCode", "self.SetForceLocalDraw(true)", -1, null, null)
@@ -147,7 +147,7 @@ function DisableViewcontrolSafe(player, viewcontrol)
 			player.ValidateScriptScope()
 
 			SetPropInt(player, "movetype", MOVETYPE_WALK)
-			player.SetAbsOrigin(player.GetScriptScope().__position)
+			player.SetAbsOrigin(player.GetScriptScope().PopExtPlayerScope.__position)
 		}
 
 		// Ignore malformed Keyframes
