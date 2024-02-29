@@ -10,12 +10,30 @@ put scripts directory inside tf directory, merge if necessary
 
 scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes use of all available hooks
 
-## Features:
-- Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  See [This Trello page](https://trello.com/b/rHmwlmCL/popextensions-todo-list) to see which ones are available
+# Features:
+
+## MissionAttributes
+- Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  Forcibly disable romevision, turn players into Robots, apply global item attributes or conditions to players, and way more than can be reasonably listed here
+
+## Bot Tags
 - Dozens of bot tags that mimic many of the rafmod/sigmod TFBot keyvalues
-- A variety of global MvM fixes that are present in rafmod/sigmod
+- Enables a variety of AI mechanics previously exclusive to rafmod/sigmod. Spellcasting bots, custom spawn locations, homing rockets, the list goes on.
+
+## Global fixes and balance changes 
+- The holiday punch can tickle robots once more, with working animations!
+- Your Eternal Reward disguises are no longer delayed.
+- Improved money collection for scout (collects instantly), money spawns with zero velocity.
+- Fixed HoldFireUntilReload on every weapon 
+- Dragons Fury cannot be reflected. 
+
+## Reverse MvM
 - Native Reverse MvM support (WIP)
-- All the original features of popextensions for adding spawn/death output hooks to bots and tanks.  
+
+## Backwards Compatible
+- All the original features of popextensions for adding spawn/death output hooks to bots and tanks are still supported, making this library a drop-in replacement.
+
+## Self-contained 
+- no need to worry about cleaning everything up manually, popextensions will automatically remove itself and all of its changes when a new popfile or wave that does not use it is loaded. 
 
 ## Example
 The example below makes bots with tag abc green, spawns a barrel prop on bot's head and gives them a frying pan (thanks to this script to download from here https://tf2maps.net/downloads/vscript-give_tf_weapon.14897/):
