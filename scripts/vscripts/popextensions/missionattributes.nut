@@ -601,8 +601,8 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (value & 8) {
 				function RobotVOThink() {
 					for (local ent; ent = Entities.FindByClassname(ent, "instanced_scripted_scene"); ) {
-						if (ent.GetEFlags() & EFL_IS_BEING_LIFTED_BY_BARNACLE) continue
-						ent.AddEFlags(EFL_IS_BEING_LIFTED_BY_BARNACLE)
+						if (ent.GetEFlags() & EFL_USER) continue
+						ent.AddEFlags(EFL_USER)
 
 						local owner = GetPropEntity(ent, "m_hOwner")
 						if (owner != null && !owner.IsBotOfType(1337)) {
