@@ -90,7 +90,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 	ThinkTable = {
 		function DragonsFuryFix() {
-			for (local fireball; fireball = FindByClassname(fireball, "tf_projectile_balloffire");)
+			for (local fireball; fireball = FindByClassname(fireball, "THINKADDED_tf_projectile_balloffire");)
 				fireball.RemoveFlag(FL_GRENADE)
 		}
 
