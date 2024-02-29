@@ -35,7 +35,69 @@ scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes
 ## Self-contained 
 - no need to worry about cleaning everything up manually, popextensions will automatically remove itself and all of its changes when a new popfile or wave that does not use it is loaded. 
 
-## Example
+# IMPORTANT NOTE FOR SERVER OWNERS 
+
+This library has a handful of features that rely on convars that are not included by default in `cfg/vscript_convar_allowlist.txt`.  You will need to modify this cfg file to add the following convars:
+
+```
+tf_mvm_defenders_team_size
+tf_dev_health_on_damage_recover_percentage
+tf_dev_marked_for_death_lifetime
+tf_whip_speed_increase
+```
+
+# Examples
+
+## MissionAttributes Example
+
+Mission attributes are collected in a table on wave init.  The function for doing so is `CollectMissionAttrs()`
+
+```
+        // Add or replace existing InitWaveOutput with code below
+        InitWaveOutput
+        {
+            Target gamerules // gamerules or tf_gamerules, depending on the map
+            Action RunScriptCode
+            Param "
+        
+                // The original InitWaveOutput trigger, change if necessary
+                EntFire(`wave_init_relay`, `Trigger`)
+
+                // Load popextensions script
+                IncludeScript(`popextensions_main.nut`)
+                
+                CollectMissionAttrs({
+
+                    `NoReanimators`: 1
+                    `666Wavebar`: 1
+                    `ForceHoliday`: 8
+                    `NoRome`: 2
+                    `WaveStartCountdown`: 5
+                    `PlayersAreRobots`: 2|4|8|16
+                    `SpellRateCommon`: 0.5
+                    `StandableHeads`: 1
+                    `PlayerAttributes`: {
+                        [TF_CLASS_SCOUT] = {
+                            `damage bonus` : 5,
+                            `fire rate penalty` : 2,
+                            `max health additive bonus` : 100,
+                        },
+                        [TF_CLASS_SOLDIER] = {
+                            `damage penalty` : 0.5,
+                            `fire rate bonus` : 0.5,
+                        },
+                        [TF_CLASS_DEMOMAN] = {
+                            `fire rate bonus` : 0.5,
+                        }
+                    }
+                })
+            "
+        }
+```
+You can find every single valid keyvalue in `popextensions/missionattributes.nut` under the `MissionAttributes::MissionAttr` function
+
+## Original Popextensions Example
+
 The example below makes bots with tag abc green, spawns a barrel prop on bot's head and gives them a frying pan (thanks to this script to download from here https://tf2maps.net/downloads/vscript-give_tf_weapon.14897/):
 ```
         // Add or replace existing InitWaveOutput with code below
@@ -48,7 +110,7 @@ The example below makes bots with tag abc green, spawns a barrel prop on bot's h
                 EntFire(`wave_init_relay`, `Trigger`)
 
                 // Load popextensions script
-                IncludeScript(`popextensions`)
+                IncludeScript(`popextensions_main.nut`)
                 // Yaki's scripts for giving weapons, and making custom ones. Download: https://tf2maps.net/downloads/vscript-give_tf_weapon.14897/
                 IncludeScript(`give_tf_weapon/_master`)
 
@@ -73,7 +135,6 @@ The example below makes bots with tag abc green, spawns a barrel prop on bot's h
                 })
             "
         }
-
 ```
 
 Example below makes all tanks that begin with name abc red and spawn with a prop and trigger_ignite on top. The tanks also use a custom icon:
@@ -88,7 +149,7 @@ Example below makes all tanks that begin with name abc red and spawn with a prop
                 EntFire(`wave_init_relay`, `Trigger`)
 
                 // Load popextensions script
-                IncludeScript(`popextensions`)
+                IncludeScript(`popextensions_main.nut`)
 
                 // Set custom wave icons inside this function
                 SetWaveIconsFunction(function() {
@@ -123,3 +184,33 @@ Example below makes all tanks that begin with name abc red and spawn with a prop
             "
         }
 ```
+
+## Setting ConVars
+
+this library includes the function `function MissionAttributes::SetConvar`.  This will reset the value of any changed ConVars after the wave/mission that uses the changed cvar is unloaded.  **Do not use ConVars.SetValue directly**
+
+```
+        // Add or replace existing InitWaveOutput with code below
+        InitWaveOutput
+        {
+            Target gamerules // gamerules or tf_gamerules, depending on the map
+            Action RunScriptCode
+            Param "
+        
+                // The original InitWaveOutput trigger, change if necessary
+                EntFire(`wave_init_relay`, `Trigger`)
+
+                // Load popextensions script
+                IncludeScript(`popextensions_main.nut`)
+
+                //disable Jungle Inferno airblast behavior
+                MissionAttributes.SetConvar(`tf_airblast_cray`, 0)
+            "
+        }
+```
+
+## Changing attributes on players and/or weapons
+
+As shown above in the mission attributes example.  It is possible to apply global attribute changes to players and specific items.  ItemAttributes supports item indexes or classnames for weapons.
+
+**Due to a limitation with VScripts AddAttribute/AddCustomAttribute functions, string attributes cannot be set**.  This means setting attributes such as `custom projectile model` are not possible
