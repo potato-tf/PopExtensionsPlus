@@ -667,30 +667,20 @@ function PopExtUtil::HasItemIndex(player, index) {
 }
 
 function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5) {
-	local utilstun = SpawnEntityFromTable("trigger_stun", {
-		targetname = "__utilstun"
-		stun_type = type
-		stun_duration = duration
-		move_speed_reduction = speedreduce
-		trigger_delay = delay
-		StartDisabled = 0
-		spawnflags = 1
+	SpawnEntityFromTable("trigger_stun", {
+		targetname = "__utilstun",
+		stun_type = type,
+		stun_duration = duration,
+		move_speed_reduction = speedreduce,
+		trigger_delay = delay,
+		StartDisabled = 0,
+		spawnflags = 1,
 		"OnStunPlayer#1": "!self,Kill,,-1,-1"
 	})
-	utilstun.SetSolid(2)
-	utilstun.SetSize(Vector(-1, -1, -1), Vector())
+	__utilstun.SetSolid(2)
+	__utilstun.SetSize(Vector(-1, -1, -1), Vector())
 
-	EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
-}
-
-function PopExtUtil::Ignite(player, duration = 10)
-{
-	local utilignite = SpawnEntityFromTable("trigger_ignite", {
-		targetname = "__utilignite"
-		burn_duration = duration
-	})
-	utilignite.SetSolid(2)
-	utilignite.SetSize(Vector(-1, -1, -1), Vector())
+	EntFireByHandle(__utilstun, "EndTouch", "", -1, player, player)
 }
 
 function PopExtUtil::ShowHudHint(player, text = "This is a hud hint", duration = 5) {
