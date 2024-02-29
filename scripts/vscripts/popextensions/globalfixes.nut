@@ -66,9 +66,9 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 				PopExtUtil.PlayerRobotModel(player, botmodel)
 
-				//overwrite the existing bot model think to remove it after taunt 
+				//overwrite the existing bot model think to remove it after taunt
 				function BotModelThink() {
-					
+
 					if (Time() > victim.GetTauntRemoveTime()) {
 						if (wearable != null) wearable.Destroy()
 
@@ -93,7 +93,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			for (local fireball; fireball = FindByClassname(fireball, "THINKADDED_tf_projectile_balloffire");)
 				fireball.RemoveFlag(FL_GRENADE)
 		}
-		
+
 		//add think table to all projectiles
 		//there is apparently no better way to do this lol
 		function ProjectileThink() {
@@ -102,7 +102,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				projectile.ValidateScriptScope()
 				local scope = projectile.GetScriptScope()
 				if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <- {}
-	
+
 				SetPropString(projectile, "m_iClassname", format("THINKADDED_%s", projectile.GetClassname()))
 			}
 		}
@@ -145,12 +145,12 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			local wep   = PopExtUtil.GetItemInSlot(player, SLOT_MELEE)
 			local index = PopExtUtil.GetItemIndex(wep)
 
-			if (index == ITEMINDEX_YOUR_ETERNAL_REWARD || index == ITEMINDEX_THE_WANGA_PRICK)
+			if (index == ID_YOUR_ETERNAL_REWARD || index == ID_WANGA_PRICK)
 				wep.RemoveAttribute("disguise on backstab")
 		}
 
 		function HoldFireUntilFullReloadFix(params) {
-			
+
 			local player = GetPlayerFromUserID(params.userid)
 
 			if (!player.IsBotOfType(1337)) return
@@ -168,7 +168,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				{
 					player.AddBotAttribute(SUPPRESS_FIRE)
 					scope.holdingfire = true
-					return -1 
+					return -1
 				}
 
 				else if (activegun.Clip1() == activegun.GetMaxClip1() && scope.holdingfire)
@@ -195,7 +195,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-			
+
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
 			foreach(_, func in GlobalFixes.SpawnHookTable) func(params)

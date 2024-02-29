@@ -171,7 +171,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 	//m_flReloadPriorNextFire is a timestamp of when the player STARTS reloading
 	//we need to wait until the ammo has actually been reloaded
 	// if (scope.sequencearray.find(activegun.GetSequence()) != null) printl(GetPropFloat(vm, "m_flCycle"))
-	if (((scope.lastreload != timestamp) || (GetItemIndex(activegun) == ITEMINDEX_DRAGONS_FURY && GetPropFloat(player, "m_Shared.m_flItemChargeMeter") < 0.001)) && ammoslot > 0 && scope.sequencearray.find(activegun.GetSequence()) != null) {
+	if (((scope.lastreload != timestamp) || (GetItemIndex(activegun) == ID_DRAGONS_FURY && GetPropFloat(player, "m_Shared.m_flItemChargeMeter") < 0.001)) && ammoslot > 0 && scope.sequencearray.find(activegun.GetSequence()) != null) {
 		//flamethrower/minigun ammo drains differently
 		if ((player.GetPlayerClass() == TF_CLASS_PYRO || player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS) && scope.cooldown > Time()) return
 
@@ -182,11 +182,11 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 
 			//13 = airblast sequence
 			if (activegun.GetSequence() == 13)
-				if (GetItemIndex(activegun) == ITEMINDEX_THE_BACKBURNER)
+				if (GetItemIndex(activegun) == ID_BACKBURNER)
 					scope.drainedamount = 50
-				else if (GetItemIndex(activegun) == ITEMINDEX_THE_DEGREASER)
+				else if (GetItemIndex(activegun) == ID_DEGREASER)
 					scope.drainedamount = 25
-			else if (GetItemIndex(activegun) == ITEMINDEX_DRAGONS_FURY)
+			else if (GetItemIndex(activegun) == ID_DRAGONS_FURY)
 				scope.drainedamount = 2
 			else
 				scope.drainedamount = 20
@@ -195,9 +195,9 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 			//see cfive_events OnGameEvent_player_builtobject for building metal draining
 			if (player.GetPlayerClass() == TF_CLASS_ENGINEER) {
 				//widowmaker drains metal instead
-				if (GetItemIndex(activegun) == ITEMINDEX_THE_WIDOWMAKER && metalslot >= 30) SetReserveMetal(player, metalslot - 30)
+				if (GetItemIndex(activegun) == ID_WIDOWMAKER && metalslot >= 30) SetReserveMetal(player, metalslot - 30)
 				//short circuit drain
-				else if (GetItemIndex(activegun) == ITEMINDEX_THE_SHORT_CIRCUIT && metalslot >= 5)
+				else if (GetItemIndex(activegun) == ID_SHORT_CIRCUIT && metalslot >= 5)
 					if (InButton(player, IN_ATTACK2) && metalslot >= 65)
 						SetReserveMetal(player, metalslot - 65)
 					else if (!InButton(player, IN_ATTACK2))
@@ -210,7 +210,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 		}
 
 		//only drain one DF ammo
-		if (GetItemIndex(activegun) == ITEMINDEX_DRAGONS_FURY)
+		if (GetItemIndex(activegun) == ID_DRAGONS_FURY)
 			scope.dfdrained = true
 
 		lastreload = timestamp
@@ -223,9 +223,9 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 		// }
 
 		//firing speed changes
-		if (GetItemIndex(activegun) == ITEMINDEX_TOMISLAV)
+		if (GetItemIndex(activegun) == ID_TOMISLAV)
 			scope.cooldown = Time() + 0.12
-		else if (GetItemIndex(activegun) == ITEMINDEX_THE_HUO_LONG_HEATER)
+		else if (GetItemIndex(activegun) == ID_HUO_LONG_HEATER)
 			scope.cooldown = Time() + 0.07 //do this better
 		else
 			scope.cooldown = Time() + 0.1
@@ -234,7 +234,7 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 	//some weapons don't actually finish their cycle before reloading.
 	//cutoff generally seems to be 0.85 for most clip-based weapons
 	local cycletime = 0.8
-	if (activegun.GetSlot() == SLOT_PRIMARY && player.GetPlayerClass() == TF_CLASS_SOLDIER) cycletime = GetItemIndex(activegun) == ITEMINDEX_THE_BEGGARS_BAZOOKA ? 0.0 : 0.42
+	if (activegun.GetSlot() == SLOT_PRIMARY && player.GetPlayerClass() == TF_CLASS_SOLDIER) cycletime = GetItemIndex(activegun) == ID_BEGGARS_BAZOOKA ? 0.0 : 0.42
 	if ((player.GetPlayerClass() == TF_CLASS_SCOUT || player.GetPlayerClass() == TF_CLASS_DEMOMAN) && GetPropBool(activegun, "m_bReloadsSingly")) cycletime = 1.0
 	if (activegun.GetMaxClip1() == -1) cycletime = 0.0
 	if (activegun.GetClassname() == "tf_weapon_compound_bow") cycletime = 0.55
@@ -251,5 +251,5 @@ local classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "py
 		return
 	}
 
-	if (GetItemIndex(GetWeaponInSlot(player, SLOT_PRIMARY)) == ITEMINDEX_DRAGONS_FURY && GetPropFloat(player, "m.Shared.m_flItemChargeMeter") == 100) scope.dfdrained = false
+	if (GetItemIndex(GetWeaponInSlot(player, SLOT_PRIMARY)) == ID_DRAGONS_FURY && GetPropFloat(player, "m.Shared.m_flItemChargeMeter") == 100) scope.dfdrained = false
 }
