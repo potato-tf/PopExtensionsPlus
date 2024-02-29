@@ -461,10 +461,6 @@ local popext_funcs =
 		local target
 		local min_distance = 32768.0
 		foreach (player in PopExtUtil.PlayerArray) {
-			local player = PlayerInstanceFromIndex(i)
-
-			if (player == null)
-				continue
 
 			local distance = (projectile.GetOrigin() - player.GetOrigin()).Length()
 

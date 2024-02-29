@@ -1246,8 +1246,6 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 		function MissionAttributes::BotsRandomCritThink() {
 			foreach (bot in PopExtUtil.BotArray) {
-				local player = PlayerInstanceFromIndex(i)
-				if (player == null || !player.IsBotOfType(1337)) continue
 
 				player.ValidateScriptScope()
 				local scope = player.GetScriptScope()
