@@ -505,8 +505,8 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (!player.IsPlayer() || !victim.IsPlayer() || IsPlayerABot(player)) return //check if non-bot victim
 			if (player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER) return //check if we're spy/sniper
 			if (GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD) return //check for headshot
-			if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || GetItemIndex(player.GetActiveWeapon()) == ITEMINDEX_THE_SYDNEY_SLEEPER)) return //ignore sydney sleeper and SMGs
-			if (player.GetPlayerClass() == TF_CLASS_SPY && GetItemIndex(player.GetActiveWeapon()) != ITEMINDEX_THE_AMBASSADOR) return //ambassador only
+			if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || GetItemIndex(player.GetActiveWeapon()) == ID_SYDNEY_SLEEPER)) return //ignore sydney sleeper and SMGs
+			if (player.GetPlayerClass() == TF_CLASS_SPY && GetItemIndex(player.GetActiveWeapon()) != ID_AMBASSADOR) return //ambassador only
 			params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL) //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
 			return true
 		}
@@ -547,7 +547,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 			if (value & 1) {
 				//sticky anims and thruster anims are particularly problematic
-				if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemIndex(player, ITEMINDEX_THERMAL_THRUSTER))) {
+				if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemIndex(player, ID_THERMAL_THRUSTER))) {
 					PopExtUtil.PlayerRobotModel(player, model)
 					return
 				}
