@@ -148,7 +148,7 @@
 	FinishedRelay = FindByName(null, "wave_finished_relay")
 	CurrentWaveNum = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
 	ClientCommand = SpawnEntityFromTable("point_clientcommand", {})
-
+	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "_roundwin", teamnum = 3})
 	Events = {
 		function OnGameEvent_mvm_wave_complete(params) { PopExtUtil.IsWaveStarted = false }
 		function OnGameEvent_mvm_wave_failed(params) { PopExtUtil.IsWaveStarted = false }
@@ -308,7 +308,25 @@ function PopExtUtil::HexToRgb(hex) {
 	// Return the RGB values as an array
 	return [r, g, b]
 }
+function PopExtUtil::CountAlivePlayers(printout = false)
+{
+    if (!PopExtUtil.IsWaveStarted) return
 
+    local playersalive = 0
+
+    foreach (player in PopExtUtil.HumanArray)
+        if (PopExtUtil.IsAlive(player))
+            playersalive++
+
+    if (printout)
+    {
+        ClientPrint(null, HUD_PRINTTALK, format("Players Alive: %d", playersalive))
+        printf("Players Alive: %d\n", playersalive)
+    }
+	//shouldn't happen
+    if (PopExtUtil.HumanArray() < playersalive) playersalive == PopExtUtil.HumanArray()
+    return playersalive
+}
 function PopExtUtil::SetParentLocalOriginDo(child, parent, attachment = null) {
 	SetPropEntity(child, "m_hMovePeer", parent.FirstMoveChild())
 	SetPropEntity(parent, "m_hMoveChild", child)

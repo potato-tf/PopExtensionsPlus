@@ -495,6 +495,16 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 	// =========================================================
 
+	case "TeamWipeWaveLoss":
+		if (value < 1 || PopExtUtil.CountAlivePlayers() != 0) return
+
+		PopExtUtil.GameRoundWin.SetTeam(value + 1) //don't believe this is necessary but doesn't hurt
+		DoEntFire("_roundwin", "RoundWin", "", -1, null, null)
+
+	break
+
+	// =========================================================
+
 	case "BotHeadshots":
 		if (value < 1) return
 
