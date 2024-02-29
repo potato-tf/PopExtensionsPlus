@@ -26,7 +26,7 @@ local popext_funcs =
 
 	popext_altfire = function(bot, args) {
 		if (args.len() == 1)
-			bot.PressAltFireButton(99999)
+			bot.PressAltFireButton(INT_MAX)
 		else if (args.len() >= 2)
 			bot.PressAltFireButton(args[1].tointeger())
 	}
@@ -86,7 +86,7 @@ local popext_funcs =
 		local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
 
 		//force deploy dispenser when leaving spawn and kill it immediately
-		if (!alwaysfire) bot.PressFireButton(9999.0)
+		if (!alwaysfire) bot.PressFireButton(INT_MAX)
 
 		function DispenserBuildThink() {
 
@@ -118,7 +118,7 @@ local popext_funcs =
 				building.SetModelScale(0.01, 0.0)
 				SetPropInt(building, "m_nRenderMode", kRenderTransColor)
 				SetPropInt(building, "m_clrRender", 0)
-				building.SetHealth(999999)
+				building.SetHealth(INT_MAX)
 				building.SetSolid(SOLID_NONE)
 
 				PopExtUtil.SetTargetname(building, format("building%d", building.entindex()))
@@ -307,12 +307,12 @@ local popext_funcs =
 		}
 	}
 	popext_spawnhere = function(bot, args) {
-		
+
 		local org = split(args[0], " ")
 		bot.Teleport(true, Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()), true, QAngle(), true, bot.GetAbsVelocity())
-		
+
 		if (args.len() < 2) return
-		
+
 		local spawnubertime = args[1].tofloat()
 		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, spawnubertime, null)
 	}
@@ -335,14 +335,14 @@ local popext_funcs =
 							break
 						case 2: // Advanced Airblast, deflect regardless of FOV
 
-							LookAt(projectile.GetOrigin(), 9999, 9999)
+							LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
 							break
 						case 3: // Expert Airblast, deflect regardless of FOV back to Sender
 
 							local owner = projectile.GetOwner()
 							if (owner != null) {
 								local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
-								LookAt(owner_head, 9999, 9999)
+								LookAt(owner_head, INT_MAX, INT_MAX)
 							}
 							break
 					}

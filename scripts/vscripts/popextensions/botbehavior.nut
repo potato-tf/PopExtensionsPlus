@@ -109,14 +109,14 @@ class AI_Bot {
 				break
 
 				case 2: // Advanced Airblast, deflect regardless of FOV
-					LookAt(projectile.GetOrigin(), 9999, 9999)
+					LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
 				break
 
 				case 3: // Expert Airblast, deflect regardless of FOV back to Sender
 					local owner = projectile.GetOwner()
 					if (owner != null) {
 						local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
-						LookAt(owner_head, 9999, 9999)
+						LookAt(owner_head, INT_MAX, INT_MAX)
 					}
 				break
 				}
@@ -187,7 +187,7 @@ class AI_Bot {
 		if (aim_time != FLT_MAX)
 			return
 
-		bot.PressAltFireButton(9999.0)
+		bot.PressAltFireButton(INT_MAX)
 		aim_time = time
 	}
 
