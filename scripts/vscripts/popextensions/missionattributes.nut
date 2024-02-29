@@ -39,14 +39,6 @@
 
 			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
-			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
-
-			if (!("PlayerThinks" in scope))
-			{
-				scope.PlayerThinks <- PlayerThinks
-				AddThinkToEnt(player, "PlayerThinks")
-			}
-
 			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 		}
 		// Hook all wave inits to reset parsing error counter.
@@ -97,8 +89,6 @@ function MissionAttributes::SetConvar(convar, value, hideChatMessage = true) {
 	if (!(convar in MissionAttributes.ConVars)) MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
 
 	if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value)
-
-	// foreach(convar, value in MissionAttributes.ConVars) printl(convar + " = " + value)
 
 	EntFireByHandle(commentaryNode, "Kill", "", 1.1, null, null)
 }
@@ -1246,7 +1236,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 		// 4 kills to reach max chance
 
 		function MissionAttributes::BotsRandomCritThink() {
-			for (local i = 1; i <= MAX_CLIENTS ; i++) {
+			foreach (bot in PopExtUtil.BotArray) {
 				local player = PlayerInstanceFromIndex(i)
 				if (player == null || !player.IsBotOfType(1337)) continue
 				
@@ -1408,8 +1398,8 @@ MissionAttrEntity.ValidateScriptScope();
 MissionAttrEntity.GetScriptScope().MissionAttrThink <- MissionAttrThink
 AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
-function CollectMissionAttrs() {
-	foreach (attr, value in MissionAttrs)
+function CollectMissionAttrs(attrs = {}) {
+	foreach (attr, value in attrs)
 		MissionAttributes.MissionAttr(attr, value)
 }
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().

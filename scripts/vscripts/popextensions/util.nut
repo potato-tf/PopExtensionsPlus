@@ -5,6 +5,7 @@ EFL_USER <- 1048576 // EFL_IS_BEING_LIFTED_BY_BARNACLE
 ::PopExtUtil <- {
 
 	PlayerArray = []
+	BotArray = []
 	Classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
 	IsWaveStarted = false //check a global variable instead of accessing a netprop every time to check if we are between waves.
 	AllNavAreas = {}
@@ -72,7 +73,6 @@ EFL_USER <- 1048576 // EFL_IS_BEING_LIFTED_BY_BARNACLE
 		THINKADDED_tf_projectile_flare				= 1
 	}
 
-	Global_Time = Time()
 	GameRules = FindByClassname(null, "tf_gamerules")
 	ObjectiveResource = FindByClassname(null, "tf_objective_resource")
 	MonsterResource = FindByClassname(null, "monster_resource")
@@ -88,28 +88,78 @@ EFL_USER <- 1048576 // EFL_IS_BEING_LIFTED_BY_BARNACLE
 		function OnGameEvent_mvm_wave_complete(params) { PopExtUtil.IsWaveStarted = false }
 		function OnGameEvent_mvm_wave_failed(params) { PopExtUtil.IsWaveStarted = false }
 		function OnGameEvent_mvm_begin_wave(params) { PopExtUtil.IsWaveStarted = true }
+		function OnGameEvent_mvm_reset_stats(params) { PopExtUtil.IsWaveStarted = true } //used for manually jumping waves
+		
+		function OnGameEvent_teamplay_round_start(params)
+		{
+			for (local i = 1; i <= MAX_CLIENTS; i++)
+			{
+				local player = PlayerInstanceFromIndex(i)
+	
+				if (player == null || !player.IsBotOfType(1337) || PopExtUtil.BotArray.find(player) != null) continue;
+	
+				PopExtUtil.BotArray.append(player)
+			}
+		}
 
 		function OnGameEvent_post_inventory_application(params) {
+			
 			local player = GetPlayerFromUserID(params.userid)
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
 			if (!("MyWeaponsArray" in scope)) scope.MyWeaponsArray <- {}
+			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
+			function PlayerThinks() { 
+				local times = []
+				foreach (name, func in scope.PlayerThinkTable) {
+					BeginBenchmark()
+			
+					func();
+					
+					local time = EndBenchmark();
+					times.append({ name = name, time = time })
+					total_time += time;
+				}
+				
+				if (time > 1.5) {
+					
+					printl("Expensive think func!")
+					foreach (time in times)
+					{
+						printf("\t%s : %.4f ms\n", time.name, time.time)
+					}
+				}
+				return -1
+			}
+		
+			if (!("PlayerThinks" in scope)) {
+				scope.PlayerThinks <- PlayerThinks
+				AddThinkToEnt(player, "PlayerThinks")
+			}
+			local myweapons = {}
 			for (local i = 0; i < SLOT_COUNT; i++) {
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 
 				if (wep == null) continue
 
-				scope.MyWeaponsArray[wep.GetSlot()] <- wep
-
+				myweapons[wep.GetSlot()] <- wep
 			}
+			foreach(slot, wep in myweapons)
+			{
+				local wep = GetPropEntityArray(player, "m_hMyWeapons", slot)
 
-			foreach (k, v in scope.MyWeaponsArray)
-			if (player.IsBotOfType(1337)) return
+				if (wep != null) wep.Kill()
+				SetPropEntityArray(player, "m_hMyWeapons", wep, slot)
+			}	
 
-			if (PopExtUtil.PlayerArray.find(player) == null) PopExtUtil.PlayerArray.append(player)
+			if (player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
+				PopExtUtil.BotArray.append(player)
+				
+			else if (PopExtUtil.PlayerArray.find(player) == null) 
+				PopExtUtil.PlayerArray.append(player)
 
 		}
 
@@ -600,17 +650,9 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 			EntFireByHandle(wearable, "SetParent", "!activator", -1, self, self)
 		return -1
 	}
-	if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
 	if (!(BotModelThink in scope.PlayerThinkTable))
 		scope.PlayerThinkTable.BotModelThink <- BotModelThink
-
-	function PopExtUtil::PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func() }
-
-	if (!("PlayerThinks" in scope)) {
-		scope.PlayerThinks <- PopExtUtil.PlayerThinks
-		AddThinkToEnt(player, "PlayerThinks")
-	}
 }
 
 function PopExtUtil::HasItemIndex(player, index) {

@@ -70,11 +70,8 @@ function DisableViewcontrolSafe(player, viewcontrol)
 		SetPropBool(TF_GAMERULES, "m_bShowMatchSummary", false)
 
 		// Loop through our human players
-		for (local i = 1; i <= MAX_CLIENTS; ++i)
+		foreach (player in PopExtUtil.PlayerArray)
 		{
-			local player = PlayerInstanceFromIndex(i)
-			if (!player || IsPlayerABot(player)) continue
-
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
@@ -100,11 +97,8 @@ function DisableViewcontrolSafe(player, viewcontrol)
 	}
 
 	// Loop through our human players
-	for (local i = 1; i <= MAX_CLIENTS; ++i)
+	foreach (player in PopExtUtil.PlayerArray)
 	{
-		local player = PlayerInstanceFromIndex(i)
-		if (!player || IsPlayerABot(player)) continue
-
 		player.ValidateScriptScope()
 		player.GetScriptScope().__position <- player.GetOrigin()
 
@@ -146,10 +140,9 @@ function DisableViewcontrolSafe(player, viewcontrol)
 		}
 
 		// Gay babyjail our human players to prevent them from moving with things like conga
-		for (local i = 1; i <= MAX_CLIENTS; ++i)
+
+		foreach (player in PopExtUtil.PlayerArray)
 		{
-			local player = PlayerInstanceFromIndex(i)
-			if (!player || IsPlayerABot(player)) continue
 
 			player.ValidateScriptScope()
 

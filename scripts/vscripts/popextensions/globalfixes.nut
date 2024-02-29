@@ -90,8 +90,21 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 	ThinkTable = {
 		function DragonsFuryFix() {
-			for (local fireball; fireball = FindByClassname(fireball, "tf_projectile_balloffire");)
+			for (local fireball; fireball = FindByClassname(fireball, "THINKADDED_tf_projectile_balloffire");)
 				fireball.RemoveFlag(FL_GRENADE)
+		}
+		
+		//add think table to all projectiles
+		//there is apparently no better way to do this lol
+		function ProjectileThink() {
+			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");) {
+				printl("test")
+				projectile.ValidateScriptScope()
+				local scope = projectile.GetScriptScope()
+				if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <- {}
+	
+				SetPropString(projectile, "m_iClassname", format("THINKADDED_%s", projectile.GetClassname()))
+			}
 		}
 	}
 
@@ -117,8 +130,9 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 					delete player.GetScriptScope().PlayerThinkTable.MoneyThink
 					return
 				}
+				local origin = player.GetOrigin()
 				for (local money; money = FindByClassnameWithin(money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS);)
-					money.SetOrigin(player.GetOrigin())
+					money.SetOrigin(origin)
 			}
 			player.GetScriptScope().PlayerThinkTable.MoneyThink <- MoneyThink
 		}
@@ -181,14 +195,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-
+			
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
-
-			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
-
-			scope.PlayerThinks <- PlayerThinks
-			AddThinkToEnt(player, "PlayerThinks")
-
 
 			foreach(_, func in GlobalFixes.SpawnHookTable) func(params)
 		}

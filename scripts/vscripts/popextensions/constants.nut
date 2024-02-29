@@ -31,9 +31,6 @@ foreach(k, v in ::EntityOutputs.getclass())
 	if (k != "IsValid" && !(k in ROOT))
 		ROOT[k] <- ::EntityOutputs[k].bindenv(::EntityOutputs)
 
-// String constants are apparently significantly faster than raw strings
-const THINK_ADDED = "THINKADDED_"
-
 // m_iSelectedSpellIndex
 const SPELL_ROLLING    = -2
 const SPELL_EMPTY      = -1
