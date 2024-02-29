@@ -21,6 +21,72 @@
 		"", // Civilian
 	]
 
+	MaxAmmoTable = {
+		[TF_CLASS_SCOUT] = {
+			["tf_weapon_scattergun"]            = 32,
+			["tf_weapon_handgun_scout_primary"] = 32,
+			["tf_weapon_soda_popper"]           = 32,
+			["tf_weapon_pep_brawler_blaster"]   = 32,
+
+			["tf_weapon_handgun_scout_secondary"] = 36,
+			["tf_weapon_pistol"]                  = 36,
+		},
+		[TF_CLASS_SOLDIER] = {
+			["tf_weapon_rocketlauncher"]           = 20,
+			["tf_weapon_rocketlauncher_directhit"] = 20,
+			["tf_weapon_rocketlauncher_airstrike"] = 20,
+			[237] = 60,
+
+			["tf_weapon_shotgun_soldier"] = 32,
+			["tf_weapon_shotgun"]         = 32,
+		},
+		[TF_CLASS_PYRO] = {
+			["tf_weapon_flamethrower"]            = 200,
+			["tf_weapon_rocketlauncher_fireball"] = 40,
+
+			["tf_weapon_shotgun_pyro"] = 32,
+			["tf_weapon_shotgun"]      = 32,
+			["tf_weapon_flaregun"]     = 16,
+		},
+		[TF_CLASS_DEMOMAN] = {
+			["tf_weapon_grenadelauncher"] = 16,
+			["tf_weapon_cannon"]          = 16,
+
+			["tf_weapon_pipebomblauncher"] = 24,
+			[265] = 72,
+		},
+		[TF_CLASS_HEAVYWEAPONS] = {
+			["tf_weapon_minigun"]     = 200,
+
+			["tf_weapon_shotgun_hwg"] = 32,
+			["tf_weapon_shotgun"]     = 32,
+		},
+		[TF_CLASS_ENGINEER] = {
+			["tf_weapon_shotgun"]                 = 32,
+			["tf_weapon_sentry_revenge"]          = 32,
+			["tf_weapon_shotgun_building_rescue"] = 16,
+			[9] = 32,
+
+			["tf_weapon_pistol"] = 200,
+		},
+		[TF_CLASS_MEDIC] = {
+			["tf_weapon_syringegun_medic"] = 150,
+			["tf_weapon_crossbow"]         = 38,
+		},
+		[TF_CLASS_SNIPER] = {
+			["tf_weapon_sniperrifle"]         = 25,
+			["tf_weapon_sniperrifle_decap"]   = 25,
+			["tf_weapon_sniperrifle_classic"] = 25,
+			["tf_weapon_compound_bow"]        = 12,
+
+			["tf_weapon_smg"]         = 75,
+			["tf_weapon_charged_smg"] = 75,
+		},
+		[TF_CLASS_SPY] = {
+			["tf_weapon_revolver"] = 24,
+		},
+	}
+
 	ItemWhitelist = []
 	ItemBlacklist = []
 
@@ -874,6 +940,14 @@ function PopExtUtil::Max(a, b) {
 	return (a >= b) ? a : b
 }
 
+function PopExtUtil::Round(num, decimals=0) {
+	if (decimals <= 0)
+		return floor(num + 0.5)
+
+	local mod = pow(10, decimals)
+	return floor((num * mod) + 0.5) / mod
+}
+
 function PopExtUtil::Clamp(x, a, b) {
 	return Min(b, Max(a, x))
 }
@@ -1076,4 +1150,40 @@ function PopExtUtil::GetPlayerReadyCount() {
 	}
 
 	return ready
+}
+
+function PopExtUtil::GetWeaponMaxAmmo(player, wep) {
+	local slot      = wep.GetSlot()
+	local classname = wep.GetClassname()
+	local itemid    = PopExtUtil.GetItemIndex(wep)
+
+	local table = PopExtUtil.MaxAmmoTable[player.GetPlayerClass()]
+
+	if (!(itemid in table) && !(classname in table))
+		return -1
+
+	local base_max = (itemid in table) ? table[itemid] : table[classname]
+
+	/*
+	local mod = 1.0
+
+	local incr
+	local decr
+	local hid
+	if (slot == SLOT_PRIMARY) {
+		incr = wep.GetAttribute("maxammo primary increased", 1.0)
+		decr = wep.GetAttribute("maxammo primary reduced", 1.0)
+		hid  = wep.GetAttribute("hidden primary max ammo bonus", 1.0)
+	}
+	else if (slot == SLOT_SECONDARY) {
+		incr = wep.GetAttribute("maxammo secondary increased", 1.0)
+		decr = wep.GetAttribute("maxammo secondary reduced", 1.0)
+		hid  = wep.GetAttribute("hidden secondary max ammo penalty", 1.0)
+	}
+
+	mod *= incr * decr * hid
+	return base_max * mod
+	*/
+
+	return base_max
 }
