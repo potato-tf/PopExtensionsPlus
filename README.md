@@ -10,6 +10,13 @@ put scripts directory inside tf directory, merge if necessary
 
 scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes use of all available hooks
 
+## Features:
+- Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  See [This Trello page](https://trello.com/b/rHmwlmCL/popextensions-todo-list) to see which ones are available
+- Dozens of bot tags that mimic many of the rafmod/sigmod TFBot keyvalues
+- A variety of global MvM fixes that are present in rafmod/sigmod
+- Native Reverse MvM support (WIP)
+- All the original features of popextensions for adding spawn/death output hooks to bots and tanks.  
+
 ## Example
 The example below makes bots with tag abc green, spawns a barrel prop on bot's head and gives them a frying pan (thanks to this script to download from here https://tf2maps.net/downloads/vscript-give_tf_weapon.14897/):
 ```
