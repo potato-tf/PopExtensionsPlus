@@ -1,0 +1,17 @@
+Dev todo notes
+--------------
+Mince:
+// TODO: Make PlayersAreRobots 16 and HandModelOverride incompatible
+// TODO: AddPlayerCond
+// TODO: (ItemAttributes) allow itemids
+// TODO: (ItemAttributes / PlayerAttributes) fix attributes carrying for on classes for some reason
+// TODO: (EnableRandomCrits) see about using abs on the condition checks, dunno if bitwise AND will eval true for negative values
+// TODO: fix switching weapons removing random crit cond not working
+// TODO: (ReverseMVM) For some reason the round just starts itsself when you spawn sometimes??
+// TODO: (ReverseMVM) Need to fix players getting stuck in spec on wave fail, mission complete, etc
+// TODO: (ReverseMVM) figure out a better system than this weapon deploy sequence for flare and sniper,
+//       the timing seems to be off or something where you can fire just after deploying and
+//       not consume ammo
+// TODO: Reimplement the Error system with try cach and raise
+// TODO: (HolidayPunchFix) Check if we need to set m_hOwnerEnity since we already use SetOwner
+// TODO: Remove reverse.nut if it isnt going to be used, ask brain
