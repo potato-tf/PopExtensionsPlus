@@ -1,5 +1,6 @@
 const SCOUT_MONEY_COLLECTION_RADIUS = 288
 const HUNTSMAN_DAMAGE_FIX_MOD       = 1.263157
+const EFL_USER = 1048576
 
 local GlobalFixesEntity = FindByName(null, "popext_globalfixes_ent")
 if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "popext_globalfixes_ent" })

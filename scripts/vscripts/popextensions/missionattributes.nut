@@ -37,6 +37,14 @@
 
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
+			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
+
+			if (!("PlayerThinks" in scope))
+			{
+				scope.PlayerThinks <- PlayerThinks
+				AddThinkToEnt(player, "PlayerThinks")
+			}
+
 			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
 			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
@@ -140,7 +148,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 	break
 
 	// ========================================================
-	
+
 	case "RedBotsNoRandomCrit":
 		function MissionAttributes::RedBotsNoRandomCrit(params)
 		{
@@ -150,7 +158,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			PopExtUtil.AddAttributeToLoadout(player, "crit mod disabled hidden", 0)
 		}
 		MissionAttributes.SpawnHookTable.RedBotsNoRandomCrit <- MissionAttributes.RedBotsNoRandomCrit
-		
+
 	// ========================================================
 
 	case "NoCrumpkins":
@@ -632,6 +640,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 
 					for (local i = 0; i < SLOT_COUNT; i++) {
+
 						local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 						if (wep == null || (wep.GetModelName() == vmodel)) continue
 
@@ -656,7 +665,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 		for ( local ent; ent = Entities.FindByClassname(ent, "info_player_teamspawn"); )
 		{
 			if (ent.GetTeam() != TF_TEAM_RED) continue
-			
+
 			local area = NavMesh.GetNavArea(ent.GetOrigin(), 128)
 			if (area == null)
 			{
@@ -665,38 +674,38 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 					area = handle
 					break
 			}
-			
+
 			local trigger_hurt = SpawnEntityFromTable("trigger_hurt", {
 				name = "_money_collector"
 				damage = 5
 				origin = area.GetCenter()
 			});
-			
+
 			trigger_hurt.SetSolid(2)
 			trigger_hurt.SetSize(Vector(-32, -32, -32), Vector(32, 32, 32))
 			//trigger_hurt.SetAbsOrigin(Vector(-1500, 4200, 500))
 			//trigger_hurt.SetSize(Vector(-128, -128, -1000), Vector(128, 128, 1000))
-			
+
 			break
 		}
-		
+
 		function MissionAttributes::Testing()
 		{
 			for ( local ent; ent = Entities.FindByClassname(ent, "item_currencypack_custom"); )
 			{
 				if (ent.GetEFlags() & EFL_USER) continue
 				ent.AddEFlags(EFL_USER)
-				
+
 				local origin = ent.GetOrigin()
 				ent.SetAbsOrigin(Vector(-1500, 4200, 500)) // testing
-				
+
 				local pickup = SpawnEntityFromTable("tf_halloween_pickup", {
 					pickup_sound = "MVM.MoneyPickup"
 					pickup_particle = ""
 				})
-				
+
 				pickup.SetModelSimple("models/items/currencypack_medium.mdl")
-				
+
 				local trace = {
 					start = origin
 					end   = origin + Vector(0, 0, -16384)
@@ -706,10 +715,10 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 					pickup.SetAbsOrigin(trace.pos + Vector(0, 0, 16))
 				else
 					pickup.SetAbsOrigin(origin)
-				
+
 				pickup.ValidateScriptScope()
 				local pscope = pickup.GetScriptScope()
-				
+
 				pscope.currency_entity <- ent
 				pscope.Think <- function() {
 					// Need to implement blinking at 25s + particle effect(s)
@@ -725,16 +734,16 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 						currency_entity.GetScriptScope().should_delay_collection <- false
 						self.EmitSound("MVM.MoneyPickup")
 						self.Destroy()
-						
+
 						return -1
 					}
 					return -1
 				}
 				AddThinkToEnt(pickup, "Think")
-				
+
 				ent.ValidateScriptScope()
 				local scope = ent.GetScriptScope()
-				
+
 				scope.should_delay_collection <- true
 				scope.Think <- function() {
 					self.SetAbsVelocity(Vector())
@@ -753,7 +762,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 				AddThinkToEnt(ent, "Think")
 			}
 		}
-		
+
 		MissionAttributes.ThinkTable.Testing <- MissionAttributes.Testing
 	break
 	// =========================================================
@@ -769,13 +778,13 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			{
 				local player = GetPlayerFromUserID(params.userid)
 				if (!player.IsBotOfType(1337)) return
-				
+
 				if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value & 1)
 				{
 					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[player.GetPlayerClass()]), -1, null, null)
 					if (value & 2) activator.GenerateAndWearItem(format("Zombie %s",classes[player.GetPlayerClass()]))
 				}
-				
+
 				if (player.GetTeam() == TF_TEAM_PVE_DEFENDERS && value & 4)
 				{
 					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[player.GetPlayerClass()]), -1, null, null)
@@ -1224,10 +1233,10 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 		MissionAttributes.SpawnHookTable.HumansMustJoinTeam <- MissionAttributes.HumansMustJoinTeam
 	break
-	
+
 	case "BotsRandomCrit":
 		if (value == 0.0) return
-		
+
 		// Simplified rare high moments
 		local base_ranged_crit_chance = 0.0005
 		local max_ranged_crit_chance  = 0.0020
@@ -1239,37 +1248,37 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			foreach (bot in PopExtUtil.BotArray) {
 				local player = PlayerInstanceFromIndex(i)
 				if (player == null || !player.IsBotOfType(1337)) continue
-				
+
 				player.ValidateScriptScope()
 				local scope = player.GetScriptScope()
 				if (!("crit_weapon" in scope))
 					scope.crit_weapon <- null
-				
+
 				if (!("ranged_crit_chance" in scope) || !("melee_crit_chance" in scope)) {
 					scope.ranged_crit_chance <- base_ranged_crit_chance
 					scope.melee_crit_chance <- base_melee_crit_chance
 				}
-				
+
 				if (!PopExtUtil.IsAlive(player) || player.GetTeam() == TEAM_SPECTATOR) continue
-				
+
 				// Wait for bot to use its crits
 				if (scope.crit_weapon != null && player.InCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)) continue
 
 				local wep       = player.GetActiveWeapon()
 				local index     = PopExtUtil.GetItemIndex(wep)
 				local classname = GetPropString(wep, "m_iClassname")
-				
+
 				// We handle melee weapons elsewhere in OnTakeDamage
 				if (wep == null || wep.IsMeleeWeapon()) continue
 				// Certain weapon types never receive random crits
 				if (classname == "tf_weapon_sniperrifle" || index == 402 || classname == "tf_weapon_medigun" || wep.GetSlot() > 2) continue
 				// Ignore weapons with certain attributes
 				// if (wep.GetAttribute("crit mod disabled", 1) == 0 || wep.GetAttribute("crit mod disabled hidden", 1) == 0) continue
-				
+
 				// Lose the crits if we switch weapons
 				if (scope.crit_weapon != null && scope.crit_weapon != wep)
 					player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
-				
+
 				local crit_chance_override = (value > 0) ? value : null
 				local chance_to_use        = (crit_chance_override != null) ? crit_chance_override : scope.ranged_crit_chance
 
@@ -1277,7 +1286,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 				if (RandomFloat(0, 1) < chance_to_use) {
 					player.AddCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 					scope.crit_weapon <- wep
-					
+
 					// Detect weapon fire to remove our crits
 					wep.ValidateScriptScope()
 					wep.GetScriptScope().last_fire_time <- Time()
@@ -1285,7 +1294,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 						local fire_time = NetProps.GetPropFloat(self, "m_flLastFireTime");
 						if (fire_time > last_fire_time) {
 							player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
-							
+
 							// Continuous fire weapons get 3 seconds of crits once they fire
 							if (classname == "tf_weapon_minigun" || classname == "tf_weapon_flamethrower") {
 								player.AddCondEx(TF_COND_CRITBOOSTED_CTF_CAPTURE, 3, null)
@@ -1295,17 +1304,17 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 								scope.crit_weapon <- null
 								scope.ranged_crit_chance <- base_ranged_crit_chance
 							}
-							
+
 							NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
 						}
 						return -1
 					}
 					AddThinkToEnt(wep, "Think")
 				}
-			}			
+			}
 		}
 		MissionAttributes.ThinkTable.BotsRandomCritThink <- MissionAttributes.BotsRandomCritThink
-		
+
 		function MissionAttributes::BotsRandomCritKill(params) {
 			local attacker = GetPlayerFromUserID(params.attacker)
 			if (attacker == null || !attacker.IsBotOfType(1337)) return
@@ -1313,41 +1322,41 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			attacker.ValidateScriptScope()
 			local scope = attacker.GetScriptScope()
 			if (!("ranged_crit_chance" in scope) || !("melee_crit_chance" in scope)) return
-			
+
 			if (scope.ranged_crit_chance + base_ranged_crit_chance > max_ranged_crit_chance)
 				scope.ranged_crit_chance <- max_ranged_crit_chance
 			else
 				scope.ranged_crit_chance <- scope.ranged_crit_chance + base_ranged_crit_chance
-			
+
 			if (scope.melee_crit_chance + base_melee_crit_chance > max_melee_crit_chance)
 				scope.melee_crit_chance <- max_melee_crit_chance
 			else
 				scope.melee_crit_chance <- scope.melee_crit_chance + base_melee_crit_chance
 		}
 		MissionAttributes.DeathHookTable.BotsRandomCritKill <- MissionAttributes.BotsRandomCritKill
-		
+
 		function MissionAttributes::BotsRandomCritTakeDamage(params) {
 			if (!("inflictor" in params)) return
-			
+
 			local attacker = params.inflictor
 			if (attacker == null || !attacker.IsPlayer() || !attacker.IsBotOfType(1337)) return
-			
+
 			attacker.ValidateScriptScope()
 			local scope = attacker.GetScriptScope()
 			if (!("melee_crit_chance" in scope)) return
-			
+
 			// Already a crit
 			if (params.damage_type & DMG_ACID) return
-			
+
 			// Only Melee weapons
 			local wep = attacker.GetActiveWeapon()
 			if (!wep.IsMeleeWeapon()) return
-			
+
 			// Certain weapon types never receive random crits
 			if (attacker.GetPlayerClass() == TF_CLASS_SPY) return
 			// Ignore weapons with certain attributes
 			// if (wep.GetAttribute("crit mod disabled", 1) == 0 || wep.GetAttribute("crit mod disabled hidden", 1) == 0) return
-			
+
 			// Roll our crit chance
 			if (RandomFloat(0, 1) < scope.melee_crit_chance) {
 				params.damage_type = params.damage_type | DMG_ACID
@@ -1400,7 +1409,10 @@ AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
 function CollectMissionAttrs(attrs = {}) {
 	foreach (attr, value in attrs)
+	{
 		MissionAttributes.MissionAttr(attr, value)
+		printl(attr + " : " + value)
+	}
 }
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
 function MissionAttr(attr, value) {

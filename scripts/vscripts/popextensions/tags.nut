@@ -627,6 +627,16 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 		if (bot.GetPlayerClass() < TF_CLASS_SPY && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
+		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+
+		function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
+
+		if (!("PlayerThinks" in scope))
+		{
+			scope.PlayerThinks <- PlayerThinks
+			AddThinkToEnt(player, "PlayerThinks")
+		}
+
 		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 	}
 	function OnScriptHook_OnTakeDamage(params) {

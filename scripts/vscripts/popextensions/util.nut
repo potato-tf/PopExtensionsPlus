@@ -119,6 +119,7 @@
 				scope.PlayerThinks <- PlayerThinks
 				AddThinkToEnt(player, "PlayerThinks")
 			}
+
 			local myweapons = {}
 			for (local i = 0; i < SLOT_COUNT; i++) {
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
@@ -131,7 +132,6 @@
 			{
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", slot)
 
-				if (wep != null) wep.Kill()
 				SetPropEntityArray(player, "m_hMyWeapons", wep, slot)
 			}
 
