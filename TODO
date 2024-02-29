@@ -4,7 +4,7 @@ Mince:
 // TODO: Make PlayersAreRobots 16 and HandModelOverride incompatible
 // TODO: AddPlayerCond
 // TODO: (ItemAttributes) allow itemids
-// TODO: (ItemAttributes / PlayerAttributes) fix attributes carrying for on classes for some reason
+// TODO: (ItemAttributes / PlayerAttributes) fix attributes carrying over on classes for some reason
 // TODO: (EnableRandomCrits) see about using abs on the condition checks, dunno if bitwise AND will eval true for negative values
 // TODO: fix switching weapons removing random crit cond not working
 // TODO: (ReverseMVM) For some reason the round just starts itsself when you spawn sometimes??
