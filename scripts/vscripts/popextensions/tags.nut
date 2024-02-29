@@ -372,7 +372,7 @@ local popext_funcs =
 	popext_aimat = function(bot, args) {
 		function AimAtThink()
 		{
-			foreach (player in PopExtUtil.PlayerArray)
+			foreach (player in PopExtUtil.HumanArray)
 			{
 				if (bot.IsInFieldOfView(player))
 				{
@@ -460,7 +460,7 @@ local popext_funcs =
 	function SelectVictim(projectile) {
 		local target
 		local min_distance = 32768.0
-		foreach (player in PopExtUtil.PlayerArray) {
+		foreach (player in PopExtUtil.HumanArray) {
 
 			local distance = (projectile.GetOrigin() - player.GetOrigin()).Length()
 

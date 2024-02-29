@@ -2,8 +2,9 @@
 
 ::PopExtUtil <- {
 
-	PlayerArray = []
+	HumanArray = []
 	BotArray = []
+	PlayerArray = []
 	Classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
 	IsWaveStarted = false //check a global variable instead of accessing a netprop every time to check if we are between waves.
 	AllNavAreas = {}
@@ -163,6 +164,10 @@
 				if (player == null || !player.IsBotOfType(1337) || PopExtUtil.BotArray.find(player) != null) continue;
 
 				PopExtUtil.BotArray.append(player)
+
+				if (player == null || PopExtUtil.PlayerArray.find(player) != null) continue;
+
+				PopExtUtil.PlayerArray.append(player)
 			}
 		}
 
@@ -204,6 +209,9 @@
 			if (player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
 				PopExtUtil.BotArray.append(player)
 
+			else if (PopExtUtil.HumanArray.find(player) == null)
+				PopExtUtil.HumanArray.append(player)
+
 			else if (PopExtUtil.PlayerArray.find(player) == null)
 				PopExtUtil.PlayerArray.append(player)
 
@@ -211,6 +219,10 @@
 
 		function OnGameEvent_player_disconnect(params) {
 			local player = GetPlayerFromUserID(params.userid)
+
+			for (local i = PopExtUtil.HumanArray.len() - 1; i >= 0; i--)
+				if (PopExtUtil.HumanArray[i] == null || PopExtUtil.HumanArray[i] == player)
+					PopExtUtil.HumanArray.remove(i)
 
 			for (local i = PopExtUtil.PlayerArray.len() - 1; i >= 0; i--)
 				if (PopExtUtil.PlayerArray[i] == null || PopExtUtil.PlayerArray[i] == player)
@@ -473,7 +485,7 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePref
 
 		//	  DoEntFire("!activator", "SetScriptOverlayMaterial", "", -1, player, player)
 
-			// foreach (player in PopExtUtil.PlayerArray) DoEntFire("command", "Command", "r_screenoverlay vgui/pauling_text", -1, player, player)
+			// foreach (player in PopExtUtil.HumanArray) DoEntFire("command", "Command", "r_screenoverlay vgui/pauling_text", -1, player, player)
 
 			SetPropString(txtent, "m_iszMessage", "")
 			EntFireByHandle(txtent, "Display", "", -1, null, null)

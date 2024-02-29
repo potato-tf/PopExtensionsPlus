@@ -851,7 +851,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
 			if (roundtime > Time() + value) {
 				local ready = PopExtUtil.GetPlayerReadyCount()
-				if (ready >= PopExtUtil.PlayerArray.len() || (roundtime <= 12.0))
+				if (ready >= PopExtUtil.HumanArray.len() || (roundtime <= 12.0))
 					SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time() + value)
 			}
 		}
@@ -1119,7 +1119,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
 			local ready     = PopExtUtil.GetPlayerReadyCount()
-			if (ready >= PopExtUtil.PlayerArray.len())
+			if (ready >= PopExtUtil.HumanArray.len())
 				SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
 		}
 		MissionAttributes.ThinkTable.BlueTeamReadyThink <- MissionAttributes.BlueTeamReadyThink
@@ -1292,7 +1292,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			// TODO: For some reason the round just starts itsself when you spawn sometimes??
 			if (!PopExtUtil.IsWaveStarted) {
 				local ready = PopExtUtil.GetPlayerReadyCount()
-				if (ready >= PopExtUtil.PlayerArray.len())
+				if (ready >= PopExtUtil.HumanArray.len())
 					SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
 			}
 		}
@@ -1748,7 +1748,7 @@ function MissionAttributes::ParseError(ErrorMsg) {
 	}
 	ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s.\n", MATTR_ERROR, ErrorMsg))
 
-	foreach (player in PopExtUtil.PlayerArray) {
+	foreach (player in PopExtUtil.HumanArray) {
 		if (player == null) continue
 
 		EntFireByHandle(ClientCommand, "Command", format("echo %s %s.\n", MATTR_ERROR, ErrorMsg), -1, player, player)
