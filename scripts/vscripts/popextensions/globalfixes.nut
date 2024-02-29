@@ -98,12 +98,14 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		//there is apparently no better way to do this lol
 		function ProjectileThink() {
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");) {
-				printl("test")
+				if (projectile.GetEFlags() & EFL_USER) continue
+
 				projectile.ValidateScriptScope()
 				local scope = projectile.GetScriptScope()
+
 				if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <- {}
 
-				SetPropString(projectile, "m_iClassname", format("THINKADDED_%s", projectile.GetClassname()))
+				projectile.AddEFlags(EFL_USER)
 			}
 		}
 	}
@@ -118,6 +120,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				money.SetAbsVelocity(Vector())
 		}
 	}
+
 	SpawnHookTable = {
 
 		function ScoutBetterMoneyCollection(params) {
