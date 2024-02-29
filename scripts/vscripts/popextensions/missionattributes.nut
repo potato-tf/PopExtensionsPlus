@@ -659,113 +659,6 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 	break
 
 	// =========================================================
-	case "Testing":
-		PrecacheScriptSound("MVM.MoneyPickup")
-		// Find suitable spot to spawn our IRS wannabe entity
-		for ( local ent; ent = Entities.FindByClassname(ent, "info_player_teamspawn"); )
-		{
-			if (ent.GetTeam() != TF_TEAM_RED) continue
-
-			local area = NavMesh.GetNavArea(ent.GetOrigin(), 128)
-			if (area == null)
-			{
-				// Just get the first one we iterate on
-				foreach(str, handle in PopExtUtil.AllNavAreas)
-					area = handle
-					break
-			}
-
-			local trigger_hurt = SpawnEntityFromTable("trigger_hurt", {
-				name = "_money_collector"
-				damage = 5
-				origin = area.GetCenter()
-			});
-
-			trigger_hurt.SetSolid(2)
-			trigger_hurt.SetSize(Vector(-32, -32, -32), Vector(32, 32, 32))
-			//trigger_hurt.SetAbsOrigin(Vector(-1500, 4200, 500))
-			//trigger_hurt.SetSize(Vector(-128, -128, -1000), Vector(128, 128, 1000))
-
-			break
-		}
-
-		function MissionAttributes::Testing()
-		{
-			for ( local ent; ent = Entities.FindByClassname(ent, "item_currencypack_custom"); )
-			{
-				if (ent.GetEFlags() & EFL_USER) continue
-				ent.AddEFlags(EFL_USER)
-
-				local origin = ent.GetOrigin()
-				ent.SetAbsOrigin(Vector(-1500, 4200, 500)) // testing
-
-				local pickup = SpawnEntityFromTable("tf_halloween_pickup", {
-					pickup_sound = "MVM.MoneyPickup"
-					pickup_particle = ""
-				})
-
-				pickup.SetModelSimple("models/items/currencypack_medium.mdl")
-
-				local trace = {
-					start = origin
-					end   = origin + Vector(0, 0, -16384)
-					mask  = 16395 // MASK_SOLID_BRUSHONLY
-				}
-				if (TraceLineEx(trace))
-					pickup.SetAbsOrigin(trace.pos + Vector(0, 0, 16))
-				else
-					pickup.SetAbsOrigin(origin)
-
-				pickup.ValidateScriptScope()
-				local pscope = pickup.GetScriptScope()
-
-				pscope.currency_entity <- ent
-				pscope.Think <- function() {
-					// Need to implement blinking at 25s + particle effect(s)
-					if (currency_entity == null || !currency_entity.IsValid())
-					{
-						self.Destroy()
-						return -1
-					}
-					for ( local ent; ent = Entities.FindByClassnameWithin(ent, "player", pickup.GetOrigin(), 64); )
-					{
-						if (ent == null || ent.GetTeam() != TF_TEAM_BLUE || ent.IsBotOfType(1337)) continue
-
-						currency_entity.GetScriptScope().should_delay_collection <- false
-						self.EmitSound("MVM.MoneyPickup")
-						self.Destroy()
-
-						return -1
-					}
-					return -1
-				}
-				AddThinkToEnt(pickup, "Think")
-
-				ent.ValidateScriptScope()
-				local scope = ent.GetScriptScope()
-
-				scope.should_delay_collection <- true
-				scope.Think <- function() {
-					self.SetAbsVelocity(Vector())
-					if (should_delay_collection)
-					{
-						//self.SetAbsOrigin(trigger_hurt.GetOrigin() + Vector(0, 0, 128))
-					}
-					else
-					{
-						printl("DONE DELAYING");
-						//self.SetAbsOrigin(trigger_hurt.GetOrigin() + Vector(0, 0, 8))
-						NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
-					}
-					return -1
-				}
-				AddThinkToEnt(ent, "Think")
-			}
-		}
-
-		MissionAttributes.ThinkTable.Testing <- MissionAttributes.Testing
-	break
-	// =========================================================
 
 		//Uses bitflags to change behavior:
 		// 1 = Blu bots use human models.
@@ -1234,7 +1127,12 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 		MissionAttributes.SpawnHookTable.HumansMustJoinTeam <- MissionAttributes.HumansMustJoinTeam
 	break
 
-	case "BotsRandomCrit":
+	// =========================================================
+
+	// 1 - Blue humans
+	// 2 - Blue robots
+	// 4 - Red  robots
+	case "EnableRandomCrits":
 		if (value == 0.0) return
 
 		// Simplified rare high moments
@@ -1244,10 +1142,15 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 		local max_melee_crit_chance   = 0.60
 		// 4 kills to reach max chance
 
-		function MissionAttributes::BotsRandomCritThink() {
-			foreach (bot in PopExtUtil.BotArray) {
+		function MissionAttributes::EnableRandomCritsThink() {
+			for (local i = 1; i <= MAX_CLIENTS ; i++) {
 				local player = PlayerInstanceFromIndex(i)
-				if (player == null || !player.IsBotOfType(1337)) continue
+				if (player == null) continue
+				// TODO: see about using math.abs on the value here, dunno if these will fire for negative values
+				if (!( (value & 1 && player.GetTeam() == TF_TEAM_BLUE && !player.IsBotOfType(1337)) ||
+					   (value & 2 && player.GetTeam() == TF_TEAM_BLUE && player.IsBotOfType(1337))  ||
+					   (value & 4 && player.GetTeam() == TF_TEAM_RED && player.IsBotOfType(1337)) ))
+					continue
 
 				player.ValidateScriptScope()
 				local scope = player.GetScriptScope()
@@ -1276,6 +1179,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 				// if (wep.GetAttribute("crit mod disabled", 1) == 0 || wep.GetAttribute("crit mod disabled hidden", 1) == 0) continue
 
 				// Lose the crits if we switch weapons
+				// TODO: doesnt work
 				if (scope.crit_weapon != null && scope.crit_weapon != wep)
 					player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 
@@ -1296,7 +1200,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 							player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 
 							// Continuous fire weapons get 3 seconds of crits once they fire
-							if (classname == "tf_weapon_minigun" || classname == "tf_weapon_flamethrower") {
+							if (classname == "tf_weapon_minigun" || classname == "tf_weapon_flamethrower" || classname == "tf_weapon_syringegun_medic") {
 								player.AddCondEx(TF_COND_CRITBOOSTED_CTF_CAPTURE, 3, null)
 								EntFireByHandle(player, "RunScriptCode", format("crit_weapon <- null; ranged_crit_chance <- %f", base_ranged_crit_chance), 3, null, null)
 							}
@@ -1313,9 +1217,9 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 				}
 			}
 		}
-		MissionAttributes.ThinkTable.BotsRandomCritThink <- MissionAttributes.BotsRandomCritThink
+		MissionAttributes.ThinkTable.EnableRandomCritsThink <- MissionAttributes.EnableRandomCritsThink
 
-		function MissionAttributes::BotsRandomCritKill(params) {
+		function MissionAttributes::EnableRandomCritsKill(params) {
 			local attacker = GetPlayerFromUserID(params.attacker)
 			if (attacker == null || !attacker.IsBotOfType(1337)) return
 
@@ -1333,9 +1237,9 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			else
 				scope.melee_crit_chance <- scope.melee_crit_chance + base_melee_crit_chance
 		}
-		MissionAttributes.DeathHookTable.BotsRandomCritKill <- MissionAttributes.BotsRandomCritKill
+		MissionAttributes.DeathHookTable.EnableRandomCritsKill <- MissionAttributes.EnableRandomCritsKill
 
-		function MissionAttributes::BotsRandomCritTakeDamage(params) {
+		function MissionAttributes::EnableRandomCritsTakeDamage(params) {
 			if (!("inflictor" in params)) return
 
 			local attacker = params.inflictor
@@ -1346,7 +1250,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			if (!("melee_crit_chance" in scope)) return
 
 			// Already a crit
-			if (params.damage_type & DMG_ACID) return
+			if (params.damage_type & DMG_CRITICAL) return
 
 			// Only Melee weapons
 			local wep = attacker.GetActiveWeapon()
@@ -1359,12 +1263,400 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 			// Roll our crit chance
 			if (RandomFloat(0, 1) < scope.melee_crit_chance) {
-				params.damage_type = params.damage_type | DMG_ACID
+				params.damage_type = params.damage_type | DMG_CRITICAL
 				// We delay here to allow death code to run so the reset doesn't get overriden
 				EntFireByHandle(attacker, "RunScriptCode", format("melee_crit_chance <- %f", base_melee_crit_chance), 0.015, null, null)
 			}
 		}
-		MissionAttributes.TakeDamageTable.BotsRandomCritTakeDamage <- MissionAttributes.BotsRandomCritTakeDamage
+		MissionAttributes.TakeDamageTable.EnableRandomCritsTakeDamage <- MissionAttributes.EnableRandomCritsTakeDamage
+	break
+
+	case "ReverseMVM":
+		function MissionAttributes::ReverseMVMThink() {
+			// Enforce max team size
+			local player_count  = 0
+			local max_team_size = 6
+			for (local i = 1; i <= MAX_CLIENTS ; i++) {
+				local player = PlayerInstanceFromIndex(i)
+				if (player == null || player.IsBotOfType(1337)) continue
+
+				if (player_count + 1 > max_team_size) {
+					player.ForceChangeTeam(TEAM_SPECTATOR, false)
+					continue
+				}
+
+				++player_count
+			}
+
+			// Readying up starts the round
+			// TODO: For some reason the round just starts itsself when you spawn sometimes??
+			if (!PopExtUtil.IsWaveStarted) {
+				local ready = PopExtUtil.GetPlayerReadyCount()
+				if (ready >= PopExtUtil.PlayerArray.len())
+					SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
+			}
+		}
+		MissionAttributes.ThinkTable.ReverseMVMThink <- MissionAttributes.ReverseMVMThink
+
+		function MissionAttributes::ReverseMVMSpawn(params) {
+			local player = GetPlayerFromUserID(params.userid)
+			if (player.IsBotOfType(1337)) return
+
+			player.ValidateScriptScope()
+			local scope = player.GetScriptScope()
+
+			// Switch to blue team
+			// TODO: Need to fix players getting stuck in spec on wave fail, mission complete, etc
+			if (player.GetTeam() != TF_TEAM_BLUE) {
+				EntFireByHandle(player, "RunScriptCode", "ChangePlayerTeamMvM(self, TF_TEAM_BLUE)", 0.015, null, null)
+				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
+			}
+
+			// Kill any phantom lasers from respawning as engie (yes this is real)
+			EntFireByHandle(player, "RunScriptCode", @"
+				for (local ent; ent = Entities.FindByClassname(ent, `env_laserdot`);)
+					if (ent.GetOwner() == self)
+						ent.Destroy()
+			", 0.5, null, null)
+
+			// Temporary solution for engie wrangler laser
+			scope.handled_laser   <- false
+			scope.laser_spawntime <- -1
+			scope.PlayerThinkTable.ReverseMVMLaserThink <- function() {
+				if (!PopExtUtil.IsAlive(player) || player.GetTeam() == TEAM_SPECTATOR) return
+
+				local wep = self.GetActiveWeapon()
+
+				if (GetPropString(wep, "m_iClassname") == "tf_weapon_laser_pointer") {
+					if (laser_spawntime == -1)
+						laser_spawntime = Time() + 0.55
+				}
+				else {
+					if (laser_spawntime > -1) {
+						laser_spawntime = -1
+						handled_laser   = false
+					}
+					return
+				}
+
+				if (handled_laser) return
+				if (Time() < laser_spawntime) return
+
+				local laser = null
+				for (local ent; ent = Entities.FindByClassname(ent, "env_laserdot");) {
+					if (ent.GetOwner() == self) {
+						laser = ent
+						break
+					}
+				}
+
+				for (local ent; ent = Entities.FindByClassname(ent, "obj_sentrygun");) {
+					local builder = GetPropEntity(ent, "m_hBuilder")
+					if (builder != self) continue
+
+					if (!GetPropBool(ent, "m_bPlayerControlled") || laser == null) continue
+
+					originalposition <- self.GetOrigin()
+					originalvelocity <- self.GetAbsVelocity()
+					originalmovetype <- self.GetMoveType()
+					self.SetAbsOrigin(ent.GetOrigin() + Vector(0, 0, -32))
+					self.SetAbsVelocity(Vector())
+					self.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
+					EntFireByHandle(laser, "RunScriptCode", "self.SetTeam(TF_TEAM_RED)", 0.015, null, null)
+					EntFireByHandle(self, "RunScriptCode", "self.SetAbsOrigin(originalposition); self.SetAbsVelocity(originalvelocity); self.SetMoveType(originalmovetype, MOVECOLLIDE_DEFAULT)", 0.015, null, null)
+
+					handled_laser = true
+					return
+				}
+
+				if (!handled_laser && laser != null)
+					laser.Destroy()
+			}
+
+			// Allow money collection
+			scope.PlayerThinkTable.ReverseMVMCurrencyThink <- function() {
+				// Save money netprops because we fuck it in the loop below
+				local money              = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
+				local prev_wave_money    = GetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped")
+				local current_wave_money = GetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped")
+
+				// Find currency near us
+				local origin = self.GetOrigin()
+				for ( local ent; ent = Entities.FindByClassnameWithin(ent, "item_currencypack_*", origin, 64); ) {
+					// Move the money to the origin and respawn it to allow us to collect it after it touches the ground
+					ent.SetAbsOrigin(Vector())
+					ent.DispatchSpawn()
+				}
+
+				// The money counters are fucked from what we did in the above loop, fix it here
+				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney", money)
+				SetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped", prev_wave_money)
+				SetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped", current_wave_money)
+			}
+
+			// Allow pack collection
+			scope.PlayerThinkTable.ReverseMVMPackThink <- function() {
+				local origin = self.GetOrigin()
+				for ( local ent; ent = Entities.FindByClassnameWithin(ent, "item_*", origin, 40); ) {
+					if (ent.GetEFlags() & EFL_USER) continue
+					if (GetPropInt(ent, "m_fEffects") & EF_NODRAW) continue
+
+					local classname = ent.GetClassname()
+					if (startswith(classname, "item_currencypack_")) continue
+
+					local refill    = false
+					local is_health = false
+
+					local multiplier = 0.0
+					if (endswith(classname, "_small"))       multiplier = 0.2
+					else if (endswith(classname, "_medium")) multiplier = 0.5
+					else if (endswith(classname, "_full"))   multiplier = 1.0
+
+					if (startswith(classname, "item_ammopack_")) {
+						local metal    = GetPropIntArray(self, "m_iAmmo", TF_AMMO_METAL)
+						local maxmetal = 200
+
+						if (metal < maxmetal) {
+							local maxmult  = PopExtUtil.Round(maxmetal * multiplier)
+							local setvalue = (metal + maxmult > maxmetal) ? maxmetal : metal + maxmult
+
+							SetPropIntArray(self, "m_iAmmo", setvalue, TF_AMMO_METAL)
+							refill = true
+						}
+
+						for (local i = 0; i < SLOT_MELEE; ++i) {
+							local wep     = PopExtUtil.GetItemInSlot(self, i)
+							local ammo    = GetPropIntArray(self, "m_iAmmo", i+1)
+							local maxammo = PopExtUtil.GetWeaponMaxAmmo(self, wep)
+
+							if (ammo >= maxammo)
+								continue
+							else {
+								local maxmult  = PopExtUtil.Round(maxammo * multiplier)
+								local setvalue = (ammo + maxmult > maxammo) ? maxammo : ammo + maxmult
+
+								printl(setvalue)
+
+								SetPropIntArray(self, "m_iAmmo", setvalue, i+1)
+								refill = true
+							}
+						}
+
+					}
+					else if (startswith(classname, "item_healthkit_")) {
+						is_health = true
+
+						local hp    = self.GetHealth()
+						local maxhp = self.GetMaxHealth()
+						if (hp >= maxhp) return
+
+						refill = true
+
+						local maxmult  = PopExtUtil.Round(maxhp * multiplier)
+						local setvalue = (hp + maxmult > maxhp) ? maxhp : hp + maxmult
+						self.ExtinguishPlayerBurning()
+
+						SendGlobalGameEvent("player_healed", {
+							patient = PopExtUtil.GetPlayerUserID(self)
+							healer  = 0
+							amount  = setvalue - hp
+						})
+						SendGlobalGameEvent("player_healonhit", {
+							entindex         = self.entindex()
+							weapon_def_index = 65535
+							amount           = setvalue - hp
+						})
+
+						self.SetHealth(setvalue)
+					}
+
+					if (refill) {
+						if (is_health)
+							EmitSoundOnClient("HealthKit.Touch", self)
+						else
+							EmitSoundOnClient("AmmoPack.Touch", self)
+
+						ent.AddEFlags(EFL_USER)
+						EntFireByHandle(ent, "Disable", "", -1, null, null)
+
+						EntFireByHandle(ent, "Enable", "", 10, null, null)
+						EntFireByHandle(ent, "RunScriptCode", "self.RemoveEFlags(EFL_USER)", 10, null, null)
+					}
+				}
+			}
+
+			// Drain player ammo on weapon usage
+			scope.PlayerThinkTable.ReverseMVMDrainAmmoThink <- function() {
+				local buttons = NetProps.GetPropInt(self, "m_nButtons");
+
+				local wep = player.GetActiveWeapon()
+				if (wep == null || wep.IsMeleeWeapon()) return
+
+				wep.ValidateScriptScope()
+				local scope = wep.GetScriptScope()
+				if (!("nextattack" in scope)) {
+					scope.nextattack <- -1
+				}
+
+
+				local classname = wep.GetClassname()
+				local itemid    = PopExtUtil.GetItemIndex(wep)
+				local sequence  = wep.GetSequence()
+
+				// These weapons have clips but either function fine or don't need to be handled
+				if (classname == "tf_weapon_particle_cannon"  || classname == "tf_weapon_raygun"     ||
+					classname == "tf_weapon_flaregun_revenge" || classname == "tf_weapon_drg_pomson" ||
+					classname == "tf_weapon_medigun") return
+
+				local clip = wep.Clip1()
+
+				if (clip > -1) {
+					if (!("lastclip" in scope))
+						scope.lastclip <- clip
+
+					// We reloaded
+					if (clip > scope.lastclip) {
+						local difference = clip - scope.lastclip
+						if (self.GetPlayerClass() == TF_CLASS_SPY && classname == "tf_weapon_revolver") {
+							local maxammo = GetPropIntArray(self, "m_iAmmo", SLOT_SECONDARY + 1)
+							SetPropIntArray(self, "m_iAmmo", maxammo - difference, SLOT_SECONDARY + 1)
+						}
+						else {
+							local maxammo = GetPropIntArray(self, "m_iAmmo", wep.GetSlot() + 1)
+							SetPropIntArray(self, "m_iAmmo", maxammo - difference, wep.GetSlot() + 1)
+						}
+					}
+
+					scope.lastclip <- clip
+				}
+				else {
+					if (classname == "tf_weapon_rocketlauncher_fireball") {
+						local recharge = GetPropFloat(player, "m_Shared.m_flItemChargeMeter")
+						if (recharge == 0) {
+							local cost = (sequence == 13) ? 2 : 1
+							local maxammo = GetPropIntArray(self, "m_iAmmo", wep.GetSlot() + 1)
+
+							if (maxammo - cost > -1)
+								SetPropIntArray(self, "m_iAmmo", maxammo - cost, wep.GetSlot() + 1)
+						}
+					}
+					else if (classname == "tf_weapon_flamethrower") {
+						if (sequence == 12) return // Weapon deploy
+						if (Time() < scope.nextattack) return
+
+						local maxammo = GetPropIntArray(self, "m_iAmmo", wep.GetSlot() + 1)
+
+						// The airblast sequence lasts 0.25s too long so we check against it here
+						if (buttons & IN_ATTACK && sequence != 13) {
+							if (maxammo - 1 > -1) {
+								SetPropIntArray(self, "m_iAmmo", maxammo - 1, wep.GetSlot() + 1)
+								scope.nextattack <- Time() + 0.105
+							}
+						}
+						else if (buttons & IN_ATTACK2) {
+							local cost = 20
+							if (itemid == 40 || itemid == 1146) // Backburner
+								cost = 50
+							else if (itemid == 215) // Degreaser
+								cost = 25
+
+							if (maxammo - cost > -1) {
+								SetPropIntArray(self, "m_iAmmo", maxammo - cost, wep.GetSlot() + 1)
+								scope.nextattack <- Time() + 0.75
+							}
+						}
+					}
+					else if (classname == "tf_weapon_flaregun") {
+						// TODO: figure out a better system than this weapon deploy sequence for flare and sniper,
+						// the timing seems to be off or something where you can fire just after deploying and
+						// not consume ammo
+						if (sequence == 7) return // Weapon deploy
+
+						local nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
+						if (Time() < nextattack) return
+
+						local maxammo = GetPropIntArray(self, "m_iAmmo", wep.GetSlot() + 1)
+						if (buttons & IN_ATTACK) {
+							if (maxammo - 1 > -1)
+								SetPropIntArray(self, "m_iAmmo", maxammo - 1, wep.GetSlot() + 1)
+						}
+					}
+					else if (classname == "tf_weapon_minigun") {
+						local nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
+						if (Time() < nextattack) return
+
+						local maxammo = GetPropIntArray(self, "m_iAmmo", wep.GetSlot() + 1)
+						if (sequence == 21) {
+							if (maxammo - 1 > -1)
+								SetPropIntArray(self, "m_iAmmo", maxammo - 1, wep.GetSlot() + 1)
+						}
+						else if (sequence == 25) {
+							if (Time() < scope.nextattack) return
+							if (itemid != 811 && itemid != 832) return
+
+							if (maxammo - 1 > -1) {
+								SetPropIntArray(self, "m_iAmmo", maxammo - 1, wep.GetSlot() + 1)
+								scope.nextattack <- Time() + 0.25
+							}
+						}
+					}
+					else if (classname == "tf_weapon_mechanical_arm") {
+						// Reset hack
+						SetPropIntArray(self, "m_iAmmo", 0, TF_AMMO_GRENADES1)
+						SetPropInt(wep, "m_iPrimaryAmmoType", 3)
+
+						local nextattack1 = GetPropFloat(wep, "m_flNextPrimaryAttack")
+						local nextattack2 = GetPropFloat(wep, "m_flNextSecondaryAttack")
+
+						local maxmetal = GetPropIntArray(self, "m_iAmmo", TF_AMMO_METAL)
+
+						if (buttons & IN_ATTACK) {
+							if (Time() < nextattack1) return
+							if (maxmetal - 5 > -1) {
+								SetPropIntArray(self, "m_iAmmo", maxmetal - 5, TF_AMMO_METAL)
+								// This prevents an exploit where you M1 and M2 in rapid succession to evade the 65 orb cost
+								SetPropFloat(wep, "m_flNextSecondaryAttack", Time() + 0.25)
+							}
+						}
+						else if (buttons & IN_ATTACK2) {
+							if (Time() < nextattack2) return
+
+							if (maxmetal - 65 > -1) {
+								// Hack to get around the game blocking SecondaryAttack below 65 metal
+								SetPropIntArray(self, "m_iAmmo", INT_MAX, TF_AMMO_GRENADES1)
+								SetPropInt(wep, "m_iPrimaryAmmoType", TF_AMMO_GRENADES1)
+
+								SetPropIntArray(self, "m_iAmmo", maxmetal - 65, TF_AMMO_METAL)
+							}
+						}
+					}
+					else if (itemid == 527) { // Widowmaker
+						local nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
+						if (Time() < nextattack) return
+
+						local maxmetal = GetPropIntArray(self, "m_iAmmo", TF_AMMO_METAL)
+
+						if (buttons & IN_ATTACK) {
+							if (maxmetal - 30 > -1)
+								SetPropIntArray(self, "m_iAmmo", maxmetal - 30, TF_AMMO_METAL)
+						}
+					}
+					else if (classname == "tf_weapon_sniperrifle" || itemid == 402 || itemid == 1098) {
+						if (sequence == 28) return // Weapon deploy
+
+						local nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
+						if (Time() < nextattack) return
+
+						local maxammo = GetPropIntArray(self, "m_iAmmo", wep.GetSlot() + 1)
+						if (buttons & IN_ATTACK) {
+							if (maxammo - 1 > -1)
+								SetPropIntArray(self, "m_iAmmo", maxammo - 1, wep.GetSlot() + 1)
+						}
+					}
+				}
+			}
+		}
+		MissionAttributes.SpawnHookTable.ReverseMVMSpawn <- MissionAttributes.ReverseMVMSpawn
 	break
 
 	//Options to revert global fixes below:
