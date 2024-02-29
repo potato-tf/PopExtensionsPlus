@@ -41,34 +41,34 @@
 	ROMEVISION_MODELINDEXES = []
 
 	DeflectableProjectiles = {
-		THINKADDED_tf_projectile_arrow				   = 1 // Huntsman arrow, Rescue Ranger bolt
-		THINKADDED_tf_projectile_ball_ornament		   = 1 // Wrap Assassin
-		THINKADDED_tf_projectile_cleaver			   = 1 // Flying Guillotine
-		THINKADDED_tf_projectile_energy_ball		   = 1 // Cow Mangler charge shot
-		THINKADDED_tf_projectile_flare				   = 1 // Flare guns projectile
-		THINKADDED_tf_projectile_healing_bolt		   = 1 // Crusader's Crossbow
-		THINKADDED_tf_projectile_jar				   = 1 // Jarate
-		THINKADDED_tf_projectile_jar_gas			   = 1 // Gas Passer explosion
-		THINKADDED_tf_projectile_jar_milk			   = 1 // Mad Milk
-		THINKADDED_tf_projectile_lightningorb		   = 1 // Spell Variant from Short Circuit
-		THINKADDED_tf_projectile_mechanicalarmorb	   = 1 // Short Circuit energy ball
-		THINKADDED_tf_projectile_pipe				   = 1 // Grenade Launcher bomb
-		THINKADDED_tf_projectile_pipe_remote		   = 1 // Stickybomb Launcher bomb
-		THINKADDED_tf_projectile_rocket				   = 1 // Rocket Launcher rocket
-		THINKADDED_tf_projectile_sentryrocket		   = 1 // Sentry gun rocket
-		THINKADDED_tf_projectile_stun_ball			   = 1 // Baseball
+		tf_projectile_arrow				   = 1 // Huntsman arrow, Rescue Ranger bolt
+		tf_projectile_ball_ornament		   = 1 // Wrap Assassin
+		tf_projectile_cleaver			   = 1 // Flying Guillotine
+		tf_projectile_energy_ball		   = 1 // Cow Mangler charge shot
+		tf_projectile_flare				   = 1 // Flare guns projectile
+		tf_projectile_healing_bolt		   = 1 // Crusader's Crossbow
+		tf_projectile_jar				   = 1 // Jarate
+		tf_projectile_jar_gas			   = 1 // Gas Passer explosion
+		tf_projectile_jar_milk			   = 1 // Mad Milk
+		tf_projectile_lightningorb		   = 1 // Spell Variant from Short Circuit
+		tf_projectile_mechanicalarmorb	   = 1 // Short Circuit energy ball
+		tf_projectile_pipe				   = 1 // Grenade Launcher bomb
+		tf_projectile_pipe_remote		   = 1 // Stickybomb Launcher bomb
+		tf_projectile_rocket				   = 1 // Rocket Launcher rocket
+		tf_projectile_sentryrocket		   = 1 // Sentry gun rocket
+		tf_projectile_stun_ball			   = 1 // Baseball
 	}
 	HomingProjectiles = {
-		THINKADDED_tf_projectile_arrow				= 1
-		THINKADDED_tf_projectile_energy_ball		= 1 // Cow Mangler
-		THINKADDED_tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
-		THINKADDED_tf_projectile_lightningorb		= 1 // Lightning Orb Spell
-		THINKADDED_tf_projectile_mechanicalarmorb	= 1 // Short Circuit
-		THINKADDED_tf_projectile_rocket				= 1
-		THINKADDED_tf_projectile_sentryrocket		= 1
-		THINKADDED_tf_projectile_spellfireball		= 1
-		THINKADDED_tf_projectile_energy_ring		= 1 // Bison
-		THINKADDED_tf_projectile_flare				= 1
+		tf_projectile_arrow				= 1
+		tf_projectile_energy_ball		= 1 // Cow Mangler
+		tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
+		tf_projectile_lightningorb		= 1 // Lightning Orb Spell
+		tf_projectile_mechanicalarmorb	= 1 // Short Circuit
+		tf_projectile_rocket				= 1
+		tf_projectile_sentryrocket		= 1
+		tf_projectile_spellfireball		= 1
+		tf_projectile_energy_ring		= 1 // Bison
+		tf_projectile_flare				= 1
 	}
 
 	GameRules = FindByClassname(null, "tf_gamerules")
@@ -112,25 +112,7 @@
 
 			function PlayerThinks() {
 				local times = []
-				foreach (name, func in scope.PlayerThinkTable) {
-					BeginBenchmark()
-
-					func();
-
-					local time = EndBenchmark();
-					times.append({ name = name, time = time })
-					total_time += time;
-				}
-
-				if (time > 1.5) {
-
-					printl("Expensive think func!")
-					foreach (time in times)
-					{
-						printf("\t%s : %.4f ms\n", time.name, time.time)
-					}
-				}
-				return -1
+				foreach (name, func in scope.PlayerThinkTable) { func(); return -1 }
 			}
 
 			if (!("PlayerThinks" in scope)) {

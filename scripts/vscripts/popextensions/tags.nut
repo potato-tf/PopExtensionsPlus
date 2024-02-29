@@ -298,7 +298,7 @@ local popext_funcs =
 	// }
 	popext_rocketcustomparticle = function (bot, args) {
 
-		for (local projectile; projectile = FindByClassname(projectile, "THINKADDED_tf_projectile_*");) {
+		for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
 
 			if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
 
@@ -320,7 +320,7 @@ local popext_funcs =
 
 		function ImprovedAirblastThink() {
 
-			for (local projectile; projectile = FindByClassname(projectile, "THINKADDED_tf_projectile_*");) {
+			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
 				printl("test")
 				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
