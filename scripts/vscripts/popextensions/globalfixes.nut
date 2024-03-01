@@ -185,6 +185,82 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			player.GetScriptScope().PlayerThinkTable.HoldFireThink <- HoldFireThink
 		}
+		
+		// Doesn't fully work correctly, need to investigate
+		function EngineerBuildingPushbackFix(params) {
+			local player = GetPlayerFromUserID(params.userid)
+			if (player.IsBotOfType(1337)) return
+
+			player.ValidateScriptScope()
+			local scope = player.GetScriptScope()
+			
+			// 400, 500 (range, force)
+			local epsilon = 20.0
+			
+			local blastjump_weapons = {
+				"tf_weapon_rocketlauncher" : null
+				"tf_weapon_rocketlauncher_directhit" : null
+				"tf_weapon_rocketlauncher_airstrike" : null
+			}
+			
+			scope.lastvelocity <- player.GetAbsVelocity()
+			scope.nextthink <- -1
+			scope.PlayerThinkTable.EngineerBuildingPushbackFix <- function() {
+				if (nextthink > -1 && Time() < nextthink) return
+				
+				if (!PopExtUtil.IsAlive(self)) return
+				
+				local velocity = self.GetAbsVelocity()
+				
+				local wep       = self.GetActiveWeapon()
+				local classname = (wep != null) ? wep.GetClassname() : ""
+				local lastfire  = GetPropFloat(wep, "m_flLastFireTime")
+				
+				// We might have been pushed by an engineer building something, lets double check
+				if( fabs((lastvelocity - velocity).Length() - 700) < epsilon) {
+					// Blast jumping can generate this type of velocity change in a frame, lets check for that
+					if (self.InCond(TF_COND_BLASTJUMPING) && classname in blastjump_weapons && (Time() - lastfire < 0.1))
+						return
+					
+					// Even with the above check, some things still sneak through so lets continue filtering
+					
+					// Look around us to see if there's a building hint and bot engineer within range
+					local origin   = self.GetOrigin()
+					local engie    = null
+					local hint     = null
+					
+					for (local player; player = Entities.FindByClassnameWithin(player, "player", origin, 650);) {
+						if (!player.IsBotOfType(1337) || player.GetPlayerClass() != TF_CLASS_ENGINEER) continue
+						
+						engie = player
+						break
+					}
+					
+					if (engie != null)
+						hint = Entities.FindByClassnameWithin(null, "bot_hint_*", engie.GetOrigin(), 200)
+					
+					printl(engie)
+					printl(hint)
+
+					// Counteract impulse velocity
+					if (hint != null && engie != null) {
+						ClientPrint(null, 3, "COUNTERACTING VELOCITY")
+						local dir =  self.EyePosition() - hint.GetOrigin()
+						
+						dir.z = 0
+						dir.Norm()
+						dir.z = 1
+						
+						local push = dir * 500
+						self.SetAbsVelocity(velocity - push)	
+
+						nextthink = Time() + 1
+					}
+				}
+				
+				lastvelocity = velocity
+			}
+		}
 	}
 
 	Events = {
