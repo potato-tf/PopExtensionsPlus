@@ -19,3 +19,4 @@ Mince:
 // TODO: Remove reverse.nut if it isnt going to be used, ask brain
 // Fix AnimatedViewControlAll camera movement
 // Implement the rest of the functions for tutorialtools.nut
+// Unsure of how the global moneyfix will interact with the ReverseMVM money collection code, need to test
