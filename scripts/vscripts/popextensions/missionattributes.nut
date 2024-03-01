@@ -58,7 +58,6 @@ const EFL_USER = 1048576
 			if (GetRoundState() != GR_STATE_PREROUND) return
 
 			MissionAttributes.ResetConvars()
-			if ("MissionAttrs" in ROOT) delete ::MissionAttrs
 			MissionAttributes.PathNum = 0
 
 			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
@@ -67,7 +66,6 @@ const EFL_USER = 1048576
 		function OnGameEvent_mvm_wave_complete(params) {
 
 			MissionAttributes.ResetConvars()
-			if ("MissionAttrs" in ROOT) delete ::MissionAttrs
 			MissionAttributes.PathNum = 0
 
 			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
@@ -76,7 +74,8 @@ const EFL_USER = 1048576
 		function OnGameEvent_mvm_mission_complete(params) {
 
 			MissionAttributes.ResetConvars()
-			if (FindByName(null, "popext_missionattr_ent") != null) MissionAttrEntity.Kill()
+			local popexent = FindByName(null, "popext_missionattr_ent")
+			if (popextent != null) popextent.Kill()
 			delete ::MissionAttributes
 		}
 	}
@@ -114,7 +113,11 @@ function MissionAttributes::ResetConvars(hideChatMessage = true) {
 }
 
 local noromecarrier = false
-function MissionAttributes::MissionAttr(attr, value = 0) {
+function MissionAttributes::MissionAttr(...) {
+	local args  = vargv
+	local attr  = args[0]
+	local value = args[1]
+	
 	local success = true
 	switch(attr) {
 
@@ -676,6 +679,8 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			} else if ("RobotVOThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotVOThink
 
 			if (value & 16) {
+				if ("HandModelOverride" in MissionAttributes.SpawnHookTable) return
+				
 				function RobotArmThink() {
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 					local playervm = GetPropEntity(player, "m_hViewModel")
@@ -991,6 +996,19 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 
 		MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
 	break
+	
+	// =========================================================
+	
+	case "AddPlayerCond":
+		function MissionAttributes::AddPlayerCond(params) {
+			local player = GetPlayerFromUserID(params.userid)
+			if (player.IsBotOfType(1337)) return
+
+			player.RemoveCond(value)
+			EntFireByHandle(player, "RunScriptCode", format("self.AddCond(%d)", value), -1, null, null)
+		}
+		MissionAttributes.SpawnHookTable.AddPlayerCond <- MissionAttributes.AddPlayerCond
+	break
 
 	// =========================================================
 
@@ -1055,10 +1073,11 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 				if (wep == null) continue
 
-				local cls = wep.GetClassname()
-				if (cls in value)
-					foreach (key, val in value[cls])
-						wep.AddAttribute(key, val, -1)
+				local info = [PopExtUtil.GetItemIndex(wep), wep.GetClassname()]
+				foreach (item in info)
+					if (item in value)
+						foreach(key, val in value[item])
+							wep.AddAttribute(key, val, -1)
 			}
 		}
 
@@ -1477,8 +1496,6 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 								local maxmult  = PopExtUtil.Round(maxammo * multiplier)
 								local setvalue = (ammo + maxmult > maxammo) ? maxammo : ammo + maxmult
 
-								printl(setvalue)
-
 								SetPropIntArray(self, "m_iAmmo", setvalue, i+1)
 								refill = true
 							}
@@ -1741,19 +1758,20 @@ MissionAttrEntity.ValidateScriptScope();
 MissionAttrEntity.GetScriptScope().MissionAttrThink <- MissionAttrThink
 AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
+// This only supports key : value pairs, if you want var args call MissionAttr directly
 function CollectMissionAttrs(attrs = {}) {
 	foreach (attr, value in attrs)
 		MissionAttributes.MissionAttr(attr, value)
 	
 }
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
-function MissionAttr(attr, value) {
-	MissionAttr.call(MissionAttributes, attr, value)
+function MissionAttr(...) {
+	MissionAttr.acall(vargv.insert(0, MissionAttributes))
 }
 
 //super truncated version incase the pop character limit becomes an issue.
-function MAtr(attr, value) {
-	MissionAttr.call(MissionAttributes, attr, value)
+function MAtr(...) {
+	MissionAttr.acall(vargv.insert(0, MissionAttributes))
 }
 
 // Logging Functions
