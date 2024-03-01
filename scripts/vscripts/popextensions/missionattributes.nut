@@ -504,6 +504,36 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 	break
 
 	// =========================================================
+	//use -4 to make giants only count as 1 kill
+	case "GiantSentryKillCountOffset":
+
+		function MissionAttributes::GiantSentryKillCount(params) {
+
+			local sentry = EntIndexToHScript(params.inflictor_entindex)
+			local victim = GetPlayerFromUserID(params.userid)
+
+			if (sentry.GetClassname() != "obj_sentrygun" || !victim.IsMiniBoss()) return
+
+			SetPropInt(sentry, "m_iKills", GetPropInt(sentry, "m_iKills") + value)
+		}
+
+		MissionAttributes.DeathHookTable.GiantSentryKillCount <- MissionAttributes.GiantSentryKillCount
+	break
+
+	// =========================================================
+	case "FlagResetTime":
+		function MissionAttributes::FlagResetTime() {
+			for (local flag; flag = FindByClassname(flag, "item_teamflag");)
+			{
+				if (typeof value == "string")
+				{
+					local values = split(value, " ")
+				}
+			}
+		}
+	break
+
+	// =========================================================
 
 	case "BotHeadshots":
 		if (value < 1) return
