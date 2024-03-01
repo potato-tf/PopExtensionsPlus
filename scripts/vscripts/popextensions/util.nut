@@ -147,8 +147,8 @@
 	StartRelay = FindByName(null, "wave_start_relay")
 	FinishedRelay = FindByName(null, "wave_finished_relay")
 	CurrentWaveNum = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
-	ClientCommand = SpawnEntityFromTable("point_clientcommand", {})
-	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "_roundwin", teamnum = 3})
+	ClientCommand = SpawnEntityFromTable("point_clientcommand", {targetname = "_clientcommand"})
+	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "_roundwin", TeamNum = 3, force_map_reset = 1})
 	Events = {
 		function OnGameEvent_mvm_wave_complete(params) { PopExtUtil.IsWaveStarted = false }
 		function OnGameEvent_mvm_wave_failed(params) { PopExtUtil.IsWaveStarted = false }
@@ -209,7 +209,7 @@
 			if (player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
 				PopExtUtil.BotArray.append(player)
 
-			else if (PopExtUtil.HumanArray.find(player) == null)
+			else if (!player.IsBotOfType(1337) && PopExtUtil.HumanArray.find(player) == null)
 				PopExtUtil.HumanArray.append(player)
 
 			else if (PopExtUtil.PlayerArray.find(player) == null)
@@ -324,7 +324,8 @@ function PopExtUtil::CountAlivePlayers(printout = false)
         printf("Players Alive: %d\n", playersalive)
     }
 	//shouldn't happen
-    if (PopExtUtil.HumanArray() < playersalive) playersalive == PopExtUtil.HumanArray()
+    if (PopExtUtil.HumanArray.len() < playersalive) playersalive == PopExtUtil.HumanArray.len()
+
     return playersalive
 }
 function PopExtUtil::SetParentLocalOriginDo(child, parent, attachment = null) {

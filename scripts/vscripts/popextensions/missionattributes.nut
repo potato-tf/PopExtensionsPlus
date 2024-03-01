@@ -1,3 +1,5 @@
+const EFL_USER = 1048576
+
 ::MissionAttributes <- {
 
 	CurAttrs = {} // Array storing currently modified attributes.
@@ -311,7 +313,7 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 	// =========================================================
 
 	case "UpgradeFile":
-		DoEntFire("tf_gamerules", "SetCustomUpgradesFile", value, -1, null, null);
+		EntFire("tf_gamerules", "SetCustomUpgradesFile", value)
 	break
 
 	// =========================================================
@@ -496,11 +498,10 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 	// =========================================================
 
 	case "TeamWipeWaveLoss":
-		if (value < 1 || PopExtUtil.CountAlivePlayers() != 0) return
-
-		PopExtUtil.GameRoundWin.SetTeam(value + 1) //don't believe this is necessary but doesn't hurt
-		DoEntFire("_roundwin", "RoundWin", "", -1, null, null)
-
+		function MissionAttributes::TeamWipeWaveLoss(params) {
+			EntFire("tf_gamerules", "RunScriptCode", "if (PopExtUtil.CountAlivePlayers() == 0) printl(PopExtUtil.CountAlivePlayers()); EntFire(`_roundwin`, `RoundWin`)", -1, null, null)
+		}
+		MissionAttributes.DeathHookTable.TeamWipeWaveLoss <- MissionAttributes.TeamWipeWaveLoss
 	break
 
 	// =========================================================
@@ -513,8 +514,9 @@ function MissionAttributes::MissionAttr(attr, value = 0) {
 			local victim = GetPlayerFromUserID(params.userid)
 
 			if (sentry.GetClassname() != "obj_sentrygun" || !victim.IsMiniBoss()) return
-
-			SetPropInt(sentry, "m_iKills", GetPropInt(sentry, "m_iKills") + value)
+			local kills = GetPropInt(sentry, "m_iKills")
+			SetPropInt(sentry, "m_iKills", kills + value)
+			// EntFireByHandle(sentry, "RunScriptCode", format("SetPropInt(self, `m_iKills`, GetPropInt(self, `m_iKills`) + %d)", value), -1, null, null)
 		}
 
 		MissionAttributes.DeathHookTable.GiantSentryKillCount <- MissionAttributes.GiantSentryKillCount
@@ -1741,10 +1743,8 @@ AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
 function CollectMissionAttrs(attrs = {}) {
 	foreach (attr, value in attrs)
-	{
 		MissionAttributes.MissionAttr(attr, value)
-		printl(attr + " : " + value)
-	}
+	
 }
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
 function MissionAttr(attr, value) {

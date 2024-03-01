@@ -630,7 +630,7 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 		if (!("PlayerThinks" in scope))
 		{
 			scope.PlayerThinks <- PlayerThinks
-			AddThinkToEnt(player, "PlayerThinks")
+			AddThinkToEnt(bot, "PlayerThinks")
 		}
 
 		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
