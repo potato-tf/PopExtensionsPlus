@@ -114,9 +114,20 @@ function MissionAttributes::ResetConvars(hideChatMessage = true) {
 
 local noromecarrier = false
 function MissionAttributes::MissionAttr(...) {
-	local args  = vargv
-	local attr  = args[0]
-	local value = args[1]
+	local args = vargv
+	local attr
+	local value
+	
+	if (args.len() == 0)
+		return
+	else if (args.len() == 1) {
+		attr  = args[0]
+		value = null
+	}
+	else {
+		attr  = args[0]
+		value = args[1]
+	}
 	
 	local success = true
 	switch(attr) {
