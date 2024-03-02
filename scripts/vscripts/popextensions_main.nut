@@ -2,7 +2,7 @@ local root = getroottable()
 
 function Include(path)
 {
-	IncludeScript(format("popextensions/%s", path), root)
+	try IncludeScript(format("popextensions/%s", path), root) catch(e) printl(e)
 }
 
 Include("constants.nut") //constants must include first
