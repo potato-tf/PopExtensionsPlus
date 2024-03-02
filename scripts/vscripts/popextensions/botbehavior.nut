@@ -59,7 +59,8 @@ class AI_Bot {
 	}
 
 	function GetThreatDistanceSqr(target) {
-		return (target.GetOrigin() - cur_pos).LengthSqr()
+		printl(target.GetOrigin())
+		return (target.GetOrigin() - bot.GetOrigin()).LengthSqr()
 	}
 
 	function FindThreat(min_dist_sqr) {

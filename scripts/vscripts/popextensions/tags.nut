@@ -323,24 +323,24 @@ local popext_funcs =
 				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
-				local dist = GetThreatDistanceSqr(projectile)
-				if (dist <= 67000 && IsVisible(projectile)) {
+				local dist = AI_Bot.GetThreatDistanceSqr(projectile)
+				if (dist <= 67000 && AI_Bot.IsVisible(projectile)) {
 					switch (botLevel) {
 						case 1: // Basic Airblast, only deflect if in FOV
 
-							if (!IsInFieldOfView(projectile))
+							if (!AI_Bot.IsInFieldOfView(projectile))
 								return
 							break
 						case 2: // Advanced Airblast, deflect regardless of FOV
 
-							LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
+						AI_Bot.LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
 							break
 						case 3: // Expert Airblast, deflect regardless of FOV back to Sender
 
 							local owner = projectile.GetOwner()
 							if (owner != null) {
 								local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
-								LookAt(owner_head, INT_MAX, INT_MAX)
+								AI_Bot.LookAt(owner_head, INT_MAX, INT_MAX)
 							}
 							break
 					}
@@ -578,7 +578,7 @@ local tagtest = "popext_improvedairblast"
 		local scope = bot.GetScriptScope()
 
 		scope.bot <- AI_Bot(bot)
-		scope.BehaviorAttribs <- {}
+		scope.PlayerThinkTable <- {}
 
 		if (bot.HasBotTag(tagtest)) {
 			local args = split(tagtest, "|")
