@@ -66,11 +66,9 @@ class AI_Bot {
 		local closestThreat = null
 		local closestThreatDist = min_dist_sqr
 
-		for (local i = 1; i <= MAX_CLIENTS; i++) {
-			local player = PlayerInstanceFromIndex(i)
+		foreach (player in PopExtUtil.PlayerArray) {
 
-			if (player == null || player == bot || !PopExtUtil.IsAlive(player) || player.GetTeam() == team || !IsThreatVisible(player))
-				continue
+			if (player == bot || !PopExtUtil.IsAlive(player) || player.GetTeam() == team || !IsThreatVisible(player)) continue
 
 			local dist = GetThreatDistanceSqr(player)
 			if (dist < closestThreatDist) {

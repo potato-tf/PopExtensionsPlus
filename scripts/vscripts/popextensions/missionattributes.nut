@@ -78,6 +78,9 @@ const EFL_USER = 1048576
 			if (popextent != null) popextent.Kill()
 			delete ::MissionAttributes
 		}
+		function OnGameEvent_player_changeclass(params) {
+			local player = GetPlayerFromUserID(params.userid)
+		}
 	}
 };
 __CollectGameEventCallbacks(MissionAttributes.Events);
@@ -515,7 +518,8 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "TeamWipeWaveLoss":
 		function MissionAttributes::TeamWipeWaveLoss(params) {
-			EntFire("tf_gamerules", "RunScriptCode", "if (PopExtUtil.CountAlivePlayers() == 0) printl(PopExtUtil.CountAlivePlayers()); EntFire(`_roundwin`, `RoundWin`)", -1, null, null)
+			if (!PopExtUtil.IsWaveStarted) return
+			EntFire("tf_gamerules", "RunScriptCode", "if (PopExtUtil.CountAlivePlayers() == 0) EntFire(`_roundwin`, `RoundWin`)")
 		}
 		MissionAttributes.DeathHookTable.TeamWipeWaveLoss <- MissionAttributes.TeamWipeWaveLoss
 	break

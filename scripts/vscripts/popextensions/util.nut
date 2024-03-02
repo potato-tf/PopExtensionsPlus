@@ -156,19 +156,18 @@
 		function OnGameEvent_mvm_begin_wave(params) { PopExtUtil.IsWaveStarted = true }
 		function OnGameEvent_mvm_reset_stats(params) { PopExtUtil.IsWaveStarted = true } //used for manually jumping waves
 
-		function OnGameEvent_teamplay_round_start(params)
-		{
-			for (local i = 1; i <= MAX_CLIENTS; i++)
-			{
+		function OnGameEvent_teamplay_round_start(params) {
+			for (local i = 1; i <= MAX_CLIENTS; i++) {
 				local player = PlayerInstanceFromIndex(i)
 
-				if (player == null || !player.IsBotOfType(1337) || PopExtUtil.BotArray.find(player) != null) continue;
+				if (player != null && player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
+					PopExtUtil.BotArray.append(player)
 
-				PopExtUtil.BotArray.append(player)
-
-				if (player == null || PopExtUtil.PlayerArray.find(player) != null) continue;
-
-				PopExtUtil.PlayerArray.append(player)
+				else if (player != null && PopExtUtil.HumanArray.find(player) == null)
+					PopExtUtil.HumanArray.append(player)
+	
+				if (player != null && PopExtUtil.PlayerArray.find(player) == null)
+					PopExtUtil.PlayerArray.append(player)
 			}
 		}
 
@@ -210,7 +209,7 @@
 			if (player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
 				PopExtUtil.BotArray.append(player)
 
-			else if (!player.IsBotOfType(1337) && PopExtUtil.HumanArray.find(player) == null)
+			else if (PopExtUtil.HumanArray.find(player) == null)
 				PopExtUtil.HumanArray.append(player)
 
 			if (PopExtUtil.PlayerArray.find(player) == null)
@@ -221,11 +220,11 @@
 		function OnGameEvent_player_activate(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			
+
 			if (!player.IsBotOfType(1337) && PopExtUtil.HumanArray.find(player) == null)
 				PopExtUtil.HumanArray.append(player)
 
-			if (PopExtUtil.PlayerArray.find(player) == null)
+			else if (PopExtUtil.PlayerArray.find(player) == null)
 				PopExtUtil.PlayerArray.append(player)
 		}
 
@@ -258,6 +257,13 @@ function PopExtUtil::IsLinuxServer() {
 
 function PopExtUtil::ShowMessage(message) {
 	ClientPrint(null, HUD_PRINTCENTER , message)
+}
+
+function PopExtUtil::ForceChangeClass(player, classindex = 1)
+{
+	player.SetPlayerClass(classindex);
+	SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", classindex);
+	player.ForceRegenerateAndRespawn();
 }
 
 function PopExtUtil::ShowChatMessage(target, fmt, ...) {
@@ -320,15 +326,18 @@ function PopExtUtil::HexToRgb(hex) {
 	// Return the RGB values as an array
 	return [r, g, b]
 }
-function PopExtUtil::CountAlivePlayers(printout = false)
+function PopExtUtil::CountAlivePlayers(printout = true)
 {
     if (!PopExtUtil.IsWaveStarted) return
 
     local playersalive = 0
 
     foreach (player in PopExtUtil.HumanArray)
+	{
+		printl(player)
         if (PopExtUtil.IsAlive(player))
             playersalive++
+	}
 
     if (printout)
     {
@@ -336,7 +345,7 @@ function PopExtUtil::CountAlivePlayers(printout = false)
         printf("Players Alive: %d\n", playersalive)
     }
 	//shouldn't happen
-    if (PopExtUtil.HumanArray.len() < playersalive) playersalive == PopExtUtil.HumanArray.len()
+    // if (PopExtUtil.HumanArray.len() < playersalive) playersalive == PopExtUtil.HumanArray.len()
 
     return playersalive
 }
