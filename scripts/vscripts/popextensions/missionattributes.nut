@@ -48,9 +48,8 @@ const EFL_USER = 1048576
 
 			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 
-			function PlayerThinks() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
+			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
 
-			scope.PlayerThinks <- PlayerThinks
 			AddThinkToEnt(player, "PlayerThinks")
 			
 
