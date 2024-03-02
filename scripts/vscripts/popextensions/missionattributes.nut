@@ -89,7 +89,7 @@ __CollectGameEventCallbacks(MissionAttributes.Events);
 local MissionAttrEntity = FindByName(null, "popext_missionattr_ent")
 if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "popext_missionattr_ent"});
 
-function MissionAttributes::SetConvar(convar, value, hideChatMessage = true) {
+function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessage = true) {
 
 	local commentaryNode = Entities.FindByClassname(null, "point_commentary_node")
 	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {})
@@ -98,6 +98,8 @@ function MissionAttributes::SetConvar(convar, value, hideChatMessage = true) {
 	if (!(convar in MissionAttributes.ConVars)) MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
 
 	if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value)
+
+	if (duration > 0) EntFire("tf_gamerules", "RunScriptCode", "MissionAttributes.SetConvar("+convar+","+MissionAttributes.ConVars[convar]+")", duration)
 
 	EntFireByHandle(commentaryNode, "Kill", "", 1.1, null, null)
 }
@@ -1191,8 +1193,9 @@ function MissionAttributes::MissionAttr(...) {
 
 			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
 			local ready     = PopExtUtil.GetPlayerReadyCount()
-			if (ready >= PopExtUtil.HumanArray.len())
-				SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
+			printl(ready)
+			// if (ready >= PopExtUtil.HumanArray.len())
+				// SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
 		}
 		MissionAttributes.ThinkTable.BlueTeamReadyThink <- MissionAttributes.BlueTeamReadyThink
 
@@ -1360,8 +1363,8 @@ function MissionAttributes::MissionAttr(...) {
 			// TODO: For some reason the round just starts itsself when you spawn sometimes??
 			if (!PopExtUtil.IsWaveStarted) {
 				local ready = PopExtUtil.GetPlayerReadyCount()
-				if (ready >= PopExtUtil.HumanArray.len())
-					SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
+				if (ready > 0 && ready >= PopExtUtil.HumanArray.len() && !("WaveStartCountdown" in MissionAttributes) && GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime") >= Time() + 12.0)
+						SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time() + 10.0)
 			}
 		}
 		MissionAttributes.ThinkTable.ReverseMVMThink <- MissionAttributes.ReverseMVMThink

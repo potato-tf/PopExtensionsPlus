@@ -142,6 +142,7 @@
 	ObjectiveResource = FindByClassname(null, "tf_objective_resource")
 	MonsterResource = FindByClassname(null, "monster_resource")
 	MvMLogicEnt = FindByClassname(null, "tf_logic_mann_vs_machine")
+	MvMStatsEnt = FindByClassname(null, "tf_mann_vs_machine_stats")
 	PlayerManager = FindByClassname(null, "tf_player_manager")
 	Worldspawn = FindByClassname(null, "worldspawn")
 	StartRelay = FindByName(null, "wave_start_relay")
@@ -212,9 +213,20 @@
 			else if (!player.IsBotOfType(1337) && PopExtUtil.HumanArray.find(player) == null)
 				PopExtUtil.HumanArray.append(player)
 
-			else if (PopExtUtil.PlayerArray.find(player) == null)
+			if (PopExtUtil.PlayerArray.find(player) == null)
 				PopExtUtil.PlayerArray.append(player)
 
+		}
+
+		function OnGameEvent_player_activate(params) {
+
+			local player = GetPlayerFromUserID(params.userid)
+			
+			if (!player.IsBotOfType(1337) && PopExtUtil.HumanArray.find(player) == null)
+				PopExtUtil.HumanArray.append(player)
+
+			if (PopExtUtil.PlayerArray.find(player) == null)
+				PopExtUtil.PlayerArray.append(player)
 		}
 
 		function OnGameEvent_player_disconnect(params) {
