@@ -1215,9 +1215,7 @@ function MissionAttributes::MissionAttr(...) {
 		// 4 kills to reach max chance
 
 		function MissionAttributes::EnableRandomCritsThink() {
-			for (local i = 1; i <= MAX_CLIENTS ; i++) {
-				local player = PlayerInstanceFromIndex(i)
-				if (player == null) continue
+			foreach (player in PopExtUtil.PlayerArray) {
 				// TODO: see about using math.abs on the value here, dunno if these will fire for negative values
 				if (!( (value & 1 && player.GetTeam() == TF_TEAM_BLUE && !player.IsBotOfType(1337)) ||
 					   (value & 2 && player.GetTeam() == TF_TEAM_BLUE && player.IsBotOfType(1337))  ||
@@ -1241,7 +1239,7 @@ function MissionAttributes::MissionAttr(...) {
 
 				local wep       = player.GetActiveWeapon()
 				local index     = PopExtUtil.GetItemIndex(wep)
-				local classname = GetPropString(wep, "m_iClassname")
+				local classname = wep.GetClassname()
 
 				// We handle melee weapons elsewhere in OnTakeDamage
 				if (wep == null || wep.IsMeleeWeapon()) continue
@@ -1348,9 +1346,7 @@ function MissionAttributes::MissionAttr(...) {
 			// Enforce max team size
 			local player_count  = 0
 			local max_team_size = 6
-			for (local i = 1; i <= MAX_CLIENTS ; i++) {
-				local player = PlayerInstanceFromIndex(i)
-				if (player == null || player.IsBotOfType(1337)) continue
+			foreach (player in PopExtUtil.PlayerArray) {
 
 				if (player_count + 1 > max_team_size) {
 					player.ForceChangeTeam(TEAM_SPECTATOR, false)
@@ -1399,7 +1395,7 @@ function MissionAttributes::MissionAttr(...) {
 
 				local wep = self.GetActiveWeapon()
 
-				if (GetPropString(wep, "m_iClassname") == "tf_weapon_laser_pointer") {
+				if (wep.GetClassname() == "tf_weapon_laser_pointer") {
 					if (laser_spawntime == -1)
 						laser_spawntime = Time() + 0.55
 				}
@@ -1700,7 +1696,7 @@ function MissionAttributes::MissionAttr(...) {
 							}
 						}
 					}
-					else if (itemid == 527) { // Widowmaker
+					else if (itemid == ID_WIDOWMAKER) { // Widowmaker
 						local nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
 						if (Time() < nextattack) return
 
