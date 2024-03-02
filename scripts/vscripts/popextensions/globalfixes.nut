@@ -240,9 +240,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 					
 					if (engie != null)
 						hint = Entities.FindByClassnameWithin(null, "bot_hint_*", engie.GetOrigin(), 200)
-					
-					printl(engie)
-					printl(hint)
 
 					// Counteract impulse velocity
 					if (hint != null && engie != null) {

@@ -590,7 +590,6 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 		if (bot.HasBotTag(tagtest)) {
 			local args = split(tagtest, "|")
 			local func = args.remove(0)
-			// printl(popext_funcs[func] + " : " + bot + " : " + args[1])
 			if (func in popext_funcs)
 				popext_funcs[func](bot, args)
 		}
