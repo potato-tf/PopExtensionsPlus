@@ -147,9 +147,13 @@
 	Worldspawn = FindByClassname(null, "worldspawn")
 	StartRelay = FindByName(null, "wave_start_relay")
 	FinishedRelay = FindByName(null, "wave_finished_relay")
+
 	CurrentWaveNum = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
+
 	ClientCommand = SpawnEntityFromTable("point_clientcommand", {targetname = "_clientcommand"})
 	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "_roundwin", TeamNum = 3, force_map_reset = 1})
+	RespawnOverride = SpawnEntityFromTable("trigger_player_respawn_override", {spawnflags = 1})
+
 	Events = {
 		function OnGameEvent_mvm_wave_complete(params) { PopExtUtil.IsWaveStarted = false }
 		function OnGameEvent_mvm_wave_failed(params) { PopExtUtil.IsWaveStarted = false }
@@ -179,12 +183,10 @@
 			local scope = player.GetScriptScope()
 
 			if (!("MyWeaponsArray" in scope)) scope.MyWeaponsArray <- {}
+
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
-			function PlayerThinks() {
-				local times = []
-				foreach (name, func in scope.PlayerThinkTable) { func(); return -1 }
-			}
+			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
 
 			if (!("PlayerThinks" in scope)) {
 				scope.PlayerThinks <- PlayerThinks
@@ -246,6 +248,19 @@ NavMesh.GetAllAreas(PopExtUtil.AllNavAreas)
 
 __CollectGameEventCallbacks(PopExtUtil.Events)
 
+PopExtUtil.RespawnOverride.SetSolid(2);
+PopExtUtil.RespawnOverride.SetSize(Vector(), Vector(1, 1, 1))
+
+//fix delayed starttouch crash
+function RespawnStartTouch() { return (activator == null) ? false : true; }
+function RespawnEndTouch() { return (activator == null) ? false : true; }
+
+PopExtUtil.RespawnOverride.ValidateScriptScope();
+PopExtUtil.RespawnOverride.GetScriptScope().InputStartTouch <- RespawnStartTouch;
+PopExtUtil.RespawnOverride.GetScriptScope().Inputstarttouch <- RespawnStartTouch;
+PopExtUtil.RespawnOverride.GetScriptScope().InputEndTouch <- RespawnEndTouch;
+PopExtUtil.RespawnOverride.GetScriptScope().Inputendtouch <- RespawnEndTouch;
+
 //HACK: forces post_inventory_application to fire on pop load
 for (local i = 1; i <= MAX_CLIENTS; i++)
 	if (PlayerInstanceFromIndex(i) != null)
@@ -264,6 +279,13 @@ function PopExtUtil::ForceChangeClass(player, classindex = 1)
 	player.SetPlayerClass(classindex);
 	SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", classindex);
 	player.ForceRegenerateAndRespawn();
+}
+
+function PopExtUtil::ChangePlayerTeamMvM(player, teamnum = 3)
+{
+    SetPropBool(FindByClassname(null, "tf_gamerules"), "m_bPlayingMannVsMachine", false);
+    player.ForceChangeTeam(teamnum, false);
+    SetPropBool(FindByClassname(null, "tf_gamerules"), "m_bPlayingMannVsMachine", true);
 }
 
 function PopExtUtil::ShowChatMessage(target, fmt, ...) {
@@ -334,7 +356,6 @@ function PopExtUtil::CountAlivePlayers(printout = false)
 
     foreach (player in PopExtUtil.HumanArray)
 	{
-		printl(player)
         if (PopExtUtil.IsAlive(player))
             playersalive++
 	}

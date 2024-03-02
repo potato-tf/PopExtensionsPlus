@@ -5,7 +5,6 @@ IncludeScript("popextensions/botbehavior.nut", root)
 local popext_funcs =
 {
 	popext_addcond = function(bot, args) {
-		printl(args[0])
 		if (args.len() == 1)
 			if (args[0].tointeger() == 43)
 				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
@@ -321,7 +320,6 @@ local popext_funcs =
 		function ImprovedAirblastThink() {
 
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
-				printl("test")
 				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
@@ -652,14 +650,12 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 	function OnGameEvent_player_team(params) {
 		local bot = GetPlayerFromUserID(params.userid)
-		if (bot.IsBotOfType(1337) || params.team == TEAM_SPECTATOR)
-			AddThinkToEnt(bot, null)
+		if (params.team == TEAM_SPECTATOR) AddThinkToEnt(bot, null)
 	}
 
 	function OnGameEvent_player_death(params) {
 		local bot = GetPlayerFromUserID(params.userid)
-		if (bot.IsBotOfType(1337))
-			AddThinkToEnt(bot, null)
+		if (bot.IsBotOfType(1337)) AddThinkToEnt(bot, null)
 	}
 }
 __CollectGameEventCallbacks(PopExtTags)

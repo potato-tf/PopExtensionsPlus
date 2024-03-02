@@ -23,7 +23,14 @@ const EFL_USER = 1048576
 	// 	foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
 	// 	MissionAttributes.RaisedParseError = false
 	// }
+	
+	function Cleanup()
+	{
+		MissionAttributes.ResetConvars()
+		MissionAttributes.PathNum = 0
 
+		MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
+	}
 	Events = {
 
 		function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
@@ -36,18 +43,16 @@ const EFL_USER = 1048576
 			local player = GetPlayerFromUserID(params.userid)
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-			
-			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
-			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
+			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 
-			if (!("PlayerThinks" in scope))
-			{
-				scope.PlayerThinks <- PlayerThinks
-				AddThinkToEnt(player, "PlayerThinks")
-			}
+			function PlayerThinks() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
+
+			scope.PlayerThinks <- PlayerThinks
+			AddThinkToEnt(player, "PlayerThinks")
+			
 
 			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 		}
@@ -57,18 +62,12 @@ const EFL_USER = 1048576
 
 			if (GetRoundState() != GR_STATE_PREROUND) return
 
-			MissionAttributes.ResetConvars()
-			MissionAttributes.PathNum = 0
-
-			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
+			MissionAttributes.Cleanup()
 		}
 
 		function OnGameEvent_mvm_wave_complete(params) {
 
-			MissionAttributes.ResetConvars()
-			MissionAttributes.PathNum = 0
-
-			MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
+			MissionAttributes.Cleanup()
 		}
 
 		function OnGameEvent_mvm_mission_complete(params) {
@@ -77,9 +76,6 @@ const EFL_USER = 1048576
 			local popexent = FindByName(null, "popext_missionattr_ent")
 			if (popextent != null) popextent.Kill()
 			delete ::MissionAttributes
-		}
-		function OnGameEvent_player_changeclass(params) {
-			local player = GetPlayerFromUserID(params.userid)
 		}
 	}
 };
@@ -261,10 +257,6 @@ function MissionAttributes::MissionAttr(...) {
 				if (params.object != OBJ_ATTACHMENT_SAPPER) return
 				local sapper = EntIndexToHScript(params.index)
 				SetPropBool(sapper, "m_bDisposableBuilding", true)
-				local flags = GetPropInt(sapper, "m_fObjectFlags")
-				printl(flags)
-				SetPropInt(sapper, "m_fObjectFlags", flags | OF_ALLOW_REPEAT_PLACEMENT)
-				printl(flags)
 			}
 			player.GetScriptScope().BuiltObjectTable.MultiSapper <- MultiSapper
 		}
@@ -1187,19 +1179,18 @@ function MissionAttributes::MissionAttr(...) {
 			if (player.IsBotOfType(1337)) return
 
 			if (player.GetTeam() != value) {
-				EntFireByHandle(player, "RunScriptCode", format("ChangePlayerTeamMvM(self, %d)", value), 0.015, null, null)
+				EntFireByHandle(player, "RunScriptCode", format("PopExtUtil.ChangePlayerTeamMvM(self, %d)", value), 0.015, null, null)
 				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
 			}
 		}
 
 		function BlueTeamReadyThink() {
-			if (value != TF_TEAM_BLUE || !GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return
+			if (value != TF_TEAM_BLUE || !PopExtUtil.IsWaveStarted) return
 
 			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
 			local ready     = PopExtUtil.GetPlayerReadyCount()
-			printl(ready)
-			// if (ready >= PopExtUtil.HumanArray.len())
-				// SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time())
+			if (ready > 0 >= PopExtUtil.HumanArray.len() && !("WaveStartCountdown" in MissionAttributes))
+				SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time() + 10.0)
 		}
 		MissionAttributes.ThinkTable.BlueTeamReadyThink <- MissionAttributes.BlueTeamReadyThink
 
@@ -1383,7 +1374,7 @@ function MissionAttributes::MissionAttr(...) {
 			// Switch to blue team
 			// TODO: Need to fix players getting stuck in spec on wave fail, mission complete, etc
 			if (player.GetTeam() != TF_TEAM_BLUE) {
-				EntFireByHandle(player, "RunScriptCode", "ChangePlayerTeamMvM(self, TF_TEAM_BLUE)", 0.015, null, null)
+				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_BLUE)", 0.015, null, null)
 				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
 			}
 
