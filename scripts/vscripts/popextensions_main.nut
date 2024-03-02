@@ -20,5 +20,4 @@ Include("tags.nut")
 
 Include("globalfixes.nut")
 Include("spawntemplate.nut")
-Include("reverse.nut")
 Include("tutorialtools.nut")
