@@ -326,7 +326,7 @@ function PopExtUtil::HexToRgb(hex) {
 	// Return the RGB values as an array
 	return [r, g, b]
 }
-function PopExtUtil::CountAlivePlayers(printout = true)
+function PopExtUtil::CountAlivePlayers(printout = false)
 {
     if (!PopExtUtil.IsWaveStarted) return
 
@@ -344,8 +344,6 @@ function PopExtUtil::CountAlivePlayers(printout = true)
         ClientPrint(null, HUD_PRINTTALK, format("Players Alive: %d", playersalive))
         printf("Players Alive: %d\n", playersalive)
     }
-	//shouldn't happen
-    // if (PopExtUtil.HumanArray.len() < playersalive) playersalive == PopExtUtil.HumanArray.len()
 
     return playersalive
 }
