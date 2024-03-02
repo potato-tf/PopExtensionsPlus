@@ -36,6 +36,8 @@ const EFL_USER = 1048576
 			local player = GetPlayerFromUserID(params.userid)
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
+			
+			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
@@ -48,8 +50,6 @@ const EFL_USER = 1048576
 			}
 
 			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
-
-			foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 		}
 		// Hook all wave inits to reset parsing error counter.
 
