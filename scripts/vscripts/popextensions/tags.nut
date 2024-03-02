@@ -569,15 +569,8 @@ local popext_funcs =
 // local tagtest = "popext_dispenseroverride"
 // local tagtest = "popext_forceromevision"
 // local tagtest = "popext_aimat|head"
-// local tagtest = "popext_improvedairblast"
-local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
-
-::BotThink <- function()
-{
-	bot.OnUpdate()
-
-	return -1
-}
+local tagtest = "popext_improvedairblast"
+// local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 ::PopExtTags <- {
 
@@ -598,7 +591,7 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
 
-		AddThinkToEnt(player, "PlayerThinks")
+		AddThinkToEnt(bot, "PlayerThinks")
 	}
 	function OnGameEvent_post_inventory_application(params) {
 		local bot = GetPlayerFromUserID(params.userid)
@@ -622,11 +615,12 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
 
-		AddThinkToEnt(player, "PlayerThinks")
+		AddThinkToEnt(bot, "PlayerThinks")
 
 		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 	}
 	function OnScriptHook_OnTakeDamage(params) {
+
 		local scope = params.attacker.GetScriptScope()
 
 		if (!("TakeDamageTable" in scope)) return
@@ -634,6 +628,7 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 		foreach (_, func in scope.TakeDamageTable) func(params)
 	}
 	function OnGameEvent_player_builtobject(params) {
+
 		local scope = GetPlayerFromUserID(params.userid).GetScriptScope()
 
 		if (!("BuiltObjectTable" in scope)) return
@@ -642,11 +637,13 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 	}
 
 	function OnGameEvent_player_team(params) {
+
 		local bot = GetPlayerFromUserID(params.userid)
 		if (params.team == TEAM_SPECTATOR) AddThinkToEnt(bot, null)
 	}
 
 	function OnGameEvent_player_death(params) {
+
 		local bot = GetPlayerFromUserID(params.userid)
 		if (bot.IsBotOfType(1337)) AddThinkToEnt(bot, null)
 	}
