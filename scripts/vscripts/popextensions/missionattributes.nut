@@ -1621,9 +1621,9 @@ function MissionAttributes::MissionAttr(...) {
 						}
 						else if (buttons & IN_ATTACK2) {
 							local cost = 20
-							if (itemid == 40 || itemid == 1146) // Backburner
+							if (itemid == ID_BACKBURNER || itemid == ID_FESTIVE_BACKBURNER) // Backburner
 								cost = 50
-							else if (itemid == 215) // Degreaser
+							else if (itemid == ID_DEGREASER) // Degreaser
 								cost = 25
 
 							if (maxammo - cost > -1) {
@@ -1658,7 +1658,7 @@ function MissionAttributes::MissionAttr(...) {
 						}
 						else if (sequence == 25) {
 							if (Time() < scope.nextattack) return
-							if (itemid != 811 && itemid != 832) return
+							if (itemid != ID_HUO_LONG_HEATER && itemid != ID_HUO_LONG_HEATER_GENUINE) return
 
 							if (maxammo - 1 > -1) {
 								SetPropIntArray(self, "m_iAmmo", maxammo - 1, wep.GetSlot() + 1)
@@ -1707,7 +1707,7 @@ function MissionAttributes::MissionAttr(...) {
 								SetPropIntArray(self, "m_iAmmo", maxmetal - 30, TF_AMMO_METAL)
 						}
 					}
-					else if (classname == "tf_weapon_sniperrifle" || itemid == 402 || itemid == 1098) {
+					else if (classname == "tf_weapon_sniperrifle" || itemid == ID_BAZAAR_BARGAIN || itemid == ID_CLASSIC) {
 						if (sequence == 28) return // Weapon deploy
 
 						local nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
