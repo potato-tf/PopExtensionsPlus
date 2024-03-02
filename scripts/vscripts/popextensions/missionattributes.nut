@@ -1511,7 +1511,7 @@ function MissionAttributes::MissionAttr(...) {
 
 						local hp    = self.GetHealth()
 						local maxhp = self.GetMaxHealth()
-						if (hp >= maxhp) return
+						if (hp >= maxhp) continue
 
 						refill = true
 
