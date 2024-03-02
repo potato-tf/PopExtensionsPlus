@@ -596,11 +596,9 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
 
-		if (!("PlayerThinks" in scope))
-		{
-			scope.PlayerThinks <- PlayerThinks
-			AddThinkToEnt(player, "PlayerThinks")
-		}
+		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
+
+		AddThinkToEnt(player, "PlayerThinks")
 	}
 	function OnGameEvent_post_inventory_application(params) {
 		local bot = GetPlayerFromUserID(params.userid)
@@ -622,13 +620,9 @@ local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
-		function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
+		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
 
-		if (!("PlayerThinks" in scope))
-		{
-			scope.PlayerThinks <- PlayerThinks
-			AddThinkToEnt(bot, "PlayerThinks")
-		}
+		AddThinkToEnt(player, "PlayerThinks")
 
 		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 	}

@@ -186,12 +186,9 @@
 
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
-			function PlayerThinks() { foreach (_, func in scope.PlayerThinkTable) func(); return -1 }
+			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
 
-			if (!("PlayerThinks" in scope)) {
-				scope.PlayerThinks <- PlayerThinks
-				AddThinkToEnt(player, "PlayerThinks")
-			}
+			AddThinkToEnt(player, "PlayerThinks")
 
 			local myweapons = {}
 			for (local i = 0; i < SLOT_COUNT; i++) {
