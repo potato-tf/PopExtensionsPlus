@@ -91,7 +91,7 @@ if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_te
 
 function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessage = true) {
 
-	local commentaryNode = Entities.FindByClassname(null, "point_commentary_node")
+	local commentaryNode = FindByClassname(null, "point_commentary_node")
 	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {})
 
 	//save original values to restore later
@@ -106,7 +106,7 @@ function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessa
 
 function MissionAttributes::ResetConvars(hideChatMessage = true) {
 
-	local commentaryNode = Entities.FindByClassname(null, "point_commentary_node")
+	local commentaryNode = FindByClassname(null, "point_commentary_node")
 
 	foreach (convar, value in MissionAttributes.ConVars) Convars.SetValue(convar, value)
 	MissionAttributes.ConVars.clear()
@@ -155,7 +155,7 @@ function MissionAttributes::MissionAttr(...) {
 		SetConvar("tf_forced_holiday", value)
 		if (value == 0) break
 
-		local ent = Entities.FindByName(null, "MissionAttrHoliday");
+		local ent = FindByName(null, "MissionAttrHoliday");
 		if (ent != null) ent.Kill();
 
 		SpawnEntityFromTable("tf_logic_holiday", {
@@ -184,7 +184,7 @@ function MissionAttributes::MissionAttr(...) {
 		function MissionAttributes::NoCrumpkins() {
 			switch(value) {
 			case 1:
-				for (local pumpkin; pumpkin = Entities.FindByClassname(pumpkin, "tf_ammo_pack");)
+				for (local pumpkin; pumpkin = FindByClassname(pumpkin, "tf_ammo_pack");)
 					if (GetPropInt(pumpkin, "m_nModelIndex") == pumpkinIndex)
 						EntFireByHandle(pumpkin, "Kill", "", -1, null, null) //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
 			}
@@ -203,7 +203,7 @@ function MissionAttributes::MissionAttr(...) {
 		if (value < 1) return
 
 		function MissionAttributes::NoReanimators(params) {
-			for (local revivemarker; revivemarker = Entities.FindByClassname(revivemarker, "entity_revive_marker");)
+			for (local revivemarker; revivemarker = FindByClassname(revivemarker, "entity_revive_marker");)
 				EntFireByHandle(revivemarker, "Kill", "", -1, null, null)
 		}
 
@@ -501,7 +501,7 @@ function MissionAttributes::MissionAttr(...) {
 		if (value < 1) return
 
 		function MissionAttributes::SniperHideLasers() {
-			for (local dot; dot = Entities.FindByClassname(dot, "env_sniperdot");)
+			for (local dot; dot = FindByClassname(dot, "env_sniperdot");)
 				if (dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS)
 					EntFireByHandle(dot, "Kill", "", -1, null, null)
 
@@ -648,7 +648,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			if (value & 8) {
 				function RobotVOThink() {
-					for (local ent; ent = Entities.FindByClassname(ent, "instanced_scripted_scene"); ) {
+					for (local ent; ent = FindByClassname(ent, "instanced_scripted_scene"); ) {
 						if (ent.GetEFlags() & EFL_USER) continue
 						ent.AddEFlags(EFL_USER)
 
@@ -768,10 +768,10 @@ function MissionAttributes::MissionAttr(...) {
 			//set value to 2 to also un-rome the carrier tank
 			if (value < 2 || noromecarrier) return
 
-			local carrier = Entities.FindByName(null, "botship_dynamic") //some maps have a targetname for it
+			local carrier = FindByName(null, "botship_dynamic") //some maps have a targetname for it
 
 			if (carrier == null) {
-				for (local props; props = Entities.FindByClassname(props, "prop_dynamic");) {
+				for (local props; props = FindByClassname(props, "prop_dynamic");) {
 					if (GetPropInt(props, "m_nModelIndex") != carrierPartsIndex) continue
 
 					carrier = props
@@ -1385,7 +1385,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Kill any phantom lasers from respawning as engie (yes this is real)
 			EntFireByHandle(player, "RunScriptCode", @"
-				for (local ent; ent = Entities.FindByClassname(ent, `env_laserdot`);)
+				for (local ent; ent = FindByClassname(ent, `env_laserdot`);)
 					if (ent.GetOwner() == self)
 						ent.Destroy()
 			", 0.5, null, null)
@@ -1414,14 +1414,14 @@ function MissionAttributes::MissionAttr(...) {
 				if (Time() < laser_spawntime) return
 
 				local laser = null
-				for (local ent; ent = Entities.FindByClassname(ent, "env_laserdot");) {
+				for (local ent; ent = FindByClassname(ent, "env_laserdot");) {
 					if (ent.GetOwner() == self) {
 						laser = ent
 						break
 					}
 				}
 
-				for (local ent; ent = Entities.FindByClassname(ent, "obj_sentrygun");) {
+				for (local ent; ent = FindByClassname(ent, "obj_sentrygun");) {
 					local builder = GetPropEntity(ent, "m_hBuilder")
 					if (builder != self) continue
 
@@ -1453,7 +1453,7 @@ function MissionAttributes::MissionAttr(...) {
 
 				// Find currency near us
 				local origin = self.GetOrigin()
-				for ( local ent; ent = Entities.FindByClassnameWithin(ent, "item_currencypack_*", origin, 64); ) {
+				for ( local ent; ent = FindByClassnameWithin(ent, "item_currencypack_*", origin, 64); ) {
 					// Move the money to the origin and respawn it to allow us to collect it after it touches the ground
 					ent.SetAbsOrigin(Vector())
 					ent.DispatchSpawn()
@@ -1468,7 +1468,7 @@ function MissionAttributes::MissionAttr(...) {
 			// Allow pack collection
 			scope.PlayerThinkTable.ReverseMVMPackThink <- function() {
 				local origin = self.GetOrigin()
-				for ( local ent; ent = Entities.FindByClassnameWithin(ent, "item_*", origin, 40); ) {
+				for ( local ent; ent = FindByClassnameWithin(ent, "item_*", origin, 40); ) {
 					if (ent.GetEFlags() & EFL_USER) continue
 					if (GetPropInt(ent, "m_fEffects") & EF_NODRAW) continue
 
