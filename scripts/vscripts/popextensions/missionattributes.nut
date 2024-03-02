@@ -1372,14 +1372,9 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Switch to blue team
 			// TODO: Need to fix players getting stuck in spec on wave fail, mission complete, etc
-			if (player.GetTeam() != TF_TEAM_PVE_INVADERS) {
-				if (PopExtUtil.GameRules) {
-					SetPropBool(PopExtUtil.GameRules, "m_bPlayingMannVsMachine", false)
-					player.ForceChangeTeam(TF_TEAM_PVE_INVADERS, false)
-					SetPropBool(PopExtUtil.GameRules, "m_bPlayingMannVsMachine", true)
-					
-					EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
-				}
+			if (player.GetTeam() != TF_TEAM_BLUE) {
+				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_BLUE)", 0.015, null, null)
+				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
 			}
 
 			// Kill any phantom lasers from respawning as engie (yes this is real)

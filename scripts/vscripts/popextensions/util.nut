@@ -280,9 +280,11 @@ function PopExtUtil::ForceChangeClass(player, classindex = 1)
 
 function PopExtUtil::ChangePlayerTeamMvM(player, teamnum = 3)
 {
-    SetPropBool(FindByClassname(null, "tf_gamerules"), "m_bPlayingMannVsMachine", false);
-    player.ForceChangeTeam(teamnum, false);
-    SetPropBool(FindByClassname(null, "tf_gamerules"), "m_bPlayingMannVsMachine", true);
+	if (PopExtUtil.GameRules) {
+		SetPropBool(PopExtUtil.GameRules, "m_bPlayingMannVsMachine", false);
+		player.ForceChangeTeam(teamnum, false);
+		SetPropBool(PopExtUtil.GameRules, "m_bPlayingMannVsMachine", true);
+	}
 }
 
 function PopExtUtil::ShowChatMessage(target, fmt, ...) {
