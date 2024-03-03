@@ -13,7 +13,6 @@ Mince:
 // TODO: (ItemAttributes / PlayerAttributes) fix attributes carrying over on classes for some reason
 // TODO: (EnableRandomCrits) see about using abs on the condition checks, dunno if bitwise AND will eval true for negative values
 // TODO: fix switching weapons removing random crit cond not working
-// TODO: (ReverseMVM) For some reason the round just starts itsself when you spawn sometimes??
 // TODO: (ReverseMVM) Need to fix players getting stuck in spec on wave fail, mission complete, etc
 // TODO: (ReverseMVM) Fix laser on sniper for human anims
 // TODO: Modify PlayersAreRobots or make a new attr for changing robot vo to human (use this in ReverseMVM)
@@ -22,7 +21,6 @@ Mince:
 //       not consume ammo
 // TODO: Reimplement the Error system with try catch and raise
 // TODO: (HolidayPunchFix) Check if we need to set m_hOwnerEnity since we already use SetOwner
-// TODO: Remove reverse.nut if it isnt going to be used, ask brain
 // Fix AnimatedViewControlAll camera movement
 // Implement the rest of the functions for tutorialtools.nut
 // Unsure of how the global moneyfix will interact with the ReverseMVM money collection code, need to test

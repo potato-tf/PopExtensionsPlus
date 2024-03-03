@@ -55,187 +55,6 @@
 			foreach(index, func in scope.popHooks[name])
 				func(entity, param)
 	}
-
-	function PopulatorThink() {
-
-		for (local tank; tank = FindByClassname(tank, "tank_boss");) {
-			tank.ValidateScriptScope()
-			local scope = tank.GetScriptScope()
-
-			if (!("created" in scope)) {
-				scope.created <- true
-				local tankName = tank.GetName().tolower()
-
-				foreach(name, table in tankNamesWildcard) {
-					if (name == tankName || name == tankName.slice(0, name.len())) {
-						PopHooksScope.AddHooksToScope(tankName, table, scope)
-
-						if ("OnSpawn" in table)
-							table.OnSpawn(tank, tankName)
-					}
-				}
-
-				if (tankName in tankNames) {
-					local table = tankNames[tankName]
-					PopHooksScope.AddHooksToScope(tankName, table, scope)
-
-					if ("OnSpawn" in table)
-						table.OnSpawn(tank, tankName)
-				}
-
-				if ("popProperty" in scope && "DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
-					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-						if (child.GetClassname() != "prop_dynamic") continue
-
-						if (child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl") {
-							NetProps.SetPropInt(child, "m_fEffects", NetProps.GetPropInt(child, "m_fEffects") | 32)
-						}
-					}
-				}
-
-				if ("popProperty" in scope && "DisableBomb" in scope.popProperty && scope.popProperty.DisableBomb) {
-					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-						if (child.GetClassname() != "prop_dynamic") continue
-
-						if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl") {
-							NetProps.SetPropInt(child, "m_fEffects", NetProps.GetPropInt(child, "m_fEffects") | 32)
-						}
-					}
-				}
-
-				if ("popProperty" in scope && "TankModel" in scope.popProperty) {
-					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly)) {
-						tank.SetModelSimple(scope.popProperty.TankModel.Default)
-					}
-
-					NetProps.SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 0)
-					NetProps.SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 3)
-
-					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-						if (child.GetClassname() != "prop_dynamic") continue
-
-						local replace_model     = -1
-						local replace_model_str = ""
-						local is_track          = false
-						local childModelName    = child.GetModelName()
-
-						if ("Bomb" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/bomb_mechanism.mdl") {
-							replace_model     = scope.popProperty.TankModelPrecached.Bomb
-							replace_model_str = scope.popProperty.TankModel.Bomb
-						}
-						else if ("LeftTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_L.mdl") {
-							replace_model     = scope.popProperty.TankModelPrecached.LeftTrack
-							replace_model_str = scope.popProperty.TankModel.LeftTrack
-							is_track          = true
-						}
-						else if ("RightTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_R.mdl") {
-							replace_model     = scope.popProperty.TankModelPrecached.RightTrack
-							replace_model_str = scope.popProperty.TankModel.RightTrack
-							is_track          = true
-						}
-
-						if (replace_model != -1) {
-							child.SetModel(replace_model_str)
-							NetProps.SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 0)
-							NetProps.SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 3)
-						}
-
-						if (is_track) {
-							child.ValidateScriptScope()
-							child.GetScriptScope().RestartTrackAnim <- function() {
-								local animSequence = self.LookupSequence("forward")
-								if (animSequence != -1) {
-									self.SetSequence(animSequence)
-									self.SetPlaybackRate(1.0)
-									self.SetCycle(0)
-								}
-							}
-							EntFireByHandle(child, "CallScriptFunction", "RestartTrackAnim", -1, null, null)
-						}
-					}
-				}
-			}
-			else {
-				if (!("lastHealth" in scope)) {
-					scope.lastHealth      <- tank.GetHealth()
-					scope.lastHealthStage <- 0
-				}
-
-				if (("changeTankModelIndex" in scope)) {
-					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
-						tank.SetModelSimple(scope.popProperty.TankModel[scope.changeTankModelIndex])
-
-					NetProps.SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 0)
-					NetProps.SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 3)
-
-					delete scope.changeTankModelIndex
-				}
-
-				if (scope.lastHealth != tank.GetHealth()) {
-					local health_per_model = tank.GetMaxHealth() / 4
-					local health_threshold = tank.GetMaxHealth() - health_per_model
-					local health_stage
-
-					for (health_stage = 0; health_stage < 3; health_stage++) {
-						if (tank.GetHealth() > health_threshold)
-							break
-
-						health_threshold -= health_per_model
-					}
-
-					if (scope.lastHealthStage != health_stage && "popProperty" in scope && "TankModel" in scope.popProperty) {
-						local name = health_stage == 0 ? "Default" : "Damage" + health_stage
-						scope.changeTankModelIndex <- name
-
-						if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly)) {
-							tank.SetModelSimple(scope.popProperty.TankModel[name])
-						}
-
-						NetProps.SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 0)
-						NetProps.SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 3)
-					}
-
-					scope.lastHealth = tank.GetHealth()
-					scope.lastHealthStage = health_stage
-				}
-			}
-		}
-
-		for (local i = 0; i < MAX_CLIENTS; i++) {
-			local player = PlayerInstanceFromIndex(i)
-			if (player == null) continue
-
-			if (player.IsBotOfType(1337)) {
-				player.ValidateScriptScope()
-				local scope = player.GetScriptScope()
-
-				local alive = PopExtUtil.IsAlive(player)
-				if (alive && !("botCreated" in scope)) {
-					scope.botCreated <- true
-
-					foreach(tag, table in robotTags) {
-						if (player.HasBotTag(tag)) {
-							scope.popFiredDeathHook <- false
-							PopHooksScope.AddHooksToScope(tag, table, scope)
-
-							if ("OnSpawn" in table)
-								table.OnSpawn(player, tag)
-						}
-					}
-				}
-				// Make sure that ondeath hook is fired always
-				if (!alive && "popFiredDeathHook" in scope) {
-					local scope = player.GetScriptScope() // TODO: we already got scope above?
-					if (!scope.popFiredDeathHook)
-						PopHooksScope.FireHooksParam(player, scope, "OnDeath", null)
-
-					delete scope.popFiredDeathHook
-				}
-			}
-		}
-
-		return -1
-	}
 	Events = {
 		function OnScriptHook_OnTakeDamage(params) {
 			local victim = params.const_entity
@@ -373,3 +192,183 @@
 	}
 }
 __CollectGameEventCallbacks(PopHooksScope.Events)
+function PopulatorThink() {
+
+	for (local tank; tank = FindByClassname(tank, "tank_boss");) {
+		tank.ValidateScriptScope()
+		local scope = tank.GetScriptScope()
+
+		if (!("created" in scope)) {
+			scope.created <- true
+			local tankName = tank.GetName().tolower()
+
+			foreach(name, table in tankNamesWildcard) {
+				if (name == tankName || name == tankName.slice(0, name.len())) {
+					PopHooksScope.AddHooksToScope(tankName, table, scope)
+
+					if ("OnSpawn" in table)
+						table.OnSpawn(tank, tankName)
+				}
+			}
+
+			if (tankName in tankNames) {
+				local table = tankNames[tankName]
+				PopHooksScope.AddHooksToScope(tankName, table, scope)
+
+				if ("OnSpawn" in table)
+					table.OnSpawn(tank, tankName)
+			}
+
+			if ("popProperty" in scope && "DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
+				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+					if (child.GetClassname() != "prop_dynamic") continue
+
+					if (child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl") {
+						SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | 32)
+					}
+				}
+			}
+
+			if ("popProperty" in scope && "DisableBomb" in scope.popProperty && scope.popProperty.DisableBomb) {
+				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+					if (child.GetClassname() != "prop_dynamic") continue
+
+					if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl") {
+						SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | 32)
+					}
+				}
+			}
+
+			if ("popProperty" in scope && "TankModel" in scope.popProperty) {
+				if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly)) {
+					tank.SetModelSimple(scope.popProperty.TankModel.Default)
+				}
+
+				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 0)
+				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 3)
+
+				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+					if (child.GetClassname() != "prop_dynamic") continue
+
+					local replace_model     = -1
+					local replace_model_str = ""
+					local is_track          = false
+					local childModelName    = child.GetModelName()
+
+					if ("Bomb" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/bomb_mechanism.mdl") {
+						replace_model     = scope.popProperty.TankModelPrecached.Bomb
+						replace_model_str = scope.popProperty.TankModel.Bomb
+					}
+					else if ("LeftTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_L.mdl") {
+						replace_model     = scope.popProperty.TankModelPrecached.LeftTrack
+						replace_model_str = scope.popProperty.TankModel.LeftTrack
+						is_track          = true
+					}
+					else if ("RightTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_R.mdl") {
+						replace_model     = scope.popProperty.TankModelPrecached.RightTrack
+						replace_model_str = scope.popProperty.TankModel.RightTrack
+						is_track          = true
+					}
+
+					if (replace_model != -1) {
+						child.SetModel(replace_model_str)
+						SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 0)
+						SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 3)
+					}
+
+					if (is_track) {
+						child.ValidateScriptScope()
+						child.GetScriptScope().RestartTrackAnim <- function() {
+							local animSequence = self.LookupSequence("forward")
+							if (animSequence != -1) {
+								self.SetSequence(animSequence)
+								self.SetPlaybackRate(1.0)
+								self.SetCycle(0)
+							}
+						}
+						EntFireByHandle(child, "CallScriptFunction", "RestartTrackAnim", -1, null, null)
+					}
+				}
+			}
+		}
+		else {
+			if (!("lastHealth" in scope)) {
+				scope.lastHealth      <- tank.GetHealth()
+				scope.lastHealthStage <- 0
+			}
+
+			if (("changeTankModelIndex" in scope)) {
+				if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
+					tank.SetModelSimple(scope.popProperty.TankModel[scope.changeTankModelIndex])
+
+				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 0)
+				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 3)
+
+				delete scope.changeTankModelIndex
+			}
+
+			if (scope.lastHealth != tank.GetHealth()) {
+				local health_per_model = tank.GetMaxHealth() / 4
+				local health_threshold = tank.GetMaxHealth() - health_per_model
+				local health_stage
+
+				for (health_stage = 0; health_stage < 3; health_stage++) {
+					if (tank.GetHealth() > health_threshold)
+						break
+
+					health_threshold -= health_per_model
+				}
+
+				if (scope.lastHealthStage != health_stage && "popProperty" in scope && "TankModel" in scope.popProperty) {
+					local name = health_stage == 0 ? "Default" : "Damage" + health_stage
+					scope.changeTankModelIndex <- name
+
+					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly)) {
+						tank.SetModelSimple(scope.popProperty.TankModel[name])
+					}
+
+					SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 0)
+					SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 3)
+				}
+
+				scope.lastHealth = tank.GetHealth()
+				scope.lastHealthStage = health_stage
+			}
+		}
+	}
+
+	for (local i = 0; i < MAX_CLIENTS; i++) {
+		local player = PlayerInstanceFromIndex(i)
+		if (player == null) continue
+
+		if (player.IsBotOfType(1337)) {
+			player.ValidateScriptScope()
+			local scope = player.GetScriptScope()
+
+			local alive = PopExtUtil.IsAlive(player)
+			if (alive && !("botCreated" in scope)) {
+				scope.botCreated <- true
+
+				foreach(tag, table in robotTags) {
+					if (player.HasBotTag(tag)) {
+						scope.popFiredDeathHook <- false
+						PopHooksScope.AddHooksToScope(tag, table, scope)
+
+						if ("OnSpawn" in table)
+							table.OnSpawn(player, tag)
+					}
+				}
+			}
+			// Make sure that ondeath hook is fired always
+			if (!alive && "popFiredDeathHook" in scope) {
+				local scope = player.GetScriptScope() // TODO: we already got scope above?
+				if (!scope.popFiredDeathHook)
+					PopHooksScope.FireHooksParam(player, scope, "OnDeath", null)
+
+				delete scope.popFiredDeathHook
+			}
+		}
+	}
+
+	return -1
+}
