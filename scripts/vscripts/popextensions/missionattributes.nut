@@ -1,5 +1,10 @@
 const EFL_USER = 1048576
 
+if (!("ScriptLoadTable" in ROOT))
+	::ScriptLoadTable   <- {}
+if (!("ScriptUnloadTable" in ROOT))
+	::ScriptUnloadTable <- {}
+
 ::MissionAttributes <- {
 
 	CurAttrs = {} // Array storing currently modified attributes.
@@ -71,12 +76,16 @@ const EFL_USER = 1048576
 
 		function OnGameEvent_mvm_mission_complete(params) {
 
+			foreach (_, func in ScriptUnloadTable) func()
 			MissionAttributes.ResetConvars()
 			DoEntFire("popext_missionattr_ent", "Kill", "", -1, null, null)
 			delete ::MissionAttributes
 		}
 	}
 };
+
+foreach (_, func in ScriptLoadTable) func()
+
 __CollectGameEventCallbacks(MissionAttributes.Events);
 
 // Mission Attribute Functions
@@ -104,6 +113,7 @@ function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessa
 function MissionAttributes::ResetConvars(hideChatMessage = true) {
 
 	local commentaryNode = FindByClassname(null, "point_commentary_node")
+	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {})
 
 	foreach (convar, value in MissionAttributes.ConVars) Convars.SetValue(convar, value)
 	MissionAttributes.ConVars.clear()
@@ -589,6 +599,21 @@ function MissionAttributes::MissionAttr(...) {
 	// TODO: Make PlayersAreRobots 16 and HandModelOverride incompatible
 
 	case "PlayersAreRobots":
+		// Doesn't work
+		ScriptLoadTable.PlayersAreRobotsReset <- function() {
+			DoEntFire("__bot_bonemerge_model", "Kill", "", -1, null, null)
+			printl("TEST TEST TEST")
+			foreach (player in PopExtUtil.HumanArray) {
+				player.ValidateScriptScope()
+				local scope = player.GetScriptScope()
+				
+				EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[player.GetPlayerClass()]), -1, null, null)
+				SetPropInt(player, "m_clrRender", 0xFFFFFF)
+				SetPropInt(player, "m_nRenderMode", 0)
+			}
+			delete ScriptLoadTable.PlayersAreRobotsReset
+		}
+		
 		function MissionAttributes::PlayersAreRobots(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
@@ -1012,7 +1037,9 @@ function MissionAttributes::MissionAttr(...) {
 			if (player.IsBotOfType(1337)) return
 
 			player.RemoveCond(value)
-			EntFireByHandle(player, "RunScriptCode", format("self.AddCond(%d)", value), -1, null, null)
+			
+			local duration = (args.len() > 2) ? args[2] : -1
+			EntFireByHandle(player, "RunScriptCode", format("self.AddCondEx(%d, %f, null)", value, duration), -1, null, null)
 		}
 		MissionAttributes.SpawnHookTable.AddPlayerCond <- MissionAttributes.AddPlayerCond
 	break

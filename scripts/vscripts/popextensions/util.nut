@@ -173,6 +173,23 @@
 				if (player != null && PopExtUtil.PlayerArray.find(player) == null)
 					PopExtUtil.PlayerArray.append(player)
 			}
+			
+			foreach (player in PopExtUtil.PlayerArray) {
+				player.ValidateScriptScope()
+				local scope = player.GetScriptScope()
+				
+				local ignore_table = {
+					"self"      : null
+					"__vname"   : null
+					"__vrefs"   : null
+					"Preserved" : null
+				}
+				foreach (k, v in scope) {
+					if (k in ignore_table) continue
+					
+					delete scope[k]
+				}
+			}
 		}
 
 		function OnGameEvent_post_inventory_application(params) {

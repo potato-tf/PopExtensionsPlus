@@ -1,3 +1,11 @@
+popExtEntity <- FindByName(null, "_popextensions")
+if (popExtEntity == null) {
+	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popextensions" })
+}
+
+popExtEntity.ValidateScriptScope()
+PopExtScope <- popExtEntity.GetScriptScope()
+
 ::PopHooksScope <- {
 
 	tankIcons = []
