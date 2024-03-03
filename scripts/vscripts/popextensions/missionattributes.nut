@@ -1091,6 +1091,17 @@ function MissionAttributes::MissionAttr(...) {
 	break
 
 	// =========================================================
+	case "AddCond":
+		function MissionAttributes::AddCond(params) {
+			local player = GetPlayerFromUserID(params.userid)
+			if (player.IsBotOfType(1337)) return
+			if (value.len() == 1)
+				player.AddCond(value[0])
+			else
+				player.AddCondEx(value[0], value[1], null)
+		}
+	break
+	// =========================================================
 
 	case "ItemAttributes":
 		function MissionAttributes::ItemAttributes(params) {
