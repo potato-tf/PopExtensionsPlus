@@ -182,8 +182,6 @@
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
-			if (!("MyWeaponsArray" in scope)) scope.MyWeaponsArray <- {}
-
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
 			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }

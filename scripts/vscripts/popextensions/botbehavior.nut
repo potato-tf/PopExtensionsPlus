@@ -45,7 +45,7 @@ class AI_Bot {
 
 	function IsVisible(target) {
 		local trace = {
-			start  = cur_eye_pos,
+			start  = bot.EyePosition(),
 			end    = target.EyePosition(),
 			mask   = 16513, // CONTENTS_SOLID|CONTENTS_OPAQUE|CONTENTS_MOVEABLE
 			ignore = bot
@@ -59,7 +59,7 @@ class AI_Bot {
 	}
 
 	function GetThreatDistanceSqr(target) {
-		printl(target.GetOrigin())
+		printl(cur_pos)
 		return (target.GetOrigin() - bot.GetOrigin()).LengthSqr()
 	}
 
@@ -228,12 +228,12 @@ class AI_Bot {
 
 		time = Time()
 
-		foreach(_, func in scope.ThinkTable) func()
+		foreach(_, func in scope.PlayerThinkTable) func()
 
 		//SwitchToBestWeapon()
 		//DrawDebugInfo()
 
-		return 0.0
+		return -1
 	}
 
 	bot   = null

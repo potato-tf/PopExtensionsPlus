@@ -323,24 +323,24 @@ local popext_funcs =
 				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
-				local dist = AI_Bot.GetThreatDistanceSqr(projectile)
-				if (dist <= 67000 && AI_Bot.IsVisible(projectile)) {
+				local dist = AI_Bot(bot).GetThreatDistanceSqr(projectile)
+				if (dist <= 67000 && AI_Bot(bot).IsVisible(projectile)) {
 					switch (botLevel) {
 						case 1: // Basic Airblast, only deflect if in FOV
 
-							if (!AI_Bot.IsInFieldOfView(projectile))
+							if (!AI_Bot(bot).IsInFieldOfView(projectile))
 								return
 							break
 						case 2: // Advanced Airblast, deflect regardless of FOV
 
-						AI_Bot.LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
+						AI_Bot(bot).LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
 							break
 						case 3: // Expert Airblast, deflect regardless of FOV back to Sender
 
 							local owner = projectile.GetOwner()
 							if (owner != null) {
 								local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
-								AI_Bot.LookAt(owner_head, INT_MAX, INT_MAX)
+								AI_Bot(bot).LookAt(owner_head, INT_MAX, INT_MAX)
 							}
 							break
 					}
@@ -572,6 +572,13 @@ local popext_funcs =
 local tagtest = "popext_improvedairblast"
 // local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
+::BotThink <- function()
+{
+	bot.OnUpdate()
+
+	return -1
+}
+
 ::PopExtTags <- {
 
 	function AI_BotSpawn(bot) {
@@ -588,10 +595,6 @@ local tagtest = "popext_improvedairblast"
 		}
 
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
-
-		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
-
-		AddThinkToEnt(bot, "PlayerThinks")
 	}
 	function OnGameEvent_post_inventory_application(params) {
 		local bot = GetPlayerFromUserID(params.userid)
@@ -611,11 +614,7 @@ local tagtest = "popext_improvedairblast"
 
 		if (bot.GetPlayerClass() < TF_CLASS_SPY && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
-		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
-
-		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
-
-		AddThinkToEnt(bot, "PlayerThinks")
+		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {BotThink = BotThink()}
 
 		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 	}
