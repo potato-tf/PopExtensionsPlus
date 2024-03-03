@@ -72,7 +72,7 @@ const EFL_USER = 1048576
 		function OnGameEvent_mvm_mission_complete(params) {
 
 			MissionAttributes.ResetConvars()
-			DoEntFire("popext_missionattr_ent", "Kill", "", -1, null, null
+			DoEntFire("popext_missionattr_ent", "Kill", "", -1, null, null)
 			delete ::MissionAttributes
 		}
 	}
