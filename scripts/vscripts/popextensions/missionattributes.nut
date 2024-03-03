@@ -1561,6 +1561,7 @@ function MissionAttributes::MissionAttr(...) {
 				local scope = wep.GetScriptScope()
 				if (!("nextattack" in scope)) {
 					scope.nextattack <- -1
+					scope.lastattack <- -1
 				}
 
 
@@ -1632,11 +1633,6 @@ function MissionAttributes::MissionAttr(...) {
 						}
 					}
 					else if (classname == "tf_weapon_flaregun") {
-						// TODO: figure out a better system than this weapon deploy sequence for flare and sniper,
-						// the timing seems to be off or something where you can fire just after deploying and
-						// not consume ammo
-						if (sequence == 7) return // Weapon deploy
-
 						local nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
 						if (Time() < nextattack) return
 
@@ -1707,13 +1703,12 @@ function MissionAttributes::MissionAttr(...) {
 						}
 					}
 					else if (classname == "tf_weapon_sniperrifle" || itemid == ID_BAZAAR_BARGAIN || itemid == ID_CLASSIC) {
-						if (sequence == 28) return // Weapon deploy
-
-						local nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
-						if (Time() < nextattack) return
-
+						local lastfire = GetPropFloat(wep, "m_flLastFireTime")
+						if (scope.lastattack == lastfire) return
+						
+						scope.lastattack <- lastfire
 						local maxammo = GetPropIntArray(self, "m_iAmmo", wep.GetSlot() + 1)
-						if (buttons & IN_ATTACK) {
+						if (scope.lastattack > 0 && scope.lastattack < Time()) {
 							if (maxammo - 1 > -1)
 								SetPropIntArray(self, "m_iAmmo", maxammo - 1, wep.GetSlot() + 1)
 						}
