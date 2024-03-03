@@ -72,8 +72,7 @@ const EFL_USER = 1048576
 		function OnGameEvent_mvm_mission_complete(params) {
 
 			MissionAttributes.ResetConvars()
-			local popexent = FindByName(null, "popext_missionattr_ent")
-			if (popextent != null) popextent.Kill()
+			DoEntFire("popext_missionattr_ent", "Kill", "", -1, null, null
 			delete ::MissionAttributes
 		}
 	}
@@ -729,14 +728,14 @@ function MissionAttributes::MissionAttr(...) {
 
 				if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value & 1)
 				{
-					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[player.GetPlayerClass()]), -1, null, null)
-					if (value & 2) activator.GenerateAndWearItem(format("Zombie %s",classes[player.GetPlayerClass()]))
+					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[player.GetPlayerClass()]), -1, null, null)
+					if (value & 2) activator.GenerateAndWearItem(format("Zombie %s",PopExtUtil.Classes[player.GetPlayerClass()]))
 				}
 
 				if (player.GetTeam() == TF_TEAM_PVE_DEFENDERS && value & 4)
 				{
-					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classes[player.GetPlayerClass()]), -1, null, null)
-					if (value & 8) activator.GenerateAndWearItem(format("Zombie %s",classes[player.GetPlayerClass()]))
+					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[player.GetPlayerClass()]), -1, null, null)
+					if (value & 8) activator.GenerateAndWearItem(format("Zombie %s",PopExtUtil.Classes[player.GetPlayerClass()]))
 				}
 			}
 
@@ -1339,6 +1338,10 @@ function MissionAttributes::MissionAttr(...) {
 	break
 
 	case "ReverseMVM":
+		// Prevent bots on red team from hogging slots so players can always join and get switched to blue
+		// TODO: Needs testing
+		MissionAttributes.SetConvar("tf_mvm_defenders_team_size", 999)
+	
 		function MissionAttributes::ReverseMVMThink() {
 			// Enforce max team size
 			local player_count  = 0
@@ -1354,7 +1357,6 @@ function MissionAttributes::MissionAttr(...) {
 			}
 
 			// Readying up starts the round
-			// TODO: For some reason the round just starts itsself when you spawn sometimes??
 			if (!PopExtUtil.IsWaveStarted) {
 				local ready = PopExtUtil.GetPlayerReadyCount()
 				if (ready > 0 && ready >= PopExtUtil.HumanArray.len() && !("WaveStartCountdown" in MissionAttributes) && GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime") >= Time() + 12.0)
