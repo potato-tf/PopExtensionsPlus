@@ -51,6 +51,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		delete ::VCD_SOUNDSCRIPT_MAP
 		delete ::PopExtUtil
 
+		delete ::__popname
 		delete ::Main
 	}
 }
