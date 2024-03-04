@@ -56,7 +56,6 @@ if (!("ScriptUnloadTable" in ROOT))
 			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
 
 			AddThinkToEnt(player, "PlayerThinks")
-			
 
 			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 		}
@@ -1033,8 +1032,8 @@ function MissionAttributes::MissionAttr(...) {
 	
 	// =========================================================
 	
-	case "AddPlayerCond":
-		function MissionAttributes::AddPlayerCond(params) {
+	case "AddCond":
+		function MissionAttributes::AddCond(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
@@ -1043,7 +1042,7 @@ function MissionAttributes::MissionAttr(...) {
 			local duration = (args.len() > 2) ? args[2] : -1
 			EntFireByHandle(player, "RunScriptCode", format("self.AddCondEx(%d, %f, null)", value, duration), -1, null, null)
 		}
-		MissionAttributes.SpawnHookTable.AddPlayerCond <- MissionAttributes.AddPlayerCond
+		MissionAttributes.SpawnHookTable.AddCond <- MissionAttributes.AddCond
 	break
 
 	// =========================================================
