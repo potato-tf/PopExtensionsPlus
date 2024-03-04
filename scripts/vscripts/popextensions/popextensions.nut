@@ -7,26 +7,26 @@ if (popExtEntity == null) {
 }
 
 popExtEntity.ValidateScriptScope()
-PopExtScope <- popExtEntity.GetScriptScope()
+PopExt <- popExtEntity.GetScriptScope()
 
-PopExtScope.robotTags         <- {}
-PopExtScope.tankNames         <- {}
-PopExtScope.tankNamesWildcard <- {}
+PopExt.robotTags         <- {}
+PopExt.tankNames         <- {}
+PopExt.tankNamesWildcard <- {}
 
 popExtThinkFuncSet <- false
 AddThinkToEnt(popExtEntity, null)
 
 PrecacheModel("models/weapons/w_models/w_rocket.mdl")
 
-function PopExtScope::AddRobotTag(tag, table) {
+function PopExt::AddRobotTag(tag, table) {
 	if (!popExtThinkFuncSet) {
 		AddThinkToEnt(popExtEntity, "PopulatorThink")
 		popExtThinkFuncSet = true
 	}
-	PopExtScope.robotTags[tag] <- table
+	PopExt.robotTags[tag] <- table
 }
 
-function PopExtScope::AddTankName(name, table) {
+function PopExt::AddTankName(name, table) {
 	if (!popExtThinkFuncSet) {
 		AddThinkToEnt(popExtEntity, "PopulatorThink")
 		popExtThinkFuncSet = true
@@ -36,13 +36,13 @@ function PopExtScope::AddTankName(name, table) {
 	local wildcard = name[name.len() - 1] == '*'
 	if (wildcard) {
 		name = name.slice(0, name.len() - 1)
-		PopExtScope.tankNamesWildcard[name] <- table
+		PopExt.tankNamesWildcard[name] <- table
 	}
 	else
-		PopExtScope.tankNames[name] <- table
+		PopExt.tankNames[name] <- table
 }
 
-function PopExtScope::_PopIncrementTankIcon(icon) {
+function PopExt::_PopIncrementTankIcon(icon) {
 	local flags = MVM_CLASS_FLAG_NORMAL
 	if (icon.isCrit) {
 		flags = flags | MVM_CLASS_FLAG_ALWAYSCRIT
@@ -57,11 +57,11 @@ function PopExtScope::_PopIncrementTankIcon(icon) {
 		flags = flags | MVM_CLASS_FLAG_SUPPORT_LIMITED
 	}
 
-	PopExtScope.DecrementWaveIconSpawnCount("tank", MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS | (icon.isSupport ? MVM_CLASS_FLAG_SUPPORT : 0) | (icon.isSupportLimited ? MVM_CLASS_FLAG_SUPPORT_LIMITED : 0), icon.count, false)
-	PopExtScope.IncrementWaveIconSpawnCount(icon.name, flags, icon.count, false)
+	PopExt.DecrementWaveIconSpawnCount("tank", MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS | (icon.isSupport ? MVM_CLASS_FLAG_SUPPORT : 0) | (icon.isSupportLimited ? MVM_CLASS_FLAG_SUPPORT_LIMITED : 0), icon.count, false)
+	PopExt.IncrementWaveIconSpawnCount(icon.name, flags, icon.count, false)
 }
 
-function PopExtScope::_PopIncrementIcon(icon) {
+function PopExt::_PopIncrementIcon(icon) {
 	local flags = MVM_CLASS_FLAG_NORMAL
 	if (icon.isCrit) {
 		flags = flags | MVM_CLASS_FLAG_ALWAYSCRIT
@@ -76,10 +76,10 @@ function PopExtScope::_PopIncrementIcon(icon) {
 		flags = flags | MVM_CLASS_FLAG_SUPPORT_LIMITED
 	}
 
-	PopExtScope.IncrementWaveIconSpawnCount(icon.name, flags, icon.count, true)
+	PopExt.IncrementWaveIconSpawnCount(icon.name, flags, icon.count, true)
 }
 
-function PopExtScope::AddCustomTankIcon(name, count, isCrit = false, isBoss = true, isSupport = false, isSupportLimited = false) {
+function PopExt::AddCustomTankIcon(name, count, isCrit = false, isBoss = true, isSupport = false, isSupportLimited = false) {
 	local icon = {
 		name      = name
 		count     = count
@@ -88,11 +88,11 @@ function PopExtScope::AddCustomTankIcon(name, count, isCrit = false, isBoss = tr
 		isSupport = isSupport
 		isSupportLimited = isSupportLimited
 	}
-	PopExtScope.tankIcons.append(icon)
-	PopExtScope._PopIncrementTankIcon(icon)
+	PopExt.tankIcons.append(icon)
+	PopExt._PopIncrementTankIcon(icon)
 }
 
-function PopExtScope::AddCustomIcon(name, count, isCrit = false, isBoss = false, isSupport = false, isSupportLimited = false) {
+function PopExt::AddCustomIcon(name, count, isCrit = false, isBoss = false, isSupport = false, isSupportLimited = false) {
 	local icon = {
 		name      = name
 		count     = count
@@ -101,19 +101,19 @@ function PopExtScope::AddCustomIcon(name, count, isCrit = false, isBoss = false,
 		isSupport = isSupport
 		isSupportLimited = isSupportLimited
 	}
-	PopExtScope.icons.append(icon)
-	PopExtScope._PopIncrementIcon(icon)
+	PopExt.icons.append(icon)
+	PopExt._PopIncrementIcon(icon)
 }
 
-function PopExtScope::SetWaveIconsFunction(func) {
-	PopExtScope.waveIconsFunction <- func
+function PopExt::SetWaveIconsFunction(func) {
+	PopExt.waveIconsFunction <- func
 	func()
 }
 
 local resource = FindByClassname(null, "tf_objective_resource")
 
 // Get wavebar spawn count of an icon with specified name and flags
-function PopExtScope::GetWaveIconSpawnCount(name, flags) {
+function PopExt::GetWaveIconSpawnCount(name, flags) {
 	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 	for (local a = 0; a < 2; a++) {
 		local suffix = a == 0 ? "" : "2"
@@ -131,7 +131,7 @@ function PopExtScope::GetWaveIconSpawnCount(name, flags) {
 // Set wavebar spawn count of an icon with specified name and flags
 // If count is set to 0, removes the icon from the wavebar
 // Can be used to put custom icons on a wavebar
-function PopExtScope::SetWaveIconSpawnCount(name, flags, count, changeMaxEnemyCount = true) {
+function PopExt::SetWaveIconSpawnCount(name, flags, count, changeMaxEnemyCount = true) {
 	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 
 	for (local a = 0; a < 2; a++) {
@@ -168,14 +168,14 @@ function PopExtScope::SetWaveIconSpawnCount(name, flags, count, changeMaxEnemyCo
 }
 // Increment wavebar spawn count of an icon with specified name and flags
 // Can be used to put custom icons on a wavebar
-function PopExtScope::IncrementWaveIconSpawnCount(name, flags, count = 1, changeMaxEnemyCount = true) {
-	PopExtScope.SetWaveIconSpawnCount(name, flags, PopExtScope.GetWaveIconSpawnCount(name, flags) + count, changeMaxEnemyCount)
+function PopExt::IncrementWaveIconSpawnCount(name, flags, count = 1, changeMaxEnemyCount = true) {
+	PopExt.SetWaveIconSpawnCount(name, flags, PopExt.GetWaveIconSpawnCount(name, flags) + count, changeMaxEnemyCount)
 	return 0
 }
 
 // Increment wavebar spawn count of an icon with specified name and flags
 // Use it to decrement the spawn count when the enemy is killed. Should not be used for support type icons
-function PopExtScope::DecrementWaveIconSpawnCount(name, flags, count = 1, changeMaxEnemyCount = false) {
+function PopExt::DecrementWaveIconSpawnCount(name, flags, count = 1, changeMaxEnemyCount = false) {
 	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 
 	for (local a = 0; a < 2; a++) {
@@ -203,7 +203,7 @@ function PopExtScope::DecrementWaveIconSpawnCount(name, flags, count = 1, change
 }
 
 // Used for mission and support limited bots to display them on a wavebar during the wave, set by the game automatically when an enemy with this icon spawn
-function PopExtScope::SetWaveIconActive(name, flags, active) {
+function PopExt::SetWaveIconActive(name, flags, active) {
 	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 	for (local a = 0; a < 2; a++) {
 		local suffix = a == 0 ? "" : "2";
@@ -218,7 +218,7 @@ function PopExtScope::SetWaveIconActive(name, flags, active) {
 }
 
 // Used for mission and support limited bots to display them on a wavebar during the wave, set by the game automatically when an enemy with this icon spawn
-function PopExtScope::GetWaveIconActive(name, flags) {
+function PopExt::GetWaveIconActive(name, flags) {
 	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 	for (local a = 0; a < 2; a++) {
 		local suffix = a == 0 ? "" : "2";

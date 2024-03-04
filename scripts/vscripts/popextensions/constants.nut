@@ -31,6 +31,30 @@ foreach(k, v in ::EntityOutputs.getclass())
 	if (k != "IsValid" && !(k in ROOT))
 		ROOT[k] <- ::EntityOutputs[k].bindenv(::EntityOutputs)
 
+const MATTR_ERROR = "MissionAttr ERROR: "
+const STRING_NETPROP_ITEMDEF = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
+const TEST = "m_AttributeManager.m_Item.m_AttributeList.m_Attributes"
+
+// Clientprint chat colors
+const COLOR_LIME       = "22FF22"
+const COLOR_YELLOW     = "FFFF66"
+const TF_COLOR_RED     = "FF3F3F"
+const TF_COLOR_BLUE    = "99CCFF"
+const TF_COLOR_SPEC    = "CCCCCC"
+const TF_COLOR_DEFAULT = "FBECCB"
+
+const INT_COLOR_WHITE = 16777215
+
+// CONST.COLOR_END <- "\x07"
+// CONST.COLOR_DEFAULT <- "\x07FBECCB"
+// CONST.COLOR_BLUE <- "\x07FF3F3F"
+// CONST.COLOR_RED <- "\x07FF3F3F"
+// CONST.COLOR_SPECTATOR <- "\x07CCCCCC"
+// CONST.COLOR_NAVY_BLUE <- "\x071337AD"
+// CONST.COLOR_DEEP_RED <- "\x07FF0000"
+// CONST.COLOR_LIME <- "\x0722FF22"
+// CONST.COLOR_YELLOW <- "\x07FFFF66"
+
 // m_iSelectedSpellIndex
 const SPELL_ROLLING    = -2
 const SPELL_EMPTY      = -1
@@ -51,28 +75,6 @@ const SPELL_BUMPER_PARACHUTE     = 13
 const SPELL_BUMPER_OVERHEAL      = 14
 const SPELL_BUMPER_BOMBHEAD      = 15
 const SPELL_COUNT = 16
-
-const MATTR_ERROR = "MissionAttr ERROR: "
-const STRING_NETPROP_ITEMDEF = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
-const TEST = "m_AttributeManager.m_Item.m_AttributeList.m_Attributes"
-
-// Clientprint chat colors
-const COLOR_LIME       = "22FF22"
-const COLOR_YELLOW     = "FFFF66"
-const TF_COLOR_RED     = "FF3F3F"
-const TF_COLOR_BLUE    = "99CCFF"
-const TF_COLOR_SPEC    = "CCCCCC"
-const TF_COLOR_DEFAULT = "FBECCB"
-
-// CONST.COLOR_END <- "\x07"
-// CONST.COLOR_DEFAULT <- "\x07FBECCB"
-// CONST.COLOR_BLUE <- "\x07FF3F3F"
-// CONST.COLOR_RED <- "\x07FF3F3F"
-// CONST.COLOR_SPECTATOR <- "\x07CCCCCC"
-// CONST.COLOR_NAVY_BLUE <- "\x071337AD"
-// CONST.COLOR_DEEP_RED <- "\x07FF0000"
-// CONST.COLOR_LIME <- "\x0722FF22"
-// CONST.COLOR_YELLOW <- "\x07FFFF66"
 
 // Weapon slots
 const SLOT_PRIMARY   = 0
@@ -161,6 +163,10 @@ const DMG_USEDISTANCEMOD     = 2097152   // DMG_SLOWBURN
 const DMG_NOCLOSEDISTANCEMOD = 131072    // DMG_POISON
 const DMG_MELEE              = 134217728 // DMG_BLAST_SURFACE
 const DMG_DONT_COUNT_DAMAGE_TOWARDS_CRIT_RATE = 67108864 //DMG_DISSOLVE
+
+//can only be used in OnTakeDamage
+const DMG_IGNORE_MAXHEALTH = 2
+const DMG_IGNORE_DEBUFFS = 4
 
 // Bot behavior flags
 // only useful for bot_generator

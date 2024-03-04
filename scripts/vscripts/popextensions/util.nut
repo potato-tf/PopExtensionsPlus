@@ -1,5 +1,4 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
-
 ::PopExtUtil <- {
 
 	HumanArray = []
@@ -36,7 +35,7 @@
 			["tf_weapon_rocketlauncher"]           = 20,
 			["tf_weapon_rocketlauncher_directhit"] = 20,
 			["tf_weapon_rocketlauncher_airstrike"] = 20,
-			[237] = 60,
+			[ID_ROCKET_JUMPER] = 60,
 
 			["tf_weapon_shotgun_soldier"] = 32,
 			["tf_weapon_shotgun"]         = 32,
@@ -54,7 +53,7 @@
 			["tf_weapon_cannon"]          = 16,
 
 			["tf_weapon_pipebomblauncher"] = 24,
-			[265] = 72,
+			[ID_STICKY_JUMPER] = 72,
 		},
 		[TF_CLASS_HEAVYWEAPONS] = {
 			["tf_weapon_minigun"]     = 200,
@@ -66,7 +65,7 @@
 			["tf_weapon_shotgun"]                 = 32,
 			["tf_weapon_sentry_revenge"]          = 32,
 			["tf_weapon_shotgun_building_rescue"] = 16,
-			[9] = 32,
+			[ID_ENGINEERS_SHOTGUN] = 32,
 
 			["tf_weapon_pistol"] = 200,
 		},
@@ -172,23 +171,6 @@
 	
 				if (player != null && PopExtUtil.PlayerArray.find(player) == null)
 					PopExtUtil.PlayerArray.append(player)
-			}
-			
-			foreach (player in PopExtUtil.PlayerArray) {
-				player.ValidateScriptScope()
-				local scope = player.GetScriptScope()
-				
-				local ignore_table = {
-					"self"      : null
-					"__vname"   : null
-					"__vrefs"   : null
-					"Preserved" : null
-				}
-				foreach (k, v in scope) {
-					if (k in ignore_table) continue
-					
-					delete scope[k]
-				}
 			}
 		}
 

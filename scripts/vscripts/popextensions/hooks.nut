@@ -1,12 +1,12 @@
-popExtEntity <- FindByName(null, "_popextensions")
+popExtEntity <- FindByName(null, "_popextensions_hooks")
 if (popExtEntity == null) {
-	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popextensions" })
+	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popextensions_hooks" })
 }
 
 popExtEntity.ValidateScriptScope()
-PopExtScope <- popExtEntity.GetScriptScope()
+PopExt <- popExtEntity.GetScriptScope()
 
-::PopHooksScope <- {
+::PopExtHooks <- {
 
 	tankIcons = []
 	icons 	  = []
@@ -68,13 +68,13 @@ PopExtScope <- popExtEntity.GetScriptScope()
 			local victim = params.const_entity
 			if (victim != null && ((victim.IsPlayer() && victim.IsBotOfType(1337)) || victim.GetClassname() == "tank_boss")) {
 				local scope = victim.GetScriptScope()
-				PopHooksScope.FireHooksParam(victim, scope, "OnTakeDamage", params)
+				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamage", params)
 			}
 	
 			local attacker = params.attacker
 			if (attacker != null && attacker.IsPlayer() && attacker.IsBotOfType(1337)) {
 				local scope = attacker.GetScriptScope()
-				PopHooksScope.FireHooksParam(attacker, scope, "OnDealDamage", params)
+				PopExtHooks.FireHooksParam(attacker, scope, "OnDealDamage", params)
 			}
 		}
 	
@@ -82,9 +82,8 @@ PopExtScope <- popExtEntity.GetScriptScope()
 			local player = GetPlayerFromUserID(params.userid)
 	
 			if (player.GetScriptScope() != null && "popWearablesToDestroy" in player.GetScriptScope()) {
-				foreach(i, wearable in player.GetScriptScope().popWearablesToDestroy)
-					if (wearable.IsValid())
-						EntFireByHandle(wearable, "Kill", "", -1, null, null)
+				foreach(wearable in player.GetScriptScope().popWearablesToDestroy)
+					if (wearable.IsValid()) EntFireByHandle(wearable, "Kill", "", -1, null, null)
 	
 				delete player.GetScriptScope().popWearablesToDestroy
 			}
@@ -95,7 +94,40 @@ PopExtScope <- popExtEntity.GetScriptScope()
 	
 				if ("popFiredDeathHook" in scope) {
 					if (!scope.popFiredDeathHook)
-						PopHooksScope.FireHooksParam(player, scope, "OnDeath", null)
+						PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)
+	
+					delete scope.popFiredDeathHook
+				}
+	
+				// Reset hooks
+				if ("botCreated" in scope)
+					delete scope.botCreated
+	
+				if ("popHooks" in scope)
+					delete scope.popHooks
+	
+			}
+		}
+		function OnGameEvent_player_team(params) {
+			
+			if (params.team != TEAM_SPECTATOR) return
+
+			local player = GetPlayerFromUserID(params.userid)
+
+			if (player.GetScriptScope() != null && "popWearablesToDestroy" in player.GetScriptScope()) {
+				foreach(wearable in player.GetScriptScope().popWearablesToDestroy)
+					if (wearable.IsValid()) EntFireByHandle(wearable, "Kill", "", -1, null, null)
+	
+				delete player.GetScriptScope().popWearablesToDestroy
+			}
+	
+			if (player != null && player.IsBotOfType(1337)) {
+				player.ValidateScriptScope()
+				local scope = player.GetScriptScope()
+	
+				if ("popFiredDeathHook" in scope) {
+					if (!scope.popFiredDeathHook)
+						PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)
 	
 					delete scope.popFiredDeathHook
 				}
@@ -114,13 +146,13 @@ PopExtScope <- popExtEntity.GetScriptScope()
 			local victim = GetPlayerFromUserID(params.userid)
 			if (victim != null && victim.IsBotOfType(1337)) {
 				local scope = victim.GetScriptScope()
-				PopHooksScope.FireHooksParam(victim, scope, "OnTakeDamagePost", params)
+				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamagePost", params)
 			}
 	
 			local attacker = GetPlayerFromUserID(params.attacker)
 			if (attacker != null && attacker.IsBotOfType(1337)) {
 				local scope = attacker.GetScriptScope()
-				PopHooksScope.FireHooksParam(attacker, scope, "OnDealDamagePost", params)
+				PopExtHooks.FireHooksParam(attacker, scope, "OnDealDamagePost", params)
 			}
 		}
 	
@@ -129,13 +161,13 @@ PopExtScope <- popExtEntity.GetScriptScope()
 			if (player != null && player.IsBotOfType(1337)) {
 				local scope = player.GetScriptScope()
 				scope.popFiredDeathHook <- true
-				PopHooksScope.FireHooksParam(player, scope, "OnDeath", params)
+				PopExtHooks.FireHooksParam(player, scope, "OnDeath", params)
 			}
 	
 			local attacker = GetPlayerFromUserID(params.attacker)
 			if (attacker != null && attacker.IsBotOfType(1337)) {
 				local scope = attacker.GetScriptScope()
-				PopHooksScope.FireHooksParam(attacker, scope, "OnKill", params)
+				PopExtHooks.FireHooksParam(attacker, scope, "OnKill", params)
 			}
 	
 			if (player.GetScriptScope() != null && "popWearablesToDestroy" in player.GetScriptScope()) {
@@ -153,7 +185,7 @@ PopExtScope <- popExtEntity.GetScriptScope()
 				local scope = victim.GetScriptScope()
 				local dead  = (victim.GetHealth() - params.damageamount) <= 0
 	
-				PopHooksScope.FireHooksParam(victim, scope, "OnTakeDamagePost", params)
+				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamagePost", params)
 	
 				if (dead && !("popFiredDeathHook" in scope)) {
 					scope.popFiredDeathHook <- true
@@ -175,31 +207,31 @@ PopExtScope <- popExtEntity.GetScriptScope()
 						DecrementWaveIconSpawnCount(icon.name, flags, 1, false)
 					}
 	
-					PopHooksScope.FireHooksParam(victim, scope, "OnDeath", params)
+					PopExtHooks.FireHooksParam(victim, scope, "OnDeath", params)
 				}
 			}
 		}
 		function OnGameEvent_mvm_begin_wave(params) {
-			if ("waveIconsFunction" in PopExtScope)
-				PopExtScope.waveIconsFunction()
+			if ("waveIconsFunction" in PopExt)
+				PopExt.waveIconsFunction()
 		
-			foreach(i, v in PopHooksScope.tankIcons)
+			foreach(i, v in PopExtHooks.tankIcons)
 				_PopIncrementTankIcon(v)
 		
-			foreach(i, v in PopHooksScope.icons)
+			foreach(i, v in PopExtHooks.icons)
 				_PopIncrementIcon(v)
 		
 		}
 		function OnGameEvent_teamplay_round_start(params) {
-			if ("waveIconsFunction" in PopExtScope)
-				delete PopExtScope.waveIconsFunction
+			if ("waveIconsFunction" in PopExt)
+				delete PopExt.waveIconsFunction
 		
 			tankIcons <- []
 			icons     <- []
 		}
 	}
 }
-__CollectGameEventCallbacks(PopHooksScope.Events)
+__CollectGameEventCallbacks(PopExtHooks.Events)
 function PopulatorThink() {
 
 	for (local tank; tank = FindByClassname(tank, "tank_boss");) {
@@ -212,7 +244,7 @@ function PopulatorThink() {
 
 			foreach(name, table in tankNamesWildcard) {
 				if (name == tankName || name == tankName.slice(0, name.len())) {
-					PopHooksScope.AddHooksToScope(tankName, table, scope)
+					PopExtHooks.AddHooksToScope(tankName, table, scope)
 
 					if ("OnSpawn" in table)
 						table.OnSpawn(tank, tankName)
@@ -221,7 +253,7 @@ function PopulatorThink() {
 
 			if (tankName in tankNames) {
 				local table = tankNames[tankName]
-				PopHooksScope.AddHooksToScope(tankName, table, scope)
+				PopExtHooks.AddHooksToScope(tankName, table, scope)
 
 				if ("OnSpawn" in table)
 					table.OnSpawn(tank, tankName)
@@ -360,7 +392,7 @@ function PopulatorThink() {
 				foreach(tag, table in robotTags) {
 					if (player.HasBotTag(tag)) {
 						scope.popFiredDeathHook <- false
-						PopHooksScope.AddHooksToScope(tag, table, scope)
+						PopExtHooks.AddHooksToScope(tag, table, scope)
 
 						if ("OnSpawn" in table)
 							table.OnSpawn(player, tag)
@@ -371,7 +403,7 @@ function PopulatorThink() {
 			if (!alive && "popFiredDeathHook" in scope) {
 				local scope = player.GetScriptScope() // TODO: we already got scope above?
 				if (!scope.popFiredDeathHook)
-					PopHooksScope.FireHooksParam(player, scope, "OnDeath", null)
+					PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)
 
 				delete scope.popFiredDeathHook
 			}

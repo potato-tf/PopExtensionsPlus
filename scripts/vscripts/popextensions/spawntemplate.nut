@@ -1,13 +1,13 @@
 // By washy
-PopExtScope.waveSchedulePointTemplates <- []
-PopExtScope.wavePointTemplates         <- []
-PopExtScope.globalTemplateSpawnCount   <- 0
+PopExt.waveSchedulePointTemplates <- []
+PopExt.wavePointTemplates         <- []
+PopExt.globalTemplateSpawnCount   <- 0
 
 ::SpawnTemplate <- {
 	//spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
 	function SpawnTemplate(pointtemplate, parent = null, origin = Vector(), angles = QAngle()) {
 		// credit to ficool2
-		PopExtScope.globalTemplateSpawnCount <- PopExtScope.globalTemplateSpawnCount + 1
+		PopExt.globalTemplateSpawnCount <- PopExt.globalTemplateSpawnCount + 1
 
 		local template = SpawnEntityFromTable("point_script_template", {})
 		local scope = template.GetScriptScope()
@@ -40,7 +40,7 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 				}
 
 				scope.SpawnedEntities.append(entity)
-				PopExtScope.wavePointTemplates.append(entity)
+				PopExt.wavePointTemplates.append(entity)
 
 				if (parent != null) {
 					//this function is defined in popextensions.nut
@@ -173,14 +173,14 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 								foreach(targetname in scope.EntityFixedUpTargetName) {
 									if (value.find(targetname) != null && value.find("/") == null) //ignore potential file paths, also ignores targetnames with "/"
 									{
-										keyvalues[key] <- value.slice(0, targetname.len()) + PopExtScope.globalTemplateSpawnCount + value.slice(targetname.len())
+										keyvalues[key] <- value.slice(0, targetname.len()) + PopExt.globalTemplateSpawnCount + value.slice(targetname.len())
 									}
 								}
 							}
 						}
 					}
 				}
-				if (index == "RemoveIfKilled") scope.removeifkilled <- entity + PopExtScope.globalTemplateSpawnCount
+				if (index == "RemoveIfKilled") scope.removeifkilled <- entity + PopExt.globalTemplateSpawnCount
 			}
 		}
 
@@ -238,23 +238,23 @@ PopExtScope.globalTemplateSpawnCount   <- 0
 	//altenative version of SpawnTemplate that will recreate itself only after wave resets (after failure, after voting, after using tf_mvm_jump_to_wave) to imitate spawning in WaveSchedule
 	//does not accept parent parameter, does not allow parenting entities
 	function SpawnTemplateWaveSchedule(pointtemplate, origin = null, angles = null) {
-		PopExtScope.waveSchedulePointTemplates.append([pointtemplate, origin, angles])
+		PopExt.waveSchedulePointTemplates.append([pointtemplate, origin, angles])
 	}
 
 	//hook to both of these events to emulate OnWaveInit
 	Events = {
 		function OnGameEvent_mvm_wave_complete(params) {
-			foreach(entity in PopExtScope.wavePointTemplates)
+			foreach(entity in PopExt.wavePointTemplates)
 				if (entity.IsValid())
 					entity.Kill()
 	
-			PopExtScope.wavePointTemplates.clear()
+			PopExt.wavePointTemplates.clear()
 		}
 	
 		function OnGameEvent_mvm_wave_failed(params) //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
 		{
 			//messy
-			foreach(param in PopExtScope.waveSchedulePointTemplates) {
+			foreach(param in PopExt.waveSchedulePointTemplates) {
 				SpawnTemplate(param[0], null, param[1], param[2])
 			}
 		}

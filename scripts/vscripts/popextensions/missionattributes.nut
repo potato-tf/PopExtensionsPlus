@@ -97,7 +97,7 @@ if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_te
 function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessage = true) {
 
 	local commentaryNode = FindByClassname(null, "point_commentary_node")
-	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {})
+	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
 
 	//save original values to restore later
 	if (!(convar in MissionAttributes.ConVars)) MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
@@ -105,19 +105,19 @@ function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessa
 	if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value)
 
 	if (duration > 0) EntFire("tf_gamerules", "RunScriptCode", "MissionAttributes.SetConvar("+convar+","+MissionAttributes.ConVars[convar]+")", duration)
-
-	EntFireByHandle(commentaryNode, "Kill", "", 1.1, null, null)
+	
+	if (commentaryNode != null) EntFireByHandle(commentaryNode, "Kill", "", -1, null, null)
 }
 
 function MissionAttributes::ResetConvars(hideChatMessage = true) {
 
 	local commentaryNode = FindByClassname(null, "point_commentary_node")
-	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {})
+	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
 
 	foreach (convar, value in MissionAttributes.ConVars) Convars.SetValue(convar, value)
 	MissionAttributes.ConVars.clear()
 
-	EntFireByHandle(commentaryNode, "Kill", "", 1.1, null, null)
+	if (commentaryNode != null) EntFireByHandle(commentaryNode, "Kill", "", -1, null, null)
 }
 
 local noromecarrier = false
@@ -141,6 +141,7 @@ function MissionAttributes::MissionAttr(...) {
 	switch(attr) {
 
 	// =========================================================
+
 	case "ForceHoliday":
 		// Replicates sigsegv-mvm: ForceHoliday.
 		// Forces a tf_holiday for the mission.
@@ -253,6 +254,21 @@ function MissionAttributes::MissionAttr(...) {
 		SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value)
 	break
 
+	// =========================================================
+	case "NegativeDmgHeals":
+		function MissionAttributes::NegativeDmgHeals(params) {
+			local player = const_entity
+
+			if (!player.IsPlayer() || damage > 0) return
+
+			if ((value == 2 && player.GetHealth() - damage > player.GetMaxHealth()) || //don't overheal is value is 2
+			(value == 1 && player.GetHealth() - damage > player.GetMaxHealth() * 1.5)) return //don't go past max overheal if value is 1
+
+			player.SetHealth(player.GetHealth() - damage)
+			
+		}
+		MissionAttributes.TakeDamageTable.NegativeDmgHeals <- MissionAttributes.NegativeDmgHeals
+	break
 	// =========================================================
 
 	case "MultiSapper":

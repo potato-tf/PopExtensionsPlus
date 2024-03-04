@@ -63,13 +63,17 @@ local popext_funcs =
 				if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
 					killrome.append(child)
 
-		//all bots only have 2 cosmetics
-		killrome[0].Kill()
-		killrome[1].Kill()
+		for(local i = killrome.len() - 1; i >= 0; i--) killrome[i].Kill()
 
 		local cosmetics = PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()]
 
-		foreach (cosmetic in cosmetics) self.GenerateAndWearItem(cosmetic)
+		if (self.GetModelName() == `models/bots/demo/bot_sentry_buster.mdl`)
+		{
+			PopExtUtil.CreatePlayerWearable(self, PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()][2])
+			return
+		}
+		foreach (cosmetic in cosmetics)
+			PopExtUtil.CreatePlayerWearable(self, cosmetic)
 		", -1, null, null)
 	}
 
@@ -567,17 +571,10 @@ local popext_funcs =
 //local tagtest = "popext_homingprojectile|1.0|1.0"
 // local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
 // local tagtest = "popext_dispenseroverride"
-// local tagtest = "popext_forceromevision"
+local tagtest = "popext_forceromevision"
 // local tagtest = "popext_aimat|head"
-local tagtest = "popext_improvedairblast"
+// local tagtest = "popext_improvedairblast"
 // local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
-
-::BotThink <- function()
-{
-	bot.OnUpdate()
-
-	return -1
-}
 
 ::PopExtTags <- {
 
@@ -595,6 +592,11 @@ local tagtest = "popext_improvedairblast"
 		}
 
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
+	}
+	function BotThink()
+	{
+		bot.OnUpdate()
+		return -1
 	}
 	function OnGameEvent_post_inventory_application(params) {
 		local bot = GetPlayerFromUserID(params.userid)
@@ -614,7 +616,7 @@ local tagtest = "popext_improvedairblast"
 
 		if (bot.GetPlayerClass() < TF_CLASS_SPY && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
-		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {BotThink = BotThink()}
+		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {BotThink = PopExtTags.BotThink()}
 
 		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 	}
