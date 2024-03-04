@@ -12,10 +12,12 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 
 	function PlayerCleanup(player) {
 		NetProps.SetPropInt(player, "m_nRenderMode", 0)
-		NetProps.SetPropInt(player, "m_clrRender", 16777215)
+		NetProps.SetPropInt(player, "m_clrRender", 0xFFFFFF)
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
-		if (scope.len() < 3) return
+
+		if (scope.len() < 4) return
+
 		local ignore_table = {
 			"self"      : null
 			"__vname"   : null
