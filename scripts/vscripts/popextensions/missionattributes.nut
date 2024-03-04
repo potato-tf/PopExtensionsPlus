@@ -600,6 +600,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "PlayersAreRobots":
 		// Doesn't work
+		/*
 		ScriptLoadTable.PlayersAreRobotsReset <- function() {
 			DoEntFire("__bot_bonemerge_model", "Kill", "", -1, null, null)
 			printl("TEST TEST TEST")
@@ -613,6 +614,7 @@ function MissionAttributes::MissionAttr(...) {
 			}
 			delete ScriptLoadTable.PlayersAreRobotsReset
 		}
+		*/
 		
 		function MissionAttributes::PlayersAreRobots(params) {
 			local player = GetPlayerFromUserID(params.userid)
