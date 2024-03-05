@@ -505,11 +505,10 @@ except:
 			print(i, f': {file}')
 			popfiles[i] = file
 
-	pop = input("enter the number for the file you would like to convert: ")
-	popfile = open(popfiles.get(int(pop)),'r', errors='replace', encoding='utf-8').read()
-if file_path.endswith(".pop"):
+	file_path = input("enter the number for the file you would like to convert: ")
 
-	popfile = open(file_path,'r', encoding='utf-8').read()
+
+	popfile = open(popfiles.get(int(file_path)),'r', encoding='utf-8').read()
 
 	# Remove comments
 	while popfile.find('//') != -1:
