@@ -1,14 +1,6 @@
 // ::popExtensionsVersion <- 6; //don't bother with versioning for now since we're constantly updating it
 local root = getroottable()
 
-popExtEntity <- FindByName(null, "_popextensions")
-if (popExtEntity == null) {
-	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popextensions" vscripts="popextensions/hooks.nut" })
-}
-
-popExtEntity.ValidateScriptScope()
-PopExt <- popExtEntity.GetScriptScope()
-
 PopExt.robotTags         <- {}
 PopExt.tankNames         <- {}
 PopExt.tankNamesWildcard <- {}
