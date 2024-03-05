@@ -240,6 +240,9 @@ function PopulatorThink() {
 
 		if (!("created" in scope)) {
 			scope.created <- true
+
+			if (!("TankThinkTable" in scope)) scope.TankThinkTable <- {}
+
 			local tankName = tank.GetName().tolower()
 
 			foreach(name, table in tankNamesWildcard) {
@@ -259,6 +262,26 @@ function PopulatorThink() {
 					table.OnSpawn(tank, tankName)
 			}
 
+			// scope.startTrack <- 
+			scope.maxHealth <- tank.GetMaxHealth()
+			scope.team <- tank.GetTeam()
+
+			function Updates() {
+				this.curPos      <- self.GetOrigin()
+				this.curVel      <- self.GetAbsVelocity()
+				this.curSpeed    <- curVel.Length()
+				// scope.curTrack    <- 
+				// scope.curProgress <- 
+				this.curHealth   <- self.GetHealth()
+				this.lastHealthPercentage <- NetProps.GetPropFloat(self, "m_lastHealthPercentage")
+			}
+
+			scope.TankThinkTable.Updates <- Updates
+
+			scope.TankThinks <- function() { foreach (name, func in scope.TankThinkTable) func(); return -1 }
+
+			AddThinkToEnt(tank, "TankThinks")
+
 			if ("popProperty" in scope && "DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
 				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
 					if (child.GetClassname() != "prop_dynamic") continue
@@ -277,6 +300,14 @@ function PopulatorThink() {
 						SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | 32)
 					}
 				}
+			}
+
+			if ("popProperty" in scope && "DisableSmoke" in scope.popProperty && scope.popProperty.DisableSmoke) {
+				function DisableSmoke() {
+					//disables smokestack, will emit one smoke particle when spawning and when moving out from under low ceilings (solid brushes 300 units or lower)
+					EntFireByHandle(self, "DispatchEffect", "ParticleEffectStop", -1, null, null)
+				}
+				scope.TankThinkTable.DisableSmoke <- DisableSmoke
 			}
 
 			if ("popProperty" in scope && "TankModel" in scope.popProperty) {
