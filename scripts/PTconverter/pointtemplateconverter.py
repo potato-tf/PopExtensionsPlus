@@ -203,7 +203,7 @@ def convert_raf_keyvalues(value):
 		splitval[2] = splitval[2].replace('\\', '/')
 		if '|' in splitval[2]:
 			splitval[2] = splitval[2].split('|')[1]
-
+		splitval[-1] = splitval[-1].split('"')[0]
 	# use emitsoundex vscript function instead
 	elif not 'player' in splitval[0].lower() and '$playsoundtoself' in entinput:
 		splitval[1] = 'RunScriptCode'
@@ -449,8 +449,8 @@ def convertpointtemplates(pop, indentationnumber, depth):
 			if key[0] == '"' and key[-1] == '"':
 				key = key[1:-1]
 			if type(value) == str and value.count(',') == 4: value = convert_raf_keyvalues(value)
-			newvalue = value.replace('\\', '/').replace('""', '"')
-			if (key.lower().startswith('on') or key.lower().startswith('ou')) and (newvalue.count(',') == 2 or newvalue.count(',') == 3 or newvalue.count(',') == 4):
+			newvalue = value.replace('\\', '/')
+			if (key.lower().startswith('on') or key.lower().startswith('ou')) and (newvalue.count(',') == 2 or newvalue.count(',') == 3 or newvalue.count(',') == 4 or 'emitsoundex' in newvalue.lower()):
 				if key.lower() in uniqueoutputs.keys():
 					uniqueoutputs.update({key.lower() : uniqueoutputs[key.lower()] + 1})
 				else:
