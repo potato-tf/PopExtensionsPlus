@@ -432,6 +432,38 @@ local popext_funcs =
 
 		bot.GetScriptScope().TakeDamageTable.AddCondOnHitTakeDamage <- AddCondOnHitTakeDamage
 	}
+	popext_dropweapon = function(bot, args) {
+		function DropWeaponDeath(params) {
+			printl("dropping weapon")
+			local slot = (args.len() > 0) ? args[0].tointeger() : -1
+			local wep  = (slot == -1) ? bot.GetActiveWeapon() : PopExtUtil.GetItemInSlot(bot, slot)
+
+			if (wep == null) return
+			
+			local itemid = PopExtUtil.GetItemIndex(wep)
+
+			local wearable = CreateByClassname("tf_wearable")
+			SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+			SetPropInt(wearable, STRING_NETPROP_ITEMDEF, itemid)
+			
+			wearable.DispatchSpawn();
+			
+			local modelname = wearable.GetModelName()
+			wearable.Destroy()
+			
+			local droppedweapon = CreateByClassname("tf_dropped_weapon")
+			SetPropInt(droppedweapon, "m_Item.m_iItemDefinitionIndex", itemid)
+			SetPropInt(droppedweapon, "m_Item.m_iEntityLevel", 5)
+			SetPropInt(droppedweapon, "m_Item.m_iEntityQuality", 6)
+			SetPropBool(droppedweapon, "m_Item.m_bInitialized", true)
+			droppedweapon.SetModelSimple(modelname)
+			droppedweapon.SetOrigin(bot.GetOrigin())
+
+			droppedweapon.DispatchSpawn()
+			// Store attributes in scope, when it gets picked up add the attributes to the real weapon
+		}
+		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- DropWeaponDeath
+	}
 }
 
 ::Homing <- {
@@ -571,7 +603,7 @@ local popext_funcs =
 //local tagtest = "popext_homingprojectile|1.0|1.0"
 // local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
 // local tagtest = "popext_dispenseroverride"
-local tagtest = "popext_forceromevision"
+local tagtest = "popext_dropweapon"
 // local tagtest = "popext_aimat|head"
 // local tagtest = "popext_improvedairblast"
 // local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
@@ -646,7 +678,14 @@ local tagtest = "popext_forceromevision"
 	function OnGameEvent_player_death(params) {
 
 		local bot = GetPlayerFromUserID(params.userid)
-		if (bot.IsBotOfType(1337)) AddThinkToEnt(bot, null)
+		if (!bot.IsBotOfType(1337)) return
+		
+		bot.ValidateScriptScope()
+		local scope = bot.GetScriptScope()
+		
+		foreach (_, func in scope.DeathHookTable) func(params)
+		
+		AddThinkToEnt(bot, null)
 	}
 }
 __CollectGameEventCallbacks(PopExtTags)
