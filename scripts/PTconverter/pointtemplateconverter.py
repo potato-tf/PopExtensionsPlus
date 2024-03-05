@@ -451,11 +451,11 @@ def convertpointtemplates(pop, indentationnumber, depth):
 			if type(value) == str and value.count(',') == 4: value = convert_raf_keyvalues(value)
 			newvalue = value.replace('\\', '/').replace('""', '"')
 			if (key.lower().startswith('on') or key.lower().startswith('ou')) and (newvalue.count(',') == 2 or newvalue.count(',') == 3 or newvalue.count(',') == 4):
-				if key in uniqueoutputs.keys():
-					uniqueoutputs.update({key : uniqueoutputs[key] + 1})
+				if key.lower() in uniqueoutputs.keys():
+					uniqueoutputs.update({key.lower() : uniqueoutputs[key.lower()] + 1})
 				else:
-					uniqueoutputs.update({key : 1})
-				print('"' + key + '#' + str(uniqueoutputs[key]) + '"', end = '')
+					uniqueoutputs.update({key.lower() : 1})
+				print('"' + key + '#' + str(uniqueoutputs[key.lower()]) + '"', end = '')
 				print(" : ", end = '')
 				if newvalue[0] == '"' and newvalue[-1] == '"':
 					newvalue = newvalue[1:-1]
