@@ -486,16 +486,27 @@ def convertpointtemplates(pop, indentationnumber, depth):
 					else:
 						print(newvalue + ',')
 
+try: 
+	import tkinter as tk
+	from tkinter import filedialog
 
-import tkinter as tk
-from tkinter import filedialog
+	root = tk.Tk()
+	root.withdraw()
 
-root = tk.Tk()
-root.withdraw()
+	file_path = filedialog.askopenfilename()
+except:
+	from os import walk
+	popfiles = {}
+	for _, _, files in walk('./'):
+		i = 0
+		for file in files:
+			if not file.endswith('.pop'): continue
+			i += 1
+			print(i, f': {file}')
+			popfiles[i] = file
 
-file_path = filedialog.askopenfilename()
-
-print(file_path)
+	pop = input("enter the number for the file you would like to convert: ")
+	popfile = open(popfiles.get(int(pop)),'r', errors='replace', encoding='utf-8').read()
 if file_path.endswith(".pop"):
 
 	popfile = open(file_path,'r', encoding='utf-8').read()
