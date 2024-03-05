@@ -251,7 +251,7 @@ def convert_raf_keyvalues(value):
 		splitkey = splitval[1].split('$')
 		# log.append(f'ALERT: Converted {splitval[1]} to AddOutput {splitkey[2]}.  This may not work in some cases!')
 		splitval[1] = 'RunScriptCode'
-		splitval[2] = f'self.KeyValueFromString({splitkey[2]} {splitval[2]})'
+		splitval[2] = f'self.KeyValueFromString(`{splitkey[2]}`, `{splitval[2]}`)'
 
 	elif '$addcond' in entinput or '$removecond' in entinput:
 		# log.append(f'SUCCESS: converted {splitval[1]} to vscript alternative')
@@ -283,10 +283,10 @@ def convert_raf_keyvalues(value):
 		# log.append(f'SUCCESS: converted {splitval[1]} to SetCustomModelWithClassAnimations')
 		splitval[1] = 'SetCustomModelWithClassAnimations'
 
-	# elif '$removeoutput' in entinput:
-	# 	# log.append(f'SUCCESS: converted {splitval[1]} to SetCustomModelWithClassAnimations', COLOR['ENDC'])
-	# 	splitval[1] = 'RunScriptCode'
-	# 	splitval[2] = 'EntityOutputs.RemoveOutput(self,``,`effects`,)'
+	elif '$removeoutput' in entinput:
+		# log.append(f'SUCCESS: converted {splitval[1]} to SetCustomModelWithClassAnimations', COLOR['ENDC'])
+		splitval[1] = 'RunScriptCode'
+		splitval[2] = f'PopExtUtil.RemoveOutputAll(self, `{splitval[2]}`)'
 
 	elif '$giveitem' in entinput or '$awardandgiveextraitem' in entinput:
 		giveitem = True
