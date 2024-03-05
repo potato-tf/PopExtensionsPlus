@@ -1,6 +1,6 @@
-popExtEntity <- FindByName(null, "_popextensions_hooks")
+popExtEntity <- FindByName(null, "_popextensions")
 if (popExtEntity == null) {
-	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popextensions_hooks" })
+	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popextensions" })
 }
 
 popExtEntity.ValidateScriptScope()
