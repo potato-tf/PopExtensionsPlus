@@ -63,19 +63,19 @@ function Include(path) {
 	try IncludeScript(format("popextensions/%s", path), root) catch(e) printl(e)
 }
 
-Include("constants.nut") //constants must include first
-Include("itemdef_constants.nut") //constants must include first
-Include("util.nut") //must include second
+Include("constants") //constants must include first
+Include("itemdef_constants") //constants must include first
+Include("util") //must include second
 
-Include("hooks.nut") //must include before popextensions
-Include("popextensions.nut")
+Include("hooks") //must include before popextensions
+Include("popextensions")
 
-Include("robotvoicelines.nut") //must include before missionattributes
-Include("missionattributes.nut")
+Include("robotvoicelines") //must include before missionattributes
+Include("missionattributes")
 
-Include("botbehavior.nut") //must include before tags
-Include("tags.nut")
+Include("botbehavior") //must include before tags
+Include("tags")
 
-Include("globalfixes.nut")
-Include("spawntemplate.nut")
-Include("tutorialtools.nut")
+Include("globalfixes")
+Include("spawntemplate")
+Include("tutorialtools")
