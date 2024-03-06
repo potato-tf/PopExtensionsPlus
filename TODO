@@ -11,8 +11,6 @@ Mince:
 // TODO: (ItemAttributes / PlayerAttributes) fix attributes carrying over on classes for some reason
 // Finish LoadoutControl once we have our own giveweapon funcs
 // Change format of playerattributes and itemattributes to be consistent with loadoutcontrol
-// TODO: (EnableRandomCrits) see about using abs on the condition checks, dunno if bitwise AND will eval true for negative values
-// TODO: fix switching weapons removing random crit cond not working
 // TODO: (ReverseMVM) Need to fix players getting stuck in spec on wave fail, mission complete, etc
 // TODO: (ReverseMVM) Fix laser on sniper for human anims
 // TODO: Modify PlayersAreRobots or make a new attr for changing robot vo to human (use this in ReverseMVM)
