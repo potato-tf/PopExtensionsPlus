@@ -494,13 +494,18 @@ try:
 	root.withdraw()
 
 	file_path = filedialog.askopenfilename()
+	popfile = open(file_path, 'r', encoding='utf-8').read()
+	print(popfile)
+	
 except:
 	from os import walk
 	popfiles = {}
 	for _, _, files in walk('./'):
 		i = 0
 		for file in files:
-			if not file.endswith('.pop'): continue
+			if not file.endswith('.pop'): 
+				print('not a population file')
+				continue
 			i += 1
 			print(i, f': {file}')
 			popfiles[i] = file
@@ -510,33 +515,29 @@ except:
 
 	popfile = open(popfiles.get(int(file_path)),'r', encoding='utf-8').read()
 
-	# Remove comments
-	while popfile.find('//') != -1:
-		popfile = popfile[:popfile.find('//')] + popfile[popfile.find('\n', popfile.find('//')):]
+# Remove comments
+while popfile.find('//') != -1:
+	popfile = popfile[:popfile.find('//')] + popfile[popfile.find('\n', popfile.find('//')):]
 
-	# Remove [$SIGSEGV] tags
-	popfile = popfile.replace('[$SIGSEGV]', '')
+# Remove [$SIGSEGV] tags
+popfile = popfile.replace('[$SIGSEGV]', '')
 
-	parsed = ParseTree(popfile, 0)
+parsed = ParseTree(popfile, 0)
 
-	keylist = getpointtemplates(parsed, [])
+keylist = getpointtemplates(parsed, [])
 
-	# Save the current stdout so that we can revert sys.stdou after we complete
-	# our redirection
-	stdout_fileno = sys.stdout
-	
-	# Redirect sys.stdout to the file
-	output = open(file_path[:-4] + "_point_templates.nut", "a+")
-	sys.stdout = output
-	sys.stdout.reconfigure(encoding='utf-8')
-	
-	convertpointtemplates(keylist, 0, 0)
+# Save the current stdout so that we can revert sys.stdou after we complete
+# our redirection
+stdout_fileno = sys.stdout
 
-	# Close the file
-	sys.stdout.close()
-	# Restore sys.stdout to our old saved file handler
-	sys.stdout = stdout_fileno
+# Redirect sys.stdout to the file
+output = open(file_path[:-4] + "_point_templates.nut", "a+")
+sys.stdout = output
+sys.stdout.reconfigure(encoding='utf-8')
 
+convertpointtemplates(keylist, 0, 0)
 
-else:
-	print("Not a population file (.pop)")
+# Close the file
+sys.stdout.close()
+# Restore sys.stdout to our old saved file handler
+sys.stdout = stdout_fileno
