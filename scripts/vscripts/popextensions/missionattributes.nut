@@ -1136,107 +1136,105 @@ function MissionAttributes::MissionAttr(...) {
 	break
 
 	// =========================================================
-
-	case "ItemWhitelist":
-		if (typeof value != "array") {
-			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
-			success = false
-			break
-		}
-
-		PopExtUtil.ItemWhitelist = value
-		if (value.len() == 0) return
-
-		function MissionAttributes::ItemWhitelist(params) {
+	
+	// TODO: once we have our own giveweapon functions, finish this
+	case "LoadoutControl":
+		function MissionAttributes::LoadoutControl(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-
+			
 			function HasVal(arr, val) foreach (v in arr) if (v == val) return true
-			for (local i = 0; i < SLOT_COUNT; i++) {
+			function IsInMultiList(arr, val) {
+				if (arr.len() <= 0) return false
+				
+				local in_list = false
+				foreach (a in arr) {
+					if (HasVal(a, val)) {
+						in_list = true
+						break
+					}
+				}
+				return in_list
+			}
+
+			for (local i = 0; i < SLOT_COUNT; ++i) {
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 				if (wep == null) continue
 
-				local cls	= wep.GetClassname()
+				local tfclass = PopExtUtil.Classes[player.GetPlayerClass()]
+
+				local slot  = PopExtUtil.Slots[i]
 				local index = PopExtUtil.GetItemIndex(wep)
-
-				if ( !(HasVal(value, cls) || HasVal(value, index)) )
-					wep.Kill()
-			}
-
-			if (PopExtUtil.ItemBlacklist.len() == 0)
-				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", 0.015, null, null)
-		}
-
-		MissionAttributes.SpawnHookTable.ItemWhitelist <- MissionAttributes.ItemWhitelist
-	break
-
-	// =========================================================
-
-	case "ItemBlacklist":
-		if (typeof value != "array") {
-			MissionAttributes.RaiseValueError("ItemBlacklist", value, "Value must be array")
-			success = false
-			break
-		}
-
-		PopExtUtil.ItemBlacklist = value
-		if (value.len() == 0) return
-
-		function MissionAttributes::ItemBlacklist(params) {
-			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
-
-			function HasVal(arr, val) foreach (v in arr) if (v == val) return true
-			for (local i = 0; i < SLOT_COUNT; i++) {
-				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
-				if (wep == null) continue
-
 				local cls	= wep.GetClassname()
-				local index = PopExtUtil.GetItemIndex(wep)
+				
+				local whitelists = []
+				local tables     = []
+				
+				tables.insert(0, value)
+				if ("Whitelist" in value) whitelists.insert(0, value.Whitelist)
+					
+				if (tfclass in value) {
+					tables.insert(0, value[tfclass])
+					if ("Whitelist" in value[tfclass])
+						whitelists.insert(0, value[tfclass].Whitelist)
+				}
+				
+				if (tfclass in value && slot in value[tfclass]) {
+					tables.insert(0, value[tfclass][slot])
+					if ("Whitelist" in value[tfclass][slot])
+						whitelists.insert(0, value[tfclass][slot].Whitelist)
+				}
+				
 
-				if ( HasVal(value, cls) || HasVal(value, index) )
-					wep.Kill()
+				if (whitelists.len() > 0) {
+					local in_whitelist = IsInMultiList(whitelists, index) || IsInMultiList(whitelists, cls)
+					
+					if (!in_whitelist) {
+						wep.Kill()
+						continue
+					}
+				}
+				
+				foreach (table in tables) {
+					local identifiers = [index, cls]
+					local full_break  = false
+					
+					foreach (id in identifiers) {
+						if (id in table) {
+							local value = table[id]
+							
+							if (value == null) {
+								wep.Kill()
+								full_break = true
+								break
+							}
+							else if (value == "") {
+								printl("GIVE STOCK ITEM, check with IsInMultiList")
+							}
+							else if (typeof value == "string" && value.len() > 0) {
+								printl("INVALID VALUE "+value+ "FOR KEY: "+id)
+								continue
+							}
+							else {
+								try {
+									local value = value.tointeger()
+									printl("REPLACE ITEM WITH ITEMINDEX "+value)
+								}
+								catch (e) {}
+							}
+						}
+					}
+					
+					if (full_break) break
+				}
 			}
-
+			
 			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", 0.015, null, null)
 		}
-
-		MissionAttributes.SpawnHookTable.ItemBlacklist <- MissionAttributes.ItemBlacklist
-	break
-
-	// =========================================================
-
-	case "HumansMustJoinTeam":
-		if (value != TF_TEAM_RED && value != TF_TEAM_BLUE) {
-			MissionAttributes.RaiseValueError("HumansMustJoinTeam", value, "Value must be 2 or 3")
-			success = false
-			break
-		}
-
-		function MissionAttributes::HumansMustJoinTeam(params) {
-			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
-
-			if (player.GetTeam() != value) {
-				EntFireByHandle(player, "RunScriptCode", format("PopExtUtil.ChangePlayerTeamMvM(self, %d)", value), 0.015, null, null)
-				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
-			}
-		}
-
-		function BlueTeamReadyThink() {
-			if (value != TF_TEAM_BLUE || !PopExtUtil.IsWaveStarted) return
-
-			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
-			local ready     = PopExtUtil.GetPlayerReadyCount()
-			if (ready > 0 >= PopExtUtil.HumanArray.len() && !("WaveStartCountdown" in MissionAttributes))
-				SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time() + 10.0)
-		}
-		MissionAttributes.ThinkTable.BlueTeamReadyThink <- MissionAttributes.BlueTeamReadyThink
-
-		MissionAttributes.SpawnHookTable.HumansMustJoinTeam <- MissionAttributes.HumansMustJoinTeam
+		MissionAttributes.SpawnHookTable.LoadoutControl <- MissionAttributes.LoadoutControl
 	break
 
 	// =========================================================
@@ -1384,7 +1382,8 @@ function MissionAttributes::MissionAttr(...) {
 	case "ReverseMVM":
 		// Prevent bots on red team from hogging slots so players can always join and get switched to blue
 		// TODO: Needs testing
-		MissionAttributes.SetConvar("tf_mvm_defenders_team_size", 999)
+		// also need to reset it
+		//MissionAttributes.SetConvar("tf_mvm_defenders_team_size", 999)
 	
 		function MissionAttributes::ReverseMVMThink() {
 			// Enforce max team size
