@@ -495,7 +495,6 @@ try:
 
 	file_path = filedialog.askopenfilename()
 	popfile = open(file_path, 'r', encoding='utf-8').read()
-	print(popfile)
 	
 except:
 	from os import walk
