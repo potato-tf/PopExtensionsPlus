@@ -8,16 +8,14 @@ Mince:
 // Once varargs is done, rename HandModelOverride to ModelOverride which can either change HAND_MODEL or PLAYER_MODEL, maybe PROP_MODEL too?
 // After this redo the playersarerobots incompatibility with the new ModelOverride since it also might include player models
 // ScriptLoadTable and ScriptUnloadTable?
-// Fix itemblacklist behavior
 // TODO: (ItemAttributes / PlayerAttributes) fix attributes carrying over on classes for some reason
+// Finish LoadoutControl once we have our own giveweapon funcs
+// Change format of playerattributes and itemattributes to be consistent with loadoutcontrol
 // TODO: (EnableRandomCrits) see about using abs on the condition checks, dunno if bitwise AND will eval true for negative values
 // TODO: fix switching weapons removing random crit cond not working
 // TODO: (ReverseMVM) Need to fix players getting stuck in spec on wave fail, mission complete, etc
 // TODO: (ReverseMVM) Fix laser on sniper for human anims
 // TODO: Modify PlayersAreRobots or make a new attr for changing robot vo to human (use this in ReverseMVM)
-// TODO: (ReverseMVM) figure out a better system than this weapon deploy sequence for flare and sniper,
-//       the timing seems to be off or something where you can fire just after deploying and
-//       not consume ammo
 // TODO: Reimplement the Error system with try catch and throw
 // TODO: (HolidayPunchFix) Check if we need to set m_hOwnerEnity since we already use SetOwner
 // Fix AnimatedViewControlAll camera movement
