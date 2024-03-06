@@ -1272,6 +1272,8 @@ function MissionAttributes::MissionAttr(...) {
 		}
 
 		function MissionAttributes::EnableRandomCritsThink() {
+			if (!PopExtUtil.IsWaveStarted) return -1
+			
 			foreach (player in PopExtUtil.PlayerArray) {
 				if (!( (value & 1 && player.GetTeam() == TF_TEAM_BLUE && !player.IsBotOfType(1337)) ||
 					   (value & 2 && player.GetTeam() == TF_TEAM_BLUE && player.IsBotOfType(1337))  ||
@@ -1322,12 +1324,16 @@ function MissionAttributes::MissionAttr(...) {
 					wep.GetScriptScope().Think <- function() {
 						local fire_time = NetProps.GetPropFloat(self, "m_flLastFireTime");
 						if (fire_time > last_fire_time) {
-							player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+							local owner = self.GetOwner()
+							owner.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+							
+							owner.ValidateScriptScope()
+							local scope = owner.GetScriptScope()
 
 							// Continuous fire weapons get 2 seconds of crits once they fire
 							if (classname in timed_crit_weapons) {
-								player.AddCondEx(TF_COND_CRITBOOSTED_CTF_CAPTURE, 2, null)
-								EntFireByHandle(player, "RunScriptCode", format("crit_weapon <- null; ranged_crit_chance <- %f", base_ranged_crit_chance), 2, null, null)
+								owner.AddCondEx(TF_COND_CRITBOOSTED_CTF_CAPTURE, 2, null)
+								EntFireByHandle(owner, "RunScriptCode", format("crit_weapon <- null; ranged_crit_chance <- %f", base_ranged_crit_chance), 2, null, null)
 							}
 							else {
 								scope.crit_weapon <- null
