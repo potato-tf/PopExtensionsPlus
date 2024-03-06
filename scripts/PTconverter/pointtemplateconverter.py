@@ -251,7 +251,7 @@ def convert_raf_keyvalues(value):
 		splitkey = splitval[1].split('$')
 		# log.append(f'ALERT: Converted {splitval[1]} to AddOutput {splitkey[2]}.  This may not work in some cases!')
 		splitval[1] = 'RunScriptCode'
-		splitval[2] = f'self.KeyValueFromString({splitkey[2]} {splitval[2]})'
+		splitval[2] = f'self.KeyValueFromString(`{splitkey[2]}`, `{splitval[2]}`)'
 
 	elif '$addcond' in entinput or '$removecond' in entinput:
 		# log.append(f'SUCCESS: converted {splitval[1]} to vscript alternative')
@@ -283,10 +283,10 @@ def convert_raf_keyvalues(value):
 		# log.append(f'SUCCESS: converted {splitval[1]} to SetCustomModelWithClassAnimations')
 		splitval[1] = 'SetCustomModelWithClassAnimations'
 
-	# elif '$removeoutput' in entinput:
-	# 	# log.append(f'SUCCESS: converted {splitval[1]} to SetCustomModelWithClassAnimations', COLOR['ENDC'])
-	# 	splitval[1] = 'RunScriptCode'
-	# 	splitval[2] = 'EntityOutputs.RemoveOutput(self,``,`effects`,)'
+	elif '$removeoutput' in entinput:
+		# log.append(f'SUCCESS: converted {splitval[1]} to SetCustomModelWithClassAnimations', COLOR['ENDC'])
+		splitval[1] = 'RunScriptCode'
+		splitval[2] = f'PopExtUtil.RemoveOutputAll(self, `{splitval[2]}`)'
 
 	elif '$giveitem' in entinput or '$awardandgiveextraitem' in entinput:
 		giveitem = True
@@ -450,7 +450,7 @@ def convertpointtemplates(pop, indentationnumber, depth):
 				key = key[1:-1]
 			if type(value) == str and value.count(',') == 4: value = convert_raf_keyvalues(value)
 			newvalue = value.replace('\\', '/')
-			if (key.lower().startswith('on') or key.lower().startswith('ou')) and (newvalue.count(',') == 2 or newvalue.count(',') == 3 or newvalue.count(',') == 4 or 'emitsoundex' in newvalue.lower()):
+			if (key.lower().startswith('on') or key.lower().startswith('ou')) and (newvalue.count(',') == 2 or newvalue.count(',') == 3 or newvalue.count(',') == 4 or 'emitsoundex' in newvalue.lower() or 'popextutil.removeoutputall' in newvalue.lower()):
 				if key.lower() in uniqueoutputs.keys():
 					uniqueoutputs.update({key.lower() : uniqueoutputs[key.lower()] + 1})
 				else:

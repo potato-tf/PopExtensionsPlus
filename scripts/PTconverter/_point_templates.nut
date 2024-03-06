@@ -21,9 +21,9 @@ PointTemplates <-
 				"OnMapSpawn#11" : "@bb144 -584 0 472 384 160@func_respawnroomvisualizer,Kill,,0,-1",
 				"OnMapSpawn#12" : "relay_attributes,Kill,,0,-1",
 				"OnMapSpawn#13" : "relay_invisible,Kill,,0,-1",
-				"OnMapSpawn#14" : "player,$RemoveOutput,effects,1,-1",
-				"OnMapSpawn#15" : "player,$RemoveOutput,effects,2,-1",
-				"OnMapSpawn#16" : "player,$RemoveOutput,renderfx,0,-1",
+				"OnMapSpawn#14" : "playerRunScriptCodePopExtUtil.RemoveOutputAll(self, `effects`)1-1",
+				"OnMapSpawn#15" : "playerRunScriptCodePopExtUtil.RemoveOutputAll(self, `effects`)2-1",
+				"OnMapSpawn#16" : "playerRunScriptCodePopExtUtil.RemoveOutputAll(self, `renderfx`)0-1",
 				"OnMapSpawn#17" : "merasmus_*,Kill,,0,-1",
 				"OnMapSpawn#18" : "wave_start_relay,AddOutput,OnTrigger gameover:Enable:0:-1,0,-1",
 				"OnMapSpawn#19" : "realtimer,trigger,,0,-1",
@@ -113,8 +113,8 @@ PointTemplates <-
 			logic_relay =
 			{
 				targetname = "wave_output_clear",
-				"OnTrigger#1" : "player,$RemoveOutput,$OnDamageReceived,0,-1",
-				"OnTrigger#2" : "player,$RemoveOutput,$OnDeath,0,-1",
+				"OnTrigger#1" : "playerRunScriptCodePopExtUtil.RemoveOutputAll(self, `$OnDamageReceived`)0-1",
+				"OnTrigger#2" : "playerRunScriptCodePopExtUtil.RemoveOutputAll(self, `$OnDeath`)0-1",
 				"OnTrigger#3" : "fog_controller,SetStartDist,600,,-1",
 				"OnTrigger#4" : "fog_controller,SetEndDist,4000,,-1",
 				"OnTrigger#5" : "fog_controller,SetColor,0 0 0,,-1",
@@ -3425,9 +3425,9 @@ PointTemplates <-
 			{
 				targetname = "roundcounter",
 				max = 255,
-				"outvalue#1" : "roundformat,RunScriptCode,self.KeyValueFromString(case01 ),0,-1",
-				"OutValue#2" : "tf_objective_resourceRunScriptCodeNetProps.SetPropEntity(self, `m_nMannVsMachineWaveCount`, )0-1,0,-1",
-				"outvalue#3" : "gameoverformat,RunScriptCode,self.KeyValueFromString(case01 ),0,-1",
+				outvalue = "roundformatRunScriptCodeself.KeyValueFromString(`case01`, ``)0-1",
+				"OutValue#1" : "tf_objective_resourceRunScriptCodeNetProps.SetPropEntity(self, `m_nMannVsMachineWaveCount`, )0-1,0,-1",
+				outvalue = "gameoverformatRunScriptCodeself.KeyValueFromString(`case01`, ``)0-1",
 			},
 		},
 		[5] =
@@ -3438,7 +3438,7 @@ PointTemplates <-
 				startvalue = 0,
 				min = 0,
 				max = 26,
-				"outvalue#1" : "enemyformat,RunScriptCode,self.KeyValueFromString(case01 ),0,-1",
+				outvalue = "enemyformatRunScriptCodeself.KeyValueFromString(`case01`, ``)0-1",
 			},
 		},
 		[6] =
@@ -3447,8 +3447,8 @@ PointTemplates <-
 			{
 				targetname = "enemyformat",
 				case16 = "% active enemies",
-				"ondefault#1" : "enemytext,RunScriptCode,self.KeyValueFromString(message ),0,-1",
-				"ondefault#2" : "enemytext,display,0,0,-1",
+				ondefault = "enemytextRunScriptCodeself.KeyValueFromString(`message`, ``)0-1",
+				"ondefault#1" : "enemytext,display,0,0,-1",
 			},
 		},
 		[7] =
@@ -6684,8 +6684,8 @@ PointTemplates <-
 			{
 				targetname = "gameoverformat",
 				case16 = "You survived % waves",
-				"ondefault#1" : "gameovertext,RunScriptCode,self.KeyValueFromString(message ),0,-1",
-				"ondefault#2" : "gameovertext,display,0,0,-1",
+				ondefault = "gameovertextRunScriptCodeself.KeyValueFromString(`message`, ``)0-1",
+				"ondefault#1" : "gameovertext,display,0,0,-1",
 			},
 		},
 		[4] =
