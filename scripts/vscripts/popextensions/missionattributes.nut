@@ -1,5 +1,4 @@
 const EFL_USER = 1048576
-
 if (!("ScriptLoadTable" in ROOT))
 	::ScriptLoadTable   <- {}
 if (!("ScriptUnloadTable" in ROOT))
@@ -28,7 +27,7 @@ if (!("ScriptUnloadTable" in ROOT))
 	// 	foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
 	// 	MissionAttributes.RaisedParseError = false
 	// }
-	
+
 	function Cleanup()
 	{
 		MissionAttributes.ResetConvars()
@@ -42,6 +41,12 @@ if (!("ScriptUnloadTable" in ROOT))
 		// function OnGameEvent_player_spawn(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) }
 		function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
+
+		function OnGameEvent_player_team(params) {
+			local player = GetPlayerFromUserID(params.userid)
+			if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
+				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", -1, null, null)
+		}
 
 		function OnGameEvent_post_inventory_application(params) {
 
@@ -105,7 +110,7 @@ function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessa
 	if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value)
 
 	if (duration > 0) EntFire("tf_gamerules", "RunScriptCode", "MissionAttributes.SetConvar("+convar+","+MissionAttributes.ConVars[convar]+")", duration)
-	
+
 	if (commentaryNode != null) EntFireByHandle(commentaryNode, "Kill", "", -1, null, null)
 }
 
@@ -125,7 +130,7 @@ function MissionAttributes::MissionAttr(...) {
 	local args = vargv
 	local attr
 	local value
-	
+
 	if (args.len() == 0)
 		return
 	else if (args.len() == 1) {
@@ -136,7 +141,7 @@ function MissionAttributes::MissionAttr(...) {
 		attr  = args[0]
 		value = args[1]
 	}
-	
+
 	local success = true
 	switch(attr) {
 
@@ -265,7 +270,7 @@ function MissionAttributes::MissionAttr(...) {
 			(value == 1 && player.GetHealth() - damage > player.GetMaxHealth() * 1.5)) return //don't go past max overheal if value is 1
 
 			player.SetHealth(player.GetHealth() - damage)
-			
+
 		}
 		MissionAttributes.TakeDamageTable.NegativeDmgHeals <- MissionAttributes.NegativeDmgHeals
 	break
@@ -622,7 +627,7 @@ function MissionAttributes::MissionAttr(...) {
 			foreach (player in PopExtUtil.HumanArray) {
 				player.ValidateScriptScope()
 				local scope = player.GetScriptScope()
-				
+
 				EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[player.GetPlayerClass()]), -1, null, null)
 				SetPropInt(player, "m_clrRender", 0xFFFFFF)
 				SetPropInt(player, "m_nRenderMode", 0)
@@ -630,7 +635,7 @@ function MissionAttributes::MissionAttr(...) {
 			delete ScriptLoadTable.PlayersAreRobotsReset
 		}
 		*/
-		
+
 		function MissionAttributes::PlayersAreRobots(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
@@ -729,7 +734,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			if (value & 16) {
 				if ("HandModelOverride" in MissionAttributes.SpawnHookTable) return
-				
+
 				function RobotArmThink() {
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 					local playervm = GetPropEntity(player, "m_hViewModel")
@@ -1045,16 +1050,16 @@ function MissionAttributes::MissionAttr(...) {
 
 		MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
 	break
-	
+
 	// =========================================================
-	
+
 	case "AddCond":
 		function MissionAttributes::AddCond(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
 			player.RemoveCond(value)
-			
+
 			local duration = (args.len() > 2) ? args[2] : -1
 			EntFireByHandle(player, "RunScriptCode", format("self.AddCondEx(%d, %f, null)", value, duration), -1, null, null)
 		}
@@ -1136,7 +1141,7 @@ function MissionAttributes::MissionAttr(...) {
 	break
 
 	// =========================================================
-	
+
 	// TODO: once we have our own giveweapon functions, finish this
 	case "LoadoutControl":
 		function MissionAttributes::LoadoutControl(params) {
@@ -1145,11 +1150,11 @@ function MissionAttributes::MissionAttr(...) {
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-			
+
 			function HasVal(arr, val) foreach (v in arr) if (v == val) return true
 			function IsInMultiList(arr, val) {
 				if (arr.len() <= 0) return false
-				
+
 				local in_list = false
 				foreach (a in arr) {
 					if (HasVal(a, val)) {
@@ -1169,43 +1174,43 @@ function MissionAttributes::MissionAttr(...) {
 				local slot  = PopExtUtil.Slots[i]
 				local index = PopExtUtil.GetItemIndex(wep)
 				local cls	= wep.GetClassname()
-				
+
 				local whitelists = []
 				local tables     = []
-				
+
 				tables.insert(0, value)
 				if ("Whitelist" in value) whitelists.insert(0, value.Whitelist)
-					
+
 				if (tfclass in value) {
 					tables.insert(0, value[tfclass])
 					if ("Whitelist" in value[tfclass])
 						whitelists.insert(0, value[tfclass].Whitelist)
 				}
-				
+
 				if (tfclass in value && slot in value[tfclass]) {
 					tables.insert(0, value[tfclass][slot])
 					if ("Whitelist" in value[tfclass][slot])
 						whitelists.insert(0, value[tfclass][slot].Whitelist)
 				}
-				
+
 
 				if (whitelists.len() > 0) {
 					local in_whitelist = IsInMultiList(whitelists, index) || IsInMultiList(whitelists, cls)
-					
+
 					if (!in_whitelist) {
 						wep.Kill()
 						continue
 					}
 				}
-				
+
 				foreach (table in tables) {
 					local identifiers = [index, cls]
 					local full_break  = false
-					
+
 					foreach (id in identifiers) {
 						if (id in table) {
 							local value = table[id]
-							
+
 							if (value == null) {
 								wep.Kill()
 								full_break = true
@@ -1227,11 +1232,11 @@ function MissionAttributes::MissionAttr(...) {
 							}
 						}
 					}
-					
+
 					if (full_break) break
 				}
 			}
-			
+
 			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", 0.015, null, null)
 		}
 		MissionAttributes.SpawnHookTable.LoadoutControl <- MissionAttributes.LoadoutControl
@@ -1244,7 +1249,7 @@ function MissionAttributes::MissionAttr(...) {
 	// 4 - Red  robots
 	case "EnableRandomCrits":
 		if (value == 0.0) return
-		
+
 		local user_chance = (args.len() > 2) ? args[2] : null
 
 		// Simplified rare high moments
@@ -1253,7 +1258,7 @@ function MissionAttributes::MissionAttr(...) {
 		local base_melee_crit_chance  = 0.15
 		local max_melee_crit_chance   = 0.60
 		// 4 kills to reach max chance
-		
+
 		local timed_crit_weapons = {
 			"tf_weapon_handgun_scout_secondary" : null,
 			"tf_weapon_pistol_scout" : null,
@@ -1264,7 +1269,7 @@ function MissionAttributes::MissionAttr(...) {
 			"tf_weapon_smg" : null,
 			"tf_weapon_charged_smg" : null,
 		}
-		
+
 		local no_crit_weapons = {
 			"tf_weapon_laser_pointer" : null,
 			"tf_weapon_medigun"	: null,
@@ -1273,11 +1278,11 @@ function MissionAttributes::MissionAttr(...) {
 
 		function MissionAttributes::EnableRandomCritsThink() {
 			if (!PopExtUtil.IsWaveStarted) return -1
-			
+
 			foreach (player in PopExtUtil.PlayerArray) {
-				if (!( (value & 1 && player.GetTeam() == TF_TEAM_BLUE && !player.IsBotOfType(1337)) ||
-					   (value & 2 && player.GetTeam() == TF_TEAM_BLUE && player.IsBotOfType(1337))  ||
-					   (value & 4 && player.GetTeam() == TF_TEAM_RED && player.IsBotOfType(1337)) ))
+				if (!( (value & 1 && player.GetTeam() == TF_TEAM_PVE_INVADERS && !player.IsBotOfType(1337)) ||
+					   (value & 2 && player.GetTeam() == TF_TEAM_PVE_INVADERS && player.IsBotOfType(1337))  ||
+					   (value & 4 && player.GetTeam() == TF_TEAM_PVE_DEFENDERS && player.IsBotOfType(1337)) ))
 					continue
 
 				player.ValidateScriptScope()
@@ -1295,7 +1300,7 @@ function MissionAttributes::MissionAttr(...) {
 				local wep       = player.GetActiveWeapon()
 				local index     = PopExtUtil.GetItemIndex(wep)
 				local classname = wep.GetClassname()
-				
+
 				// Lose the crits if we switch weapons
 				if (scope.crit_weapon != null && scope.crit_weapon != wep)
 					player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
@@ -1326,7 +1331,7 @@ function MissionAttributes::MissionAttr(...) {
 						if (fire_time > last_fire_time) {
 							local owner = self.GetOwner()
 							owner.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
-							
+
 							owner.ValidateScriptScope()
 							local scope = owner.GetScriptScope()
 
@@ -1407,7 +1412,7 @@ function MissionAttributes::MissionAttr(...) {
 		// TODO: Needs testing
 		// also need to reset it
 		//MissionAttributes.SetConvar("tf_mvm_defenders_team_size", 999)
-	
+
 		function MissionAttributes::ReverseMVMThink() {
 			// Enforce max team size
 			local player_count  = 0
@@ -1440,8 +1445,8 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Switch to blue team
 			// TODO: Need to fix players getting stuck in spec on wave fail, mission complete, etc
-			if (player.GetTeam() != TF_TEAM_BLUE) {
-				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_BLUE)", 0.015, null, null)
+			if (player.GetTeam() != TF_TEAM_PVE_INVADERS) {
+				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", 0.015, null, null)
 				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
 			}
 
@@ -1495,7 +1500,7 @@ function MissionAttributes::MissionAttr(...) {
 					self.SetAbsOrigin(ent.GetOrigin() + Vector(0, 0, -32))
 					self.SetAbsVelocity(Vector())
 					self.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
-					EntFireByHandle(laser, "RunScriptCode", "self.SetTeam(TF_TEAM_RED)", 0.015, null, null)
+					EntFireByHandle(laser, "RunScriptCode", "self.SetTeam(TF_TEAM_PVE_DEFENDERS)", 0.015, null, null)
 					EntFireByHandle(self, "RunScriptCode", "self.SetAbsOrigin(originalposition); self.SetAbsVelocity(originalvelocity); self.SetMoveType(originalmovetype, MOVECOLLIDE_DEFAULT)", 0.015, null, null)
 
 					handled_laser = true
@@ -1771,7 +1776,7 @@ function MissionAttributes::MissionAttr(...) {
 					else if (classname == "tf_weapon_sniperrifle" || itemid == ID_BAZAAR_BARGAIN || itemid == ID_CLASSIC) {
 						local lastfire = GetPropFloat(wep, "m_flLastFireTime")
 						if (scope.lastattack == lastfire) return
-						
+
 						scope.lastattack <- lastfire
 						local maxammo = GetPropIntArray(self, "m_iAmmo", wep.GetSlot() + 1)
 						if (scope.lastattack > 0 && scope.lastattack < Time()) {
@@ -1829,7 +1834,7 @@ AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 function CollectMissionAttrs(attrs = {}) {
 	foreach (attr, value in attrs)
 		MissionAttributes.MissionAttr(attr, value)
-	
+
 }
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
 function MissionAttr(...) {

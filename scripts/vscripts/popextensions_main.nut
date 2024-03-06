@@ -1,14 +1,12 @@
 local root = getroottable()
 
-//save popfile name in global scope when we first initialize
-//if it has, a new pop has loaded, clean everything up.
-
 local o = Entities.FindByClassname(null, "tf_objective_resource")
 ::__popname <- NetProps.GetPropString(o, "m_iszMvMPopfileName")
 // ::commentaryNode <- SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
 
 ::Main <- {
-	//cleanup function
+	//save popfile name in global scope when we first initialize
+	//if the popfile name changed, a new pop has loaded, clean everything up.
 
 	function PlayerCleanup(player) {
 		NetProps.SetPropInt(player, "m_nRenderMode", 0)
@@ -44,17 +42,16 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 			Main.PlayerCleanup(player)
 		}
 
-		delete ::PopExt
-		delete ::PopExtTags
-		delete ::PopExtHooks
-		delete ::GlobalFixes
-		delete ::SpawnTemplate
-		delete ::MissionAttributes
-		delete ::VCD_SOUNDSCRIPT_MAP
-		delete ::PopExtUtil
-
-		delete ::__popname
-		delete ::Main
+		try delete ::MissionAttributes catch(e) return
+		try delete ::PopExt catch(e) return
+		try delete ::PopExtTags catch(e) return
+		try delete ::PopExtHooks catch(e) return
+		try delete ::GlobalFixes catch(e) return
+		try delete ::SpawnTemplate catch(e) return
+		try delete ::VCD_SOUNDSCRIPT_MAP catch(e) return
+		try delete ::PopExtUtil catch(e) return
+		try delete ::__popname catch(e) return
+		try delete ::Main catch(e) return
 	}
 }
 __CollectGameEventCallbacks(Main)
