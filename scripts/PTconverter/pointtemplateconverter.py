@@ -323,17 +323,17 @@ def convert_raf_keyvalues(value):
 				except Exception as IndexError:
 					formatval = 'INVALID ? -1 ? null'
 			else:
-				print(COLOR['CYAN'], 'Enter The item classname and definiton index for',COLOR['ENDC'],COLOR['HEADER'],f'{splitval[2].strip()}',COLOR['ENDC'])
-				print(COLOR['CYAN'],'Find them here:',COLOR['ENDC'],COLOR['GREEN'],'https://wiki.alliedmods.net/Team_fortress_2_item_definition_indexes',COLOR['ENDC'])
-				print(COLOR['CYAN'],'Enter null for wearable model if you are not creating a tf_wearable weapon',COLOR['ENDC'])
-				print(COLOR['HEADER'], 'Enter ? for an example input',COLOR['ENDC'])
-				# formatval = 'a ? a ? null'
-				formatval = input('Format: Classname ? Index ? Wearable Model: ')
+				# print(COLOR['CYAN'], 'Enter The item classname and definiton index for',COLOR['ENDC'],COLOR['HEADER'],f'{splitval[2].strip()}',COLOR['ENDC'])
+				# print(COLOR['CYAN'],'Find them here:',COLOR['ENDC'],COLOR['GREEN'],'https://wiki.alliedmods.net/Team_fortress_2_item_definition_indexes',COLOR['ENDC'])
+				# print(COLOR['CYAN'],'Enter null for wearable model if you are not creating a tf_wearable weapon',COLOR['ENDC'])
+				# print(COLOR['HEADER'], 'Enter ? for an example input',COLOR['ENDC'])
+				formatval = 'a ? a ? null'
+				# formatval = input('Format: Classname ? Index ? Wearable Model: ')
 
-				if formatval == '?':
-					print(COLOR['CYAN'],'Example input (the bat outta hell for demo):',COLOR['ENDC'],COLOR['GREEN'], 'tf_weapon_bottle ? 939 ? null', COLOR['ENDC'])
-					print(COLOR['CYAN'],'Example tf_wearable input (cozy camper):',COLOR['ENDC'],COLOR['GREEN'], 'tf_wearable ? 642 ? models/workshop/player/items/sniper/xms_sniper_commandobackpack/xms_sniper_commandobackpack.mdl', COLOR['ENDC'])
-					formatval = input('Format: Classname ? Index ? Wearable Model: ')
+				# if formatval == '?':
+					# print(COLOR['CYAN'],'Example input (the bat outta hell for demo):',COLOR['ENDC'],COLOR['GREEN'], 'tf_weapon_bottle ? 939 ? null', COLOR['ENDC'])
+					# print(COLOR['CYAN'],'Example tf_wearable input (cozy camper):',COLOR['ENDC'],COLOR['GREEN'], 'tf_wearable ? 642 ? models/workshop/player/items/sniper/xms_sniper_commandobackpack/xms_sniper_commandobackpack.mdl', COLOR['ENDC'])
+					# formatval = input('Format: Classname ? Index ? Wearable Model: ')
 
 		customweapons.update({splitval[2] : formatval})
 		formatsplit = formatval.split('?')
