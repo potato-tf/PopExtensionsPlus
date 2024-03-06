@@ -204,6 +204,7 @@ def convert_raf_keyvalues(value):
 		if '|' in splitval[2]:
 			splitval[2] = splitval[2].split('|')[1]
 		splitval[-1] = splitval[-1].split('"')[0]
+
 	# use emitsoundex vscript function instead
 	elif not 'player' in splitval[0].lower() and '$playsoundtoself' in entinput:
 		splitval[1] = 'RunScriptCode'
@@ -372,6 +373,7 @@ def convert_raf_keyvalues(value):
 		changeattribs = True
 		splitval[0] = 'point_populator_interface'
 		splitval[1] = 'ChangeBotAttributes'
+		splitval[-1] = splitval[-1].split('"')[0]
 
 	elif '$setowner' in entinput:
 		splitval[1] = 'RunScriptCode'
