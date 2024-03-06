@@ -22,3 +22,4 @@ Mince:
 // Implement the rest of the functions for tutorialtools.nut
 // Unsure of how the global moneyfix will interact with the ReverseMVM money collection code, need to test
 // Make a human / zombie voices override for reversemvm and add support for giants (for robos use the sounds, for others deepen the voice pitch)
+// Add the robo idle sound?
