@@ -1244,6 +1244,8 @@ function MissionAttributes::MissionAttr(...) {
 	// 4 - Red  robots
 	case "EnableRandomCrits":
 		if (value == 0.0) return
+		
+		local user_chance = (args.len() > 2) ? args[2] : null
 
 		// Simplified rare high moments
 		local base_ranged_crit_chance = 0.0005
@@ -1251,10 +1253,26 @@ function MissionAttributes::MissionAttr(...) {
 		local base_melee_crit_chance  = 0.15
 		local max_melee_crit_chance   = 0.60
 		// 4 kills to reach max chance
+		
+		local timed_crit_weapons = {
+			"tf_weapon_handgun_scout_secondary" : null,
+			"tf_weapon_pistol_scout" : null,
+			"tf_weapon_flamethrower" : null,
+			"tf_weapon_minigun" : null,
+			"tf_weapon_pistol" : null,
+			"tf_weapon_syringegun_medic" : null,
+			"tf_weapon_smg" : null,
+			"tf_weapon_charged_smg" : null,
+		}
+		
+		local no_crit_weapons = {
+			"tf_weapon_laser_pointer" : null,
+			"tf_weapon_medigun"	: null,
+			"tf_weapon_sniperrifle" : null,
+		}
 
 		function MissionAttributes::EnableRandomCritsThink() {
 			foreach (player in PopExtUtil.PlayerArray) {
-				// TODO: see about using math.abs on the value here, dunno if these will fire for negative values
 				if (!( (value & 1 && player.GetTeam() == TF_TEAM_BLUE && !player.IsBotOfType(1337)) ||
 					   (value & 2 && player.GetTeam() == TF_TEAM_BLUE && player.IsBotOfType(1337))  ||
 					   (value & 4 && player.GetTeam() == TF_TEAM_RED && player.IsBotOfType(1337)) ))
@@ -1272,26 +1290,25 @@ function MissionAttributes::MissionAttr(...) {
 
 				if (!PopExtUtil.IsAlive(player) || player.GetTeam() == TEAM_SPECTATOR) continue
 
-				// Wait for bot to use its crits
-				if (scope.crit_weapon != null && player.InCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)) continue
-
 				local wep       = player.GetActiveWeapon()
 				local index     = PopExtUtil.GetItemIndex(wep)
 				local classname = wep.GetClassname()
+				
+				// Lose the crits if we switch weapons
+				if (scope.crit_weapon != null && scope.crit_weapon != wep)
+					player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
+
+				// Wait for bot to use its crits
+				if (scope.crit_weapon != null && player.InCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)) continue
 
 				// We handle melee weapons elsewhere in OnTakeDamage
 				if (wep == null || wep.IsMeleeWeapon()) continue
 				// Certain weapon types never receive random crits
-				if (classname == "tf_weapon_sniperrifle" || index == 402 || classname == "tf_weapon_medigun" || wep.GetSlot() > 2) continue
+				if (classname in no_crit_weapons || wep.GetSlot() > 2) continue
 				// Ignore weapons with certain attributes
 				// if (wep.GetAttribute("crit mod disabled", 1) == 0 || wep.GetAttribute("crit mod disabled hidden", 1) == 0) continue
 
-				// Lose the crits if we switch weapons
-				// TODO: doesnt work
-				if (scope.crit_weapon != null && scope.crit_weapon != wep)
-					player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
-
-				local crit_chance_override = (value > 0) ? value : null
+				local crit_chance_override = (user_chance > 0) ? user_chance : null
 				local chance_to_use        = (crit_chance_override != null) ? crit_chance_override : scope.ranged_crit_chance
 
 				// Roll for random crits
@@ -1307,10 +1324,10 @@ function MissionAttributes::MissionAttr(...) {
 						if (fire_time > last_fire_time) {
 							player.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 
-							// Continuous fire weapons get 3 seconds of crits once they fire
-							if (classname == "tf_weapon_minigun" || classname == "tf_weapon_flamethrower" || classname == "tf_weapon_syringegun_medic") {
-								player.AddCondEx(TF_COND_CRITBOOSTED_CTF_CAPTURE, 3, null)
-								EntFireByHandle(player, "RunScriptCode", format("crit_weapon <- null; ranged_crit_chance <- %f", base_ranged_crit_chance), 3, null, null)
+							// Continuous fire weapons get 2 seconds of crits once they fire
+							if (classname in timed_crit_weapons) {
+								player.AddCondEx(TF_COND_CRITBOOSTED_CTF_CAPTURE, 2, null)
+								EntFireByHandle(player, "RunScriptCode", format("crit_weapon <- null; ranged_crit_chance <- %f", base_ranged_crit_chance), 2, null, null)
 							}
 							else {
 								scope.crit_weapon <- null
