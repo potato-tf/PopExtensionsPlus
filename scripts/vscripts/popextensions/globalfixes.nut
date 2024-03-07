@@ -82,7 +82,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 					return -1
 				}
-				AddThinkToEnt(victim, "Think")
+				victim.GetScriptScope().PlayerThinkTable.BotModelThink <- BotModelThink
 			}
 		}
 	}
@@ -97,7 +97,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 		//add think table to all projectiles
 		//there is apparently no better way to do this lol
-		function ProjectileThink() {
+		function AddProjectileThink() {
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");) {
 				if (projectile.GetEFlags() & EFL_USER) continue
 
@@ -105,7 +105,10 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				local scope = projectile.GetScriptScope()
 
 				if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <- {}
+				
+				scope.ProjectileThink <- function () { foreach (name, func in scope.ProjectileThinkTable) { func() } return -1 }
 
+				AddThinkToEnt(projectile, "ProjectileThink")
 				projectile.AddEFlags(EFL_USER)
 			}
 		}

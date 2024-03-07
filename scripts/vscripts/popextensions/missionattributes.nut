@@ -689,10 +689,10 @@ function MissionAttributes::MissionAttr(...) {
 
 			if (value & 8) {
 				function RobotVOThink() {
+					
 					for (local ent; ent = FindByClassname(ent, "instanced_scripted_scene"); ) {
 						if (ent.GetEFlags() & EFL_USER) continue
 						ent.AddEFlags(EFL_USER)
-
 						local owner = GetPropEntity(ent, "m_hOwner")
 						if (owner != null && !owner.IsBotOfType(1337)) {
 
@@ -924,19 +924,7 @@ function MissionAttributes::MissionAttr(...) {
 					skeles.SetSkin(1)
 				}
 				// smoove skele, unfinished
-
-				// local locomotion = skeles.GetLocomotionInterface();
-				// locomotion.Reset();
-				// skeles.FlagForUpdate(true);
-				// locomotion.ComputeUpdateInterval(); //not necessary
-				// foreach (a in areas)
-				// {
-				//	   if (a.GetPlayerCount(TF_TEAM_PVE_DEFENDERS) < 1) continue
-
-				//	   skeles.ClearImmobileStatus();
-				//	   locomotion.SetDesiredSpeed(280.0);
-				//	   locomotion.Approach(a.FindRandomSpot(), 999.0);
-				// }
+				skeles.FlagForUpdate(true);
 			}
 		}
 

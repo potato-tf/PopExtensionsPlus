@@ -88,6 +88,9 @@
 		},
 	}
 
+	ItemWhitelist = []
+	ItemBlacklist = []
+
 	ROMEVISION_MODELS = {
 
 		[1] = ["models/workshop/player/items/scout/tw_scoutbot_armor/tw_scoutbot_armor.mdl", "models/workshop/player/items/scout/tw_scoutbot_hat/tw_scoutbot_hat.mdl"],
@@ -497,6 +500,25 @@ function PopExtUtil::CreatePlayerWearable(player, model, bonemerge = true, attac
 	return wearable
 }
 
+function PopExtUtil::StripWeapon(player, slot = -1)
+{
+    if (slot == -1) slot = player.GetActiveWeapon().GetSlot()
+
+    for (local i = 0; i < SLOT_COUNT; i++)
+    {
+        local weapon = GetWeaponInSlot(player, i);
+
+        if (weapon == null || weapon.GetSlot() != slot) continue;
+
+        weapon.Kill();
+        break;
+    }
+}
+
+function PopExtUtil::WeaponSwitchSlot(player, slot)
+{
+ 	EntFireByHandle(PopExtUtil.ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player);
+}
 
 function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
 	local rgb = PopExtUtil.HexToRgb("FFFF66")
