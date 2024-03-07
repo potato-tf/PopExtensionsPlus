@@ -1145,7 +1145,7 @@ function PopExtUtil::StopAndPlayMVMSound(player, soundscript, delay) {
 
 	scope.mvmsound <- sound.slice(0, dotindex+1) + "MVM_" + sound.slice(dotindex+1)
 
-	EntFireByHandle(player, "RunScriptCode", "self.EmitSound(mvmsound);", delay + 0.015, null, null)
+	EntFireByHandle(player, "RunScriptCode", "self.EmitSound(mvmsound);", delay + SINGLE_TICK, null, null)
 }
 
 function PopExtUtil::StringReplace(str, findwhat, replace) {

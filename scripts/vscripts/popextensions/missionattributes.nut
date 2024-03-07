@@ -1225,7 +1225,7 @@ function MissionAttributes::MissionAttr(...) {
 				}
 			}
 
-			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", 0.015, null, null)
+			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", SINGLE_TICK, null, null)
 		}
 		MissionAttributes.SpawnHookTable.LoadoutControl <- MissionAttributes.LoadoutControl
 	break
@@ -1389,7 +1389,7 @@ function MissionAttributes::MissionAttr(...) {
 			if (RandomFloat(0, 1) < scope.melee_crit_chance) {
 				params.damage_type = params.damage_type | DMG_CRITICAL
 				// We delay here to allow death code to run so the reset doesn't get overriden
-				EntFireByHandle(attacker, "RunScriptCode", format("melee_crit_chance <- %f", base_melee_crit_chance), 0.015, null, null)
+				EntFireByHandle(attacker, "RunScriptCode", format("melee_crit_chance <- %f", base_melee_crit_chance), SINGLE_TICK, null, null)
 			}
 		}
 		MissionAttributes.TakeDamageTable.EnableRandomCritsTakeDamage <- MissionAttributes.EnableRandomCritsTakeDamage
@@ -1434,8 +1434,8 @@ function MissionAttributes::MissionAttr(...) {
 			// Switch to blue team
 			// TODO: Need to fix players getting stuck in spec on wave fail, mission complete, etc
 			if (player.GetTeam() != TF_TEAM_PVE_INVADERS) {
-				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", 0.015, null, null)
-				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", 0.015, null, null)
+				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", SINGLE_TICK, null, null)
+				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", SINGLE_TICK, null, null)
 			}
 
 			// Kill any phantom lasers from respawning as engie (yes this is real)
@@ -1488,8 +1488,8 @@ function MissionAttributes::MissionAttr(...) {
 					self.SetAbsOrigin(ent.GetOrigin() + Vector(0, 0, -32))
 					self.SetAbsVelocity(Vector())
 					self.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
-					EntFireByHandle(laser, "RunScriptCode", "self.SetTeam(TF_TEAM_PVE_DEFENDERS)", 0.015, null, null)
-					EntFireByHandle(self, "RunScriptCode", "self.SetAbsOrigin(originalposition); self.SetAbsVelocity(originalvelocity); self.SetMoveType(originalmovetype, MOVECOLLIDE_DEFAULT)", 0.015, null, null)
+					EntFireByHandle(laser, "RunScriptCode", "self.SetTeam(TF_TEAM_PVE_DEFENDERS)", SINGLE_TICK, null, null)
+					EntFireByHandle(self, "RunScriptCode", "self.SetAbsOrigin(originalposition); self.SetAbsVelocity(originalvelocity); self.SetMoveType(originalmovetype, MOVECOLLIDE_DEFAULT)", SINGLE_TICK, null, null)
 
 					handled_laser = true
 					return
@@ -1773,6 +1773,13 @@ function MissionAttributes::MissionAttr(...) {
 						}
 					}
 				}
+			}
+
+			//bitflags
+			//cannot pick up intel
+			if (value & 2)
+			{
+				player.AddCustomAttribute("cannot pick up intelligence", 1, -1)
 			}
 		}
 		MissionAttributes.SpawnHookTable.ReverseMVMSpawn <- MissionAttributes.ReverseMVMSpawn

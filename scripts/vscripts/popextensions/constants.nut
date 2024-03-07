@@ -34,6 +34,7 @@ foreach(k, v in ::EntityOutputs.getclass())
 const MATTR_ERROR = "MissionAttr ERROR: "
 const STRING_NETPROP_ITEMDEF = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
 const TEST = "m_AttributeManager.m_Item.m_AttributeList.m_Attributes"
+const SINGLE_TICK = 0.015
 
 // Clientprint chat colors
 const COLOR_LIME       = "22FF22"

@@ -246,7 +246,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 					// Counteract impulse velocity
 					if (hint != null && engie != null) {
-						ClientPrint(null, 3, "COUNTERACTING VELOCITY")
+						// ClientPrint(null, 3, "COUNTERACTING VELOCITY")
 						local dir =  self.EyePosition() - hint.GetOrigin()
 						
 						dir.z = 0

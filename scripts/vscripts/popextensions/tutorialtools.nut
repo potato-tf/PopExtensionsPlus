@@ -165,7 +165,7 @@ function DisableViewcontrolSafe(player, viewcontrol)
 
 		local should_teleport = (keyframes[keyframe].len() > 3) ? t[3] : false
 
-		local ticks_left = floor((start_time + next_time - current_time) / 0.015)
+		local ticks_left = floor((start_time + next_time - current_time) / SINGLE_TICK)
 
 		if (should_teleport)
 		{
