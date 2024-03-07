@@ -99,7 +99,7 @@ local popext_funcs =
 			local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
 				if (hint && !alwaysfire) bot.PressFireButton(0.0)
 		}
-		bot.GetScriptScope().TagThinkTable.DispenserBuildThink <- DispenserBuildThink
+		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- DispenserBuildThink
 		function DispenserBuildOverride(params) {
 
 			//dispenser built, stop force firing
@@ -252,7 +252,7 @@ local popext_funcs =
 			break
 			}
 		}
-		bot.GetScriptScope().TagThinkTable.BestWeaponThink <- BestWeaponThink
+		bot.GetScriptScope().PlayerThinkTable.BestWeaponThink <- BestWeaponThink
 	}
 	popext_homingprojectile = function(bot, args) {
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
@@ -269,7 +269,7 @@ local popext_funcs =
 				Homing.AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
 			}
 		}
-		bot.GetScriptScope().TagThinkTable.HomingProjectileScanner <- HomingProjectileScanner
+		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- HomingProjectileScanner
 
 		function HomingTakeDamage(params) {
 			if (!params.const_entity.IsPlayer()) return
@@ -344,7 +344,7 @@ local popext_funcs =
 				}
 			}
 		}
-		bot.GetScriptScope().TagThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
+		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
 	}
 	/* valid attachment points for most playermodels:
 		- head
@@ -375,7 +375,7 @@ local popext_funcs =
 				}
 			}
 		}
-		bot.GetScriptScope().TagThinkTable.AimAtThink <- AimAtThink
+		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- AimAtThink
 	}
 	popext_addcondonhit = function(bot, args) {
 		// Tag addcondonhit |cond|duration|threshold|crit
@@ -587,9 +587,9 @@ local popext_funcs =
 	// function PopExt_BotThinks()
 	// {
 	//	   local scope = self.GetScriptScope()
-	//	   if (scope.TagThinkTable.len() < 1) return
+	//	   if (scope.PlayerThinkTable.len() < 1) return
 
-	//	   foreach (_, func in scope.TagThinkTable)
+	//	   foreach (_, func in scope.PlayerThinkTable)
 	//		  func(self)
 	// }
 //	   AddThinkToEnt(bot, "PopExt_BotThinks")
@@ -610,7 +610,7 @@ local tagtest = "popext_improvedairblast"
 		local scope = bot.GetScriptScope()
 
 		scope.bot <- AI_Bot(bot)
-		scope.TagThinkTable <- {}
+		scope.PlayerThinkTable <- {}
 
 		if (bot.HasBotTag(tagtest)) {
 			local args = split(tagtest, "|")
@@ -640,7 +640,7 @@ local tagtest = "popext_improvedairblast"
 
 		local items = {
 
-			TagThinkTable = {}
+			PlayerThinkTable = {}
 			TakeDamageTable = {}
 			DeathHookTable = {}
 		}
