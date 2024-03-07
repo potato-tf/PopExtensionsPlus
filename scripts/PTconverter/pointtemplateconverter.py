@@ -452,7 +452,7 @@ def convertpointtemplates(pop, indentationnumber, depth):
 				key = key[1:-1]
 			if type(value) == str and value.count(',') == 4: value = convert_raf_keyvalues(value)
 			newvalue = value.replace('\\', '/')
-			if (key.lower().startswith('on') or key.lower().startswith('ou')) and (newvalue.count(',') == 2 or newvalue.count(',') == 3 or newvalue.count(',') == 4 or 'emitsoundex' in newvalue.lower() or 'popextutil.removeoutputall' in newvalue.lower()):
+			if (key.lower().startswith('on') or key.lower().startswith('$on') or key.lower().startswith('ou')) and (newvalue.count(',') == 2 or newvalue.count(',') == 3 or newvalue.count(',') == 4 or 'emitsoundex' in newvalue.lower() or 'popextutil.removeoutputall' in newvalue.lower()):
 				if key.lower() in uniqueoutputs.keys():
 					uniqueoutputs.update({key.lower() : uniqueoutputs[key.lower()] + 1})
 				else:
@@ -505,7 +505,6 @@ except:
 		i = 0
 		for file in files:
 			if not file.endswith('.pop'): 
-				print('not a population file')
 				continue
 			i += 1
 			print(i, f': {file}')
