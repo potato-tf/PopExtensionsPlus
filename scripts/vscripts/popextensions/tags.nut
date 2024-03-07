@@ -99,7 +99,7 @@ local popext_funcs =
 			local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
 				if (hint && !alwaysfire) bot.PressFireButton(0.0)
 		}
-		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- DispenserBuildThink
+		bot.GetScriptScope().TagThinkTable.DispenserBuildThink <- DispenserBuildThink
 		function DispenserBuildOverride(params) {
 
 			//dispenser built, stop force firing
@@ -252,7 +252,7 @@ local popext_funcs =
 			break
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.BestWeaponThink <- BestWeaponThink
+		bot.GetScriptScope().TagThinkTable.BestWeaponThink <- BestWeaponThink
 	}
 	popext_homingprojectile = function(bot, args) {
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
@@ -269,7 +269,7 @@ local popext_funcs =
 				Homing.AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- HomingProjectileScanner
+		bot.GetScriptScope().TagThinkTable.HomingProjectileScanner <- HomingProjectileScanner
 
 		function HomingTakeDamage(params) {
 			if (!params.const_entity.IsPlayer()) return
@@ -315,7 +315,6 @@ local popext_funcs =
 	popext_improvedairblast = function (bot, args) {
 
 		function ImprovedAirblastThink() {
-
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
 				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
@@ -345,7 +344,7 @@ local popext_funcs =
 				}
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
+		bot.GetScriptScope().TagThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
 	}
 	/* valid attachment points for most playermodels:
 		- head
@@ -376,7 +375,7 @@ local popext_funcs =
 				}
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- AimAtThink
+		bot.GetScriptScope().TagThinkTable.AimAtThink <- AimAtThink
 	}
 	popext_addcondonhit = function(bot, args) {
 		// Tag addcondonhit |cond|duration|threshold|crit
@@ -588,21 +587,21 @@ local popext_funcs =
 	// function PopExt_BotThinks()
 	// {
 	//	   local scope = self.GetScriptScope()
-	//	   if (scope.PlayerThinkTable.len() < 1) return
+	//	   if (scope.TagThinkTable.len() < 1) return
 
-	//	   foreach (_, func in scope.PlayerThinkTable)
+	//	   foreach (_, func in scope.TagThinkTable)
 	//		  func(self)
 	// }
 //	   AddThinkToEnt(bot, "PopExt_BotThinks")
 // }
 
 // local tagtest = "popext_usebestweapon"
-local tagtest = "popext_homingprojectile|1.0|1.0"
+// local tagtest = "popext_homingprojectile|1.0|1.0"
 // local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
 // local tagtest = "popext_dispenseroverride"
 // local tagtest = "popext_forceromevision"
 // local tagtest = "popext_aimat|head"
-// local tagtest = "popext_improvedairblast"
+local tagtest = "popext_improvedairblast"
 // local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 ::PopExtTags <- {
@@ -611,7 +610,7 @@ local tagtest = "popext_homingprojectile|1.0|1.0"
 		local scope = bot.GetScriptScope()
 
 		scope.bot <- AI_Bot(bot)
-		scope.PlayerThinkTable <- {}
+		scope.TagThinkTable <- {}
 
 		if (bot.HasBotTag(tagtest)) {
 			local args = split(tagtest, "|")
@@ -629,18 +628,19 @@ local tagtest = "popext_homingprojectile|1.0|1.0"
 	
 	function OnGameEvent_post_inventory_application(params) {
 		local bot = GetPlayerFromUserID(params.userid)
+		if (!bot.IsBotOfType(1337)) return
 
 		bot.ValidateScriptScope()
 		local scope = bot.GetScriptScope()
-
 		scope.BotThink <- PopExtTags.BotThink
-		AddThinkToEnt(bot, "BotThink")
+		
+		EntFireByHandle(bot, "RunScriptCode", "AddThinkToEnt(self, `BotThink`)", -1, null, null)
 
 		if (!bot.IsBotOfType(1337)) return
 
 		local items = {
 
-			PlayerThinkTable = {}
+			TagThinkTable = {}
 			TakeDamageTable = {}
 			DeathHookTable = {}
 		}

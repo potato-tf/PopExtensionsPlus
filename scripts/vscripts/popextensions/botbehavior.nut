@@ -227,7 +227,7 @@ class AI_Bot {
 
 		time = Time()
 
-		foreach(_, func in scope.PlayerThinkTable) func()
+		foreach(_, func in scope.TagThinkTable) func()
 
 		//SwitchToBestWeapon()
 		//DrawDebugInfo()
