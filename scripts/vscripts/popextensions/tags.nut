@@ -51,8 +51,53 @@ local popext_funcs =
 		if (slot == -1) slot = player.GetActiveWeapon().GetSlot()
 		PopExtUtil.GetItemInSlot(player, slot).Kill()
 	}
+
 	popext_spell = function(bot, args) {
-		local delay, cooldown, repeats, ifseetarget, charges, limit, ifhealthbelow, type
+
+		local type = args[0].tointeger()
+		local cooldown = args[1].tointeger()
+		local delay = (args_len > 2) ? args[2].tointeger() : 3
+		local repeats = (args_len > 2) ? args[2].tointeger() : INT_MAX
+		local charges = (args_len > 3) ? args[3].tointeger() : 2
+		local limit = (args_len > 4) ? args[4].tointeger() : 1
+		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : INT_MAX
+		local ifseetarget = (args_len > 7) ? args[7].tointeger() : 1
+		
+		local spellbook = PopExtUtil.GetWeaponInSlot(bot, SLOT_UTILITY)
+
+		if (spellbook == null) 
+		{
+			ClientPrint(null, 3, bot+" has spell tag with no spellbook!")
+			return
+		}
+
+		local cooldowntime = Time() + cooldown
+		local delaytime = Time() + delay
+
+		local maxspells = 0
+		function SpellThink()
+		{
+			if (maxspells >= limit)
+			{
+				delete bot.GetScriptScope().PlayerThinkTable.SpellThink
+				return
+			}
+
+			if (Time() < delaytime || Time() < cooldowntime || bot.GetHealth() > ifhealthbelow) return
+
+			SetPropEntity(spellbook, "m_iSelectedSpellIndex", type)
+			SetPropEntity(spellbook, "m_iSpellCharges", charges)
+
+			//force equip spellbook temporarily.
+			//there are ways to do this without passive_weapon but it won't do the throwing animation
+
+			spellbook.AddAttribute("is_passive_weapon", 1, 0.1)
+			spellbook.ReapplyProvision()
+
+			maxspells++
+			cooldowntime = Time() + cooldown
+		}
+		bot.GetScriptScope().PlayerThinkTable.SpellThink <- SpellThink
 	}
 	popext_forceromevision = function(bot, args) {
 
