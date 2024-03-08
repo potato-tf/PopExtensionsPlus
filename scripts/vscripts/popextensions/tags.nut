@@ -1,6 +1,6 @@
 local root = getroottable()
 //behavior tags
-IncludeScript("popextensions/botbehavior.nut", root)
+// IncludeScript("popextensions/botbehavior.nut", root)
 
 local popext_funcs =
 {
@@ -57,17 +57,27 @@ local popext_funcs =
 		local type = args[0].tointeger()
 		local cooldown = args[1].tointeger()
 		local delay = (args_len > 2) ? args[2].tointeger() : 3
-		local repeats = (args_len > 2) ? args[2].tointeger() : INT_MAX
-		local charges = (args_len > 3) ? args[3].tointeger() : 2
-		local limit = (args_len > 4) ? args[4].tointeger() : INT_MAX
-		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : INT_MAX
-		local ifseetarget = (args_len > 7) ? args[7].tointeger() : 1
+		local repeats = (args_len > 3) ? args[3].tointeger() : INT_MAX
+		local ifhealthbelow = (args_len > 4) ? args[4].tointeger() : INT_MAX
+		local charges = (args_len > 5) ? args[5].tointeger() : 1
+		local ifseetarget = (args_len > 6) ? args[6].tointeger() : 1
 		
 		local spellbook = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
 
+		//equip a spellbook if the bot doesn't have one
 		if (spellbook == null) 
 		{
-			ClientPrint(null, 3, bot+" has spell tag with no spellbook!")
+			local weapon = Entities.CreateByClassname("tf_weapon_spellbook")
+			SetPropInt(weapon, STRING_NETPROP_ITEMDEF, ID_SPELLBOOK_MAGAZINE_STOCK)
+			SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
+			SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
+
+			weapon.SetTeam(bot.GetTeam())
+			Entities.DispatchSpawn(weapon)
+	
+			bot.Weapon_Equip(weapon)
+
+			//try again next think
 			return
 		}
 
@@ -77,25 +87,26 @@ local popext_funcs =
 		local maxspells = 0
 		function SpellThink()
 		{
-			if (maxspells >= limit)
+			if ((maxspells) >= repeats)
 			{
 				delete bot.GetScriptScope().PlayerThinkTable.SpellThink
 				return
 			}
 
-			if (Time() < delaytime || Time() < cooldowntime || bot.GetHealth() > ifhealthbelow) return
-
-			SetPropEntity(spellbook, "m_iSelectedSpellIndex", type)
-			SetPropEntity(spellbook, "m_iSpellCharges", charges)
-
-			//force equip spellbook temporarily.
-			//there are ways to do this without passive_weapon but it won't do the throwing animation
-
-			spellbook.AddAttribute("is_passive_weapon", 1, 0.1)
-			spellbook.ReapplyProvision()
-			bot.PressFireButton(1.0)
+			if (Time() < delaytime || (Time() < cooldowntime) || bot.GetHealth() > ifhealthbelow) return
 
 			maxspells++
+
+			SetPropInt(spellbook, "m_iSelectedSpellIndex", type)
+			SetPropInt(spellbook, "m_iSpellCharges", charges)
+
+			bot.Weapon_Switch(spellbook)
+			spellbook.AddAttribute("disable weapon switch", 1, 1) // duration doesn't work here?
+			spellbook.ReapplyProvision()
+
+			EntFireByHandle(spellbook, "RunScriptCode", "self.RemoveAttribute(`disable weapon switch`)", 1, null, null)
+			EntFireByHandle(spellbook, "RunScriptCode", "self.ReapplyProvision()", 1, null, null)
+
 			cooldowntime = Time() + cooldown
 		}
 		bot.GetScriptScope().PlayerThinkTable.SpellThink <- SpellThink
@@ -130,6 +141,33 @@ local popext_funcs =
 		function FireWeaponThink(bot) {
 
 		}
+	}
+	popext_ringoffire = function(bot, args) {
+		local args_len = args.len()
+		local damage = (args_len > 0) ? args[0].tofloat() : 7.5
+		local interval = (args_len > 1) ? args[1].tofloat() : 0.5
+		local radius = (args_len > 2) ? args[2].tofloat() : 135.0
+
+		local cooldown = Time() + interval
+		function RingOfFireThink()
+		{
+			if (Time() < cooldown) return
+
+			local origin = bot.GetOrigin()
+			local angles = bot.GetAngles()
+
+			DispatchParticleEffect("heavy_ring_of_fire", origin, angles)
+
+			for (local player; player = FindByClassnameWithin(player, "player", origin, 135.0);)
+			{
+				if (player.GetTeam() == bot.GetTeam() || !PopExtUtil.IsAlive(player)) continue
+
+				player.TakeDamage(damage, DMG_BURN, bot)
+				PopExtUtil.Ignite(player)
+			}
+			cooldown = Time() + interval
+		}
+		bot.GetScriptScope().PlayerThinkTable.RingOfFireThink <- RingOfFireThink
 	}
 	popext_dispenseroverride = function(bot, args) {
 		if (args.len() == 0) args.append(1) //sentry override by default
@@ -219,6 +257,7 @@ local popext_funcs =
 
 	//this is a very simple method for giving bots weapons.
 	popext_giveweapon = function(bot, args) {
+
 		local weapon = Entities.CreateByClassname(args[0])
 		SetPropInt(weapon, STRING_NETPROP_ITEMDEF, args[1].tointeger())
 		SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
@@ -643,12 +682,13 @@ local popext_funcs =
 
 // local tagtest = "popext_usebestweapon"
 // local tagtest = "popext_homingprojectile|1.0|1.0"
-// local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
+// local tagtest = "popext_giveweapon|tf_weapon_shotgun_pyro|425"
 // local tagtest = "popext_dispenseroverride"
 // local tagtest = "popext_forceromevision"
 // local tagtest = "popext_aimat|head"
 // local tagtest = "popext_improvedairblast"
-local tagtest = "popext_spell|0|2"
+// local tagtest = "popext_spell|0|5|2|4|100"
+local tagtest = "popext_ringoffire|20|2"
 // local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 ::PopExtTags <- {

@@ -151,7 +151,7 @@
 	CurrentWaveNum = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
 
 	ClientCommand = SpawnEntityFromTable("point_clientcommand", {targetname = "_clientcommand"})
-	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "_roundwin", TeamNum = 3, force_map_reset = 1})
+	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "__utilroundwin", TeamNum = 3, force_map_reset = 1})
 	RespawnOverride = SpawnEntityFromTable("trigger_player_respawn_override", {spawnflags = 1})
 
 	Events = {
@@ -816,14 +816,22 @@ function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speed
 	EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
 }
 
-function PopExtUtil::Ignite(player, duration = 10)
+function PopExtUtil::Ignite(player, duration = 10, damage = 1)
 {
-	local utilignite = SpawnEntityFromTable("trigger_ignite", {
-		targetname = "__utilignite"
-		burn_duration = duration
-	})
-	utilignite.SetSolid(2)
-	utilignite.SetSize(Vector(-1, -1, -1), Vector())
+	local utilignite = FindByName(null, "__utilignite")
+	if (utilignite == null)
+	{
+		utilignite = SpawnEntityFromTable("trigger_ignite", {
+			targetname = "__utilignite"
+			burn_duration = duration
+			damage = damage
+			spawnflags = 1
+		})
+		utilignite.SetSolid(2)
+		utilignite.SetSize(Vector(-1, -1, -1), Vector())
+	}
+	EntFireByHandle(utilignite, "StartTouch", "", -1, player, player)
+	EntFireByHandle(utilignite, "EndTouch", "", SINGLE_TICK, player, player)
 }
 
 function PopExtUtil::ShowHudHint(player, text = "This is a hud hint", duration = 5) {

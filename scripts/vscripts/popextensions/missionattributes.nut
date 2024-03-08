@@ -15,6 +15,7 @@ if (!("ScriptUnloadTable" in ROOT))
 	DeathHookTable  = {}
 	// InitWaveTable = {}
 	DisconnectTable = {}
+	StartWaveTable = {}
 
 	DebugText        = false
 	RaisedParseError = false
@@ -41,7 +42,7 @@ if (!("ScriptUnloadTable" in ROOT))
 		// function OnGameEvent_player_spawn(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) }
 		function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
-
+		function OnGameEvent_mvm_begin_wave(params) { foreach (_, func in MissionAttributes.StartWaveTable) func(params) }
 		function OnGameEvent_player_team(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
@@ -201,7 +202,7 @@ function MissionAttributes::MissionAttr(...) {
 						EntFireByHandle(pumpkin, "Kill", "", -1, null, null) //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
 			}
 
-			for (local i = 1, player; i <= MaxClients(); i++)
+			foreach (player in PopExtUtil.PlayerArray)
 				if (player = PlayerInstanceFromIndex(i), player && player.InCond(TF_COND_CRITBOOSTED_PUMPKIN)) //TF_COND_CRITBOOSTED_PUMPKIN
 					EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null)
 		}
@@ -250,29 +251,34 @@ function MissionAttributes::MissionAttr(...) {
 	// =========================================================
 
 	case "WaveNum":
-		SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value)
+		function MissionAttributes::SetWaveNum(params = null) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value) }
+		MissionAttributes.SetWaveNum()
+		MissionAttributes.StartWaveTable.SetWaveNum <- MissionAttributes.SetWaveNum
 	break
 
 	// =========================================================
 
-	case "MaxWaveNum":
-		SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value)
+	case "MaxWaveNum":		
+	function MissionAttributes::SetMaxWaveNum(params = null) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value) }
+	MissionAttributes.SetMaxWaveNum()
+	MissionAttributes.StartWaveTable.SetMaxWaveNum <- MissionAttributes.SetMaxWaveNum
 	break
 
 	// =========================================================
 	case "NegativeDmgHeals":
-		function MissionAttributes::NegativeDmgHeals(params) {
-			local player = const_entity
+		// function MissionAttributes::NegativeDmgHeals(params) {
+		// 	local player = params.const_entity
+			
+		// 	local damage = params.damage
+		// 	if (!player.IsPlayer() || damage > 0) return
 
-			if (!player.IsPlayer() || damage > 0) return
+		// 	if ((value == 2 && player.GetHealth() - damage > player.GetMaxHealth()) || //don't overheal is value is 2
+		// 	(value == 1 && player.GetHealth() - damage > player.GetMaxHealth() * 1.5)) return //don't go past max overheal if value is 1
 
-			if ((value == 2 && player.GetHealth() - damage > player.GetMaxHealth()) || //don't overheal is value is 2
-			(value == 1 && player.GetHealth() - damage > player.GetMaxHealth() * 1.5)) return //don't go past max overheal if value is 1
+		// 	player.SetHealth(player.GetHealth() - damage)
 
-			player.SetHealth(player.GetHealth() - damage)
-
-		}
-		MissionAttributes.TakeDamageTable.NegativeDmgHeals <- MissionAttributes.NegativeDmgHeals
+		// }
+		// MissionAttributes.TakeDamageTable.NegativeDmgHeals <- MissionAttributes.NegativeDmgHeals
 	break
 	// =========================================================
 
@@ -539,13 +545,13 @@ function MissionAttributes::MissionAttr(...) {
 	case "TeamWipeWaveLoss":
 		function MissionAttributes::TeamWipeWaveLoss(params) {
 			if (!PopExtUtil.IsWaveStarted) return
-			EntFire("tf_gamerules", "RunScriptCode", "if (PopExtUtil.CountAlivePlayers() == 0) EntFire(`_roundwin`, `RoundWin`)")
+			EntFire("tf_gamerules", "RunScriptCode", "if (PopExtUtil.CountAlivePlayers() == 0) EntFire(`__utilroundwin`, `RoundWin`)")
 		}
 		MissionAttributes.DeathHookTable.TeamWipeWaveLoss <- MissionAttributes.TeamWipeWaveLoss
 	break
 
 	// =========================================================
-	//use -4 to make giants only count as 1 kill
+	
 	case "GiantSentryKillCountOffset":
 
 		function MissionAttributes::GiantSentryKillCount(params) {
@@ -556,7 +562,6 @@ function MissionAttributes::MissionAttr(...) {
 			if (sentry.GetClassname() != "obj_sentrygun" || !victim.IsMiniBoss()) return
 			local kills = GetPropInt(sentry, "m_iKills")
 			SetPropInt(sentry, "m_iKills", kills + value)
-			// EntFireByHandle(sentry, "RunScriptCode", format("SetPropInt(self, `m_iKills`, GetPropInt(self, `m_iKills`) + %d)", value), -1, null, null)
 		}
 
 		MissionAttributes.DeathHookTable.GiantSentryKillCount <- MissionAttributes.GiantSentryKillCount
@@ -570,7 +575,15 @@ function MissionAttributes::MissionAttr(...) {
 				if (typeof value == "string")
 				{
 					local values = split(value, " ")
-				}
+					foreach (v in values)
+					{
+						local split = v.split("|")
+						EntFire(split[0], "SetReturnTime", split[1])
+					}
+						
+				} 
+				else if (typeof value == "integer" || typeof value == "float")
+					EntFire("item_teamflag", "SetReturnTime", value)
 			}
 		}
 	break
@@ -595,8 +608,8 @@ function MissionAttributes::MissionAttr(...) {
 			if (!player.IsPlayer() || !victim.IsPlayer() || IsPlayerABot(player)) return //check if non-bot victim
 			if (player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER) return //check if we're spy/sniper
 			if (GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD) return //check for headshot
-			if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || GetItemIndex(player.GetActiveWeapon()) == ID_SYDNEY_SLEEPER)) return //ignore sydney sleeper and SMGs
-			if (player.GetPlayerClass() == TF_CLASS_SPY && GetItemIndex(player.GetActiveWeapon()) != ID_AMBASSADOR) return //ambassador only
+			if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || PopExtUtil.GetItemIndex(player.GetActiveWeapon()) == ID_SYDNEY_SLEEPER)) return //ignore sydney sleeper and SMGs
+			if (player.GetPlayerClass() == TF_CLASS_SPY && PopExtUtil.GetItemIndex(player.GetActiveWeapon()) != ID_AMBASSADOR) return //ambassador only
 			params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL) //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
 			return true
 		}
@@ -768,8 +781,7 @@ function MissionAttributes::MissionAttr(...) {
 		// 4 = Red bots use zombie models. Overrides human models.
 
 		case "BotsAreHumans":
-			function MissionAttributes::BotsAreHumans(params)
-			{
+			function MissionAttributes::BotsAreHumans(params) {
 				local player = GetPlayerFromUserID(params.userid)
 				if (!player.IsBotOfType(1337)) return
 
