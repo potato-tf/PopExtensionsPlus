@@ -188,10 +188,10 @@
 
 			AddThinkToEnt(player, "PlayerThinks")
 
+			//sort weapons by slot
 			local myweapons = {}
 			for (local i = 0; i < SLOT_COUNT; i++) {
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
-
 				if (wep == null) continue
 
 				myweapons[wep.GetSlot()] <- wep
@@ -506,7 +506,7 @@ function PopExtUtil::StripWeapon(player, slot = -1)
 
     for (local i = 0; i < SLOT_COUNT; i++)
     {
-        local weapon = GetWeaponInSlot(player, i);
+        local weapon = PopExtUtil.GetItemInSlot(player, i);
 
         if (weapon == null || weapon.GetSlot() != slot) continue;
 
@@ -1228,7 +1228,7 @@ function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_
 
 function PopExtUtil::GetPlayerReadyCount() {
 	local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
-	if (!GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return 0
+	if (PopExtUtil.IsWaveStarted) return 0
 	local ready = 0
 
 	for (local i = 0; i < GetPropArraySize(PopExtUtil.GameRules, "m_bPlayerReady"); ++i) {

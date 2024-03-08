@@ -53,17 +53,17 @@ local popext_funcs =
 	}
 
 	popext_spell = function(bot, args) {
-
+		local args_len = args.len()
 		local type = args[0].tointeger()
 		local cooldown = args[1].tointeger()
 		local delay = (args_len > 2) ? args[2].tointeger() : 3
 		local repeats = (args_len > 2) ? args[2].tointeger() : INT_MAX
 		local charges = (args_len > 3) ? args[3].tointeger() : 2
-		local limit = (args_len > 4) ? args[4].tointeger() : 1
+		local limit = (args_len > 4) ? args[4].tointeger() : INT_MAX
 		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : INT_MAX
 		local ifseetarget = (args_len > 7) ? args[7].tointeger() : 1
 		
-		local spellbook = PopExtUtil.GetWeaponInSlot(bot, SLOT_UTILITY)
+		local spellbook = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
 
 		if (spellbook == null) 
 		{
@@ -93,6 +93,7 @@ local popext_funcs =
 
 			spellbook.AddAttribute("is_passive_weapon", 1, 0.1)
 			spellbook.ReapplyProvision()
+			bot.PressFireButton(1.0)
 
 			maxspells++
 			cooldowntime = Time() + cooldown
@@ -646,7 +647,8 @@ local popext_funcs =
 // local tagtest = "popext_dispenseroverride"
 // local tagtest = "popext_forceromevision"
 // local tagtest = "popext_aimat|head"
-local tagtest = "popext_improvedairblast"
+// local tagtest = "popext_improvedairblast"
+local tagtest = "popext_spell|0|2"
 // local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 ::PopExtTags <- {

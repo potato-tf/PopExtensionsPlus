@@ -935,7 +935,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "WaveStartCountdown":
 		function MissionAttributes::WaveStartCountdown() {
-			if (!GetPropBool(PopExtUtil.ObjectiveResource, "m_bMannVsMachineBetweenWaves")) return
+			if (PopExtUtil.IsWaveStarted) return
 
 			local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
 			if (roundtime > Time() + value) {
