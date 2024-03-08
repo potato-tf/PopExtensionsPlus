@@ -11,10 +11,10 @@ Mince:
 // TODO: (ItemAttributes / PlayerAttributes) fix attributes carrying over on classes for some reason
 // Finish LoadoutControl once we have our own giveweapon funcs
 // Change format of playerattributes and itemattributes to be consistent with loadoutcontrol
-// TODO: (ReverseMVM) Fix laser on sniper for human anims
 // TODO: Modify PlayersAreRobots or make a new attr for changing robot vo to human (use this in ReverseMVM)
 // TODO: Reimplement the Error system with try catch and throw
 // TODO: (HolidayPunchFix) Check if we need to set m_hOwnerEnity since we already use SetOwner
+// TODO: (ReverseMVM) Fix laser on sniper for human anims
 // TODO: (ReverseMVM) See if we can forcibly jump to the next wave somehow when firing a game_round_win
 
 // Fix AnimatedViewControlAll camera movement
