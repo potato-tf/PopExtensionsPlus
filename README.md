@@ -15,7 +15,10 @@ scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes
 ## MissionAttributes
 - Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  Forcibly disable romevision, turn players into Robots, apply global item attributes or conditions to players, and way more than can be reasonably listed here
 
-## Bot Tags
+## Bot Tags (WIP) 
+
+### NOTE: None of this currently works until a GetAllBotTags VScript function is added to the game. 
+
 - Dozens of bot tags that mimic many of the rafmod/sigmod TFBot keyvalues
 - Enables a variety of AI mechanics previously exclusive to rafmod/sigmod. Spellcasting bots, custom spawn locations, homing rockets, the list goes on.
 
@@ -29,12 +32,12 @@ scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes
 ## Reverse MvM
 - Native Reverse MvM support (WIP)
 
-## Backwards Compatible
-- All the original features of popextensions for adding spawn/death output hooks to bots and tanks are still supported, making this library a drop-in replacement.
-
-## Self-contained 
+## Self-Contained 
 - no need to worry about cleaning everything up manually, popextensions will automatically remove itself and all of its changes when a new popfile or wave that does not use it is loaded. 
 
+## Backwards Compatible
+- All the original features of popextensions for adding spawn/death output hooks to bots and tanks are still supported, making this library a drop-in replacement.
+- 
 # IMPORTANT NOTE FOR SERVER OWNERS 
 
 This library has a handful of features that rely on convars that are not included by default in `cfg/vscript_convar_allowlist.txt`.  You will need to modify this cfg file to add the following convars:
