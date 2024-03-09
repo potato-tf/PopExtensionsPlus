@@ -285,25 +285,26 @@ local popext_funcs =
 		//force deploy dispenser when leaving spawn and kill it immediately
 		if (!alwaysfire && args[0].tointeger() == 1) bot.PressFireButton(INT_MAX)
 
-		function DispenserBuildThink() {
+		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- function() {
 
 			//start forcing primary attack when near hint
 			local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
 				if (hint && !alwaysfire) bot.PressFireButton(0.0)
 		}
-		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- DispenserBuildThink
+
 		function DispenserBuildOverride(params) {
 
+			local obj = params.object
 			//dispenser built, stop force firing
 			if (!alwaysfire) bot.PressFireButton(0.0)
 
-			if ((args[0].tointeger() == 1 && params.object == OBJ_SENTRYGUN) || (args[0].tointeger() == 2 && params.object == OBJ_TELEPORTER)) {
-				if (params.object == OBJ_SENTRYGUN) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
+			if ((args[0].tointeger() == 1 && obj == OBJ_SENTRYGUN) || (args[0].tointeger() == 2 && obj == OBJ_TELEPORTER)) {
+				if (obj == OBJ_SENTRYGUN) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
 
 				bot.AddCustomAttribute("upgrade rate decrease", 8, -1)
 				local building = EntIndexToHScript(params.index)
-				if (params.object == OBJ_TELEPORTER) {
-					
+				if (obj != OBJ_DISPENSER) {
+
 					building.ValidateScriptScope()
 					building.GetScriptScope().CheckBuiltThink <- function() {
 
@@ -368,7 +369,6 @@ local popext_funcs =
 
 				AddOutput(dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1) //kill it to avoid showing up in killfeed
 				AddOutput(building, "OnDestroyed", dispenser.GetName(), "Destroy", "", -1, -1) //always destroy the dispenser
-				EntFireByHandle(building, "Disable", "", 10.6, null, null)
 			}
 		}
 		bot.GetScriptScope().BuiltObjectTable.DispenserBuildOverride <- DispenserBuildOverride
