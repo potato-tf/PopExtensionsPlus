@@ -270,13 +270,9 @@ local popext_funcs =
 
 		function WeaponResistTakeDamage(params)
 		{	
-			printl(params.const_entity)
 			if (!params.const_entity.IsPlayer() || params.weapon == null || (params.weapon.GetClassname() != weapon || PopExtUtil.GetItemIndex(params.weapon) != weapon.tointeger())) return
 			params.damage *= amount
 		}
-		foreach(k,v in bot.GetScriptScope()) 
-			if (k == "TakeDamageTable") printl(v)
-				// foreach(a, b in k) printl(a + " : " + b)
 		
 		bot.GetScriptScope().TakeDamageTable.WeaponResistTakeDamage <- WeaponResistTakeDamage
 	}
@@ -306,7 +302,18 @@ local popext_funcs =
 
 				bot.AddCustomAttribute("upgrade rate decrease", 8, -1)
 				local building = EntIndexToHScript(params.index)
-				if (params.object == OBJ_TELEPORTER) EntFireByHandle(building, "Disable", "", 21.01, null, null)
+				if (params.object == OBJ_TELEPORTER) {
+					
+					building.ValidateScriptScope()
+					building.GetScriptScope().CheckBuiltThink <- function() {
+
+						if (GetPropBool(building, "m_bBuilding")) return
+
+						EntFireByHandle(building, "Disable", "", -1, null, null)
+						delete building.GetScriptScope().CheckBuiltThink
+					}
+					AddThinkToEnt(building, "CheckBuiltThink")
+				}
 				//kill the first alwaysfire built dispenser when leaving spawn
 				local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 16)
 
