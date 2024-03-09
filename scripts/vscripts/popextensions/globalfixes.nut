@@ -172,6 +172,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
 				local activegun = player.GetActiveWeapon()
+
+				printl(activegun.Clip1())
 				
 				if (activegun == null) return
 

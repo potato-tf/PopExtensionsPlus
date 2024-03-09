@@ -207,7 +207,7 @@ function MissionAttributes::MissionAttr(...) {
 			}
 
 			foreach (player in PopExtUtil.PlayerArray)
-				if (player = PlayerInstanceFromIndex(i), player && player.InCond(TF_COND_CRITBOOSTED_PUMPKIN)) //TF_COND_CRITBOOSTED_PUMPKIN
+				if (player.InCond(TF_COND_CRITBOOSTED_PUMPKIN)) //TF_COND_CRITBOOSTED_PUMPKIN
 					EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null)
 		}
 
@@ -1860,6 +1860,11 @@ function MissionAttributes::MissionAttr(...) {
 				delete scope.BuiltObjectTable.DrainMetal
 				delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink
 			}
+			if (value & 8)
+				if (player.GetPlayerClass() == TF_CLASS_SPY)
+				{
+					player.AddCustomAttribute("cloak consume rate decreased", -FLT_MAX, -1)
+				}
 			
 		}
 		MissionAttributes.SpawnHookTable.ReverseMVMSpawn <- MissionAttributes.ReverseMVMSpawn

@@ -797,7 +797,7 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 function PopExtUtil::HasItemIndex(player, index) {
 	local t = false
 	for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-		if (GetItemIndex(child) == index) {
+		if (PopExtUtil.GetItemIndex(child) == index) {
 			t = true
 			break
 		}
@@ -806,18 +806,22 @@ function PopExtUtil::HasItemIndex(player, index) {
 }
 
 function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5) {
-	local utilstun = SpawnEntityFromTable("trigger_stun", {
-		targetname = "__utilstun"
-		stun_type = type
-		stun_duration = duration
-		move_speed_reduction = speedreduce
-		trigger_delay = delay
-		StartDisabled = 0
-		spawnflags = 1
-		"OnStunPlayer#1": "!self,Kill,,-1,-1"
-	})
+
+	local utilstun = FindByName(null, "__utilstun")
+
+	if (utilstun == null) {
+		utilstun = SpawnEntityFromTable("trigger_stun", {	
+			targetname = "__utilstun"
+			stun_type = type
+			stun_duration = duration
+			move_speed_reduction = speedreduce
+			trigger_delay = delay
+			StartDisabled = 0
+			spawnflags = 1
+		})
+	}
 	utilstun.SetSolid(2)
-	utilstun.SetSize(Vector(-1, -1, -1), Vector())
+	utilstun.SetSize(Vector(-1, -1, -1), Vector())	
 
 	EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
 }
@@ -840,14 +844,14 @@ function PopExtUtil::Ignite(player, duration = 10, damage = 1)
 	EntFireByHandle(utilignite, "EndTouch", "", SINGLE_TICK, player, player)
 }
 
-function PopExtUtil::ShowHudHint(player, text = "This is a hud hint", duration = 5) {
-	local hudhint = FindByName(null, "__hudhint") != null
+function PopExtUtil::ShowHudHint(text = "This is a hud hint", player = null, duration = 5) {
+	local hudhint = FindByName(null, "__utilhudhint") != null
 
 	local flags = (player == null) ? 1 : 0
 
-	if (!hudhint) ::__hudhint <- SpawnEntityFromTable("env_hudhint", { targetname = "__hudhint", spawnflags = flags, message = text })
+	if (!hudhint) hudhint = SpawnEntityFromTable("env_hudhint", { targetname = "__utilhudhint", spawnflags = flags, message = text })
 
-	__hudhint.KeyValueFromString("message", text)
+	hudhint.KeyValueFromString("message", text)
 
 	EntFireByHandle(__hudhint, "ShowHudHint", "", -1, player, player)
 	EntFireByHandle(__hudhint, "HideHudHint", "", duration, player, player)

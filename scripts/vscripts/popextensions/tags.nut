@@ -13,7 +13,10 @@ local tagtest =  [
 	"popext_usehumananims",
 	"popext_spell|0|5|2|4|150",
 	"popext_ringoffire|20|2",
-	"popext_weaponswitch|2"
+	"popext_weaponswitch|2",
+	"popext_fireweapon|2048",
+	"popext_dispenseroverride",
+	"popext_weaponresist|tf_weapon_minigun|0.5"
 ]
 
 local popext_funcs =
@@ -68,7 +71,8 @@ local popext_funcs =
 
 	popext_fireweapon = function(bot, args) {
 		
-		local slot = args[0].tointeger()
+		local args_len = args.len()
+		local button = args[0].tointeger()
 		local cooldown = (args_len > 1) ? args[1].tointeger() : 3
 		local duration = (args_len > 2) ? args[2].tointeger() : 1.0
 		local delay = (args_len > 3) ? args[3].tointeger() : 0
@@ -88,7 +92,7 @@ local popext_funcs =
 				return
 			}
 
-			if (Time() < delaytime || (Time() < cooldowntime) || bot.GetHealth() > ifhealthbelow) return
+			if (Time() < delaytime || (Time() < cooldowntime) || bot.GetHealth() > ifhealthbelow || bot.HasBotAttribute(SUPPRESS_FIRE)) return
 
 			maxrepeats++
 
@@ -214,7 +218,10 @@ local popext_funcs =
 			return
 		}
 		foreach (cosmetic in cosmetics)
-			PopExtUtil.CreatePlayerWearable(self, cosmetic)
+		{
+			local wearable = PopExtUtil.CreatePlayerWearable(self, cosmetic)
+			SetPropString(wearable, `m_iName`, `__bot_romevision_model`)
+		}
 		", -1, null, null)
 	}
 	popext_ringoffire = function(bot, args) {
@@ -243,18 +250,35 @@ local popext_funcs =
 		}
 		bot.GetScriptScope().PlayerThinkTable.RingOfFireThink <- RingOfFireThink
 	}
-	popext_meleeai = function(bot, args) {
-		local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
+	// popext_meleeai = function(bot, args) {
+	// 	local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
 
-		function MeleeAIThink() {
-			local threat = FindThreat(visionoverride)
+	// 	function MeleeAIThink() {
+	// 		local threat = FindThreat(visionoverride)
 			
-			if (threat == null || threat.IsFullyInvisible() || threat.IsStealthed()) return
+	// 		if (threat == null || threat.IsFullyInvisible() || threat.IsStealthed()) return
 
-			SetThreat(threat, true)
+	// 		SetThreat(threat, true)
+	// 	}
+
+	// 	bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- MeleeAIThink
+	// }
+
+	popext_weaponresist = function(bot, args) {
+		local weapon = args[0]
+		local amount = args[1].tofloat()
+
+		function WeaponResistTakeDamage(params)
+		{	
+			printl(params.const_entity)
+			if (!params.const_entity.IsPlayer() || params.weapon == null || (params.weapon.GetClassname() != weapon || PopExtUtil.GetItemIndex(params.weapon) != weapon.tointeger())) return
+			params.damage *= amount
 		}
-
-		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- MeleeAIThink
+		foreach(k,v in bot.GetScriptScope()) 
+			if (k == "TakeDamageTable") printl(v)
+				// foreach(a, b in k) printl(a + " : " + b)
+		
+		bot.GetScriptScope().TakeDamageTable.WeaponResistTakeDamage <- WeaponResistTakeDamage
 	}
 
 	popext_dispenseroverride = function(bot, args) {
@@ -448,8 +472,7 @@ local popext_funcs =
 			if (!params.const_entity.IsPlayer()) return
 
 			local classname = params.inflictor.GetClassname()
-			if (classname != "tf_projectile_flare" && classname != "tf_projectile_energy_ring")
-				return
+			if (classname != "tf_projectile_flare" && classname != "tf_projectile_energy_ring") return
 
 			EntFireByHandle(params.inflictor, "Kill", null, 0.5, null, null)
 		}
@@ -648,6 +671,9 @@ local popext_funcs =
 		projectile_scope.ignoreDisguisedSpies <- ignoreDisguisedSpies
 		projectile_scope.ignoreStealthedSpies <- ignoreStealthedSpies
 
+		//this should be added in globalfixes.nut but sometimes this code tries to run before the table is created
+		if (!("ProjectileThinkTable" in projectile_scope)) projectile_scope.ProjectileThinkTable <- {}
+
 		projectile_scope.ProjectileThinkTable.HomingProjectileThink <- Homing.HomingProjectileThink
 	}
 
@@ -823,7 +849,7 @@ local popext_funcs =
 
 		if (!("TakeDamageTable" in scope)) return
 
-		foreach (_, func in scope.TakeDamageTable) func(params)
+		foreach (_, func in scope.TakeDamageTable) { printl(_); func(params) }
 	}
 	function OnGameEvent_player_builtobject(params) {
 
