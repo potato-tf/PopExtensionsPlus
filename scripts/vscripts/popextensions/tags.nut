@@ -8,14 +8,14 @@ local tagtest =  [
 	"popext_alwaysglow",
 	"popext_usebestweapon",
 	"popext_giveweapon|tf_weapon_shotgun_pyro|425",
-	"popext_homingprojectile|1.0|1.0",
+	"popext_homingprojectile|2|1.0",
 	"popext_improvedairblast",
 	"popext_usehumananims",
 	"popext_spell|0|5|2|4|150",
 	"popext_ringoffire|20|2",
 	"popext_weaponswitch|2",
 	"popext_fireweapon|2048",
-	"popext_dispenseroverride",
+	"popext_dispenseroverride|2",
 	"popext_weaponresist|tf_weapon_minigun|0.5"
 ]
 
@@ -287,7 +287,7 @@ local popext_funcs =
 		local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
 
 		//force deploy dispenser when leaving spawn and kill it immediately
-		if (!alwaysfire) bot.PressFireButton(INT_MAX)
+		if (!alwaysfire && args[0].tointeger() == 1) bot.PressFireButton(INT_MAX)
 
 		function DispenserBuildThink() {
 
@@ -301,12 +301,12 @@ local popext_funcs =
 			//dispenser built, stop force firing
 			if (!alwaysfire) bot.PressFireButton(0.0)
 
-			if ((args[0].tointeger() == 1 && params.object == 2) || (args[0].tointeger() == 2 && params.object == 1)) {
-				if (params.object == 2) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
+			if ((args[0].tointeger() == 1 && params.object == OBJ_SENTRYGUN) || (args[0].tointeger() == 2 && params.object == OBJ_TELEPORTER)) {
+				if (params.object == OBJ_SENTRYGUN) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
 
 				bot.AddCustomAttribute("upgrade rate decrease", 8, -1)
 				local building = EntIndexToHScript(params.index)
-
+				if (params.object == OBJ_TELEPORTER) EntFireByHandle(building, "Disable", "", 21.01, null, null)
 				//kill the first alwaysfire built dispenser when leaving spawn
 				local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 16)
 
@@ -662,12 +662,13 @@ local popext_funcs =
 	// Modify the AttachProjectileThinker function to accept projectile speed adjustment if needed
 	function AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies = true, ignoreStealthedSpies = true) {
 		local projectile_speed = projectile.GetAbsVelocity().Norm()
-		projectile_speed *= speed_mult
+
+		// printl("speed: " + projectile_speed)
 
 		projectile.ValidateScriptScope()
 		local projectile_scope = projectile.GetScriptScope()
 		projectile_scope.turn_power			  <- turn_power
-		projectile_scope.projectile_speed	  <- projectile_speed
+		projectile_scope.projectile_speed	  <- projectile_speed // * speed_mult
 		projectile_scope.ignoreDisguisedSpies <- ignoreDisguisedSpies
 		projectile_scope.ignoreStealthedSpies <- ignoreStealthedSpies
 
@@ -728,11 +729,13 @@ local popext_funcs =
 	function FaceTowards(new_target, projectile, projectile_speed) {
 		local scope = projectile.GetScriptScope()
 		local desired_dir = new_target.EyePosition() - projectile.GetOrigin()
-			desired_dir.Norm()
+		
+		desired_dir.Norm()
 
 		local current_dir = projectile.GetForwardVector()
 		local new_dir = current_dir + (desired_dir - current_dir) * scope.turn_power
-			new_dir.Norm()
+		// printl("Dir: " + new_dir)
+		new_dir.Norm()
 
 		local move_ang = PopExtUtil.VectorAngles(new_dir)
 		local projectile_velocity = move_ang.Forward() * projectile_speed

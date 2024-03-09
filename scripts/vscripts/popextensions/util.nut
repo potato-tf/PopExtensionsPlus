@@ -729,6 +729,34 @@ function PopExtUtil::PressButton(player, button) {
 	SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") | button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") | button)
 }
 
+function PopExtUtil::IsPointInRespawnRoom(point)
+{
+	local triggers = []
+	for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
+	{
+		trigger.SetCollisionGroup(0)
+		trigger.RemoveSolidFlags(4) // FSOLID_NOT_SOLID
+		triggers.append(trigger)
+	}
+	
+	local trace =
+	{
+		start = point,
+		end = point,
+		mask = 0
+	}
+	TraceLineEx(trace)
+	
+	foreach (trigger in triggers)
+	{
+		trigger.SetCollisionGroup(25) // special collision group used by respawnrooms only
+		trigger.AddSolidFlags(4) // FSOLID_NOT_SOLID
+	}
+
+	return trace.hit && trace.enthit.GetClassname() == "func_respawnroom"
+}
+
+
 //assumes user is using the SLOT_ constants
 function PopExtUtil::SwitchWeaponSlot(player, slot) {
 	EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player)

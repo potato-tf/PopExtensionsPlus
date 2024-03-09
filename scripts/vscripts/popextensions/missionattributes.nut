@@ -1860,11 +1860,21 @@ function MissionAttributes::MissionAttr(...) {
 				delete scope.BuiltObjectTable.DrainMetal
 				delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink
 			}
-			if (value & 8)
-				if (player.GetPlayerClass() == TF_CLASS_SPY)
+
+			//infinite cloak
+			if (value & 8 && player.GetPlayerClass() == TF_CLASS_SPY)
+				//setting it to -FLT_MAX makes it display as +inf%
+				player.AddCustomAttribute("cloak consume rate decreased", -FLT_MAX, -1)
+			
+			if (value & 16)
+			{
+				function InRespawnThink()
 				{
-					player.AddCustomAttribute("cloak consume rate decreased", -FLT_MAX, -1)
+					if (player.InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED) || !PopExtUtil.IsPointInRespawnRoom(player.EyePosition())) return
+					player.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, 1, null)
 				}
+			}
+				
 			
 		}
 		MissionAttributes.SpawnHookTable.ReverseMVMSpawn <- MissionAttributes.ReverseMVMSpawn
