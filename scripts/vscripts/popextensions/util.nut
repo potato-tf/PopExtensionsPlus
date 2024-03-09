@@ -188,6 +188,12 @@
 
 			AddThinkToEnt(player, "PlayerThinks")
 
+			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) 
+			{
+				scope.BuiltObjectTable <- {}
+				scope.buildings <- [-1, array(2), -1]
+			}
+			
 			//sort weapons by slot
 			local myweapons = {}
 			for (local i = 0; i < SLOT_COUNT; i++) {

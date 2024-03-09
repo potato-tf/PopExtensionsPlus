@@ -63,7 +63,11 @@ if (!("ScriptUnloadTable" in ROOT))
 
 			AddThinkToEnt(player, "PlayerThinks")
 
-			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
+			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) 
+			{
+				scope.BuiltObjectTable <- {}
+				scope.buildings <- []
+			}
 		}
 		// Hook all wave inits to reset parsing error counter.
 
@@ -751,6 +755,7 @@ function MissionAttributes::MissionAttr(...) {
 				function RobotArmThink() {
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 					local playervm = GetPropEntity(player, "m_hViewModel")
+					if (playervm == null) return
 					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 
 					for (local i = 0; i < SLOT_COUNT; i++) {
@@ -1085,15 +1090,24 @@ function MissionAttributes::MissionAttr(...) {
 				success = false
 				return
 			}
-
-			local tfclass = player.GetPlayerClass();
+			
+			local tfclass = player.GetPlayerClass()
+			foreach (k, v in value)
+			{
+				printl(k + " : " +v)
+				if (typeof k == "string" && (typeof v == "integer" || typeof v == "float"))
+					EntFireByHandle(player, "RunScriptCode", ""+player.AddCustomAttribute(k, v, -1), -1, null, null)
+			}
+			
 			if (!(tfclass in value)) return
-
-			local table = value[tfclass];
+			local table = value[tfclass]
 			foreach (key, val in table) {
 				local valformat = ""
 				if (typeof val == "integer")
 					valformat = format("self.AddCustomAttribute(`%s`, %d, -1)", key, val)
+
+				else if (typeof val == "float")
+					valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", key, val)
 
 				else if (typeof val == "string") {
 					MissionAttributes.RaiseValueError("PlayerAttributes", val, "Cannot set string attributes!")
@@ -1101,8 +1115,6 @@ function MissionAttributes::MissionAttr(...) {
 					return
 				}
 
-				else if (typeof val == "float")
-					valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", key, val)
 
 				EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
 				if (key in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
@@ -1461,6 +1473,7 @@ function MissionAttributes::MissionAttr(...) {
 			scope.handled_laser   <- false
 			scope.laser_spawntime <- -1
 			scope.PlayerThinkTable.ReverseMVMLaserThink <- function() {
+
 				if (!PopExtUtil.IsAlive(player) || player.GetTeam() == TEAM_SPECTATOR) return
 
 				local wep = self.GetActiveWeapon()
@@ -1513,6 +1526,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Allow money collection
 			scope.PlayerThinkTable.ReverseMVMCurrencyThink <- function() {
+
 				// Save money netprops because we fuck it in the loop below
 				local money              = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
 				local prev_wave_money    = GetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped")
@@ -1534,6 +1548,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Allow pack collection
 			scope.PlayerThinkTable.ReverseMVMPackThink <- function() {
+
 				local origin = self.GetOrigin()
 				for ( local ent; ent = FindByClassnameWithin(ent, "item_*", origin, 40); ) {
 					if (ent.GetEFlags() & EFL_USER) continue
@@ -1623,6 +1638,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Drain player ammo on weapon usage
 			scope.PlayerThinkTable.ReverseMVMDrainAmmoThink <- function() {
+
 				local buttons = NetProps.GetPropInt(self, "m_nButtons");
 
 				local wep = player.GetActiveWeapon()
@@ -1786,13 +1802,65 @@ function MissionAttributes::MissionAttr(...) {
 					}
 				}
 			}
+			if (player.GetPlayerClass() == TF_CLASS_ENGINEER)
+			{
+				scope.BuiltObjectTable.DrainMetal <- function(params) {
+				
+					local player = GetPlayerFromUserID(params.userid)
+					local scope = player.GetScriptScope()
+					local curmetal = GetPropIntArray(player, "m_iAmmo", TF_AMMO_METAL)
+					if (!("buildings" in scope)) scope.buildings <- [-1, array(2), -1]
+					printl(scope.buildings)
+					// don't drain metal if this buildings entindex exists in the players scope
+					if (scope.buildings.find(params.index) != null || scope.buildings[1].find(params.index) != null) return
+				
+					// add entindexes to player scope
+					if (params.object == OBJ_TELEPORTER)
+						if (GetPropInt(EntIndexToHScript(params.index), "m_iTeleportType") == TTYPE_ENTRANCE)
+							scope.buildings[1][0] = params.index
+						else
+							scope.buildings[1][1] = params.index
+					else
+						scope.buildings[params.object] = params.index
+				
+					switch(params.object)
+					{
+						case OBJ_DISPENSER:
+							SetPropIntArray(player, "m_iAmmo", curmetal - 100, TF_AMMO_METAL)
+						break
+					
+						case OBJ_TELEPORTER:
+							if (PopExtUtil.HasItemIndex(player, ID_EUREKA_EFFECT))
+								SetPropIntArray(player, "m_iAmmo", curmetal - 25, TF_AMMO_METAL)
+							else
+								SetPropIntArray(player, "m_iAmmo", curmetal - 50, TF_AMMO_METAL)
+						break
+					
+						case OBJ_SENTRYGUN:
+							if (PopExtUtil.HasItemIndex(player, ID_GUNSLINGER))
+								SetPropIntArray(player, "m_iAmmo", curmetal - 100, TF_AMMO_METAL)
+							else
+								SetPropIntArray(player, "m_iAmmo", curmetal - 130, TF_AMMO_METAL)
+						break
+					}
+					if (GetPropIntArray(player, "m_iAmmo", TF_AMMO_METAL) < 0) EntFireByHandle(player, "RunScriptCode", "SetPropIntArray(player, `m_iAmmo`, 0, TF_AMMO_METAL)", -1, null, null)
+				}
+
+			}
 
 			//bitflags
 			//cannot pick up intel
 			if (value & 2)
-			{
 				player.AddCustomAttribute("cannot pick up intelligence", 1, -1)
+			
+			//remove ammo drain
+			//we should probably avoid adding it to the think table altogether but whatever 
+			if (value & 4)
+			{
+				delete scope.BuiltObjectTable.DrainMetal
+				delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink
 			}
+			
 		}
 		MissionAttributes.SpawnHookTable.ReverseMVMSpawn <- MissionAttributes.ReverseMVMSpawn
 	break
