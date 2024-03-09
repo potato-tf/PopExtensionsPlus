@@ -149,7 +149,8 @@ local popext_funcs =
 		local radius = (args_len > 2) ? args[2].tofloat() : 135.0
 
 		local cooldown = Time() + interval
-		function RingOfFireThink() {
+		function RingOfFireThink()
+		{
 			if (Time() < cooldown) return
 
 			local origin = bot.GetOrigin()
@@ -177,8 +178,9 @@ local popext_funcs =
 			if (threat == null || threat.IsFullyInvisible() || threat.IsStealthed()) return
 
 			SetThreat(threat, true)
+				
 		}
-
+		
 		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- MeleeAIThink
 	}
 	popext_dispenseroverride = function(bot, args) {
