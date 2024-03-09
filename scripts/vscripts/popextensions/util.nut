@@ -786,7 +786,7 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 
 	function PopExtUtil::BotModelThink() {
 		if (wearable && (player.IsTaunting() || wearable.GetMoveParent() != player))
-			EntFireByHandle(wearable, "SetParent", "!activator", -1, self, self)
+			EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player)
 		return -1
 	}
 

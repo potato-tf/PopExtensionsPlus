@@ -1,6 +1,21 @@
 //behavior tags
 IncludeScript("popextensions/botbehavior", getroottable())
 
+local tagtest =  [
+	"popext_forceromevision",
+	"popext_addcond|32|10",
+	"popext_usehumanmodel",
+	"popext_alwaysglow",
+	"popext_usebestweapon",
+	"popext_giveweapon|tf_weapon_shotgun_pyro|425",
+	"popext_homingprojectile|1.0|1.0",
+	"popext_improvedairblast",
+	"popext_usehumananims",
+	"popext_spell|0|5|2|4|150",
+	"popext_ringoffire|20|2",
+	"popext_weaponswitch|2"
+]
+
 local popext_funcs =
 {
 	popext_addcond = function(bot, args) {
@@ -84,13 +99,13 @@ local popext_funcs =
 	}
 	
 	popext_weaponswitch = function(bot, args) {
-		
+		local args_len = args.len()
 		local slot = args[0].tointeger()
 		local cooldown = (args_len > 1) ? args[1].tointeger() : 3
-		local duration = (args_len > 2) ? args[2].tointeger() : 1
-		local delay = (args_len > 3) ? args[3].tointeger() : INT_MAX
-		local repeats = (args_len > 4) ? args[4].tointeger() : 1
-		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : 1
+		local duration = (args_len > 2) ? args[2].tointeger() : 5
+		local delay = (args_len > 3) ? args[3].tointeger() : 3
+		local repeats = (args_len > 4) ? args[4].tointeger() : INT_MAX
+		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : INT_MAX
 		local ifseetarget = (args_len > 6) ? args[6].tointeger() : 1
 
 		local maxrepeats = 0
@@ -109,8 +124,10 @@ local popext_funcs =
 
 			maxrepeats++
 
-			PopExtUtil.SwitchWeaponSlot(bot, slot)
+			bot.Weapon_Switch(PopExtUtil.GetItemInSlot(bot, slot))
 			bot.AddCustomAttribute("disable weapon switch", 1, duration)
+			EntFireByHandle(bot, "RunScriptCode","self.RemoveCustomAttribute(`disable weapon switch`)", duration, null, null)
+			EntFireByHandle(bot, "RunScriptCode", format("self.Weapon_Switch(PopExtUtil.GetItemInSlot(self, %d))", slot), duration+SINGLE_TICK, null, null)
 			cooldowntime = Time() + cooldown
 		}
 		bot.GetScriptScope().PlayerThinkTable.WeaponSwitchThink <- WeaponSwitchThink
@@ -344,7 +361,7 @@ local popext_funcs =
 	}
 
 	popext_usebestweapon = function(bot, args) {
-		function BestWeaponThink(bot) {
+		function BestWeaponThink() {
 			switch(bot.GetPlayerClass()) {
 			case 1: //TF_CLASS_SCOUT
 
@@ -750,18 +767,6 @@ local popext_funcs =
 //	   AddThinkToEnt(bot, "PopExt_BotThinks")
 // }
 
-// local tagtest = "popext_usebestweapon"
-// local tagtest = "popext_homingprojectile|1.0|1.0"
-// local tagtest = "popext_giveweapon|tf_weapon_shotgun_pyro|425"
-// local tagtest = "popext_dispenseroverride"
-// local tagtest = "popext_forceromevision"
-// local tagtest = "popext_aimat|head"
-// local tagtest = "popext_improvedairblast"
-local tagtest = "popext_spell|0|5|2|4|100"
-// local tagtest = "popext_ringoffire|20|2"
-// local tagtest = "popext_meleeai"
-// local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
-
 ::PopExtTags <- {
 
 	function AI_BotSpawn(bot) {
@@ -769,13 +774,16 @@ local tagtest = "popext_spell|0|5|2|4|100"
 
 		scope.bot <- AI_Bot(bot)
 		scope.PlayerThinkTable <- {}
-
-		if (bot.HasBotTag(tagtest)) {
-			local args = split(tagtest, "|")
-			local func = args.remove(0)
-			if (func in popext_funcs)
-				popext_funcs[func](bot, args)
+		
+		foreach(tag in tagtest) {
+			if (bot.HasBotTag(tag)) {
+				local args = split(tag, "|")
+				local func = args.remove(0)
+				if (func in popext_funcs)
+					popext_funcs[func](bot, args)
+			}
 		}
+		
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
 	}
 	function BotThink()
