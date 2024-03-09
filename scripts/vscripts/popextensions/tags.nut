@@ -1,6 +1,6 @@
 local root = getroottable()
 //behavior tags
-IncludeScript("popextensions/botbehavior", root)
+// IncludeScript("popextensions/botbehavior.nut", root)
 
 local popext_funcs =
 {
@@ -158,7 +158,7 @@ local popext_funcs =
 
 			DispatchParticleEffect("heavy_ring_of_fire", origin, angles)
 
-			for (local player; player = FindByClassnameWithin(player, "player", origin, radius);)
+			for (local player; player = FindByClassnameWithin(player, "player", origin, 135.0);)
 			{
 				if (player.GetTeam() == bot.GetTeam() || !PopExtUtil.IsAlive(player)) continue
 
@@ -168,20 +168,6 @@ local popext_funcs =
 			cooldown = Time() + interval
 		}
 		bot.GetScriptScope().PlayerThinkTable.RingOfFireThink <- RingOfFireThink
-	}
-	popext_meleeai = function(bot, args) {
-		local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
-
-		function MeleeAIThink() {
-			local threat = FindThreat(visionoverride)
-			
-			if (threat == null || threat.IsFullyInvisible() || threat.IsStealthed()) return
-
-			SetThreat(threat, true)
-				
-		}
-		
-		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- MeleeAIThink
 	}
 	popext_dispenseroverride = function(bot, args) {
 		if (args.len() == 0) args.append(1) //sentry override by default
@@ -418,7 +404,8 @@ local popext_funcs =
 				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
-				if (GetThreatDistanceSqr(projectile) <= 67000 && IsVisible(projectile)) {
+				local dist = GetThreatDistanceSqr(projectile)
+				if (dist <= 67000 && IsVisible(projectile)) {
 					switch (botLevel) {
 						case 1: // Basic Airblast, only deflect if in FOV
 
@@ -701,8 +688,7 @@ local popext_funcs =
 // local tagtest = "popext_aimat|head"
 // local tagtest = "popext_improvedairblast"
 // local tagtest = "popext_spell|0|5|2|4|100"
-// local tagtest = "popext_ringoffire|20|2"
-local tagtest = "popext_meleeai"
+local tagtest = "popext_ringoffire|20|2"
 // local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
 
 ::PopExtTags <- {

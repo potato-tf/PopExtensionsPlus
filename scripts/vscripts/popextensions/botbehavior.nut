@@ -118,7 +118,7 @@ class AI_Bot {
 					}
 				break
 				}
-				bot.PressAltFireButton()
+				bot.PressAltFireButton(0.0)
 			}
 		}
 	}
@@ -161,7 +161,7 @@ class AI_Bot {
 
 		if (fire_next_time > time) {
 			bot.AddBotAttribute(SUPPRESS_FIRE)
-			bot.PressFireButton()
+			bot.PressFireButton(0.0)
 			bot.RemoveBotAttribute(SUPPRESS_FIRE)
 			return false
 		}
@@ -194,7 +194,7 @@ class AI_Bot {
 			return
 
 		bot.AddBotAttribute(SUPPRESS_FIRE)
-		bot.PressAltFireButton()
+		bot.PressAltFireButton(0.0)
 		bot.RemoveBotAttribute(SUPPRESS_FIRE)
 		aim_time = FLT_MAX
 	}
