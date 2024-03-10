@@ -33,6 +33,9 @@ if (!("ScriptUnloadTable" in ROOT))
 	{
 		MissionAttributes.ResetConvars()
 		MissionAttributes.PathNum = 0
+		foreach (bot in PopExtUtil.BotArray)
+			if (bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
+				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
 
 		MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 	}

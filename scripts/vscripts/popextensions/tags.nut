@@ -20,14 +20,20 @@ local tagtest =  [
 	"popext_rocketcustomtrail|eyeboss_projectile"
 ]
 
-local popext_funcs =
-{
+local popext_funcs = {
+	
 	popext_addcond = function(bot, args) {
-		if (args.len() == 1)
-			if (args[0].tointeger() == 43)
+		if (args.len() == 1) {
+			if (args[0].tointeger() == 43) {
 				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
+				function MoveToSpec(params) {
+					EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
+				}
+				bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
+			}
 			else
 				bot.AddCond(args[0].tointeger())
+		}
 
 		else if (args.len() >= 2)
 			bot.AddCondEx(args[0].tointeger(), args[1].tointeger(), null)
@@ -35,6 +41,10 @@ local popext_funcs =
 
 	popext_reprogrammed = function(bot, args) {
 		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
+		function MoveToSpec(params) {
+			EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
+		}
+		bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
 	}
 
 	popext_reprogrammed_neutral = function(bot, args) {
