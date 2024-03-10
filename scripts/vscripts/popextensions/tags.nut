@@ -8,7 +8,7 @@ local tagtest =  [
 	"popext_alwaysglow",
 	"popext_usebestweapon",
 	"popext_giveweapon|tf_weapon_shotgun_pyro|425",
-	"popext_homingprojectile|2|1.0",
+	"popext_homingprojectile|1.0|1.0",
 	"popext_improvedairblast",
 	"popext_usehumananims",
 	"popext_spell|0|5|2|4|150",
@@ -16,7 +16,8 @@ local tagtest =  [
 	"popext_weaponswitch|2",
 	"popext_fireweapon|2048",
 	"popext_dispenseroverride|2",
-	"popext_weaponresist|tf_weapon_minigun|0.5"
+	"popext_weaponresist|tf_weapon_minigun|0.5",
+	"popext_rocketcustomtrail|eyeboss_projectile"
 ]
 
 local popext_funcs =
@@ -485,25 +486,28 @@ local popext_funcs =
 		}
 		bot.GetScriptScope().TakeDamageTable.HomingTakeDamage <- HomingTakeDamage
 	}
-	// popext_rocketcustomtrail = function (bot, args)
-	// {
-	//	   local projectile
-	//	   while (projectile = Entities.FindByClassname(null, "tf_projectile_rocket"))
-	//	   {
-	//		   if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
+	popext_rocketcustomtrail = function (bot, args) {
 
-	//		   EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
-	//	   }
-	// }
-	popext_rocketcustomparticle = function (bot, args) {
-
-		for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
-
-			if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
-
-			EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
-			EntFireByHandle(projectile, "RunScriptCode", format("self.DispatchParticleEffect(%s, self.GetOrigin(), self.GetAbsAngles())", args), -1, null, null)
+		
+		function ProjectileTrailThink()
+		{
+			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
+				if (projectile.GetEFlags() & EFL_NO_ROTORWASH_PUSH || GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
+				
+				printl(projectile)
+				if (args.len() > 1) EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
+				// EntFireByHandle(projectile, "RunScriptCode", format("DispatchParticleEffect(`%s`, self.GetOrigin(), self.GetAngles())", args[0]), SINGLE_TICK, null, null)
+				local particle = SpawnEntityFromTable("trigger_particle", {
+					particle_name = args[0],
+					attachment_type = 1, // PATTACH_ABSORIGIN_FOLLOW,
+					spawnflags = 64 // allow everything
+				});
+				EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile);
+				EntFireByHandle(particle, "Kill", "", -1, null, null);
+				projectile.AddEFlags(EFL_NO_ROTORWASH_PUSH)
+			}
 		}
+		bot.GetScriptScope().PlayerThinkTable.ProjectileTrailThink <- ProjectileTrailThink
 	}
 	popext_spawnhere = function(bot, args) {
 
