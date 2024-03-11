@@ -271,13 +271,14 @@ function PopulatorThink() {
 			scope.curHealth <- tank.GetHealth()
 			scope.lastHealthPercentage <- GetPropFloat(tank, "m_lastHealthPercentage")
 
-			scope.TankThinkTable.Updates <- function() {
+			scope.Updates <- function() {
 				this.curPos    <- self.GetOrigin()
 				this.curVel    <- self.GetAbsVelocity()
 				this.curSpeed  <- curVel.Length()
 				this.curHealth <- self.GetHealth()
 				this.lastHealthPercentage <- GetPropFloat(self, "m_lastHealthPercentage")
 			}
+			scope.TankThinkTable.Updates <- scope.Updates
 
 			scope.TankThinks <- function() { foreach (name, func in scope.TankThinkTable) func(); return -1 }
 
