@@ -266,7 +266,15 @@ function PopulatorThink() {
 			scope.maxHealth <- tank.GetMaxHealth()
 			scope.team <- tank.GetTeam()
 
-			function Updates() {
+			scope.curPos <- tank.GetOrigin()
+			scope.curVel      <- tank.GetAbsVelocity()
+			scope.curSpeed    <- scope.curVel.Length()
+			// scope.curTrack    <- 
+			// scope.curProgress <- 
+			scope.curHealth   <- tank.GetHealth()
+			scope.lastHealthPercentage <- NetProps.GetPropFloat(tank, "m_lastHealthPercentage")
+
+			scope.TankThinkTable.Updates <- function() {
 				this.curPos      <- self.GetOrigin()
 				this.curVel      <- self.GetAbsVelocity()
 				this.curSpeed    <- curVel.Length()
@@ -275,8 +283,6 @@ function PopulatorThink() {
 				this.curHealth   <- self.GetHealth()
 				this.lastHealthPercentage <- NetProps.GetPropFloat(self, "m_lastHealthPercentage")
 			}
-
-			scope.TankThinkTable.Updates <- Updates
 
 			scope.TankThinks <- function() { foreach (name, func in scope.TankThinkTable) func(); return -1 }
 
