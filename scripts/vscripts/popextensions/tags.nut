@@ -11,12 +11,12 @@ local tagtest =  [
 	"popext_homingprojectile|1.0|1.0",
 	"popext_improvedairblast",
 	"popext_usehumananims",
-	"popext_spell|0|5|2|4|150",
+	"popext_spell|11|5|2",
 	"popext_ringoffire|20|2",
 	"popext_weaponswitch|2",
 	"popext_fireweapon|2048",
 	"popext_dispenseroverride|2",
-	"popext_weaponresist|tf_weapon_minigun|0.5",
+	"popext_weaponresist|tf_weapon_minigun|99999",
 	"popext_rocketcustomtrail|eyeboss_projectile"
 ]
 
@@ -196,10 +196,12 @@ local popext_funcs = {
 
 			SetPropInt(spellbook, "m_iSelectedSpellIndex", type)
 			SetPropInt(spellbook, "m_iSpellCharges", charges)
+			try {
 
-			bot.Weapon_Switch(spellbook)
-			spellbook.AddAttribute("disable weapon switch", 1, 1) // duration doesn't work here?
-			spellbook.ReapplyProvision()
+				bot.Weapon_Switch(spellbook)
+				spellbook.AddAttribute("disable weapon switch", 1, 1) // duration doesn't work here?
+				spellbook.ReapplyProvision()
+			} catch(e) printl("can't find spellbook!")
 
 			EntFireByHandle(spellbook, "RunScriptCode", "self.RemoveAttribute(`disable weapon switch`)", 1, null, null)
 			EntFireByHandle(spellbook, "RunScriptCode", "self.ReapplyProvision()", 1, null, null)
@@ -282,12 +284,16 @@ local popext_funcs = {
 		function WeaponResistTakeDamage(params)
 		{	
 			if (!params.const_entity.IsPlayer() || params.weapon == null || (params.weapon.GetClassname() != weapon || PopExtUtil.GetItemIndex(params.weapon) != weapon.tointeger())) return
+			printl(params.weapon)
 			params.damage *= amount
 		}
 		
 		bot.GetScriptScope().TakeDamageTable.WeaponResistTakeDamage <- WeaponResistTakeDamage
 	}
 
+	popext_setskin = function(bot, args) {
+		EntFireByHandle(bot, "skin", args[0], SINGLE_TICK, null, null)
+	}
 	popext_dispenseroverride = function(bot, args) {
 		if (args.len() == 0) args.append(1) //sentry override by default
 
@@ -504,7 +510,6 @@ local popext_funcs = {
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
 				if (projectile.GetEFlags() & EFL_NO_ROTORWASH_PUSH || GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
 				
-				printl(projectile)
 				if (args.len() > 1) EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 				// EntFireByHandle(projectile, "RunScriptCode", format("DispatchParticleEffect(`%s`, self.GetOrigin(), self.GetAngles())", args[0]), SINGLE_TICK, null, null)
 				local particle = SpawnEntityFromTable("trigger_particle", {
@@ -873,7 +878,7 @@ local popext_funcs = {
 
 		if (!("TakeDamageTable" in scope)) return
 
-		foreach (_, func in scope.TakeDamageTable) { printl(_); func(params) }
+		foreach (_, func in scope.TakeDamageTable) { func(params) }
 	}
 	function OnGameEvent_player_builtobject(params) {
 
@@ -895,12 +900,17 @@ local popext_funcs = {
 		local bot = GetPlayerFromUserID(params.userid)
 		if (!bot.IsBotOfType(1337)) return
 
-		bot.ValidateScriptScope()
 		local scope = bot.GetScriptScope()
-
+		bot.ClearAllBotTags()
 		foreach (_, func in scope.DeathHookTable) func(params)
 
 		AddThinkToEnt(bot, null)
+	}
+	function OnGameEvent_teamplay_round_start(params) {
+
+		foreach (bot in PopExtUtil.BotArray)
+			if (bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
+				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
 	}
 }
 __CollectGameEventCallbacks(PopExtTags)

@@ -2,8 +2,8 @@ const SCOUT_MONEY_COLLECTION_RADIUS = 288
 const HUNTSMAN_DAMAGE_FIX_MOD       = 1.263157
 const EFL_USER = 1048576
 
-local GlobalFixesEntity = FindByName(null, "_popextensions_globalfixes")
-if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "_popextensions_globalfixes" })
+local GlobalFixesEntity = FindByName(null, "_popext_globalfixes")
+if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "_popext_globalfixes" })
 
 ::GlobalFixes <- {
 	InitWaveTable = {}

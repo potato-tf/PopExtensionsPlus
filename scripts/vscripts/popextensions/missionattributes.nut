@@ -78,6 +78,9 @@ if (!("ScriptUnloadTable" in ROOT))
 
 			if (GetRoundState() != GR_STATE_PREROUND) return
 
+            foreach (player in PopExtUtil.PlayerArray)
+                Main.PlayerCleanup(player)
+
 			MissionAttributes.Cleanup()
 		}
 
@@ -90,7 +93,7 @@ if (!("ScriptUnloadTable" in ROOT))
 
 			foreach (_, func in ScriptUnloadTable) func()
 			MissionAttributes.ResetConvars()
-			DoEntFire("popext_missionattr_ent", "Kill", "", -1, null, null)
+			EntFire("_popext_missionattr_ent", "Kill")
 			delete ::MissionAttributes
 		}
 	}
@@ -104,8 +107,8 @@ __CollectGameEventCallbacks(MissionAttributes.Events);
 // =========================================================
 // Function is called in popfile by mission maker to modify mission attributes.
 
-local MissionAttrEntity = FindByName(null, "popext_missionattr_ent")
-if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "popext_missionattr_ent"});
+local MissionAttrEntity = FindByName(null, "_popext_missionattr_ent")
+if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "_popext_missionattr_ent"});
 
 function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessage = true) {
 
@@ -935,7 +938,7 @@ function MissionAttributes::MissionAttr(...) {
 			// m_hThrower does not change when the skeletons split for spell-casted skeles, just need to kill them after spawning
 			for (local skeles; skeles = FindByClassname(skeles, "tf_zombie");  ) {
 				//kill blu split skeles
-				if (skeles.GetModelScale() == 0.5 && GetPropEntity(skelespell, "m_hThrower").IsBotOfType(1337)) {
+				if (skeles.GetModelScale() == 0.5 && skeles.GetOwner().IsBotOfType(1337)) {
 					EntFireByHandle(skeles, "Kill", "", -1, null, null)
 					return
 				}
@@ -1097,7 +1100,7 @@ function MissionAttributes::MissionAttr(...) {
 			local tfclass = player.GetPlayerClass()
 			foreach (k, v in value)
 			{
-				printl(k + " : " +v)
+				// printl(k + " : " +v)
 				if (typeof k == "string" && (typeof v == "integer" || typeof v == "float"))
 					EntFireByHandle(player, "RunScriptCode", ""+player.AddCustomAttribute(k, v, -1), -1, null, null)
 			}
@@ -1813,7 +1816,6 @@ function MissionAttributes::MissionAttr(...) {
 					local scope = player.GetScriptScope()
 					local curmetal = GetPropIntArray(player, "m_iAmmo", TF_AMMO_METAL)
 					if (!("buildings" in scope)) scope.buildings <- [-1, array(2), -1]
-					printl(scope.buildings)
 					// don't drain metal if this buildings entindex exists in the players scope
 					if (scope.buildings.find(params.index) != null || scope.buildings[1].find(params.index) != null) return
 				
@@ -1924,7 +1926,7 @@ MissionAttrEntity.GetScriptScope().MissionAttrThink <- MissionAttrThink
 AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
 // This only supports key : value pairs, if you want var args call MissionAttr directly
-function CollectMissionAttrs(attrs = {}) {
+function MissionAttrs(attrs = {}) {
 	foreach (attr, value in attrs)
 		MissionAttributes.MissionAttr(attr, value)
 

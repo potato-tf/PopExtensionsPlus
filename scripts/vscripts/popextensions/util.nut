@@ -161,15 +161,18 @@
 		function OnGameEvent_mvm_reset_stats(params) { PopExtUtil.IsWaveStarted = true } //used for manually jumping waves
 
 		function OnGameEvent_teamplay_round_start(params) {
+
 			for (local i = 1; i <= MAX_CLIENTS; i++) {
 				local player = PlayerInstanceFromIndex(i)
+
+				// printl(player)
 
 				if (player != null && player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
 					PopExtUtil.BotArray.append(player)
 
 				else if (player != null && PopExtUtil.HumanArray.find(player) == null)
 					PopExtUtil.HumanArray.append(player)
-	
+					
 				if (player != null && PopExtUtil.PlayerArray.find(player) == null)
 					PopExtUtil.PlayerArray.append(player)
 			}
@@ -265,7 +268,7 @@ PopExtUtil.RespawnOverride.GetScriptScope().Inputendtouch <- RespawnEndTouch;
 //HACK: forces post_inventory_application to fire on pop load
 for (local i = 1; i <= MAX_CLIENTS; i++)
 	if (PlayerInstanceFromIndex(i) != null)
-		EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", -1, null, null)
+		EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", SINGLE_TICK, null, null)
 
 function PopExtUtil::IsLinuxServer() {
 	return RAND_MAX != 32767
