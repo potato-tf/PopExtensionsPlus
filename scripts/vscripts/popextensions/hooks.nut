@@ -262,31 +262,46 @@ function PopulatorThink() {
 					table.OnSpawn(tank, tankName)
 			}
 
-			// scope.startTrack <- 
 			scope.maxHealth <- tank.GetMaxHealth()
-			scope.team <- tank.GetTeam()
+			scope.team      <- tank.GetTeam()
 
-			scope.curPos <- tank.GetOrigin()
-			scope.curVel      <- tank.GetAbsVelocity()
-			scope.curSpeed    <- scope.curVel.Length()
-			// scope.curTrack    <- 
-			// scope.curProgress <- 
-			scope.curHealth   <- tank.GetHealth()
-			scope.lastHealthPercentage <- NetProps.GetPropFloat(tank, "m_lastHealthPercentage")
+			scope.curPos    <- tank.GetOrigin()
+			scope.curVel    <- tank.GetAbsVelocity()
+			scope.curSpeed  <- scope.curVel.Length()
+			scope.curHealth <- tank.GetHealth()
+			scope.lastHealthPercentage <- GetPropFloat(tank, "m_lastHealthPercentage")
 
 			scope.TankThinkTable.Updates <- function() {
-				this.curPos      <- self.GetOrigin()
-				this.curVel      <- self.GetAbsVelocity()
-				this.curSpeed    <- curVel.Length()
-				// scope.curTrack    <- 
-				// scope.curProgress <- 
-				this.curHealth   <- self.GetHealth()
-				this.lastHealthPercentage <- NetProps.GetPropFloat(self, "m_lastHealthPercentage")
+				this.curPos    <- self.GetOrigin()
+				this.curVel    <- self.GetAbsVelocity()
+				this.curSpeed  <- curVel.Length()
+				this.curHealth <- self.GetHealth()
+				this.lastHealthPercentage <- GetPropFloat(self, "m_lastHealthPercentage")
 			}
 
 			scope.TankThinks <- function() { foreach (name, func in scope.TankThinkTable) func(); return -1 }
 
 			AddThinkToEnt(tank, "TankThinks")
+
+			if ("popProperty" in scope && "IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
+				scope.popProperty.DisableTracks <- true
+				scope.popProperty.DisableBomb <- true
+				// scope.popProperty.TankModel <- "models/bots/boss_bot/boss_blimp_pure.mdl"
+
+				tank.SetAbsAngles(QAngle(0, tank.GetAbsAngles().y, 0))
+				tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1")
+				// scope.blimpModel <- PrecacheModel("models/bots/boss_bot/boss_blimp_pure.mdl")
+
+				local tankspeed = GetPropFloat(tank, "m_speed")
+				scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), speed = tankspeed, startspeed = tankspeed, target = "extratankpath1_1"})
+
+				scope.BlimpThink <- function() {
+					// for(local i=0; i<=3; i++) SetPropIntArray(self, "m_nModelIndexOverrides", blimpModel, i)
+					self.SetAbsOrigin(blimpTrain.GetOrigin())
+					self.GetLocomotionInterface().Reset()
+				}
+				scope.TankThinkTable.BlimpThink <- scope.BlimpThink
+			}
 
 			if ("popProperty" in scope && "DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
 				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
@@ -309,11 +324,11 @@ function PopulatorThink() {
 			}
 
 			if ("popProperty" in scope && "DisableSmoke" in scope.popProperty && scope.popProperty.DisableSmoke) {
-				function DisableSmoke() {
+				scope.DisableSmoke <- function() {
 					//disables smokestack, will emit one smoke particle when spawning and when moving out from under low ceilings (solid brushes 300 units or lower)
 					EntFireByHandle(self, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 				}
-				scope.TankThinkTable.DisableSmoke <- DisableSmoke
+				scope.TankThinkTable.DisableSmoke <- scope.DisableSmoke
 			}
 
 			if ("popProperty" in scope && "TankModel" in scope.popProperty) {
