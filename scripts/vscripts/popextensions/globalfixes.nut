@@ -90,6 +90,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 	DisconnectTable = {}
 
 	ThinkTable = {
+		
 		function DragonsFuryFix() {
 			for (local fireball; fireball = FindByClassname(fireball, "tf_projectile_balloffire");)
 				fireball.RemoveFlag(FL_GRENADE)
@@ -115,6 +116,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 	}
 
 	DeathHookTable = {
+		
 		function NoCreditVelocity(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
@@ -170,6 +172,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
 				local activegun = player.GetActiveWeapon()
+
+				printl(activegun.Clip1())
 				
 				if (activegun == null) return
 
@@ -280,6 +284,11 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
+			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) 
+			{
+				scope.BuiltObjectTable <- {}
+				scope.buildings <- [-1, array(2), -1]
+			}
 			foreach(_, func in GlobalFixes.SpawnHookTable) func(params)
 		}
 		// Hook all wave inits to reset parsing error counter.

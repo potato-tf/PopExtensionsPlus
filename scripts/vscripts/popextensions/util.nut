@@ -151,7 +151,7 @@
 	CurrentWaveNum = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
 
 	ClientCommand = SpawnEntityFromTable("point_clientcommand", {targetname = "_clientcommand"})
-	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "_roundwin", TeamNum = 3, force_map_reset = 1})
+	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "__utilroundwin", TeamNum = 3, force_map_reset = 1})
 	RespawnOverride = SpawnEntityFromTable("trigger_player_respawn_override", {spawnflags = 1})
 
 	Events = {
@@ -188,6 +188,12 @@
 
 			AddThinkToEnt(player, "PlayerThinks")
 
+			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) 
+			{
+				scope.BuiltObjectTable <- {}
+				scope.buildings <- [-1, array(2), -1]
+			}
+			
 			//sort weapons by slot
 			local myweapons = {}
 			for (local i = 0; i < SLOT_COUNT; i++) {
@@ -723,6 +729,34 @@ function PopExtUtil::PressButton(player, button) {
 	SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") | button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") | button)
 }
 
+function PopExtUtil::IsPointInRespawnRoom(point)
+{
+	local triggers = []
+	for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
+	{
+		trigger.SetCollisionGroup(0)
+		trigger.RemoveSolidFlags(4) // FSOLID_NOT_SOLID
+		triggers.append(trigger)
+	}
+	
+	local trace =
+	{
+		start = point,
+		end = point,
+		mask = 0
+	}
+	TraceLineEx(trace)
+	
+	foreach (trigger in triggers)
+	{
+		trigger.SetCollisionGroup(25) // special collision group used by respawnrooms only
+		trigger.AddSolidFlags(4) // FSOLID_NOT_SOLID
+	}
+
+	return trace.hit && trace.enthit.GetClassname() == "func_respawnroom"
+}
+
+
 //assumes user is using the SLOT_ constants
 function PopExtUtil::SwitchWeaponSlot(player, slot) {
 	EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player)
@@ -780,7 +814,7 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 
 	function PopExtUtil::BotModelThink() {
 		if (wearable && (player.IsTaunting() || wearable.GetMoveParent() != player))
-			EntFireByHandle(wearable, "SetParent", "!activator", -1, self, self)
+			EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player)
 		return -1
 	}
 
@@ -791,7 +825,7 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 function PopExtUtil::HasItemIndex(player, index) {
 	local t = false
 	for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-		if (GetItemIndex(child) == index) {
+		if (PopExtUtil.GetItemIndex(child) == index) {
 			t = true
 			break
 		}
@@ -800,40 +834,52 @@ function PopExtUtil::HasItemIndex(player, index) {
 }
 
 function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5) {
-	local utilstun = SpawnEntityFromTable("trigger_stun", {
-		targetname = "__utilstun"
-		stun_type = type
-		stun_duration = duration
-		move_speed_reduction = speedreduce
-		trigger_delay = delay
-		StartDisabled = 0
-		spawnflags = 1
-		"OnStunPlayer#1": "!self,Kill,,-1,-1"
-	})
+
+	local utilstun = FindByName(null, "__utilstun")
+
+	if (utilstun == null) {
+		utilstun = SpawnEntityFromTable("trigger_stun", {	
+			targetname = "__utilstun"
+			stun_type = type
+			stun_duration = duration
+			move_speed_reduction = speedreduce
+			trigger_delay = delay
+			StartDisabled = 0
+			spawnflags = 1
+		})
+	}
 	utilstun.SetSolid(2)
-	utilstun.SetSize(Vector(-1, -1, -1), Vector())
+	utilstun.SetSize(Vector(-1, -1, -1), Vector())	
 
 	EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
 }
 
-function PopExtUtil::Ignite(player, duration = 10)
+function PopExtUtil::Ignite(player, duration = 10, damage = 1)
 {
-	local utilignite = SpawnEntityFromTable("trigger_ignite", {
-		targetname = "__utilignite"
-		burn_duration = duration
-	})
-	utilignite.SetSolid(2)
-	utilignite.SetSize(Vector(-1, -1, -1), Vector())
+	local utilignite = FindByName(null, "__utilignite")
+	if (utilignite == null)
+	{
+		utilignite = SpawnEntityFromTable("trigger_ignite", {
+			targetname = "__utilignite"
+			burn_duration = duration
+			damage = damage
+			spawnflags = 1
+		})
+		utilignite.SetSolid(2)
+		utilignite.SetSize(Vector(-1, -1, -1), Vector())
+	}
+	EntFireByHandle(utilignite, "StartTouch", "", -1, player, player)
+	EntFireByHandle(utilignite, "EndTouch", "", SINGLE_TICK, player, player)
 }
 
-function PopExtUtil::ShowHudHint(player, text = "This is a hud hint", duration = 5) {
-	local hudhint = FindByName(null, "__hudhint") != null
+function PopExtUtil::ShowHudHint(text = "This is a hud hint", player = null, duration = 5) {
+	local hudhint = FindByName(null, "__utilhudhint") != null
 
 	local flags = (player == null) ? 1 : 0
 
-	if (!hudhint) ::__hudhint <- SpawnEntityFromTable("env_hudhint", { targetname = "__hudhint", spawnflags = flags, message = text })
+	if (!hudhint) hudhint = SpawnEntityFromTable("env_hudhint", { targetname = "__utilhudhint", spawnflags = flags, message = text })
 
-	__hudhint.KeyValueFromString("message", text)
+	hudhint.KeyValueFromString("message", text)
 
 	EntFireByHandle(__hudhint, "ShowHudHint", "", -1, player, player)
 	EntFireByHandle(__hudhint, "HideHudHint", "", duration, player, player)

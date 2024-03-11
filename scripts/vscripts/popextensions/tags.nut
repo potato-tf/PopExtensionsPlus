@@ -1,15 +1,39 @@
-local root = getroottable()
 //behavior tags
-IncludeScript("popextensions/botbehavior.nut", root)
+IncludeScript("popextensions/botbehavior", getroottable())
 
-local popext_funcs =
-{
+local tagtest =  [
+	"popext_forceromevision",
+	"popext_addcond|32|10",
+	"popext_usehumanmodel",
+	"popext_alwaysglow",
+	"popext_usebestweapon",
+	"popext_giveweapon|tf_weapon_shotgun_pyro|425",
+	"popext_homingprojectile|1.0|1.0",
+	"popext_improvedairblast",
+	"popext_usehumananims",
+	"popext_spell|0|5|2|4|150",
+	"popext_ringoffire|20|2",
+	"popext_weaponswitch|2",
+	"popext_fireweapon|2048",
+	"popext_dispenseroverride|2",
+	"popext_weaponresist|tf_weapon_minigun|0.5",
+	"popext_rocketcustomtrail|eyeboss_projectile"
+]
+
+local popext_funcs = {
+	
 	popext_addcond = function(bot, args) {
-		if (args.len() == 1)
-			if (args[0].tointeger() == 43)
+		if (args.len() == 1) {
+			if (args[0].tointeger() == 43) {
 				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
+				function MoveToSpec(params) {
+					EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
+				}
+				bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
+			}
 			else
 				bot.AddCond(args[0].tointeger())
+		}
 
 		else if (args.len() >= 2)
 			bot.AddCondEx(args[0].tointeger(), args[1].tointeger(), null)
@@ -17,6 +41,10 @@ local popext_funcs =
 
 	popext_reprogrammed = function(bot, args) {
 		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
+		function MoveToSpec(params) {
+			EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
+		}
+		bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
 	}
 
 	popext_reprogrammed_neutral = function(bot, args) {
@@ -52,50 +80,130 @@ local popext_funcs =
 		PopExtUtil.GetItemInSlot(player, slot).Kill()
 	}
 
+	popext_fireweapon = function(bot, args) {
+		
+		local args_len = args.len()
+		local button = args[0].tointeger()
+		local cooldown = (args_len > 1) ? args[1].tointeger() : 3
+		local duration = (args_len > 2) ? args[2].tointeger() : 1.0
+		local delay = (args_len > 3) ? args[3].tointeger() : 0
+		local repeats = (args_len > 4) ? args[4].tointeger() : INT_MAX
+		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : INT_MAX
+		local ifseetarget = (args_len > 6) ? args[6].tointeger() : 1
+
+		local maxrepeats = 0
+		local cooldowntime = Time() + cooldown
+		local delaytime = Time() + delay
+
+		function FireWeaponThink()
+		{
+			if ((maxrepeats) >= repeats)
+			{
+				delete bot.GetScriptScope().PlayerThinkTable.FireWeaponThink
+				return
+			}
+
+			if (Time() < delaytime || (Time() < cooldowntime) || bot.GetHealth() > ifhealthbelow || bot.HasBotAttribute(SUPPRESS_FIRE)) return
+
+			maxrepeats++
+
+			PopExtUtil.PressButton(bot, button)
+			cooldowntime = Time() + cooldown
+		}
+		bot.GetScriptScope().PlayerThinkTable.FireWeaponThink <- FireWeaponThink
+	}
+	
+	popext_weaponswitch = function(bot, args) {
+		local args_len = args.len()
+		local slot = args[0].tointeger()
+		local cooldown = (args_len > 1) ? args[1].tointeger() : 3
+		local duration = (args_len > 2) ? args[2].tointeger() : 5
+		local delay = (args_len > 3) ? args[3].tointeger() : 3
+		local repeats = (args_len > 4) ? args[4].tointeger() : INT_MAX
+		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : INT_MAX
+		local ifseetarget = (args_len > 6) ? args[6].tointeger() : 1
+
+		local maxrepeats = 0
+		local cooldowntime = Time() + cooldown
+		local delaytime = Time() + delay
+
+		function WeaponSwitchThink()
+		{
+			if ((maxrepeats) >= repeats)
+			{
+				delete bot.GetScriptScope().PlayerThinkTable.WeaponSwitchThink
+				return
+			}
+
+			if (Time() < delaytime || (Time() < cooldowntime) || bot.GetHealth() > ifhealthbelow) return
+
+			maxrepeats++
+
+			bot.Weapon_Switch(PopExtUtil.GetItemInSlot(bot, slot))
+			bot.AddCustomAttribute("disable weapon switch", 1, duration)
+			EntFireByHandle(bot, "RunScriptCode","self.RemoveCustomAttribute(`disable weapon switch`)", duration, null, null)
+			EntFireByHandle(bot, "RunScriptCode", format("self.Weapon_Switch(PopExtUtil.GetItemInSlot(self, %d))", slot), duration+SINGLE_TICK, null, null)
+			cooldowntime = Time() + cooldown
+		}
+		bot.GetScriptScope().PlayerThinkTable.WeaponSwitchThink <- WeaponSwitchThink
+	}
+	
 	popext_spell = function(bot, args) {
+
 		local args_len = args.len()
 		local type = args[0].tointeger()
 		local cooldown = args[1].tointeger()
 		local delay = (args_len > 2) ? args[2].tointeger() : 3
-		local repeats = (args_len > 2) ? args[2].tointeger() : INT_MAX
-		local charges = (args_len > 3) ? args[3].tointeger() : 2
-		local limit = (args_len > 4) ? args[4].tointeger() : INT_MAX
-		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : INT_MAX
-		local ifseetarget = (args_len > 7) ? args[7].tointeger() : 1
+		local repeats = (args_len > 3) ? args[3].tointeger() : INT_MAX
+		local ifhealthbelow = (args_len > 4) ? args[4].tointeger() : INT_MAX
+		local charges = (args_len > 5) ? args[5].tointeger() : 1
+		local ifseetarget = (args_len > 6) ? args[6].tointeger() : 1
 		
 		local spellbook = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
 
+		//equip a spellbook if the bot doesn't have one
 		if (spellbook == null) 
 		{
-			ClientPrint(null, 3, bot+" has spell tag with no spellbook!")
+			local weapon = Entities.CreateByClassname("tf_weapon_spellbook")
+			SetPropInt(weapon, STRING_NETPROP_ITEMDEF, ID_SPELLBOOK_MAGAZINE_STOCK)
+			SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
+			SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
+
+			weapon.SetTeam(bot.GetTeam())
+			Entities.DispatchSpawn(weapon)
+	
+			bot.Weapon_Equip(weapon)
+
+			//try again next think
 			return
 		}
 
 		local cooldowntime = Time() + cooldown
 		local delaytime = Time() + delay
 
-		local maxspells = 0
+		local maxrepeats = 0
 		function SpellThink()
 		{
-			if (maxspells >= limit)
+			if ((maxrepeats) >= repeats)
 			{
 				delete bot.GetScriptScope().PlayerThinkTable.SpellThink
 				return
 			}
 
-			if (Time() < delaytime || Time() < cooldowntime || bot.GetHealth() > ifhealthbelow) return
+			if (Time() < delaytime || (Time() < cooldowntime) || bot.GetHealth() > ifhealthbelow) return
 
-			SetPropEntity(spellbook, "m_iSelectedSpellIndex", type)
-			SetPropEntity(spellbook, "m_iSpellCharges", charges)
+			maxrepeats++
 
-			//force equip spellbook temporarily.
-			//there are ways to do this without passive_weapon but it won't do the throwing animation
+			SetPropInt(spellbook, "m_iSelectedSpellIndex", type)
+			SetPropInt(spellbook, "m_iSpellCharges", charges)
 
-			spellbook.AddAttribute("is_passive_weapon", 1, 0.1)
+			bot.Weapon_Switch(spellbook)
+			spellbook.AddAttribute("disable weapon switch", 1, 1) // duration doesn't work here?
 			spellbook.ReapplyProvision()
-			bot.PressFireButton(1.0)
 
-			maxspells++
+			EntFireByHandle(spellbook, "RunScriptCode", "self.RemoveAttribute(`disable weapon switch`)", 1, null, null)
+			EntFireByHandle(spellbook, "RunScriptCode", "self.ReapplyProvision()", 1, null, null)
+
 			cooldowntime = Time() + cooldown
 		}
 		bot.GetScriptScope().PlayerThinkTable.SpellThink <- SpellThink
@@ -121,42 +229,103 @@ local popext_funcs =
 			return
 		}
 		foreach (cosmetic in cosmetics)
-			PopExtUtil.CreatePlayerWearable(self, cosmetic)
+		{
+			local wearable = PopExtUtil.CreatePlayerWearable(self, cosmetic)
+			SetPropString(wearable, `m_iName`, `__bot_romevision_model`)
+		}
 		", -1, null, null)
 	}
+	popext_ringoffire = function(bot, args) {
+		local args_len = args.len()
+		local damage = (args_len > 0) ? args[0].tofloat() : 7.5
+		local interval = (args_len > 1) ? args[1].tofloat() : 0.5
+		local radius = (args_len > 2) ? args[2].tofloat() : 135.0
 
-	popext_fireweapon = function(bot, args) {
-		//think function
-		function FireWeaponThink(bot) {
+		local cooldown = Time() + interval
+		function RingOfFireThink() {
+			if (Time() < cooldown) return
 
+			local origin = bot.GetOrigin()
+			local angles = bot.GetAngles()
+
+			DispatchParticleEffect("heavy_ring_of_fire", origin, angles)
+
+			for (local player; player = FindByClassnameWithin(player, "player", origin, radius);)
+			{
+				if (player.GetTeam() == bot.GetTeam() || !PopExtUtil.IsAlive(player)) continue
+
+				player.TakeDamage(damage, DMG_BURN, bot)
+				PopExtUtil.Ignite(player)
+			}
+			cooldown = Time() + interval
 		}
+		bot.GetScriptScope().PlayerThinkTable.RingOfFireThink <- RingOfFireThink
 	}
+	// popext_meleeai = function(bot, args) {
+	// 	local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
+
+	// 	function MeleeAIThink() {
+	// 		local threat = FindThreat(visionoverride)
+			
+	// 		if (threat == null || threat.IsFullyInvisible() || threat.IsStealthed()) return
+
+	// 		SetThreat(threat, true)
+	// 	}
+
+	// 	bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- MeleeAIThink
+	// }
+
+	popext_weaponresist = function(bot, args) {
+		local weapon = args[0]
+		local amount = args[1].tofloat()
+
+		function WeaponResistTakeDamage(params)
+		{	
+			if (!params.const_entity.IsPlayer() || params.weapon == null || (params.weapon.GetClassname() != weapon || PopExtUtil.GetItemIndex(params.weapon) != weapon.tointeger())) return
+			params.damage *= amount
+		}
+		
+		bot.GetScriptScope().TakeDamageTable.WeaponResistTakeDamage <- WeaponResistTakeDamage
+	}
+
 	popext_dispenseroverride = function(bot, args) {
 		if (args.len() == 0) args.append(1) //sentry override by default
 
 		local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
 
 		//force deploy dispenser when leaving spawn and kill it immediately
-		if (!alwaysfire) bot.PressFireButton(INT_MAX)
+		if (!alwaysfire && args[0].tointeger() == 1) bot.PressFireButton(INT_MAX)
 
-		function DispenserBuildThink() {
+		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- function() {
 
 			//start forcing primary attack when near hint
 			local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
 				if (hint && !alwaysfire) bot.PressFireButton(0.0)
 		}
-		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- DispenserBuildThink
+
 		function DispenserBuildOverride(params) {
 
+			local obj = params.object
 			//dispenser built, stop force firing
 			if (!alwaysfire) bot.PressFireButton(0.0)
 
-			if ((args[0].tointeger() == 1 && params.object == 2) || (args[0].tointeger() == 2 && params.object == 1)) {
-				if (params.object == 2) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
+			if ((args[0].tointeger() == 1 && obj == OBJ_SENTRYGUN) || (args[0].tointeger() == 2 && obj == OBJ_TELEPORTER)) {
+				if (obj == OBJ_SENTRYGUN) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
 
 				bot.AddCustomAttribute("upgrade rate decrease", 8, -1)
 				local building = EntIndexToHScript(params.index)
+				if (obj != OBJ_DISPENSER) {
 
+					building.ValidateScriptScope()
+					building.GetScriptScope().CheckBuiltThink <- function() {
+
+						if (GetPropBool(building, "m_bBuilding")) return
+
+						EntFireByHandle(building, "Disable", "", -1, null, null)
+						delete building.GetScriptScope().CheckBuiltThink
+					}
+					AddThinkToEnt(building, "CheckBuiltThink")
+				}
 				//kill the first alwaysfire built dispenser when leaving spawn
 				local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 16)
 
@@ -211,7 +380,6 @@ local popext_funcs =
 
 				AddOutput(dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1) //kill it to avoid showing up in killfeed
 				AddOutput(building, "OnDestroyed", dispenser.GetName(), "Destroy", "", -1, -1) //always destroy the dispenser
-				EntFireByHandle(building, "Disable", "", 10.6, null, null)
 			}
 		}
 		bot.GetScriptScope().BuiltObjectTable.DispenserBuildOverride <- DispenserBuildOverride
@@ -219,6 +387,7 @@ local popext_funcs =
 
 	//this is a very simple method for giving bots weapons.
 	popext_giveweapon = function(bot, args) {
+
 		local weapon = Entities.CreateByClassname(args[0])
 		SetPropInt(weapon, STRING_NETPROP_ITEMDEF, args[1].tointeger())
 		SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
@@ -234,7 +403,7 @@ local popext_funcs =
 	}
 
 	popext_usebestweapon = function(bot, args) {
-		function BestWeaponThink(bot) {
+		function BestWeaponThink() {
 			switch(bot.GetPlayerClass()) {
 			case 1: //TF_CLASS_SCOUT
 
@@ -321,32 +490,34 @@ local popext_funcs =
 			if (!params.const_entity.IsPlayer()) return
 
 			local classname = params.inflictor.GetClassname()
-			if (classname != "tf_projectile_flare" && classname != "tf_projectile_energy_ring")
-				return
+			if (classname != "tf_projectile_flare" && classname != "tf_projectile_energy_ring") return
 
 			EntFireByHandle(params.inflictor, "Kill", null, 0.5, null, null)
 		}
 		bot.GetScriptScope().TakeDamageTable.HomingTakeDamage <- HomingTakeDamage
 	}
-	// popext_rocketcustomtrail = function (bot, args)
-	// {
-	//	   local projectile
-	//	   while (projectile = Entities.FindByClassname(null, "tf_projectile_rocket"))
-	//	   {
-	//		   if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
+	popext_rocketcustomtrail = function (bot, args) {
 
-	//		   EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
-	//	   }
-	// }
-	popext_rocketcustomparticle = function (bot, args) {
-
-		for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
-
-			if (GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
-
-			EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
-			EntFireByHandle(projectile, "RunScriptCode", format("self.DispatchParticleEffect(%s, self.GetOrigin(), self.GetAbsAngles())", args), -1, null, null)
+		
+		function ProjectileTrailThink()
+		{
+			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
+				if (projectile.GetEFlags() & EFL_NO_ROTORWASH_PUSH || GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
+				
+				printl(projectile)
+				if (args.len() > 1) EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
+				// EntFireByHandle(projectile, "RunScriptCode", format("DispatchParticleEffect(`%s`, self.GetOrigin(), self.GetAngles())", args[0]), SINGLE_TICK, null, null)
+				local particle = SpawnEntityFromTable("trigger_particle", {
+					particle_name = args[0],
+					attachment_type = 1, // PATTACH_ABSORIGIN_FOLLOW,
+					spawnflags = 64 // allow everything
+				});
+				EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile);
+				EntFireByHandle(particle, "Kill", "", -1, null, null);
+				projectile.AddEFlags(EFL_NO_ROTORWASH_PUSH)
+			}
 		}
+		bot.GetScriptScope().PlayerThinkTable.ProjectileTrailThink <- ProjectileTrailThink
 	}
 	popext_spawnhere = function(bot, args) {
 
@@ -365,8 +536,7 @@ local popext_funcs =
 				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
-				local dist = GetThreatDistanceSqr(projectile)
-				if (dist <= 67000 && IsVisible(projectile)) {
+				if (GetThreatDistanceSqr(projectile) <= 67000 && IsVisible(projectile)) {
 					switch (botLevel) {
 						case 1: // Basic Airblast, only deflect if in FOV
 
@@ -513,14 +683,18 @@ local popext_funcs =
 	// Modify the AttachProjectileThinker function to accept projectile speed adjustment if needed
 	function AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies = true, ignoreStealthedSpies = true) {
 		local projectile_speed = projectile.GetAbsVelocity().Norm()
-		projectile_speed *= speed_mult
+
+		// printl("speed: " + projectile_speed)
 
 		projectile.ValidateScriptScope()
 		local projectile_scope = projectile.GetScriptScope()
 		projectile_scope.turn_power			  <- turn_power
-		projectile_scope.projectile_speed	  <- projectile_speed
+		projectile_scope.projectile_speed	  <- projectile_speed // * speed_mult
 		projectile_scope.ignoreDisguisedSpies <- ignoreDisguisedSpies
 		projectile_scope.ignoreStealthedSpies <- ignoreStealthedSpies
+
+		//this should be added in globalfixes.nut but sometimes this code tries to run before the table is created
+		if (!("ProjectileThinkTable" in projectile_scope)) projectile_scope.ProjectileThinkTable <- {}
 
 		projectile_scope.ProjectileThinkTable.HomingProjectileThink <- Homing.HomingProjectileThink
 	}
@@ -576,11 +750,13 @@ local popext_funcs =
 	function FaceTowards(new_target, projectile, projectile_speed) {
 		local scope = projectile.GetScriptScope()
 		local desired_dir = new_target.EyePosition() - projectile.GetOrigin()
-			desired_dir.Norm()
+		
+		desired_dir.Norm()
 
 		local current_dir = projectile.GetForwardVector()
 		local new_dir = current_dir + (desired_dir - current_dir) * scope.turn_power
-			new_dir.Norm()
+		// printl("Dir: " + new_dir)
+		new_dir.Norm()
 
 		local move_ang = PopExtUtil.VectorAngles(new_dir)
 		local projectile_velocity = move_ang.Forward() * projectile_speed
@@ -641,16 +817,6 @@ local popext_funcs =
 //	   AddThinkToEnt(bot, "PopExt_BotThinks")
 // }
 
-// local tagtest = "popext_usebestweapon"
-// local tagtest = "popext_homingprojectile|1.0|1.0"
-// local tagtest = "popext_giveweapon|tf_weapon_shotgun_soldier|425"
-// local tagtest = "popext_dispenseroverride"
-// local tagtest = "popext_forceromevision"
-// local tagtest = "popext_aimat|head"
-// local tagtest = "popext_improvedairblast"
-local tagtest = "popext_spell|0|2"
-// local tagtest = "popext_spawnhere|-1377.119995 3381.023193 356.891449|3"
-
 ::PopExtTags <- {
 
 	function AI_BotSpawn(bot) {
@@ -658,13 +824,16 @@ local tagtest = "popext_spell|0|2"
 
 		scope.bot <- AI_Bot(bot)
 		scope.PlayerThinkTable <- {}
-
-		if (bot.HasBotTag(tagtest)) {
-			local args = split(tagtest, "|")
-			local func = args.remove(0)
-			if (func in popext_funcs)
-				popext_funcs[func](bot, args)
+		
+		foreach(tag in tagtest) {
+			if (bot.HasBotTag(tag)) {
+				local args = split(tag, "|")
+				local func = args.remove(0)
+				if (func in popext_funcs)
+					popext_funcs[func](bot, args)
+			}
 		}
+		
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
 	}
 	function BotThink()
@@ -693,7 +862,7 @@ local tagtest = "popext_spell|0|2"
 		}
 		foreach (k,v in items) if (!(k in scope)) scope[k] <- v
 		// foreach (k, v in scope) printl(k + " : " + v)
-		if (bot.GetPlayerClass() < TF_CLASS_SPY && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
+		if (bot.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
 
 		// PopExtTags.AI_BotSpawn(bot)
 		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
@@ -704,7 +873,7 @@ local tagtest = "popext_spell|0|2"
 
 		if (!("TakeDamageTable" in scope)) return
 
-		foreach (_, func in scope.TakeDamageTable) func(params)
+		foreach (_, func in scope.TakeDamageTable) { printl(_); func(params) }
 	}
 	function OnGameEvent_player_builtobject(params) {
 

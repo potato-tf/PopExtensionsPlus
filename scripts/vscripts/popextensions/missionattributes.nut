@@ -15,6 +15,7 @@ if (!("ScriptUnloadTable" in ROOT))
 	DeathHookTable  = {}
 	// InitWaveTable = {}
 	DisconnectTable = {}
+	StartWaveTable = {}
 
 	DebugText        = false
 	RaisedParseError = false
@@ -32,6 +33,9 @@ if (!("ScriptUnloadTable" in ROOT))
 	{
 		MissionAttributes.ResetConvars()
 		MissionAttributes.PathNum = 0
+		foreach (bot in PopExtUtil.BotArray)
+			if (bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
+				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
 
 		MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 	}
@@ -41,7 +45,7 @@ if (!("ScriptUnloadTable" in ROOT))
 		// function OnGameEvent_player_spawn(params) { foreach (_, func in MissionAttributes.SpawnHookTable) func(params) }
 		function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
-
+		function OnGameEvent_mvm_begin_wave(params) { foreach (_, func in MissionAttributes.StartWaveTable) func(params) }
 		function OnGameEvent_player_team(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
@@ -62,7 +66,11 @@ if (!("ScriptUnloadTable" in ROOT))
 
 			AddThinkToEnt(player, "PlayerThinks")
 
-			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
+			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) 
+			{
+				scope.BuiltObjectTable <- {}
+				scope.buildings <- []
+			}
 		}
 		// Hook all wave inits to reset parsing error counter.
 
@@ -201,8 +209,8 @@ function MissionAttributes::MissionAttr(...) {
 						EntFireByHandle(pumpkin, "Kill", "", -1, null, null) //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
 			}
 
-			for (local i = 1, player; i <= MaxClients(); i++)
-				if (player = PlayerInstanceFromIndex(i), player && player.InCond(TF_COND_CRITBOOSTED_PUMPKIN)) //TF_COND_CRITBOOSTED_PUMPKIN
+			foreach (player in PopExtUtil.PlayerArray)
+				if (player.InCond(TF_COND_CRITBOOSTED_PUMPKIN)) //TF_COND_CRITBOOSTED_PUMPKIN
 					EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null)
 		}
 
@@ -250,29 +258,34 @@ function MissionAttributes::MissionAttr(...) {
 	// =========================================================
 
 	case "WaveNum":
-		SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value)
+		function MissionAttributes::SetWaveNum(params = null) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value) }
+		MissionAttributes.SetWaveNum()
+		MissionAttributes.StartWaveTable.SetWaveNum <- MissionAttributes.SetWaveNum
 	break
 
 	// =========================================================
 
-	case "MaxWaveNum":
-		SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value)
+	case "MaxWaveNum":		
+	function MissionAttributes::SetMaxWaveNum(params = null) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value) }
+	MissionAttributes.SetMaxWaveNum()
+	MissionAttributes.StartWaveTable.SetMaxWaveNum <- MissionAttributes.SetMaxWaveNum
 	break
 
 	// =========================================================
 	case "NegativeDmgHeals":
-		function MissionAttributes::NegativeDmgHeals(params) {
-			local player = const_entity
+		// function MissionAttributes::NegativeDmgHeals(params) {
+		// 	local player = params.const_entity
+			
+		// 	local damage = params.damage
+		// 	if (!player.IsPlayer() || damage > 0) return
 
-			if (!player.IsPlayer() || damage > 0) return
+		// 	if ((value == 2 && player.GetHealth() - damage > player.GetMaxHealth()) || //don't overheal is value is 2
+		// 	(value == 1 && player.GetHealth() - damage > player.GetMaxHealth() * 1.5)) return //don't go past max overheal if value is 1
 
-			if ((value == 2 && player.GetHealth() - damage > player.GetMaxHealth()) || //don't overheal is value is 2
-			(value == 1 && player.GetHealth() - damage > player.GetMaxHealth() * 1.5)) return //don't go past max overheal if value is 1
+		// 	player.SetHealth(player.GetHealth() - damage)
 
-			player.SetHealth(player.GetHealth() - damage)
-
-		}
-		MissionAttributes.TakeDamageTable.NegativeDmgHeals <- MissionAttributes.NegativeDmgHeals
+		// }
+		// MissionAttributes.TakeDamageTable.NegativeDmgHeals <- MissionAttributes.NegativeDmgHeals
 	break
 	// =========================================================
 
@@ -539,13 +552,13 @@ function MissionAttributes::MissionAttr(...) {
 	case "TeamWipeWaveLoss":
 		function MissionAttributes::TeamWipeWaveLoss(params) {
 			if (!PopExtUtil.IsWaveStarted) return
-			EntFire("tf_gamerules", "RunScriptCode", "if (PopExtUtil.CountAlivePlayers() == 0) EntFire(`_roundwin`, `RoundWin`)")
+			EntFire("tf_gamerules", "RunScriptCode", "if (PopExtUtil.CountAlivePlayers() == 0) EntFire(`__utilroundwin`, `RoundWin`)")
 		}
 		MissionAttributes.DeathHookTable.TeamWipeWaveLoss <- MissionAttributes.TeamWipeWaveLoss
 	break
 
 	// =========================================================
-	//use -4 to make giants only count as 1 kill
+	
 	case "GiantSentryKillCountOffset":
 
 		function MissionAttributes::GiantSentryKillCount(params) {
@@ -556,7 +569,6 @@ function MissionAttributes::MissionAttr(...) {
 			if (sentry.GetClassname() != "obj_sentrygun" || !victim.IsMiniBoss()) return
 			local kills = GetPropInt(sentry, "m_iKills")
 			SetPropInt(sentry, "m_iKills", kills + value)
-			// EntFireByHandle(sentry, "RunScriptCode", format("SetPropInt(self, `m_iKills`, GetPropInt(self, `m_iKills`) + %d)", value), -1, null, null)
 		}
 
 		MissionAttributes.DeathHookTable.GiantSentryKillCount <- MissionAttributes.GiantSentryKillCount
@@ -570,7 +582,15 @@ function MissionAttributes::MissionAttr(...) {
 				if (typeof value == "string")
 				{
 					local values = split(value, " ")
-				}
+					foreach (v in values)
+					{
+						local split = v.split("|")
+						EntFire(split[0], "SetReturnTime", split[1])
+					}
+						
+				} 
+				else if (typeof value == "integer" || typeof value == "float")
+					EntFire("item_teamflag", "SetReturnTime", value)
 			}
 		}
 	break
@@ -595,8 +615,8 @@ function MissionAttributes::MissionAttr(...) {
 			if (!player.IsPlayer() || !victim.IsPlayer() || IsPlayerABot(player)) return //check if non-bot victim
 			if (player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER) return //check if we're spy/sniper
 			if (GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD) return //check for headshot
-			if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || GetItemIndex(player.GetActiveWeapon()) == ID_SYDNEY_SLEEPER)) return //ignore sydney sleeper and SMGs
-			if (player.GetPlayerClass() == TF_CLASS_SPY && GetItemIndex(player.GetActiveWeapon()) != ID_AMBASSADOR) return //ambassador only
+			if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || PopExtUtil.GetItemIndex(player.GetActiveWeapon()) == ID_SYDNEY_SLEEPER)) return //ignore sydney sleeper and SMGs
+			if (player.GetPlayerClass() == TF_CLASS_SPY && PopExtUtil.GetItemIndex(player.GetActiveWeapon()) != ID_AMBASSADOR) return //ambassador only
 			params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL) //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
 			return true
 		}
@@ -738,6 +758,7 @@ function MissionAttributes::MissionAttr(...) {
 				function RobotArmThink() {
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 					local playervm = GetPropEntity(player, "m_hViewModel")
+					if (playervm == null) return
 					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 
 					for (local i = 0; i < SLOT_COUNT; i++) {
@@ -768,8 +789,7 @@ function MissionAttributes::MissionAttr(...) {
 		// 4 = Red bots use zombie models. Overrides human models.
 
 		case "BotsAreHumans":
-			function MissionAttributes::BotsAreHumans(params)
-			{
+			function MissionAttributes::BotsAreHumans(params) {
 				local player = GetPlayerFromUserID(params.userid)
 				if (!player.IsBotOfType(1337)) return
 
@@ -1073,15 +1093,24 @@ function MissionAttributes::MissionAttr(...) {
 				success = false
 				return
 			}
-
-			local tfclass = player.GetPlayerClass();
+			
+			local tfclass = player.GetPlayerClass()
+			foreach (k, v in value)
+			{
+				printl(k + " : " +v)
+				if (typeof k == "string" && (typeof v == "integer" || typeof v == "float"))
+					EntFireByHandle(player, "RunScriptCode", ""+player.AddCustomAttribute(k, v, -1), -1, null, null)
+			}
+			
 			if (!(tfclass in value)) return
-
-			local table = value[tfclass];
+			local table = value[tfclass]
 			foreach (key, val in table) {
 				local valformat = ""
 				if (typeof val == "integer")
 					valformat = format("self.AddCustomAttribute(`%s`, %d, -1)", key, val)
+
+				else if (typeof val == "float")
+					valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", key, val)
 
 				else if (typeof val == "string") {
 					MissionAttributes.RaiseValueError("PlayerAttributes", val, "Cannot set string attributes!")
@@ -1089,8 +1118,6 @@ function MissionAttributes::MissionAttr(...) {
 					return
 				}
 
-				else if (typeof val == "float")
-					valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", key, val)
 
 				EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
 				if (key in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
@@ -1449,6 +1476,7 @@ function MissionAttributes::MissionAttr(...) {
 			scope.handled_laser   <- false
 			scope.laser_spawntime <- -1
 			scope.PlayerThinkTable.ReverseMVMLaserThink <- function() {
+
 				if (!PopExtUtil.IsAlive(player) || player.GetTeam() == TEAM_SPECTATOR) return
 
 				local wep = self.GetActiveWeapon()
@@ -1501,6 +1529,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Allow money collection
 			scope.PlayerThinkTable.ReverseMVMCurrencyThink <- function() {
+
 				// Save money netprops because we fuck it in the loop below
 				local money              = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
 				local prev_wave_money    = GetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped")
@@ -1522,6 +1551,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Allow pack collection
 			scope.PlayerThinkTable.ReverseMVMPackThink <- function() {
+
 				local origin = self.GetOrigin()
 				for ( local ent; ent = FindByClassnameWithin(ent, "item_*", origin, 40); ) {
 					if (ent.GetEFlags() & EFL_USER) continue
@@ -1611,6 +1641,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Drain player ammo on weapon usage
 			scope.PlayerThinkTable.ReverseMVMDrainAmmoThink <- function() {
+
 				local buttons = NetProps.GetPropInt(self, "m_nButtons");
 
 				local wep = player.GetActiveWeapon()
@@ -1774,13 +1805,80 @@ function MissionAttributes::MissionAttr(...) {
 					}
 				}
 			}
+			if (player.GetPlayerClass() == TF_CLASS_ENGINEER)
+			{
+				scope.BuiltObjectTable.DrainMetal <- function(params) {
+				
+					local player = GetPlayerFromUserID(params.userid)
+					local scope = player.GetScriptScope()
+					local curmetal = GetPropIntArray(player, "m_iAmmo", TF_AMMO_METAL)
+					if (!("buildings" in scope)) scope.buildings <- [-1, array(2), -1]
+					printl(scope.buildings)
+					// don't drain metal if this buildings entindex exists in the players scope
+					if (scope.buildings.find(params.index) != null || scope.buildings[1].find(params.index) != null) return
+				
+					// add entindexes to player scope
+					if (params.object == OBJ_TELEPORTER)
+						if (GetPropInt(EntIndexToHScript(params.index), "m_iTeleportType") == TTYPE_ENTRANCE)
+							scope.buildings[1][0] = params.index
+						else
+							scope.buildings[1][1] = params.index
+					else
+						scope.buildings[params.object] = params.index
+				
+					switch(params.object)
+					{
+						case OBJ_DISPENSER:
+							SetPropIntArray(player, "m_iAmmo", curmetal - 100, TF_AMMO_METAL)
+						break
+					
+						case OBJ_TELEPORTER:
+							if (PopExtUtil.HasItemIndex(player, ID_EUREKA_EFFECT))
+								SetPropIntArray(player, "m_iAmmo", curmetal - 25, TF_AMMO_METAL)
+							else
+								SetPropIntArray(player, "m_iAmmo", curmetal - 50, TF_AMMO_METAL)
+						break
+					
+						case OBJ_SENTRYGUN:
+							if (PopExtUtil.HasItemIndex(player, ID_GUNSLINGER))
+								SetPropIntArray(player, "m_iAmmo", curmetal - 100, TF_AMMO_METAL)
+							else
+								SetPropIntArray(player, "m_iAmmo", curmetal - 130, TF_AMMO_METAL)
+						break
+					}
+					if (GetPropIntArray(player, "m_iAmmo", TF_AMMO_METAL) < 0) EntFireByHandle(player, "RunScriptCode", "SetPropIntArray(player, `m_iAmmo`, 0, TF_AMMO_METAL)", -1, null, null)
+				}
+
+			}
 
 			//bitflags
 			//cannot pick up intel
 			if (value & 2)
-			{
 				player.AddCustomAttribute("cannot pick up intelligence", 1, -1)
+			
+			//remove ammo drain
+			//we should probably avoid adding it to the think table altogether but whatever 
+			if (value & 4)
+			{
+				delete scope.BuiltObjectTable.DrainMetal
+				delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink
 			}
+
+			//infinite cloak
+			if (value & 8 && player.GetPlayerClass() == TF_CLASS_SPY)
+				//setting it to -FLT_MAX makes it display as +inf%
+				player.AddCustomAttribute("cloak consume rate decreased", -FLT_MAX, -1)
+			
+			if (value & 16)
+			{
+				function InRespawnThink()
+				{
+					if (player.InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED) || !PopExtUtil.IsPointInRespawnRoom(player.EyePosition())) return
+					player.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, 1, null)
+				}
+			}
+				
+			
 		}
 		MissionAttributes.SpawnHookTable.ReverseMVMSpawn <- MissionAttributes.ReverseMVMSpawn
 	break

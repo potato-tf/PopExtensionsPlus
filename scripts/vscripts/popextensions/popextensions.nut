@@ -80,7 +80,7 @@ function PopExt::AddCustomTankIcon(name, count, isCrit = false, isBoss = true, i
 		isSupport = isSupport
 		isSupportLimited = isSupportLimited
 	}
-	PopExt.tankIcons.append(icon)
+	PopExtHooks.tankIcons.append(icon)
 	PopExt._PopIncrementTankIcon(icon)
 }
 
@@ -93,7 +93,7 @@ function PopExt::AddCustomIcon(name, count, isCrit = false, isBoss = false, isSu
 		isSupport = isSupport
 		isSupportLimited = isSupportLimited
 	}
-	PopExt.icons.append(icon)
+	PopExtHooks.icons.append(icon)
 	PopExt._PopIncrementIcon(icon)
 }
 
