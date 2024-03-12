@@ -50,7 +50,7 @@ const INT_COLOR_WHITE = 16777215
 
 //use this crit boost for crits that are added temporarily (e.g. customattributes LastShotCrits())
 const COND_CRITBOOST_TEMPORARY = 56 //TF_COND_CRITBOOSTED_CARD_EFFECT
-
+// const COND_CRITBOOST_PERMANENT = 39 //TF_COND_CRITBOOSTED_CTF_CAPTURE //this one might be misleading, uncomment if we need a 4th
 const COND_CRITBOOST_PLAYERS = 37 // TF_COND_CRITBOOSTED_FIRST_BLOOD
 const COND_CRITBOOST_BOTS = 38 // TF_COND_CRITBOOSTED_BONUS_TIME
 
