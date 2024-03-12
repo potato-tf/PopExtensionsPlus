@@ -27,11 +27,11 @@ local popext_funcs = {
 	popext_addcond = function(bot, args) {
 		if (args.len() == 1) {
 			if (args[0].tointeger() == 43) {
-				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
+				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
 				function MoveToSpec(params) {
 					EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 				}
-				bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
+				// bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
 			}
 			else
 				bot.AddCond(args[0].tointeger())
@@ -42,15 +42,15 @@ local popext_funcs = {
 	}
 
 	popext_reprogrammed = function(bot, args) {
-		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
+		PopExtUtil.ChangePlayerTeamMvM(bot, TF_TEAM_PVE_DEFENDERS)
 		function MoveToSpec(params) {
 			EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 		}
-		bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
+		// bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
 	}
 
 	popext_reprogrammed_neutral = function(bot, args) {
-		bot.ForceChangeTeam(TEAM_UNASSIGNED, false)
+		bot.ForceChangeTeam(TEAM_UNASSIGNED, true)
 	}
 
 	popext_altfire = function(bot, args) {

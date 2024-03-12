@@ -110,8 +110,31 @@ function CustomAttributes::FireMilkBolt(player, value, item) {
     }
 }
 
-function CustomAttributes::TurnToIce(player, item)
-{
+function CustomAttributes::MeleeCleaveAttack(player, item) {
+
+
+}
+
+function CustomAttributes::TeleporterRechargeTime(player, value, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    
+    scope = player.GetScriptScope()
+    scope.teleporterrechargetimemult <- value
+    
+    CustomAttributes.PlayerTeleportTable.TeleporterRechargeTime <- function(params) {
+        local teleportedplayer = GetPlayerFromUserID(params.userid)
+
+        local teleporter = FindByClassnameNearest("obj_teleporter", teleportedplayer.GetOrigin(), 16)
+
+        local chargetime = GetPropFloat(teleporter, "m_flRechargeTime")
+        SetPropFloat(teleporter, "m_flRechargeTime", chargetime * teleporterrechargetimemult)
+    }
+}
+
+function CustomAttributes::TurnToIce(player, item) {
+
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
@@ -132,8 +155,7 @@ function CustomAttributes::TurnToIce(player, item)
     // Add the attribute that creates ice statues
     freeze_proxy_weapon.AddAttribute("freeze backstab victim", 1.0, -1.0)
 
-    CustomAttributes.TakeDamageTable.TurnToIce <- function(params)
-    {
+    CustomAttributes.TakeDamageTable.TurnToIce <- function(params) {
         local attacker = params.attacker
         if (PopExtUtil.HasItemInLoadout(attacker, item) == null) return true
         local victim = params.const_entity
@@ -148,8 +170,7 @@ function CustomAttributes::TurnToIce(player, item)
     }
 }
 
-function CustomAttributes::TeleporterSpeedBoost(player, item)
-{
+function CustomAttributes::TeleporterSpeedBoost(player, item) {
     local scope = player.GetScriptScope()
     scope.speedboostteleporter <- true
     CustomAttributes.PlayerTeleportTable.TeleporterSpeedBoost <- function(params) {
@@ -177,6 +198,10 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "set turn to ice":
             CustomAttributes.TurnToIce(player, item)
+        break
+
+        case "mult teleporter recharge rate":
+            CustomAttributes.TeleporterRechargeTime(player, value, item)
         break
     }
 }

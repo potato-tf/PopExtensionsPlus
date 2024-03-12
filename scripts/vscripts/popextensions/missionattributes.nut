@@ -48,11 +48,11 @@ if (!("ScriptUnloadTable" in ROOT))
 		function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 		function OnGameEvent_mvm_begin_wave(params) { foreach (_, func in MissionAttributes.StartWaveTable) func(params) }
-		function OnGameEvent_player_team(params) {
-			local player = GetPlayerFromUserID(params.userid)
-			if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
-				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", -1, null, null)
-		}
+		// function OnGameEvent_player_team(params) {
+		// 	local player = GetPlayerFromUserID(params.userid)
+		// 	if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
+		// 		EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", -1, null, null)
+		// }
 
 		function OnGameEvent_post_inventory_application(params) {
 
@@ -570,7 +570,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			local sentry = EntIndexToHScript(params.inflictor_entindex)
 			local victim = GetPlayerFromUserID(params.userid)
-			
+
 			if (sentry == null) return
 
 			if (sentry.GetClassname() != "obj_sentrygun" || !victim.IsMiniBoss()) return
@@ -1107,31 +1107,31 @@ function MissionAttributes::MissionAttr(...) {
 						CustomAttributes.AddAttr(player, k, v)
 					else
 						EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", k, v.tofloat()), -1, null, null)
-					
-			}
 			
-			if (!(tfclass in value)) return
-			local table = value[tfclass]
-			foreach (k, v in table) {
-				if (k in CustomAttributes.Attrs)
-					CustomAttributes.ItemAttr(player, k, v)
-				else {
-					local valformat = ""
-					if (typeof v == "integer")
-						valformat = format("self.AddCustomAttribute(`%s`, %d, -1)", k, v)
+				if (!(tfclass in value)) continue
+				local table = value[tfclass]
+				foreach (k, v in table) {
+					if (k in CustomAttributes.Attrs)
+						CustomAttributes.ItemAttr(player, k, v)
+					else {
+						local valformat = ""
+						if (typeof v == "integer")
+							valformat = format("self.AddCustomAttribute(`%s`, %d, -1)", k, v)
 
-					else if (typeof v == "float")
-						valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", k, v)
+						else if (typeof v == "float")
+							valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", k, v)
 
-					else if (typeof v == "string") {
-						MissionAttributes.RaiseValueError("PlayerAttributes", v, "Cannot set string attributes!")
-						success = false
-						return
+						else if (typeof v == "string") {
+							MissionAttributes.RaiseValueError("PlayerAttributes", v, "Cannot set string attributes!")
+							success = false
+							continue
+						}
+
+
+						EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
+						if (k in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
+						
 					}
-
-
-					EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
-					if (k in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
 				}
 			}
 		}
@@ -1887,8 +1887,8 @@ function MissionAttributes::MissionAttr(...) {
 			//we should probably avoid adding it to the think table altogether but whatever 
 			if (value & 4)
 			{
-				delete scope.BuiltObjectTable.DrainMetal
-				delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink
+				try delete scope.BuiltObjectTable.DrainMetal catch(e) return
+				try delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink catch(e) return
 			}
 
 			//infinite cloak
