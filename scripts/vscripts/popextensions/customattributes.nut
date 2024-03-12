@@ -214,6 +214,18 @@ function CustomAttributes::TeleporterSpeedBoost(player, item) {
     }
 }
 
+function CustomAttributes::CanBreatheUnderwater(player, item) {
+    
+    local painfinished = GetPropInt(player, "m_PainFinished")
+    
+    player.GetScriptScope().PlayerThinkTable.CanBreatheUnderwater <- function() {
+
+        local underwater = player.GetWaterLevel() == 3 ? INT_MAX : painfinished
+        if (player.GetWaterLevel() == 3) SetPropInt(player, "m_PainFinished", underwater)
+    }
+    
+}
+
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
     //TODO: set up error handler
@@ -247,6 +259,10 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         case "melee cleave attack":
             CustomAttributes.MeleeCleaveAttack(player, item, value)
             attribinfo = {attr = attr, desc = "On Swing: Weapon hits multiple targets"}
+        break
+        case "can breathe underwater":
+            CustomAttributes.CanBreatheUnderwater(player, item, value)
+            attribinfo = {attr = attr, desc = "Player can breathe underwater"}
         break
     }
 }
