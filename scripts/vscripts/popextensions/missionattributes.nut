@@ -934,6 +934,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "NoSkeleSplit":
 		function MissionAttributes::NoSkeleSplit() {
+
 			//kill skele spawners before they split from tf_zombie_spawner
 			for (local skelespell; skelespell = FindByClassname(skelespell, "tf_projectile_spellspawnzombie"); )
 				if (GetPropEntity(skelespell, "m_hThrower") == null)
@@ -942,14 +943,14 @@ function MissionAttributes::MissionAttr(...) {
 			// m_hThrower does not change when the skeletons split for spell-casted skeles, just need to kill them after spawning
 			for (local skeles; skeles = FindByClassname(skeles, "tf_zombie");  ) {
 				//kill blu split skeles
-				if (skeles.GetModelScale() == 0.5 && skeles.GetOwner().IsBotOfType(1337)) {
+				if (skeles.GetModelScale() == 0.5 && (skeles.GetOwner() == null || skeles.GetOwner().IsBotOfType(1337))) {
 					EntFireByHandle(skeles, "Kill", "", -1, null, null)
 					return
 				}
-				if (skeles.GetTeam() == 5) {
-					skeles.SetTeam(TF_TEAM_PVE_INVADERS)
-					skeles.SetSkin(1)
-				}
+				// if (skeles.GetTeam() == 5) {
+				// 	skeles.SetTeam(TF_TEAM_PVE_INVADERS)
+				// 	skeles.SetSkin(1)
+				// }
 			}
 		}
 

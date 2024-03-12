@@ -9,9 +9,11 @@
     Attrs = {
         "fires milk bolt": null
         "mod teleporter speed boost": null
+        "mult teleporter recharge rate": null
         "set turn to ice": null
         "melee cleave attack": null
     }
+    ItemDescriptions = []
 
     Events = {
 
@@ -76,7 +78,7 @@
 }
 __CollectGameEventCallbacks(CustomAttributes.Events)
 
-function CustomAttributes::FireMilkBolt(player, value, item) {
+function CustomAttributes::FireMilkBolt(player, item, value = 5.0) {
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
@@ -85,7 +87,6 @@ function CustomAttributes::FireMilkBolt(player, value, item) {
     scope.milkboltfired <- false
 
     scope.PlayerThinkTable.FireMilkBolt <- function() {
-        local nextattack = 0.0
         
         if (player.GetActiveWeapon() != wep) return
 
@@ -110,12 +111,43 @@ function CustomAttributes::FireMilkBolt(player, value, item) {
     }
 }
 
-function CustomAttributes::MeleeCleaveAttack(player, item) {
+function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
 
+    local scope = player.GetScriptScope()
+    local playerstocleave = []
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    local nextattack = 0.0
+    scope.cleaved <- false
+
+    scope.PlayerThinkTable.MeleeCleaveAttack <- function() {
+        if (nextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0) return
+
+        scope.cleaved = false
+        nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
+    }
+    CustomAttributes.TakeDamageTable.MeleeCleaveAttack <- function(params) {
+        if (scope.cleaved) return
+
+        local wep = PopExtUtil.HasItemInLoadout(player, item)
+        if (wep == null) return
+
+        scope.cleaved = true
+        // params.early_out = true
+
+        local playerstocleave = []
+        
+        local swingpos = player.EyePosition() + (player.EyeAngles().Forward() * 30) - Vector(0, 0, value)
+
+        for (local p; p = FindByClassnameWithin(p, "player", swingpos, value);)
+            if (p.GetTeam() != player.GetTeam() && p.GetTeam() != TEAM_SPECTATOR)
+                p.TakeDamageCustom(params.inflictor, params.attacker, params.weapon, params.damage_force, params.damage_position, params.damage, params.damage_type, params.damage_custom)
+            
+    }
 }
 
-function CustomAttributes::TeleporterRechargeTime(player, value, item) {
+function CustomAttributes::TeleporterRechargeTime(player, item, value = 1.0) {
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
@@ -161,7 +193,8 @@ function CustomAttributes::TurnToIce(player, item) {
         local victim = params.const_entity
         if (victim.IsPlayer() && params.damage >= victim.GetHealth())
         {
-            victim.TakeDamageCustom(attacker, victim, freeze_proxy_weapon, Vector(), Vector(), params.damage, params.damage_type, TF_DMG_CUSTOM_BACKSTAB)
+            victim.TakeDamageCustom(attacker, victim, freeze_proxy_weapon, Vector(), Vector(), params.damage, params.damage_type, params.damage_custom | TF_DMG_CUSTOM_BACKSTAB)
+
             // I don't remember why this is needed but it's important
             local ragdoll = GetPropEntity(victim, "m_hRagdoll")
             if (ragdoll) SetPropInt(ragdoll, "m_iDamageCustom", 0)
@@ -178,31 +211,47 @@ function CustomAttributes::TeleporterSpeedBoost(player, item) {
         local teleportedplayer = GetPlayerFromUserID(params.userid)
 
         if ("speedboostteleporter" in scope && scope.speedboostteleporter) teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
-    
     }
 }
 
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
+    //TODO: set up error handler
+    if (!(attr in CustomAttributes.Attrs)) return
+
+    local attribinfo = {}
+
 	switch(attr) {
 
         //Secondary attack: fires a milk bolt that applies milk for x seconds.
         case "fires milk bolt":
-            CustomAttributes.FireMilkBolt(player, value, item)
+            CustomAttributes.FireMilkBolt(player, item, value)
+            attribinfo = {attr = attr, desc = format("Secondary attack: fires a bolt that applies milk for %d seconds.", value)}
         break
 
         //teleporters grant a speed boost for x seconds after teleport
         case "mod teleporter speed boost":
             CustomAttributes.TeleporterSpeedBoost(player, item)
+            attribinfo = {attr = attr, desc = format("Teleporters grant a speed boost for %f seconds after teleport", value)}
         break
 
         case "set turn to ice":
             CustomAttributes.TurnToIce(player, item)
+            attribinfo = {attr = attr, desc = format("On Kill: Turn victim to ice.", value)}
         break
 
         case "mult teleporter recharge rate":
-            CustomAttributes.TeleporterRechargeTime(player, value, item)
+            CustomAttributes.TeleporterRechargeTime(player, item, value)
+            attribinfo = {attr = attr, desc = "On Kill: Turn victim to ice"}
         break
+        case "melee cleave attack":
+            CustomAttributes.MeleeCleaveAttack(player, item, value)
+            attribinfo = {attr = attr, desc = "On swing: Weapon hits multiple targets"}
+        break
+    }
+    player.GetScriptScope().PlayerThinkTable.ShowAttribInfo <- function()
+    {
+        if (player.IsInspecting()) return
     }
 }
 function CustomAttrs(attrs = {}) {

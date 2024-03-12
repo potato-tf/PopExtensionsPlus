@@ -857,7 +857,7 @@ function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speed
 	EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
 }
 
-function PopExtUtil::Ignite(player, duration = 10, damage = 1)
+function PopExtUtil::Ignite(player, duration = 10.0, damage = 1)
 {
 	local utilignite = FindByName(null, "__utilignite")
 	if (utilignite == null)
@@ -875,7 +875,7 @@ function PopExtUtil::Ignite(player, duration = 10, damage = 1)
 	EntFireByHandle(utilignite, "EndTouch", "", SINGLE_TICK, player, player)
 }
 
-function PopExtUtil::ShowHudHint(text = "This is a hud hint", player = null, duration = 5) {
+function PopExtUtil::ShowHudHint(text = "This is a hud hint", player = null, duration = 5.0) {
 	local hudhint = FindByName(null, "__utilhudhint") != null
 
 	local flags = (player == null) ? 1 : 0
