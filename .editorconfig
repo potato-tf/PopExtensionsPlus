@@ -1,14 +1,24 @@
+# Set this file as the top-most EditorConfig file
 root = true
 
-[*]
-end_of_line = lf
-insert_final_newline = true
-
-[*nut]
+# All text files
+[*.{nut,md,pop,py,txt}]
+ # UTF-8 character set
 charset = utf-8
-indent_style = tab
-indent_size = 4
+ # Use line feed newlines
+end_of_line = lf
+ # Enable newline file terminator
+insert_final_newline = true
+ # Trim trailing whitespace
 trim_trailing_whitespace = true
 
-[*.md]
-trim_trailing_whitespace = false
+# Source files
+[*.{nut,pop,py}]
+ # Four space width hard tab indentation
+indent_style = tab
+indent_size = 4
+
+# Documentation files
+[*.{md,txt}]
+ # Natural language code for spell-checking
+spelling_language = en-GB
