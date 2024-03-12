@@ -46,13 +46,10 @@ const TF_COLOR_DEFAULT = "FBECCB"
 
 const INT_COLOR_WHITE = 16777215
 
-//redefine crit boost so we don't step all over other crit boost effects
+// redefine crit boost so we don't end up using all of the different crit boost effects all over the place
 
 //use this crit boost for crits that are added temporarily (e.g. customattributes LastShotCrits())
-const COND_CRITBOOST_TEMPORARY = 56 //TF_COND_CRITBOOSTED_CARD_EFFECT
-// const COND_CRITBOOST_PERMANENT = 39 //TF_COND_CRITBOOSTED_CTF_CAPTURE //this one might be misleading, uncomment if we need a 4th
-const COND_CRITBOOST_PLAYERS = 37 // TF_COND_CRITBOOSTED_FIRST_BLOOD
-const COND_CRITBOOST_BOTS = 38 // TF_COND_CRITBOOSTED_BONUS_TIME
+const COND_CRITBOOST = 39 //TF_COND_CRITBOOSTED_CTF_CAPTURE
 
 // CONST.COLOR_END <- "\x07"
 // CONST.COLOR_DEFAULT <- "\x07FBECCB"

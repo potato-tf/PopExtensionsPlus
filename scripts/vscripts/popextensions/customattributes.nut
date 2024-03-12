@@ -280,11 +280,11 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
 
         if (wep.Clip1() > 1)
         {
-            player.RemoveCondEx(COND_CRITBOOST_TEMPORARY, true)
+            player.RemoveCondEx(COND_CRITBOOST, true)
             return
         }
         
-        player.AddCondEx(COND_CRITBOOST_TEMPORARY, value, null)
+        player.AddCondEx(COND_CRITBOOST, value, null)
     }
 }
 
