@@ -1,4 +1,3 @@
-// ::popExtensionsVersion <- 6; //don't bother with versioning for now since we're constantly updating it
 local root = getroottable()
 
 PopExt.robotTags         <- {}

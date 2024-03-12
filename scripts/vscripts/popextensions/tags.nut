@@ -17,7 +17,9 @@ local tagtest =  [
 	"popext_fireweapon|2048",
 	"popext_dispenseroverride|2",
 	"popext_weaponresist|tf_weapon_minigun|99999",
-	"popext_rocketcustomtrail|eyeboss_projectile"
+	"popext_rocketcustomtrail|eyeboss_projectile",
+	"popext_reprogrammed",
+	"popext_spawnhere|-779.491150 3302.379883 312.992340"
 ]
 
 local popext_funcs = {
@@ -42,7 +44,7 @@ local popext_funcs = {
 	popext_reprogrammed = function(bot, args) {
 		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
 		function MoveToSpec(params) {
-			EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
+			EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 		}
 		bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
 	}
@@ -114,6 +116,7 @@ local popext_funcs = {
 	}
 	
 	popext_weaponswitch = function(bot, args) {
+
 		local args_len = args.len()
 		local slot = args[0].tointeger()
 		local cooldown = (args_len > 1) ? args[1].tointeger() : 3

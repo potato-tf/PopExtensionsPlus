@@ -1,3 +1,5 @@
+IncludeScript("popextensions/customattributes")
+
 const EFL_USER = 1048576
 if (!("ScriptLoadTable" in ROOT))
 	::ScriptLoadTable   <- {}
@@ -568,6 +570,8 @@ function MissionAttributes::MissionAttr(...) {
 
 			local sentry = EntIndexToHScript(params.inflictor_entindex)
 			local victim = GetPlayerFromUserID(params.userid)
+			
+			if (sentry == null) return
 
 			if (sentry.GetClassname() != "obj_sentrygun" || !victim.IsMiniBoss()) return
 			local kills = GetPropInt(sentry, "m_iKills")
@@ -677,7 +681,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			if (value & 1) {
 				//sticky anims and thruster anims are particularly problematic
-				if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemIndex(player, ID_THERMAL_THRUSTER))) {
+				if ((playerclass == TF_CLASS_DEMOMAN && PopExtUtil.GetItemInSlot(player, SLOT_SECONDARY).GetClassname() == "tf_weapon_pipebomblauncher") || (playerclass == TF_CLASS_PYRO && PopExtUtil.HasItemInLoadout(player, ID_THERMAL_THRUSTER))) {
 					PopExtUtil.PlayerRobotModel(player, model)
 					return
 				}
@@ -946,8 +950,6 @@ function MissionAttributes::MissionAttr(...) {
 					skeles.SetTeam(TF_TEAM_PVE_INVADERS)
 					skeles.SetSkin(1)
 				}
-				// smoove skele, unfinished
-				skeles.FlagForUpdate(true);
 			}
 		}
 
@@ -1100,30 +1102,37 @@ function MissionAttributes::MissionAttr(...) {
 			local tfclass = player.GetPlayerClass()
 			foreach (k, v in value)
 			{
-				// printl(k + " : " +v)
 				if (typeof k == "string" && (typeof v == "integer" || typeof v == "float"))
-					EntFireByHandle(player, "RunScriptCode", ""+player.AddCustomAttribute(k, v, -1), -1, null, null)
+					if (k in CustomAttributes.Attrs)
+						CustomAttributes.AddAttr(player, k, v)
+					else
+						EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", k, v.tofloat()), -1, null, null)
+					
 			}
 			
 			if (!(tfclass in value)) return
 			local table = value[tfclass]
-			foreach (key, val in table) {
-				local valformat = ""
-				if (typeof val == "integer")
-					valformat = format("self.AddCustomAttribute(`%s`, %d, -1)", key, val)
+			foreach (k, v in table) {
+				if (k in CustomAttributes.Attrs)
+					CustomAttributes.ItemAttr(player, k, v)
+				else {
+					local valformat = ""
+					if (typeof v == "integer")
+						valformat = format("self.AddCustomAttribute(`%s`, %d, -1)", k, v)
 
-				else if (typeof val == "float")
-					valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", key, val)
+					else if (typeof v == "float")
+						valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", k, v)
 
-				else if (typeof val == "string") {
-					MissionAttributes.RaiseValueError("PlayerAttributes", val, "Cannot set string attributes!")
-					success = false
-					return
+					else if (typeof v == "string") {
+						MissionAttributes.RaiseValueError("PlayerAttributes", v, "Cannot set string attributes!")
+						success = false
+						return
+					}
+
+
+					EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
+					if (k in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
 				}
-
-
-				EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
-				if (key in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
 			}
 		}
 
@@ -1150,8 +1159,16 @@ function MissionAttributes::MissionAttr(...) {
 				local info = [PopExtUtil.GetItemIndex(wep), wep.GetClassname()]
 				foreach (item in info)
 					if (item in value)
-						foreach(key, val in value[item])
-							wep.AddAttribute(key, val, -1)
+						foreach(k, v in value[item])
+						{
+							if (k in CustomAttributes.Attrs)
+								CustomAttributes.AddAttr(player, k, v, item)
+							else
+							{
+								wep.AddAttribute(k, v, -1)
+								wep.ReapplyProvision()
+							}
+						}
 			}
 		}
 
@@ -1238,7 +1255,7 @@ function MissionAttributes::MissionAttr(...) {
 								printl("GIVE STOCK ITEM, check with IsInMultiList")
 							}
 							else if (typeof value == "string" && value.len() > 0) {
-								printl("INVALID VALUE "+value+ "FOR KEY: "+id)
+								printl("INVALID VALUE "+value+ "FOR k: "+id)
 								continue
 							}
 							else {
@@ -1456,7 +1473,15 @@ function MissionAttributes::MissionAttr(...) {
 
 		function MissionAttributes::ReverseMVMSpawn(params) {
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(1337))
+			{
+				if (player.HasItem() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS && !bot.HasBotTag("popext_redflagcarrier"))
+				{
+					local flag = GetPropEntity(player, "m_hItem")
+					EntFireByHandle(flag, "ForceResetSilent", "", -1, null, null)
+				}
+				return
+			}
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -1835,14 +1860,14 @@ function MissionAttributes::MissionAttr(...) {
 						break
 					
 						case OBJ_TELEPORTER:
-							if (PopExtUtil.HasItemIndex(player, ID_EUREKA_EFFECT))
+							if (PopExtUtil.HasItemInLoadout(player, ID_EUREKA_EFFECT))
 								SetPropIntArray(player, "m_iAmmo", curmetal - 25, TF_AMMO_METAL)
 							else
 								SetPropIntArray(player, "m_iAmmo", curmetal - 50, TF_AMMO_METAL)
 						break
 					
 						case OBJ_SENTRYGUN:
-							if (PopExtUtil.HasItemIndex(player, ID_GUNSLINGER))
+							if (PopExtUtil.HasItemInLoadout(player, ID_GUNSLINGER))
 								SetPropIntArray(player, "m_iAmmo", curmetal - 100, TF_AMMO_METAL)
 							else
 								SetPropIntArray(player, "m_iAmmo", curmetal - 130, TF_AMMO_METAL)
@@ -1871,13 +1896,20 @@ function MissionAttributes::MissionAttr(...) {
 				//setting it to -FLT_MAX makes it display as +inf%
 				player.AddCustomAttribute("cloak consume rate decreased", -FLT_MAX, -1)
 			
-			if (value & 16)
+			//spawnroom behavior.  16 = spawn protection 32 = can't attack
+			if (value & 16 || value & 32)
 			{
 				function InRespawnThink()
 				{
-					if (player.InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED) || !PopExtUtil.IsPointInRespawnRoom(player.EyePosition())) return
-					player.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, 1, null)
+					if (!PopExtUtil.IsPointInRespawnRoom(player.EyePosition())) return
+
+					if (value & 16 && !player.InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED))
+						player.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, 2.0, null)
+
+					if (value & 32) 
+						player.AddCustomAttribute("no_attack", 1, 1.0)
 				}
+				scope.PlayerThinkTable.InRespawnThink <- InRespawnThink
 			}
 				
 			
@@ -1925,7 +1957,7 @@ MissionAttrEntity.ValidateScriptScope();
 MissionAttrEntity.GetScriptScope().MissionAttrThink <- MissionAttrThink
 AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
-// This only supports key : value pairs, if you want var args call MissionAttr directly
+// This only supports k : value pairs, if you want var args call MissionAttr directly
 function MissionAttrs(attrs = {}) {
 	foreach (attr, value in attrs)
 		MissionAttributes.MissionAttr(attr, value)

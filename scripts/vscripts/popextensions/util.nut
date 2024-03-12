@@ -172,7 +172,7 @@
 
 				else if (player != null && PopExtUtil.HumanArray.find(player) == null)
 					PopExtUtil.HumanArray.append(player)
-					
+
 				if (player != null && PopExtUtil.PlayerArray.find(player) == null)
 					PopExtUtil.PlayerArray.append(player)
 			}
@@ -825,11 +825,11 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 		scope.PlayerThinkTable.BotModelThink <- BotModelThink
 }
 
-function PopExtUtil::HasItemIndex(player, index) {
-	local t = false
+function PopExtUtil::HasItemInLoadout(player, index) {
+	local t = null
 	for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-		if (PopExtUtil.GetItemIndex(child) == index) {
-			t = true
+		if (child.GetClassname() == index || child == index || PopExtUtil.GetItemIndex(child) == index) {
+			t = child
 			break
 		}
 	}
