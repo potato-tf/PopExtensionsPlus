@@ -1,12 +1,21 @@
 # Source files
 *.nut text eol=lf diff=cpp
+*.pop text eol=lf diff=cpp
+*.py text eol=lf diff=python
 
 # Documentation files
-*.pop text eol=lf diff=cpp
 *.md text eol=lf diff=markdown
+*.txt text eol=lf
 
-# Linguist configuration
+# Editor Files
+#  VSCode incorrectly uses the .json extension for MSFT JSONC.
+.vscode/*.json text eol=lf
+
+# github-linguist/linguist configuration
 *.nut linguist-detectable=true
 *.nut linguist-language=Squirrel
 *.pop linguist-detectable=true
-*.pop linguist-language=vdf
+*.pop linguist-language=Valve-Data-Format
+*.py linguist-detectable=true
+*.py linguist-language=Python
+.vscode/*.json linguist-language=JSON-with-Comments
