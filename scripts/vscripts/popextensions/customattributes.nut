@@ -12,6 +12,46 @@
         "mult teleporter recharge rate": null
         "set turn to ice": null
         "melee cleave attack": null
+        "extra damage on hit": null
+        "scoreboard minigame": null
+        "last shot crits": null
+        "can breathe under water": null
+        "cannot swim": null
+        "swimming mastery": null
+        "mod minigun can holster while spinning": null
+        "wet immunity": null
+        "ability master sniper": null
+        "keep disguise on attack": null
+        "add give health to teammate on hit": null
+        "mult dispenser rate": null
+        "mvm sentry ammo": null
+        "build small sentries": null
+        "kill combo fire rate boost": null
+        "disguise as dispenser on crouch": null
+        "ubercharge transfer": null
+        "ubercharge ammo": null
+        "teleport instead of die": null
+        "mod projectile heat seek power": null
+        "mult dmg vs same class": null
+        "uber on damage taken": null
+        "mult crit when health is below percent": null
+        "penetration damage penalty": null
+        "firing forward pull": null
+        "mod soldier buff range": null
+        "mult rocketjump deploy time": null
+        "mult nonrocketjump attackrate": null
+        "aoe heal chance": null
+        "crits on damage": null
+        "stun on damage": null
+        "aoe blast on damage": null
+        "mult dmg with reduced health": null
+        "mult airblast primary refire time": null
+        "mod flamethrower spinup time": null
+        "airblast functionality flags": null
+        "reverse airblast": null
+        "airblast dashes": null
+        "mult sniper charge per sec with enemy under crosshair": null
+        "sniper beep with enemy under crosshair": null
     }
     ItemDescriptions = []
 
@@ -223,7 +263,29 @@ function CustomAttributes::CanBreatheUnderwater(player, item) {
         local underwater = player.GetWaterLevel() == 3 ? INT_MAX : painfinished
         if (player.GetWaterLevel() == 3) SetPropInt(player, "m_PainFinished", underwater)
     }
+}
+
+function CustomAttributes::LastShotCrits(player, item, value = -1) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local nextattack = 0.0
     
+    player.GetScriptScope().PlayerThinkTable.LastShotCrits <- function() {
+
+        if (nextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
+
+        nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
+
+        if (wep.Clip1() > 1)
+        {
+            player.RemoveCondEx(COND_CRITBOOST_TEMPORARY, true)
+            return
+        }
+        
+        player.AddCondEx(COND_CRITBOOST_TEMPORARY, value, null)
+    }
 }
 
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
@@ -235,16 +297,14 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
 	switch(attr) {
 
-        //Secondary attack: fires a milk bolt that applies milk for x seconds.
         case "fires milk bolt":
             CustomAttributes.FireMilkBolt(player, item, value)
             attribinfo = {attr = attr, desc = format("Secondary attack: fires a bolt that applies milk for %d seconds.", value)}
         break
 
-        //teleporters grant a speed boost for x seconds after teleport
         case "mod teleporter speed boost":
             CustomAttributes.TeleporterSpeedBoost(player, item)
-            attribinfo = {attr = attr, desc = format("Teleporters grant a speed boost for %f seconds after teleport", value)}
+            attribinfo = {attr = attr, desc = format("Teleporters grant a speed boost for %f seconds", value)}
         break
 
         case "set turn to ice":
@@ -260,7 +320,17 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             CustomAttributes.MeleeCleaveAttack(player, item, value)
             attribinfo = {attr = attr, desc = "On Swing: Weapon hits multiple targets"}
         break
-        case "can breathe underwater":
+        case "last shot crits":
+            CustomAttributes.LastShotCrits(player, item)
+            attribinfo = {attr = attr, desc = "Crit boost on last shot"}
+
+        break
+        case "wet immunity": 
+            CustomAttributes.WetImmunity(player, item)
+            attribinfo = {attr = attr, desc = "Immune to jar effects"}
+        break
+        
+        case "can breathe under water":
             CustomAttributes.CanBreatheUnderwater(player, item, value)
             attribinfo = {attr = attr, desc = "Player can breathe underwater"}
         break
