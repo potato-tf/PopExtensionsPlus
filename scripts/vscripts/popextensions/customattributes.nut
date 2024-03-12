@@ -246,12 +246,8 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         break
         case "melee cleave attack":
             CustomAttributes.MeleeCleaveAttack(player, item, value)
-            attribinfo = {attr = attr, desc = "On swing: Weapon hits multiple targets"}
+            attribinfo = {attr = attr, desc = "On Swing: Weapon hits multiple targets"}
         break
-    }
-    player.GetScriptScope().PlayerThinkTable.ShowAttribInfo <- function()
-    {
-        if (player.IsInspecting()) return
     }
 }
 function CustomAttrs(attrs = {}) {
@@ -264,5 +260,10 @@ function CustomAttrs(attrs = {}) {
                 CustomAttributes.AddAttr(player, k, v[0])
             else 
                 CustomAttributes.AddAttr(player, k, v[0], v[1])
+    }
+    
+    player.GetScriptScope().PlayerThinkTable.ShowAttribInfo <- function()
+    {
+        if (player.IsInspecting()) return
     }
 }
