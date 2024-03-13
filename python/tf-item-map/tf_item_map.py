@@ -12,7 +12,7 @@ LOCALE: typing.Final[str] = 'english'
 MAX_RECURSION_DEPTH: typing.Final[str] = 50
 OUTPUT_TABLE_NAME: typing.Final[str] = 'PopExtUtil.ItemMap'
 OUTPUT_DIR: typing.Final[str] = f'{os.path.dirname(__file__)}/output'
-OUTPUT_FILE_NAME: typing.Final[str] = 'tf_item_map.nut'
+OUTPUT_FILE_NAME: typing.Final[str] = 'item_map.nut'
 
 # TODO: Path hardcoded currently for win32, but can be detected easily from libraryfolders.vdf.
 tf_path = f'{os.environ['ProgramW6432']}/Steam/steamapps/common/Team Fortress 2/tf'
@@ -66,7 +66,7 @@ def ItemMap_to_squirrel(tablename: str, inputdict: dict, indent: str = '    ', g
     """
 
     generation_time = datetime.datetime.now(datetime.timezone.utc)
-    _outputlist = ['// TFItemMap generated at ' + generation_time.strftime('%H:%M %Y/%m/%d UTC')]
+    _outputlist = ['// TFItemMap generated on ' + generation_time.strftime('%H:%M %Y/%m/%d UTC')]
 
     if globalscope:
         _outputlist.append(f'::{tablename} <- {{')
