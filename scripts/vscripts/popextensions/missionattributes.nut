@@ -1,5 +1,7 @@
 IncludeScript("popextensions/customattributes")
 
+PrecacheScriptSound("Announcer.MVM_Get_To_Upgrade")
+
 const EFL_USER = 1048576
 if (!("ScriptLoadTable" in ROOT))
 	::ScriptLoadTable   <- {}
@@ -10,6 +12,7 @@ if (!("ScriptUnloadTable" in ROOT))
 
 	CurAttrs = {} // Array storing currently modified attributes.
 	ConVars  = {} //table storing original convar values
+	SoundsToReplace = {}
 
 	ThinkTable      = {}
 	TakeDamageTable = {}
@@ -55,7 +58,10 @@ if (!("ScriptUnloadTable" in ROOT))
 		function OnGameEvent_player_team(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
+			{
 				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", -1, null, null)
+				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", SINGLE_TICK, null, null)
+			}
 		}
 
 		function OnGameEvent_post_inventory_application(params) {
@@ -101,6 +107,18 @@ if (!("ScriptUnloadTable" in ROOT))
 			MissionAttributes.ResetConvars()
 			EntFire("_popext_missionattr_ent", "Kill")
 			delete ::MissionAttributes
+		}
+		function OnGameEvent_teamplay_broadcast_audio(params) {
+
+			if (params.sound in MissionAttributes.SoundsToReplace)
+			{
+				foreach (player in PopExtUtil.HumanArray) 
+					StopSoundOn(params.sound, player)
+
+				if (MissionAttributes.SoundsToReplace.len() == 0 || MissionAttributes.SoundsToReplace[params.sound] == null) return
+
+				EmitSoundEx({sound_name = MissionAttributes.SoundsToReplace[params.sound]})
+			}
 		}
 	}
 };
@@ -1282,6 +1300,12 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.LoadoutControl <- MissionAttributes.LoadoutControl
 	break
 
+	case "SoundOverrides":
+		if (typeof value != "table") MissionAttributes.RaiseValueError("SoundOverrides", value, "value must be a table")
+
+		foreach (sound, override in value) MissionAttributes.SoundsToReplace[sound] <- override
+	break
+
 	// =========================================================
 
 	// 1 - Blue humans
@@ -1478,11 +1502,13 @@ function MissionAttributes::MissionAttr(...) {
 
 		function MissionAttributes::ReverseMVMSpawn(params) {
 			local player = GetPlayerFromUserID(params.userid)
+			
 			if (player.IsBotOfType(1337))
 			{
 				if (player.HasItem() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS && !bot.HasBotTag("popext_redflagcarrier"))
 				{
 					local flag = GetPropEntity(player, "m_hItem")
+					printl(flag)
 					EntFireByHandle(flag, "ForceResetSilent", "", -1, null, null)
 				}
 				return
@@ -1904,7 +1930,7 @@ function MissionAttributes::MissionAttr(...) {
 			//spawnroom behavior.  16 = spawn protection 32 = can't attack
 			if (value & 16 || value & 32)
 			{
-				function InRespawnThink()
+				scope.PlayerThinkTable.InRespawnThink <- function()
 				{
 					if (!PopExtUtil.IsPointInRespawnRoom(player.EyePosition())) return
 
@@ -1912,9 +1938,8 @@ function MissionAttributes::MissionAttr(...) {
 						player.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, 2.0, null)
 
 					if (value & 32) 
-						player.AddCustomAttribute("no_attack", 1, 1.0)
+						player.AddCustomAttribute("no_attack", 1, 0.033)
 				}
-				scope.PlayerThinkTable.InRespawnThink <- InRespawnThink
 			}
 				
 			

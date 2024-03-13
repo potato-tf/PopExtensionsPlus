@@ -154,16 +154,17 @@ function CustomAttributes::FireMilkBolt(player, item, value = 5.0) {
 function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
     local scope = player.GetScriptScope()
-    local playerstocleave = []
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
     local nextattack = 0.0
     scope.cleaved <- false
 
     scope.PlayerThinkTable.MeleeCleaveAttack <- function() {
+
         if (nextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0) return
 
         scope.cleaved = false
+
         nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
     }
     CustomAttributes.TakeDamageTable.MeleeCleaveAttack <- function(params) {
@@ -175,8 +176,6 @@ function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
         scope.cleaved = true
         // params.early_out = true
-
-        local playerstocleave = []
         
         local swingpos = player.EyePosition() + (player.EyeAngles().Forward() * 30) - Vector(0, 0, value)
 
@@ -259,8 +258,8 @@ function CustomAttributes::CanBreatheUnderwater(player, item) {
     
     local painfinished = GetPropInt(player, "m_PainFinished")
 
-    EntFire("trigger_multiple", "Disable")
-    EntFire("trigger_hurt", "Kill")
+    EntFire("trigger_multiple", "Disable", 1)
+    EntFire("trigger_hurt", "Kill", 1)
 
     player.GetScriptScope().PlayerThinkTable.CanBreatheUnderwater <- function() {
 
@@ -271,18 +270,19 @@ function CustomAttributes::CanBreatheUnderwater(player, item) {
         SetPropFloat(player, "m_PainFinished", 0.0)
     }
 }
-function CustomAttributes::SwimmingMastery(player, item) {
+function CustomAttributes::MultSwimSpeed(player, item, value = 1.25) {
 
-    local maxspeed = GetPropFloat(player, "m_flMaxSpeed")
-    player.GetScriptScope().PlayerThinkTable.CanBreatheUnderwater <- function() {
+    //local speedmult = 1.254901961
+    local maxspeed = GetPropFloat(player, "m_flMaxspeed")
 
-        printl("test")
+    player.GetScriptScope().PlayerThinkTable.MultSwimSpeed <- function() {
+        
         if (player.GetWaterLevel() == 3) 
         {
-            SetPropFloat(player, "m_flMaxSpeed", maxspeed * 1.254901961)
+            SetPropFloat(player, "m_flMaxspeed", maxspeed * value)
             return
         }
-        SetPropFloat(player, "m_flMaxSpeed", maxspeed)
+        SetPropFloat(player, "m_flMaxspeed", maxspeed)
     }
 }
 
@@ -371,9 +371,9 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             attribinfo = {attr = attr, desc = "Player can breathe underwater"}
         break
 
-        case "swimming mastery":
-            CustomAttributes.SwimmingMastery(player, item)
-            attribinfo = {attr = attr, desc = "Player can swim at full speed"}
+        case "mult swim speed":
+            CustomAttributes.SwimmingMastery(player, item, value)
+            attribinfo = {attr = attr, desc = format("Swimming speed multiplied by %d", value)}
         break
     }
     CustomAttributes.ItemDescriptions.append(attribinfo)
@@ -390,7 +390,7 @@ function CustomAttrs(attrs = {}) {
                 CustomAttributes.AddAttr(player, k, v[0], v[1])
 
         local cooldowntime = Time() + 5.0
-        
+
         player.GetScriptScope().PlayerThinkTable.ShowAttribInfo <- function() {
     
             if (!player.IsInspecting() || cooldowntime > Time()) return
