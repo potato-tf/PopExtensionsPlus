@@ -388,22 +388,22 @@ function CustomAttrs(attrs = {}) {
                 CustomAttributes.AddAttr(player, k, v[0])
             else 
                 CustomAttributes.AddAttr(player, k, v[0], v[1])
-    }
+
+        local cooldowntime = Time() + 5.0
+        
+        player.GetScriptScope().PlayerThinkTable.ShowAttribInfo <- function() {
     
-    local cooldowntime = Time() + 5.0
-
-    player.GetScriptScope().PlayerThinkTable.ShowAttribInfo <- function() {
-
-        if (!player.IsInspecting() || cooldowntime > Time()) return
-
-        local formatted = ""
-
-        foreach (descs in CustomAttributes.ItemDescriptions)
-            foreach (desc, attr in descs)
-                formatted += format("%s\n\t%s\n", attr, desc)
-
-        PopExtUtil.ShowHudHint(formatted, player, cooldowntime - SINGLE_TICK)
-
-        cooldowntime = Time() + 5.0
+            if (!player.IsInspecting() || cooldowntime > Time()) return
+    
+            local formatted = ""
+    
+            foreach (descs in CustomAttributes.ItemDescriptions)
+                foreach (desc, attr in descs)
+                    formatted += format("%s\n\t%s\n", attr, desc)
+    
+            PopExtUtil.ShowHudHint(formatted, player, cooldowntime - SINGLE_TICK)
+    
+            cooldowntime = Time() + 5.0
+        }
     }
 }

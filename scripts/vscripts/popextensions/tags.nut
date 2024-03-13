@@ -42,7 +42,7 @@ local popext_funcs = {
 	}
 
 	popext_reprogrammed = function(bot, args) {
-		PopExtUtil.ChangePlayerTeamMvM(bot, TF_TEAM_PVE_DEFENDERS)
+		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
 		function MoveToSpec(params) {
 			EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 		}
