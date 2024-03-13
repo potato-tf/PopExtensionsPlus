@@ -52,11 +52,11 @@ if (!("ScriptUnloadTable" in ROOT))
 		function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 		function OnGameEvent_mvm_begin_wave(params) { foreach (_, func in MissionAttributes.StartWaveTable) func(params) }
-		// function OnGameEvent_player_team(params) {
-		// 	local player = GetPlayerFromUserID(params.userid)
-		// 	if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
-		// 		EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", -1, null, null)
-		// }
+		function OnGameEvent_player_team(params) {
+			local player = GetPlayerFromUserID(params.userid)
+			if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
+				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", -1, null, null)
+		}
 
 		function OnGameEvent_post_inventory_application(params) {
 
@@ -1457,9 +1457,9 @@ function MissionAttributes::MissionAttr(...) {
 			// Enforce max team size
 			local player_count  = 0
 			local max_team_size = 6
-			foreach (player in PopExtUtil.PlayerArray) {
+			foreach (player in PopExtUtil.HumanArray) {
 
-				if (player_count + 1 > max_team_size) {
+				if (player_count + 1 > max_team_size && player.GetTeam() != TEAM_SPECTATOR && !player.IsBotOfType(1337)) {
 					player.ForceChangeTeam(TEAM_SPECTATOR, false)
 					continue
 				}
