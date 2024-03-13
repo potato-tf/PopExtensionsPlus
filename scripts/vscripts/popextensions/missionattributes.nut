@@ -1776,7 +1776,7 @@ function MissionAttributes::MissionAttr(...) {
 						}
 						else if (sequence == 25) {
 							if (Time() < scope.nextattack) return
-							if (itemid != ID_HUO_LONG_HEATER && itemid != ID_HUO_LONG_HEATER_GENUINE) return
+							if (itemid != ID_HUO_LONG_HEATMAKER && itemid != ID_GENUINE_HUO_LONG_HEATMAKER) return
 
 							if (maxammo - 1 > -1) {
 								SetPropIntArray(self, "m_iAmmo", maxammo - 1, wep.GetSlot() + 1)

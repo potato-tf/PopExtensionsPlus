@@ -54,7 +54,7 @@
 			["tf_weapon_cannon"]          = 16,
 
 			["tf_weapon_pipebomblauncher"] = 24,
-			[ID_STICKY_JUMPER] = 72,
+			[ID_STICKYBOMB_JUMPER] = 72,
 		},
 		[TF_CLASS_HEAVYWEAPONS] = {
 			["tf_weapon_minigun"]     = 200,
@@ -66,7 +66,7 @@
 			["tf_weapon_shotgun"]                 = 32,
 			["tf_weapon_sentry_revenge"]          = 32,
 			["tf_weapon_shotgun_building_rescue"] = 16,
-			[ID_ENGINEERS_SHOTGUN] = 32,
+			[ID_SHOTGUN_PRIMARY] = 32,
 
 			["tf_weapon_pistol"] = 200,
 		},
