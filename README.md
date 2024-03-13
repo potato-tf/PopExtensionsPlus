@@ -3,7 +3,7 @@ VScript extensions for use inside population files
 
 This is a greatly expanded fork of the original PopExtensions that aims to recreate many of the features in sigsegv/rafradek's server plugins.
 
-The roadmap for what needs to be added to this script can be found [here](https://trello.com/b/rHmwlmCL/popextensions-todo-list).  We encourage anyone and everyone to submit pull requests to recreate the missing features in VScript. 
+The roadmap for what needs to be added to this script can be found [here](https://trello.com/b/rHmwlmCL/popextensions-todo-list).  We encourage anyone and everyone to submit pull requests to recreate the missing features in VScript.
 
 How to install:
 put scripts directory inside tf directory, merge if necessary
@@ -15,30 +15,34 @@ scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes
 ## MissionAttributes
 - Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  Forcibly disable romevision, turn players into Robots, apply global item attributes or conditions to players, and way more than can be reasonably listed here
 
-## Bot Tags (WIP) 
-
-### NOTE: None of this currently works until a GetAllBotTags VScript function is added to the game. 
+## Bot Tags (WIP)
 
 - Dozens of bot tags that mimic many of the rafmod/sigmod TFBot keyvalues
 - Enables a variety of AI mechanics previously exclusive to rafmod/sigmod. Spellcasting bots, custom spawn locations, homing rockets, the list goes on.
 
-## Global fixes and balance changes 
+### IMPORTANT!
+Due to current limitations with VScript, you must include a separate script file that has all of the tags for your bots in an array.
+
+Copy/paste all of your bot tags from every bot into a script file with the same name as your mission suffixed with "_tags" (e.g. "mvm_bigrock_vscript_tags.nut")
+
+
+## Global fixes and balance changes
 - The holiday punch can tickle robots once more, with working animations!
 - Your Eternal Reward disguises are no longer delayed.
 - Improved money collection for scout (collects instantly), money spawns with zero velocity.
-- Fixed HoldFireUntilReload on every weapon 
-- Dragons Fury cannot be reflected. 
+- Fixed HoldFireUntilReload on every weapon
+- Dragons Fury cannot be reflected.
 
 ## Reverse MvM
 - Native Reverse MvM support (WIP)
 
-## Self-Contained 
-- no need to worry about cleaning everything up manually, popextensions will automatically remove itself and all of its changes when a new popfile or wave that does not use it is loaded. 
+## Self-Contained
+- no need to worry about cleaning everything up manually, popextensions will automatically remove itself and all of its changes when a new popfile or wave that does not use it is loaded.
 
 ## Backwards Compatible
 - All the original features of popextensions for adding spawn/death output hooks to bots and tanks are still supported, making this library a drop-in replacement.
-- 
-# IMPORTANT NOTE FOR SERVER OWNERS 
+-
+# IMPORTANT NOTE FOR SERVER OWNERS
 
 This library has a handful of features that rely on convars that are not included by default in `cfg/vscript_convar_allowlist.txt`.  You will need to modify this cfg file to add the following convars:
 
@@ -62,13 +66,13 @@ Mission attributes are collected in a table on wave init.  The function for doin
             Target gamerules // gamerules or tf_gamerules, depending on the map
             Action RunScriptCode
             Param "
-        
+
                 // The original InitWaveOutput trigger, change if necessary
                 EntFire(`wave_init_relay`, `Trigger`)
 
                 // Load popextensions script
                 IncludeScript(`popextensions_main.nut`)
-                
+
                 CollectMissionAttrs({
 
                     `NoReanimators`: 1
@@ -199,7 +203,7 @@ this library includes the function `function MissionAttributes::SetConvar`.  Thi
             Target gamerules // gamerules or tf_gamerules, depending on the map
             Action RunScriptCode
             Param "
-        
+
                 // The original InitWaveOutput trigger, change if necessary
                 EntFire(`wave_init_relay`, `Trigger`)
 
