@@ -1,26 +1,9 @@
 //behavior tags
 IncludeScript("popextensions/botbehavior", getroottable())
 
-local tagtest =  [
-	"popext_forceromevision",
-	"popext_addcond|32|10",
-	"popext_usehumanmodel",
-	"popext_alwaysglow",
-	"popext_usebestweapon",
-	"popext_giveweapon|tf_weapon_shotgun_pyro|425",
-	"popext_homingprojectile|1.0|1.0",
-	"popext_improvedairblast",
-	"popext_usehumananims",
-	"popext_spell|11|5|2",
-	"popext_ringoffire|20|2",
-	"popext_weaponswitch|2",
-	"popext_fireweapon|2048",
-	"popext_dispenseroverride|2",
-	"popext_weaponresist|tf_weapon_minigun|99999",
-	"popext_rocketcustomtrail|eyeboss_projectile",
-	"popext_reprogrammed",
-	"popext_spawnhere|-779.491150 3302.379883 312.992340"
-]
+local tagfile = format("%s_tags.nut", split(split(__popname, "/")[2], ".")[0])
+printl(tagfile)
+IncludeScript(tagfile, getroottable())
 
 local popext_funcs = {
 	
@@ -842,7 +825,7 @@ local popext_funcs = {
 		scope.bot <- AI_Bot(bot)
 		scope.PlayerThinkTable <- {}
 		
-		foreach(tag in tagtest) {
+		foreach(tag in __tagarray) {
 			if (bot.HasBotTag(tag)) {
 				local args = split(tag, "|")
 				local func = args.remove(0)
