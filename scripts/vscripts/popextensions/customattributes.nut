@@ -258,9 +258,6 @@ function CustomAttributes::CanBreatheUnderwater(player, item) {
     
     local painfinished = GetPropInt(player, "m_PainFinished")
 
-    EntFire("trigger_multiple", "Disable", 1)
-    EntFire("trigger_hurt", "Kill", 1)
-
     player.GetScriptScope().PlayerThinkTable.CanBreatheUnderwater <- function() {
 
         if (player.GetWaterLevel() == 3) {
