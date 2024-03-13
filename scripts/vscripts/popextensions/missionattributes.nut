@@ -38,7 +38,11 @@ if (!("ScriptUnloadTable" in ROOT))
 		foreach (bot in PopExtUtil.BotArray)
 			if (bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
-
+			
+		for (local wearable; wearable = FindByClassname(wearable, "tf_wearable");)
+			if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
+				EntFireByHandle(wearable, "Kill", "", -1, null, null)
+				
 		MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 	}
 	Events = {

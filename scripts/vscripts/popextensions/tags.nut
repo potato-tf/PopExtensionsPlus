@@ -240,6 +240,15 @@ local popext_funcs = {
 		}
 		", -1, null, null)
 	}
+
+	popext_customattrib = function(bot, args) {
+		local args_len = args.len()
+		if (args_len == 2)
+			CustomAttributes.AddAttr(bot, args[0], args[1])
+		else if (args_len == 3)
+			CustomAttributes.AddAttr(bot, args[0], args[1], args[2])
+	}
+	
 	popext_ringoffire = function(bot, args) {
 		local args_len = args.len()
 		local damage = (args_len > 0) ? args[0].tofloat() : 7.5

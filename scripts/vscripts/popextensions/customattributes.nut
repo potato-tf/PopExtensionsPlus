@@ -153,7 +153,6 @@ function CustomAttributes::FireMilkBolt(player, item, value = 5.0) {
 
 function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
-
     local scope = player.GetScriptScope()
     local playerstocleave = []
     local wep = PopExtUtil.HasItemInLoadout(player, item)
@@ -168,6 +167,7 @@ function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
         nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
     }
     CustomAttributes.TakeDamageTable.MeleeCleaveAttack <- function(params) {
+        
         if (scope.cleaved) return
 
         local wep = PopExtUtil.HasItemInLoadout(player, item)
@@ -244,6 +244,7 @@ function CustomAttributes::TurnToIce(player, item) {
 }
 
 function CustomAttributes::TeleporterSpeedBoost(player, item) {
+
     local scope = player.GetScriptScope()
     scope.speedboostteleporter <- true
     CustomAttributes.PlayerTeleportTable.TeleporterSpeedBoost <- function(params) {
@@ -257,11 +258,31 @@ function CustomAttributes::TeleporterSpeedBoost(player, item) {
 function CustomAttributes::CanBreatheUnderwater(player, item) {
     
     local painfinished = GetPropInt(player, "m_PainFinished")
-    
+
+    EntFire("trigger_multiple", "Disable")
+    EntFire("trigger_hurt", "Kill")
+
     player.GetScriptScope().PlayerThinkTable.CanBreatheUnderwater <- function() {
 
-        local underwater = player.GetWaterLevel() == 3 ? INT_MAX : painfinished
-        if (player.GetWaterLevel() == 3) SetPropInt(player, "m_PainFinished", underwater)
+        if (player.GetWaterLevel() == 3) {
+            SetPropFloat(player, "m_PainFinished", FLT_MAX)
+            return
+        }
+        SetPropFloat(player, "m_PainFinished", 0.0)
+    }
+}
+function CustomAttributes::SwimmingMastery(player, item) {
+
+    local maxspeed = GetPropFloat(player, "m_flMaxSpeed")
+    player.GetScriptScope().PlayerThinkTable.CanBreatheUnderwater <- function() {
+
+        printl("test")
+        if (player.GetWaterLevel() == 3) 
+        {
+            SetPropFloat(player, "m_flMaxSpeed", maxspeed * 1.254901961)
+            return
+        }
+        SetPropFloat(player, "m_flMaxSpeed", maxspeed)
     }
 }
 
@@ -274,17 +295,29 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
     
     player.GetScriptScope().PlayerThinkTable.LastShotCrits <- function() {
 
-        if (nextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
+        if (wep == null || nextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
 
         nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
+        try {
 
-        if (wep.Clip1() > 1)
-        {
-            player.RemoveCondEx(COND_CRITBOOST, true)
-            return
-        }
-        
-        player.AddCondEx(COND_CRITBOOST, value, null)
+            if (wep.Clip1() != 1)
+            {
+                player.RemoveCondEx(COND_CRITBOOST, true)
+                return
+            }
+            player.AddCondEx(COND_CRITBOOST, value, null)
+        } catch(e) printl(e)
+    }
+}
+
+function CustomAttributes::WetImmunity(player, item) {
+
+    local wetconds = [TF_COND_MAD_MILK, TF_COND_URINE, TF_COND_GAS]
+
+    player.GetScriptScope.PlayerThinkTable.WetImmunity <- function() {
+        foreach (cond in wetconds)
+            if (player.InCond(cond))
+                player.RemoveCondEx(cond, true)
     }
 }
 
@@ -316,25 +349,34 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             CustomAttributes.TeleporterRechargeTime(player, item, value)
             attribinfo = {attr = attr, desc = "On Kill: Turn victim to ice"}
         break
+
         case "melee cleave attack":
             CustomAttributes.MeleeCleaveAttack(player, item, value)
             attribinfo = {attr = attr, desc = "On Swing: Weapon hits multiple targets"}
         break
+
         case "last shot crits":
             CustomAttributes.LastShotCrits(player, item)
             attribinfo = {attr = attr, desc = "Crit boost on last shot"}
 
         break
+
         case "wet immunity": 
             CustomAttributes.WetImmunity(player, item)
             attribinfo = {attr = attr, desc = "Immune to jar effects"}
         break
         
         case "can breathe under water":
-            CustomAttributes.CanBreatheUnderwater(player, item, value)
+            CustomAttributes.CanBreatheUnderwater(player, item)
             attribinfo = {attr = attr, desc = "Player can breathe underwater"}
         break
+
+        case "swimming mastery":
+            CustomAttributes.SwimmingMastery(player, item)
+            attribinfo = {attr = attr, desc = "Player can swim at full speed"}
+        break
     }
+    CustomAttributes.ItemDescriptions.append(attribinfo)
 }
 function CustomAttrs(attrs = {}) {
     CustomAttributes.SpawnHookTable.ApplyCustomAttribs <- function(params)
@@ -348,8 +390,20 @@ function CustomAttrs(attrs = {}) {
                 CustomAttributes.AddAttr(player, k, v[0], v[1])
     }
     
-    player.GetScriptScope().PlayerThinkTable.ShowAttribInfo <- function()
-    {
-        if (player.IsInspecting()) return
+    local cooldowntime = Time() + 5.0
+
+    player.GetScriptScope().PlayerThinkTable.ShowAttribInfo <- function() {
+
+        if (!player.IsInspecting() || cooldowntime > Time()) return
+
+        local formatted = ""
+
+        foreach (descs in CustomAttributes.ItemDescriptions)
+            foreach (desc, attr in descs)
+                formatted += format("%s\n\t%s\n", attr, desc)
+
+        PopExtUtil.ShowHudHint(formatted, player, cooldowntime - SINGLE_TICK)
+
+        cooldowntime = Time() + 5.0
     }
 }
