@@ -91,7 +91,7 @@ if (!("ScriptUnloadTable" in ROOT))
 			if (GetRoundState() != GR_STATE_PREROUND) return
 
             foreach (player in PopExtUtil.PlayerArray)
-                Main.PlayerCleanup(player)
+                PopExtMain.PlayerCleanup(player)
 
 			MissionAttributes.Cleanup()
 		}
@@ -1135,7 +1135,7 @@ function MissionAttributes::MissionAttr(...) {
 				local table = value[tfclass]
 				foreach (k, v in table) {
 					if (k in CustomAttributes.Attrs)
-						CustomAttributes.ItemAttr(player, k, v)
+						CustomAttributes.AddAttr(player, k, v)
 					else {
 						local valformat = ""
 						if (typeof v == "integer")

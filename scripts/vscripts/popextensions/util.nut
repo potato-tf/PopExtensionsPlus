@@ -708,7 +708,7 @@ function PopExtUtil::SetPlayerName(player,	name) {
 }
 
 function PopExtUtil::GetPlayerUserID(player) {
-	return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex()) //TODO replace PlayerManager with the actual entity name
+	return GetPropIntArray(PopExtUtil.PlayerManager, "m_iUserID", player.entindex()) //TODO replace PlayerManager with the actual entity name
 }
 
 function PopExtUtil::PlayerRespawn() {
@@ -876,7 +876,7 @@ function PopExtUtil::Ignite(player, duration = 10.0, damage = 1)
 }
 
 function PopExtUtil::ShowHudHint(text = "This is a hud hint", player = null, duration = 5.0) {
-	local hudhint = FindByName(null, "__utilhudhint") != null
+	local hudhint = FindByName(null, "__utilhudhint")
 
 	local flags = (player == null) ? 1 : 0
 
@@ -884,8 +884,8 @@ function PopExtUtil::ShowHudHint(text = "This is a hud hint", player = null, dur
 
 	hudhint.KeyValueFromString("message", text)
 
-	EntFireByHandle(__hudhint, "ShowHudHint", "", -1, player, player)
-	EntFireByHandle(__hudhint, "HideHudHint", "", duration, player, player)
+	EntFireByHandle(hudhint, "ShowHudHint", "", -1, player, player)
+	EntFireByHandle(hudhint, "HideHudHint", "", duration, player, player)
 }
 
 function PopExtUtil::SetEntityColor(entity, r, g, b, a) {

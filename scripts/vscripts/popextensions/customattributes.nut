@@ -53,7 +53,6 @@
         "mult sniper charge per sec with enemy under crosshair": null
         "sniper beep with enemy under crosshair": null
     }
-    ItemDescriptions = []
 
     Events = {
 
@@ -102,7 +101,7 @@
 			if (GetRoundState() != GR_STATE_PREROUND) return
 
             foreach (player in PopExtUtil.HumanArray)
-                Main.PlayerCleanup(player)
+                PopExtMain.PlayerCleanup(player)
 		}
 
 		// function OnGameEvent_mvm_wave_complete(params) {
@@ -152,16 +151,18 @@ function CustomAttributes::FireMilkBolt(player, item, value = 5.0) {
 }
 function CustomAttributes::TeleportInsteadOfDie(player, item, value) {
     CustomAttributes.TakeDamageTable.TeleportInsteadOfDie <- function(params) {
-        
+
+        if (RandomFloat(0, 1) > value.tofloat()) return
+
         local player = params.const_entity
         
-        if (!player.IsPlayer() || player.GetHealth() > params.damage) return
+        if (!player.IsPlayer() || player.GetHealth() > params.damage || player.IsInvulnerable() || PopExtUtil.IsPointInRespawnRoom(player.EyePosition())) return
 
         local health = player.GetHealth()
         params.early_out = true
         
         player.ForceRespawn()
-        EntFireByHandle(player, "RunScriptCode", format("self.SetHealth(%d)", value), -1, null, null)
+        EntFireByHandle(player, "RunScriptCode","self.SetHealth(1)", -1, null, null)
     }
 }
 
@@ -216,16 +217,61 @@ function CustomAttributes::TeleporterRechargeTime(player, item, value = 1.0) {
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
     
-    scope = player.GetScriptScope()
+    local scope = player.GetScriptScope()
     scope.teleporterrechargetimemult <- value
     
-    CustomAttributes.PlayerTeleportTable.TeleporterRechargeTime <- function(params) {
-        local teleportedplayer = GetPlayerFromUserID(params.userid)
+    // CustomAttributes.PlayerTeleportTable.TeleporterRechargeTime <- function(params) {
+    //     local teleportedplayer = GetPlayerFromUserID(params.userid)
 
-        local teleporter = FindByClassnameNearest("obj_teleporter", teleportedplayer.GetOrigin(), 16)
+    //     local teleporter = FindByClassnameNearest("obj_teleporter", teleportedplayer.GetOrigin(), 16)
 
-        local chargetime = GetPropFloat(teleporter, "m_flRechargeTime")
-        SetPropFloat(teleporter, "m_flRechargeTime", chargetime * teleporterrechargetimemult)
+    //     local chargetime = GetPropFloat(teleporter, "m_flCurrentRechargeDuration")
+    // }
+
+    scope.PlayerThinkTable.TeleporterRechargeTime <- function() {
+
+        local mult = scope.teleporterrechargetimemult
+        local teleporter = FindByClassnameNearest("obj_teleporter", player.GetOrigin(), 16)
+
+        if (teleporter == null || teleporter.GetScriptThinkFunc() != "") return
+
+        teleporter.ValidateScriptScope()
+        local chargetime = GetPropFloat(teleporter, "m_flCurrentRechargeDuration")
+
+        local teleportscope = teleporter.GetScriptScope()
+        if (!("rechargetimestamp" in teleportscope)) teleportscope.rechargetimestamp <- 0.0
+        if (!("rechargeset" in teleportscope)) teleportscope.rechargeset <- false
+        
+        teleportscope.TeleportMultThink <- function() {
+
+            // printl(GetPropFloat(teleporter, "m_flCurrentRechargeDuration"))
+
+            if (!teleportscope.rechargeset)
+            {
+                SetPropFloat(teleporter, "m_flCurrentRechargeDuration", chargetime * mult)
+                SetPropFloat(teleporter, "m_flRechargeTime", Time() * mult)
+
+                teleportscope.rechargeset = true
+                teleportscope.rechargetimestamp = GetPropFloat(teleporter, "m_flRechargeTime") * mult
+            }
+            if (GetPropInt(teleporter, "m_iState") == 6 && GetPropFloat(teleporter, "m_flRechargeTime") >= teleportscope.rechargetimestamp)
+            {
+                teleportscope.rechargeset = false
+            }
+
+            printl(GetPropFloat(teleporter, "m_flRechargeTime") + " : " + teleportscope.rechargetimestamp)
+            return -1
+        }
+        AddThinkToEnt(teleporter, "TeleportMultThink")
+    }
+}
+
+function CustomAttributes::UberOnDamageTaken(player, item, value) { 
+    
+    if (RandomInt(0, 1) > value) return
+    
+    CustomAttributes.TakeDamageTable.UberOnDamageTaken(params) {
+
     }
 }
 
@@ -252,10 +298,12 @@ function CustomAttributes::TurnToIce(player, item) {
     freeze_proxy_weapon.AddAttribute("freeze backstab victim", 1.0, -1.0)
 
     CustomAttributes.TakeDamageTable.TurnToIce <- function(params) {
+
         local attacker = params.attacker
         if (PopExtUtil.HasItemInLoadout(attacker, item) == null) return true
+
         local victim = params.const_entity
-        if (victim.IsPlayer() && params.damage >= victim.GetHealth())
+        if (victim.IsPlayer() && attacker == player && params.damage >= victim.GetHealth())
         {
             victim.TakeDamageCustom(attacker, victim, freeze_proxy_weapon, Vector(), Vector(), params.damage, params.damage_type, params.damage_custom | TF_DMG_CUSTOM_BACKSTAB)
 
@@ -271,8 +319,10 @@ function CustomAttributes::TeleporterSpeedBoost(player, item) {
 
     local scope = player.GetScriptScope()
     scope.speedboostteleporter <- true
+
     CustomAttributes.PlayerTeleportTable.TeleporterSpeedBoost <- function(params) {
 
+        if (params.builderid != PopExtUtil.GetPlayerUserID(player)) return
         local teleportedplayer = GetPlayerFromUserID(params.userid)
 
         if ("speedboostteleporter" in scope && scope.speedboostteleporter) teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
@@ -336,7 +386,7 @@ function CustomAttributes::WetImmunity(player, item) {
 
     local wetconds = [TF_COND_MAD_MILK, TF_COND_URINE, TF_COND_GAS]
 
-    player.GetScriptScope.PlayerThinkTable.WetImmunity <- function() {
+    player.GetScriptScope().PlayerThinkTable.WetImmunity <- function() {
         foreach (cond in wetconds)
             if (player.InCond(cond))
                 player.RemoveCondEx(cond, true)
@@ -348,94 +398,98 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
     //TODO: set up error handler
     if (!(attr in CustomAttributes.Attrs)) return
 
-    local attribinfo = {}
+    local scope = player.GetScriptScope()
+    if (!("attribinfo" in scope)) scope.attribinfo <- {}
 
 	switch(attr) {
 
         case "fires milk bolt":
             CustomAttributes.FireMilkBolt(player, item, value)
-            attribinfo = {attr = attr, desc = format("Secondary attack: fires a bolt that applies milk for %d seconds.", value)}
+            scope.attribinfo[attr] <- format("Secondary attack: fires a bolt that applies milk for %d seconds.", value)
         break
 
         case "mod teleporter speed boost":
             CustomAttributes.TeleporterSpeedBoost(player, item)
-            attribinfo = {attr = attr, desc = format("Teleporters grant a speed boost for %f seconds", value)}
+            scope.attribinfo[attr] <- format("Teleporters grant a speed boost for %f seconds", value)
         break
 
         case "set turn to ice":
             CustomAttributes.TurnToIce(player, item)
-            attribinfo = {attr = attr, desc = format("On Kill: Turn victim to ice.", value)}
+            scope.attribinfo[attr] <- format("On Kill: Turn victim to ice.", value)
         break
 
         case "mult teleporter recharge rate":
             CustomAttributes.TeleporterRechargeTime(player, item, value)
-            attribinfo = {attr = attr, desc = "On Kill: Turn victim to ice"}
+            scope.attribinfo[attr] <- format("Teleporter recharge rate multiplied by %f", value)
         break
 
         case "melee cleave attack":
             CustomAttributes.MeleeCleaveAttack(player, item, value)
-            attribinfo = {attr = attr, desc = "On Swing: Weapon hits multiple targets"}
+            scope.attribinfo[attr] <- "On Swing: Weapon hits multiple targets"
         break
 
         case "last shot crits":
             CustomAttributes.LastShotCrits(player, item)
-            attribinfo = {attr = attr, desc = "Crit boost on last shot"}
+            scope.attribinfo[attr] <- "Crit boost on last shot"
 
         break
 
         case "wet immunity": 
             CustomAttributes.WetImmunity(player, item)
-            attribinfo = {attr = attr, desc = "Immune to jar effects"}
+            scope.attribinfo[attr] <- "Immune to jar effects"
         break
         
         case "can breathe under water":
             CustomAttributes.CanBreatheUnderwater(player, item)
-            attribinfo = {attr = attr, desc = "Player can breathe underwater"}
+            scope.attribinfo[attr] <- "Player can breathe underwater"
         break
 
         case "mult swim speed":
-            CustomAttributes.SwimmingMastery(player, item, value)
-            attribinfo = {attr = attr, desc = format("Swimming speed multiplied by %d", value)}
+            CustomAttributes.MultSwimSpeed(player, item, value)
+            scope.attribinfo[attr] <- format("Swimming speed multiplied by %f", value.tofloat())
         break
         
         case "teleport instead of die":
             CustomAttributes.TeleportInsteadOfDie(player, item, value)
-            attribinfo = {attr = attr, desc = format("Player respawns with %d health when they would normally die", value)}
+            scope.attribinfo[attr] <- format("%d percent chance of teleporting to spawn with 1 health instead of dying", (value.tofloat() * 100).tointeger())
         break
         
         case "mult dmg vs same class":
             CustomAttributes.DmgVsSameClass(player, item, value)
-            attribinfo = {attr = attr, desc = format("Damage versus %s increased by %f", PopExtUtil.Classes[player.GetPlayerClass()], value.tofloat())}
+            scope.attribinfo[attr] <- format("Damage versus %s multiplied by %f", PopExtUtil.Classes[player.GetPlayerClass()], value.tofloat())
         break
     }
-    CustomAttributes.ItemDescriptions.append(attribinfo)
-}
-function CustomAttrs(attrs = {}) {
-    CustomAttributes.SpawnHookTable.ApplyCustomAttribs <- function(params)
-    {
-        local player = GetPlayerFromUserID(params.userid)
-        if (player.IsBotOfType(1337)) return
-        foreach (k, v in attrs)
-            if (v.len() == 1)
-                CustomAttributes.AddAttr(player, k, v[0])
-            else 
-                CustomAttributes.AddAttr(player, k, v[0], v[1])
 
-        local cooldowntime = Time() + 5.0
+    local cooldowntime = 3.0
 
-        player.GetScriptScope().PlayerThinkTable.ShowAttribInfo <- function() {
-    
-            if (!player.IsInspecting() || cooldowntime > Time()) return
-    
-            local formatted = ""
-    
-            foreach (descs in CustomAttributes.ItemDescriptions)
-                foreach (desc, attr in descs)
-                    formatted += format("%s\n\t%s\n", attr, desc)
-    
-            PopExtUtil.ShowHudHint(formatted, player, cooldowntime - SINGLE_TICK)
-    
-            cooldowntime = Time() + 5.0
-        }
+    local scope = player.GetScriptScope()
+    scope.PlayerThinkTable.ShowAttribInfo <- function() {
+
+        if (!player.IsInspecting() || Time() < cooldowntime) return
+
+        local formatted = ""
+
+        foreach (desc, attr in scope.attribinfo)
+            if (!formatted.find(attr))
+                formatted += format("%s:\n\n%s\n\n\n", desc, attr)
+
+        printl(formatted.len())
+        PopExtUtil.ShowHudHint(formatted, player, 3.0 - SINGLE_TICK)
+
+        cooldowntime = Time() + 3.0
     }
 }
+
+//obsolete, implemented into item/playerattribs
+// function CustomAttrs(attrs = {}) {
+//     CustomAttributes.SpawnHookTable.ApplyCustomAttribs <- function(params)
+//     {
+//         local player = GetPlayerFromUserID(params.userid)
+//         if (player.IsBotOfType(1337)) return
+//         foreach (k, v in attrs)
+//             if (v.len() == 1)
+//                 CustomAttributes.AddAttr(player, k, v[0])
+//             else 
+//                 CustomAttributes.AddAttr(player, k, v[0], v[1])
+//     }
+// }
