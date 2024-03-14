@@ -268,10 +268,14 @@ function CustomAttributes::TeleporterRechargeTime(player, item, value = 1.0) {
 
 function CustomAttributes::UberOnDamageTaken(player, item, value) { 
     
-    if (RandomInt(0, 1) > value) return
+    CustomAttributes.TakeDamageTable.UberOnDamageTaken <- function(params) {
     
-    CustomAttributes.TakeDamageTable.UberOnDamageTaken(params) {
+        local damagedplayer = params.const_entity
 
+        if (damagedplayer != player || RandomInt(0, 1) > value || damagedplayer.IsInvulnerable()) return
+        
+        damagedplayer.AddCondEx(COND_UBERCHARGE, 3.0, player)
+        params.early_out = true
     }
 }
 
@@ -372,13 +376,31 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
         nextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
         try {
 
-            if (wep.Clip1() != 1)
+            if (wep.Clip1() != 1 && !player.IsCritBoosted())
             {
                 player.RemoveCondEx(COND_CRITBOOST, true)
                 return
             }
-            player.AddCondEx(COND_CRITBOOST, value, null)
+            
+            if (!player.IsCritBoosted()) player.AddCondEx(COND_CRITBOOST, value, null)
+            
         } catch(e) printl(e)
+    }
+}
+
+function CustomAttributes::CritWhenHealthBelow(player, item, value = -1) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    
+    player.GetScriptScope().PlayerThinkTable.CritWhenHealthBelow <- function() {
+
+            if (player.GetHealth() > value && !player.IsCritBoosted())
+            {
+                player.AddCond(COND_CRITBOOST, true)
+                return
+            }
+            player.RemoveCond(COND_CRITBOOST)
     }
 }
 
@@ -393,12 +415,32 @@ function CustomAttributes::WetImmunity(player, item) {
     }
 }
 
+function CustomAttributes::BuildSmallSentry(player, item) {
+    local scope = player.GetScriptScope()
+
+    if (!("BuiltObjectTable") in scope) return
+
+    scope.BuiltObjectTable.BuildSmallSentry <- function(params) {
+        
+        if (params.object != OBJ_SENTRYGUN) return
+
+        local sentry = EntIndexToHScript(params.index)
+        local maxhealth = sentry.GetMaxHealth() * 0.66
+
+        sentry.SetModelScale(0.8, -1)
+        sentry.SetMaxHealth(maxhealth)
+        if (sentry.GetHealth() > sentry.GetMaxHealth()) sentry.SetHealth(maxhealth)
+        SetPropInt(sentry, "m_iUpgradeMetalRequired", 150)
+    }
+}
+
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
     //TODO: set up error handler
     if (!(attr in CustomAttributes.Attrs)) return
 
     local scope = player.GetScriptScope()
+    local valuepercent = (value.tofloat() * 100).tointeger()
     if (!("attribinfo" in scope)) scope.attribinfo <- {}
 
 	switch(attr) {
@@ -451,12 +493,32 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         
         case "teleport instead of die":
             CustomAttributes.TeleportInsteadOfDie(player, item, value)
-            scope.attribinfo[attr] <- format("%d percent chance of teleporting to spawn with 1 health instead of dying", (value.tofloat() * 100).tointeger())
+            scope.attribinfo[attr] <- format("%d percent chance of teleporting to spawn with 1 health instead of dying", valuepercent)
         break
         
         case "mult dmg vs same class":
             CustomAttributes.DmgVsSameClass(player, item, value)
             scope.attribinfo[attr] <- format("Damage versus %s multiplied by %f", PopExtUtil.Classes[player.GetPlayerClass()], value.tofloat())
+        break
+
+        case "uber on damage taken":
+            CustomAttributes.UberOnDamageTaken(player, item, value)
+            scope.attribinfo[attr] <- format("On take damage: %d percent chance of gaining invicibility for 3 seconds", valuepercent)
+        break
+
+        case "build small sentries":
+            CustomAttributes.BuildSmallSentry(player, item, value)
+            scope.attribinfo[attr] <- "Sentries are 20% smaller. have 33% less health, take 25% less metal to upgrade"
+        break
+
+        case "crit when health below":
+            CustomAttributes.CritWhenHealthBelow(player, item, value)
+            scope.attribinfo[attr] <- format("Player is crit boosted when below %d health.", value)
+        break
+
+        case "mvm sentry ammo":
+            CustomAttributes.SentryAmmo(player, item, value)
+            scope.attribinfo[attr] <- format("Sentry ammo multiplied by %f", value.tofloat())
         break
     }
 
@@ -480,7 +542,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
     }
 }
 
-//obsolete, implemented into item/playerattribs
+//obsolete, implemented into item/playerattribs/bot tags
 // function CustomAttrs(attrs = {}) {
 //     CustomAttributes.SpawnHookTable.ApplyCustomAttribs <- function(params)
 //     {

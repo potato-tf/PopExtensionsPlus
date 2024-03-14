@@ -1503,16 +1503,7 @@ function MissionAttributes::MissionAttr(...) {
 		function MissionAttributes::ReverseMVMSpawn(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			
-			if (player.IsBotOfType(1337))
-			{
-				if (player.HasItem() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS && !bot.HasBotTag("popext_redflagcarrier"))
-				{
-					local flag = GetPropEntity(player, "m_hItem")
-					printl(flag)
-					EntFireByHandle(flag, "ForceResetSilent", "", -1, null, null)
-				}
-				return
-			}
+			EntFire("item_teamflag", "AddOutput", "OnPickupTeam1 !self:ForceResetSilent::0:-1")
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()

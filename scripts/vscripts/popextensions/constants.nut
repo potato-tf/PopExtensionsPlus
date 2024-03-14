@@ -46,10 +46,10 @@ const TF_COLOR_DEFAULT = "FBECCB"
 
 const INT_COLOR_WHITE = 16777215
 
-// redefine crit boost so we don't end up using all of the different crit boost effects all over the place
+// redefine crit/uber conds so we don't end up using different conds all over the place
 
-//use this crit boost for crits that are added temporarily (e.g. customattributes LastShotCrits())
 const COND_CRITBOOST = 39 //TF_COND_CRITBOOSTED_CTF_CAPTURE
+const COND_UBERCHARGE = 57 //TF_COND_INVULNERABLE_CARD_EFFECT
 
 // CONST.COLOR_END <- "\x07"
 // CONST.COLOR_DEFAULT <- "\x07FBECCB"

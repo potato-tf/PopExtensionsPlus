@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "03.14.2024.2"
+::popExtensionsVersion <- "03.14.2024.3"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -50,7 +50,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		for (local wearable; wearable = FindByClassname(wearable, "tf_wearable*");)
 			if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
 				EntFireByHandle(wearable, "Kill", "", -1, null, null)
-				
+
 		//same pop, don't run clean-up
 		if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
 
