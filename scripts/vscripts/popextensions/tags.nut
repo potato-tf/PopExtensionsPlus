@@ -4,6 +4,7 @@ IncludeScript("popextensions/botbehavior", getroottable())
 local tagfile = format("%s_tags.nut", split(split(__popname, "/")[2], ".")[0])
 printl(tagfile)
 IncludeScript(tagfile, getroottable())
+PopExtUtil.PlayerManager.ValidateScriptScope()
 
 local popext_funcs = {
 	
@@ -32,9 +33,9 @@ local popext_funcs = {
 		// bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
 	}
 
-	popext_reprogrammed_neutral = function(bot, args) {
-		bot.ForceChangeTeam(TEAM_UNASSIGNED, true)
-	}
+	// popext_reprogrammed_neutral = function(bot, args) {
+		// bot.ForceChangeTeam(TEAM_UNASSIGNED, true)
+	// }
 
 	popext_altfire = function(bot, args) {
 		if (args.len() == 1)

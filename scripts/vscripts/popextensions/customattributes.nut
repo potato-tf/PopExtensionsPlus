@@ -150,7 +150,32 @@ function CustomAttributes::FireMilkBolt(player, item, value = 5.0) {
         
     }
 }
+function CustomAttributes::TeleportInsteadOfDie(player, item, value) {
+    CustomAttributes.TakeDamageTable.TeleportInsteadOfDie <- function(params) {
+        
+        local player = params.const_entity
+        
+        if (!player.IsPlayer() || player.GetHealth() > params.damage) return
 
+        local health = player.GetHealth()
+        params.early_out = true
+        
+        player.ForceRespawn()
+        EntFireByHandle(player, "RunScriptCode", format("self.SetHealth(%d)", value), -1, null, null)
+    }
+}
+
+function CustomAttributes::DmgVsSameClass(player, item, value) {
+    
+    CustomAttributes.TakeDamageTable.DmgVsSameClass <- function(params) {
+        local victim = params.const_entity
+        local attacker = params.attacker
+
+        if (!attacker.IsPlayer() || !victim.IsPlayer() || attacker.GetPlayerClass() != victim.GetPlayerClass()) return
+
+        params.damage *= value
+    }
+}
 function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
     local scope = player.GetScriptScope()
@@ -371,6 +396,16 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         case "mult swim speed":
             CustomAttributes.SwimmingMastery(player, item, value)
             attribinfo = {attr = attr, desc = format("Swimming speed multiplied by %d", value)}
+        break
+        
+        case "teleport instead of die":
+            CustomAttributes.TeleportInsteadOfDie(player, item, value)
+            attribinfo = {attr = attr, desc = format("Player respawns with %d health when they would normally die", value)}
+        break
+        
+        case "mult dmg vs same class":
+            CustomAttributes.DmgVsSameClass(player, item, value)
+            attribinfo = {attr = attr, desc = format("Damage versus %s increased by %f", PopExtUtil.Classes[player.GetPlayerClass()], value.tofloat())}
         break
     }
     CustomAttributes.ItemDescriptions.append(attribinfo)
