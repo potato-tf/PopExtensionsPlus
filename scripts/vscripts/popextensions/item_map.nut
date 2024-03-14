@@ -1,4 +1,4 @@
-// TFItemMap generated at 07:15 2024/03/12 UTC
+// TFItemMap generated at 06:37 2024/03/13 UTC
 ::PopExtUtil.ItemMap <- {
     "default" : {
         id = "default",
@@ -159,36 +159,6 @@
         id = 30,
         item_class = "tf_weapon_invis",
         item_name_english = "Invis Watch"
-    },
-    "TF_WEAPON_BUILDER_SPY" : {
-        id = 735,
-        item_class = "tf_weapon_builder",
-        item_name_english = "Sapper"
-    },
-    "Upgradeable TF_WEAPON_BUILDER_SPY" : {
-        id = 736,
-        item_class = "tf_weapon_builder",
-        item_name_english = "Sapper"
-    },
-    "Upgradeable TF_WEAPON_PDA_ENGINEER_BUILD" : {
-        id = 737,
-        item_class = "tf_weapon_pda_engineer_build",
-        item_name_english = "Construction PDA"
-    },
-    "TF_WEAPON_SPELLBOOK" : {
-        id = 1132,
-        item_class = "tf_weapon_spellbook",
-        item_name_english = "Spellbook Magazine"
-    },
-    "TF_WEAPON_GRAPPLINGHOOK" : {
-        id = 1152,
-        item_class = "tf_weapon_grapplinghook",
-        item_name_english = "Grappling Hook"
-    },
-    "Default Power Up Canteen (MvM)" : {
-        id = 1163,
-        item_class = "tf_powerup_bottle",
-        item_name_english = "Power Up Canteen"
     },
     "The Kritzkrieg" : {
         id = 35,
@@ -623,12 +593,12 @@
     "TTG Max Pistol" : {
         id = 160,
         item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
+        item_name_english = "Lugermorph"
     },
     "TTG Sam Revolver" : {
         id = 161,
         item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
+        item_name_english = "Big Kill"
     },
     "TTG Max Hat" : {
         id = 162,
@@ -1088,7 +1058,7 @@
     "The Horseless Headless Horseman's Headtaker" : {
         id = 266,
         item_class = "tf_weapon_sword",
-        item_name_english = "Eyelander"
+        item_name_english = "Horseless Headless Horsemann's Headtaker"
     },
     "Haunted Metal Scrap" : {
         id = 267,
@@ -1218,7 +1188,7 @@
     "TTG Max Pistol - Poker Night" : {
         id = 294,
         item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
+        item_name_english = "Lugermorph"
     },
     "TTG Glasses" : {
         id = 295,
@@ -1233,12 +1203,12 @@
     "TTG Watch" : {
         id = 297,
         item_class = "tf_weapon_invis",
-        item_name_english = "Invis Watch"
+        item_name_english = "Enthusiast's Timepiece"
     },
     "Iron Curtain" : {
         id = 298,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Iron Curtain"
     },
     "Portal 2 Pin" : {
         id = 299,
@@ -1497,7 +1467,7 @@
     },
     "The Half-Zatoichi" : {
         id = 357,
-        item_class = "tf_weapon_sword",
+        item_class = "tf_weapon_katana",
         item_name_english = "Half-Zatoichi"
     },
     "Heavy Topknot" : {
@@ -1898,7 +1868,7 @@
     "The Postal Pummeler" : {
         id = 457,
         item_class = "tf_weapon_fireaxe",
-        item_name_english = "Axtinguisher"
+        item_name_english = "Postal Pummeler"
     },
     "Cosa Nostra Cap" : {
         id = 459,
@@ -1998,7 +1968,7 @@
     "Nessie's Nine Iron" : {
         id = 482,
         item_class = "tf_weapon_sword",
-        item_name_english = "Eyelander"
+        item_name_english = "Nessie's Nine Iron"
     },
     "Rogue's Col Roule" : {
         id = 483,
@@ -2044,6 +2014,91 @@
         id = 493,
         item_class = "tf_wearable",
         item_name_english = "Noise Maker - Fireworks"
+    },
+    "TournamentMedal - GWJ Winners" : {
+        id = 496,
+        item_class = "tf_wearable",
+        item_name_english = "First Place - Gamers With Jobs Tournament"
+    },
+    "TournamentMedal - GWJ Runnerups" : {
+        id = 497,
+        item_class = "tf_wearable",
+        item_name_english = "Second Place - Gamers With Jobs Tournament"
+    },
+    "TournamentMedal - GWJ Participants" : {
+        id = 498,
+        item_class = "tf_wearable",
+        item_name_english = "Participant - Gamers With Jobs Tournament"
+    },
+    "TournamentMedal - ETF2LHL Winners" : {
+        id = 499,
+        item_class = "tf_wearable",
+        item_name_english = "First Place - ETF2L Highlander Tournament"
+    },
+    "TournamentMedal - ETF2LHL 2nd" : {
+        id = 500,
+        item_class = "tf_wearable",
+        item_name_english = "Second Place - ETF2L Highlander Tournament"
+    },
+    "TournamentMedal - ETF2LHL 3rd" : {
+        id = 501,
+        item_class = "tf_wearable",
+        item_name_english = "Third Place - ETF2L Highlander Tournament"
+    },
+    "TournamentMedal - ETF2LHL Participants" : {
+        id = 502,
+        item_class = "tf_wearable",
+        item_name_english = "Participant - ETF2L Highlander Tournament"
+    },
+    "TournamentMedal - UGCHL Participants" : {
+        id = 503,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Participant"
+    },
+    "TournamentMedal - UGCHLDiv1 Winners" : {
+        id = 504,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Platinum 1st Place"
+    },
+    "TournamentMedal - UGCHLDiv1 2nd" : {
+        id = 505,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Platinum 2nd Place"
+    },
+    "TournamentMedal - UGCHLDiv1 3rd" : {
+        id = 506,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Platinum 3rd Place"
+    },
+    "TournamentMedal - UGCHLDiv2 Winners" : {
+        id = 507,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Silver 1st Place"
+    },
+    "TournamentMedal - UGCHLDiv2 2nd" : {
+        id = 508,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Silver 2nd Place"
+    },
+    "TournamentMedal - UGCHLDiv2 3rd" : {
+        id = 509,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Silver 3rd Place"
+    },
+    "TournamentMedal - UGCHLDiv3 Winners" : {
+        id = 510,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Iron 1st Place"
+    },
+    "TournamentMedal - UGCHLDiv3 2nd" : {
+        id = 511,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Iron 2nd Place"
+    },
+    "TournamentMedal - UGCHLDiv3 3rd" : {
+        id = 512,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Iron 3rd Place"
     },
     "The Original" : {
         id = 513,
@@ -2328,7 +2383,7 @@
     "The Wanga Prick" : {
         id = 574,
         item_class = "tf_weapon_knife",
-        item_name_english = "Your Eternal Reward"
+        item_name_english = "Wanga Prick"
     },
     "The Infernal Impaler" : {
         id = 575,
@@ -2643,7 +2698,7 @@
     "The Sharp Dresser" : {
         id = 638,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Sharp Dresser"
     },
     "Bowtie" : {
         id = 639,
@@ -2723,7 +2778,7 @@
     "Festive Minigun 2011" : {
         id = 654,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Festive Minigun"
     },
     "Spirit Of Giving" : {
         id = 655,
@@ -2743,42 +2798,42 @@
     "Festive Rocket Launcher 2011" : {
         id = 658,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
+        item_name_english = "Festive Rocket Launcher"
     },
     "Festive Flamethrower 2011" : {
         id = 659,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Festive Flame Thrower"
     },
     "Festive Bat 2011" : {
         id = 660,
         item_class = "tf_weapon_bat",
-        item_name_english = "Bat"
+        item_name_english = "Festive Bat"
     },
     "Festive Stickybomb Launcher 2011" : {
         id = 661,
         item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
+        item_name_english = "Festive Stickybomb Launcher"
     },
     "Festive Wrench 2011" : {
         id = 662,
         item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
+        item_name_english = "Festive Wrench"
     },
     "Festive Medigun 2011" : {
         id = 663,
         item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
+        item_name_english = "Festive Medi Gun"
     },
     "Festive Sniper Rifle 2011" : {
         id = 664,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "Festive Sniper Rifle"
     },
     "Festive Knife 2011" : {
         id = 665,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Festive Knife"
     },
     "The B.M.O.C." : {
         id = 666,
@@ -2798,7 +2853,7 @@
     "Festive Scattergun 2011" : {
         id = 669,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Festive Scattergun"
     },
     "The Stocking Stuffer" : {
         id = 670,
@@ -2819,6 +2874,101 @@
         id = 675,
         item_class = "tf_wearable",
         item_name_english = "Ebenezer"
+    },
+    "UGC Tournament Fall 2011 - Platinum 1st Place" : {
+        id = 680,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Platinum 1st Place"
+    },
+    "UGC Tournament Fall 2011 - Platinum 2nd Place" : {
+        id = 681,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Platinum 2nd Place"
+    },
+    "UGC Tournament Fall 2011 - Platinum 3rd Place" : {
+        id = 682,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Platinum 3rd Place"
+    },
+    "UGC Tournament Fall 2011 - Platinum Participant" : {
+        id = 683,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Platinum Participant"
+    },
+    "UGC Tournament Autumn 2011 - Euro Platinum" : {
+        id = 684,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Euro Platinum"
+    },
+    "UGC Tournament Fall 2011 - Silver 1st Place" : {
+        id = 685,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Silver 1st Place"
+    },
+    "UGC Tournament Fall 2011 - Silver 2nd Place" : {
+        id = 686,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Silver 2nd Place"
+    },
+    "UGC Tournament Fall 2011 - Silver 3rd Place" : {
+        id = 687,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Silver 3rd Place"
+    },
+    "UGC Tournament Fall 2011 - Silver Participant" : {
+        id = 688,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Silver Participant"
+    },
+    "UGC Tournament Autumn 2011 - Euro Silver" : {
+        id = 689,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Euro Silver"
+    },
+    "UGC Tournament Fall 2011 - Iron 2nd Place" : {
+        id = 690,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Iron 2nd Place"
+    },
+    "UGC Tournament Fall 2011 - Iron 1st Place" : {
+        id = 691,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Iron 1st Place"
+    },
+    "UGC Tournament Fall 2011 - Iron 3rd Place" : {
+        id = 692,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Iron 3rd Place"
+    },
+    "UGC Tournament Autumn 2011 - Euro Iron" : {
+        id = 693,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Euro Iron"
+    },
+    "UGC Tournament Fall 2011 - Tin 1st Place" : {
+        id = 694,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Tin 1st Place"
+    },
+    "UGC Tournament Fall 2011 - Tin 2nd Place" : {
+        id = 695,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Tin 2nd Place"
+    },
+    "UGC Tournament Fall 2011 - Tin 3rd Place" : {
+        id = 696,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Tin 3rd Place"
+    },
+    "UGC Tournament Fall 2011 - Participant" : {
+        id = 697,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Participant"
+    },
+    "UGC Tournament Autumn 2011 - Euro Participant" : {
+        id = 698,
+        item_class = "tf_wearable",
+        item_name_english = "UGC Highlander Euro Participant"
     },
     "Something Special For Someone Special" : {
         id = 699,
@@ -2875,6 +3025,11 @@
         item_class = "tf_wearable",
         item_name_english = "Philateler"
     },
+    "The Map Maker's Medallion" : {
+        id = 717,
+        item_class = "tf_wearable",
+        item_name_english = "Map Maker's Medallion"
+    },
     "The Merc Medal" : {
         id = 718,
         item_class = "tf_wearable",
@@ -2913,7 +3068,7 @@
     "The Black Rose" : {
         id = 727,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Black Rose"
     },
     "Store Purchase Promotion Package" : {
         id = 729,
@@ -2945,6 +3100,21 @@
         item_class = "tf_wearable",
         item_name_english = "Teufort Tooth Kicker"
     },
+    "TF_WEAPON_BUILDER_SPY" : {
+        id = 735,
+        item_class = "tf_weapon_builder",
+        item_name_english = "Sapper"
+    },
+    "Upgradeable TF_WEAPON_BUILDER_SPY" : {
+        id = 736,
+        item_class = "tf_weapon_builder",
+        item_name_english = "Sapper"
+    },
+    "Upgradeable TF_WEAPON_PDA_ENGINEER_BUILD" : {
+        id = 737,
+        item_class = "tf_weapon_pda_engineer_build",
+        item_name_english = "Construction PDA"
+    },
     "Pet Balloonicorn" : {
         id = 738,
         item_class = "tf_wearable",
@@ -2963,7 +3133,7 @@
     "The Rainblower" : {
         id = 741,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Rainblower"
     },
     "Autogrant Pyrovision Goggles" : {
         id = 743,
@@ -3092,8 +3262,8 @@
     },
     "Baby Face's Blaster" : {
         id = 772,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_class = "tf_weapon_pep_brawler_blaster",
+        item_name_english = "Baby Face's Blaster"
     },
     "Pretty Boy's Pocket Pistol" : {
         id = 773,
@@ -3193,92 +3363,92 @@
     "Silver Botkiller Sniper Rifle Mk.I" : {
         id = 792,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "Silver Botkiller Sniper Rifle Mk.I"
     },
     "Silver Botkiller Minigun Mk.I" : {
         id = 793,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Silver Botkiller Minigun Mk.I"
     },
     "Silver Botkiller Knife Mk.I" : {
         id = 794,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Silver Botkiller Knife Mk.I"
     },
     "Silver Botkiller Wrench Mk.I" : {
         id = 795,
         item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
+        item_name_english = "Silver Botkiller Wrench Mk.I"
     },
     "Silver Botkiller Medi Gun Mk.I" : {
         id = 796,
         item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
+        item_name_english = "Silver Botkiller Medi Gun Mk.I"
     },
     "Silver Botkiller Stickybomb Launcher Mk.I" : {
         id = 797,
         item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
+        item_name_english = "Silver Botkiller Stickybomb Launcher Mk.I"
     },
     "Silver Botkiller Flame Thrower Mk.I" : {
         id = 798,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Silver Botkiller Flame Thrower Mk.I"
     },
     "Silver Botkiller Scattergun Mk.I" : {
         id = 799,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Silver Botkiller Scattergun Mk.I"
     },
     "Silver Botkiller Rocket Launcher Mk.I" : {
         id = 800,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
+        item_name_english = "Silver Botkiller Rocket Launcher Mk.I"
     },
     "Gold Botkiller Sniper Rifle Mk.I" : {
         id = 801,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "Gold Botkiller Sniper Rifle Mk.I"
     },
     "Gold Botkiller Minigun Mk.I" : {
         id = 802,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Gold Botkiller Minigun Mk.I"
     },
     "Gold Botkiller Knife Mk.I" : {
         id = 803,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Gold Botkiller Knife Mk.I"
     },
     "Gold Botkiller Wrench Mk.I" : {
         id = 804,
         item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
+        item_name_english = "Gold Botkiller Wrench Mk.I"
     },
     "Gold Botkiller Medi Gun Mk.I" : {
         id = 805,
         item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
+        item_name_english = "Gold Botkiller Medi Gun Mk.I"
     },
     "Gold Botkiller Stickybomb Launcher Mk.I" : {
         id = 806,
         item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
+        item_name_english = "Gold Botkiller Stickybomb Launcher Mk.I"
     },
     "Gold Botkiller Flame Thrower Mk.I" : {
         id = 807,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Gold Botkiller Flame Thrower Mk.I"
     },
     "Gold Botkiller Scattergun Mk.I" : {
         id = 808,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Gold Botkiller Scattergun Mk.I"
     },
     "Gold Botkiller Rocket Launcher Mk.I" : {
         id = 809,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
+        item_name_english = "Gold Botkiller Rocket Launcher Mk.I"
     },
     "The Red-Tape Recorder" : {
         id = 810,
@@ -3473,12 +3643,12 @@
     "Deflector" : {
         id = 850,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Deflector"
     },
     "The AWPer Hand" : {
         id = 851,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "AWPer Hand"
     },
     "The Soldier's Stogie" : {
         id = 852,
@@ -3613,182 +3783,182 @@
     "Rust Botkiller Sniper Rifle Mk.I" : {
         id = 881,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "Rust Botkiller Sniper Rifle Mk.I"
     },
     "Rust Botkiller Minigun Mk.I" : {
         id = 882,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Rust Botkiller Minigun Mk.I"
     },
     "Rust Botkiller Knife Mk.I" : {
         id = 883,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Rust Botkiller Knife Mk.I"
     },
     "Rust Botkiller Wrench Mk.I" : {
         id = 884,
         item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
+        item_name_english = "Rust Botkiller Wrench Mk.I"
     },
     "Rust Botkiller Medi Gun Mk.I" : {
         id = 885,
         item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
+        item_name_english = "Rust Botkiller Medi Gun Mk.I"
     },
     "Rust Botkiller Stickybomb Launcher Mk.I" : {
         id = 886,
         item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
+        item_name_english = "Rust Botkiller Stickybomb Launcher Mk.I"
     },
     "Rust Botkiller Flame Thrower Mk.I" : {
         id = 887,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Rust Botkiller Flame Thrower Mk.I"
     },
     "Rust Botkiller Scattergun Mk.I" : {
         id = 888,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Rust Botkiller Scattergun Mk.I"
     },
     "Rust Botkiller Rocket Launcher Mk.I" : {
         id = 889,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
+        item_name_english = "Rust Botkiller Rocket Launcher Mk.I"
     },
     "Blood Botkiller Sniper Rifle Mk.I" : {
         id = 890,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "Blood Botkiller Sniper Rifle Mk.I"
     },
     "Blood Botkiller Minigun Mk.I" : {
         id = 891,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Blood Botkiller Minigun Mk.I"
     },
     "Blood Botkiller Knife Mk.I" : {
         id = 892,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Blood Botkiller Knife Mk.I"
     },
     "Blood Botkiller Wrench Mk.I" : {
         id = 893,
         item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
+        item_name_english = "Blood Botkiller Wrench Mk.I"
     },
     "Blood Botkiller Medi Gun Mk.I" : {
         id = 894,
         item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
+        item_name_english = "Blood Botkiller Medi Gun Mk.I"
     },
     "Blood Botkiller Stickybomb Launcher Mk.I" : {
         id = 895,
         item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
+        item_name_english = "Blood Botkiller Stickybomb Launcher Mk.I"
     },
     "Blood Botkiller Flame Thrower Mk.I" : {
         id = 896,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Blood Botkiller Flame Thrower Mk.I"
     },
     "Blood Botkiller Scattergun Mk.I" : {
         id = 897,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Blood Botkiller Scattergun Mk.I"
     },
     "Blood Botkiller Rocket Launcher Mk.I" : {
         id = 898,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
+        item_name_english = "Blood Botkiller Rocket Launcher Mk.I"
     },
     "Carbonado Botkiller Sniper Rifle Mk.I" : {
         id = 899,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "Carbonado Botkiller Sniper Rifle Mk.I"
     },
     "Carbonado Botkiller Minigun Mk.I" : {
         id = 900,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Carbonado Botkiller Minigun Mk.I"
     },
     "Carbonado Botkiller Knife Mk.I" : {
         id = 901,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Carbonado Botkiller Knife Mk.I"
     },
     "Carbonado Botkiller Wrench Mk.I" : {
         id = 902,
         item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
+        item_name_english = "Carbonado Botkiller Wrench Mk.I"
     },
     "Carbonado Botkiller Medi Gun Mk.I" : {
         id = 903,
         item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
+        item_name_english = "Carbonado Botkiller Medi Gun Mk.I"
     },
     "Carbonado Botkiller Stickybomb Launcher Mk.I" : {
         id = 904,
         item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
+        item_name_english = "Carbonado Botkiller Stickybomb Launcher Mk.I"
     },
     "Carbonado Botkiller Flame Thrower Mk.I" : {
         id = 905,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Carbonado Botkiller Flame Thrower Mk.I"
     },
     "Carbonado Botkiller Scattergun Mk.I" : {
         id = 906,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Carbonado Botkiller Scattergun Mk.I"
     },
     "Carbonado Botkiller Rocket Launcher Mk.I" : {
         id = 907,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
+        item_name_english = "Carbonado Botkiller Rocket Launcher Mk.I"
     },
     "Diamond Botkiller Sniper Rifle Mk.I" : {
         id = 908,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "Diamond Botkiller Sniper Rifle Mk.I"
     },
     "Diamond Botkiller Minigun Mk.I" : {
         id = 909,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Diamond Botkiller Minigun Mk.I"
     },
     "Diamond Botkiller Knife Mk.I" : {
         id = 910,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Diamond Botkiller Knife Mk.I"
     },
     "Diamond Botkiller Wrench Mk.I" : {
         id = 911,
         item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
+        item_name_english = "Diamond Botkiller Wrench Mk.I"
     },
     "Diamond Botkiller Medi Gun Mk.I" : {
         id = 912,
         item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
+        item_name_english = "Diamond Botkiller Medi Gun Mk.I"
     },
     "Diamond Botkiller Stickybomb Launcher Mk.I" : {
         id = 913,
         item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
+        item_name_english = "Diamond Botkiller Stickybomb Launcher Mk.I"
     },
     "Diamond Botkiller Flame Thrower Mk.I" : {
         id = 914,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Diamond Botkiller Flame Thrower Mk.I"
     },
     "Diamond Botkiller Scattergun Mk.I" : {
         id = 915,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Diamond Botkiller Scattergun Mk.I"
     },
     "Diamond Botkiller Rocket Launcher Mk.I" : {
         id = 916,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
+        item_name_english = "Diamond Botkiller Rocket Launcher Mk.I"
     },
     "Sir Hootsalot" : {
         id = 917,
@@ -3872,8 +4042,8 @@
     },
     "The Ap-Sap" : {
         id = 933,
-        item_class = "tf_weapon_builder",
-        item_name_english = "Sapper"
+        item_class = "tf_weapon_sapper",
+        item_name_english = "Ap-Sap"
     },
     "The Dead Little Buddy" : {
         id = 934,
@@ -3943,7 +4113,7 @@
     "The Quackenbirdt" : {
         id = 947,
         item_class = "tf_weapon_invis",
-        item_name_english = "Invis Watch"
+        item_name_english = "Quäckenbirdt"
     },
     "The Deadliest Duckling" : {
         id = 948,
@@ -3993,92 +4163,92 @@
     "Silver Botkiller Sniper Rifle Mk.II" : {
         id = 957,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "Silver Botkiller Sniper Rifle Mk.II"
     },
     "Silver Botkiller Minigun Mk.II" : {
         id = 958,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Silver Botkiller Minigun Mk.II"
     },
     "Silver Botkiller Knife Mk.II" : {
         id = 959,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Silver Botkiller Knife Mk.II"
     },
     "Silver Botkiller Wrench Mk.II" : {
         id = 960,
         item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
+        item_name_english = "Silver Botkiller Wrench Mk.II"
     },
     "Silver Botkiller Medi Gun Mk.II" : {
         id = 961,
         item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
+        item_name_english = "Silver Botkiller Medi Gun Mk.II"
     },
     "Silver Botkiller Stickybomb Launcher Mk.II" : {
         id = 962,
         item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
+        item_name_english = "Silver Botkiller Stickybomb Launcher Mk.II"
     },
     "Silver Botkiller Flame Thrower Mk.II" : {
         id = 963,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Silver Botkiller Flame Thrower Mk.II"
     },
     "Silver Botkiller Scattergun Mk.II" : {
         id = 964,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Silver Botkiller Scattergun Mk.II"
     },
     "Silver Botkiller Rocket Launcher Mk.II" : {
         id = 965,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
+        item_name_english = "Silver Botkiller Rocket Launcher Mk.II"
     },
     "Gold Botkiller Sniper Rifle Mk.II" : {
         id = 966,
         item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
+        item_name_english = "Gold Botkiller Sniper Rifle Mk.II"
     },
     "Gold Botkiller Minigun Mk.II" : {
         id = 967,
         item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
+        item_name_english = "Gold Botkiller Minigun Mk.II"
     },
     "Gold Botkiller Knife Mk.II" : {
         id = 968,
         item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
+        item_name_english = "Gold Botkiller Knife Mk.II"
     },
     "Gold Botkiller Wrench Mk.II" : {
         id = 969,
         item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
+        item_name_english = "Gold Botkiller Wrench Mk.II"
     },
     "Gold Botkiller Medi Gun Mk.II" : {
         id = 970,
         item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
+        item_name_english = "Gold Botkiller Medi Gun Mk.II"
     },
     "Gold Botkiller Stickybomb Launcher Mk.II" : {
         id = 971,
         item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
+        item_name_english = "Gold Botkiller Stickybomb Launcher Mk.II"
     },
     "Gold Botkiller Flame Thrower Mk.II" : {
         id = 972,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
+        item_name_english = "Gold Botkiller Flame Thrower Mk.II"
     },
     "Gold Botkiller Scattergun Mk.II" : {
         id = 973,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Gold Botkiller Scattergun Mk.II"
     },
     "Gold Botkiller Rocket Launcher Mk.II" : {
         id = 974,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
+        item_name_english = "Gold Botkiller Rocket Launcher Mk.II"
     },
     "Tour of Duty Badge Advanced 2" : {
         id = 975,
@@ -4203,47 +4373,47 @@
     "Festive Holy Mackerel" : {
         id = 999,
         item_class = "tf_weapon_bat_fish",
-        item_name_english = "Holy Mackerel"
+        item_name_english = "Festive Holy Mackerel"
     },
     "Festive Axtinguisher" : {
         id = 1000,
         item_class = "tf_weapon_fireaxe",
-        item_name_english = "Axtinguisher"
+        item_name_english = "Festive Axtinguisher"
     },
     "Festive Buff Banner" : {
         id = 1001,
         item_class = "tf_weapon_buff_item",
-        item_name_english = "Buff Banner"
+        item_name_english = "Festive Buff Banner"
     },
     "Festive Sandvich" : {
         id = 1002,
         item_class = "tf_weapon_lunchbox",
-        item_name_english = "Sandvich"
+        item_name_english = "Festive Sandvich"
     },
     "Festive Ubersaw" : {
         id = 1003,
         item_class = "tf_weapon_bonesaw",
-        item_name_english = "Ubersaw"
+        item_name_english = "Festive Ubersaw"
     },
     "Festive Frontier Justice" : {
         id = 1004,
         item_class = "tf_weapon_sentry_revenge",
-        item_name_english = "Frontier Justice"
+        item_name_english = "Festive Frontier Justice"
     },
     "Festive Huntsman" : {
         id = 1005,
         item_class = "tf_weapon_compound_bow",
-        item_name_english = "Huntsman"
+        item_name_english = "Festive Huntsman"
     },
     "Festive Ambassador" : {
         id = 1006,
         item_class = "tf_weapon_revolver",
-        item_name_english = "Ambassador"
+        item_name_english = "Festive Ambassador"
     },
     "Festive Grenade Launcher" : {
         id = 1007,
         item_class = "tf_weapon_grenadelauncher",
-        item_name_english = "Grenade Launcher"
+        item_name_english = "Festive Grenade Launcher"
     },
     "The Prize Plushy" : {
         id = 1008,
@@ -4457,7 +4627,7 @@
     },
     "The Grandmaster" : {
         id = 1067,
-        item_class = "tf_wearable",
+        item_class = "tf_wearable_levelable_item",
         item_name_english = "Grandmaster"
     },
     "Halloween Unfilled Spellbook" : {
@@ -4513,47 +4683,47 @@
     "Festive Force-a-Nature" : {
         id = 1078,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Force-A-Nature"
+        item_name_english = "Festive Force-A-Nature"
     },
     "Festive Crusader's Crossbow" : {
         id = 1079,
         item_class = "tf_weapon_crossbow",
-        item_name_english = "Crusader's Crossbow"
+        item_name_english = "Festive Crusader's Crossbow"
     },
     "Festive Sapper" : {
         id = 1080,
-        item_class = "tf_weapon_builder",
-        item_name_english = "Sapper"
+        item_class = "tf_weapon_sapper",
+        item_name_english = "Festive Sapper"
     },
     "Festive Flare Gun" : {
         id = 1081,
         item_class = "tf_weapon_flaregun",
-        item_name_english = "Flare Gun"
+        item_name_english = "Festive Flare Gun"
     },
     "Festive Eyelander" : {
         id = 1082,
         item_class = "tf_weapon_sword",
-        item_name_english = "Eyelander"
+        item_name_english = "Festive Eyelander"
     },
     "Festive Jarate" : {
         id = 1083,
         item_class = "tf_weapon_jar",
-        item_name_english = "Jarate"
+        item_name_english = "Festive Jarate"
     },
     "Festive Gloves of Running Urgently" : {
         id = 1084,
         item_class = "tf_weapon_fists",
-        item_name_english = "Gloves of Running Urgently"
+        item_name_english = "Festive Gloves of Running Urgently"
     },
     "Festive Black Box" : {
         id = 1085,
         item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Black Box"
+        item_name_english = "Festive Black Box"
     },
     "Festive Wrangler" : {
         id = 1086,
         item_class = "tf_weapon_laser_pointer",
-        item_name_english = "Wrangler"
+        item_name_english = "Festive Wrangler"
     },
     "Der Maschinensoldaten-Helm" : {
         id = 1087,
@@ -4583,7 +4753,7 @@
     "The Fortified Compound" : {
         id = 1092,
         item_class = "tf_weapon_compound_bow",
-        item_name_english = "Huntsman"
+        item_name_english = "Fortified Compound"
     },
     "The Gilded Guard" : {
         id = 1093,
@@ -4623,7 +4793,7 @@
     "The Bread Bite" : {
         id = 1100,
         item_class = "tf_weapon_fists",
-        item_name_english = "Gloves of Running Urgently"
+        item_name_english = "Bread Bite"
     },
     "The B.A.S.E. Jumper" : {
         id = 1101,
@@ -4632,13 +4802,13 @@
     },
     "The Snack Attack" : {
         id = 1102,
-        item_class = "tf_weapon_builder",
-        item_name_english = "Sapper"
+        item_class = "tf_weapon_sapper",
+        item_name_english = "Snack Attack"
     },
     "The Back Scatter" : {
         id = 1103,
         item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
+        item_name_english = "Back Scatter"
     },
     "The Air Strike" : {
         id = 1104,
@@ -4648,7 +4818,7 @@
     "The Self-Aware Beauty Mark" : {
         id = 1105,
         item_class = "tf_weapon_jar",
-        item_name_english = "Jarate"
+        item_name_english = "Self-Aware Beauty Mark"
     },
     "Square Dance Taunt" : {
         id = 1106,
@@ -4728,7 +4898,7 @@
     "Mutated Milk" : {
         id = 1121,
         item_class = "tf_weapon_jar_milk",
-        item_name_english = "Mad Milk"
+        item_name_english = "Mutated Milk"
     },
     "Towering Pillar of Summer Shades" : {
         id = 1122,
@@ -4754,6 +4924,11 @@
         id = 1127,
         item_class = "saxxy",
         item_name_english = "Crossing Guard"
+    },
+    "TF_WEAPON_SPELLBOOK" : {
+        id = 1132,
+        item_class = "tf_weapon_spellbook",
+        item_name_english = "Spellbook Magazine"
     },
     "Powerup Strength" : {
         id = 1133,
@@ -4798,37 +4973,37 @@
     "Festive Shotgun 2014" : {
         id = 1141,
         item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
+        item_name_english = "Festive Shotgun"
     },
     "Festive Revolver 2014" : {
         id = 1142,
         item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
+        item_name_english = "Festive Revolver"
     },
     "Festive Bonesaw 2014" : {
         id = 1143,
         item_class = "tf_weapon_bonesaw",
-        item_name_english = "Bonesaw"
+        item_name_english = "Festive Bonesaw"
     },
     "Festive Targe 2014" : {
         id = 1144,
         item_class = "tf_wearable_demoshield",
-        item_name_english = "Chargin' Targe"
+        item_name_english = "Festive Chargin' Targe"
     },
     "Festive Bonk 2014" : {
         id = 1145,
         item_class = "tf_weapon_lunchbox_drink",
-        item_name_english = "Bonk! Atomic Punch"
+        item_name_english = "Festive Bonk! Atomic Punch"
     },
     "Festive Backburner 2014" : {
         id = 1146,
         item_class = "tf_weapon_flamethrower",
-        item_name_english = "Backburner"
+        item_name_english = "Festive Backburner"
     },
     "Festive SMG 2014" : {
         id = 1149,
         item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
+        item_name_english = "Festive SMG"
     },
     "The Quickiebomb Launcher" : {
         id = 1150,
@@ -4839,6 +5014,11 @@
         id = 1151,
         item_class = "tf_weapon_grenadelauncher",
         item_name_english = "Iron Bomber"
+    },
+    "TF_WEAPON_GRAPPLINGHOOK" : {
+        id = 1152,
+        item_class = "tf_weapon_grapplinghook",
+        item_name_english = "Grappling Hook"
     },
     "Panic Attack Shotgun" : {
         id = 1153,
@@ -4890,6 +5070,11 @@
         item_class = "no_entity",
         item_name_english = "Taunt: Mannrobics"
     },
+    "Default Power Up Canteen (MvM)" : {
+        id = 1163,
+        item_class = "tf_powerup_bottle",
+        item_name_english = "Power Up Canteen"
+    },
     "Civilian Grade JACK Hat" : {
         id = 1164,
         item_class = "tf_wearable",
@@ -4929,271 +5114,6 @@
         id = 1171,
         item_class = "tf_wearable",
         item_name_english = "PASS Time Early Participation Pin"
-    },
-    "quest25000" : {
-        id = 25000,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25001" : {
-        id = 25001,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25002" : {
-        id = 25002,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25003" : {
-        id = 25003,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25004" : {
-        id = 25004,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25005" : {
-        id = 25005,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25006" : {
-        id = 25006,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25007" : {
-        id = 25007,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25008" : {
-        id = 25008,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25009" : {
-        id = 25009,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25010" : {
-        id = 25010,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25011" : {
-        id = 25011,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25012" : {
-        id = 25012,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25013" : {
-        id = 25013,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25014" : {
-        id = 25014,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25015" : {
-        id = 25015,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25016" : {
-        id = 25016,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25017" : {
-        id = 25017,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25018" : {
-        id = 25018,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25019" : {
-        id = 25019,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25020" : {
-        id = 25020,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25021" : {
-        id = 25021,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25022" : {
-        id = 25022,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25023" : {
-        id = 25023,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25024" : {
-        id = 25024,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25025" : {
-        id = 25025,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25026" : {
-        id = 25026,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25027" : {
-        id = 25027,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25028" : {
-        id = 25028,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25029" : {
-        id = 25029,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25030" : {
-        id = 25030,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25031" : {
-        id = 25031,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25032" : {
-        id = 25032,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25033" : {
-        id = 25033,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25034" : {
-        id = 25034,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25035" : {
-        id = 25035,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25036" : {
-        id = 25036,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25037" : {
-        id = 25037,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25038" : {
-        id = 25038,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25039" : {
-        id = 25039,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25040" : {
-        id = 25040,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25041" : {
-        id = 25041,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25042" : {
-        id = 25042,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25043" : {
-        id = 25043,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25044" : {
-        id = 25044,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25045" : {
-        id = 25045,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25046" : {
-        id = 25046,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25047" : {
-        id = 25047,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25048" : {
-        id = 25048,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25049" : {
-        id = 25049,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25050" : {
-        id = 25050,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25051" : {
-        id = 25051,
-        item_class = "tool",
-        item_name_english = ""
-    },
-    "quest25052" : {
-        id = 25052,
-        item_class = "tool",
-        item_name_english = ""
     },
     "Taunt: The Victory Lap" : {
         id = 1172,
@@ -5288,7 +5208,7 @@
     "The Second Banana" : {
         id = 1190,
         item_class = "tf_weapon_lunchbox",
-        item_name_english = "Sandvich"
+        item_name_english = "Second Banana"
     },
     "Mercenary Park Cap" : {
         id = 1191,
@@ -5330,7890 +5250,4380 @@
         item_class = "tf_wearable",
         item_name_english = "What's in the Team Fortress 2 Soundtrack Box?"
     },
-    "concealedkiller_sniperrifle_nightowl" : {
-        id = 15000,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "concealedkiller_smg_woodsywidowmaker" : {
-        id = 15001,
-        item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
-    },
-    "concealedkiller_scattergun_nightterror" : {
-        id = 15002,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "concealedkiller_shotgun_backwoodsboomstick" : {
-        id = 15003,
-        item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
-    },
-    "concealedkiller_minigun_kingofthejungle" : {
-        id = 15004,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "concealedkiller_flamethrower_forestfire" : {
-        id = 15005,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "concealedkiller_rocketlauncher_woodlandwarrior" : {
-        id = 15006,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "concealedkiller_sniperrifle_purplerange" : {
-        id = 15007,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "concealedkiller_medigun_maskedmender" : {
-        id = 15008,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "concealedkiller_stickybomblauncher_suddenflurry" : {
-        id = 15009,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "concealedkiller_medigun_wrappedreviver" : {
-        id = 15010,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "concealedkiller_revolver_psychedelicslugger" : {
-        id = 15011,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "concealedkiller_stickybomblauncher_carpetbomber" : {
-        id = 15012,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "concealedkiller_pistol_redrockroscoe" : {
-        id = 15013,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "concealedkiller_rocketlauncher_sandcannon" : {
-        id = 15014,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "craftsmann_scattergun_tartantorpedo" : {
-        id = 15015,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "craftsmann_shotgun_rusticruiner" : {
-        id = 15016,
-        item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
-    },
-    "craftsmann_flamethrower_barnburner" : {
-        id = 15017,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "craftsmann_pistol_homemadeheater" : {
-        id = 15018,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "craftsmann_sniperrifle_lumberfromdownunder" : {
-        id = 15019,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "craftsmann_minigun_ironwood" : {
-        id = 15020,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "craftsmann_scattergun_countrycrusher" : {
-        id = 15021,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "craftsmann_smg_plaidpotshotter" : {
-        id = 15022,
-        item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
-    },
-    "craftsmann_sniperrifle_shotinthedark" : {
-        id = 15023,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "craftsmann_stickybomblauncher_blastedbombardier" : {
-        id = 15024,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "craftsmann_medigun_reclaimedreanimator" : {
-        id = 15025,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "craftsmann_minigun_antiqueannihilator" : {
-        id = 15026,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "craftsmann_revolver_oldcountry" : {
-        id = 15027,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "craftsmann_rocketlauncher_americanpastoral" : {
-        id = 15028,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "craftsmann_scattergun_backcountryblaster" : {
-        id = 15029,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "teufort_flamethrower_bovineblazemaker" : {
-        id = 15030,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "teufort_minigun_warroom" : {
-        id = 15031,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "teufort_smg_treadplatetormenter" : {
-        id = 15032,
-        item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
-    },
-    "teufort_sniperrifle_bogtrotter" : {
-        id = 15033,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "teufort_flamethrower_earthskyandfire" : {
-        id = 15034,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "teufort_pistol_hickoryholepuncher" : {
-        id = 15035,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "teufort_scattergun_sprucedeuce" : {
-        id = 15036,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "teufort_smg_teamsprayer" : {
-        id = 15037,
-        item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
-    },
-    "teufort_stickybomblauncher_rooftopwrangler" : {
-        id = 15038,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "teufort_medigun_civilservant" : {
-        id = 15039,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "teufort_minigun_citizenpain" : {
-        id = 15040,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "teufort_pistol_localhero" : {
-        id = 15041,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "teufort_revolver_mayor" : {
-        id = 15042,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "teufort_rocketlauncher_smalltownbringdown" : {
-        id = 15043,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "teufort_shotgun_civicduty" : {
-        id = 15044,
-        item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
-    },
-    "powerhouse_stickybomblauncher_liquidasset" : {
-        id = 15045,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "powerhouse_pistol_blackdahlia" : {
-        id = 15046,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "powerhouse_shotgun_lightningrod" : {
-        id = 15047,
-        item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
-    },
-    "powerhouse_stickybomblauncher_pinkelephant" : {
-        id = 15048,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "powerhouse_flamethrower_flashfryer" : {
-        id = 15049,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "powerhouse_medigun_sparkoflife" : {
-        id = 15050,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "powerhouse_revolver_deadreckoner" : {
-        id = 15051,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "powerhouse_rocketlauncher_shellshocker" : {
-        id = 15052,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "powerhouse_scattergun_currentevent" : {
-        id = 15053,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "powerhouse_flamethrower_turbinetorcher" : {
-        id = 15054,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "powerhouse_minigun_brickhouse" : {
-        id = 15055,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "powerhouse_pistol_sandstonespecial" : {
-        id = 15056,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "powerhouse_rocketlauncher_aquamarine" : {
-        id = 15057,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "powerhouse_smg_lowprofile" : {
-        id = 15058,
-        item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
-    },
-    "powerhouse_sniperrifle_thunderbolt" : {
-        id = 15059,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "harvest_pistol_macabreweb" : {
-        id = 15060,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "harvest_pistol_nutcracker" : {
-        id = 15061,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "harvest_revolver_boneyard" : {
-        id = 15062,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "harvest_revolver_wildwood" : {
-        id = 15063,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "harvest_revolver_macabreweb" : {
-        id = 15064,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "harvest_scattergun_macabreweb" : {
-        id = 15065,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "harvest_flamethrower_autumn" : {
-        id = 15066,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "harvest_flamethrower_pumpkinpatch" : {
-        id = 15067,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "harvest_flamethrower_nutcracker" : {
-        id = 15068,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "harvest_scattergun_nutcracker" : {
-        id = 15069,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "harvest_sniperrifle_pumpkinpatch" : {
-        id = 15070,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "harvest_sniperrifle_boneyard" : {
-        id = 15071,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "harvest_sniperrifle_wildwood" : {
-        id = 15072,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "harvest_wrench_nutcracker" : {
-        id = 15073,
-        item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
-    },
-    "harvest_wrench_autumn" : {
-        id = 15074,
-        item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
-    },
-    "harvest_wrench_boneyard" : {
-        id = 15075,
-        item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
-    },
-    "harvest_smg_wildwood" : {
-        id = 15076,
-        item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
-    },
-    "harvest_grenadelauncher_autumn" : {
-        id = 15077,
-        item_class = "tf_weapon_grenadelauncher",
-        item_name_english = "Grenade Launcher"
-    },
-    "harvest_medigun_wildwood" : {
-        id = 15078,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "harvest_grenadelauncher_macabreweb" : {
-        id = 15079,
-        item_class = "tf_weapon_grenadelauncher",
-        item_name_english = "Grenade Launcher"
-    },
-    "harvest_knife_boneyard" : {
-        id = 15080,
-        item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
-    },
-    "harvest_rocketlauncher_autumn" : {
-        id = 15081,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "harvest_stickybomblauncher_autumn" : {
-        id = 15082,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "harvest_stickybomblauncher_pumpkinpatch" : {
-        id = 15083,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "harvest_stickybomblauncher_macabreweb" : {
-        id = 15084,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "harvest_shotgun_autumn" : {
-        id = 15085,
-        item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
-    },
-    "harvest_minigun_macabreweb" : {
-        id = 15086,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "harvest_minigun_pumpkinpatch" : {
-        id = 15087,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "harvest_minigun_nutcracker" : {
-        id = 15088,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "pyroland_flamethrower_balloonicorn" : {
-        id = 15089,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "pyroland_flamethrower_rainbow" : {
-        id = 15090,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "pyroland_grenadelauncher_rainbow" : {
-        id = 15091,
-        item_class = "tf_weapon_grenadelauncher",
-        item_name_english = "Grenade Launcher"
-    },
-    "pyroland_grenadelauncher_sweetdreams" : {
-        id = 15092,
-        item_class = "tf_weapon_grenadelauncher",
-        item_name_english = "Grenade Launcher"
-    },
-    "pyroland_knife_bluemew" : {
-        id = 15094,
-        item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
-    },
-    "pyroland_knife_braincandy" : {
-        id = 15095,
-        item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
-    },
-    "pyroland_knife_stabbedtohell" : {
-        id = 15096,
-        item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
-    },
-    "pyroland_medigun_flowerpower" : {
-        id = 15097,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "pyroland_minigun_braincandy" : {
-        id = 15098,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "pyroland_minigun_mistercuddles" : {
-        id = 15099,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "pyroland_pistol_bluemew" : {
-        id = 15100,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "pyroland_pistol_braincandy" : {
-        id = 15101,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "pyroland_pistol_shottohell" : {
-        id = 15102,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "pyroland_revolver_flowerpower" : {
-        id = 15103,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "pyroland_rocketlauncher_bluemew" : {
-        id = 15104,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "pyroland_rocketlauncher_braincandy" : {
-        id = 15105,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "pyroland_scattergun_bluemew" : {
-        id = 15106,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "pyroland_scattergun_flowerpower" : {
-        id = 15107,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "pyroland_scattergun_shottohell" : {
-        id = 15108,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "pyroland_shotgun_flowerpower" : {
-        id = 15109,
-        item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
-    },
-    "pyroland_smg_bluemew" : {
-        id = 15110,
-        item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
-    },
-    "pyroland_sniperrifle_balloonicorn" : {
-        id = 15111,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "pyroland_sniperrifle_rainbow" : {
-        id = 15112,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "pyroland_stickybomblauncher_sweetdreams" : {
-        id = 15113,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "pyroland_wrench_torquedtohell" : {
-        id = 15114,
-        item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
-    },
-    "gentlemanne_flamethrower_coffinnail" : {
-        id = 15115,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "gentlemanne_grenadelauncher_coffinnail" : {
-        id = 15116,
-        item_class = "tf_weapon_grenadelauncher",
-        item_name_english = "Grenade Launcher"
-    },
-    "gentlemanne_grenadelauncher_topshelf" : {
-        id = 15117,
-        item_class = "tf_weapon_grenadelauncher",
-        item_name_english = "Grenade Launcher"
-    },
-    "gentlemanne_knife_dressedtokill" : {
-        id = 15118,
-        item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
-    },
-    "gentlemanne_knife_topshelf" : {
-        id = 15119,
-        item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
-    },
-    "gentlemanne_medigun_coffinnail" : {
-        id = 15120,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "gentlemanne_medigun_dressedtokill" : {
-        id = 15121,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "gentlemanne_medigun_highrollers" : {
-        id = 15122,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "gentlemanne_minigun_coffinnail" : {
-        id = 15123,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "gentlemanne_minigun_dressedtokill" : {
-        id = 15124,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "gentlemanne_minigun_topshelf" : {
-        id = 15125,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "gentlemanne_pistol_dressedtokill" : {
-        id = 15126,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "gentlemanne_revolver_coffinnail" : {
-        id = 15127,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "gentlemanne_revolver_topshelf" : {
-        id = 15128,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "gentlemanne_rocketlauncher_coffinnail" : {
-        id = 15129,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "gentlemanne_rocketlauncher_highrollers" : {
-        id = 15130,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "gentlemanne_scattergun_coffinnail" : {
-        id = 15131,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "gentlemanne_shotgun_coffinnail" : {
-        id = 15132,
-        item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
-    },
-    "gentlemanne_shotgun_dressedtokill" : {
-        id = 15133,
-        item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
-    },
-    "gentlemanne_smg_highrollers" : {
-        id = 15134,
-        item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
-    },
-    "gentlemanne_sniperrifle_coffinnail" : {
-        id = 15135,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "gentlemanne_sniperrifle_dressedtokill" : {
-        id = 15136,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "gentlemanne_stickybomblauncher_coffinnail" : {
-        id = 15137,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "gentlemanne_stickybomblauncher_dressedtokill" : {
-        id = 15138,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "gentlemanne_wrench_dressedtokill" : {
-        id = 15139,
-        item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
-    },
-    "gentlemanne_wrench_topshelf" : {
-        id = 15140,
-        item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
-    },
-    "warbird_flamethrower_warhawk" : {
-        id = 15141,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "warbird_grenadelauncher_warhawk" : {
-        id = 15142,
-        item_class = "tf_weapon_grenadelauncher",
-        item_name_english = "Grenade Launcher"
-    },
-    "warbird_knife_blitzkrieg" : {
-        id = 15143,
-        item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
-    },
-    "warbird_knife_airwolf" : {
-        id = 15144,
-        item_class = "tf_weapon_knife",
-        item_name_english = "Knife"
-    },
-    "warbird_medigun_blitzkrieg" : {
-        id = 15145,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "warbird_medigun_corsair" : {
-        id = 15146,
-        item_class = "tf_weapon_medigun",
-        item_name_english = "Medi Gun"
-    },
-    "warbird_minigun_butcherbird" : {
-        id = 15147,
-        item_class = "tf_weapon_minigun",
-        item_name_english = "Minigun"
-    },
-    "warbird_pistol_blitzkrieg" : {
-        id = 15148,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "warbird_revolver_blitzkrieg" : {
-        id = 15149,
-        item_class = "tf_weapon_revolver",
-        item_name_english = "Revolver"
-    },
-    "warbird_rocketlauncher_warhawk" : {
-        id = 15150,
-        item_class = "tf_weapon_rocketlauncher",
-        item_name_english = "Rocket Launcher"
-    },
-    "warbird_scattergun_killerbee" : {
-        id = 15151,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "warbird_shotgun_redbear" : {
-        id = 15152,
-        item_class = "tf_weapon_shotgun",
-        item_name_english = "Shotgun"
-    },
-    "warbird_smg_blitzkrieg" : {
-        id = 15153,
-        item_class = "tf_weapon_smg",
-        item_name_english = "SMG"
-    },
-    "warbird_sniperrifle_airwolf" : {
-        id = 15154,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Sniper Rifle"
-    },
-    "warbird_stickybomblauncher_blitzkrieg" : {
-        id = 15155,
-        item_class = "tf_weapon_pipebomblauncher",
-        item_name_english = "Stickybomb Launcher"
-    },
-    "warbird_wrench_airwolf" : {
-        id = 15156,
-        item_class = "tf_weapon_wrench",
-        item_name_english = "Wrench"
-    },
-    "warbird_scattergun_corsair" : {
-        id = 15157,
-        item_class = "tf_weapon_scattergun",
-        item_name_english = "Scattergun"
-    },
-    "warbird_grenadelauncher_butcherbird" : {
-        id = 15158,
-        item_class = "tf_weapon_grenadelauncher",
-        item_name_english = "Grenade Launcher"
-    },
-    "Paintkit" : {
-        id = 9536,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 102" : {
-        id = 16102,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 104" : {
-        id = 16104,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 105" : {
-        id = 16105,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 106" : {
-        id = 16106,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 109" : {
-        id = 16109,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 112" : {
-        id = 16112,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 113" : {
-        id = 16113,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 114" : {
-        id = 16114,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 120" : {
-        id = 16120,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 122" : {
-        id = 16122,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 130" : {
-        id = 16130,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 139" : {
-        id = 16139,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 143" : {
-        id = 16143,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 144" : {
-        id = 16144,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 151" : {
-        id = 16151,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 160" : {
-        id = 16160,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 161" : {
-        id = 16161,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 163" : {
-        id = 16163,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 300" : {
-        id = 16300,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 301" : {
-        id = 16301,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 302" : {
-        id = 16302,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 303" : {
-        id = 16303,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 304" : {
-        id = 16304,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 305" : {
-        id = 16305,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 306" : {
-        id = 16306,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 307" : {
-        id = 16307,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 308" : {
-        id = 16308,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 309" : {
-        id = 16309,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 310" : {
-        id = 16310,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 390" : {
-        id = 16390,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 391" : {
-        id = 16391,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 200" : {
-        id = 17200,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 201" : {
-        id = 17201,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 202" : {
-        id = 17202,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 203" : {
-        id = 17203,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 204" : {
-        id = 17204,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 205" : {
-        id = 17205,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 206" : {
-        id = 17206,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 207" : {
-        id = 17207,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 208" : {
-        id = 17208,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 209" : {
-        id = 17209,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 210" : {
-        id = 17210,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 211" : {
-        id = 17211,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 212" : {
-        id = 17212,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 213" : {
-        id = 17213,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 214" : {
-        id = 17214,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 215" : {
-        id = 17215,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 217" : {
-        id = 17217,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 218" : {
-        id = 17218,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 220" : {
-        id = 17220,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 221" : {
-        id = 17221,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 223" : {
-        id = 17223,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 224" : {
-        id = 17224,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 225" : {
-        id = 17225,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 226" : {
-        id = 17226,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 228" : {
-        id = 17228,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 230" : {
-        id = 17230,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 232" : {
-        id = 17232,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 234" : {
-        id = 17234,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 235" : {
-        id = 17235,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 236" : {
-        id = 17236,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 237" : {
-        id = 17237,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 238" : {
-        id = 17238,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 239" : {
-        id = 17239,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 240" : {
-        id = 17240,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 241" : {
-        id = 17241,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 242" : {
-        id = 17242,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 243" : {
-        id = 17243,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 244" : {
-        id = 17244,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 245" : {
-        id = 17245,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 246" : {
-        id = 17246,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 247" : {
-        id = 17247,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 248" : {
-        id = 17248,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 249" : {
-        id = 17249,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 250" : {
-        id = 17250,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 251" : {
-        id = 17251,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 252" : {
-        id = 17252,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 253" : {
-        id = 17253,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 254" : {
-        id = 17254,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 255" : {
-        id = 17255,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 256" : {
-        id = 17256,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 257" : {
-        id = 17257,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 258" : {
-        id = 17258,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 259" : {
-        id = 17259,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 260" : {
-        id = 17260,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 261" : {
-        id = 17261,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 262" : {
-        id = 17262,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 263" : {
-        id = 17263,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 264" : {
-        id = 17264,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 265" : {
-        id = 17265,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 266" : {
-        id = 17266,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 267" : {
-        id = 17267,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 268" : {
-        id = 17268,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 269" : {
-        id = 17269,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 270" : {
-        id = 17270,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 271" : {
-        id = 17271,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 272" : {
-        id = 17272,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 273" : {
-        id = 17273,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 275" : {
-        id = 17275,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 276" : {
-        id = 17276,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 277" : {
-        id = 17277,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 278" : {
-        id = 17278,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 279" : {
-        id = 17279,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 280" : {
-        id = 17280,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 281" : {
-        id = 17281,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 282" : {
-        id = 17282,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 283" : {
-        id = 17283,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 284" : {
-        id = 17284,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 285" : {
-        id = 17285,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 286" : {
-        id = 17286,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 287" : {
-        id = 17287,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 289" : {
-        id = 17289,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 290" : {
-        id = 17290,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 291" : {
-        id = 17291,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 292" : {
-        id = 17292,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 293" : {
-        id = 17293,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 294" : {
-        id = 17294,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 295" : {
-        id = 17295,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 296" : {
-        id = 17296,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 297" : {
-        id = 17297,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 400" : {
-        id = 17400,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 401" : {
-        id = 17401,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 402" : {
-        id = 17402,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 403" : {
-        id = 17403,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 404" : {
-        id = 17404,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 405" : {
-        id = 17405,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 406" : {
-        id = 17406,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 407" : {
-        id = 17407,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 408" : {
-        id = 17408,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 409" : {
-        id = 17409,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 410" : {
-        id = 17410,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 411" : {
-        id = 17411,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 412" : {
-        id = 17412,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 413" : {
-        id = 17413,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 414" : {
-        id = 17414,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 415" : {
-        id = 17415,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 416" : {
-        id = 17416,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 417" : {
-        id = 17417,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 418" : {
-        id = 17418,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 419" : {
-        id = 17419,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Paintkit 420" : {
-        id = 17420,
-        item_class = "tool",
-        item_name_english = "War Paint"
-    },
-    "Warpaint Collection 1 Tier 1 Keyless Case" : {
-        id = 18000,
+    "World Traveler" : {
+        id = 1899,
+        item_class = "tf_wearable",
+        item_name_english = "World Traveler's Hat"
+    },
+    "Map Token Egypt" : {
+        id = 1900,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Egypt"
+    },
+    "Map Token Coldfront" : {
+        id = 1901,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Coldfront"
+    },
+    "Map Token Fastlane" : {
+        id = 1902,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Fastlane"
+    },
+    "Map Token Turbine" : {
+        id = 1903,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Turbine"
+    },
+    "Map Token Steel" : {
+        id = 1904,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Steel"
+    },
+    "Map Token Junction" : {
+        id = 1905,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Junction"
+    },
+    "Map Token Watchtower" : {
+        id = 1906,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Watchtower"
+    },
+    "Map Token Hoodoo" : {
+        id = 1907,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Hoodoo"
+    },
+    "Map Token Offblast" : {
+        id = 1908,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Offblast"
+    },
+    "Map Token Yukon" : {
+        id = 1909,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Yukon"
+    },
+    "Map Token Harvest" : {
+        id = 1910,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Harvest"
+    },
+    "Map Token Freight" : {
+        id = 1911,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Freight"
+    },
+    "Map Token Mountain Lab" : {
+        id = 1912,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Mountain Lab"
+    },
+    "Map Token Manor Event" : {
+        id = 1913,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Mann Manor"
+    },
+    "Map Token Nightfall" : {
+        id = 1914,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Nightfall"
+    },
+    "Map Token Frontier" : {
+        id = 1915,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Frontier"
+    },
+    "Map Token Lakeside" : {
+        id = 1916,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Lakeside"
+    },
+    "Map Token Gullywash" : {
+        id = 1917,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Gullywash"
+    },
+    "Map Token Kong King" : {
+        id = 1918,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Kong King"
+    },
+    "Map Token Process" : {
+        id = 1919,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Process"
+    },
+    "Map Token Standin" : {
+        id = 1920,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Standin"
+    },
+    "Map Token Snakewater" : {
+        id = 1921,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Snakewater"
+    },
+    "Map Token Snowplow" : {
+        id = 1922,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Snowplow"
+    },
+    "Map Token Borneo" : {
+        id = 1923,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Borneo"
+    },
+    "Map Token Suijin" : {
+        id = 1924,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Suijin"
+    },
+    "Map Token 2Fort Invasion" : {
+        id = 1925,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - 2Fort Invasion"
+    },
+    "Map Token Probed" : {
+        id = 1926,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Probed"
+    },
+    "Map Token Watergate" : {
+        id = 1927,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Watergate"
+    },
+    "Map Token Byre" : {
+        id = 1928,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Byre"
+    },
+    "Map Token Gorge Event" : {
+        id = 1929,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Gorge Event"
+    },
+    "Map Token Sunshine Event" : {
+        id = 1930,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Sinshine"
+    },
+    "Map Token Moonshine Event" : {
+        id = 1931,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Moonshine Event"
+    },
+    "Map Token Millstone Event" : {
+        id = 1932,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Hellstone"
+    },
+    "Map Token Snowycoast" : {
+        id = 1933,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Snowycoast"
+    },
+    "Map Token Vanguard" : {
+        id = 1934,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Vanguard"
+    },
+    "Map Token Landfall" : {
+        id = 1935,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Landfall"
+    },
+    "Map Token Highpass" : {
+        id = 1936,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Highpass"
+    },
+    "Map Token Sunshine" : {
+        id = 1937,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Sunshine"
+    },
+    "Map Token Metalworks" : {
+        id = 1938,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Metalworks"
+    },
+    "Map Token Swiftwater" : {
+        id = 1939,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Swiftwater"
+    },
+    "Map Token Maple Ridge Event" : {
+        id = 1940,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Maple Ridge Event"
+    },
+    "Map Token Fifth Curve Event" : {
+        id = 1941,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Brimstone"
+    },
+    "Map Token Pit Of Death" : {
+        id = 1942,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Pit of Death"
+    },
+    "Map Token Mossrock" : {
+        id = 1943,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Mossrock"
+    },
+    "Map Token Lazarus" : {
+        id = 1944,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Lazarus"
+    },
+    "Map Token Banana Bay" : {
+        id = 1945,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Banana Bay"
+    },
+    "Map Token Enclosure" : {
+        id = 1946,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Enclosure"
+    },
+    "Map Token Brazil" : {
+        id = 1947,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Brazil"
+    },
+    "Map Token Bagel Event" : {
+        id = 1948,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Cauldron"
+    },
+    "Map Token Rumble Event" : {
+        id = 1949,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Gravestone"
+    },
+    "Map Token Monster Bash" : {
+        id = 1950,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Monster Bash"
+    },
+    "Map Token Slasher" : {
+        id = 1951,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Slasher"
+    },
+    "Map Token Cursed Cove" : {
+        id = 1952,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Cursed Cove"
+    },
+    "Map Token Laughter" : {
+        id = 1953,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Laughter"
+    },
+    "Map Token Precipice" : {
+        id = 1954,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Precipice"
+    },
+    "Map Token Megalo" : {
+        id = 1955,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Megalo"
+    },
+    "Map Token Hassle Castle" : {
+        id = 1956,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Hassle Castle"
+    },
+    "Map Token Bloodwater" : {
+        id = 1957,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Bloodwater"
+    },
+    "Map Token Undergrove Event" : {
+        id = 1958,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Moldergrove"
+    },
+    "Map Token Pier" : {
+        id = 1959,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Pier"
+    },
+    "Map Token SnowVille" : {
+        id = 1960,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - SnowVille"
+    },
+    "Map Token Snowfall" : {
+        id = 1961,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Snowfall"
+    },
+    "Map Token Wutville" : {
+        id = 1962,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Wutville"
+    },
+    "Map Token Farmageddon" : {
+        id = 1963,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Farmageddon"
+    },
+    "Map Token Los Muertos" : {
+        id = 1964,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Los Muertos"
+    },
+    "Map Token Erebus" : {
+        id = 1965,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Erebus"
+    },
+    "Map Token Terror" : {
+        id = 1966,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Terror"
+    },
+    "Map Token Graveyard" : {
+        id = 1967,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Graveyard"
+    },
+    "Map Token Sinthetic" : {
+        id = 1968,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Sinthetic"
+    },
+    "Map Token Polar" : {
+        id = 1969,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Polar"
+    },
+    "Map Token Bread Space" : {
+        id = 1970,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Bread Space"
+    },
+    "Map Token Chilly" : {
+        id = 1971,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Chilly"
+    },
+    "Map Token Cascade" : {
+        id = 1972,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Cascade"
+    },
+    "Map Token Altitude" : {
+        id = 1973,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Altitude"
+    },
+    "Map Token Doublefrost" : {
+        id = 1974,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Doublefrost"
+    },
+    "Map Token Soul Mill" : {
+        id = 1975,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Soul-Mill"
+    },
+    "Map Token Helltrain" : {
+        id = 1976,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Helltrain"
+    },
+    "Map Token Bonesaw" : {
+        id = 1977,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Bonesaw"
+    },
+    "Map Token Crasher" : {
+        id = 1978,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Crasher"
+    },
+    "Map Token Ghoulpit" : {
+        id = 1979,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Ghoulpit"
+    },
+    "Map Token Spookeyridge" : {
+        id = 1980,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Spookeyridge"
+    },
+    "Map Token Frostwatch" : {
+        id = 1981,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Frostwatch"
+    },
+    "Map Token Frostcliff" : {
+        id = 1982,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Frostcliff"
+    },
+    "Map Token Rumford" : {
+        id = 1983,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Rumford"
+    },
+    "Map Token Frosty" : {
+        id = 1984,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Frosty"
+    },
+    "Map Token Coal Pit" : {
+        id = 1985,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Coal Pit"
+    },
+    "Map Token Sharkbay" : {
+        id = 1986,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Sharkbay"
+    },
+    "Map Token Rotunda" : {
+        id = 1987,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Rotunda"
+    },
+    "Map Token Phoenix" : {
+        id = 1988,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Phoenix"
+    },
+    "Map Token Cashworks" : {
+        id = 1989,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Cashworks"
+    },
+    "Map Token Venice" : {
+        id = 1990,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Venice"
+    },
+    "Map Token Reckoner" : {
+        id = 1991,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Reckoner"
+    },
+    "Map Token Sulfur" : {
+        id = 1992,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Sulfur"
+    },
+    "Map Token Hardwood" : {
+        id = 1993,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Hardwood"
+    },
+    "Map Token Pelican Peak" : {
+        id = 1994,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Pelican Peak"
+    },
+    "Map Token Selbyen" : {
+        id = 1995,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Selbyen"
+    },
+    "Map Token VSH Tiny Rock" : {
+        id = 1996,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Tiny Rock"
+    },
+    "Map Token VSH Distillery" : {
+        id = 1997,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Distillery"
+    },
+    "Map Token VSH Skirmish" : {
+        id = 1998,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Skirmish"
+    },
+    "Map Token VSH Nucleus" : {
+        id = 1999,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Nucleus VSH"
+    },
+    "Polycount Pyro Bundle" : {
+        id = 2000,
+        item_class = "bundle",
+        item_name_english = "The Gas Jockey's Gear"
+    },
+    "Polycount Spy Bundle" : {
+        id = 2001,
+        item_class = "bundle",
+        item_name_english = "The Saharan Spy"
+    },
+    "Polycount Soldier Bundle" : {
+        id = 2002,
+        item_class = "bundle",
+        item_name_english = "The Tank Buster"
+    },
+    "Polycount Sniper Bundle" : {
+        id = 2003,
+        item_class = "bundle",
+        item_name_english = "The Croc-o-Style Kit"
+    },
+    "Polycount Scout Bundle" : {
+        id = 2004,
+        item_class = "bundle",
+        item_name_english = "The Special Delivery"
+    },
+    "Polycount Bundle" : {
+        id = 2005,
+        item_class = "bundle",
+        item_name_english = "Polycount Pack"
+    },
+    "Halloween Noise Maker Bundle" : {
+        id = 2006,
+        item_class = "bundle",
+        item_name_english = "Noise Maker Bundle"
+    },
+    "Map Token Bundle" : {
+        id = 2007,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Medieval Medic Bundle" : {
+        id = 2008,
+        item_class = "bundle",
+        item_name_english = "The Medieval Medic"
+    },
+    "Hibernating Bear Bundle" : {
+        id = 2009,
+        item_class = "bundle",
+        item_name_english = "The Hibernating Bear"
+    },
+    "Expert's Ordnance Bundle" : {
+        id = 2010,
+        item_class = "bundle",
+        item_name_english = "The Expert's Ordnance"
+    },
+    "Winter Update Bundle" : {
+        id = 2011,
+        item_class = "bundle",
+        item_name_english = "Winter Update Pack"
+    },
+    "Fancy Hat Bundle" : {
+        id = 2012,
+        item_class = "bundle",
+        item_name_english = "Box of Fancy Hats"
+    },
+    "Excessive Bundle of Bundles" : {
+        id = 2013,
+        item_class = "bundle",
+        item_name_english = "A Bargaining Manne's Bundle of Bargains"
+    },
+    "Nasty Weapon Bundle" : {
+        id = 2014,
+        item_class = "bundle",
+        item_name_english = "Pile of Nasty Weapons"
+    },
+    "Map Token Bundle 2" : {
+        id = 2015,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Shogun Complete Bundle" : {
+        id = 2016,
+        item_class = "bundle",
+        item_name_english = "The Emperor's Assortment"
+    },
+    "Japan Charity Bundle" : {
+        id = 2017,
+        item_class = "bundle",
+        item_name_english = "Japan Charity Bundle"
+    },
+    "Scout Starter Bundle" : {
+        id = 2018,
+        item_class = "bundle",
+        item_name_english = "Scout Starter Pack"
+    },
+    "Soldier Starter Bundle" : {
+        id = 2019,
+        item_class = "bundle",
+        item_name_english = "Soldier Starter Pack"
+    },
+    "Pyro Starter Bundle" : {
+        id = 2020,
+        item_class = "bundle",
+        item_name_english = "Pyro Starter Pack"
+    },
+    "Demoman Starter Bundle" : {
+        id = 2021,
+        item_class = "bundle",
+        item_name_english = "Demoman Starter Pack"
+    },
+    "Heavy Starter Bundle" : {
+        id = 2022,
+        item_class = "bundle",
+        item_name_english = "Heavy Starter Pack"
+    },
+    "Engineer Starter Bundle" : {
+        id = 2023,
+        item_class = "bundle",
+        item_name_english = "Engineer Starter Pack"
+    },
+    "Medic Starter Bundle" : {
+        id = 2024,
+        item_class = "bundle",
+        item_name_english = "Medic Starter Pack"
+    },
+    "Sniper Starter Bundle" : {
+        id = 2025,
+        item_class = "bundle",
+        item_name_english = "Sniper Starter Pack"
+    },
+    "Spy Starter Bundle" : {
+        id = 2026,
+        item_class = "bundle",
+        item_name_english = "Spy Starter Pack"
+    },
+    "Mobster Monday Bundle" : {
+        id = 2028,
+        item_class = "bundle",
+        item_name_english = "Mobster Monday Bundle"
+    },
+    "TimbukTuesday Bundle" : {
+        id = 2029,
+        item_class = "bundle",
+        item_name_english = "Timbuk-Tuesday Bundle"
+    },
+    "World War Wednesday Bundle" : {
+        id = 2030,
+        item_class = "bundle",
+        item_name_english = "World War Wednesday Bundle"
+    },
+    "Meet the Medic! Bundle" : {
+        id = 2031,
+        item_class = "bundle",
+        item_name_english = "Meet the Medic! Bundle"
+    },
+    "Uber Bundle" : {
+        id = 2032,
+        item_class = "bundle",
+        item_name_english = "The Uber Update Bundle"
+    },
+    "Summer Sun Bundle" : {
+        id = 2033,
+        item_class = "bundle",
+        item_name_english = "Summer Sun Bundle"
+    },
+    "Dr. Grordbort's Victory Pack" : {
+        id = 2034,
+        item_class = "bundle",
+        item_name_english = "Dr. Grordbort's Victory Pack"
+    },
+    "Dr. Grordbort ComicCon Promo Code" : {
+        id = 2035,
+        item_class = "bundle",
+        item_name_english = "#TF_Bundle_DrGComicCon"
+    },
+    "Bethesda Employee Bundle" : {
+        id = 2036,
+        item_class = "bundle",
+        item_name_english = "Bethesda Employee Bundle"
+    },
+    "Tripwire Employee Bundle" : {
+        id = 2037,
+        item_class = "bundle",
+        item_name_english = "Tripwire Employee Bundle"
+    },
+    "Bethesda Employee Bundle Genuine" : {
+        id = 2038,
+        item_class = "bundle",
+        item_name_english = "Bethesda Employee Bundle"
+    },
+    "Tripwire Employee Bundle Genuine" : {
+        id = 2039,
+        item_class = "bundle",
+        item_name_english = "Tripwire Employee Bundle"
+    },
+    "Deus Ex Promo Bundle" : {
+        id = 2040,
+        item_class = "bundle",
+        item_name_english = "The Manno-Technology Bundle"
+    },
+    "Deus Ex Purity Fist Promo" : {
+        id = 2041,
+        item_class = "bundle",
+        item_name_english = "#TF_Bundle_DeusExFistPromo"
+    },
+    "DOTA2 Gamescom Winners Finals PROMO Bundle" : {
+        id = 2042,
+        item_class = "bundle",
+        item_name_english = "#TF_Bundle_DOTA2GamescomWinnersFinals"
+    },
+    "DOTA2 Gamescom Losers Finals PROMO Bundle" : {
+        id = 2043,
+        item_class = "bundle",
+        item_name_english = "#TF_Bundle_DOTA2GamescomLosersFinals"
+    },
+    "DOTA2 Gamescom Championship PROMO Bundle" : {
+        id = 2044,
+        item_class = "bundle",
+        item_name_english = "#TF_Bundle_DOTA2GamescomChampionship"
+    },
+    "Deus Ex Self-Made Bundle" : {
+        id = 2045,
+        item_class = "bundle",
+        item_name_english = "#TF_Bundle_DeusExSelfMade"
+    },
+    "Shogun Complete Genuine Bundle" : {
+        id = 2046,
+        item_class = "bundle",
+        item_name_english = "The Emperor's Assortment"
+    },
+    "Killer Exclusive PCGamer Bundle" : {
+        id = 2047,
+        item_class = "bundle",
+        item_name_english = "#TF_Bundle_KillerExclusive"
+    },
+    "Deus Ex Contest Bundle" : {
+        id = 2048,
+        item_class = "bundle",
+        item_name_english = "#TF_Bundle_DeusExContest"
+    },
+    "Map Token Bundle 3" : {
+        id = 2049,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Football Manager 2012 Promo Bundle" : {
+        id = 2050,
+        item_class = "bundle",
+        item_name_english = "Footballer's Kit"
+    },
+    "Demo Halloween 2011 Bundle" : {
+        id = 2051,
+        item_class = "bundle",
+        item_name_english = "The Highland Hound Bundle"
+    },
+    "Scout Halloween 2011 Bundle" : {
+        id = 2052,
+        item_class = "bundle",
+        item_name_english = "The Curse-a-Nature Bundle"
+    },
+    "Pyro Halloween 2011 Bundle" : {
+        id = 2053,
+        item_class = "bundle",
+        item_name_english = "The Infernal Imp Bundle"
+    },
+    "Medic Halloween 2011 Bundle" : {
+        id = 2054,
+        item_class = "bundle",
+        item_name_english = "The Mad Doktor Bundle"
+    },
+    "Soldier Halloween 2011 Bundle" : {
+        id = 2055,
+        item_class = "bundle",
+        item_name_english = "The Tin Soldier Bundle"
+    },
+    "Spy Halloween 2011 Bundle" : {
+        id = 2056,
+        item_class = "bundle",
+        item_name_english = "The Invisible Rogue Bundle"
+    },
+    "Heavy Halloween 2011 Bundle" : {
+        id = 2057,
+        item_class = "bundle",
+        item_name_english = "The FrankenHeavy Bundle"
+    },
+    "Sniper Halloween 2011 Bundle" : {
+        id = 2058,
+        item_class = "bundle",
+        item_name_english = "The Camper Van Helsing Bundle"
+    },
+    "Engineer Halloween 2011 Bundle" : {
+        id = 2059,
+        item_class = "bundle",
+        item_name_english = "The Brundle Bundle Bundle"
+    },
+    "Halloween 2011 Bundle" : {
+        id = 2060,
+        item_class = "bundle",
+        item_name_english = "Halloween 2011 Costume Bundle of Bundles"
+    },
+    "Archimedes Promo" : {
+        id = 2061,
+        item_class = "bundle",
+        item_name_english = "Archimedes Promo"
+    },
+    "Dr. Grordbort's Brainiac Pack" : {
+        id = 2062,
+        item_class = "bundle",
+        item_name_english = "Dr. Grordbort's Brainiac Pack"
+    },
+    "Dr. Grordbort's Moonman Pack" : {
+        id = 2063,
+        item_class = "bundle",
+        item_name_english = "Dr. Grordbort's Moonman Pack"
+    },
+    "Dr. Grordbort's Moonbrain Double Pack" : {
+        id = 2064,
+        item_class = "bundle",
+        item_name_english = "Dr. Grordbort's Moonbrain Double Pack"
+    },
+    "Santa's Little Accomplice Bundle" : {
+        id = 2065,
+        item_class = "bundle",
+        item_name_english = "Santa's Little Accomplice Bundle"
+    },
+    "Pet Balloonicorn Promo" : {
+        id = 2066,
+        item_class = "bundle",
+        item_name_english = "Pet Balloonicorn Promo"
+    },
+    "Sandvich Promo" : {
+        id = 2067,
+        item_class = "bundle",
+        item_name_english = "Sandvich Promo"
+    },
+    "Companion Square Promo" : {
+        id = 2068,
+        item_class = "bundle",
+        item_name_english = "Companion Square Promo"
+    },
+    "Soldier Equalizer Escape Plan Bundle" : {
+        id = 2069,
+        item_class = "bundle",
+        item_name_english = "The Pickaxe Pack"
+    },
+    "Robot Chicken Hat Promo" : {
+        id = 2070,
+        item_class = "bundle",
+        item_name_english = "Robot Chicken Hat Promo"
+    },
+    "Urban Professional Bundle" : {
+        id = 2071,
+        item_class = "bundle",
+        item_name_english = "Urban Professional Bundle"
+    },
+    "Dumpster Diver Bundle" : {
+        id = 2072,
+        item_class = "bundle",
+        item_name_english = "Dumpster Diver Bundle"
+    },
+    "Public Enemy Bundle" : {
+        id = 2073,
+        item_class = "bundle",
+        item_name_english = "Public Enemy Bundle"
+    },
+    "Pyromania Bundle" : {
+        id = 2074,
+        item_class = "bundle",
+        item_name_english = "Pyromania Mega Bundle"
+    },
+    "Summer 2012 Community Bundle" : {
+        id = 2075,
+        item_class = "bundle",
+        item_name_english = "Summer 2012 Community Bundle"
+    },
+    "Sleeping Dogs Bundle" : {
+        id = 2076,
+        item_class = "bundle",
+        item_name_english = "Triad Bundle"
+    },
+    "QuakeCon2012 Bundle" : {
+        id = 2077,
+        item_class = "bundle",
+        item_name_english = "QuakeCon Bundle"
+    },
+    "Steam Translation Bundle" : {
+        id = 2078,
+        item_class = "bundle",
+        item_name_english = "Steam Translation Bundle"
+    },
+    "Map Token Bundle 4" : {
+        id = 2079,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Hero Academy Gold Bundle" : {
+        id = 2080,
+        item_class = "bundle",
+        item_name_english = "Hero Academy Gold Pack"
+    },
+    "Sleeping Dogs Employee Bundle" : {
+        id = 2081,
+        item_class = "bundle",
+        item_name_english = "Triad Bundle"
+    },
+    "Portal 2 Soundtrack Promo" : {
+        id = 2082,
+        item_class = "bundle",
+        item_name_english = "Portal 2 Soundtrack Promo"
+    },
+    "Red Heavy Action Figure Promo" : {
+        id = 2083,
+        item_class = "bundle",
+        item_name_english = "Red Heavy Action Figure Promo"
+    },
+    "Red Pyro Action Figure Promo" : {
+        id = 2084,
+        item_class = "bundle",
+        item_name_english = "Red Pyro Action Figure Promo"
+    },
+    "Red Demoman Action Figure Promo" : {
+        id = 2085,
+        item_class = "bundle",
+        item_name_english = "Red Demoman Action Figure Promo"
+    },
+    "Red Soldier Action Figure Promo" : {
+        id = 2086,
+        item_class = "bundle",
+        item_name_english = "Red Soldier Action Figure Promo"
+    },
+    "Blue Heavy Action Figure Promo" : {
+        id = 2087,
+        item_class = "bundle",
+        item_name_english = "Blue Heavy Action Figure Promo"
+    },
+    "Blue Pyro Action Figure Promo" : {
+        id = 2088,
+        item_class = "bundle",
+        item_name_english = "Blue Pyro Action Figure Promo"
+    },
+    "Blue Demoman Action Figure Promo" : {
+        id = 2089,
+        item_class = "bundle",
+        item_name_english = "Blue Demoman Action Figure Promo"
+    },
+    "Blue Soldier Action Figure Promo" : {
+        id = 2090,
+        item_class = "bundle",
+        item_name_english = "Blue Soldier Action Figure Promo"
+    },
+    "Total War Bundle" : {
+        id = 2091,
+        item_class = "bundle",
+        item_name_english = "Total War Bundle"
+    },
+    "Halloween 2012 Community Bundle" : {
+        id = 2092,
+        item_class = "bundle",
+        item_name_english = "Halloween 2012 Community Bundle"
+    },
+    "Name Tag For Bundles" : {
+        id = 2093,
+        item_class = "tool",
+        item_name_english = "Name Tag"
+    },
+    "Scout Starter Bundle No Hat" : {
+        id = 2094,
+        item_class = "bundle",
+        item_name_english = "Scout Starter Pack"
+    },
+    "Soldier Starter Bundle No Hat" : {
+        id = 2095,
+        item_class = "bundle",
+        item_name_english = "Soldier Starter Pack"
+    },
+    "Pyro Starter Bundle No Hat" : {
+        id = 2096,
+        item_class = "bundle",
+        item_name_english = "Pyro Starter Pack"
+    },
+    "Demoman Starter Bundle No Hat" : {
+        id = 2097,
+        item_class = "bundle",
+        item_name_english = "Demoman Starter Pack"
+    },
+    "Heavy Starter Bundle No Hat" : {
+        id = 2098,
+        item_class = "bundle",
+        item_name_english = "Heavy Starter Pack"
+    },
+    "Engineer Starter Bundle No Hat" : {
+        id = 2099,
+        item_class = "bundle",
+        item_name_english = "Engineer Starter Pack"
+    },
+    "Medic Starter Bundle No Hat" : {
+        id = 2100,
+        item_class = "bundle",
+        item_name_english = "Medic Starter Pack"
+    },
+    "Sniper Starter Bundle No Hat" : {
+        id = 2101,
+        item_class = "bundle",
+        item_name_english = "Sniper Starter Pack"
+    },
+    "Spy Starter Bundle No Hat" : {
+        id = 2102,
+        item_class = "bundle",
+        item_name_english = "Spy Starter Pack"
+    },
+    "Purity Fist Promo" : {
+        id = 2103,
+        item_class = "bundle",
+        item_name_english = "Purity Fist Promo"
+    },
+    "The Henchmann Bundle" : {
+        id = 2104,
+        item_class = "bundle",
+        item_name_english = "The Henchmann Bundle"
+    },
+    "The Rockzo Bundle" : {
+        id = 2105,
+        item_class = "bundle",
+        item_name_english = "The Rockzo Bundle"
+    },
+    "The Brutananadilewski Bundle" : {
+        id = 2106,
+        item_class = "bundle",
+        item_name_english = "The Brutananadilewski Bundle"
+    },
+    "The Adult Swim Bundle" : {
+        id = 2107,
+        item_class = "bundle",
+        item_name_english = "The Adult Swim Bundle"
+    },
+    "Winter 2012 Bundle" : {
+        id = 2108,
+        item_class = "bundle",
+        item_name_english = "Smissmas 2012 Bundle"
+    },
+    "Pet Balloonicorn Plush Promo" : {
+        id = 2109,
+        item_class = "bundle",
+        item_name_english = "Pet Balloonicorn Promo"
+    },
+    "Sandvich v2 Promo" : {
+        id = 2110,
+        item_class = "bundle",
+        item_name_english = "Sandvich Promo"
+    },
+    "Oculus Rift Promo" : {
+        id = 2111,
+        item_class = "bundle",
+        item_name_english = "Oculus Rift Promo"
+    },
+    "Red Engineer Action Figure Promo" : {
+        id = 2112,
+        item_class = "bundle",
+        item_name_english = "Red Engineer Action Figure Promo"
+    },
+    "Blue Engineer Action Figure Promo" : {
+        id = 2113,
+        item_class = "bundle",
+        item_name_english = "Blue Engineer Action Figure Promo"
+    },
+    "Red Spy Action Figure Promo" : {
+        id = 2114,
+        item_class = "bundle",
+        item_name_english = "Red Spy Action Figure Promo"
+    },
+    "Blue Spy Action Figure Promo" : {
+        id = 2115,
+        item_class = "bundle",
+        item_name_english = "Blue Spy Action Figure Promo"
+    },
+    "Red Sniper Action Figure Promo" : {
+        id = 2116,
+        item_class = "bundle",
+        item_name_english = "Red Sniper Action Figure Promo"
+    },
+    "Blue Sniper Action Figure Promo" : {
+        id = 2117,
+        item_class = "bundle",
+        item_name_english = "Blue Sniper Action Figure Promo"
+    },
+    "Red Scout Action Figure Promo" : {
+        id = 2118,
+        item_class = "bundle",
+        item_name_english = "Red Scout Action Figure Promo"
+    },
+    "Blue Scout Action Figure Promo" : {
+        id = 2119,
+        item_class = "bundle",
+        item_name_english = "Blue Scout Action Figure Promo"
+    },
+    "Red Medic Action Figure Promo" : {
+        id = 2120,
+        item_class = "bundle",
+        item_name_english = "Red Medic Action Figure Promo"
+    },
+    "Blue Medic Action Figure Promo" : {
+        id = 2121,
+        item_class = "bundle",
+        item_name_english = "Blue Medic Action Figure Promo"
+    },
+    "Team Fortress Chess Promo" : {
+        id = 2122,
+        item_class = "bundle",
+        item_name_english = "Team Fortress Chess Promo"
+    },
+    "Map Token Bundle 5" : {
+        id = 2123,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "The Byzantine Bundle" : {
+        id = 2124,
+        item_class = "bundle",
+        item_name_english = "The Byzantine Bundle"
+    },
+    "Map Token Bundle 6" : {
+        id = 2125,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Halloween 2013 Everything Bundle" : {
+        id = 2126,
+        item_class = "bundle",
+        item_name_english = "Halloween 2013 Community Bundle"
+    },
+    "TF2mixup Community Event 2013 Promo" : {
+        id = 2127,
+        item_class = "bundle",
+        item_name_english = "TF2mixup Community Event 2013 Promo"
+    },
+    "Robot Heavy Collectible Figure Promo" : {
+        id = 2128,
+        item_class = "bundle",
+        item_name_english = "Robot Heavy Collectible Figure Promo"
+    },
+    "Love & War Taunt Bundle" : {
+        id = 2129,
+        item_class = "bundle",
+        item_name_english = "Love And War Taunts Bundle"
+    },
+    "Love & War Weapons Bundle" : {
+        id = 2130,
+        item_class = "bundle",
+        item_name_english = "Love And War Weapons Bundle"
+    },
+    "Love & War Cosmetics Bundle" : {
+        id = 2131,
+        item_class = "bundle",
+        item_name_english = "Love And War Cosmetics Bundle"
+    },
+    "Spycrab Promo" : {
+        id = 2132,
+        item_class = "bundle",
+        item_name_english = "Spycrab Promo"
+    },
+    "RPS Promo" : {
+        id = 2133,
+        item_class = "bundle",
+        item_name_english = "RPS Promo"
+    },
+    "Alien: Isolation Promo Bundle" : {
+        id = 2134,
+        item_class = "bundle",
+        item_name_english = "Alien: Isolation Promo"
+    },
+    "Halloween 2014 Everything Bundle" : {
+        id = 2135,
+        item_class = "bundle",
+        item_name_english = "Halloween 2014 Community Bundle"
+    },
+    "Robot Pyro Collectible Figure Promo" : {
+        id = 2136,
+        item_class = "bundle",
+        item_name_english = "Robot Pyro Collectible Figure Promo"
+    },
+    "TF2mixup Community Event 2014 Promo" : {
+        id = 2137,
+        item_class = "bundle",
+        item_name_english = "TF2mixup Community Event 2014 Promo"
+    },
+    "Map Token Bundle 7" : {
+        id = 2138,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 8" : {
+        id = 2139,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 9" : {
+        id = 2140,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Yogscast Jingle Jam 2015 Promo" : {
+        id = 2141,
+        item_class = "bundle",
+        item_name_english = "Yogscast Jingle Jam 2015 Promo"
+    },
+    "Batman Arkham Knight Promo Bundle" : {
+        id = 2142,
+        item_class = "bundle",
+        item_name_english = "Batman Arkham Knight Promo"
+    },
+    "Map Token Bundle 10" : {
+        id = 2143,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Tough Break Community Maps Bundle" : {
+        id = 2144,
+        item_class = "bundle",
+        item_name_english = "Tough Break Community Maps Bundle"
+    },
+    "Love & War Cosmetics Bundle New" : {
+        id = 2145,
+        item_class = "bundle",
+        item_name_english = "Love And War Cosmetics Bundle"
+    },
+    "Scout Starter Bundle v2" : {
+        id = 2146,
+        item_class = "bundle",
+        item_name_english = "Scout Starter Pack"
+    },
+    "Soldier Starter Bundle v2" : {
+        id = 2147,
+        item_class = "bundle",
+        item_name_english = "Soldier Starter Pack"
+    },
+    "Pyro Starter Bundle v2" : {
+        id = 2148,
+        item_class = "bundle",
+        item_name_english = "Pyro Starter Pack"
+    },
+    "Demoman Starter Bundle v2" : {
+        id = 2149,
+        item_class = "bundle",
+        item_name_english = "Demoman Starter Pack"
+    },
+    "Heavy Starter Bundle v2" : {
+        id = 2150,
+        item_class = "bundle",
+        item_name_english = "Heavy Starter Pack"
+    },
+    "Engineer Starter Bundle v2" : {
+        id = 2151,
+        item_class = "bundle",
+        item_name_english = "Engineer Starter Pack"
+    },
+    "Medic Starter Bundle v2" : {
+        id = 2152,
+        item_class = "bundle",
+        item_name_english = "Medic Starter Pack"
+    },
+    "Sniper Starter Bundle v2" : {
+        id = 2153,
+        item_class = "bundle",
+        item_name_english = "Sniper Starter Pack"
+    },
+    "Spy Starter Bundle v2" : {
+        id = 2154,
+        item_class = "bundle",
+        item_name_english = "Spy Starter Pack"
+    },
+    "Map Token Bundle 11" : {
+        id = 2155,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 12" : {
+        id = 2156,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Yogscast Jingle Jam 2016 Promo" : {
+        id = 2157,
+        item_class = "bundle",
+        item_name_english = "Yogscast Jingle Jam 2016 Promo"
+    },
+    "ChefSteps Joule Promo" : {
+        id = 2158,
+        item_class = "bundle",
+        item_name_english = "ChefSteps Joule Promo"
+    },
+    "Team Fortress 2 Soundtrack Promo" : {
+        id = 2159,
+        item_class = "bundle",
+        item_name_english = "Team Fortress 2 Soundtrack Promo"
+    },
+    "Map Token Bundle 13" : {
+        id = 2160,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Yogscast Jingle Jam 2017 Promo" : {
+        id = 2161,
+        item_class = "bundle",
+        item_name_english = "Yogscast Jingle Jam 2017 Promo"
+    },
+    "Map Token Bundle 14" : {
+        id = 2162,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 15" : {
+        id = 2163,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 16" : {
+        id = 2164,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 17" : {
+        id = 2165,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 18" : {
+        id = 2166,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 19" : {
+        id = 2167,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 20" : {
+        id = 2168,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 21" : {
+        id = 2169,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Team Fortress 2 Soundtrack Promo Untradable" : {
+        id = 2170,
+        item_class = "bundle",
+        item_name_english = "Team Fortress 2 Soundtrack Promo"
+    },
+    "Map Token Bundle 22" : {
+        id = 2171,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 23" : {
+        id = 2172,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Bundle 24" : {
+        id = 2173,
+        item_class = "bundle",
+        item_name_english = "Map Stamps Collection"
+    },
+    "Map Token Perks" : {
+        id = 2500,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Perks"
+    },
+    "Map Token Slime" : {
+        id = 2501,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Slime"
+    },
+    "Map Token Lava Pit" : {
+        id = 2502,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Lava Pit"
+    },
+    "Map Token Mannsylvania" : {
+        id = 2503,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Mannsylvania"
+    },
+    "Map Token Sandcastle" : {
+        id = 2504,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Sandcastle"
+    },
+    "Map Token Spineyard" : {
+        id = 2505,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Spineyard"
+    },
+    "Map Token Corruption" : {
+        id = 2506,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Corruption"
+    },
+    "Map Token Murky" : {
+        id = 2507,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Murky"
+    },
+    "Map Token Atoll" : {
+        id = 2508,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Atoll"
+    },
+    "Map Token Woods" : {
+        id = 2509,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Woods"
+    },
+    "Map Token Sanitarium" : {
+        id = 2510,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Sanitarium"
+    },
+    "Map Token Devastation" : {
+        id = 2511,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Devastation"
+    },
+    "Map Token Snowtower" : {
+        id = 2512,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Snowtower"
+    },
+    "Map Token Krampus" : {
+        id = 2513,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Krampus"
+    },
+    "Map Token Haarp" : {
+        id = 2514,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Haarp"
+    },
+    "Map Token Brew" : {
+        id = 2515,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Brew"
+    },
+    "Map Token Hacksaw" : {
+        id = 2516,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Hacksaw"
+    },
+    "Map Token Turbine Event" : {
+        id = 2517,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Turbine Center"
+    },
+    "Map Token Carrier" : {
+        id = 2518,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Carrier"
+    },
+    "Map Token Galleria" : {
+        id = 2519,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Galleria"
+    },
+    "Map Token Emerge" : {
+        id = 2520,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Emerge"
+    },
+    "Map Token Camber" : {
+        id = 2521,
+        item_class = "map_token",
+        item_name_english = "Map Stamp - Camber"
+    },
+    "Craft Bar Level 1" : {
+        id = 5000,
+        item_class = "craft_item",
+        item_name_english = "Scrap Metal"
+    },
+    "Craft Bar Level 2" : {
+        id = 5001,
+        item_class = "craft_item",
+        item_name_english = "Reclaimed Metal"
+    },
+    "Craft Bar Level 3" : {
+        id = 5002,
+        item_class = "craft_item",
+        item_name_english = "Refined Metal"
+    },
+    "Scout Class Token" : {
+        id = 5003,
+        item_class = "class_token",
+        item_name_english = "Class Token - Scout"
+    },
+    "Sniper Class Token" : {
+        id = 5004,
+        item_class = "class_token",
+        item_name_english = "Class Token - Sniper"
+    },
+    "Soldier Class Token" : {
+        id = 5005,
+        item_class = "class_token",
+        item_name_english = "Class Token - Soldier"
+    },
+    "Demoman Class Token" : {
+        id = 5006,
+        item_class = "class_token",
+        item_name_english = "Class Token - Demoman"
+    },
+    "Heavy Class Token" : {
+        id = 5007,
+        item_class = "class_token",
+        item_name_english = "Class Token - Heavy"
+    },
+    "Medic Class Token" : {
+        id = 5008,
+        item_class = "class_token",
+        item_name_english = "Class Token - Medic"
+    },
+    "Pyro Class Token" : {
+        id = 5009,
+        item_class = "class_token",
+        item_name_english = "Class Token - Pyro"
+    },
+    "Spy Class Token" : {
+        id = 5010,
+        item_class = "class_token",
+        item_name_english = "Class Token - Spy"
+    },
+    "Engineer Class Token" : {
+        id = 5011,
+        item_class = "class_token",
+        item_name_english = "Class Token - Engineer"
+    },
+    "Slot Token - Primary" : {
+        id = 5012,
+        item_class = "slot_token",
+        item_name_english = "Slot Token - Primary"
+    },
+    "Slot Token - Secondary" : {
+        id = 5013,
+        item_class = "slot_token",
+        item_name_english = "Slot Token - Secondary"
+    },
+    "Slot Token - Melee" : {
+        id = 5014,
+        item_class = "slot_token",
+        item_name_english = "Slot Token - Melee"
+    },
+    "Slot Token - PDA2" : {
+        id = 5018,
+        item_class = "slot_token",
+        item_name_english = "Slot Token - PDA2"
+    },
+    "Name Tag" : {
+        id = 5020,
+        item_class = "tool",
+        item_name_english = "Name Tag"
+    },
+    "Decoder Ring" : {
+        id = 5021,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Supply Crate" : {
+        id = 5022,
         item_class = "supply_crate",
-        item_name_english = "'Decorated War Hero' War Paint\nCivilian Grade Keyless Case"
+        item_name_english = "Mann Co. Supply Crate"
     },
-    "Warpaint Collection 1 Tier 2 Keyless Case" : {
-        id = 18001,
+    "Paint Can" : {
+        id = 5023,
+        item_class = "tool",
+        item_name_english = "Paint Can"
+    },
+    "Customize Texture Tool" : {
+        id = 5026,
+        item_class = "tool",
+        item_name_english = "Decal Tool"
+    },
+    "Paint Can 1" : {
+        id = 5027,
+        item_class = "tool",
+        item_name_english = "Indubitably Green"
+    },
+    "Paint Can 2" : {
+        id = 5028,
+        item_class = "tool",
+        item_name_english = "Zepheniah's Greed"
+    },
+    "Paint Can 3" : {
+        id = 5029,
+        item_class = "tool",
+        item_name_english = "Noble Hatter's Violet"
+    },
+    "Paint Can 4" : {
+        id = 5030,
+        item_class = "tool",
+        item_name_english = "Color No. 216-190-216"
+    },
+    "Paint Can 5" : {
+        id = 5031,
+        item_class = "tool",
+        item_name_english = "A Deep Commitment to Purple"
+    },
+    "Paint Can 6" : {
+        id = 5032,
+        item_class = "tool",
+        item_name_english = "Mann Co. Orange"
+    },
+    "Paint Can 7" : {
+        id = 5033,
+        item_class = "tool",
+        item_name_english = "Muskelmannbraun"
+    },
+    "Paint Can 8" : {
+        id = 5034,
+        item_class = "tool",
+        item_name_english = "Peculiarly Drab Tincture"
+    },
+    "Paint Can 9" : {
+        id = 5035,
+        item_class = "tool",
+        item_name_english = "Radigan Conagher Brown"
+    },
+    "Paint Can 10" : {
+        id = 5036,
+        item_class = "tool",
+        item_name_english = "Ye Olde Rustic Colour"
+    },
+    "Paint Can 11" : {
+        id = 5037,
+        item_class = "tool",
+        item_name_english = "Australium Gold"
+    },
+    "Paint Can 12" : {
+        id = 5038,
+        item_class = "tool",
+        item_name_english = "Aged Moustache Grey"
+    },
+    "Paint Can 13" : {
+        id = 5039,
+        item_class = "tool",
+        item_name_english = "An Extraordinary Abundance of Tinge"
+    },
+    "Paint Can 14" : {
+        id = 5040,
+        item_class = "tool",
+        item_name_english = "A Distinctive Lack of Hue"
+    },
+    "Supply Crate 2" : {
+        id = 5041,
         item_class = "supply_crate",
-        item_name_english = "'Decorated War Hero' War Paint\nFreelance Grade Keyless Case"
+        item_name_english = "Mann Co. Supply Crate"
     },
-    "Warpaint Collection 1 Tier 3 Keyless Case" : {
-        id = 18002,
+    "Gift Wrap" : {
+        id = 5042,
+        item_class = "tool",
+        item_name_english = "Gift Wrap"
+    },
+    "Wrapped Gift" : {
+        id = 5043,
+        item_class = "tool",
+        item_name_english = "A Carefully Wrapped Gift"
+    },
+    "Description Tag" : {
+        id = 5044,
+        item_class = "tool",
+        item_name_english = "Description Tag"
+    },
+    "Supply Crate 3" : {
+        id = 5045,
         item_class = "supply_crate",
-        item_name_english = "'Decorated War Hero' War Paint\nMercenary Grade Keyless Case"
+        item_name_english = "Mann Co. Supply Crate"
     },
-    "Warpaint Collection 2 Tier 1 Keyless Case" : {
-        id = 18003,
+    "Paint Can Team Color" : {
+        id = 5046,
+        item_class = "tool",
+        item_name_english = "Team Spirit"
+    },
+    "Winter Crate" : {
+        id = 5048,
         item_class = "supply_crate",
-        item_name_english = "'Contract Campaigner' War Paint\nCivilian Grade Keyless Case"
+        item_name_english = "Festive Winter Crate"
     },
-    "Warpaint Collection 2 Tier 2 Keyless Case" : {
-        id = 18004,
+    "Winter Key" : {
+        id = 5049,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Backpack Expander" : {
+        id = 5050,
+        item_class = "tool",
+        item_name_english = "Backpack Expander"
+    },
+    "Paint Can 15" : {
+        id = 5051,
+        item_class = "tool",
+        item_name_english = "Pink as Hell"
+    },
+    "Paint Can 16" : {
+        id = 5052,
+        item_class = "tool",
+        item_name_english = "A Color Similar to Slate"
+    },
+    "Paint Can 17" : {
+        id = 5053,
+        item_class = "tool",
+        item_name_english = "Drably Olive"
+    },
+    "Paint Can 18" : {
+        id = 5054,
+        item_class = "tool",
+        item_name_english = "The Bitter Taste of Defeat and Lime"
+    },
+    "Paint Can 19" : {
+        id = 5055,
+        item_class = "tool",
+        item_name_english = "The Color of a Gentlemann's Business Pants"
+    },
+    "Paint Can 20" : {
+        id = 5056,
+        item_class = "tool",
+        item_name_english = "Dark Salmon Injustice"
+    },
+    "Christmas Key 2010" : {
+        id = 5057,
+        item_class = "tool",
+        item_name_english = "Stocking Stuffer Key"
+    },
+    "Paint Can Team Color 2" : {
+        id = 5060,
+        item_class = "tool",
+        item_name_english = "Operator's Overalls"
+    },
+    "Paint Can Team Color 3" : {
+        id = 5061,
+        item_class = "tool",
+        item_name_english = "Waterlogged Lab Coat"
+    },
+    "Paint Can Team Color 4" : {
+        id = 5062,
+        item_class = "tool",
+        item_name_english = "Balaclavas Are Forever"
+    },
+    "Paint Can Team Color 5" : {
+        id = 5063,
+        item_class = "tool",
+        item_name_english = "An Air of Debonair"
+    },
+    "Paint Can Team Color 6" : {
+        id = 5064,
+        item_class = "tool",
+        item_name_english = "The Value of Teamwork"
+    },
+    "Paint Can Team Color 7" : {
+        id = 5065,
+        item_class = "tool",
+        item_name_english = "Cream Spirit"
+    },
+    "Summer Crate" : {
+        id = 5066,
         item_class = "supply_crate",
-        item_name_english = "'Contract Campaigner' War Paint\nFreelance Grade Keyless Case"
+        item_name_english = "Refreshing Summer Cooler"
     },
-    "Warpaint Collection 2 Tier 3 Keyless Case" : {
-        id = 18005,
+    "Summer Key" : {
+        id = 5067,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Supply Crate Rare" : {
+        id = 5068,
         item_class = "supply_crate",
-        item_name_english = "'Contract Campaigner' War Paint\nMercenary Grade Keyless Case"
+        item_name_english = "Salvaged Mann Co. Supply Crate"
+    },
+    "Naughty Winter Crate 2011" : {
+        id = 5070,
+        item_class = "supply_crate",
+        item_name_english = "Naughty Winter Crate"
+    },
+    "Nice Winter Crate 2011" : {
+        id = 5071,
+        item_class = "supply_crate",
+        item_name_english = "Nice Winter Crate"
+    },
+    "Naughty Winter Key 2011" : {
+        id = 5072,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Nice Winter Key 2011" : {
+        id = 5073,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Something Special For Someone Special (Tool)" : {
+        id = 5074,
+        item_class = "tool",
+        item_name_english = "Something Special For Someone Special"
+    },
+    "Something Special For Someone Special (Wearable)" : {
+        id = 5075,
+        item_class = "tf_wearable",
+        item_name_english = "Something Special For Someone Special"
+    },
+    "Paint Can 21" : {
+        id = 5076,
+        item_class = "tool",
+        item_name_english = "A Mann's Mint"
+    },
+    "Paint Can 22" : {
+        id = 5077,
+        item_class = "tool",
+        item_name_english = "After Eight"
+    },
+    "Scorched Crate" : {
+        id = 5078,
+        item_class = "supply_crate",
+        item_name_english = "Scorched Crate"
+    },
+    "Scorched Key" : {
+        id = 5079,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Fall Crate 2012" : {
+        id = 5080,
+        item_class = "supply_crate",
+        item_name_english = "Fall Crate"
+    },
+    "Fall Key 2012" : {
+        id = 5081,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Account Upgrade To Premium" : {
+        id = 5082,
+        item_class = "tool",
+        item_name_english = "Upgrade to Premium Gift"
+    },
+    "Giftapult Gift Wrap" : {
+        id = 5083,
+        item_class = "tool",
+        item_name_english = "Giftapult"
+    },
+    "Wrapped Giftapult Package" : {
+        id = 5084,
+        item_class = "tool",
+        item_name_english = "Loaded Giftapult"
+    },
+    "Delivered Giftapult Package" : {
+        id = 5085,
+        item_class = "tool",
+        item_name_english = "Delivered Giftapult Package"
+    },
+    "Summer Starter Kit" : {
+        id = 5086,
+        item_class = "tf_wearable",
+        item_name_english = "Summer Starter Kit"
+    },
+    "Summer Adventure Pack" : {
+        id = 5087,
+        item_class = "tf_wearable",
+        item_name_english = "Summer Adventure Pack"
+    },
+    "RIFT Spider Hat Code" : {
+        id = 5500,
+        item_class = "tool",
+        item_name_english = "RIFT Well Spun Hat Claim Code"
+    },
+    "Goldfish" : {
+        id = 5600,
+        item_class = "craft_item",
+        item_name_english = "Roasted Goldfish"
     },
-    "The Electric Badge-aloo" : {
-        id = 30000,
-        item_class = "tf_wearable",
-        item_name_english = "Electric Badge-aloo"
-    },
-    "Modest Metal Pile of Scrap" : {
-        id = 30001,
-        item_class = "tf_wearable",
-        item_name_english = "Modest Metal Pile of Scrap"
-    },
-    "Letch's LED" : {
-        id = 30002,
-        item_class = "tf_wearable",
-        item_name_english = "Letch's LED"
-    },
-    "The Galvanized Gibus" : {
-        id = 30003,
-        item_class = "tf_wearable",
-        item_name_english = "Galvanized Gibus"
-    },
-    "Soldered Sensei" : {
-        id = 30004,
-        item_class = "tf_wearable",
-        item_name_english = "Soldered Sensei"
-    },
-    "Shooter's Tin Topi" : {
-        id = 30005,
-        item_class = "tf_wearable",
-        item_name_english = "Shooter's Tin Topi"
-    },
-    "Noble Nickel Amassment of Hats" : {
-        id = 30006,
-        item_class = "tf_wearable",
-        item_name_english = "Noble Nickel Amassment of Hats"
-    },
-    "Base Metal Billycock" : {
-        id = 30007,
-        item_class = "tf_wearable",
-        item_name_english = "Base Metal Billycock"
-    },
-    "Towering Titanium Pillar of Hats" : {
-        id = 30008,
-        item_class = "tf_wearable",
-        item_name_english = "Towering Titanium Pillar of Hats"
-    },
-    "The Megapixel Beard" : {
-        id = 30009,
-        item_class = "tf_wearable",
-        item_name_english = "Megapixel Beard"
-    },
-    "The HDMI Patch" : {
-        id = 30010,
-        item_class = "tf_wearable",
-        item_name_english = "HDMI Patch"
-    },
-    "The Bolted Bombardier" : {
-        id = 30011,
-        item_class = "tf_wearable",
-        item_name_english = "Bolted Bombardier"
-    },
-    "The Titanium Towel" : {
-        id = 30012,
-        item_class = "tf_wearable",
-        item_name_english = "Titanium Towel"
-    },
-    "The Gridiron Guardian" : {
-        id = 30013,
-        item_class = "tf_wearable",
-        item_name_english = "Gridiron Guardian"
-    },
-    "Tyrantium Helmet" : {
-        id = 30014,
-        item_class = "tf_wearable",
-        item_name_english = "Tyrantium Helmet"
-    },
-    "Battery Canteens" : {
-        id = 30015,
-        item_class = "tf_powerup_bottle",
-        item_name_english = "Power Up Canteen"
-    },
-    "The FR-0" : {
-        id = 30016,
-        item_class = "tf_wearable",
-        item_name_english = "FR-0"
-    },
-    "Steel Shako" : {
-        id = 30017,
-        item_class = "tf_wearable",
-        item_name_english = "Steel Shako"
-    },
-    "The Bot Dogger" : {
-        id = 30018,
-        item_class = "tf_wearable",
-        item_name_english = "Bot Dogger"
-    },
-    "Ye Oiled Baker Boy" : {
-        id = 30019,
-        item_class = "tf_wearable",
-        item_name_english = "Ye Oiled Baker Boy"
-    },
-    "The Scrap Sack" : {
-        id = 30020,
-        item_class = "tf_wearable",
-        item_name_english = "Scrap Sack"
-    },
-    "The Pure Tin Capotain" : {
-        id = 30021,
-        item_class = "tf_wearable",
-        item_name_english = "Pure Tin Capotain"
-    },
-    "Plumber's Pipe" : {
-        id = 30022,
-        item_class = "tf_wearable",
-        item_name_english = "Plumber's Pipe"
-    },
-    "Teddy Robobelt" : {
-        id = 30023,
-        item_class = "tf_wearable",
-        item_name_english = "Teddy Robobelt"
-    },
-    "The Cyborg Stunt Helmet" : {
-        id = 30024,
-        item_class = "tf_wearable",
-        item_name_english = "Cyborg Stunt Helmet"
-    },
-    "The Electric Escorter" : {
-        id = 30025,
-        item_class = "tf_wearable",
-        item_name_english = "Electric Escorter"
-    },
-    "Full Metal Drill Hat" : {
-        id = 30026,
-        item_class = "tf_wearable",
-        item_name_english = "Full Metal Drill Hat"
-    },
-    "The Bolt Boy" : {
-        id = 30027,
-        item_class = "tf_wearable",
-        item_name_english = "Bolt Boy"
-    },
-    "The Metal Slug" : {
-        id = 30028,
-        item_class = "tf_wearable",
-        item_name_english = "Metal Slug"
-    },
-    "The Broadband Bonnet" : {
-        id = 30029,
-        item_class = "tf_wearable",
-        item_name_english = "Broadband Bonnet"
-    },
-    "Bonk Leadwear" : {
-        id = 30030,
-        item_class = "tf_wearable",
-        item_name_english = "Bonk Leadwear"
-    },
-    "The Plug-In Prospector" : {
-        id = 30031,
-        item_class = "tf_wearable",
-        item_name_english = "Plug-In Prospector"
-    },
-    "The Rusty Reaper" : {
-        id = 30032,
-        item_class = "tf_wearable",
-        item_name_english = "Rusty Reaper"
-    },
-    "Soldier's Sparkplug" : {
-        id = 30033,
-        item_class = "tf_wearable",
-        item_name_english = "Soldier's Sparkplug"
-    },
-    "The Bolted Bicorne" : {
-        id = 30034,
-        item_class = "tf_wearable",
-        item_name_english = "Bolted Bicorne"
-    },
-    "The Timeless Topper" : {
-        id = 30035,
-        item_class = "tf_wearable",
-        item_name_english = "Timeless Topper"
-    },
-    "The Filamental" : {
-        id = 30036,
-        item_class = "tf_wearable",
-        item_name_english = "Filamental"
-    },
-    "The Strontium Stove Pipe" : {
-        id = 30037,
-        item_class = "tf_wearable",
-        item_name_english = "Strontium Stove Pipe"
-    },
-    "Firewall Helmet" : {
-        id = 30038,
-        item_class = "tf_wearable",
-        item_name_english = "Firewall Helmet"
-    },
-    "Respectless Robo-Glove" : {
-        id = 30039,
-        item_class = "tf_wearable",
-        item_name_english = "Respectless Robo-Glove"
-    },
-    "Pyro's Boron Beanie" : {
-        id = 30040,
-        item_class = "tf_wearable",
-        item_name_english = "Pyro's Boron Beanie"
-    },
-    "Halogen Head Lamp" : {
-        id = 30041,
-        item_class = "tf_wearable",
-        item_name_english = "Halogen Head Lamp"
-    },
-    "Platinum Pickelhaube" : {
-        id = 30042,
-        item_class = "tf_wearable",
-        item_name_english = "Platinum Pickelhaube"
-    },
-    "The Virus Doctor" : {
-        id = 30043,
-        item_class = "tf_wearable",
-        item_name_english = "Virus Doctor"
-    },
-    "Texas Tin-Gallon" : {
-        id = 30044,
-        item_class = "tf_wearable",
-        item_name_english = "Texas Tin-Gallon"
-    },
-    "Titanium Tyrolean" : {
-        id = 30045,
-        item_class = "tf_wearable",
-        item_name_english = "Titanium Tyrolean"
-    },
-    "Practitioner's Processing Mask" : {
-        id = 30046,
-        item_class = "tf_wearable",
-        item_name_english = "Practitioner's Processing Mask"
-    },
-    "Bootleg Base Metal Billycock" : {
-        id = 30047,
-        item_class = "tf_wearable",
-        item_name_english = "Bootleg Base Metal Billycock"
-    },
-    "Mecha-Medes" : {
-        id = 30048,
-        item_class = "tf_wearable",
-        item_name_english = "Mecha-Medes"
-    },
-    "The Tungsten Toque" : {
-        id = 30049,
-        item_class = "tf_wearable",
-        item_name_english = "Tungsten Toque"
-    },
-    "The Steam Pipe" : {
-        id = 30050,
-        item_class = "tf_wearable",
-        item_name_english = "Steam Pipe"
-    },
-    "The Data Mining Light" : {
-        id = 30051,
-        item_class = "tf_wearable",
-        item_name_english = "Data Mining Light"
-    },
-    "The Byte'd Beak" : {
-        id = 30052,
-        item_class = "tf_wearable",
-        item_name_english = "Byte'd Beak"
-    },
-    "The Googol Glass Eyes" : {
-        id = 30053,
-        item_class = "tf_wearable",
-        item_name_english = "Googol Glass Eyes"
-    },
-    "The Bunsen Brave" : {
-        id = 30054,
-        item_class = "tf_wearable",
-        item_name_english = "Bunsen Brave"
-    },
-    "The Scrumpy Strongbox" : {
-        id = 30055,
-        item_class = "tf_wearable",
-        item_name_english = "Scrumpy Strongbox"
-    },
-    "The Dual-Core Devil Doll" : {
-        id = 30056,
-        item_class = "tf_wearable",
-        item_name_english = "Dual-Core Devil Doll"
-    },
-    "The Bolted Birdcage" : {
-        id = 30057,
-        item_class = "tf_wearable",
-        item_name_english = "Bolted Birdcage"
-    },
-    "The Crosslinker's Coil" : {
-        id = 30058,
-        item_class = "tf_wearable",
-        item_name_english = "Crosslinker's Coil"
-    },
-    "The Beastly Bonnet" : {
-        id = 30059,
-        item_class = "tf_wearable",
-        item_name_english = "Beastly Bonnet"
-    },
-    "The Cheet Sheet" : {
-        id = 30060,
-        item_class = "tf_wearable",
-        item_name_english = "Cheet Sheet"
-    },
-    "The Tartantaloons" : {
-        id = 30061,
-        item_class = "tf_wearable",
-        item_name_english = "Tartantaloons"
-    },
-    "The Steel Sixpack" : {
-        id = 30062,
-        item_class = "tf_wearable",
-        item_name_english = "Steel Sixpack"
-    },
-    "The Centurion" : {
-        id = 30063,
-        item_class = "tf_wearable",
-        item_name_english = "Centurion"
-    },
-    "The Tartan Shade" : {
-        id = 30064,
-        item_class = "tf_wearable",
-        item_name_english = "Tartan Shade"
-    },
-    "The Hardy Laurel" : {
-        id = 30065,
-        item_class = "tf_wearable",
-        item_name_english = "Hardy Laurel"
-    },
-    "The Brotherhood of Arms" : {
-        id = 30066,
-        item_class = "tf_wearable",
-        item_name_english = "Brotherhood of Arms"
-    },
-    "The Well-Rounded Rifleman" : {
-        id = 30067,
-        item_class = "tf_wearable",
-        item_name_english = "Well-Rounded Rifleman"
-    },
-    "The Breakneck Baggies" : {
-        id = 30068,
-        item_class = "tf_wearable",
-        item_name_english = "Breakneck Baggies"
-    },
-    "The Powdered Practitioner" : {
-        id = 30069,
-        item_class = "tf_wearable",
-        item_name_english = "Powdered Practitioner"
-    },
-    "The Pocket Pyro" : {
-        id = 30070,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Pyro"
-    },
-    "The Cloud Crasher" : {
-        id = 30071,
-        item_class = "tf_wearable",
-        item_name_english = "Cloud Crasher"
-    },
-    "The Pom-Pommed Provocateur" : {
-        id = 30072,
-        item_class = "tf_wearable",
-        item_name_english = "Pom-Pommed Provocateur"
-    },
-    "The Dark Age Defender" : {
-        id = 30073,
-        item_class = "tf_wearable",
-        item_name_english = "Dark Age Defender"
-    },
-    "The Tyurtlenek" : {
-        id = 30074,
-        item_class = "tf_wearable",
-        item_name_english = "Tyurtlenek"
-    },
-    "The Mair Mask" : {
-        id = 30075,
-        item_class = "tf_wearable",
-        item_name_english = "Mair Mask"
-    },
-    "The Bigg Mann on Campus" : {
-        id = 30076,
-        item_class = "tf_wearable",
-        item_name_english = "Bigg Mann on Campus"
-    },
-    "The Cool Cat Cardigan" : {
-        id = 30077,
-        item_class = "tf_wearable",
-        item_name_english = "Cool Cat Cardigan"
-    },
-    "Greased Lightning" : {
-        id = 30078,
-        item_class = "tf_wearable",
-        item_name_english = "Greased Lightning"
-    },
-    "The Red Army Robin" : {
-        id = 30079,
-        item_class = "tf_wearable",
-        item_name_english = "Red Army Robin"
-    },
-    "The Heavy-Weight Champ" : {
-        id = 30080,
-        item_class = "tf_wearable",
-        item_name_english = "Heavy-Weight Champ"
-    },
-    "The Tsarboosh" : {
-        id = 30081,
-        item_class = "tf_wearable",
-        item_name_english = "Tsarboosh"
-    },
-    "The Glasgow Great Helm" : {
-        id = 30082,
-        item_class = "tf_wearable",
-        item_name_english = "Glasgow Great Helm"
-    },
-    "The Caffeine Cooler" : {
-        id = 30083,
-        item_class = "tf_wearable",
-        item_name_english = "Caffeine Cooler"
-    },
-    "The Half-Pipe Hurdler" : {
-        id = 30084,
-        item_class = "tf_wearable",
-        item_name_english = "Half-Pipe Hurdler"
-    },
-    "The Macho Mann" : {
-        id = 30085,
-        item_class = "tf_wearable",
-        item_name_english = "Macho Mann"
-    },
-    "The Trash Toter" : {
-        id = 30086,
-        item_class = "tf_wearable",
-        item_name_english = "Trash Toter"
-    },
-    "The Dry Gulch Gulp" : {
-        id = 30087,
-        item_class = "tf_wearable",
-        item_name_english = "Dry Gulch Gulp"
-    },
-    "El Muchacho" : {
-        id = 30089,
-        item_class = "tf_wearable",
-        item_name_english = "El Muchacho"
-    },
-    "The Backpack Broiler" : {
-        id = 30090,
-        item_class = "tf_wearable",
-        item_name_english = "Backpack Broiler"
-    },
-    "The Burning Bandana" : {
-        id = 30091,
-        item_class = "tf_wearable",
-        item_name_english = "Burning Bandana"
-    },
-    "The Soot Suit" : {
-        id = 30092,
-        item_class = "tf_wearable",
-        item_name_english = "Soot Suit"
-    },
-    "The Hive Minder" : {
-        id = 30093,
-        item_class = "tf_wearable",
-        item_name_english = "Hive Minder"
-    },
-    "The Katyusha" : {
-        id = 30094,
-        item_class = "tf_wearable",
-        item_name_english = "Katyusha"
-    },
-    "Das Hazmattenhatten" : {
-        id = 30095,
-        item_class = "tf_wearable",
-        item_name_english = "Das Hazmattenhatten"
-    },
-    "Das Feelinbeterbager" : {
-        id = 30096,
-        item_class = "tf_wearable",
-        item_name_english = "Das Feelinbeterbager"
-    },
-    "Das Ubersternmann" : {
-        id = 30097,
-        item_class = "tf_wearable",
-        item_name_english = "Das Ubersternmann"
-    },
-    "Das Metalmeatencasen" : {
-        id = 30098,
-        item_class = "tf_wearable",
-        item_name_english = "Das Metalmeatencasen"
-    },
-    "The Pardner's Pompadour" : {
-        id = 30099,
-        item_class = "tf_wearable",
-        item_name_english = "Pardner's Pompadour"
-    },
-    "The Birdman of Australiacatraz" : {
-        id = 30100,
-        item_class = "tf_wearable",
-        item_name_english = "Birdman of Australiacatraz"
-    },
-    "The Cobber Chameleon" : {
-        id = 30101,
-        item_class = "tf_wearable",
-        item_name_english = "Cobber Chameleon"
-    },
-    "The Falconer" : {
-        id = 30103,
-        item_class = "tf_wearable",
-        item_name_english = "Falconer"
-    },
-    "Graybanns" : {
-        id = 30104,
-        item_class = "tf_wearable",
-        item_name_english = "Graybanns"
-    },
-    "The Black Watch" : {
-        id = 30105,
-        item_class = "tf_wearable",
-        item_name_english = "Black Watch"
-    },
-    "The Tartan Spartan" : {
-        id = 30106,
-        item_class = "tf_wearable",
-        item_name_english = "Tartan Spartan"
-    },
-    "The Gaelic Golf Bag" : {
-        id = 30107,
-        item_class = "tf_wearable",
-        item_name_english = "Gaelic Golf Bag"
-    },
-    "The Borscht Belt" : {
-        id = 30108,
-        item_class = "tf_wearable",
-        item_name_english = "Borscht Belt"
-    },
-    "Das Naggenvatcher" : {
-        id = 30109,
-        item_class = "tf_wearable",
-        item_name_english = "Das Naggenvatcher"
-    },
-    "The Whiskey Bib" : {
-        id = 30110,
-        item_class = "tf_wearable",
-        item_name_english = "Whiskey Bib"
-    },
-    "The Stormin' Norman" : {
-        id = 30112,
-        item_class = "tf_wearable",
-        item_name_english = "Stormin' Norman"
-    },
-    "The Flared Frontiersman" : {
-        id = 30113,
-        item_class = "tf_wearable",
-        item_name_english = "Flared Frontiersman"
-    },
-    "The Valley Forge" : {
-        id = 30114,
-        item_class = "tf_wearable",
-        item_name_english = "Valley Forge"
-    },
-    "The Compatriot" : {
-        id = 30115,
-        item_class = "tf_wearable",
-        item_name_english = "Compatriot"
-    },
-    "The Caribbean Conqueror" : {
-        id = 30116,
-        item_class = "tf_wearable",
-        item_name_english = "Caribbean Conqueror"
-    },
-    "The Colonial Clogs" : {
-        id = 30117,
-        item_class = "tf_wearable",
-        item_name_english = "Colonial Clogs"
-    },
-    "The Whirly Warrior" : {
-        id = 30118,
-        item_class = "tf_wearable",
-        item_name_english = "Whirly Warrior"
-    },
-    "The Federal Casemaker" : {
-        id = 30119,
-        item_class = "tf_wearable",
-        item_name_english = "Federal Casemaker"
-    },
-    "The Rebel Rouser" : {
-        id = 30120,
-        item_class = "tf_wearable",
-        item_name_english = "Rebel Rouser"
-    },
-    "Das Maddendoktor" : {
-        id = 30121,
-        item_class = "tf_wearable",
-        item_name_english = "Das Maddendoktor"
-    },
-    "The Bear Necessities" : {
-        id = 30122,
-        item_class = "tf_wearable",
-        item_name_english = "Bear Necessities"
-    },
-    "The Harmburg" : {
-        id = 30123,
-        item_class = "tf_wearable",
-        item_name_english = "Harmburg"
-    },
-    "The Gaelic Garb" : {
-        id = 30124,
-        item_class = "tf_wearable",
-        item_name_english = "Gaelic Garb"
-    },
-    "The Rogue's Brogues" : {
-        id = 30125,
-        item_class = "tf_wearable",
-        item_name_english = "Rogue's Brogues"
-    },
-    "The Shogun's Shoulder Guard" : {
-        id = 30126,
-        item_class = "tf_wearable",
-        item_name_english = "Shogun's Shoulder Guard"
-    },
-    "Das Gutenkutteharen" : {
-        id = 30127,
-        item_class = "tf_wearable",
-        item_name_english = "Das Gutenkutteharen"
-    },
-    "The Belgian Detective" : {
-        id = 30128,
-        item_class = "tf_wearable",
-        item_name_english = "Belgian Detective"
-    },
-    "The Hornblower" : {
-        id = 30129,
-        item_class = "tf_wearable",
-        item_name_english = "Hornblower"
-    },
-    "Lieutenant Bites" : {
-        id = 30130,
-        item_class = "tf_wearable",
-        item_name_english = "Lieutenant Bites"
-    },
-    "The Brawling Buccaneer" : {
-        id = 30131,
-        item_class = "tf_wearable",
-        item_name_english = "Brawling Buccaneer"
-    },
-    "The Blood Banker" : {
-        id = 30132,
-        item_class = "tf_wearable",
-        item_name_english = "Blood Banker"
-    },
-    "The After Dark" : {
-        id = 30133,
-        item_class = "tf_wearable",
-        item_name_english = "After Dark"
-    },
-    "The Delinquent's Down Vest" : {
-        id = 30134,
-        item_class = "tf_wearable",
-        item_name_english = "Delinquent's Down Vest"
-    },
-    "Wet Works" : {
-        id = 30135,
-        item_class = "tf_wearable",
-        item_name_english = "Wet Works"
-    },
-    "Baron von Havenaplane" : {
-        id = 30136,
-        item_class = "tf_wearable",
-        item_name_english = "Baron von Havenaplane"
-    },
-    "Das Fantzipantzen" : {
-        id = 30137,
-        item_class = "tf_wearable",
-        item_name_english = "Das Fantzipantzen"
-    },
-    "The Bolshevik Biker" : {
-        id = 30138,
-        item_class = "tf_wearable",
-        item_name_english = "Bolshevik Biker"
-    },
-    "The Pampered Pyro" : {
-        id = 30139,
-        item_class = "tf_wearable",
-        item_name_english = "Pampered Pyro"
-    },
-    "The Virtual Viewfinder" : {
-        id = 30140,
-        item_class = "tf_wearable",
-        item_name_english = "Virtual Viewfinder"
-    },
-    "The Gabe Glasses" : {
-        id = 30141,
-        item_class = "tf_wearable",
-        item_name_english = "Gabe Glasses"
-    },
-    "The Founding Father" : {
-        id = 30142,
-        item_class = "tf_wearable",
-        item_name_english = "Founding Father"
-    },
-    "tw_demobot_armor" : {
-        id = 30143,
-        item_class = "tf_wearable",
-        item_name_english = "Demobot Armor"
-    },
-    "tw_demobot_helmet" : {
-        id = 30144,
-        item_class = "tf_wearable",
-        item_name_english = "Demobot Helmet"
-    },
-    "tw_engineerbot_armor" : {
-        id = 30145,
-        item_class = "tf_wearable",
-        item_name_english = "Engineerbot Armor"
-    },
-    "tw_engineerbot_helmet" : {
-        id = 30146,
-        item_class = "tf_wearable",
-        item_name_english = "Engineerbot Helmet"
-    },
-    "tw_heavybot_armor" : {
-        id = 30147,
-        item_class = "tf_wearable",
-        item_name_english = "Heavybot Armor"
-    },
-    "tw_heavybot_helmet" : {
-        id = 30148,
-        item_class = "tf_wearable",
-        item_name_english = "Heavybot Helmet"
-    },
-    "tw_medibot_chariot" : {
-        id = 30149,
-        item_class = "tf_wearable",
-        item_name_english = "Medicbot Chariot"
-    },
-    "tw_medibot_hat" : {
-        id = 30150,
-        item_class = "tf_wearable",
-        item_name_english = "Medicbot Hat"
-    },
-    "tw_pyrobot_armor" : {
-        id = 30151,
-        item_class = "tf_wearable",
-        item_name_english = "Pyrobot Armor"
-    },
-    "tw_pyrobot_helmet" : {
-        id = 30152,
-        item_class = "tf_wearable",
-        item_name_english = "Pyrobot Helmet"
-    },
-    "tw_scoutbot_armor" : {
-        id = 30153,
-        item_class = "tf_wearable",
-        item_name_english = "Scoutbot Armor"
-    },
-    "tw_scoutbot_hat" : {
-        id = 30154,
-        item_class = "tf_wearable",
-        item_name_english = "Scoutbot Hat"
-    },
-    "tw_sniperbot_armor" : {
-        id = 30155,
-        item_class = "tf_wearable",
-        item_name_english = "Sniperbot Armor"
-    },
-    "tw_sniperbot_helmet" : {
-        id = 30156,
-        item_class = "tf_wearable",
-        item_name_english = "Sniperbot Helmet"
-    },
-    "tw_soldierbot_armor" : {
-        id = 30157,
-        item_class = "tf_wearable",
-        item_name_english = "Soldierbot Armor"
-    },
-    "tw_soldierbot_helmet" : {
-        id = 30158,
-        item_class = "tf_wearable",
-        item_name_english = "Soldierbot Helmet"
-    },
-    "tw_spybot_armor" : {
-        id = 30159,
-        item_class = "tf_wearable",
-        item_name_english = "Spybot Armor"
-    },
-    "tw_spybot_hood" : {
-        id = 30160,
-        item_class = "tf_wearable",
-        item_name_english = "Spybot Hood"
-    },
-    "tw_sentrybuster" : {
-        id = 30161,
-        item_class = "tf_wearable",
-        item_name_english = "Sentrybuster"
-    },
-    "The Bone Dome" : {
-        id = 30162,
-        item_class = "tf_wearable",
-        item_name_english = "Bone Dome"
-    },
-    "The Air Raider" : {
-        id = 30163,
-        item_class = "tf_wearable",
-        item_name_english = "Air Raider"
-    },
-    "The Viking Braider" : {
-        id = 30164,
-        item_class = "tf_wearable",
-        item_name_english = "Viking Braider"
-    },
-    "The Cuban Bristle Crisis" : {
-        id = 30165,
-        item_class = "tf_wearable",
-        item_name_english = "Cuban Bristle Crisis"
-    },
-    "The Beep Boy" : {
-        id = 30167,
-        item_class = "tf_wearable",
-        item_name_english = "Beep Boy"
-    },
-    "The Special Eyes" : {
-        id = 30168,
-        item_class = "tf_wearable",
-        item_name_english = "Special Eyes"
-    },
-    "Trickster's Turnout Gear" : {
-        id = 30169,
-        item_class = "tf_wearable",
-        item_name_english = "Trickster's Turnout Gear"
-    },
-    "The Chronomancer" : {
-        id = 30170,
-        item_class = "tf_wearable",
-        item_name_english = "Chronomancer"
-    },
-    "The Medical Mystery" : {
-        id = 30171,
-        item_class = "tf_wearable",
-        item_name_english = "Medical Mystery"
-    },
-    "The Gold Digger" : {
-        id = 30172,
-        item_class = "tf_wearable",
-        item_name_english = "Gold Digger"
-    },
-    "Brim-Full Of Bullets" : {
-        id = 30173,
-        item_class = "tf_wearable",
-        item_name_english = "Brim-Full of Bullets"
-    },
-    "The Cotton Head" : {
-        id = 30175,
-        item_class = "tf_wearable",
-        item_name_english = "Cotton Head"
-    },
-    "Pop-eyes" : {
-        id = 30176,
-        item_class = "tf_wearable",
-        item_name_english = "Pop-Eyes"
-    },
-    "Hong Kong Cone" : {
-        id = 30177,
-        item_class = "tf_wearable",
-        item_name_english = "Hong Kong Cone"
-    },
-    "Weight Room Warmer" : {
-        id = 30178,
-        item_class = "tf_wearable",
-        item_name_english = "Weight Room Warmer"
-    },
-    "The Hurt Locher" : {
-        id = 30179,
-        item_class = "tf_wearable",
-        item_name_english = "Hurt Locher"
-    },
-    "Pirate Bandana" : {
-        id = 30180,
-        item_class = "tf_wearable",
-        item_name_english = "Pirate Bandana"
-    },
-    "Li'l Snaggletooth" : {
-        id = 30181,
-        item_class = "tf_wearable",
-        item_name_english = "Li'l Snaggletooth"
-    },
-    "L'homme Burglerre" : {
-        id = 30182,
-        item_class = "tf_wearable",
-        item_name_english = "L'homme Burglerre"
-    },
-    "Escapist" : {
-        id = 30183,
-        item_class = "tf_wearable",
-        item_name_english = "Escapist"
-    },
-    "The Flapjack" : {
-        id = 30185,
-        item_class = "tf_wearable",
-        item_name_english = "Flapjack"
-    },
-    "A Brush with Death" : {
-        id = 30186,
-        item_class = "tf_wearable",
-        item_name_english = "A Brush with Death"
-    },
-    "The Slick Cut" : {
-        id = 30187,
-        item_class = "tf_wearable",
-        item_name_english = "Slick Cut"
-    },
-    "The Frenchman's Formals" : {
-        id = 30189,
-        item_class = "tf_wearable",
-        item_name_english = "Frenchman's Formals"
-    },
-    "The Ward" : {
-        id = 30190,
-        item_class = "tf_wearable",
-        item_name_english = "Ward"
-    },
-    "The Beast From Below" : {
-        id = 30191,
-        item_class = "tf_wearable",
-        item_name_english = "Beast from Below"
-    },
-    "Hard-Headed Hardware" : {
-        id = 30192,
-        item_class = "tf_wearable",
-        item_name_english = "Hard-Headed Hardware"
-    },
-    "Cap'n Calamari" : {
-        id = 30193,
-        item_class = "tf_wearable",
-        item_name_english = "Cap'n Calamari"
-    },
-    "The Spectralnaut" : {
-        id = 30194,
-        item_class = "tf_wearable",
-        item_name_english = "Spectralnaut"
-    },
-    "Ethereal Hood" : {
-        id = 30195,
-        item_class = "tf_wearable",
-        item_name_english = "Ethereal Hood"
-    },
-    "The Maniac's Manacles" : {
-        id = 30196,
-        item_class = "tf_wearable",
-        item_name_english = "Maniac's Manacles"
-    },
-    "The Second Opinion" : {
-        id = 30197,
-        item_class = "tf_wearable",
-        item_name_english = "Second Opinion"
-    },
-    "The Pocket Horsemann" : {
-        id = 30198,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Horsemann"
-    },
-    "The Last Bite" : {
-        id = 30199,
-        item_class = "tf_wearable",
-        item_name_english = "Last Bite"
-    },
-    "The Baphomet Trotters" : {
-        id = 30200,
-        item_class = "tf_wearable",
-        item_name_english = "Baphomet Trotters"
-    },
-    "Burny's Boney Bonnet" : {
-        id = 30203,
-        item_class = "tf_wearable",
-        item_name_english = "Burny's Boney Bonnet"
-    },
-    "The Crispy Golden Locks" : {
-        id = 30204,
-        item_class = "tf_wearable",
-        item_name_english = "Crispy Golden Locks"
-    },
-    "The Scorched Skirt" : {
-        id = 30205,
-        item_class = "tf_wearable",
-        item_name_english = "Scorched Skirt"
-    },
-    "The Accursed Apparition" : {
-        id = 30206,
-        item_class = "tf_wearable",
-        item_name_english = "Accursed Apparition"
-    },
-    "The Hound's Hood" : {
-        id = 30207,
-        item_class = "tf_wearable",
-        item_name_english = "Hound's Hood"
-    },
-    "The Terrier Trousers" : {
-        id = 30208,
-        item_class = "tf_wearable",
-        item_name_english = "Terrier Trousers"
-    },
-    "The Horrific Head of Hare" : {
-        id = 30211,
-        item_class = "tf_wearable",
-        item_name_english = "Horrific Head of Hare"
-    },
-    "The Snaggletoothed Stetson" : {
-        id = 30212,
-        item_class = "tf_wearable",
-        item_name_english = "Snaggletoothed Stetson"
-    },
-    "Up Pyroscopes" : {
-        id = 30213,
-        item_class = "tf_wearable",
-        item_name_english = "Up Pyroscopes"
-    },
-    "The One-Way Ticket" : {
-        id = 30214,
-        item_class = "tf_wearable",
-        item_name_english = "One-Way Ticket"
-    },
-    "The Birdie Bonnet" : {
-        id = 30215,
-        item_class = "tf_wearable",
-        item_name_english = "Birdie Bonnet"
-    },
-    "The External Organ" : {
-        id = 30216,
-        item_class = "tf_wearable",
-        item_name_english = "External Organ"
-    },
-    "Ivan The Inedible" : {
-        id = 30217,
-        item_class = "tf_wearable",
-        item_name_english = "Ivan the Inedible"
-    },
-    "The Rugged Respirator" : {
-        id = 30218,
-        item_class = "tf_wearable",
-        item_name_english = "Rugged Respirator"
-    },
-    "The Squid's Lid" : {
-        id = 30219,
-        item_class = "tf_wearable",
-        item_name_english = "Squid's Lid"
-    },
-    "The Hollowhead" : {
-        id = 30220,
-        item_class = "tf_wearable",
-        item_name_english = "Hollowhead"
-    },
-    "Grub Grenades" : {
-        id = 30221,
-        item_class = "tf_wearable",
-        item_name_english = "Grub Grenades"
-    },
-    "The Gothic Guise" : {
-        id = 30222,
-        item_class = "tf_wearable",
-        item_name_english = "Gothic Guise"
-    },
-    "The Grease Monkey" : {
-        id = 30223,
-        item_class = "tf_wearable",
-        item_name_english = "Grease Monkey"
-    },
-    "The Alternative Medicine Mann" : {
-        id = 30224,
-        item_class = "tf_wearable",
-        item_name_english = "Alternative Medicine Mann"
-    },
-    "The Cauterizer's Caudal Appendage" : {
-        id = 30225,
-        item_class = "tf_wearable",
-        item_name_english = "Cauterizer's Caudal Appendage"
-    },
-    "Polly Putrid" : {
-        id = 30226,
-        item_class = "tf_wearable",
-        item_name_english = "Polly Putrid"
-    },
-    "The Faux Manchu" : {
-        id = 30227,
-        item_class = "tf_wearable",
-        item_name_english = "Faux Manchu"
-    },
-    "The Hidden Dragon" : {
-        id = 30228,
-        item_class = "tf_wearable",
-        item_name_english = "Hidden Dragon"
-    },
-    "The Lo-Grav Loafers" : {
-        id = 30229,
-        item_class = "tf_wearable",
-        item_name_english = "Lo-Grav Loafers"
-    },
-    "The Surgeon's Space Suit" : {
-        id = 30230,
-        item_class = "tf_wearable",
-        item_name_english = "Surgeon's Space Suit"
-    },
-    "The Face Plante" : {
-        id = 30231,
-        item_class = "tf_wearable",
-        item_name_english = "Face Plante"
-    },
-    "Das Blutliebhaber" : {
-        id = 30232,
-        item_class = "tf_wearable",
-        item_name_english = "Das Blutliebhaber"
-    },
-    "The Trepanabotomizer" : {
-        id = 30233,
-        item_class = "tf_wearable",
-        item_name_english = "Trepanabotomizer"
-    },
-    "The Sackcloth Spook" : {
-        id = 30234,
-        item_class = "tf_wearable",
-        item_name_english = "Sackcloth Spook"
-    },
-    "The Mucous Membrain" : {
-        id = 30235,
-        item_class = "tf_wearable",
-        item_name_english = "Mucous Membrain"
-    },
-    "Pin Pals" : {
-        id = 30236,
-        item_class = "tf_wearable",
-        item_name_english = "Pin Pals"
-    },
-    "Medimedes" : {
-        id = 30237,
-        item_class = "tf_wearable",
-        item_name_english = "Medimedes"
-    },
-    "The Chicken Kiev" : {
-        id = 30238,
-        item_class = "tf_wearable",
-        item_name_english = "Chicken Kiev"
-    },
-    "The Freedom Feathers" : {
-        id = 30239,
-        item_class = "tf_wearable",
-        item_name_english = "Freedom Feathers"
-    },
-    "The Headtaker's Hood" : {
-        id = 30240,
-        item_class = "tf_wearable",
-        item_name_english = "Headtaker's Hood"
-    },
-    "The Transylvania Top" : {
-        id = 30241,
-        item_class = "tf_wearable",
-        item_name_english = "Transylvania Top"
-    },
-    "The Candleer" : {
-        id = 30242,
-        item_class = "tf_wearable",
-        item_name_english = "Candleer"
-    },
-    "The Horsemann's Hand-Me-Down" : {
-        id = 30243,
-        item_class = "tf_wearable",
-        item_name_english = "Horsemann's Hand-Me-Down"
-    },
-    "Bozo's Bouffant" : {
-        id = 30245,
-        item_class = "tf_wearable",
-        item_name_english = "Bozo's Bouffant"
-    },
-    "Faun Feet" : {
-        id = 30247,
-        item_class = "tf_wearable",
-        item_name_english = "Faun Feet"
-    },
-    "The Halloweiner" : {
-        id = 30248,
-        item_class = "tf_wearable",
-        item_name_english = "Halloweiner"
-    },
-    "The Lordly Lapels" : {
-        id = 30249,
-        item_class = "tf_wearable",
-        item_name_english = "Lordly Lapels"
-    },
-    "The Cadaver's Capper" : {
-        id = 30251,
-        item_class = "tf_wearable",
-        item_name_english = "Cadaver's Capper"
-    },
-    "Guano" : {
-        id = 30252,
-        item_class = "tf_wearable",
-        item_name_english = "Guano"
-    },
-    "The Sprinting Cephalopod" : {
-        id = 30253,
-        item_class = "tf_wearable",
-        item_name_english = "Sprinting Cephalopod"
-    },
-    "Unidentified Following Object" : {
-        id = 30254,
-        item_class = "tf_wearable",
-        item_name_english = "Unidentified Following Object"
-    },
-    "The Beacon from Beyond" : {
-        id = 30255,
-        item_class = "tf_wearable",
-        item_name_english = "Beacon from Beyond"
-    },
-    "The Hyperbaric Bowler" : {
-        id = 30256,
-        item_class = "tf_wearable",
-        item_name_english = "Hyperbaric Bowler"
-    },
-    "The Death Support Pack" : {
-        id = 30257,
-        item_class = "tf_wearable",
-        item_name_english = "Death Support Pack"
-    },
-    "The Carious Chameleon" : {
-        id = 30258,
-        item_class = "tf_wearable",
-        item_name_english = "Carious Chameleon"
-    },
-    "The Monster's Stompers" : {
-        id = 30259,
-        item_class = "tf_wearable",
-        item_name_english = "Monster's Stompers"
-    },
-    "The Bountiful Bow" : {
-        id = 30260,
-        item_class = "tf_wearable",
-        item_name_english = "Bountiful Bow"
-    },
-    "The Candyman's Cap" : {
-        id = 30261,
-        item_class = "tf_wearable",
-        item_name_english = "Candyman's Cap"
-    },
-    "The Vicar's Vestments" : {
-        id = 30263,
-        item_class = "tf_wearable",
-        item_name_english = "Vicar's Vestments"
-    },
-    "The Hardium Helm" : {
-        id = 30264,
-        item_class = "tf_wearable",
-        item_name_english = "Hardium Helm"
-    },
-    "The Jupiter Jumpers" : {
-        id = 30265,
-        item_class = "tf_wearable",
-        item_name_english = "Jupiter Jumpers"
-    },
-    "The Space Bracers" : {
-        id = 30266,
-        item_class = "tf_wearable",
-        item_name_english = "Space Bracers"
-    },
-    "The Handhunter" : {
-        id = 30267,
-        item_class = "tf_wearable",
-        item_name_english = "Handhunter"
-    },
-    "The Spellbinder's Bonnet" : {
-        id = 30268,
-        item_class = "tf_wearable",
-        item_name_english = "Spellbinder's Bonnet"
-    },
-    "The Macabre Mask" : {
-        id = 30269,
-        item_class = "tf_wearable",
-        item_name_english = "Macabre Mask"
-    },
-    "The Shaman's Skull" : {
-        id = 30270,
-        item_class = "tf_wearable",
-        item_name_english = "Shaman's Skull"
-    },
-    "The Vicious Visage" : {
-        id = 30273,
-        item_class = "tf_wearable",
-        item_name_english = "Vicious Visage"
-    },
-    "The Tuque or Treat" : {
-        id = 30274,
-        item_class = "tf_wearable",
-        item_name_english = "Tuque or Treat"
-    },
-    "The Horned Honcho" : {
-        id = 30275,
-        item_class = "tf_wearable",
-        item_name_english = "Horned Honcho"
-    },
-    "Lieutenant Bites the Dust" : {
-        id = 30276,
-        item_class = "tf_wearable",
-        item_name_english = "Lieutenant Bites the Dust"
-    },
-    "The Grisly Gumbo" : {
-        id = 30277,
-        item_class = "tf_wearable",
-        item_name_english = "Grisly Gumbo"
-    },
-    "The Dark Helm" : {
-        id = 30278,
-        item_class = "tf_wearable",
-        item_name_english = "Dark Helm"
-    },
-    "Archimedes the Undying" : {
-        id = 30279,
-        item_class = "tf_wearable",
-        item_name_english = "Archimedes the Undying"
-    },
-    "The Monstrous Mandible" : {
-        id = 30280,
-        item_class = "tf_wearable",
-        item_name_english = "Monstrous Mandible"
-    },
-    "The Shaolin Sash" : {
-        id = 30281,
-        item_class = "tf_wearable",
-        item_name_english = "Shaolin Sash"
-    },
-    "The Mann-Bird of Aberdeen" : {
-        id = 30282,
-        item_class = "tf_wearable",
-        item_name_english = "Mann-Bird of Aberdeen"
-    },
-    "The Foul Cowl" : {
-        id = 30283,
-        item_class = "tf_wearable",
-        item_name_english = "Foul Cowl"
-    },
-    "Sir Shootsalot" : {
-        id = 30284,
-        item_class = "tf_wearable",
-        item_name_english = "Sir Shootsalot"
-    },
-    "The Corpsemopolitan" : {
-        id = 30285,
-        item_class = "tf_wearable",
-        item_name_english = "Corpsemopolitan"
-    },
-    "The Glob" : {
-        id = 30286,
-        item_class = "tf_wearable",
-        item_name_english = "Glob"
-    },
-    "The Hallowed Headcase" : {
-        id = 30287,
-        item_class = "tf_wearable",
-        item_name_english = "Hallowed Headcase"
-    },
-    "Carrion Companion" : {
-        id = 30288,
-        item_class = "tf_wearable",
-        item_name_english = "Carrion Companion"
-    },
-    "Quoth" : {
-        id = 30289,
-        item_class = "tf_wearable",
-        item_name_english = "Quoth"
-    },
-    "PY-40 Incinibot" : {
-        id = 30290,
-        item_class = "tf_wearable",
-        item_name_english = "PY-40 Incinibot"
-    },
-    "The Parasight" : {
-        id = 30292,
-        item_class = "tf_wearable",
-        item_name_english = "Parasight"
-    },
-    "Teutonkahmun" : {
-        id = 30293,
-        item_class = "tf_wearable",
-        item_name_english = "Teutonkahmun"
-    },
-    "The Larval Lid" : {
-        id = 30294,
-        item_class = "tf_wearable",
-        item_name_english = "Larval Lid"
-    },
-    "The Manneater" : {
-        id = 30295,
-        item_class = "tf_wearable",
-        item_name_english = "Manneater"
-    },
-    "The Creature From The Heap" : {
-        id = 30296,
-        item_class = "tf_wearable",
-        item_name_english = "Creature from the Heap"
-    },
-    "The Magical Mercenary" : {
-        id = 30297,
-        item_class = "tf_wearable",
-        item_name_english = "Magical Mercenary"
-    },
-    "The Raven's Visage" : {
-        id = 30298,
-        item_class = "tf_wearable",
-        item_name_english = "Raven's Visage"
-    },
-    "Ramses' Regalia" : {
-        id = 30299,
-        item_class = "tf_wearable",
-        item_name_english = "Ramses' Regalia"
-    },
-    "The Haunted Hat" : {
-        id = 30300,
-        item_class = "tf_wearable",
-        item_name_english = "Haunted Hat"
-    },
-    "Bozo's Brogues" : {
-        id = 30301,
-        item_class = "tf_wearable",
-        item_name_english = "Bozo's Brogues"
-    },
-    "The Cryptic Keepsake" : {
-        id = 30302,
-        item_class = "tf_wearable",
-        item_name_english = "Cryptic Keepsake"
-    },
-    "The Abhorrent Appendages" : {
-        id = 30303,
-        item_class = "tf_wearable",
-        item_name_english = "Abhorrent Appendages"
-    },
-    "The Blizzard Breather" : {
-        id = 30304,
-        item_class = "tf_wearable",
-        item_name_english = "Blizzard Breather"
-    },
-    "The Sub Zero Suit" : {
-        id = 30305,
-        item_class = "tf_wearable",
-        item_name_english = "Sub Zero Suit"
-    },
-    "The Dictator" : {
-        id = 30306,
-        item_class = "tf_wearable",
-        item_name_english = "Dictator"
-    },
-    "Neckwear Headwear" : {
-        id = 30307,
-        item_class = "tf_wearable",
-        item_name_english = "Neckwear Headwear"
-    },
-    "The Trail-Blazer" : {
-        id = 30308,
-        item_class = "tf_wearable",
-        item_name_english = "Trail-Blazer"
-    },
-    "Dead of Night" : {
-        id = 30309,
-        item_class = "tf_wearable",
-        item_name_english = "Dead of Night"
-    },
-    "The Snow Scoper" : {
-        id = 30310,
-        item_class = "tf_wearable",
-        item_name_english = "Snow Scoper"
-    },
-    "The Nunhood" : {
-        id = 30311,
-        item_class = "tf_wearable",
-        item_name_english = "Nunhood"
-    },
-    "The Angel of Death" : {
-        id = 30312,
-        item_class = "tf_wearable",
-        item_name_english = "Angel of Death"
-    },
-    "The Kiss King" : {
-        id = 30313,
-        item_class = "tf_wearable",
-        item_name_english = "Kiss King"
-    },
-    "The Slo-Poke" : {
-        id = 30314,
-        item_class = "tf_wearable",
-        item_name_english = "Slo-Poke"
-    },
-    "Minnesota Slick" : {
-        id = 30315,
-        item_class = "tf_wearable",
-        item_name_english = "Minnesota Slick"
-    },
-    "The Toy Soldier" : {
-        id = 30316,
-        item_class = "tf_wearable",
-        item_name_english = "Toy Soldier"
-    },
-    "The Five-Month Shadow" : {
-        id = 30317,
-        item_class = "tf_wearable",
-        item_name_english = "Five-Month Shadow"
-    },
-    "The Mann of Reason" : {
-        id = 30318,
-        item_class = "tf_wearable",
-        item_name_english = "Mann of Reason"
-    },
-    "The Mann of the House" : {
-        id = 30319,
-        item_class = "tf_wearable",
-        item_name_english = "Mann of the House"
-    },
-    "Chucklenuts" : {
-        id = 30320,
-        item_class = "tf_wearable",
-        item_name_english = "Chucklenuts"
-    },
-    "Tiny Timber" : {
-        id = 30321,
-        item_class = "tf_wearable",
-        item_name_english = "Tiny Timber"
-    },
-    "Face Full of Festive" : {
-        id = 30322,
-        item_class = "tf_wearable",
-        item_name_english = "Face Full of Festive"
-    },
-    "The Ruffled Ruprecht" : {
-        id = 30323,
-        item_class = "tf_wearable",
-        item_name_english = "Ruffled Ruprecht"
-    },
-    "The Golden Garment" : {
-        id = 30324,
-        item_class = "tf_wearable",
-        item_name_english = "Golden Garment"
-    },
-    "The Little Drummer Mann" : {
-        id = 30325,
-        item_class = "tf_wearable",
-        item_name_english = "Little Drummer Mann"
-    },
-    "The Scout Shako" : {
-        id = 30326,
-        item_class = "tf_wearable",
-        item_name_english = "Scout Shako"
-    },
-    "The Toy Tailor" : {
-        id = 30327,
-        item_class = "tf_wearable",
-        item_name_english = "Toy Tailor"
-    },
-    "The Extra Layer" : {
-        id = 30328,
-        item_class = "tf_wearable",
-        item_name_english = "Extra Layer"
-    },
-    "The Polar Pullover" : {
-        id = 30329,
-        item_class = "tf_wearable",
-        item_name_english = "Polar Pullover"
-    },
-    "The Dogfighter" : {
-        id = 30330,
-        item_class = "tf_wearable",
-        item_name_english = "Dogfighter"
-    },
-    "Antarctic Parka" : {
-        id = 30331,
-        item_class = "tf_wearable",
-        item_name_english = "Antarctic Parka"
-    },
-    "Runner's Warm-Up" : {
-        id = 30332,
-        item_class = "tf_wearable",
-        item_name_english = "Runner's Warm-Up"
-    },
-    "Highland High Heels" : {
-        id = 30333,
-        item_class = "tf_wearable",
-        item_name_english = "Highland High Heels"
-    },
-    "Tartan Tyrolean" : {
-        id = 30334,
-        item_class = "tf_wearable",
-        item_name_english = "Tartan Tyrolean"
-    },
-    "Marshall's Mutton Chops" : {
-        id = 30335,
-        item_class = "tf_wearable",
-        item_name_english = "Marshall's Mutton Chops"
-    },
-    "The Trencher's Topper" : {
-        id = 30336,
-        item_class = "tf_wearable",
-        item_name_english = "Trencher's Topper"
-    },
-    "The Trencher's Tunic" : {
-        id = 30337,
-        item_class = "tf_wearable",
-        item_name_english = "Trencher's Tunic"
-    },
-    "Ground Control" : {
-        id = 30338,
-        item_class = "tf_wearable",
-        item_name_english = "Ground Control"
-    },
-    "The Killer's Kit" : {
-        id = 30339,
-        item_class = "tf_wearable",
-        item_name_english = "Killer's Kit"
-    },
-    "Stylish DeGroot" : {
-        id = 30340,
-        item_class = "tf_wearable",
-        item_name_english = "Stylish DeGroot"
-    },
-    "Ein" : {
-        id = 30341,
-        item_class = "tf_wearable",
-        item_name_english = "Ein"
-    },
-    "The Heavy Lifter" : {
-        id = 30342,
-        item_class = "tf_wearable",
-        item_name_english = "Heavy Lifter"
-    },
-    "Gone Commando" : {
-        id = 30343,
-        item_class = "tf_wearable",
-        item_name_english = "Gone Commando"
-    },
-    "Bullet Buzz" : {
-        id = 30344,
-        item_class = "tf_wearable",
-        item_name_english = "Bullet Buzz"
-    },
-    "The Leftover Trap" : {
-        id = 30345,
-        item_class = "tf_wearable",
-        item_name_english = "Leftover Trap"
-    },
-    "The Trash Man" : {
-        id = 30346,
-        item_class = "tf_wearable",
-        item_name_english = "Trash Man"
-    },
-    "The Scotch Saver" : {
-        id = 30347,
-        item_class = "tf_wearable",
-        item_name_english = "Scotch Saver"
-    },
-    "Bushi-Dou" : {
-        id = 30348,
-        item_class = "tf_wearable",
-        item_name_english = "Bushi-Dou"
-    },
-    "The Fashionable Megalomaniac" : {
-        id = 30349,
-        item_class = "tf_wearable",
-        item_name_english = "Fashionable Megalomaniac"
-    },
-    "The Dough Puncher" : {
-        id = 30350,
-        item_class = "tf_wearable",
-        item_name_english = "Dough Puncher"
-    },
-    "The Teutonic Toque" : {
-        id = 30351,
-        item_class = "tf_wearable",
-        item_name_english = "Teutonic Toque"
-    },
-    "The Mustachioed Mann" : {
-        id = 30352,
-        item_class = "tf_wearable",
-        item_name_english = "Mustachioed Mann"
-    },
-    "The Backstabber's Boomslang" : {
-        id = 30353,
-        item_class = "tf_wearable",
-        item_name_english = "Backstabber's Boomslang"
-    },
-    "The Rat Stompers" : {
-        id = 30354,
-        item_class = "tf_wearable",
-        item_name_english = "Rat Stompers"
-    },
-    "Sole Mate" : {
-        id = 30355,
-        item_class = "tf_wearable",
-        item_name_english = "Sole Mate"
-    },
-    "The Heat of Winter" : {
-        id = 30356,
-        item_class = "tf_wearable",
-        item_name_english = "Heat of Winter"
-    },
-    "The Dark Falkirk Helm" : {
-        id = 30357,
-        item_class = "tf_wearable",
-        item_name_english = "Dark Falkirk Helm"
-    },
-    "The Sole Saviors" : {
-        id = 30358,
-        item_class = "tf_wearable",
-        item_name_english = "Sole Saviors"
-    },
-    "The Huntsman's Essentials" : {
-        id = 30359,
-        item_class = "tf_wearable",
-        item_name_english = "Huntsman's Essentials"
-    },
-    "The Napoleon Complex" : {
-        id = 30360,
-        item_class = "tf_wearable",
-        item_name_english = "Napoleon Complex"
-    },
-    "The Colonel's Coat" : {
-        id = 30361,
-        item_class = "tf_wearable",
-        item_name_english = "Colonel's Coat"
-    },
-    "The Law" : {
-        id = 30362,
-        item_class = "tf_wearable",
-        item_name_english = "Law"
-    },
-    "The Juggernaut Jacket" : {
-        id = 30363,
-        item_class = "tf_wearable",
-        item_name_english = "Juggernaut Jacket"
-    },
-    "The Warmth Preserver" : {
-        id = 30364,
-        item_class = "tf_wearable",
-        item_name_english = "Warmth Preserver"
-    },
-    "The Smock Surgeon" : {
-        id = 30365,
-        item_class = "tf_wearable",
-        item_name_english = "Smock Surgeon"
-    },
-    "The Sangu Sleeves" : {
-        id = 30366,
-        item_class = "tf_wearable",
-        item_name_english = "Sangu Sleeves"
-    },
-    "The Cute Suit" : {
-        id = 30367,
-        item_class = "tf_wearable",
-        item_name_english = "Cute Suit"
-    },
-    "The War Goggles" : {
-        id = 30368,
-        item_class = "tf_wearable",
-        item_name_english = "War Goggles"
-    },
-    "The Eliminators Safeguard" : {
-        id = 30369,
-        item_class = "tf_wearable",
-        item_name_english = "Eliminator's Safeguard"
-    },
-    "The Archers Groundings" : {
-        id = 30371,
-        item_class = "tf_wearable",
-        item_name_english = "Archer's Groundings"
-    },
-    "Combat Slacks" : {
-        id = 30372,
-        item_class = "tf_wearable",
-        item_name_english = "Combat Slacks"
-    },
-    "The Toowoomba Tunic" : {
-        id = 30373,
-        item_class = "tf_wearable",
-        item_name_english = "Toowoomba Tunic"
-    },
-    "The Sammy Cap" : {
-        id = 30374,
-        item_class = "tf_wearable",
-        item_name_english = "Sammy Cap"
-    },
-    "The Deep Cover Operator" : {
-        id = 30375,
-        item_class = "tf_wearable",
-        item_name_english = "Deep Cover Operator"
-    },
-    "The Ticket Boy" : {
-        id = 30376,
-        item_class = "tf_wearable",
-        item_name_english = "Ticket Boy"
-    },
-    "The Antarctic Researcher" : {
-        id = 30377,
-        item_class = "tf_wearable",
-        item_name_english = "Antarctic Researcher"
-    },
-    "Heer's Helmet" : {
-        id = 30378,
-        item_class = "tf_wearable",
-        item_name_english = "Heer's Helmet"
-    },
-    "The Gaiter Guards" : {
-        id = 30379,
-        item_class = "tf_wearable",
-        item_name_english = "Gaiter Guards"
-    },
-    "The Classified Coif" : {
-        id = 30388,
-        item_class = "tf_wearable",
-        item_name_english = "Classified Coif"
-    },
-    "The Rogue's Robe" : {
-        id = 30389,
-        item_class = "tf_wearable",
-        item_name_english = "Rogue's Robe"
-    },
-    "The Spook Specs" : {
-        id = 30390,
-        item_class = "tf_wearable",
-        item_name_english = "Spook Specs"
-    },
-    "The Sengoku Scorcher" : {
-        id = 30391,
-        item_class = "tf_wearable",
-        item_name_english = "Sengoku Scorcher"
-    },
-    "The Man in Slacks" : {
-        id = 30392,
-        item_class = "tf_wearable",
-        item_name_english = "Man in Slacks"
-    },
-    "The Razor Cut" : {
-        id = 30393,
-        item_class = "tf_wearable",
-        item_name_english = "Razor Cut"
-    },
-    "The Frickin' Sweet Ninja Hood" : {
-        id = 30394,
-        item_class = "tf_wearable",
-        item_name_english = "Frickin' Sweet Ninja Hood"
-    },
-    "The Southie Shinobi" : {
-        id = 30395,
-        item_class = "tf_wearable",
-        item_name_english = "Southie Shinobi"
-    },
-    "The Red Socks" : {
-        id = 30396,
-        item_class = "tf_wearable",
-        item_name_english = "Red Socks"
-    },
-    "The Bruiser's Bandanna" : {
-        id = 30397,
-        item_class = "tf_wearable",
-        item_name_english = "Bruiser's Bandanna"
-    },
-    "The Gas Guzzler" : {
-        id = 30398,
-        item_class = "tf_wearable",
-        item_name_english = "Gas Guzzler"
-    },
-    "The Smoking Skid Lid" : {
-        id = 30399,
-        item_class = "tf_wearable",
-        item_name_english = "Smoking Skid Lid"
-    },
-    "The Lunatic's Leathers" : {
-        id = 30400,
-        item_class = "tf_wearable",
-        item_name_english = "Lunatic's Leathers"
-    },
-    "Yuri's Revenge" : {
-        id = 30401,
-        item_class = "tf_wearable",
-        item_name_english = "Yuri's Revenge"
-    },
-    "The Tools of the Trade" : {
-        id = 30402,
-        item_class = "tf_wearable",
-        item_name_english = "Tools of the Trade"
-    },
-    "The Joe-on-the-Go" : {
-        id = 30403,
-        item_class = "tf_wearable",
-        item_name_english = "Joe-on-the-Go"
-    },
-    "The Aviator Assassin" : {
-        id = 30404,
-        item_class = "tf_wearable",
-        item_name_english = "Aviator Assassin"
-    },
-    "The Sky Captain" : {
-        id = 30405,
-        item_class = "tf_wearable",
-        item_name_english = "Sky Captain"
-    },
-    "The Peacenik's Ponytail" : {
-        id = 30406,
-        item_class = "tf_wearable",
-        item_name_english = "Peacenik's Ponytail"
-    },
-    "The Level Three Chin" : {
-        id = 30407,
-        item_class = "tf_wearable",
-        item_name_english = "Level Three Chin"
-    },
-    "The Egghead's Overalls" : {
-        id = 30408,
-        item_class = "tf_wearable",
-        item_name_english = "Egghead's Overalls"
-    },
-    "The Lonesome Loafers" : {
-        id = 30409,
-        item_class = "tf_wearable",
-        item_name_english = "Lonesome Loafers"
-    },
-    "Ze Ubermensch" : {
-        id = 30410,
-        item_class = "tf_wearable",
-        item_name_english = "Ze Übermensch"
-    },
-    "The Au Courant Assassin" : {
-        id = 30411,
-        item_class = "tf_wearable",
-        item_name_english = "Au Courant Assassin"
-    },
-    "The Endothermic Exowear" : {
-        id = 30412,
-        item_class = "tf_wearable",
-        item_name_english = "Endothermic Exowear"
-    },
-    "The Merc's Mohawk" : {
-        id = 30413,
-        item_class = "tf_wearable",
-        item_name_english = "Merc's Mohawk"
-    },
-    "The Eye-Catcher" : {
-        id = 30414,
-        item_class = "tf_wearable",
-        item_name_english = "Eye-Catcher"
-    },
-    "The Medicine Manpurse" : {
-        id = 30415,
-        item_class = "tf_wearable",
-        item_name_english = "Medicine Manpurse"
-    },
-    "Employee of the Mmmph" : {
-        id = 30416,
-        item_class = "tf_wearable",
-        item_name_english = "Employee of the Mmmph"
-    },
-    "The Frymaster" : {
-        id = 30417,
-        item_class = "tf_wearable",
-        item_name_english = "Frymaster"
-    },
-    "The Combustible Kabuto" : {
-        id = 30418,
-        item_class = "tf_wearable",
-        item_name_english = "Combustible Kabuto"
-    },
-    "The Chronoscarf" : {
-        id = 30419,
-        item_class = "tf_wearable",
-        item_name_english = "Chronoscarf"
-    },
-    "The Danger" : {
-        id = 30420,
-        item_class = "tf_wearable",
-        item_name_english = "Danger"
-    },
-    "The Frontier Djustice" : {
-        id = 30421,
-        item_class = "tf_wearable",
-        item_name_english = "Frontier Djustice"
-    },
-    "Vive La France" : {
-        id = 30422,
-        item_class = "tf_wearable",
-        item_name_english = "Vive La France"
-    },
-    "The Scoper's Smoke" : {
-        id = 30423,
-        item_class = "tf_wearable",
-        item_name_english = "Scoper's Smoke"
-    },
-    "The Triggerman's Tacticals" : {
-        id = 30424,
-        item_class = "tf_wearable",
-        item_name_english = "Triggerman's Tacticals"
-    },
-    "Tipped Lid" : {
-        id = 30425,
-        item_class = "tf_wearable",
-        item_name_english = "Tipped Lid"
-    },
-    "The Paisley Pro" : {
-        id = 30426,
-        item_class = "tf_wearable",
-        item_name_english = "Paisley Pro"
-    },
-    "The Argyle Ace" : {
-        id = 30427,
-        item_class = "tf_wearable",
-        item_name_english = "Argyle Ace"
-    },
-    "The Pomade Prince" : {
-        id = 30428,
-        item_class = "tf_wearable",
-        item_name_english = "Pomade Prince"
-    },
-    "The Allbrero" : {
-        id = 30429,
-        item_class = "tf_wearable",
-        item_name_english = "Allbrero"
-    },
-    "Seeing Double" : {
-        id = 30430,
-        item_class = "tf_wearable",
-        item_name_english = "Seeing Double"
-    },
-    "Six Pack Abs" : {
-        id = 30431,
-        item_class = "tf_wearable",
-        item_name_english = "Six Pack Abs"
-    },
-    "The Spycrab" : {
-        id = 30467,
-        item_class = "tf_wearable",
-        item_name_english = "Spycrab"
-    },
-    "Horace" : {
-        id = 30469,
-        item_class = "tf_wearable",
-        item_name_english = "Horace"
-    },
-    "The Biomech Backpack" : {
-        id = 30470,
-        item_class = "tf_wearable",
-        item_name_english = "Biomech Backpack"
-    },
-    "The Alien Cranium" : {
-        id = 30471,
-        item_class = "tf_wearable",
-        item_name_english = "Alien Cranium"
-    },
-    "The Xeno Suit" : {
-        id = 30472,
-        item_class = "tf_wearable",
-        item_name_english = "Xeno Suit"
-    },
-    "The MK 50" : {
-        id = 30473,
-        item_class = "tf_wearable",
-        item_name_english = "MK 50"
-    },
-    "The Nostromo Napalmer" : {
-        id = 30474,
-        item_class = "tf_weapon_flamethrower",
-        item_name_english = "Flame Thrower"
-    },
-    "The Mishap Mercenary" : {
-        id = 30475,
-        item_class = "tf_wearable",
-        item_name_english = "Mishap Mercenary"
-    },
-    "The Lady Killer" : {
-        id = 30476,
-        item_class = "tf_wearable",
-        item_name_english = "Lady Killer"
-    },
-    "The Lone Survivor" : {
-        id = 30477,
-        item_class = "tf_wearable",
-        item_name_english = "Lone Survivor"
-    },
-    "Poacher's Safari Jacket" : {
-        id = 30478,
-        item_class = "tf_wearable",
-        item_name_english = "Poacher's Safari Jacket"
-    },
-    "Thirst Blood" : {
-        id = 30479,
-        item_class = "tf_wearable",
-        item_name_english = "Thirst Blood"
-    },
-    "Mann of the Seven Sees" : {
-        id = 30480,
-        item_class = "tf_wearable",
-        item_name_english = "Mann of the Seven Sees"
-    },
-    "Hillbilly Speed-Bump" : {
-        id = 30481,
-        item_class = "tf_wearable",
-        item_name_english = "Hillbilly Speed Bump"
-    },
-    "The Unshaved Bear" : {
-        id = 30482,
-        item_class = "tf_wearable",
-        item_name_english = "Unshaved Bear"
-    },
-    "Pocket Heavy" : {
-        id = 30483,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Heavy"
-    },
-    "The Dadliest Catch" : {
-        id = 30484,
-        item_class = "tf_wearable",
-        item_name_english = "Dadliest Catch"
-    },
-    "Herzensbrecher" : {
-        id = 30486,
-        item_class = "tf_wearable",
-        item_name_english = "Herzensbrecher"
-    },
-    "Hundekopf" : {
-        id = 30487,
-        item_class = "tf_wearable",
-        item_name_english = "Hundkopf"
-    },
-    "Kriegsmaschine-9000" : {
-        id = 30488,
-        item_class = "tf_wearable",
-        item_name_english = "Kriegsmaschine-9000"
-    },
-    "Transylvanian Toupe" : {
-        id = 30489,
-        item_class = "tf_wearable",
-        item_name_english = "Vampire Makeover"
-    },
-    "Vampiric Vesture" : {
-        id = 30490,
-        item_class = "tf_wearable",
-        item_name_english = "Vampiric Vesture"
-    },
-    "Nugget Noggin" : {
-        id = 30491,
-        item_class = "tf_wearable",
-        item_name_english = "Nugget Noggin"
-    },
-    "Fowl Fists" : {
-        id = 30492,
-        item_class = "tf_wearable",
-        item_name_english = "Fowl Fists"
-    },
-    "Talon Trotters" : {
-        id = 30493,
-        item_class = "tf_wearable",
-        item_name_english = "Talon Trotters"
-    },
-    "Head Hunter" : {
-        id = 30494,
-        item_class = "tf_wearable",
-        item_name_english = "Head Hunter"
-    },
-    "Claws And Infect" : {
-        id = 30495,
-        item_class = "tf_wearable",
-        item_name_english = "Claws And Infect"
-    },
-    "Crazy Legs" : {
-        id = 30496,
-        item_class = "tf_wearable",
-        item_name_english = "Crazy Legs"
-    },
-    "Ghost of Spies Checked Past" : {
-        id = 30497,
-        item_class = "tf_wearable",
-        item_name_english = "Ghost of Spies Checked Past"
-    },
-    "The Hooded Haunter" : {
-        id = 30498,
-        item_class = "tf_wearable",
-        item_name_english = "Hooded Haunter"
-    },
-    "Conspiratorial Cut" : {
-        id = 30499,
-        item_class = "tf_wearable",
-        item_name_english = "Cranial Conspiracy"
-    },
-    "Skinless Slashers" : {
-        id = 30500,
-        item_class = "tf_wearable",
-        item_name_english = "Scaly Scrapers"
-    },
-    "Marsupial Man" : {
-        id = 30501,
-        item_class = "tf_wearable",
-        item_name_english = "Marsupial Man"
-    },
-    "Kanga Kickers" : {
-        id = 30502,
-        item_class = "tf_wearable",
-        item_name_english = "Kanga Kickers"
-    },
-    "Roo Rippers" : {
-        id = 30503,
-        item_class = "tf_wearable",
-        item_name_english = "Roo Rippers"
-    },
-    "Marsupial Muzzle" : {
-        id = 30504,
-        item_class = "tf_wearable",
-        item_name_english = "Marsupial Muzzle"
-    },
-    "Shadowman's Shade" : {
-        id = 30505,
-        item_class = "tf_wearable",
-        item_name_english = "Shadowman's Shade"
-    },
-    "Nightmare Hunter" : {
-        id = 30506,
-        item_class = "tf_wearable",
-        item_name_english = "Nightmare Hunter"
-    },
-    "Rogue's Rabbit" : {
-        id = 30507,
-        item_class = "tf_wearable",
-        item_name_english = "Rogue's Rabbit"
-    },
-    "Iron Fist" : {
-        id = 30508,
-        item_class = "tf_wearable",
-        item_name_english = "Iron Fist"
-    },
-    "Beep Man" : {
-        id = 30509,
-        item_class = "tf_wearable",
-        item_name_english = "Beep Man"
-    },
-    "Soul of 'Spenser's Past" : {
-        id = 30510,
-        item_class = "tf_wearable",
-        item_name_english = "Soul of 'Spensers Past"
-    },
-    "Tiny Texan" : {
-        id = 30511,
-        item_class = "tf_wearable",
-        item_name_english = "Tiny Texan"
-    },
-    "Facepeeler" : {
-        id = 30512,
-        item_class = "tf_wearable",
-        item_name_english = "Facepeeler"
-    },
-    "Mr. Mundee's Wild Ride" : {
-        id = 30513,
-        item_class = "tf_wearable",
-        item_name_english = "Mr. Mundee's Wild Ride"
-    },
-    "Templar's Spirit" : {
-        id = 30514,
-        item_class = "tf_wearable",
-        item_name_english = "Templar's Spirit"
-    },
-    "Wings of Purity" : {
-        id = 30515,
-        item_class = "tf_wearable",
-        item_name_english = "Wings of Purity"
-    },
-    "Forgotten King's Restless Head" : {
-        id = 30516,
-        item_class = "tf_wearable",
-        item_name_english = "Forgotten King's Restless Head"
-    },
-    "Forgotten King's Pauldrons" : {
-        id = 30517,
-        item_class = "tf_wearable",
-        item_name_english = "Forgotten King's Pauldrons"
-    },
-    "Eyeborg" : {
-        id = 30518,
-        item_class = "tf_wearable",
-        item_name_english = "Eyeborg"
-    },
-    "Explosive Mind" : {
-        id = 30519,
-        item_class = "tf_wearable",
-        item_name_english = "Mannhattan Project"
-    },
-    "Ghoul Gibbin' Gear" : {
-        id = 30520,
-        item_class = "tf_wearable",
-        item_name_english = "Ghoul Gibbin' Gear"
-    },
-    "Hellhunter's Headpiece" : {
-        id = 30521,
-        item_class = "tf_wearable",
-        item_name_english = "Hellhunter's Headpiece"
-    },
-    "Supernatural Stalker" : {
-        id = 30522,
-        item_class = "tf_wearable",
-        item_name_english = "Supernatural Stalker"
-    },
-    "Garden Bristles" : {
-        id = 30523,
-        item_class = "tf_wearable",
-        item_name_english = "Garden Bristles"
-    },
-    "Battle Bird" : {
-        id = 30524,
-        item_class = "tf_wearable",
-        item_name_english = "Battle Bird"
-    },
-    "Creature's Grin" : {
-        id = 30525,
-        item_class = "tf_wearable",
-        item_name_english = "Creature's Grin"
-    },
-    "Arsonist Apparatus" : {
-        id = 30526,
-        item_class = "tf_wearable",
-        item_name_english = "Arsonist Apparatus"
-    },
-    "Moccasin Machinery" : {
-        id = 30527,
-        item_class = "tf_wearable",
-        item_name_english = "Moccasin Machinery"
-    },
-    "Lollichop Licker" : {
-        id = 30528,
-        item_class = "tf_wearable",
-        item_name_english = "Lollichop Licker"
-    },
-    "Mr. Juice" : {
-        id = 30529,
-        item_class = "tf_wearable",
-        item_name_english = "Mr. Juice"
-    },
-    "Vampyro" : {
-        id = 30530,
-        item_class = "tf_wearable",
-        item_name_english = "Vampyro"
-    },
-    "Bone-Cut Belt" : {
-        id = 30531,
-        item_class = "tf_wearable",
-        item_name_english = "Bone-Cut Belt"
-    },
-    "Bull Locks" : {
-        id = 30532,
-        item_class = "tf_wearable",
-        item_name_english = "Bull Locks"
-    },
-    "Minsk Beef" : {
-        id = 30533,
-        item_class = "tf_wearable",
-        item_name_english = "Minsk Beef"
-    },
-    "Immobile Suit" : {
-        id = 30534,
-        item_class = "tf_wearable",
-        item_name_english = "Immobile Suit"
-    },
-    "Kritz Or Treat Canteen" : {
-        id = 30535,
-        item_class = "tf_powerup_bottle",
-        item_name_english = "Power Up Canteen"
-    },
-    "Cursed Cruise" : {
-        id = 30536,
-        item_class = "tf_wearable",
-        item_name_english = "Li'l Dutchman"
-    },
-    "EOTL_Skier" : {
-        id = 30538,
-        item_class = "tf_wearable",
-        item_name_english = "Wartime Warmth"
-    },
-    "EOTL_Insulated_innovator" : {
-        id = 30539,
-        item_class = "tf_wearable",
-        item_name_english = "Insulated Inventor"
-    },
-    "EOTL_blinks_breeches" : {
-        id = 30540,
-        item_class = "tf_wearable",
-        item_name_english = "Brooklyn Booties"
-    },
-    "EOTL_demo_dynamite" : {
-        id = 30541,
-        item_class = "tf_wearable",
-        item_name_english = "Double Dynamite"
-    },
-    "EOTL_Brisk-weather Beanie" : {
-        id = 30542,
-        item_class = "tf_wearable",
-        item_name_english = "Coldsnap Cap"
-    },
-    "EOTL_winter_pants" : {
-        id = 30543,
-        item_class = "tf_wearable",
-        item_name_english = "Snow Stompers"
-    },
-    "EOTL_pyro_sweater" : {
-        id = 30544,
-        item_class = "tf_wearable",
-        item_name_english = "North Polar Fleece"
-    },
-    "EOTL_Flat_cap" : {
-        id = 30545,
-        item_class = "tf_wearable",
-        item_name_english = "Fur-Lined Fighter"
-    },
-    "EOTL_FURCAP" : {
-        id = 30546,
-        item_class = "tf_wearable",
-        item_name_english = "Boxcar Bomber"
-    },
-    "EOTL_summerhat" : {
-        id = 30547,
-        item_class = "tf_wearable",
-        item_name_english = "Bomber's Bucket Hat"
-    },
-    "EOTL_soldier_garrison" : {
-        id = 30548,
-        item_class = "tf_wearable",
-        item_name_english = "Screamin' Eagle"
-    },
-    "EOTL_hiphunter_hat" : {
-        id = 30549,
-        item_class = "tf_wearable",
-        item_name_english = "Winter Woodsman"
-    },
-    "EOTL_hiphunter_jacket" : {
-        id = 30550,
-        item_class = "tf_wearable",
-        item_name_english = "Snow Sleeves"
-    },
-    "EOTL_hiphunter_boots" : {
-        id = 30551,
-        item_class = "tf_wearable",
-        item_name_english = "Flashdance Footies"
-    },
-    "EOTL_thermal_sleeves" : {
-        id = 30552,
-        item_class = "tf_wearable",
-        item_name_english = "Thermal Tracker"
-    },
-    "EOTL_soldierhat" : {
-        id = 30553,
-        item_class = "tf_wearable",
-        item_name_english = "Condor Cap"
-    },
-    "EOTL_beard" : {
-        id = 30554,
-        item_class = "tf_wearable",
-        item_name_english = "Mistaken Movember"
-    },
-    "EOTL_demopants" : {
-        id = 30555,
-        item_class = "tf_wearable",
-        item_name_english = "Double Dog Dare Demo Pants"
-    },
-    "EOTL_Ursa Major" : {
-        id = 30556,
-        item_class = "tf_wearable",
-        item_name_english = "Sleeveless in Siberia"
-    },
-    "EOTL_sheavyshirt" : {
-        id = 30557,
-        item_class = "tf_wearable",
-        item_name_english = "Hunter Heavy"
-    },
-    "EOTL_Coldfront Curbstompers" : {
-        id = 30558,
-        item_class = "tf_wearable",
-        item_name_english = "Coldfront Curbstompers"
-    },
-    "End of the Line Community Update Medal" : {
-        id = 30559,
-        item_class = "tf_wearable",
-        item_name_english = "End of the Line Community Update Medal"
-    },
-    "The Bootenkhamuns" : {
-        id = 30561,
-        item_class = "tf_wearable",
-        item_name_english = "Bootenkhamuns"
-    },
-    "Jungle Booty" : {
-        id = 30563,
-        item_class = "tf_wearable",
-        item_name_english = "Jungle Booty"
-    },
-    "Orion's Belt" : {
-        id = 30564,
-        item_class = "tf_wearable",
-        item_name_english = "Orion's Belt"
-    },
-    "The Crown of the Old Kingdom" : {
-        id = 30567,
-        item_class = "tf_wearable",
-        item_name_english = "Crown of the Old Kingdom"
-    },
-    "The Tomb Readers" : {
-        id = 30569,
-        item_class = "tf_wearable",
-        item_name_english = "Tomb Readers"
-    },
-    "Pool Party Taunt" : {
-        id = 30570,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Pool Party"
-    },
-    "Brimstone" : {
-        id = 30571,
-        item_class = "tf_wearable",
-        item_name_english = "Brimstone"
-    },
-    "Taunt: The Boston Breakdance" : {
-        id = 30572,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Boston Breakdance"
-    },
-    "dec2014 Marauders Mask" : {
-        id = 30573,
-        item_class = "tf_wearable",
-        item_name_english = "Mountebank's Masque"
-    },
-    "dec2014 Truands Tunic" : {
-        id = 30574,
-        item_class = "tf_wearable",
-        item_name_english = "Courtier's Collar"
-    },
-    "dec2014 Fools Footwear" : {
-        id = 30575,
-        item_class = "tf_wearable",
-        item_name_english = "Harlequin's Hooves"
-    },
-    "dec2014 CoPilot_2014" : {
-        id = 30576,
-        item_class = "tf_wearable",
-        item_name_english = "Co-Pilot"
-    },
-    "dec2014 Skullcap" : {
-        id = 30578,
-        item_class = "tf_wearable",
-        item_name_english = "Skullcap"
-    },
-    "dec2014 2014_pyromancer_hood" : {
-        id = 30580,
-        item_class = "tf_wearable",
-        item_name_english = "Pyromancer's Hood"
-    },
-    "dec2014 Pyromancer's Raiments" : {
-        id = 30581,
-        item_class = "tf_wearable",
-        item_name_english = "Pyromancer's Raiments"
-    },
-    "dec2014 Black Knights Bascinet" : {
-        id = 30582,
-        item_class = "tf_wearable",
-        item_name_english = "Black Knight's Bascinet"
-    },
-    "dec2014 Torchers Tabard" : {
-        id = 30583,
-        item_class = "tf_wearable",
-        item_name_english = "Torcher's Tabard"
-    },
-    "dec2014 Armoured Appendages" : {
-        id = 30584,
-        item_class = "tf_wearable",
-        item_name_english = "Charred Chainmail"
-    },
-    "dec2014 Viking Helmet" : {
-        id = 30586,
-        item_class = "tf_wearable",
-        item_name_english = "Valhalla Helm"
-    },
-    "dec2014 Viking Boots" : {
-        id = 30587,
-        item_class = "tf_wearable",
-        item_name_english = "Storm Stompers"
-    },
-    "dec2014 heavy_parka" : {
-        id = 30588,
-        item_class = "tf_wearable",
-        item_name_english = "Siberian Facehugger"
-    },
-    "dec2014 The Big Papa" : {
-        id = 30589,
-        item_class = "tf_wearable",
-        item_name_english = "Old Man Frost"
-    },
-    "dec2014 engineer_detectiveholster" : {
-        id = 30590,
-        item_class = "tf_wearable",
-        item_name_english = "Holstered Heaters"
-    },
-    "dec2014 engineer_detectiveradio" : {
-        id = 30591,
-        item_class = "tf_wearable",
-        item_name_english = "Cop Caller"
-    },
-    "dec2014 engineer_detectiveglasses" : {
-        id = 30592,
-        item_class = "tf_wearable",
-        item_name_english = "Conagher's Combover"
-    },
-    "dec2014 engineer_seal" : {
-        id = 30593,
-        item_class = "tf_wearable",
-        item_name_english = "Clubsy The Seal"
-    },
-    "dec2014 medic_unknown_mann" : {
-        id = 30595,
-        item_class = "tf_wearable",
-        item_name_english = "Unknown Mann"
-    },
-    "dec2014 Surgeon's Shako" : {
-        id = 30596,
-        item_class = "tf_wearable",
-        item_name_english = "Surgeon's Shako"
-    },
-    "dec2014 hunter_beard" : {
-        id = 30597,
-        item_class = "tf_wearable",
-        item_name_english = "Bushman's Bristles"
-    },
-    "dec2014 hunter_ushanka" : {
-        id = 30598,
-        item_class = "tf_wearable",
-        item_name_english = "Professional's Ushanka"
-    },
-    "dec2014 hunter_vest" : {
-        id = 30599,
-        item_class = "tf_wearable",
-        item_name_english = "Marksman's Mohair"
-    },
-    "dec2014 Wally Pocket" : {
-        id = 30600,
-        item_class = "tf_wearable",
-        item_name_english = "Wally Pocket"
-    },
-    "eotl_winter_coat" : {
-        id = 30601,
-        item_class = "tf_wearable",
-        item_name_english = "Cold Snap Coat"
-    },
-    "dec2014 The Puffy Provocateur" : {
-        id = 30602,
-        item_class = "tf_wearable",
-        item_name_english = "Puffy Provocateur"
-    },
-    "dec2014 Stealthy Scarf" : {
-        id = 30603,
-        item_class = "tf_wearable",
-        item_name_english = "Stealthy Scarf"
-    },
-    "dec2014 Comforter" : {
-        id = 30604,
-        item_class = "tf_wearable",
-        item_name_english = "Scot Bonnet"
-    },
-    "dec2014 Thermal Insulation Layer" : {
-        id = 30605,
-        item_class = "tf_wearable",
-        item_name_english = "Thermal Insulation Layer"
-    },
-    "dec2014 Pocket Momma" : {
-        id = 30606,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Momma"
-    },
-    "The Pocket Raiders" : {
-        id = 30607,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Raiders"
-    },
-    "Taunt: The Killer Solo" : {
-        id = 30609,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Killer Solo"
-    },
-    "Taunt: Most Wanted" : {
-        id = 30614,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Most Wanted"
-    },
-    "Taunt: The Boxtrot" : {
-        id = 30615,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Box Trot"
-    },
-    "Taunt: The Proletariat Showoff" : {
-        id = 30616,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Proletariat Posedown"
-    },
-    "Taunt: Bucking Bronco" : {
-        id = 30618,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Bucking Bronco"
-    },
-    "Taunt: Burstchester" : {
-        id = 30621,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Burstchester"
-    },
-    "The Rotation Sensation" : {
-        id = 30623,
-        item_class = "tf_wearable",
-        item_name_english = "Rotation Sensation"
-    },
-    "The Physician's Protector" : {
-        id = 30625,
-        item_class = "tf_wearable",
-        item_name_english = "Physician's Protector"
-    },
-    "The Vascular Vestment" : {
-        id = 30626,
-        item_class = "tf_wearable",
-        item_name_english = "Vascular Vestment"
-    },
-    "Bruce's Bonnet" : {
-        id = 30627,
-        item_class = "tf_wearable",
-        item_name_english = "Bruce's Bonnet"
-    },
-    "Outta' Sight" : {
-        id = 30628,
-        item_class = "tf_wearable",
-        item_name_english = "Outta Sight"
-    },
-    "Support Spurs" : {
-        id = 30629,
-        item_class = "tf_wearable",
-        item_name_english = "Support Spurs"
-    },
-    "Lurker's Leathers" : {
-        id = 30631,
-        item_class = "tf_wearable",
-        item_name_english = "Lurker's Leathers"
-    },
-    "Commissar's Coat" : {
-        id = 30633,
-        item_class = "tf_wearable",
-        item_name_english = "Commissar's Coat"
-    },
-    "Sheriff's Stetson" : {
-        id = 30634,
-        item_class = "tf_wearable",
-        item_name_english = "Sheriff's Stetson"
-    },
-    "Wild West Waistcoat" : {
-        id = 30635,
-        item_class = "tf_wearable",
-        item_name_english = "Wild West Waistcoat"
-    },
-    "Fortunate Son" : {
-        id = 30636,
-        item_class = "tf_wearable",
-        item_name_english = "Fortunate Son"
-    },
-    "Flak Jack" : {
-        id = 30637,
-        item_class = "tf_wearable",
-        item_name_english = "Flak Jack"
-    },
-    "Captain Cardbeard Cutthroat" : {
-        id = 30640,
-        item_class = "tf_wearable",
-        item_name_english = "Captain Cardbeard Cutthroat"
-    },
-    "Potassium Bonnett" : {
-        id = 30643,
-        item_class = "tf_wearable",
-        item_name_english = "Potassium Bonnet"
-    },
-    "White Russian" : {
-        id = 30644,
-        item_class = "tf_wearable",
-        item_name_english = "White Russian"
-    },
-    "El Duderino" : {
-        id = 30645,
-        item_class = "tf_wearable",
-        item_name_english = "El Duderino"
-    },
-    "Captain Space Mann" : {
-        id = 30646,
-        item_class = "tf_wearable",
-        item_name_english = "Captain Space Mann"
-    },
-    "Phononaut" : {
-        id = 30647,
-        item_class = "tf_wearable",
-        item_name_english = "Phononaut"
-    },
-    "Corona Australis" : {
-        id = 30648,
-        item_class = "tf_wearable",
-        item_name_english = "Corona Australis"
-    },
-    "Final Frontiersman" : {
-        id = 30649,
-        item_class = "tf_wearable",
-        item_name_english = "Final Frontiersman"
-    },
-    "Starduster" : {
-        id = 30650,
-        item_class = "tf_wearable",
-        item_name_english = "Starduster"
-    },
-    "The Graylien" : {
-        id = 30651,
-        item_class = "tf_wearable",
-        item_name_english = "Graylien"
-    },
-    "Phobos Filter" : {
-        id = 30652,
-        item_class = "tf_wearable",
-        item_name_english = "Phobos Filter"
-    },
-    "Sucker Slug" : {
-        id = 30653,
-        item_class = "tf_wearable",
-        item_name_english = "Sucker Slug"
-    },
-    "Life Support System" : {
-        id = 30654,
-        item_class = "tf_wearable",
-        item_name_english = "Life Support System"
-    },
-    "Rocket Operator" : {
-        id = 30655,
-        item_class = "tf_wearable",
-        item_name_english = "Rocket Operator"
-    },
-    "Universal Translator" : {
-        id = 30658,
-        item_class = "tf_wearable",
-        item_name_english = "Universal Translator"
-    },
-    "Cadet Visor" : {
-        id = 30661,
-        item_class = "tf_wearable",
-        item_name_english = "Cadet Visor"
-    },
-    "A Head Full of Hot Air" : {
-        id = 30662,
-        item_class = "tf_wearable",
-        item_name_english = "A Head Full of Hot Air"
-    },
-    "Jupiter Jetpack" : {
-        id = 30663,
-        item_class = "tf_wearable",
-        item_name_english = "Jupiter Jetpack"
-    },
-    "The Space Diver" : {
-        id = 30664,
-        item_class = "tf_wearable",
-        item_name_english = "Space Diver"
-    },
-    "Shooting Star" : {
-        id = 30665,
-        item_class = "tf_weapon_sniperrifle",
-        item_name_english = "Machina"
-    },
-    "The C.A.P.P.E.R" : {
-        id = 30666,
-        item_class = "tf_weapon_pistol",
-        item_name_english = "Pistol"
-    },
-    "Batsaber" : {
-        id = 30667,
-        item_class = "tf_weapon_bat",
-        item_name_english = "Bat"
-    },
-    "The Giger Counter" : {
-        id = 30668,
-        item_class = "tf_weapon_laser_pointer",
-        item_name_english = "Wrangler"
-    },
-    "Space Hamster Hammy" : {
-        id = 30669,
-        item_class = "tf_wearable",
-        item_name_english = "Space Hamster Hammy"
-    },
-    "Invasion Community Update Medal" : {
-        id = 30670,
-        item_class = "tf_wearable",
-        item_name_english = "Invasion Community Update Medal"
-    },
-    "Taunt: True Scotsman's Call" : {
-        id = 30671,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Bad Pipes"
-    },
-    "Taunt: Zoomin' Broom" : {
-        id = 30672,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Zoomin' Broom"
-    },
-    "Taunt: Soldier's Requiem" : {
-        id = 30673,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Soldier's Requiem"
-    },
-    "Roboot" : {
-        id = 30675,
-        item_class = "tf_wearable",
-        item_name_english = "Roboot"
-    },
-    "The Face of Mercy" : {
-        id = 30676,
-        item_class = "tf_wearable",
-        item_name_english = "Face of Mercy"
-    },
-    "El Caballero" : {
-        id = 30680,
-        item_class = "tf_wearable",
-        item_name_english = "El Caballero"
-    },
-    "El Patron" : {
-        id = 30681,
-        item_class = "tf_wearable",
-        item_name_english = "El Patron"
-    },
-    "Smokey Sombrero" : {
-        id = 30682,
-        item_class = "tf_wearable",
-        item_name_english = "Smokey Sombrero"
-    },
-    "Neptune's Nightmare" : {
-        id = 30684,
-        item_class = "tf_wearable",
-        item_name_english = "Neptune's Nightmare"
-    },
-    "Thrilling Tracksuit" : {
-        id = 30685,
-        item_class = "tf_wearable",
-        item_name_english = "Thrilling Tracksuit"
-    },
-    "Death Racer's Helmet" : {
-        id = 30686,
-        item_class = "tf_wearable",
-        item_name_english = "Death Racer's Helmet"
-    },
-    "Grim Tweeter" : {
-        id = 30693,
-        item_class = "tf_wearable",
-        item_name_english = "Grim Tweeter"
-    },
-    "Iron Lung" : {
-        id = 30698,
-        item_class = "tf_wearable",
-        item_name_english = "Iron Lung"
-    },
-    "Duck Billed Hatypus" : {
-        id = 30700,
-        item_class = "tf_wearable",
-        item_name_english = "Duck Billed Hatypus"
-    },
-    "Prehistoric Pullover" : {
-        id = 30704,
-        item_class = "tf_wearable",
-        item_name_english = "Prehistoric Pullover"
-    },
-    "Catastrophic Companions" : {
-        id = 30706,
-        item_class = "tf_wearable",
-        item_name_english = "Catastrophic Companions"
-    },
-    "Dead'er Alive" : {
-        id = 30707,
-        item_class = "tf_wearable",
-        item_name_english = "Dead'er Alive"
-    },
-    "The Hellmet" : {
-        id = 30708,
-        item_class = "tf_wearable",
-        item_name_english = "Hellmet"
-    },
-    "Crusader's Getup" : {
-        id = 30716,
-        item_class = "tf_wearable",
-        item_name_english = "Crusader's Getup"
-    },
-    "Arthropod's Aspect" : {
-        id = 30717,
-        item_class = "tf_wearable",
-        item_name_english = "Arthropod's Aspect"
-    },
-    "B'aaarrgh-n-Bicorne" : {
-        id = 30718,
-        item_class = "tf_wearable",
-        item_name_english = "B'aaarrgh-n-Bicorne"
-    },
-    "B'aaarrgh-n-Britches" : {
-        id = 30719,
-        item_class = "tf_wearable",
-        item_name_english = "B'aaarrgh-n-Britches"
-    },
-    "Arkham Cowl" : {
-        id = 30720,
-        item_class = "tf_wearable",
-        item_name_english = "Arkham Cowl"
-    },
-    "The Firefly" : {
-        id = 30721,
-        item_class = "tf_wearable",
-        item_name_english = "Firefly"
-    },
-    "Batter's Bracers" : {
-        id = 30722,
-        item_class = "tf_wearable",
-        item_name_english = "Batter's Bracers"
-    },
-    "The Hood of Sorrows" : {
-        id = 30723,
-        item_class = "tf_wearable",
-        item_name_english = "Hood of Sorrows"
-    },
-    "Fear Monger" : {
-        id = 30724,
-        item_class = "tf_wearable",
-        item_name_english = "Fear Monger"
-    },
-    "Pocket Villains" : {
-        id = 30726,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Villains"
-    },
-    "The Caped Crusader" : {
-        id = 30727,
-        item_class = "tf_wearable",
-        item_name_english = "Caped Crusader"
-    },
-    "Buttler" : {
-        id = 30728,
-        item_class = "tf_wearable",
-        item_name_english = "Buttler"
-    },
-    "Teufort Knight" : {
-        id = 30733,
-        item_class = "tf_wearable",
-        item_name_english = "Teufort Knight"
-    },
-    "Sidekick's Side Slick" : {
-        id = 30735,
-        item_class = "tf_wearable",
-        item_name_english = "Sidekick's Side Slick"
-    },
-    "The Bat Backup" : {
-        id = 30736,
-        item_class = "tf_wearable",
-        item_name_english = "Bat Backup"
-    },
-    "Crook Combatant" : {
-        id = 30737,
-        item_class = "tf_wearable",
-        item_name_english = "Crook Combatant"
-    },
-    "Batbelt" : {
-        id = 30738,
-        item_class = "tf_wearable",
-        item_name_english = "Batbelt"
-    },
-    "Promo Fear Monger" : {
-        id = 30739,
-        item_class = "tf_wearable",
-        item_name_english = "Fear Monger"
-    },
-    "Promo Arkham Cowl" : {
-        id = 30740,
-        item_class = "tf_wearable",
-        item_name_english = "Arkham Cowl"
-    },
-    "Promo The Firefly" : {
-        id = 30741,
-        item_class = "tf_wearable",
-        item_name_english = "Firefly"
-    },
-    "Shin Shredders" : {
-        id = 30742,
-        item_class = "tf_wearable",
-        item_name_english = "Shin Shredders"
-    },
-    "The Patriot Peak" : {
-        id = 30743,
-        item_class = "tf_wearable",
-        item_name_english = "Patriot Peak"
-    },
-    "The Diplomat" : {
-        id = 30744,
-        item_class = "tf_wearable",
-        item_name_english = "Diplomat"
-    },
-    "Siberian Sweater" : {
-        id = 30745,
-        item_class = "tf_wearable",
-        item_name_english = "Siberian Sweater"
-    },
-    "A Well Wrapped Hat" : {
-        id = 30746,
-        item_class = "tf_wearable",
-        item_name_english = "A Well Wrapped Hat"
-    },
-    "The Gift Bringer" : {
-        id = 30747,
-        item_class = "tf_wearable",
-        item_name_english = "Gift Bringer"
-    },
-    "The Chill Chullo" : {
-        id = 30748,
-        item_class = "tf_wearable",
-        item_name_english = "Chill Chullo"
-    },
-    "Winter Backup" : {
-        id = 30749,
-        item_class = "tf_wearable",
-        item_name_english = "Winter Backup"
-    },
-    "Medical Monarch" : {
-        id = 30750,
-        item_class = "tf_wearable",
-        item_name_english = "Medical Monarch"
-    },
-    "Bonk Batter's Backup" : {
-        id = 30751,
-        item_class = "tf_wearable",
-        item_name_english = "Bonk Batter's Backup"
-    },
-    "Chicago Overcoat" : {
-        id = 30752,
-        item_class = "tf_wearable",
-        item_name_english = "Chicago Overcoat"
-    },
-    "A Hat to Kill For" : {
-        id = 30753,
-        item_class = "tf_wearable",
-        item_name_english = "A Hat to Kill For"
-    },
-    "Hot Heels" : {
-        id = 30754,
-        item_class = "tf_wearable",
-        item_name_english = "Hot Heels"
-    },
-    "Berlin Brain Bowl" : {
-        id = 30755,
-        item_class = "tf_wearable",
-        item_name_english = "Berlin Brain Bowl"
-    },
-    "Bunnyhopper's Ballistics Vest" : {
-        id = 30756,
-        item_class = "tf_wearable",
-        item_name_english = "Bunnyhopper's Ballistics Vest"
-    },
-    "Prinny Pouch" : {
-        id = 30757,
-        item_class = "tf_wearable",
-        item_name_english = "Prinny Pouch"
-    },
-    "Prinny Machete" : {
-        id = 30758,
-        item_class = "saxxy",
-        item_name_english = "Prinny Machete"
-    },
-    "Prinny Hat" : {
-        id = 30759,
-        item_class = "tf_wearable",
-        item_name_english = "Prinny Hat"
-    },
-    "Taunt: The Fubar Fanfare" : {
-        id = 30761,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Fubar Fanfare"
-    },
-    "Taunt: Disco Fever" : {
-        id = 30762,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Disco Fever"
-    },
-    "Taunt: The Balloonibouncer" : {
-        id = 30763,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Balloonibouncer"
-    },
-    "The Airdog" : {
-        id = 30767,
-        item_class = "tf_wearable",
-        item_name_english = "Airdog"
-    },
-    "Bedouin Bandana" : {
-        id = 30768,
-        item_class = "tf_wearable",
-        item_name_english = "Bedouin Bandana"
-    },
-    "Herald's Helm" : {
-        id = 30769,
-        item_class = "tf_wearable",
-        item_name_english = "Herald's Helm"
-    },
-    "Courtly Cuirass" : {
-        id = 30770,
-        item_class = "tf_wearable",
-        item_name_english = "Courtly Cuirass"
-    },
-    "Squire's Sabatons" : {
-        id = 30771,
-        item_class = "tf_wearable",
-        item_name_english = "Squire's Sabatons"
-    },
-    "The Surgical Survivalist" : {
-        id = 30773,
-        item_class = "tf_wearable",
-        item_name_english = "Surgical Survivalist"
-    },
-    "The Dead Head" : {
-        id = 30775,
-        item_class = "tf_wearable",
-        item_name_english = "Dead Head"
-    },
-    "The Lurking Legionnaire" : {
-        id = 30777,
-        item_class = "tf_wearable",
-        item_name_english = "Lurking Legionnaire"
-    },
-    "The Dayjogger" : {
-        id = 30779,
-        item_class = "tf_wearable",
-        item_name_english = "Dayjogger"
-    },
-    "The Patriot's Pouches" : {
-        id = 30780,
-        item_class = "tf_wearable",
-        item_name_english = "Patriot's Pouches"
-    },
-    "Dad Duds" : {
-        id = 30785,
-        item_class = "tf_wearable",
-        item_name_english = "Dad Duds"
-    },
-    "The Gauzed Gaze" : {
-        id = 30786,
-        item_class = "tf_wearable",
-        item_name_english = "Gauzed Gaze"
-    },
-    "The Demo's Dustcatcher" : {
-        id = 30788,
-        item_class = "tf_wearable",
-        item_name_english = "Demo's Dustcatcher"
-    },
-    "The Scoped Spartan" : {
-        id = 30789,
-        item_class = "tf_wearable",
-        item_name_english = "Scoped Spartan"
-    },
-    "Colossal Cranium" : {
-        id = 30792,
-        item_class = "tf_wearable",
-        item_name_english = "Colossal Cranium"
-    },
-    "Aerobatics Demonstrator" : {
-        id = 30793,
-        item_class = "tf_wearable",
-        item_name_english = "Aerobatics Demonstrator"
-    },
-    "Final Frontier Freighter" : {
-        id = 30794,
-        item_class = "tf_wearable",
-        item_name_english = "Final Frontier Freighter"
-    },
-    "Hovering Hotshot" : {
-        id = 30795,
-        item_class = "tf_wearable",
-        item_name_english = "Hovering Hotshot"
-    },
-    "The Toadstool Topper" : {
-        id = 30796,
-        item_class = "tf_wearable",
-        item_name_english = "Toadstool Topper"
-    },
-    "Showstopper" : {
-        id = 30797,
-        item_class = "tf_wearable",
-        item_name_english = "Showstopper"
-    },
-    "Big Topper" : {
-        id = 30798,
-        item_class = "tf_wearable",
-        item_name_english = "Big Topper"
-    },
-    "Combustible Cutie" : {
-        id = 30799,
-        item_class = "tf_wearable",
-        item_name_english = "Combustible Cutie"
-    },
-    "The Cranial Carcharodon" : {
-        id = 30800,
-        item_class = "tf_wearable",
-        item_name_english = "Cranial Carcharodon"
-    },
-    "Spooktacles" : {
-        id = 30801,
-        item_class = "tf_wearable",
-        item_name_english = "Spooktacles"
-    },
-    "Heavy Tourism" : {
-        id = 30803,
-        item_class = "tf_wearable",
-        item_name_english = "Heavy Tourism"
-    },
-    "The El Paso Poncho" : {
-        id = 30804,
-        item_class = "tf_wearable",
-        item_name_english = "El Paso Poncho"
-    },
-    "The Wide-Brimmed Bandito" : {
-        id = 30805,
-        item_class = "tf_wearable",
-        item_name_english = "Wide-Brimmed Bandito"
-    },
-    "The Corpus Christi Cranium" : {
-        id = 30806,
-        item_class = "tf_wearable",
-        item_name_english = "Corpus Christi Cranium"
-    },
-    "Spirit of the Bombing Past" : {
-        id = 30807,
-        item_class = "tf_wearable",
-        item_name_english = "Spirit of the Bombing Past"
-    },
-    "Class Crown" : {
-        id = 30808,
-        item_class = "tf_wearable",
-        item_name_english = "Class Crown"
-    },
-    "The Wing Mann" : {
-        id = 30809,
-        item_class = "tf_wearable",
-        item_name_english = "Wing Mann"
-    },
-    "Nasty Norsemann" : {
-        id = 30810,
-        item_class = "tf_wearable",
-        item_name_english = "Nasty Norsemann"
-    },
-    "Pestering Jester" : {
-        id = 30811,
-        item_class = "tf_wearable",
-        item_name_english = "Pestering Jester"
-    },
-    "Mo'Horn" : {
-        id = 30812,
-        item_class = "tf_wearable",
-        item_name_english = "Mo'Horn"
-    },
-    "The Surgeon's Sidearms" : {
-        id = 30813,
-        item_class = "tf_wearable",
-        item_name_english = "Surgeon's Sidearms"
-    },
-    "Lil' Bitey" : {
-        id = 30814,
-        item_class = "tf_wearable",
-        item_name_english = "Lil' Bitey"
-    },
-    "Mad Mask" : {
-        id = 30815,
-        item_class = "tf_wearable",
-        item_name_english = "Mad Mask"
-    },
-    "Taunt: Second Rate Sorcery" : {
-        id = 30816,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Second Rate Sorcery"
-    },
-    "Burly Beast" : {
-        id = 30817,
-        item_class = "tf_wearable",
-        item_name_english = "Burly Beast"
-    },
-    "Socked and Loaded" : {
-        id = 30818,
-        item_class = "tf_wearable",
-        item_name_english = "Socked and Loaded"
-    },
-    "Flammable Favor" : {
-        id = 30819,
-        item_class = "tf_wearable",
-        item_name_english = "Flammable Favor"
-    },
-    "Snowwing" : {
-        id = 30820,
-        item_class = "tf_wearable",
-        item_name_english = "Snowwing"
-    },
-    "Packable Provisions" : {
-        id = 30821,
-        item_class = "tf_wearable",
-        item_name_english = "Packable Provisions"
-    },
-    "Handy Canes" : {
-        id = 30822,
-        item_class = "tf_wearable",
-        item_name_english = "Handy Canes"
-    },
-    "Bomb Beanie" : {
-        id = 30823,
-        item_class = "tf_wearable",
-        item_name_english = "Bomb Beanie"
-    },
-    "The Electric Twanger" : {
-        id = 30824,
-        item_class = "tf_wearable",
-        item_name_english = "Electric Twanger"
-    },
-    "Santarchimedes" : {
-        id = 30825,
-        item_class = "tf_wearable",
-        item_name_english = "Santarchimedes"
-    },
-    "Sweet Smissmas Sweater" : {
-        id = 30826,
-        item_class = "tf_wearable",
-        item_name_english = "Sweet Smissmas Sweater"
-    },
-    "Brain-Warming Wear" : {
-        id = 30827,
-        item_class = "tf_wearable",
-        item_name_english = "Brain-Warming Wear"
-    },
-    "The Snowmann" : {
-        id = 30829,
-        item_class = "tf_wearable",
-        item_name_english = "Snowmann"
-    },
-    "The Bomber Knight" : {
-        id = 30830,
-        item_class = "tf_wearable",
-        item_name_english = "Bomber Knight"
-    },
-    "Reader's Choice" : {
-        id = 30831,
-        item_class = "tf_wearable",
-        item_name_english = "Reader's Choice"
-    },
-    "Woolen Warmer" : {
-        id = 30833,
-        item_class = "tf_wearable",
-        item_name_english = "Woolen Warmer"
-    },
-    "Pyro the Flamedeer" : {
-        id = 30835,
-        item_class = "tf_wearable",
-        item_name_english = "Pyro the Flamedeer"
-    },
-    "Elf Esteem" : {
-        id = 30836,
-        item_class = "tf_wearable",
-        item_name_english = "Elf Esteem"
-    },
-    "The Head Prize" : {
-        id = 30838,
-        item_class = "tf_wearable",
-        item_name_english = "Head Prize"
-    },
-    "Taunt: Didgeridrongo" : {
-        id = 30839,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Didgeridrongo"
-    },
-    "Taunt: Scotsmann's Stagger" : {
-        id = 30840,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Scotsmann's Stagger"
-    },
-    "Taunt: The Dueling Banjo" : {
-        id = 30842,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Dueling Banjo"
-    },
-    "Taunt: The Russian Arms Race" : {
-        id = 30843,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Russian Arms Race"
-    },
-    "Taunt: The Soviet Strongarm" : {
-        id = 30844,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Soviet Strongarm"
-    },
-    "Taunt: The Jumping Jack" : {
-        id = 30845,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Jumping Jack"
-    },
-    "Plumber's Cap" : {
-        id = 30846,
-        item_class = "tf_wearable",
-        item_name_english = "Plumber's Cap"
-    },
-    "The Upgrade" : {
-        id = 30848,
-        item_class = "tf_wearable",
-        item_name_english = "Upgrade"
-    },
-    "Pocket Pauling" : {
-        id = 30849,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Pauling"
-    },
-    "Flakcatcher" : {
-        id = 30853,
-        item_class = "tf_wearable",
-        item_name_english = "Flakcatcher"
-    },
-    "Down Under Duster" : {
-        id = 30856,
-        item_class = "tf_wearable",
-        item_name_english = "Down Under Duster"
-    },
-    "Guilden Guardian" : {
-        id = 30857,
-        item_class = "tf_wearable",
-        item_name_english = "Guilden Guardian"
-    },
-    "Hawk Eyed Hunter" : {
-        id = 30858,
-        item_class = "tf_wearable",
-        item_name_english = "Hawk-Eyed Hunter"
-    },
-    "Airtight Arsonist" : {
-        id = 30859,
-        item_class = "tf_wearable",
-        item_name_english = "Airtight Arsonist"
-    },
-    "Field Practice" : {
-        id = 30862,
-        item_class = "tf_wearable",
-        item_name_english = "Field Practice"
-    },
-    "Blast Defense" : {
-        id = 30863,
-        item_class = "tf_wearable",
-        item_name_english = "Blast Defense"
-    },
-    "Warhood" : {
-        id = 30866,
-        item_class = "tf_wearable",
-        item_name_english = "Warhood"
-    },
-    "The Lightning Lid" : {
-        id = 30867,
-        item_class = "tf_wearable",
-        item_name_english = "Lightning Lid"
-    },
-    "Legendary Lid" : {
-        id = 30868,
-        item_class = "tf_wearable",
-        item_name_english = "Legendary Lid"
-    },
-    "Messenger's Mail Bag" : {
-        id = 30869,
-        item_class = "tf_wearable",
-        item_name_english = "Messenger's Mail Bag"
-    },
-    "Flash of Inspiration" : {
-        id = 30871,
-        item_class = "tf_wearable",
-        item_name_english = "Flash of Inspiration"
-    },
-    "Head Mounted Double Observatory" : {
-        id = 30872,
-        item_class = "tf_wearable",
-        item_name_english = "Head Mounted Double Observatory"
-    },
-    "Airborne Attire" : {
-        id = 30873,
-        item_class = "tf_wearable",
-        item_name_english = "Airborne Attire"
-    },
-    "Archer's Sterling" : {
-        id = 30874,
-        item_class = "tf_wearable",
-        item_name_english = "Archer's Sterling"
-    },
-    "Speedster's Spandex" : {
-        id = 30875,
-        item_class = "tf_wearable",
-        item_name_english = "Speedster's Spandex"
-    },
-    "Taunt: The Headcase" : {
-        id = 30876,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Headcase"
-    },
-    "The Hunter in Darkness" : {
-        id = 30877,
-        item_class = "tf_wearable",
-        item_name_english = "Hunter in Darkness"
-    },
-    "Quizzical Quetzal" : {
-        id = 30878,
-        item_class = "tf_wearable",
-        item_name_english = "Quizzical Quetzal"
-    },
-    "The Aztec Warrior" : {
-        id = 30879,
-        item_class = "tf_wearable",
-        item_name_english = "Aztec Warrior"
-    },
-    "Pocket Saxton" : {
-        id = 30880,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Saxton"
-    },
-    "The Croaking Hazard" : {
-        id = 30881,
-        item_class = "tf_wearable",
-        item_name_english = "Croaking Hazard"
-    },
-    "Jungle Wreath" : {
-        id = 30882,
-        item_class = "tf_wearable",
-        item_name_english = "Jungle Wreath"
-    },
-    "The Slithering Scarf" : {
-        id = 30883,
-        item_class = "tf_wearable",
-        item_name_english = "Slithering Scarf"
-    },
-    "Aloha Apparel" : {
-        id = 30884,
-        item_class = "tf_wearable",
-        item_name_english = "Aloha Apparel"
-    },
-    "The Nuke" : {
-        id = 30885,
-        item_class = "tf_wearable",
-        item_name_english = "Nuke"
-    },
-    "Bananades" : {
-        id = 30886,
-        item_class = "tf_wearable",
-        item_name_english = "Bananades"
-    },
-    "The War Eagle" : {
-        id = 30887,
-        item_class = "tf_wearable",
-        item_name_english = "War Eagle"
-    },
-    "Jungle Jersey" : {
-        id = 30888,
-        item_class = "tf_wearable",
-        item_name_english = "Jungle Jersey"
-    },
-    "Transparent Trousers" : {
-        id = 30889,
-        item_class = "tf_wearable",
-        item_name_english = "Transparent Trousers"
-    },
-    "Forest Footwear" : {
-        id = 30890,
-        item_class = "tf_wearable",
-        item_name_english = "Forest Footwear"
-    },
-    "The Cammy Jammies" : {
-        id = 30891,
-        item_class = "tf_wearable",
-        item_name_english = "Cammy Jammies"
-    },
-    "The Conspicuous Camouflage" : {
-        id = 30892,
-        item_class = "tf_wearable",
-        item_name_english = "Conspicuous Camouflage"
-    },
-    "The Classy Capper" : {
-        id = 30893,
-        item_class = "tf_wearable",
-        item_name_english = "Classy Capper"
-    },
-    "The Most Dangerous Mane" : {
-        id = 30894,
-        item_class = "tf_wearable",
-        item_name_english = "Most Dangerous Mane"
-    },
-    "Rifleman's Regalia" : {
-        id = 30895,
-        item_class = "tf_wearable",
-        item_name_english = "Rifleman's Regalia"
-    },
-    "Attack Packs" : {
-        id = 30896,
-        item_class = "tf_wearable",
-        item_name_english = "Attack Packs"
-    },
-    "The Shellmet" : {
-        id = 30897,
-        item_class = "tf_wearable",
-        item_name_english = "Shellmet"
-    },
-    "Sharp Chest Pain" : {
-        id = 30898,
-        item_class = "tf_wearable",
-        item_name_english = "Sharp Chest Pain"
-    },
-    "The Crit Cloak" : {
-        id = 30899,
-        item_class = "tf_wearable",
-        item_name_english = "Crit Cloak"
-    },
-    "Fireman's Essentials" : {
-        id = 30900,
-        item_class = "tf_wearable",
-        item_name_english = "Fireman's Essentials"
-    },
-    "D-eye-monds" : {
-        id = 30901,
-        item_class = "tf_wearable",
-        item_name_english = "D-eye-monds"
-    },
-    "Deity's Dress" : {
-        id = 30902,
-        item_class = "tf_wearable",
-        item_name_english = "Deity's Dress"
-    },
-    "Feathered Fiend" : {
-        id = 30903,
-        item_class = "tf_wearable",
-        item_name_english = "Feathered Fiend"
-    },
-    "Sacrificial Stone" : {
-        id = 30904,
-        item_class = "tf_wearable",
-        item_name_english = "Sacrificial Stone"
-    },
-    "The Hot Huaraches" : {
-        id = 30905,
-        item_class = "tf_wearable",
-        item_name_english = "Hot Huaraches"
-    },
-    "Vitals Vest" : {
-        id = 30906,
-        item_class = "tf_wearable",
-        item_name_english = "Vitals Vest"
-    },
-    "Battle Boonie" : {
-        id = 30907,
-        item_class = "tf_wearable",
-        item_name_english = "Battle Boonie"
-    },
-    "Conaghers' Utility Idol" : {
-        id = 30908,
-        item_class = "tf_wearable",
-        item_name_english = "Conaghers' Utility Idol"
-    },
-    "Tropical Toad" : {
-        id = 30909,
-        item_class = "tf_wearable",
-        item_name_english = "Tropical Toad"
-    },
-    "Heavy Harness" : {
-        id = 30910,
-        item_class = "tf_wearable",
-        item_name_english = "Heavy Harness"
-    },
-    "Fat Man's Field Cap" : {
-        id = 30911,
-        item_class = "tf_wearable",
-        item_name_english = "Fat Man's Field Cap"
-    },
-    "Commando Elite" : {
-        id = 30912,
-        item_class = "tf_wearable",
-        item_name_english = "Commando Elite"
-    },
-    "Siberian Tigerstripe" : {
-        id = 30913,
-        item_class = "tf_wearable",
-        item_name_english = "Siberian Tigerstripe"
-    },
-    "The Aztec Aggressor" : {
-        id = 30914,
-        item_class = "tf_wearable",
-        item_name_english = "Aztec Aggressor"
-    },
-    "The Pithy Professional" : {
-        id = 30915,
-        item_class = "tf_wearable",
-        item_name_english = "Pithy Professional"
-    },
-    "Bait and Bite" : {
-        id = 30916,
-        item_class = "tf_wearable",
-        item_name_english = "Bait and Bite"
-    },
-    "Taunt: The Trackman's Touchdown" : {
-        id = 30917,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Trackman's Touchdown"
-    },
-    "Taunt: Surgeon's Squeezebox" : {
-        id = 30918,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Surgeon's Squeezebox"
-    },
-    "Taunt: The Skating Scorcher" : {
-        id = 30919,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Skating Scorcher"
-    },
-    "Taunt: The Bunnyhopper" : {
-        id = 30920,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Bunnyhopper"
-    },
-    "Taunt: Runner's Rhythm" : {
-        id = 30921,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Runner's Rhythm"
-    },
-    "Taunt: Luxury Lounge" : {
-        id = 30922,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Luxury Lounge"
-    },
-    "Sledder's Sidekick" : {
-        id = 30923,
-        item_class = "tf_wearable",
-        item_name_english = "Sledder's Sidekick"
-    },
-    "Balloonihoodie" : {
-        id = 30928,
-        item_class = "tf_wearable",
-        item_name_english = "Balloonihoodie"
-    },
-    "Pocket Yeti" : {
-        id = 30929,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Yeti"
-    },
-    "Trucker's Topper" : {
-        id = 30930,
-        item_class = "tf_wearable",
-        item_name_english = "Trucker's Topper"
-    },
-    "Burning Beanie" : {
-        id = 30936,
-        item_class = "tf_wearable",
-        item_name_english = "Burning Beanie"
-    },
-    "The Cat's Pajamas" : {
-        id = 30937,
-        item_class = "tf_wearable",
-        item_name_english = "Cat's Pajamas"
-    },
-    "Coldfront Commander" : {
-        id = 30939,
-        item_class = "tf_wearable",
-        item_name_english = "Coldfront Commander"
-    },
-    "Coldfront Carapace" : {
-        id = 30940,
-        item_class = "tf_wearable",
-        item_name_english = "Coldfront Carapace"
-    },
-    "Blast Blocker" : {
-        id = 30945,
-        item_class = "tf_wearable",
-        item_name_english = "Blast Blocker"
-    },
-    "Hungover Hero" : {
-        id = 30954,
-        item_class = "tf_wearable",
-        item_name_english = "Hungover Hero"
-    },
-    "The Handsome Hitman" : {
-        id = 30955,
-        item_class = "tf_wearable",
-        item_name_english = "Handsome Hitman"
-    },
-    "Puffy Polar Cap" : {
-        id = 30958,
-        item_class = "tf_wearable",
-        item_name_english = "Puffy Polar Cap"
-    },
-    "The Sinner's Shade" : {
-        id = 30959,
-        item_class = "tf_wearable",
-        item_name_english = "Sinner's Shade"
-    },
-    "Wild West Whiskers" : {
-        id = 30960,
-        item_class = "tf_wearable",
-        item_name_english = "Wild West Whiskers"
-    },
-    "Polar Bear" : {
-        id = 30964,
-        item_class = "tf_wearable",
-        item_name_english = "Polar Bear"
-    },
-    "Brass Bucket" : {
-        id = 30969,
-        item_class = "tf_wearable",
-        item_name_english = "Brass Bucket"
-    },
-    "Down Tundra Coat" : {
-        id = 30971,
-        item_class = "tf_wearable",
-        item_name_english = "Down Tundra Coat"
-    },
-    "Pocket Santa" : {
-        id = 30972,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Santa"
-    },
-    "Melody Of Misery" : {
-        id = 30973,
-        item_class = "tf_wearable",
-        item_name_english = "Melody of Misery"
-    },
-    "The Caribou Companion" : {
-        id = 30974,
-        item_class = "tf_wearable",
-        item_name_english = "Caribou Companion"
-    },
-    "Robin Walkers" : {
-        id = 30975,
-        item_class = "tf_wearable",
-        item_name_english = "Robin Walkers"
-    },
-    "The Tundra Top" : {
-        id = 30976,
-        item_class = "tf_wearable",
-        item_name_english = "Tundra Top"
-    },
-    "Antarctic Eyewear" : {
-        id = 30977,
-        item_class = "tf_wearable",
-        item_name_english = "Antarctic Eyewear"
-    },
-    "The Head Hedge" : {
-        id = 30978,
-        item_class = "tf_wearable",
-        item_name_english = "Head Hedge"
-    },
-    "The Frag Proof Fragger" : {
-        id = 30979,
-        item_class = "tf_wearable",
-        item_name_english = "Frag Proof Fragger"
-    },
-    "Tsar Platinum" : {
-        id = 30980,
-        item_class = "tf_wearable",
-        item_name_english = "Tsar Platinum"
-    },
-    "Starboard Crusader" : {
-        id = 30981,
-        item_class = "tf_wearable",
-        item_name_english = "Starboard Crusader"
-    },
-    "Scourge of the Sky" : {
-        id = 30982,
-        item_class = "tf_wearable",
-        item_name_english = "Scourge of the Sky"
-    },
-    "Veterans Attire" : {
-        id = 30983,
-        item_class = "tf_wearable",
-        item_name_english = "Veteran's Attire"
-    },
-    "Sky High Fly Guy" : {
-        id = 30984,
-        item_class = "tf_wearable",
-        item_name_english = "Sky High Fly Guy"
-    },
-    "Private Maggot Muncher" : {
-        id = 30985,
-        item_class = "tf_wearable",
-        item_name_english = "Private Maggot Muncher"
-    },
-    "The Hot Case" : {
-        id = 30986,
-        item_class = "tf_wearable",
-        item_name_english = "Hot Case"
-    },
-    "The Burning Question" : {
-        id = 30987,
-        item_class = "tf_wearable",
-        item_name_english = "Burning Question"
-    },
-    "Aristotle" : {
-        id = 30988,
-        item_class = "tf_wearable",
-        item_name_english = "Aristotle"
-    },
-    "Assassin's Attire" : {
-        id = 30989,
-        item_class = "tf_wearable",
-        item_name_english = "Assassin's Attire"
-    },
-    "Wipe Out Wraps" : {
-        id = 30990,
-        item_class = "tf_wearable",
-        item_name_english = "Wipe Out Wraps"
-    },
-    "Blizzard Britches" : {
-        id = 30991,
-        item_class = "tf_wearable",
-        item_name_english = "Blizzard Britches"
-    },
-    "The Cold Case" : {
-        id = 30992,
-        item_class = "tf_wearable",
-        item_name_english = "Cold Case"
-    },
-    "Punk's Pomp" : {
-        id = 30993,
-        item_class = "tf_wearable",
-        item_name_english = "Punk's Pomp"
-    },
-    "A Shell of a Mann" : {
-        id = 30994,
-        item_class = "tf_wearable",
-        item_name_english = "A Shell of a Mann"
-    },
-    "Dell in the Shell" : {
-        id = 30995,
-        item_class = "tf_wearable",
-        item_name_english = "Dell in the Shell"
-    },
-    "Terror-antula" : {
-        id = 30996,
-        item_class = "tf_wearable",
-        item_name_english = "Terror-antula"
-    },
-    "Deadbeats" : {
-        id = 30997,
-        item_class = "tf_wearable",
-        item_name_english = "Deadbeats"
-    },
-    "Lucky Cat Hat" : {
-        id = 30998,
-        item_class = "tf_wearable",
-        item_name_english = "Lucky Cat Hat"
-    },
-    "Olympic Leapers" : {
-        id = 30999,
-        item_class = "tf_wearable",
-        item_name_english = "Olympic Leapers"
-    },
-    "Hephaistos' Handcraft" : {
-        id = 31000,
-        item_class = "tf_wearable",
-        item_name_english = "Hephaistos' Handcraft"
-    },
-    "Athenian Attire" : {
-        id = 31001,
-        item_class = "tf_wearable",
-        item_name_english = "Athenian Attire"
-    },
-    "The Tank Top" : {
-        id = 31002,
-        item_class = "tf_wearable",
-        item_name_english = "Tank Top"
-    },
-    "Vampire Vanquisher" : {
-        id = 31003,
-        item_class = "tf_wearable",
-        item_name_english = "Vampire Vanquisher"
-    },
-    "Pyro in Chinatown" : {
-        id = 31004,
-        item_class = "tf_wearable",
-        item_name_english = "Pyro in Chinatown"
-    },
-    "Scopers Scales" : {
-        id = 31005,
-        item_class = "tf_wearable",
-        item_name_english = "Scoper's Scales"
-    },
-    "Mr. Quackers" : {
-        id = 31006,
-        item_class = "tf_wearable",
-        item_name_english = "Mr. Quackers"
-    },
-    "The Arachno-Arsonist" : {
-        id = 31007,
-        item_class = "tf_wearable",
-        item_name_english = "Arachno-Arsonist"
-    },
-    "Mann-O-War" : {
-        id = 31008,
-        item_class = "tf_wearable",
-        item_name_english = "Mann-O-War"
-    },
-    "Crocodile Mun-Dee" : {
-        id = 31009,
-        item_class = "tf_wearable",
-        item_name_english = "Crocodile Mun-Dee"
-    },
-    "Highway Star" : {
-        id = 31010,
-        item_class = "tf_wearable",
-        item_name_english = "Highway Star"
-    },
-    "Defragmenting Hard Hat 17%" : {
-        id = 31011,
-        item_class = "tf_wearable",
-        item_name_english = "Defragmenting Hard Hat 17%"
-    },
-    "Aim Assistant" : {
-        id = 31012,
-        item_class = "tf_wearable",
-        item_name_english = "Aim Assistant"
-    },
-    "Mini-Engy" : {
-        id = 31013,
-        item_class = "tf_wearable",
-        item_name_english = "Mini-Engy"
-    },
-    "Dressperado" : {
-        id = 31014,
-        item_class = "tf_wearable",
-        item_name_english = "Dressperado"
-    },
-    "Bandit's Boots" : {
-        id = 31015,
-        item_class = "tf_wearable",
-        item_name_english = "Bandit's Boots"
-    },
-    "Murderer's Motif" : {
-        id = 31016,
-        item_class = "tf_wearable",
-        item_name_english = "Murderer's Motif"
-    },
-    "Gaelic Glutton" : {
-        id = 31017,
-        item_class = "tf_wearable",
-        item_name_english = "Gaelic Glutton"
-    },
-    "The Polar Pal" : {
-        id = 31018,
-        item_class = "tf_wearable",
-        item_name_english = "Polar Pal"
-    },
-    "Pocket Admin" : {
-        id = 31019,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Admin"
-    },
-    "Bread Heads" : {
-        id = 31020,
-        item_class = "tf_wearable",
-        item_name_english = "Bread Heads"
-    },
-    "The Catcher's Companion" : {
-        id = 31021,
-        item_class = "tf_wearable",
-        item_name_english = "Catcher's Companion"
-    },
-    "Juvenile's Jumper" : {
-        id = 31022,
-        item_class = "tf_wearable",
-        item_name_english = "Juvenile's Jumper"
-    },
-    "Millennial Mercenary" : {
-        id = 31023,
-        item_class = "tf_wearable",
-        item_name_english = "Millennial Mercenary"
-    },
-    "The Crack Pot" : {
-        id = 31024,
-        item_class = "tf_wearable",
-        item_name_english = "Crack Pot"
-    },
-    "Climbing Commander" : {
-        id = 31025,
-        item_class = "tf_wearable",
-        item_name_english = "Climbing Commander"
-    },
-    "Pocket Pardner" : {
-        id = 31026,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Pardner"
-    },
-    "Miser's Muttonchops" : {
-        id = 31027,
-        item_class = "tf_wearable",
-        item_name_english = "Miser's Muttonchops"
-    },
-    "Snowcapped" : {
-        id = 31028,
-        item_class = "tf_wearable",
-        item_name_english = "Snowcapped"
-    },
-    "Cool Capuchon" : {
-        id = 31029,
-        item_class = "tf_wearable",
-        item_name_english = "Cool Capuchon"
-    },
-    "Paka Parka" : {
-        id = 31030,
-        item_class = "tf_wearable",
-        item_name_english = "Paka Parka"
-    },
-    "Wise Whiskers" : {
-        id = 31031,
-        item_class = "tf_wearable",
-        item_name_english = "Wise Whiskers"
-    },
-    "The Puggyback" : {
-        id = 31032,
-        item_class = "tf_wearable",
-        item_name_english = "Puggyback"
-    },
-    "Harry" : {
-        id = 31033,
-        item_class = "tf_wearable",
-        item_name_english = "Harry"
-    },
-    "Mighty Mitre" : {
-        id = 31034,
-        item_class = "tf_wearable",
-        item_name_english = "Mighty Mitre"
-    },
-    "The Dumb Bell" : {
-        id = 31035,
-        item_class = "tf_wearable",
-        item_name_english = "Dumb Bell"
-    },
-    "Stapler's Specs" : {
-        id = 31036,
-        item_class = "tf_wearable",
-        item_name_english = "Stapler's Specs"
-    },
-    "Dynamite Abs" : {
-        id = 31037,
-        item_class = "tf_wearable",
-        item_name_english = "Dynamite Abs"
-    },
-    "Backbreaker's Skullcracker" : {
-        id = 31038,
-        item_class = "tf_wearable",
-        item_name_english = "Backbreaker's Skullcracker"
-    },
-    "Backbreaker's Guards" : {
-        id = 31039,
-        item_class = "tf_wearable",
-        item_name_english = "Backbreaker's Guards"
-    },
-    "Unforgiven Glory" : {
-        id = 31040,
-        item_class = "tf_wearable",
-        item_name_english = "Unforgiven Glory"
-    },
-    "Melted Mop" : {
-        id = 31041,
-        item_class = "tf_wearable",
-        item_name_english = "Melted Mop"
-    },
-    "The Bottle Cap" : {
-        id = 31042,
-        item_class = "tf_wearable",
-        item_name_english = "Bottle Cap"
-    },
-    "The Pompous Privateer" : {
-        id = 31043,
-        item_class = "tf_wearable",
-        item_name_english = "Pompous Privateer"
-    },
-    "The Peacebreaker" : {
-        id = 31044,
-        item_class = "tf_wearable",
-        item_name_english = "Peacebreaker"
-    },
-    "Dancing Doe" : {
-        id = 31045,
-        item_class = "tf_wearable",
-        item_name_english = "Dancing Doe"
-    },
-    "Texas Toast" : {
-        id = 31046,
-        item_class = "tf_wearable",
-        item_name_english = "Texas Toast"
-    },
-    "The Fiery Phoenix" : {
-        id = 31047,
-        item_class = "tf_wearable",
-        item_name_english = "Fiery Phoenix"
-    },
-    "Shutterbug" : {
-        id = 31048,
-        item_class = "tf_wearable",
-        item_name_english = "Shutterbug"
-    },
-    "Brain Interface" : {
-        id = 31049,
-        item_class = "tf_wearable",
-        item_name_english = "Brain Interface"
-    },
-    "Spawn Camper" : {
-        id = 31050,
-        item_class = "tf_wearable",
-        item_name_english = "Spawn Camper"
-    },
-    "Wanderer's Wear" : {
-        id = 31051,
-        item_class = "tf_wearable",
-        item_name_english = "Wanderer's Wear"
-    },
-    "Mediterranean Mercenary" : {
-        id = 31052,
-        item_class = "tf_wearable",
-        item_name_english = "Mediterranean Mercenary"
-    },
-    "Kapitan's Kaftan" : {
-        id = 31053,
-        item_class = "tf_wearable",
-        item_name_english = "Kapitan's Kaftan"
-    },
-    "The Bare Necessities" : {
-        id = 31054,
-        item_class = "tf_wearable",
-        item_name_english = "Bare Necessities"
-    },
-    "Wagga Wagga Wear" : {
-        id = 31055,
-        item_class = "tf_wearable",
-        item_name_english = "Wagga Wagga Wear"
-    },
-    "Speedy Scoundrel" : {
-        id = 31056,
-        item_class = "tf_wearable",
-        item_name_english = "Speedy Scoundrel"
-    },
-    "Bobby Bonnet" : {
-        id = 31057,
-        item_class = "tf_wearable",
-        item_name_english = "Bobby Bonnet"
-    },
-    "Bat Hat" : {
-        id = 31058,
-        item_class = "tf_wearable",
-        item_name_english = "Bat Hat"
-    },
-    "Mister Bones" : {
-        id = 31059,
-        item_class = "tf_wearable",
-        item_name_english = "Mister Bones"
-    },
-    "Binoculus" : {
-        id = 31060,
-        item_class = "tf_wearable",
-        item_name_english = "BINOCULUS!"
-    },
-    "Pocket Halloween Boss" : {
-        id = 31061,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket Halloween Boss"
-    },
-    "Bread Biter" : {
-        id = 31062,
-        item_class = "tf_wearable",
-        item_name_english = "Bread Biter"
-    },
-    "The Horrible Horns" : {
-        id = 31063,
-        item_class = "tf_wearable",
-        item_name_english = "Horrible Horns"
-    },
-    "The Trick Stabber" : {
-        id = 31064,
-        item_class = "tf_wearable",
-        item_name_english = "Trick Stabber"
-    },
-    "Head of the Dead" : {
-        id = 31065,
-        item_class = "tf_wearable",
-        item_name_english = "Head of the Dead"
-    },
-    "Skullbrero" : {
-        id = 31066,
-        item_class = "tf_wearable",
-        item_name_english = "Skullbrero"
-    },
-    "Candy Cranium" : {
-        id = 31067,
-        item_class = "tf_wearable",
-        item_name_english = "Candy Cranium"
-    },
-    "Pyro Shark" : {
-        id = 31068,
-        item_class = "tf_wearable",
-        item_name_english = "Pyro Shark"
-    },
-    "El Zapateador" : {
-        id = 31069,
-        item_class = "tf_wearable",
-        item_name_english = "El Zapateador"
-    },
-    "Party Poncho" : {
-        id = 31070,
-        item_class = "tf_wearable",
-        item_name_english = "Party Poncho"
-    },
-    "Racc Mann" : {
-        id = 31071,
-        item_class = "tf_wearable",
-        item_name_english = "Racc Mann"
-    },
-    "Voodoo Vizier" : {
-        id = 31072,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo Vizier"
-    },
-    "Avian Amante" : {
-        id = 31073,
-        item_class = "tf_wearable",
-        item_name_english = "Avian Amante"
-    },
-    "El Mostacho" : {
-        id = 31074,
-        item_class = "tf_wearable",
-        item_name_english = "El Mostacho"
-    },
-    "Eingineer" : {
-        id = 31075,
-        item_class = "tf_wearable",
-        item_name_english = "Eingineer"
-    },
-    "Pyr'o Lantern" : {
-        id = 31076,
-        item_class = "tf_wearable",
-        item_name_english = "Pyr'o Lantern"
-    },
-    "Madmann's Muzzle" : {
-        id = 31077,
-        item_class = "tf_wearable",
-        item_name_english = "Madmann's Muzzle"
-    },
-    "Derangement Garment" : {
-        id = 31078,
-        item_class = "tf_wearable",
-        item_name_english = "Derangement Garment"
-    },
-    "Soviet Strongmann" : {
-        id = 31079,
-        item_class = "tf_wearable",
-        item_name_english = "Soviet Strongmann"
-    },
-    "Convict Cap" : {
-        id = 31080,
-        item_class = "tf_wearable",
-        item_name_english = "Convict Cap"
-    },
-    "Fuel Injector" : {
-        id = 31081,
-        item_class = "tf_wearable",
-        item_name_english = "Fuel Injector"
-    },
-    "Remorseless Raptor" : {
-        id = 31082,
-        item_class = "tf_wearable",
-        item_name_english = "Remorseless Raptor"
-    },
-    "Wild Whip" : {
-        id = 31083,
-        item_class = "tf_wearable",
-        item_name_english = "Wild Whip"
-    },
-    "Elizabeth the Third" : {
-        id = 31084,
-        item_class = "tf_wearable",
-        item_name_english = "Elizabeth the Third"
-    },
-    "Bumble Beenie" : {
-        id = 31085,
-        item_class = "tf_wearable",
-        item_name_english = "Bumble Beenie"
-    },
-    "Pebbles the Penguin" : {
-        id = 31086,
-        item_class = "tf_wearable",
-        item_name_english = "Pebbles the Penguin"
-    },
-    "Yule Hog" : {
-        id = 31087,
-        item_class = "tf_wearable",
-        item_name_english = "Yule Hog"
-    },
-    "Gingerbread Mann" : {
-        id = 31088,
-        item_class = "tf_wearable",
-        item_name_english = "Gingerbread Mann"
-    },
-    "Smissmas Saxton" : {
-        id = 31089,
-        item_class = "tf_wearable",
-        item_name_english = "Smissmas Saxton"
-    },
-    "Globetrotter" : {
-        id = 31090,
-        item_class = "tf_wearable",
-        item_name_english = "Globetrotter"
-    },
-    "Citizen Cane" : {
-        id = 31091,
-        item_class = "tf_wearable",
-        item_name_english = "Citizen Cane"
-    },
-    "Candy Crown" : {
-        id = 31092,
-        item_class = "tf_wearable",
-        item_name_english = "Candy Crown"
-    },
-    "Glittering Garland" : {
-        id = 31093,
-        item_class = "tf_wearable",
-        item_name_english = "Glittering Garland"
-    },
-    "Winter Wrap Up" : {
-        id = 31094,
-        item_class = "tf_wearable",
-        item_name_english = "Winter Wrap Up"
-    },
-    "Public Speaker" : {
-        id = 31095,
-        item_class = "tf_wearable",
-        item_name_english = "Public Speaker"
-    },
-    "Discovision" : {
-        id = 31096,
-        item_class = "tf_wearable",
-        item_name_english = "Discovision"
-    },
-    "Provisions Cap" : {
-        id = 31097,
-        item_class = "tf_wearable",
-        item_name_english = "Provisions Cap"
-    },
-    "Telefragger Toque" : {
-        id = 31098,
-        item_class = "tf_wearable",
-        item_name_english = "Telefragger Toque"
-    },
-    "Pocket-Medes" : {
-        id = 31099,
-        item_class = "tf_wearable",
-        item_name_english = "Pocket-Medes"
-    },
-    "Spiky Viking" : {
-        id = 31100,
-        item_class = "tf_wearable",
-        item_name_english = "Spiky Viking"
-    },
-    "The Missing Piece" : {
-        id = 31101,
-        item_class = "tf_wearable",
-        item_name_english = "Missing Piece"
-    },
-    "The Mislaid Sweater" : {
-        id = 31102,
-        item_class = "tf_wearable",
-        item_name_english = "Mislaid Sweater"
-    },
-    "Hypno-eyes" : {
-        id = 31103,
-        item_class = "tf_wearable",
-        item_name_english = "Hypno-Eyes"
-    },
-    "Breadcrab" : {
-        id = 31104,
-        item_class = "tf_wearable",
-        item_name_english = "Breadcrab"
-    },
-    "Loaf Loafers" : {
-        id = 31105,
-        item_class = "tf_wearable",
-        item_name_english = "Loaf Loafers"
-    },
-    "Sophisticated Smoker" : {
-        id = 31106,
-        item_class = "tf_wearable",
-        item_name_english = "Sophisticated Smoker"
-    },
-    "Flamehawk" : {
-        id = 31107,
-        item_class = "tf_wearable",
-        item_name_english = "Flamehawk"
-    },
-    "Fire Fighter" : {
-        id = 31108,
-        item_class = "tf_wearable",
-        item_name_english = "Fire Fighter"
-    },
-    "Crabe de Chapeau" : {
-        id = 31109,
-        item_class = "tf_wearable",
-        item_name_english = "Crabe de Chapeau"
-    },
-    "Bird's Eye Viewer" : {
-        id = 31110,
-        item_class = "tf_wearable",
-        item_name_english = "Bird's Eye Viewer"
-    },
-    "Hawk Warrior" : {
-        id = 31111,
-        item_class = "tf_wearable",
-        item_name_english = "Hawk Warrior"
-    },
-    "Bazaar Bauble" : {
-        id = 31112,
-        item_class = "tf_wearable",
-        item_name_english = "Bazaar Bauble"
-    },
-    "Breach and Bomb" : {
-        id = 31113,
-        item_class = "tf_wearable",
-        item_name_english = "Breach and Bomb"
-    },
-    "Head Of Defense" : {
-        id = 31114,
-        item_class = "tf_wearable",
-        item_name_english = "Head of Defense"
-    },
-    "Hazard Headgear" : {
-        id = 31115,
-        item_class = "tf_wearable",
-        item_name_english = "Hazard Headgear"
-    },
-    "Soda Specs" : {
-        id = 31116,
-        item_class = "tf_wearable",
-        item_name_english = "Soda Specs"
-    },
-    "California Cap" : {
-        id = 31117,
-        item_class = "tf_wearable",
-        item_name_english = "California Cap"
-    },
-    "Poolside Polo" : {
-        id = 31118,
-        item_class = "tf_wearable",
-        item_name_english = "Poolside Polo"
-    },
-    "Tools of the Tourist" : {
-        id = 31119,
-        item_class = "tf_wearable",
-        item_name_english = "Tools of the Tourist"
-    },
-    "The Jarmaments" : {
-        id = 31120,
-        item_class = "tf_wearable",
-        item_name_english = "Jarmaments"
-    },
-    "Flatliner" : {
-        id = 31121,
-        item_class = "tf_wearable",
-        item_name_english = "Flatliner"
-    },
-    "Self-Care" : {
-        id = 31122,
-        item_class = "tf_wearable",
-        item_name_english = "Self-Care"
-    },
-    "Momma Kiev" : {
-        id = 31123,
-        item_class = "tf_wearable",
-        item_name_english = "Momma Kiev"
-    },
-    "Smoking Jacket" : {
-        id = 31124,
-        item_class = "tf_wearable",
-        item_name_english = "Smoking Jacket"
-    },
-    "Impish Ears" : {
-        id = 31125,
-        item_class = "tf_wearable",
-        item_name_english = "Impish Ears"
-    },
-    "Balloonicorpse" : {
-        id = 31126,
-        item_class = "tf_wearable",
-        item_name_english = "Balloonicorpse"
-    },
-    "Gourd Grin" : {
-        id = 31127,
-        item_class = "tf_wearable",
-        item_name_english = "Gourd Grin"
-    },
-    "Hollowed Helm" : {
-        id = 31128,
-        item_class = "tf_wearable",
-        item_name_english = "Hollowed Helm"
-    },
-    "A Handsome Handy Thing" : {
-        id = 31129,
-        item_class = "tf_wearable",
-        item_name_english = "A Handsome Handy Thing"
-    },
-    "King Cardbeard" : {
-        id = 31130,
-        item_class = "tf_wearable",
-        item_name_english = "King Cardbeard"
-    },
-    "Sir Pumpkinton" : {
-        id = 31131,
-        item_class = "tf_wearable",
-        item_name_english = "Sir Pumpkinton"
-    },
-    "Wrap-A-Khamon" : {
-        id = 31132,
-        item_class = "tf_wearable",
-        item_name_english = "Wrap-A-Khamon"
-    },
-    "The Boom Boxers" : {
-        id = 31133,
-        item_class = "tf_wearable",
-        item_name_english = "Boom Boxers"
-    },
-    "Eye-see-you" : {
-        id = 31134,
-        item_class = "tf_wearable",
-        item_name_english = "Eye-See-You"
-    },
-    "Handsome Devil" : {
-        id = 31135,
-        item_class = "tf_wearable",
-        item_name_english = "Handsome Devil"
-    },
-    "Misfortune Fedora" : {
-        id = 31136,
-        item_class = "tf_wearable",
-        item_name_english = "Misfortune Fedora"
-    },
-    "War Blunder" : {
-        id = 31137,
-        item_class = "tf_wearable",
-        item_name_english = "War Blunder"
-    },
-    "Grounded Flyboy" : {
-        id = 31138,
-        item_class = "tf_wearable",
-        item_name_english = "Grounded Flyboy"
-    },
-    "Rolfe Copter" : {
-        id = 31139,
-        item_class = "tf_wearable",
-        item_name_english = "Rolfe Copter"
-    },
-    "The Pug Mug" : {
-        id = 31140,
-        item_class = "tf_wearable",
-        item_name_english = "Pug Mug"
-    },
-    "The Treehugger" : {
-        id = 31141,
-        item_class = "tf_wearable",
-        item_name_english = "Treehugger"
-    },
-    "Mannvich" : {
-        id = 31142,
-        item_class = "tf_wearable",
-        item_name_english = "Mannvich"
-    },
-    "The Seared Sorcerer" : {
-        id = 31143,
-        item_class = "tf_wearable",
-        item_name_english = "Seared Sorcerer"
-    },
-    "The Fire Tooth" : {
-        id = 31144,
-        item_class = "tf_wearable",
-        item_name_english = "Fire Tooth"
-    },
-    "Flavorful Baggies" : {
-        id = 31145,
-        item_class = "tf_wearable",
-        item_name_english = "Flavorful Baggies"
-    },
-    "Calamitous Cauldron" : {
-        id = 31146,
-        item_class = "tf_wearable",
-        item_name_english = "Calamitous Cauldron"
-    },
-    "Semi-tame Trapper's Hat" : {
-        id = 31147,
-        item_class = "tf_wearable",
-        item_name_english = "Semi-Tame Trapper's Hat"
-    },
-    "Wavefinder" : {
-        id = 31148,
-        item_class = "tf_wearable",
-        item_name_english = "Wavefinder"
-    },
-    "Glow from Below" : {
-        id = 31149,
-        item_class = "tf_wearable",
-        item_name_english = "Glow from Below"
-    },
-    "Goblineer" : {
-        id = 31150,
-        item_class = "tf_wearable",
-        item_name_english = "Goblineer"
-    },
-    "The Ghoul Box" : {
-        id = 31151,
-        item_class = "tf_wearable",
-        item_name_english = "Ghoul Box"
-    },
-    "All Hallows' Hatte" : {
-        id = 31152,
-        item_class = "tf_wearable",
-        item_name_english = "All Hallows' Hatte"
-    },
-    "Taunt: The Pooped Deck" : {
-        id = 31153,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Pooped Deck"
-    },
-    "Taunt: Time Out Therapy" : {
-        id = 31154,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Time Out Therapy"
-    },
-    "Taunt: Rocket Jockey" : {
-        id = 31155,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Rocket Jockey"
-    },
-    "Taunt: The Boston Boarder" : {
-        id = 31156,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Boston Boarder"
-    },
-    "Taunt: Scorcher's Solo" : {
-        id = 31157,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Scorcher's Solo"
-    },
-    "Taunt: Texas Truckin" : {
-        id = 31160,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Texas Truckin'"
-    },
-    "Taunt: Spin-to-Win" : {
-        id = 31161,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Spin-to-Win"
-    },
-    "Taunt: The Fist Bump" : {
-        id = 31162,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Fist Bump"
-    },
-    "Particulate Protector" : {
-        id = 31163,
-        item_class = "tf_wearable",
-        item_name_english = "Particulate Protector"
-    },
-    "Candy Cantlers" : {
-        id = 31164,
-        item_class = "tf_wearable",
-        item_name_english = "Candy Cantlers"
-    },
-    "Jolly Jingler" : {
-        id = 31165,
-        item_class = "tf_wearable",
-        item_name_english = "Jolly Jingler"
-    },
-    "The Smissmass Sorcerer" : {
-        id = 31166,
-        item_class = "tf_wearable",
-        item_name_english = "Smissmas Sorcerer"
-    },
-    "Festive Flip-thwomps" : {
-        id = 31167,
-        item_class = "tf_wearable",
-        item_name_english = "Festive Flip-Thwomps"
-    },
-    "Towering Pillar of Beanies" : {
-        id = 31168,
-        item_class = "tf_wearable",
-        item_name_english = "Towering Pillar of Beanies"
-    },
-    "Shoestring Santa" : {
-        id = 31169,
-        item_class = "tf_wearable",
-        item_name_english = "Shoestring Santa"
-    },
-    "Professional's Pom Pom" : {
-        id = 31170,
-        item_class = "tf_wearable",
-        item_name_english = "Professional's Pom-Pom"
-    },
-    "Reindoonibeanie" : {
-        id = 31171,
-        item_class = "tf_wearable",
-        item_name_english = "Reindoonibeanie"
-    },
-    "Festive Fascinator" : {
-        id = 31172,
-        item_class = "tf_wearable",
-        item_name_english = "Festive Fascinator"
-    },
-    "Towering Pile Of Presents" : {
-        id = 31173,
-        item_class = "tf_wearable",
-        item_name_english = "Towering Pile of Presents"
-    },
-    "The Round-A-Bout" : {
-        id = 31174,
-        item_class = "tf_wearable",
-        item_name_english = "Round-A-Bout"
-    },
-    "Blitzen Bowl" : {
-        id = 31175,
-        item_class = "tf_wearable",
-        item_name_english = "Blitzen Bowl"
-    },
-    "Elf Care Provider" : {
-        id = 31176,
-        item_class = "tf_wearable",
-        item_name_english = "Elf Care Provider"
-    },
-    "Night Ward" : {
-        id = 31177,
-        item_class = "tf_wearable",
-        item_name_english = "Night Ward"
-    },
-    "SandMann's Brush" : {
-        id = 31178,
-        item_class = "tf_wearable",
-        item_name_english = "SandMann's Brush"
-    },
-    "BedBug Protection" : {
-        id = 31179,
-        item_class = "tf_wearable",
-        item_name_english = "BedBug Protection"
-    },
-    "Bear Walker" : {
-        id = 31180,
-        item_class = "tf_wearable",
-        item_name_english = "Bear Walker"
-    },
-    "The Killing Tree" : {
-        id = 31181,
-        item_class = "tf_wearable",
-        item_name_english = "Killing Tree"
-    },
-    "Helm Helm" : {
-        id = 31182,
-        item_class = "tf_wearable",
-        item_name_english = "Helm Helm"
-    },
-    "Ballooniphones" : {
-        id = 31183,
-        item_class = "tf_wearable",
-        item_name_english = "Ballooniphones"
-    },
-    "Manndatory Attire" : {
-        id = 31184,
-        item_class = "tf_wearable",
-        item_name_english = "Manndatory Attire"
-    },
-    "Brim of Fire" : {
-        id = 31185,
-        item_class = "tf_wearable",
-        item_name_english = "Brim of Fire"
-    },
-    "Reel Fly Hat" : {
-        id = 31186,
-        item_class = "tf_wearable",
-        item_name_english = "Reel Fly Hat"
-    },
-    "Hook Line and Cinder" : {
-        id = 31187,
-        item_class = "tf_wearable",
-        item_name_english = "Hook, Line, and Cinder"
-    },
-    "Water Waders" : {
-        id = 31188,
-        item_class = "tf_wearable",
-        item_name_english = "Water Waders"
-    },
-    "The Sightliner" : {
-        id = 31189,
-        item_class = "tf_wearable",
-        item_name_english = "Sightliner"
-    },
-    "Snack Stack" : {
-        id = 31190,
-        item_class = "tf_wearable",
-        item_name_english = "Snack Stack"
-    },
-    "Two Punch Mann" : {
-        id = 31191,
-        item_class = "tf_wearable",
-        item_name_english = "Two Punch Mann"
-    },
-    "Wild Brim Slouch" : {
-        id = 31192,
-        item_class = "tf_wearable",
-        item_name_english = "Wild Brim Slouch"
-    },
-    "Crocodile Dandy" : {
-        id = 31193,
-        item_class = "tf_wearable",
-        item_name_english = "Crocodile Dandy"
-    },
-    "Crustaceous Cowl" : {
-        id = 31194,
-        item_class = "tf_wearable",
-        item_name_english = "Crustaceous Cowl"
-    },
-    "Fast Food" : {
-        id = 31195,
-        item_class = "tf_wearable",
-        item_name_english = "Fast Food"
-    },
-    "Meal Dealer" : {
-        id = 31196,
-        item_class = "tf_wearable",
-        item_name_english = "Meal Dealer"
-    },
-    "Fried Batter" : {
-        id = 31197,
-        item_class = "tf_wearable",
-        item_name_english = "Fried Batter"
-    },
-    "Roaming Roman" : {
-        id = 31198,
-        item_class = "tf_wearable",
-        item_name_english = "Roaming Roman"
-    },
-    "The Panisher" : {
-        id = 31199,
-        item_class = "tf_wearable",
-        item_name_english = "Panisher"
-    },
-    "Thousand-Yard Stare" : {
-        id = 31200,
-        item_class = "tf_wearable",
-        item_name_english = "Thousand-Yard Stare"
-    },
-    "Taunt: The Drunken Sailor" : {
-        id = 31201,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Drunken Sailor"
-    },
-    "Taunt: The Profane Puppeteer" : {
-        id = 31202,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Profane Puppeteer"
-    },
-    "Taunt: The Mannbulance!" : {
-        id = 31203,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Mannbulance!"
-    },
-    "Taunt: Bare Knuckle Beatdown" : {
-        id = 31207,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Bare Knuckle Beatdown"
-    },
-    "Creepy Crawlers" : {
-        id = 31208,
-        item_class = "tf_wearable",
-        item_name_english = "Creepy Crawlers"
-    },
-    "Spooky Head-Bouncers" : {
-        id = 31209,
-        item_class = "tf_wearable",
-        item_name_english = "Spooky Head-Bouncers"
-    },
-    "Towering Patch of Pumpkins" : {
-        id = 31210,
-        item_class = "tf_wearable",
-        item_name_english = "Towering Patch of Pumpkins"
-    },
-    "Twisted Topper" : {
-        id = 31211,
-        item_class = "tf_wearable",
-        item_name_english = "Twisted Topper"
-    },
-    "Beanie The All-Gnawing" : {
-        id = 31212,
-        item_class = "tf_wearable",
-        item_name_english = "Beanie The All-Gnawing"
-    },
-    "Eyequarium" : {
-        id = 31213,
-        item_class = "tf_wearable",
-        item_name_english = "Eyequarium"
-    },
-    "Second-head Headwear" : {
-        id = 31214,
-        item_class = "tf_wearable",
-        item_name_english = "Second-Head Headwear"
-    },
-    "Alakablamicon" : {
-        id = 31215,
-        item_class = "tf_wearable",
-        item_name_english = "Alakablamicon"
-    },
-    "Hat Outta Hell" : {
-        id = 31216,
-        item_class = "tf_wearable",
-        item_name_english = "Hat Outta Hell"
-    },
-    "Goalkeeper" : {
-        id = 31217,
-        item_class = "tf_wearable",
-        item_name_english = "Goalkeeper"
-    },
-    "The Bone Cone" : {
-        id = 31218,
-        item_class = "tf_wearable",
-        item_name_english = "Bone Cone"
-    },
-    "The Scariest Mask EVER" : {
-        id = 31219,
-        item_class = "tf_wearable",
-        item_name_english = "Scariest Mask EVER"
-    },
-    "Trickster's Treats" : {
-        id = 31220,
-        item_class = "tf_wearable",
-        item_name_english = "Trickster's Treats"
-    },
-    "Wandering Wraith" : {
-        id = 31221,
-        item_class = "tf_wearable",
-        item_name_english = "Wandering Wraith"
-    },
-    "Smiling Somen" : {
-        id = 31222,
-        item_class = "tf_wearable",
-        item_name_english = "Smiling Somen"
-    },
-    "The Hook, Line, and Thinker" : {
-        id = 31223,
-        item_class = "tf_wearable",
-        item_name_english = "Hook, Line, and Thinker"
-    },
-    "Optic Nerve" : {
-        id = 31224,
-        item_class = "tf_wearable",
-        item_name_english = "Optic Nerve"
-    },
-    "Death Stare" : {
-        id = 31225,
-        item_class = "tf_wearable",
-        item_name_english = "Death Stare"
-    },
-    "The Corpse Carrier" : {
-        id = 31226,
-        item_class = "tf_wearable",
-        item_name_english = "Corpse Carrier"
-    },
-    "Gruesome Gourd" : {
-        id = 31227,
-        item_class = "tf_wearable",
-        item_name_english = "Gruesome Gourd"
-    },
-    "Poopy Doe" : {
-        id = 31228,
-        item_class = "tf_wearable",
-        item_name_english = "Poopy Doe"
-    },
-    "Batter's Beak" : {
-        id = 31229,
-        item_class = "tf_wearable",
-        item_name_english = "Batter's Beak"
-    },
-    "War Dog" : {
-        id = 31230,
-        item_class = "tf_wearable",
-        item_name_english = "War Dog"
-    },
-    "The Miami Rooster" : {
-        id = 31231,
-        item_class = "tf_wearable",
-        item_name_english = "Miami Rooster"
-    },
-    "Computron 5000" : {
-        id = 31232,
-        item_class = "tf_wearable",
-        item_name_english = "Computron 5000"
-    },
-    "Taunt: The Homerunner's Hobby" : {
-        id = 31233,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Homerunner's Hobby"
-    },
-    "Taunt: Doctor's Defibrillators" : {
-        id = 31236,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Doctor's Defibrillators"
-    },
-    "Taunt: Shooter's Stakeout" : {
-        id = 31237,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Shooter's Stakeout"
-    },
-    "Taunt: The Hot Wheeler" : {
-        id = 31239,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Hot Wheeler"
-    },
-    "El Fiestibrero" : {
-        id = 31241,
-        item_class = "tf_wearable",
-        item_name_english = "El Fiestibrero"
-    },
-    "Gnome Dome" : {
-        id = 31242,
-        item_class = "tf_wearable",
-        item_name_english = "Gnome Dome"
-    },
-    "Jolly Jester" : {
-        id = 31243,
-        item_class = "tf_wearable",
-        item_name_english = "Jolly Jester"
-    },
-    "Seasonal Spring" : {
-        id = 31244,
-        item_class = "tf_wearable",
-        item_name_english = "Seasonal Spring"
-    },
-    "Oh Deer!" : {
-        id = 31245,
-        item_class = "tf_wearable",
-        item_name_english = "Oh Deer!"
-    },
-    "The Giftcrafter" : {
-        id = 31246,
-        item_class = "tf_wearable",
-        item_name_english = "Giftcrafter"
-    },
-    "Merry Cone" : {
-        id = 31247,
-        item_class = "tf_wearable",
-        item_name_english = "Merry Cone"
-    },
-    "Brain Cane" : {
-        id = 31248,
-        item_class = "tf_wearable",
-        item_name_english = "Brain Cane"
-    },
-    "Reindoonihorns" : {
-        id = 31249,
-        item_class = "tf_wearable",
-        item_name_english = "Reindoonihorns"
-    },
-    "Cozy Catchers" : {
-        id = 31250,
-        item_class = "tf_wearable",
-        item_name_english = "Cozy Catchers"
-    },
-    "Ominous Offering" : {
-        id = 31251,
-        item_class = "tf_wearable",
-        item_name_english = "Ominous Offering"
-    },
-    "Festive Frames" : {
-        id = 31252,
-        item_class = "tf_wearable",
-        item_name_english = "Festive Frames"
-    },
-    "Elf Ignition" : {
-        id = 31253,
-        item_class = "tf_wearable",
-        item_name_english = "Elf Ignition"
-    },
-    "Train Of Thought" : {
-        id = 31254,
-        item_class = "tf_wearable",
-        item_name_english = "Train of Thought"
-    },
-    "Mooshanka" : {
-        id = 31255,
-        item_class = "tf_wearable",
-        item_name_english = "Mooshanka"
-    },
-    "Elf Defence" : {
-        id = 31256,
-        item_class = "tf_wearable",
-        item_name_english = "Elf Defense"
-    },
-    "Festive Cover-Up" : {
-        id = 31257,
-        item_class = "tf_wearable",
-        item_name_english = "Festive Cover-Up"
-    },
-    "Seasonal Employee" : {
-        id = 31258,
-        item_class = "tf_wearable",
-        item_name_english = "Seasonal Employee"
-    },
-    "Hat Chocolate" : {
-        id = 31259,
-        item_class = "tf_wearable",
-        item_name_english = "Hat Chocolate"
-    },
-    "Elf-Made Bandanna" : {
-        id = 31260,
-        item_class = "tf_wearable",
-        item_name_english = "Elf-Made Bandanna"
-    },
-    "The Decorated Veteran" : {
-        id = 31261,
-        item_class = "tf_wearable",
-        item_name_english = "Decorated Veteran"
-    },
-    "Undercover Brolly" : {
-        id = 31262,
-        item_class = "tf_wearable",
-        item_name_english = "Undercover Brolly"
-    },
-    "Kazan Karategi" : {
-        id = 31263,
-        item_class = "tf_wearable",
-        item_name_english = "Kazan Karategi"
-    },
-    "The Western Wraps" : {
-        id = 31264,
-        item_class = "tf_wearable",
-        item_name_english = "Western Wraps"
-    },
-    "Soda Cap" : {
-        id = 31265,
-        item_class = "tf_wearable",
-        item_name_english = "Soda Cap"
-    },
-    "Fizzy Pharmacist" : {
-        id = 31266,
-        item_class = "tf_wearable",
-        item_name_english = "Fizzy Pharmacist"
-    },
-    "Squatter's Right" : {
-        id = 31267,
-        item_class = "tf_wearable",
-        item_name_english = "Squatter's Right"
-    },
-    "Combat Casual" : {
-        id = 31268,
-        item_class = "tf_wearable",
-        item_name_english = "Combat Casual"
-    },
-    "Rocko" : {
-        id = 31269,
-        item_class = "tf_wearable",
-        item_name_english = "Rocko"
-    },
-    "Tropical Camo" : {
-        id = 31270,
-        item_class = "tf_wearable",
-        item_name_english = "Tropical Camo"
-    },
-    "Hawaiian Hunter" : {
-        id = 31271,
-        item_class = "tf_wearable",
-        item_name_english = "Hawaiian Hunter"
-    },
-    "The Lawnmaker" : {
-        id = 31272,
-        item_class = "tf_wearable",
-        item_name_english = "Lawnmaker"
-    },
-    "Head Banger" : {
-        id = 31273,
-        item_class = "tf_wearable",
-        item_name_english = "Head Banger"
-    },
-    "The Hawaiian Hangover" : {
-        id = 31274,
-        item_class = "tf_wearable",
-        item_name_english = "Hawaiian Hangover"
-    },
-    "Barefoot Brawler" : {
-        id = 31275,
-        item_class = "tf_wearable",
-        item_name_english = "Barefoot Brawler"
-    },
-    "The Chaser" : {
-        id = 31276,
-        item_class = "tf_wearable",
-        item_name_english = "Chaser"
-    },
-    "The Detective" : {
-        id = 31277,
-        item_class = "tf_wearable",
-        item_name_english = "Detective"
-    },
-    "Tactical Turtleneck" : {
-        id = 31278,
-        item_class = "tf_wearable",
-        item_name_english = "Tactical Turtleneck"
-    },
-    "Night Vision Gawkers" : {
-        id = 31279,
-        item_class = "tf_wearable",
-        item_name_english = "Night Vision Gawkers"
-    },
-    "Monsieur Grenouille" : {
-        id = 31280,
-        item_class = "tf_wearable",
-        item_name_english = "Monsieur Grenouille"
-    },
-    "The Ripped Rider" : {
-        id = 31281,
-        item_class = "tf_wearable",
-        item_name_english = "Ripped Rider"
-    },
-    "The Throttlehead" : {
-        id = 31282,
-        item_class = "tf_wearable",
-        item_name_english = "Throttlehead"
-    },
-    "The Team Player" : {
-        id = 31283,
-        item_class = "tf_wearable",
-        item_name_english = "Team Player"
-    },
-    "Boston Brain Bucket" : {
-        id = 31284,
-        item_class = "tf_wearable",
-        item_name_english = "Boston Brain Bucket"
-    },
-    "Pest's Pads" : {
-        id = 31285,
-        item_class = "tf_wearable",
-        item_name_english = "Pest's Pads"
-    },
-    "Taunt: Texas Twirl 'Em" : {
-        id = 31286,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Texas Twirl 'Em"
-    },
-    "Taunt: The Scaredy-cat!" : {
-        id = 31288,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Scaredy-cat!"
-    },
-    "Taunt: The Crypt Creeper" : {
-        id = 31289,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Crypt Creeper"
-    },
-    "Taunt: The Travel Agent" : {
-        id = 31290,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Travel Agent"
-    },
-    "Taunt: Drunk Mann's Cannon" : {
-        id = 31291,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Drunk Mann's Cannon"
-    },
-    "Taunt: Shanty Shipmate" : {
-        id = 31292,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Shanty Shipmate"
-    },
-    "Beaten and Bruised" : {
-        id = 31293,
-        item_class = "tf_wearable",
-        item_name_english = "Beaten and Bruised"
-    },
-    "Starlight Sorcerer" : {
-        id = 31294,
-        item_class = "tf_wearable",
-        item_name_english = "Starlight Sorcerer"
-    },
-    "The Onimann" : {
-        id = 31295,
-        item_class = "tf_wearable",
-        item_name_english = "Onimann"
-    },
-    "Propaniac" : {
-        id = 31296,
-        item_class = "tf_wearable",
-        item_name_english = "Propaniac"
-    },
-    "Dustbowl Devil" : {
-        id = 31297,
-        item_class = "tf_wearable",
-        item_name_english = "Dustbowl Devil"
-    },
-    "More Gun Marshal" : {
-        id = 31298,
-        item_class = "tf_wearable",
-        item_name_english = "More Gun Marshal"
-    },
-    "The Lavish Labwear" : {
-        id = 31299,
-        item_class = "tf_wearable",
-        item_name_english = "Lavish Labwear"
-    },
-    "Victorian Villainy" : {
-        id = 31300,
-        item_class = "tf_wearable",
-        item_name_english = "Victorian Villainy"
-    },
-    "The Turncoat" : {
-        id = 31301,
-        item_class = "tf_wearable",
-        item_name_english = "Turncoat"
-    },
-    "The Imp's Imprint" : {
-        id = 31302,
-        item_class = "tf_wearable",
-        item_name_english = "Imp's Imprint"
-    },
-    "The Masked Fiend" : {
-        id = 31303,
-        item_class = "tf_wearable",
-        item_name_english = "Masked Fiend"
-    },
-    "Horror Shawl" : {
-        id = 31304,
-        item_class = "tf_wearable",
-        item_name_english = "Horror Shawl"
-    },
-    "Road Rage" : {
-        id = 31305,
-        item_class = "tf_wearable",
-        item_name_english = "Road Rage"
-    },
-    "Road Block" : {
-        id = 31306,
-        item_class = "tf_wearable",
-        item_name_english = "Road Block"
-    },
-    "Alcoholic Automaton" : {
-        id = 31307,
-        item_class = "tf_wearable",
-        item_name_english = "Alcoholic Automaton"
-    },
-    "Nightbane Brim" : {
-        id = 31308,
-        item_class = "tf_wearable",
-        item_name_english = "Nightbane Brim"
-    },
-    "Bombard Brigadier" : {
-        id = 31309,
-        item_class = "tf_wearable",
-        item_name_english = "Bombard Brigadier"
-    },
-    "Firearm Protector" : {
-        id = 31310,
-        item_class = "tf_wearable",
-        item_name_english = "Firearm Protector"
-    },
-    "Safety Stripes" : {
-        id = 31311,
-        item_class = "tf_wearable",
-        item_name_english = "Safety Stripes"
-    },
-    "Cranial Cowl" : {
-        id = 31312,
-        item_class = "tf_wearable",
-        item_name_english = "Cranial Cowl"
-    },
-    "Headhunter's Brim" : {
-        id = 31313,
-        item_class = "tf_wearable",
-        item_name_english = "Headhunter's Brim"
-    },
-    "Hunting Cloak" : {
-        id = 31314,
-        item_class = "tf_wearable",
-        item_name_english = "Hunting Cloak"
-    },
-    "Misha's Maw" : {
-        id = 31315,
-        item_class = "tf_wearable",
-        item_name_english = "Misha's Maw"
-    },
-    "Cabinet Mann" : {
-        id = 31316,
-        item_class = "tf_wearable",
-        item_name_english = "Cabinet Mann"
-    },
-    "The Fire Breather" : {
-        id = 31317,
-        item_class = "tf_wearable",
-        item_name_english = "Fire Breather"
-    },
-    "Magical Mount" : {
-        id = 31318,
-        item_class = "tf_wearable",
-        item_name_english = "Magical Mount"
-    },
-    "The Pony Express" : {
-        id = 31319,
-        item_class = "tf_wearable",
-        item_name_english = "Pony Express"
-    },
-    "Taunt: Russian Rubdown" : {
-        id = 31320,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Russian Rubdown"
-    },
-    "Taunt: Tailored Terminal" : {
-        id = 31321,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Tailored Terminal"
-    },
-    "Taunt: Roasty Toasty" : {
-        id = 31322,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Roasty Toasty"
-    },
-    "Trapper's Flap" : {
-        id = 31323,
-        item_class = "tf_wearable",
-        item_name_english = "Trapper's Flap"
-    },
-    "Battle Bear" : {
-        id = 31324,
-        item_class = "tf_wearable",
-        item_name_english = "Battle Bear"
-    },
-    "Colonel Kringle" : {
-        id = 31325,
-        item_class = "tf_wearable",
-        item_name_english = "Colonel Kringle"
-    },
-    "Lumbercap" : {
-        id = 31326,
-        item_class = "tf_wearable",
-        item_name_english = "Lumbercap"
-    },
-    "Festive Rack" : {
-        id = 31327,
-        item_class = "tf_wearable",
-        item_name_english = "Festive Rack"
-    },
-    "Firebrand" : {
-        id = 31328,
-        item_class = "tf_wearable",
-        item_name_english = "Firebrand"
-    },
-    "Partizan" : {
-        id = 31329,
-        item_class = "tf_wearable",
-        item_name_english = "Partizan"
-    },
-    "The Soft Hard Hat" : {
-        id = 31331,
-        item_class = "tf_wearable",
-        item_name_english = "Soft Hard Hat"
-    },
-    "The Cool Warm Sweater" : {
-        id = 31332,
-        item_class = "tf_wearable",
-        item_name_english = "Cool Warm Sweater"
-    },
-    "Arctic Mole" : {
-        id = 31333,
-        item_class = "tf_wearable",
-        item_name_english = "Arctic Mole"
-    },
-    "Underminer's Overcoat" : {
-        id = 31334,
-        item_class = "tf_wearable",
-        item_name_english = "Underminer's Overcoat"
-    },
-    "Bulb Bonnet" : {
-        id = 31335,
-        item_class = "tf_wearable",
-        item_name_english = "Bulb Bonnet"
-    },
-    "Cold Blooded Coat" : {
-        id = 31336,
-        item_class = "tf_wearable",
-        item_name_english = "Cold Blooded Coat"
-    },
-    "Frostbite Bonnet" : {
-        id = 31337,
-        item_class = "tf_wearable",
-        item_name_english = "Frostbite Bonnet"
-    },
-    "Infiltrator's Insulation" : {
-        id = 31338,
-        item_class = "tf_wearable",
-        item_name_english = "Infiltrator's Insulation"
-    },
-    "Motley Sleeves" : {
-        id = 31339,
-        item_class = "tf_wearable",
-        item_name_english = "Motley Sleeves"
-    },
-    "Crosshair Cardigan" : {
-        id = 31340,
-        item_class = "tf_wearable",
-        item_name_english = "Crosshair Cardigan"
-    },
-    "Plaid Lad" : {
-        id = 31341,
-        item_class = "tf_wearable",
-        item_name_english = "Plaid Lad"
-    },
-    "Glasgow Bankroll" : {
-        id = 31342,
-        item_class = "tf_wearable",
-        item_name_english = "Glasgow Bankroll"
-    },
-    "The Wooly Pulli" : {
-        id = 31343,
-        item_class = "tf_wearable",
-        item_name_english = "Wooly Pulli"
-    },
-    "Oktoberfester" : {
-        id = 31344,
-        item_class = "tf_wearable",
-        item_name_english = "Oktoberfester"
-    },
-    "Ol' Reliable" : {
-        id = 31345,
-        item_class = "tf_wearable",
-        item_name_english = "Ol' Reliable"
-    },
-    "Heavy Heating" : {
-        id = 31346,
-        item_class = "tf_wearable",
-        item_name_english = "Heavy Heating"
-    },
-    "Taunt: Star-Spangled Strategy" : {
-        id = 31347,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Star-Spangled Strategy"
-    },
-    "Taunt: Killer Joke" : {
-        id = 31348,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Killer Joke"
-    },
-    "Taunt: The Head Doctor" : {
-        id = 31349,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Head Doctor"
-    },
-    "Taunt: Tuefort Tango" : {
-        id = 31351,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Teufort Tango"
-    },
-    "Taunt: The Road Rager" : {
-        id = 31352,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Road Rager"
-    },
-    "Taunt: The Killer Signature" : {
-        id = 31354,
-        item_class = "no_entity",
-        item_name_english = "Taunt: The Killer Signature"
-    },
-    "Full Metal Helmet" : {
-        id = 31355,
-        item_class = "tf_wearable",
-        item_name_english = "Full Metal Helmet"
-    },
-    "Brothers in Blues" : {
-        id = 31356,
-        item_class = "tf_wearable",
-        item_name_english = "Brothers in Blues"
-    },
-    "The Flame Warrior" : {
-        id = 31357,
-        item_class = "tf_wearable",
-        item_name_english = "Flame Warrior"
-    },
-    "The Soho Sleuth" : {
-        id = 31358,
-        item_class = "tf_wearable",
-        item_name_english = "Soho Sleuth"
-    },
-    "The Firestalker" : {
-        id = 31359,
-        item_class = "tf_wearable",
-        item_name_english = "Firestalker"
-    },
-    "The Glorious Gambeson" : {
-        id = 31360,
-        item_class = "tf_wearable",
-        item_name_english = "Glorious Gambeson"
-    },
-    "The Bushman" : {
-        id = 31361,
-        item_class = "tf_wearable",
-        item_name_english = "Bushman"
-    },
-    "Cranium Cover" : {
-        id = 31362,
-        item_class = "tf_wearable",
-        item_name_english = "Cranium Cover"
-    },
-    "Preventative Measure" : {
-        id = 31363,
-        item_class = "tf_wearable",
-        item_name_english = "Preventative Measure"
-    },
-    "Uber-Wear" : {
-        id = 31364,
-        item_class = "tf_wearable",
-        item_name_english = "Über-Wear"
-    },
-    "Medical Emergency" : {
-        id = 31365,
-        item_class = "tf_wearable",
-        item_name_english = "Medical Emergency"
-    },
-    "Brimmed Bootlegger" : {
-        id = 31366,
-        item_class = "tf_wearable",
-        item_name_english = "Brimmed Bootlegger"
-    },
-    "Prohibition Opposition" : {
-        id = 31367,
-        item_class = "tf_wearable",
-        item_name_english = "Prohibition Opposition"
-    },
-    "Brother Mann" : {
-        id = 31368,
-        item_class = "tf_wearable",
-        item_name_english = "Brother Mann"
-    },
-    "Heavy Metal" : {
-        id = 31369,
-        item_class = "tf_wearable",
-        item_name_english = "Heavy Metal"
+    "Pocket Lint" : {
+        id = 5601,
+        item_class = "craft_item",
+        item_name_english = "Charred Pocket Lint"
     },
-    "Hog Heels" : {
-        id = 31370,
-        item_class = "tf_wearable",
-        item_name_english = "Hog Heels"
-    },
-    "The Blast Bowl" : {
-        id = 31371,
-        item_class = "tf_wearable",
-        item_name_english = "Blast Bowl"
-    },
-    "The Shrapnel Shell" : {
-        id = 31372,
-        item_class = "tf_wearable",
-        item_name_english = "Shrapnel Shell"
-    },
-    "Cargo Constructor" : {
-        id = 31373,
-        item_class = "tf_wearable",
-        item_name_english = "Cargo Constructor"
-    },
-    "Hazard Handler" : {
-        id = 31374,
-        item_class = "tf_wearable",
-        item_name_english = "Hazard Handler"
-    },
-    "Cranium Cooler" : {
-        id = 31375,
-        item_class = "tf_wearable",
-        item_name_english = "Cranium Cooler"
-    },
-    "Cleaner's Cap" : {
-        id = 31376,
-        item_class = "tf_wearable",
-        item_name_english = "Cleaner's Cap"
-    },
-    "Le Professionnel" : {
-        id = 31377,
-        item_class = "tf_wearable",
-        item_name_english = "Le Professionnel"
-    },
-    "Close Quarters Cover" : {
-        id = 31378,
-        item_class = "tf_wearable",
-        item_name_english = "Close Quarters Cover"
-    },
-    "Stealth Bomber" : {
-        id = 31379,
-        item_class = "tf_wearable",
-        item_name_english = "Stealth Bomber"
-    },
-    "Taunt: Roar O'War" : {
-        id = 31380,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Roar O'War"
-    },
-    "Taunt: Neck Snap" : {
-        id = 31381,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Neck Snap"
-    },
-    "Taunt: Borrowed Bones" : {
-        id = 31382,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Borrowed Bones"
-    },
-    "Ludicrously Lunatic Lunon Fedora" : {
-        id = 31383,
-        item_class = "tf_wearable",
-        item_name_english = "Ludicrously Lunatic Lunon Fedora"
-    },
-    "Demonic Dome" : {
-        id = 31384,
-        item_class = "tf_wearable",
-        item_name_english = "Demonic Dome"
-    },
-    "The Mean Captain" : {
-        id = 31385,
-        item_class = "tf_wearable",
-        item_name_english = "Mean Captain"
-    },
-    "Clown's Cover-Up" : {
-        id = 31386,
-        item_class = "tf_wearable",
-        item_name_english = "Clown's Cover-Up"
-    },
-    "Shortness Of Breath" : {
-        id = 31387,
-        item_class = "tf_wearable",
-        item_name_english = "Shortness Of Breath"
-    },
-    "Warlock's Warcloak" : {
-        id = 31388,
-        item_class = "tf_wearable",
-        item_name_english = "Warlock's Warcloak"
-    },
-    "Dead Heat" : {
-        id = 31389,
-        item_class = "tf_wearable",
-        item_name_english = "Dead Heat"
-    },
-    "Splitting Headache" : {
-        id = 31390,
-        item_class = "tf_wearable",
-        item_name_english = "Splitting Headache"
-    },
-    "Thunder Dome" : {
-        id = 31391,
-        item_class = "tf_wearable",
-        item_name_english = "Thunder Dome"
-    },
-    "Stunt Suit" : {
-        id = 31392,
-        item_class = "tf_wearable",
-        item_name_english = "Stunt Suit"
-    },
-    "Mad Lad" : {
-        id = 31393,
-        item_class = "tf_wearable",
-        item_name_english = "Mad Lad"
-    },
-    "Dell Dynamic" : {
-        id = 31394,
-        item_class = "tf_wearable",
-        item_name_english = "Dell Dynamic"
-    },
-    "Constructor's Cover" : {
-        id = 31395,
-        item_class = "tf_wearable",
-        item_name_english = "Constructor's Cover"
-    },
-    "Classic Criminal" : {
-        id = 31396,
-        item_class = "tf_wearable",
-        item_name_english = "Classic Criminal"
-    },
-    "Concealed Convict" : {
-        id = 31397,
-        item_class = "tf_wearable",
-        item_name_english = "Concealed Convict"
-    },
-    "Six-Eyed Specs" : {
-        id = 31398,
-        item_class = "tf_wearable",
-        item_name_english = "Six-Eyed Specs"
-    },
-    "Medical Mummy" : {
-        id = 31399,
-        item_class = "tf_wearable",
-        item_name_english = "Medical Mummy"
-    },
-    "The Main Cast" : {
-        id = 31400,
-        item_class = "tf_wearable",
-        item_name_english = "Main Cast"
-    },
-    "Power Spike" : {
-        id = 31401,
-        item_class = "tf_wearable",
-        item_name_english = "Power Spike"
-    },
-    "Bare Bear Bones" : {
-        id = 31402,
-        item_class = "tf_wearable",
-        item_name_english = "Bare Bear Bones"
-    },
-    "The Make Ogre" : {
-        id = 31403,
-        item_class = "tf_wearable",
-        item_name_english = "Make Ogre"
-    },
-    "Sightseer" : {
-        id = 31404,
-        item_class = "tf_wearable",
-        item_name_english = "Sightseer"
-    },
-    "Sharpshooter's Shroud" : {
-        id = 31405,
-        item_class = "tf_wearable",
-        item_name_english = "Sharpshooter's Shroud"
+    "Cheese Wheel" : {
+        id = 5602,
+        item_class = "craft_item",
+        item_name_english = "Smoked Cheese Wheel"
     },
-    "The Last Laugh" : {
-        id = 31406,
-        item_class = "tf_wearable",
-        item_name_english = "Last Laugh"
-    },
-    "Jumping Jester" : {
-        id = 31407,
-        item_class = "tf_wearable",
-        item_name_english = "Jumping Jester"
-    },
-    "Blastphomet" : {
-        id = 31408,
-        item_class = "tf_wearable",
-        item_name_english = "Blastphomet"
-    },
-    "Spyder" : {
-        id = 31409,
-        item_class = "tf_wearable",
-        item_name_english = "Spyder"
-    },
-    "Carry-Van" : {
-        id = 31410,
-        item_class = "tf_wearable",
-        item_name_english = "Carry-Van"
-    },
-    "Fiercesome Fluorescence" : {
-        id = 31411,
-        item_class = "tf_wearable",
-        item_name_english = "Fiercesome Fluorescence"
-    },
-    "Taunt: Cheers!" : {
-        id = 31412,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Cheers!"
-    },
-    "Taunt: Mourning Mercs" : {
-        id = 31413,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Mourning Mercs"
-    },
-    "Taunt: Foul Play" : {
-        id = 31414,
-        item_class = "no_entity",
-        item_name_english = "Taunt: Foul Play"
-    },
-    "Boarder's Beanie" : {
-        id = 31415,
-        item_class = "tf_wearable",
-        item_name_english = "Boarder's Beanie"
-    },
-    "Cozy Cover-Up" : {
-        id = 31416,
-        item_class = "tf_wearable",
-        item_name_english = "Cozy Cover-Up"
-    },
-    "The Dapper Dickens" : {
-        id = 31417,
-        item_class = "tf_wearable",
-        item_name_english = "Dapper Dickens"
-    },
-    "Trench Warefarer" : {
-        id = 31418,
-        item_class = "tf_wearable",
-        item_name_english = "Trench Warfarer"
-    },
-    "Wanderer's Wool" : {
-        id = 31419,
-        item_class = "tf_wearable",
-        item_name_english = "Wanderer's Wool"
-    },
-    "The Puffed Practitioner" : {
-        id = 31420,
-        item_class = "tf_wearable",
-        item_name_english = "Puffed Practitioner"
-    },
-    "The Frigid Fashion" : {
-        id = 31421,
-        item_class = "tf_wearable",
-        item_name_english = "Frigid Fashion"
-    },
-    "Nightcap" : {
-        id = 31422,
-        item_class = "tf_wearable",
-        item_name_english = "Nightcap"
-    },
-    "Lazy Lounger" : {
-        id = 31423,
-        item_class = "tf_wearable",
-        item_name_english = "Lazy Lounger"
-    },
-    "Slumber Slacks" : {
-        id = 31424,
-        item_class = "tf_wearable",
-        item_name_english = "Slumber Slacks"
-    },
-    "Clue Hairdo" : {
-        id = 31425,
-        item_class = "tf_wearable",
-        item_name_english = "Clue Hairdo"
+    "Banana Peel" : {
+        id = 5603,
+        item_class = "craft_item",
+        item_name_english = "Burned Banana Peel"
     },
-    "Sleuth Suit" : {
-        id = 31426,
-        item_class = "tf_wearable",
-        item_name_english = "Sleuth Suit"
+    "Barn Door Plank" : {
+        id = 5604,
+        item_class = "craft_item",
+        item_name_english = "Incinerated Barn Door Plank"
     },
-    "Strasbourg Scholar" : {
-        id = 31427,
-        item_class = "tf_wearable",
-        item_name_english = "Strasbourg Scholar"
+    "Secret Diary" : {
+        id = 5605,
+        item_class = "tf_weapon_spellbook",
+        item_name_english = "Fireproof Secret Diary"
     },
-    "The Covert Covers" : {
-        id = 31428,
+    "Damaged Capacitor" : {
+        id = 5606,
         item_class = "tf_wearable",
-        item_name_english = "Covert Covers"
+        item_name_english = "Barely-Melted Capacitor"
     },
-    "Scruffed 'n Stitched" : {
-        id = 31429,
+    "Pile Of Ash" : {
+        id = 5607,
         item_class = "tf_wearable",
-        item_name_english = "Scruffed 'n Stitched"
+        item_name_english = "Pile of Ash"
     },
-    "Rugged Rags" : {
-        id = 31430,
-        item_class = "tf_wearable",
-        item_name_english = "Rugged Rags"
+    "Voodoo-Cursed Item (Armory)" : {
+        id = 5608,
+        item_class = "craft_item",
+        item_name_english = "Voodoo-Cursed Object"
     },
-    "Masked Loyalty" : {
-        id = 31431,
-        item_class = "tf_wearable",
-        item_name_english = "Masked Loyalty"
+    "Voodoo-Cursed Old Boot" : {
+        id = 5609,
+        item_class = "craft_item",
+        item_name_english = "Voodoo-Cursed Old Boot"
     },
-    "Impact Impaler" : {
-        id = 31432,
-        item_class = "tf_wearable",
-        item_name_english = "Impact Impaler"
+    "Voodoo-Cursed Skeleton" : {
+        id = 5610,
+        item_class = "craft_item",
+        item_name_english = "Voodoo-Cursed Skeleton"
     },
-    "Torcher's Trench Coat" : {
-        id = 31433,
-        item_class = "tf_wearable",
-        item_name_english = "Torcher's Trench Coat"
+    "Voodoo-Cursed Bag Of Quicklime" : {
+        id = 5611,
+        item_class = "craft_item",
+        item_name_english = "Voodoo-Cursed Bag of Quicklime"
     },
-    "Balkan's Brute" : {
-        id = 31434,
-        item_class = "tf_wearable",
-        item_name_english = "Balkan's Brute"
+    "Voodoo-Cursed Robot Arm" : {
+        id = 5612,
+        item_class = "craft_item",
+        item_name_english = "Voodoo-Cursed Robot Arm"
     },
-    "Bigger Mann on Campus" : {
-        id = 31435,
-        item_class = "tf_wearable",
-        item_name_english = "Bigger Mann on Campus"
+    "Voodoo-Cursed Novelty Bass" : {
+        id = 5613,
+        item_class = "craft_item",
+        item_name_english = "Voodoo-Cursed Novelty Bass"
     },
-    "Isotopic Insulator" : {
-        id = 31436,
-        item_class = "tf_wearable",
-        item_name_english = "Isotopic Insulator"
+    "Voodoo-Cursed Sticky-Bomb" : {
+        id = 5614,
+        item_class = "craft_item",
+        item_name_english = "Voodoo-Cursed Sticky-Bomb"
     },
-    "Bonk Beanie" : {
-        id = 31437,
-        item_class = "tf_wearable",
-        item_name_english = "Bonk Beanie"
+    "Voodoo-Cursed Nail" : {
+        id = 5615,
+        item_class = "craft_item",
+        item_name_english = "Voodoo-Cursed Nail"
     },
-    "TournamentMedal - GWJ Winners" : {
-        id = 496,
+    "Voodoo-Cursed Soul (Armory)" : {
+        id = 5616,
         item_class = "tf_wearable",
-        item_name_english = "First Place - Gamers With Jobs Tournament"
+        item_name_english = "Voodoo-Cursed Soul"
     },
-    "TournamentMedal - GWJ Runnerups" : {
-        id = 497,
+    "Zombie Scout" : {
+        id = 5617,
         item_class = "tf_wearable",
-        item_name_english = "Second Place - Gamers With Jobs Tournament"
+        item_name_english = "Voodoo-Cursed Scout Soul"
     },
-    "TournamentMedal - GWJ Participants" : {
-        id = 498,
+    "Zombie Soldier" : {
+        id = 5618,
         item_class = "tf_wearable",
-        item_name_english = "Participant - Gamers With Jobs Tournament"
+        item_name_english = "Voodoo-Cursed Soldier Soul"
     },
-    "TournamentMedal - ETF2LHL Winners" : {
-        id = 499,
+    "Zombie Heavy" : {
+        id = 5619,
         item_class = "tf_wearable",
-        item_name_english = "First Place - ETF2L Highlander Tournament"
+        item_name_english = "Voodoo-Cursed Heavy Soul"
     },
-    "TournamentMedal - ETF2LHL 2nd" : {
-        id = 500,
+    "Zombie Demo" : {
+        id = 5620,
         item_class = "tf_wearable",
-        item_name_english = "Second Place - ETF2L Highlander Tournament"
+        item_name_english = "Voodoo-Cursed Demoman Soul"
     },
-    "TournamentMedal - ETF2LHL 3rd" : {
-        id = 501,
+    "Zombie Engineer" : {
+        id = 5621,
         item_class = "tf_wearable",
-        item_name_english = "Third Place - ETF2L Highlander Tournament"
+        item_name_english = "Voodoo-Cursed Engineer Soul"
     },
-    "TournamentMedal - ETF2LHL Participants" : {
-        id = 502,
+    "Zombie Medic" : {
+        id = 5622,
         item_class = "tf_wearable",
-        item_name_english = "Participant - ETF2L Highlander Tournament"
+        item_name_english = "Voodoo-Cursed Medic Soul"
     },
-    "TournamentMedal - UGCHL Participants" : {
-        id = 503,
+    "Zombie Spy" : {
+        id = 5623,
         item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Participant"
+        item_name_english = "Voodoo-Cursed Spy Soul"
     },
-    "TournamentMedal - UGCHLDiv1 Winners" : {
-        id = 504,
+    "Zombie Pyro" : {
+        id = 5624,
         item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Platinum 1st Place"
+        item_name_english = "Voodoo-Cursed Pyro Soul"
     },
-    "TournamentMedal - UGCHLDiv1 2nd" : {
-        id = 505,
+    "Zombie Sniper" : {
+        id = 5625,
         item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Platinum 2nd Place"
+        item_name_english = "Voodoo-Cursed Sniper Soul"
     },
-    "TournamentMedal - UGCHLDiv1 3rd" : {
-        id = 506,
+    "Pile Of Curses" : {
+        id = 5626,
         item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Platinum 3rd Place"
+        item_name_english = "Pile of Curses"
     },
-    "TournamentMedal - UGCHLDiv2 Winners" : {
-        id = 507,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Silver 1st Place"
+    "Eerie Crate" : {
+        id = 5627,
+        item_class = "supply_crate",
+        item_name_english = "Eerie Crate"
     },
-    "TournamentMedal - UGCHLDiv2 2nd" : {
-        id = 508,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Silver 2nd Place"
+    "Eerie Key" : {
+        id = 5628,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
     },
-    "TournamentMedal - UGCHLDiv2 3rd" : {
-        id = 509,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Silver 3rd Place"
+    "Naughty Winter Crate 2012" : {
+        id = 5629,
+        item_class = "supply_crate",
+        item_name_english = "Naughty Winter Crate 2012"
     },
-    "TournamentMedal - UGCHLDiv3 Winners" : {
-        id = 510,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Iron 1st Place"
+    "Nice Winter Crate 2012" : {
+        id = 5630,
+        item_class = "supply_crate",
+        item_name_english = "Nice Winter Crate 2012"
     },
-    "TournamentMedal - UGCHLDiv3 2nd" : {
-        id = 511,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Iron 2nd Place"
+    "Naughty Winter Key 2012" : {
+        id = 5631,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
     },
-    "TournamentMedal - UGCHLDiv3 3rd" : {
-        id = 512,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Iron 3rd Place"
+    "Nice Winter Key 2012" : {
+        id = 5632,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
     },
-    "UGC Tournament Fall 2011 - Platinum 1st Place" : {
-        id = 680,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Platinum 1st Place"
+    "Strange Bacon Grease" : {
+        id = 5633,
+        item_class = "tool",
+        item_name_english = "Strange Bacon Grease"
     },
-    "UGC Tournament Fall 2011 - Platinum 2nd Place" : {
-        id = 681,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Platinum 2nd Place"
+    "Robo Crate 2013" : {
+        id = 5635,
+        item_class = "supply_crate",
+        item_name_english = "Robo Community Crate"
     },
-    "UGC Tournament Fall 2011 - Platinum 3rd Place" : {
-        id = 682,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Platinum 3rd Place"
+    "Robo Key 2013" : {
+        id = 5636,
+        item_class = "tool",
+        item_name_english = "Robo Community Crate Key"
     },
-    "UGC Tournament Fall 2011 - Platinum Participant" : {
-        id = 683,
+    "Gift - 23 RoboKeys 2013" : {
+        id = 5637,
         item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Platinum Participant"
+        item_name_english = "Pile of Robo Community Crate Key Gifts"
     },
-    "UGC Tournament Autumn 2011 - Euro Platinum" : {
-        id = 684,
+    "Gift - 1 RoboKey 2013" : {
+        id = 5638,
         item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Euro Platinum"
+        item_name_english = "A Random Robo Community Crate Key Gift"
     },
-    "UGC Tournament Fall 2011 - Silver 1st Place" : {
-        id = 685,
+    "July 2013 Claim Check" : {
+        id = 5639,
         item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Silver 1st Place"
+        item_name_english = "Summer Claim Check"
     },
-    "UGC Tournament Fall 2011 - Silver 2nd Place" : {
-        id = 686,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Silver 2nd Place"
+    "July 2013 Early Crate" : {
+        id = 5640,
+        item_class = "supply_crate",
+        item_name_english = "Summer Appetizer Crate"
     },
-    "UGC Tournament Fall 2011 - Silver 3rd Place" : {
-        id = 687,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Silver 3rd Place"
+    "July 2013 Early Key" : {
+        id = 5641,
+        item_class = "tool",
+        item_name_english = "Summer Appetizer Key"
     },
-    "UGC Tournament Fall 2011 - Silver Participant" : {
-        id = 688,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Silver Participant"
+    "July 2013 Crate 01" : {
+        id = 5642,
+        item_class = "supply_crate",
+        item_name_english = "Red Summer 2013 Cooler"
     },
-    "UGC Tournament Autumn 2011 - Euro Silver" : {
-        id = 689,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Euro Silver"
+    "July 2013 Key 01" : {
+        id = 5643,
+        item_class = "tool",
+        item_name_english = "Red Summer 2013 Cooler Key"
     },
-    "UGC Tournament Fall 2011 - Iron 2nd Place" : {
-        id = 690,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Iron 2nd Place"
+    "July 2013 Crate 02" : {
+        id = 5644,
+        item_class = "supply_crate",
+        item_name_english = "Orange Summer 2013 Cooler"
     },
-    "UGC Tournament Fall 2011 - Iron 1st Place" : {
-        id = 691,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Iron 1st Place"
+    "July 2013 Key 02" : {
+        id = 5645,
+        item_class = "tool",
+        item_name_english = "Orange Summer 2013 Cooler Key"
     },
-    "UGC Tournament Fall 2011 - Iron 3rd Place" : {
-        id = 692,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Iron 3rd Place"
+    "July 2013 Crate 03" : {
+        id = 5646,
+        item_class = "supply_crate",
+        item_name_english = "Yellow Summer 2013 Cooler"
     },
-    "UGC Tournament Autumn 2011 - Euro Iron" : {
-        id = 693,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Euro Iron"
+    "July 2013 Key 03" : {
+        id = 5647,
+        item_class = "tool",
+        item_name_english = "Yellow Summer 2013 Cooler Key"
     },
-    "UGC Tournament Fall 2011 - Tin 1st Place" : {
-        id = 694,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Tin 1st Place"
+    "July 2013 Crate 04" : {
+        id = 5648,
+        item_class = "supply_crate",
+        item_name_english = "Green Summer 2013 Cooler"
     },
-    "UGC Tournament Fall 2011 - Tin 2nd Place" : {
-        id = 695,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Tin 2nd Place"
+    "July 2013 Key 04" : {
+        id = 5649,
+        item_class = "tool",
+        item_name_english = "Green Summer 2013 Cooler Key"
     },
-    "UGC Tournament Fall 2011 - Tin 3rd Place" : {
-        id = 696,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Tin 3rd Place"
+    "July 2013 Crate 05" : {
+        id = 5650,
+        item_class = "supply_crate",
+        item_name_english = "Aqua Summer 2013 Cooler"
     },
-    "UGC Tournament Fall 2011 - Participant" : {
-        id = 697,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Participant"
+    "July 2013 Key 05" : {
+        id = 5651,
+        item_class = "tool",
+        item_name_english = "Aqua Summer 2013 Cooler Key"
     },
-    "UGC Tournament Autumn 2011 - Euro Participant" : {
-        id = 698,
-        item_class = "tf_wearable",
-        item_name_english = "UGC Highlander Euro Participant"
+    "July 2013 Crate 06" : {
+        id = 5652,
+        item_class = "supply_crate",
+        item_name_english = "Blue Summer 2013 Cooler"
     },
-    "The Map Maker's Medallion" : {
-        id = 717,
-        item_class = "tf_wearable",
-        item_name_english = "Map Maker's Medallion"
+    "July 2013 Key 06" : {
+        id = 5653,
+        item_class = "tool",
+        item_name_english = "Blue Summer 2013 Cooler Key"
+    },
+    "July 2013 Crate 07" : {
+        id = 5654,
+        item_class = "supply_crate",
+        item_name_english = "Brown Summer 2013 Cooler"
+    },
+    "July 2013 Key 07" : {
+        id = 5655,
+        item_class = "tool",
+        item_name_english = "Brown Summer 2013 Cooler Key"
+    },
+    "July 2013 Crate 08" : {
+        id = 5656,
+        item_class = "supply_crate",
+        item_name_english = "Black Summer 2013 Cooler"
+    },
+    "July 2013 Key 08" : {
+        id = 5657,
+        item_class = "tool",
+        item_name_english = "Black Summer 2013 Cooler Key"
+    },
+    "Gift - 23 SummerKeys 2013" : {
+        id = 5658,
+        item_class = "tf_wearable",
+        item_name_english = "Pile of Summer Cooler Key Gifts"
+    },
+    "Gift - 1 SummerKey 2013" : {
+        id = 5659,
+        item_class = "tf_wearable",
+        item_name_english = "A Random Summer Cooler Key Gift"
+    },
+    "Supply Crate Rare 2" : {
+        id = 5660,
+        item_class = "supply_crate",
+        item_name_english = "Select Reserve Mann Co. Supply Crate"
+    },
+    "Pomson 6000 Strangifier" : {
+        id = 5661,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Robits Loot 01" : {
+        id = 5700,
+        item_class = "craft_item",
+        item_name_english = "Pristine Robot Currency Digester"
+    },
+    "Robits Loot 02" : {
+        id = 5701,
+        item_class = "craft_item",
+        item_name_english = "Pristine Robot Brainstorm Bulb"
+    },
+    "Robits Loot 03" : {
+        id = 5702,
+        item_class = "craft_item",
+        item_name_english = "Reinforced Robot Emotion Detector"
+    },
+    "Robits Loot 04" : {
+        id = 5703,
+        item_class = "craft_item",
+        item_name_english = "Reinforced Robot Humor Suppression Pump"
+    },
+    "Robits Loot 05" : {
+        id = 5704,
+        item_class = "craft_item",
+        item_name_english = "Reinforced Robot Bomb Stabilizer"
+    },
+    "Robits Loot 06" : {
+        id = 5705,
+        item_class = "craft_item",
+        item_name_english = "Battle-Worn Robot Taunt Processor"
+    },
+    "Robits Loot 07" : {
+        id = 5706,
+        item_class = "craft_item",
+        item_name_english = "Battle-Worn Robot KB-808"
+    },
+    "Robits Loot 08" : {
+        id = 5707,
+        item_class = "craft_item",
+        item_name_english = "Battle-Worn Robot Money Furnace"
+    },
+    "Fall 2013 Acorns Crate" : {
+        id = 5708,
+        item_class = "supply_crate",
+        item_name_english = "Fall 2013 Acorns Crate"
+    },
+    "Fall 2013 Gourd Crate" : {
+        id = 5709,
+        item_class = "supply_crate",
+        item_name_english = "Fall 2013 Gourd Crate"
+    },
+    "Fall 2013 Acorns Key" : {
+        id = 5710,
+        item_class = "tool",
+        item_name_english = "Fall 2013 Acorns Crate Key"
+    },
+    "Fall 2013 Gourd Key" : {
+        id = 5711,
+        item_class = "tool",
+        item_name_english = "Fall 2013 Gourd Crate Key"
+    },
+    "Halloween 2013 Crate" : {
+        id = 5712,
+        item_class = "supply_crate",
+        item_name_english = "Spooky Crate"
+    },
+    "Halloween 2013 Key" : {
+        id = 5713,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Naughty Winter Crate 2013" : {
+        id = 5714,
+        item_class = "supply_crate",
+        item_name_english = "Naughty Winter Crate 2013"
+    },
+    "Nice Winter Crate 2013" : {
+        id = 5715,
+        item_class = "supply_crate",
+        item_name_english = "Nice Winter Crate 2013"
+    },
+    "Naughty Winter Key 2013" : {
+        id = 5716,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Nice Winter Key 2013" : {
+        id = 5717,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Self Gift - Stocking Stuffer 2013" : {
+        id = 5718,
+        item_class = "tf_wearable",
+        item_name_english = "Gift-Stuffed Stocking"
+    },
+    "Strongbox Crate 2014" : {
+        id = 5719,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Strongbox"
+    },
+    "Strongbox Key 2014" : {
+        id = 5720,
+        item_class = "tool",
+        item_name_english = "Mann Co. Strongbox Key"
+    },
+    "Pretty Boy's Pocket Pistol Strangifier" : {
+        id = 5721,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Phlogistinator Strangifier" : {
+        id = 5722,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Cleaner's Carbine Strangifier" : {
+        id = 5723,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Private Eye Strangifier" : {
+        id = 5724,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Big Chief Strangifier" : {
+        id = 5725,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Rocket Launcher Killstreakifier Basic" : {
+        id = 5726,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Scattergun Killstreakifier Basic" : {
+        id = 5727,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Sniperrifle Killstreakifier Basic" : {
+        id = 5728,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Shotgun Killstreakifier Basic" : {
+        id = 5729,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Ubersaw Killstreakifier Basic" : {
+        id = 5730,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "GRU Killstreakifier Basic" : {
+        id = 5731,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Spy-cicle Launcher Killstreakifier Basic" : {
+        id = 5732,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Axtinguisher Killstreakifier Basic" : {
+        id = 5733,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Supply Crate Ration" : {
+        id = 5734,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Supply Munition"
+    },
+    "Supply Crate Ration 2" : {
+        id = 5735,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Supply Munition"
+    },
+    "Short 2014 Community Crate A" : {
+        id = 5737,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Stockpile Crate"
+    },
+    "Short 2014 Community Crate B" : {
+        id = 5738,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Stockpile Crate"
+    },
+    "Short 2014 Taunt Crate" : {
+        id = 5739,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Audition Reel"
+    },
+    "Short 2014 Key" : {
+        id = 5740,
+        item_class = "tool",
+        item_name_english = "Mann Co. Stockpile Crate Key"
+    },
+    "Self Gift - Mutated Bread Box" : {
+        id = 5741,
+        item_class = "tf_wearable",
+        item_name_english = "Bread Box"
+    },
+    "Supply Crate Ration 3" : {
+        id = 5742,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Supply Munition"
+    },
+    "StickyLauncher Killstreakifier Basic" : {
+        id = 5743,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Minigun Killstreakifier Basic" : {
+        id = 5744,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "DirectHit Killstreakifier Basic" : {
+        id = 5745,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Huntsman Killstreakifier Basic" : {
+        id = 5746,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Backburner Killstreakifier Basic" : {
+        id = 5747,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Backscatter Killstreakifier Basic" : {
+        id = 5748,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Kritzkrieg Killstreakifier Basic" : {
+        id = 5749,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Ambassador Killstreakifier Basic" : {
+        id = 5750,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Frontier Justice Killstreakifier Basic" : {
+        id = 5751,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Supply Crate Ration 4" : {
+        id = 5752,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Supply Munition"
+    },
+    "Air Strike Strangifier" : {
+        id = 5753,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Classic Strangifier" : {
+        id = 5754,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Manmelter Strangifier" : {
+        id = 5755,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Vaccinator Strangifier" : {
+        id = 5756,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Widowmaker Strangifier" : {
+        id = 5757,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Anger Strangifier" : {
+        id = 5758,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Apparition's Aspect Strangifier" : {
+        id = 5759,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Taunt Shuffle Crate" : {
+        id = 5760,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Director's Cut Reel"
+    },
+    "Summer Crate 2014" : {
+        id = 5761,
+        item_class = "supply_crate",
+        item_name_english = "Limited Late Summer Crate"
+    },
+    "Limited Summer 2014 Key" : {
+        id = 5762,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Halloween 2014 Scout Crate" : {
+        id = 5763,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Creepy Scout Crate"
+    },
+    "Halloween 2014 Pyro Crate" : {
+        id = 5764,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Creepy Pyro Crate"
+    },
+    "Halloween 2014 Heavy Crate" : {
+        id = 5765,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Creepy Heavy Crate"
+    },
+    "Halloween 2014 Engineer Crate" : {
+        id = 5766,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Creepy Engineer Crate"
+    },
+    "Halloween 2014 Spy Crate" : {
+        id = 5767,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Creepy Spy Crate"
+    },
+    "Halloween 2014 Sniper Crate" : {
+        id = 5768,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Creepy Sniper Crate"
+    },
+    "Halloween 2014 Soldier Crate" : {
+        id = 5769,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Creepy Soldier Crate"
+    },
+    "Halloween 2014 Medic Crate" : {
+        id = 5770,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Creepy Medic Crate"
+    },
+    "Halloween 2014 Demo Crate" : {
+        id = 5771,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Creepy Demo Crate"
+    },
+    "Halloween Giveaway Cauldron 2014 (Base)" : {
+        id = 5772,
+        item_class = "tf_wearable",
+        item_name_english = "Halloween Gift Cauldron"
+    },
+    "Halloween Giveaway Cauldron 2014 (Achievement)" : {
+        id = 5773,
+        item_class = "tf_wearable",
+        item_name_english = "Halloween Gift Cauldron"
+    },
+    "EOTL Community Crate" : {
+        id = 5774,
+        item_class = "supply_crate",
+        item_name_english = "End of the Line Community Crate"
+    },
+    "EOTL Community Key" : {
+        id = 5775,
+        item_class = "tool",
+        item_name_english = "End of the Line Key"
+    },
+    "Gift - 23 EOTL Keys" : {
+        id = 5776,
+        item_class = "tf_wearable",
+        item_name_english = "Pile of End of the Line Key Gifts"
+    },
+    "Gift - 1 EOTL Key" : {
+        id = 5777,
+        item_class = "tf_wearable",
+        item_name_english = "A Random End of the Line Key Gift"
+    },
+    "Duck Token" : {
+        id = 5778,
+        item_class = "tool",
+        item_name_english = "Duck Token"
+    },
+    "Gift - 23 Duck Tokens" : {
+        id = 5779,
+        item_class = "tf_wearable",
+        item_name_english = "Pile of Duck Token Gifts"
+    },
+    "Gift - 1 Duck Token" : {
+        id = 5780,
+        item_class = "tf_wearable",
+        item_name_english = "A Random Duck Token Gift"
+    },
+    "Supply Crate Ration 5" : {
+        id = 5781,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Supply Munition"
+    },
+    "Cow Mangler 5000 Strangifier" : {
+        id = 5783,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Third Degree Strangifier" : {
+        id = 5784,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Naughty Winter Crate 2014" : {
+        id = 5789,
+        item_class = "supply_crate",
+        item_name_english = "Naughty Winter Crate 2014"
+    },
+    "Nice Winter Crate 2014" : {
+        id = 5790,
+        item_class = "supply_crate",
+        item_name_english = "Nice Winter Crate 2014"
+    },
+    "Naughty Key 2014 Key" : {
+        id = 5791,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Nice Key 2014 Key" : {
+        id = 5792,
+        item_class = "tool",
+        item_name_english = "Mann Co. Supply Crate Key"
+    },
+    "Flaregun Killstreakifier Basic" : {
+        id = 5793,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Wrench Killstreakifier Basic" : {
+        id = 5794,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Revolver Killstreakifier Basic" : {
+        id = 5795,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Machina Killstreakifier Basic" : {
+        id = 5796,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Baby Face Blaster Killstreakifier Basic" : {
+        id = 5797,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Huo Long Heatmaker Killstreakifier Basic" : {
+        id = 5798,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Loose Cannon Killstreakifier Basic" : {
+        id = 5799,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Vaccinator Killstreakifier Basic" : {
+        id = 5800,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Air Strike Killstreakifier Basic" : {
+        id = 5801,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Supply Crate Ration 6" : {
+        id = 5802,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Supply Munition"
+    },
+    "Supply Crate Ration 7" : {
+        id = 5803,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Supply Munition"
+    },
+    "Righteous Bison Strangifier" : {
+        id = 5804,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Summer 2015 Operation Key" : {
+        id = 5805,
+        item_class = "tool",
+        item_name_english = "Gun Mettle Key"
+    },
+    "Operation Summer 2015 Concealed Killer Case" : {
+        id = 5806,
+        item_class = "supply_crate",
+        item_name_english = "The Concealed Killer Weapons Case"
+    },
+    "Operation Summer 2015 Powerhouse Case" : {
+        id = 5807,
+        item_class = "supply_crate",
+        item_name_english = "The Powerhouse Weapons Case"
+    },
+    "Unused Summer 2015 Operation Pass" : {
+        id = 5808,
+        item_class = "craft_item",
+        item_name_english = "Gun Mettle Campaign Pass"
+    },
+    "Activated Summer 2015 Operation Pass" : {
+        id = 5809,
+        item_class = "craft_item",
+        item_name_english = "Gun Mettle Campaign Coin"
+    },
+    "Concealed Killer Collection Dummy" : {
+        id = 5810,
+        item_class = "craft_item",
+        item_name_english = "Concealed Killer Collection"
+    },
+    "Craftsmann Collection Dummy" : {
+        id = 5811,
+        item_class = "craft_item",
+        item_name_english = "Craftsmann Collection"
+    },
+    "Powerhouse Collection Dummy" : {
+        id = 5812,
+        item_class = "craft_item",
+        item_name_english = "Powerhouse Collection"
+    },
+    "Teufort Collection Dummy" : {
+        id = 5813,
+        item_class = "craft_item",
+        item_name_english = "Teufort Collection"
+    },
+    "Gun Mettle Cosmetics Collection Dummy" : {
+        id = 5814,
+        item_class = "craft_item",
+        item_name_english = "Gun Mettle Cosmetics Collection"
+    },
+    "Gun Mettle Cosmetic Key" : {
+        id = 5816,
+        item_class = "tool",
+        item_name_english = "Gun Mettle Cosmetic Key"
+    },
+    "Gun Mettle Cosmetic Case" : {
+        id = 5817,
+        item_class = "supply_crate",
+        item_name_english = "Gun Mettle Cosmetic Case"
+    },
+    "Strange Count Transfer Tool" : {
+        id = 5818,
+        item_class = "tool",
+        item_name_english = "Strange Count Transfer Tool"
+    },
+    "Unused Invasion Pass" : {
+        id = 5819,
+        item_class = "craft_item",
+        item_name_english = "Invasion Community Update Pass"
+    },
+    "Activated Invasion Pass" : {
+        id = 5820,
+        item_class = "craft_item",
+        item_name_english = "Invasion Community Update Coin"
+    },
+    "Invasion Key" : {
+        id = 5821,
+        item_class = "tool",
+        item_name_english = "Invasion Community Update Key"
+    },
+    "Invasion Case 01" : {
+        id = 5822,
+        item_class = "supply_crate",
+        item_name_english = "Quarantined Collection Case"
+    },
+    "Invasion Case 02" : {
+        id = 5823,
+        item_class = "supply_crate",
+        item_name_english = "Confidential Collection Case"
+    },
+    "Invasion Collection Dummy 01" : {
+        id = 5824,
+        item_class = "craft_item",
+        item_name_english = "Quarantined Collection"
+    },
+    "Invasion Collection Dummy 02" : {
+        id = 5825,
+        item_class = "craft_item",
+        item_name_english = "Confidential Collection"
+    },
+    "Activated Halloween Pass" : {
+        id = 5826,
+        item_class = "craft_item",
+        item_name_english = "Soul Gargoyle"
+    },
+    "Halloween 2015 Key" : {
+        id = 5827,
+        item_class = "tool",
+        item_name_english = "Gargoyle Key"
+    },
+    "Halloween 2015 case" : {
+        id = 5828,
+        item_class = "supply_crate",
+        item_name_english = "Gargoyle Case"
+    },
+    "Unused Operation Tough Break Pass" : {
+        id = 5829,
+        item_class = "craft_item",
+        item_name_english = "Tough Break Campaign Pass"
+    },
+    "Activated Operation Tough Break Pass" : {
+        id = 5830,
+        item_class = "craft_item",
+        item_name_english = "Tough Break Campaign Stamp"
+    },
+    "Tough Break Case 01 Pyroland" : {
+        id = 5831,
+        item_class = "supply_crate",
+        item_name_english = "Pyroland Weapons Case"
+    },
+    "Tough Break Case 02 Warbirds" : {
+        id = 5832,
+        item_class = "supply_crate",
+        item_name_english = "Warbird Weapons Case"
+    },
+    "Tough Break Key" : {
+        id = 5833,
+        item_class = "tool",
+        item_name_english = "Tough Break Key"
+    },
+    "Tough Break Collection Dummy 01" : {
+        id = 5834,
+        item_class = "craft_item",
+        item_name_english = "Harvest Collection"
+    },
+    "Tough Break Collection Dummy 02" : {
+        id = 5835,
+        item_class = "craft_item",
+        item_name_english = "Gentlemanne's Collection"
+    },
+    "Tough Break Collection Dummy 03" : {
+        id = 5836,
+        item_class = "craft_item",
+        item_name_english = "Pyroland Collection"
+    },
+    "Tough Break Collection Dummy 04" : {
+        id = 5837,
+        item_class = "craft_item",
+        item_name_english = "Warbird Collection"
+    },
+    "Winter 2015 Mystery Box" : {
+        id = 5838,
+        item_class = "tool",
+        item_name_english = "Smissmas 2015 Festive Gift"
+    },
+    "Festivizer" : {
+        id = 5839,
+        item_class = "tool",
+        item_name_english = "Festivizer"
+    },
+    "Tough Break Cosmetics Collection Dummy" : {
+        id = 5840,
+        item_class = "craft_item",
+        item_name_english = "Tough Break Cosmetics Collection"
+    },
+    "Tough Break Cosmetic Key" : {
+        id = 5841,
+        item_class = "tool",
+        item_name_english = "Tough Break Cosmetic Key"
+    },
+    "Tough Break Cosmetic Case" : {
+        id = 5842,
+        item_class = "supply_crate",
+        item_name_english = "Tough Break Cosmetic Case"
+    },
+    "Common Stat Clock" : {
+        id = 5843,
+        item_class = "tool",
+        item_name_english = "Civilian Grade Stat Clock"
+    },
+    "Fall 2013 Acorns Key New" : {
+        id = 5844,
+        item_class = "tool",
+        item_name_english = "Fall 2013 Acorns Crate Key"
+    },
+    "Strongbox Key 2014 New" : {
+        id = 5845,
+        item_class = "tool",
+        item_name_english = "Mann Co. Strongbox Key"
+    },
+    "Short 2014 Key New" : {
+        id = 5846,
+        item_class = "tool",
+        item_name_english = "Mann Co. Stockpile Crate Key"
+    },
+    "Halloween 2015 Key New" : {
+        id = 5847,
+        item_class = "tool",
+        item_name_english = "Gargoyle Key"
+    },
+    "Mayflower Cosmetic Key" : {
+        id = 5848,
+        item_class = "tool",
+        item_name_english = "Mayflower Cosmetic Key"
+    },
+    "Mayflower Cosmetic Case" : {
+        id = 5849,
+        item_class = "supply_crate",
+        item_name_english = "Mayflower Cosmetic Case"
+    },
+    "Keyless Cosmetic Crate Scout" : {
+        id = 5850,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Scout"
+    },
+    "Keyless Cosmetic Crate Sniper" : {
+        id = 5851,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Sniper"
+    },
+    "Keyless Cosmetic Crate Soldier" : {
+        id = 5852,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Soldier"
+    },
+    "Keyless Cosmetic Crate Demoman" : {
+        id = 5853,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Demo"
+    },
+    "Keyless Cosmetic Crate Medic" : {
+        id = 5854,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Medic"
+    },
+    "Keyless Cosmetic Crate Heavy" : {
+        id = 5855,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Heavy"
+    },
+    "Keyless Cosmetic Crate Pyro" : {
+        id = 5856,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Pyro"
+    },
+    "Keyless Cosmetic Crate Spy" : {
+        id = 5857,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Spy"
+    },
+    "Keyless Cosmetic Crate Engineer" : {
+        id = 5858,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Engineer"
+    },
+    "Supply Crate Ration 8" : {
+        id = 5859,
+        item_class = "supply_crate",
+        item_name_english = "Mann Co. Supply Munition"
+    },
+    "Keyless Cosmetic Crate MultiClass" : {
+        id = 5860,
+        item_class = "tf_wearable",
+        item_name_english = "Unlocked Cosmetic Crate Multi-Class"
+    },
+    "Halloween 2016 Case" : {
+        id = 5861,
+        item_class = "supply_crate",
+        item_name_english = "Creepy Crawly Case"
+    },
+    "Halloween 2016 Key" : {
+        id = 5862,
+        item_class = "tool",
+        item_name_english = "Creepy Crawly Key"
+    },
+    "Halloween 2015 Collection Dummy" : {
+        id = 5863,
+        item_class = "craft_item",
+        item_name_english = "Gargoyle Collection"
+    },
+    "Halloween 2016 Collection Dummy" : {
+        id = 5864,
+        item_class = "craft_item",
+        item_name_english = "Creepy Crawly Collection"
+    },
+    "Keyless Winter 2016 Case" : {
+        id = 5865,
+        item_class = "supply_crate",
+        item_name_english = "Unlocked Winter 2016 Cosmetic Case"
+    },
+    "Rainy Day Cosmetic Key" : {
+        id = 5866,
+        item_class = "tool",
+        item_name_english = "Rainy Day Cosmetic Key"
+    },
+    "Rainy Day Cosmetic Case" : {
+        id = 5867,
+        item_class = "supply_crate",
+        item_name_english = "Rainy Day Cosmetic Case"
+    },
+    "Unused Campaign 3 Pass" : {
+        id = 5868,
+        item_class = "craft_item",
+        item_name_english = "Jungle Inferno Campaign Pass"
+    },
+    "Activated Campaign 3 Pass" : {
+        id = 5869,
+        item_class = "tf_wearable_campaign_item",
+        item_name_english = "Jungle Inferno ConTracker"
+    },
+    "Abominable Cosmetic Case" : {
+        id = 5871,
+        item_class = "supply_crate",
+        item_name_english = "Abominable Cosmetic Case"
+    },
+    "Campaign 3 Cosmetics Case 1 Collection Dummy" : {
+        id = 5872,
+        item_class = "craft_item",
+        item_name_english = "Abominable Cosmetic Collection"
+    },
+    "Abominable Cosmetic Key" : {
+        id = 5873,
+        item_class = "tool",
+        item_name_english = "Abominable Cosmetic Key"
+    },
+    "Unleash the Beast Cosmetic Case" : {
+        id = 5875,
+        item_class = "supply_crate",
+        item_name_english = "Unleash the Beast Cosmetic Case"
+    },
+    "Campaign 3 Cosmetics Case 2 Collection Dummy" : {
+        id = 5876,
+        item_class = "craft_item",
+        item_name_english = "Unleash the Beast Cosmetic Collection"
+    },
+    "Unleash the Beast Cosmetic Key" : {
+        id = 5877,
+        item_class = "tool",
+        item_name_english = "Unleash the Beast Cosmetic Key"
+    },
+    "Campaign 3 Contract Paintkit Collection Dummy 1" : {
+        id = 5878,
+        item_class = "craft_item",
+        item_name_english = "Decorated War Hero Collection"
+    },
+    "Campaign 3 Contract Paintkit Collection Dummy 2" : {
+        id = 5879,
+        item_class = "craft_item",
+        item_name_english = "Contract Campaigner Collection"
+    },
+    "Campaign 3 Paintkit Case Collection Dummy 1" : {
+        id = 5880,
+        item_class = "craft_item",
+        item_name_english = "Jungle Jackpot Collection"
+    },
+    "Campaign 3 Paintkit Case Collection Dummy 2" : {
+        id = 5881,
+        item_class = "craft_item",
+        item_name_english = "Infernal Reward Collection"
+    },
+    "Jungle Jackpot War Paint Key" : {
+        id = 5882,
+        item_class = "tool",
+        item_name_english = "Jungle Jackpot War Paint Key"
+    },
+    "Jungle Jackpot War Paint Case" : {
+        id = 5883,
+        item_class = "supply_crate",
+        item_name_english = "Jungle Jackpot War Paint Case"
+    },
+    "Infernal Reward War Paint Key" : {
+        id = 5884,
+        item_class = "tool",
+        item_name_english = "Infernal Reward War Paint Key"
+    },
+    "Infernal Reward War Paint Case" : {
+        id = 5885,
+        item_class = "supply_crate",
+        item_name_english = "Infernal Reward War Paint Case"
+    },
+    "Self Gift - Stocking Stuffer 2017" : {
+        id = 5886,
+        item_class = "tf_wearable",
+        item_name_english = "Gift-Stuffed Stocking 2017"
+    },
+    "Winter 2017 Cosmetic Key" : {
+        id = 5887,
+        item_class = "tool",
+        item_name_english = "Winter 2017 Cosmetic Key"
+    },
+    "Winter 2017 Cosmetic Case" : {
+        id = 5888,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2017 Cosmetic Case"
+    },
+    "Winter 2017 War Paint Key" : {
+        id = 5889,
+        item_class = "tool",
+        item_name_english = "Winter 2017 War Paint Key"
+    },
+    "Winter 2017 War Paint Case" : {
+        id = 5890,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2017 War Paint Case"
+    },
+    "Jungle Inferno Contracts Pass" : {
+        id = 5891,
+        item_class = "craft_item",
+        item_name_english = "Jungle Inferno Contracts Pass"
+    },
+    "Blue Moon Cosmetic Key" : {
+        id = 5892,
+        item_class = "tool",
+        item_name_english = "Blue Moon Cosmetic Key"
+    },
+    "Blue Moon Cosmetic Case" : {
+        id = 5893,
+        item_class = "supply_crate",
+        item_name_english = "Blue Moon Cosmetic Case"
+    },
+    "Halloween 2018 Case" : {
+        id = 5894,
+        item_class = "supply_crate",
+        item_name_english = "Violet Vermin Case"
+    },
+    "Halloween 2018 Key" : {
+        id = 5895,
+        item_class = "tool",
+        item_name_english = "Violet Vermin Key"
+    },
+    "Halloween 2018 Collection Dummy" : {
+        id = 5896,
+        item_class = "craft_item",
+        item_name_english = "Violet Vermin Collection"
+    },
+    "Scream Fortress 2018 War Paint Case" : {
+        id = 5897,
+        item_class = "supply_crate",
+        item_name_english = "Scream Fortress X War Paint Case"
+    },
+    "Scream Fortress 2018 War Paint Key" : {
+        id = 5898,
+        item_class = "tool",
+        item_name_english = "Scream Fortress X War Paint Key"
+    },
+    "Scream Fortress 2018 War Paint Dummy" : {
+        id = 5899,
+        item_class = "craft_item",
+        item_name_english = "Scream Fortress X Collection"
+    },
+    "Self Gift - Stocking Stuffer 2018" : {
+        id = 5900,
+        item_class = "tf_wearable",
+        item_name_english = "Gift-Stuffed Stocking 2018"
+    },
+    "Winter 2018 Cosmetic Key" : {
+        id = 5901,
+        item_class = "tool",
+        item_name_english = "Winter 2018 Cosmetic Key"
+    },
+    "Winter 2018 Cosmetic Case" : {
+        id = 5902,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2018 Cosmetic Case"
+    },
+    "Summer 2019 Cosmetic Key" : {
+        id = 5903,
+        item_class = "tool",
+        item_name_english = "Summer 2019 Cosmetic Key"
+    },
+    "Summer 2019 Cosmetic Case" : {
+        id = 5904,
+        item_class = "supply_crate",
+        item_name_english = "Summer 2019 Cosmetic Case"
+    },
+    "Halloween 2019 Case" : {
+        id = 5905,
+        item_class = "supply_crate",
+        item_name_english = "Spooky Spoils Case"
+    },
+    "Halloween 2019 Key" : {
+        id = 5906,
+        item_class = "tool",
+        item_name_english = "Spooky Spoils Key"
+    },
+    "Halloween 2019 Collection Dummy" : {
+        id = 5907,
+        item_class = "craft_item",
+        item_name_english = "Spooky Spoils Collection"
+    },
+    "Winter 2019 Cosmetic Key" : {
+        id = 5908,
+        item_class = "tool",
+        item_name_english = "Winter 2019 Cosmetic Key"
+    },
+    "Winter 2019 Cosmetic Case" : {
+        id = 5909,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2019 Cosmetic Case"
+    },
+    "Self Gift - Stocking Stuffer 2019" : {
+        id = 5910,
+        item_class = "tf_wearable",
+        item_name_english = "Gift-Stuffed Stocking 2019"
+    },
+    "Winter 2019 War Paint Key" : {
+        id = 5911,
+        item_class = "tool",
+        item_name_english = "Winter 2019 War Paint Key"
+    },
+    "Winter 2019 War Paint Case" : {
+        id = 5912,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2019 War Paint Case"
+    },
+    "Summer 2020 Cosmetic Key" : {
+        id = 5913,
+        item_class = "tool",
+        item_name_english = "Summer 2020 Cosmetic Key"
+    },
+    "Summer 2020 Cosmetic Case" : {
+        id = 5914,
+        item_class = "supply_crate",
+        item_name_english = "Summer 2020 Cosmetic Case"
+    },
+    "Halloween 2020 Case" : {
+        id = 5915,
+        item_class = "supply_crate",
+        item_name_english = "Wicked Windfall Case"
+    },
+    "Halloween 2020 Key" : {
+        id = 5916,
+        item_class = "tool",
+        item_name_english = "Wicked Windfall Key"
+    },
+    "Halloween 2020 Collection Dummy" : {
+        id = 5917,
+        item_class = "craft_item",
+        item_name_english = "Wicked Windfall Collection"
+    },
+    "Scream Fortress 2020 War Paint Case" : {
+        id = 5918,
+        item_class = "supply_crate",
+        item_name_english = "Scream Fortress XII War Paint Case"
+    },
+    "Scream Fortress 2020 War Paint Key" : {
+        id = 5919,
+        item_class = "tool",
+        item_name_english = "Scream Fortress XII War Paint Key"
+    },
+    "Scream Fortress 2020 War Paint Dummy" : {
+        id = 5920,
+        item_class = "craft_item",
+        item_name_english = "Scream Fortress XII Collection"
+    },
+    "Winter 2020 Cosmetic Key" : {
+        id = 5921,
+        item_class = "tool",
+        item_name_english = "Winter 2020 Cosmetic Key"
+    },
+    "Winter 2020 Cosmetic Case" : {
+        id = 5922,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2020 Cosmetic Case"
+    },
+    "Self Gift - Stocking Stuffer 2020" : {
+        id = 5923,
+        item_class = "tf_wearable",
+        item_name_english = "Gift-Stuffed Stocking 2020"
+    },
+    "Winter 2020 War Paint Key" : {
+        id = 5924,
+        item_class = "tool",
+        item_name_english = "Winter 2020 War Paint Key"
+    },
+    "Winter 2020 War Paint Case" : {
+        id = 5925,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2020 War Paint Case"
+    },
+    "Summer 2021 Cosmetic Key" : {
+        id = 5926,
+        item_class = "tool",
+        item_name_english = "Summer 2021 Cosmetic Key"
+    },
+    "Summer 2021 Cosmetic Case" : {
+        id = 5927,
+        item_class = "supply_crate",
+        item_name_english = "Summer 2021 Cosmetic Case"
+    },
+    "Halloween 2021 Case" : {
+        id = 5928,
+        item_class = "supply_crate",
+        item_name_english = "Crimson Cache Case"
+    },
+    "Halloween 2021 Key" : {
+        id = 5929,
+        item_class = "tool",
+        item_name_english = "Crimson Cache Key"
+    },
+    "Halloween 2021 Collection Dummy" : {
+        id = 5930,
+        item_class = "craft_item",
+        item_name_english = "Crimson Cache Collection"
+    },
+    "Scream Fortress 2021 War Paint Case" : {
+        id = 5931,
+        item_class = "supply_crate",
+        item_name_english = "Scream Fortress XIII War Paint Case"
+    },
+    "Scream Fortress 2021 War Paint Key" : {
+        id = 5932,
+        item_class = "tool",
+        item_name_english = "Scream Fortress XIII War Paint Key"
+    },
+    "Scream Fortress 2021 War Paint Dummy" : {
+        id = 5933,
+        item_class = "craft_item",
+        item_name_english = "Scream Fortress XIII Collection"
+    },
+    "Winter 2021 Cosmetic Key" : {
+        id = 5934,
+        item_class = "tool",
+        item_name_english = "Winter 2021 Cosmetic Key"
+    },
+    "Winter 2021 Cosmetic Case" : {
+        id = 5935,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2021 Cosmetic Case"
+    },
+    "Self Gift - Stocking Stuffer 2021" : {
+        id = 5936,
+        item_class = "tf_wearable",
+        item_name_english = "Gift-Stuffed Stocking 2021"
+    },
+    "Summer 2022 Cosmetic Key" : {
+        id = 5937,
+        item_class = "tool",
+        item_name_english = "Summer 2022 Cosmetic Key"
+    },
+    "Summer 2022 Cosmetic Case" : {
+        id = 5938,
+        item_class = "supply_crate",
+        item_name_english = "Summer 2022 Cosmetic Case"
+    },
+    "Halloween 2022 Case" : {
+        id = 5939,
+        item_class = "supply_crate",
+        item_name_english = "Ghoulish Gains Case"
+    },
+    "Halloween 2022 Key" : {
+        id = 5940,
+        item_class = "tool",
+        item_name_english = "Ghoulish Gains Key"
+    },
+    "Halloween 2022 Collection Dummy" : {
+        id = 5941,
+        item_class = "craft_item",
+        item_name_english = "Ghoulish Gains Collection"
+    },
+    "Scream Fortress 2022 War Paint Case" : {
+        id = 5942,
+        item_class = "supply_crate",
+        item_name_english = "Scream Fortress XIV War Paint Case"
+    },
+    "Scream Fortress 2022 War Paint Key" : {
+        id = 5943,
+        item_class = "tool",
+        item_name_english = "Scream Fortress XIV War Paint Key"
+    },
+    "Scream Fortress 2022 War Paint Dummy" : {
+        id = 5944,
+        item_class = "craft_item",
+        item_name_english = "Scream Fortress XIV Collection"
+    },
+    "Self Gift - Stocking Stuffer 2022" : {
+        id = 5945,
+        item_class = "tf_wearable",
+        item_name_english = "Gift-Stuffed Stocking 2022"
+    },
+    "Winter 2022 Cosmetic Key" : {
+        id = 5946,
+        item_class = "tool",
+        item_name_english = "Winter 2022 Cosmetic Key"
+    },
+    "Winter 2022 Cosmetic Case" : {
+        id = 5947,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2022 Cosmetic Case"
+    },
+    "Summer 2023 Cosmetic Key" : {
+        id = 5948,
+        item_class = "tool",
+        item_name_english = "Summer 2023 Cosmetic Key"
+    },
+    "Summer 2023 Cosmetic Case" : {
+        id = 5949,
+        item_class = "supply_crate",
+        item_name_english = "Summer 2023 Cosmetic Case"
+    },
+    "Summer 2023 War Paint Key" : {
+        id = 5950,
+        item_class = "tool",
+        item_name_english = "Summer 2023 War Paint Key"
+    },
+    "Summer 2023 War Paint Case" : {
+        id = 5951,
+        item_class = "supply_crate",
+        item_name_english = "Summer 2023 War Paint Case"
+    },
+    "Halloween 2023 Case" : {
+        id = 5952,
+        item_class = "supply_crate",
+        item_name_english = "Bone-Chilling Bonanza Case"
+    },
+    "Halloween 2023 Key" : {
+        id = 5953,
+        item_class = "tool",
+        item_name_english = "Bone-Chilling Bonanza Key"
+    },
+    "Halloween 2023 Collection Dummy" : {
+        id = 5954,
+        item_class = "craft_item",
+        item_name_english = "Bone-Chilling Bonanza Collection"
+    },
+    "Self Gift - Stocking Stuffer 2023" : {
+        id = 5955,
+        item_class = "tf_wearable",
+        item_name_english = "Gift-Stuffed Stocking 2023"
+    },
+    "Winter 2023 Cosmetic Key" : {
+        id = 5956,
+        item_class = "tool",
+        item_name_english = "Winter 2023 Cosmetic Key"
+    },
+    "Winter 2023 Cosmetic Case" : {
+        id = 5957,
+        item_class = "supply_crate",
+        item_name_english = "Winter 2023 Cosmetic Case"
+    },
+    "Strange Part (Armory)" : {
+        id = 5999,
+        item_class = "tool",
+        item_name_english = "Strange Part"
+    },
+    "Strange Part: Heavies Killed" : {
+        id = 6000,
+        item_class = "tool",
+        item_name_english = "Strange Part: Heavies Killed"
+    },
+    "Strange Part: Demomen Killed" : {
+        id = 6001,
+        item_class = "tool",
+        item_name_english = "Strange Part: Demomen Killed"
+    },
+    "Strange Part: Soldiers Killed" : {
+        id = 6002,
+        item_class = "tool",
+        item_name_english = "Strange Part: Soldiers Killed"
+    },
+    "Strange Part: Scouts Killed" : {
+        id = 6003,
+        item_class = "tool",
+        item_name_english = "Strange Part: Scouts Killed"
+    },
+    "Strange Part: Engineers Killed" : {
+        id = 6004,
+        item_class = "tool",
+        item_name_english = "Strange Part: Engineers Killed"
+    },
+    "Strange Part: Snipers Killed" : {
+        id = 6005,
+        item_class = "tool",
+        item_name_english = "Strange Part: Snipers Killed"
+    },
+    "Strange Part: Pyros Killed" : {
+        id = 6006,
+        item_class = "tool",
+        item_name_english = "Strange Part: Pyros Killed"
+    },
+    "Strange Part: Medics Killed" : {
+        id = 6007,
+        item_class = "tool",
+        item_name_english = "Strange Part: Medics Killed"
+    },
+    "Strange Part: Spies Killed" : {
+        id = 6008,
+        item_class = "tool",
+        item_name_english = "Strange Part: Spies Killed"
+    },
+    "Strange Part: Buildings Destroyed" : {
+        id = 6009,
+        item_class = "tool",
+        item_name_english = "Strange Part: Buildings Destroyed"
+    },
+    "Strange Part: Projectiles Reflected" : {
+        id = 6010,
+        item_class = "tool",
+        item_name_english = "Strange Part: Projectiles Reflected"
+    },
+    "Strange Part: Headshot Kills" : {
+        id = 6011,
+        item_class = "tool",
+        item_name_english = "Strange Part: Headshot Kills"
+    },
+    "Strange Part: Airborne Enemies Killed" : {
+        id = 6012,
+        item_class = "tool",
+        item_name_english = "Strange Part: Airborne Enemies Killed"
+    },
+    "Strange Part: Enemies Gibbed" : {
+        id = 6013,
+        item_class = "tool",
+        item_name_english = "Strange Part: Gib Kills"
+    },
+    "Strange Part: Full Moon Kills" : {
+        id = 6015,
+        item_class = "tool",
+        item_name_english = "Strange Part: Full Moon Kills"
+    },
+    "Strange Part: Domination Kills" : {
+        id = 6016,
+        item_class = "tool",
+        item_name_english = "Strange Part: Domination Kills"
+    },
+    "Strange Part: Revenge Kills" : {
+        id = 6018,
+        item_class = "tool",
+        item_name_english = "Strange Part: Revenge Kills"
+    },
+    "Strange Part: Posthumous Kills" : {
+        id = 6019,
+        item_class = "tool",
+        item_name_english = "Strange Part: Posthumous Kills"
+    },
+    "Strange Part: Allies Extinguished" : {
+        id = 6020,
+        item_class = "tool",
+        item_name_english = "Strange Part: Teammates Extinguished"
+    },
+    "Strange Part: Critical Kills" : {
+        id = 6021,
+        item_class = "tool",
+        item_name_english = "Strange Part: Critical Kills"
+    },
+    "Strange Part: Kills While Explosive-Jumping" : {
+        id = 6022,
+        item_class = "tool",
+        item_name_english = "Strange Part: Kills While Explosive Jumping"
+    },
+    "Strange Part: Ubers Dropped" : {
+        id = 6023,
+        item_class = "tool",
+        item_name_english = "Strange Part: Medics Killed That Have Full ÜberCharge"
+    },
+    "Strange Part: Cloaked Spies Killed" : {
+        id = 6024,
+        item_class = "tool",
+        item_name_english = "Strange Part: Cloaked Spies Killed"
+    },
+    "Strange Part: Sappers Destroyed" : {
+        id = 6025,
+        item_class = "tool",
+        item_name_english = "Strange Part: Sappers Destroyed"
+    },
+    "Strange Part: Robots Destroyed" : {
+        id = 6026,
+        item_class = "tool",
+        item_name_english = "Strange Part: Robots Destroyed"
+    },
+    "Strange Part: Giant Robots Destroyed" : {
+        id = 6028,
+        item_class = "tool",
+        item_name_english = "Strange Part: Giant Robots Destroyed"
+    },
+    "Strange Part: Kills While Low-Health" : {
+        id = 6032,
+        item_class = "tool",
+        item_name_english = "Strange Part: Low-Health Kills"
+    },
+    "Strange Part: Halloween Kills" : {
+        id = 6033,
+        item_class = "tool",
+        item_name_english = "Strange Part: Halloween Kills"
+    },
+    "Strange Part: Robots Destroyed During Halloween" : {
+        id = 6034,
+        item_class = "tool",
+        item_name_english = "Strange Part: Robots Destroyed During Halloween"
+    },
+    "Strange Part: Defender Kills" : {
+        id = 6035,
+        item_class = "tool",
+        item_name_english = "Strange Part: Defender Kills"
+    },
+    "Strange Part: Underwater Kills" : {
+        id = 6036,
+        item_class = "tool",
+        item_name_english = "Strange Part: Underwater Kills"
+    },
+    "Strange Part: Kills While Ubercharged" : {
+        id = 6037,
+        item_class = "tool",
+        item_name_english = "Strange Part: Kills While Übercharged"
+    },
+    "Strange Part: Tanks Destroyed" : {
+        id = 6038,
+        item_class = "tool",
+        item_name_english = "Strange Part: Tanks Destroyed"
+    },
+    "Strange Part: Long-Distance Kills" : {
+        id = 6039,
+        item_class = "tool",
+        item_name_english = "Strange Part: Long-Distance Kills"
+    },
+    "Strange Part: Victory Time Kills" : {
+        id = 6041,
+        item_class = "tool",
+        item_name_english = "Strange Part: Kills During Victory Time"
+    },
+    "Strange Part: Robot Scout Kills" : {
+        id = 6042,
+        item_class = "tool",
+        item_name_english = "Strange Part: Robot Scouts Destroyed"
+    },
+    "Strange Part: Robot Spy Kills" : {
+        id = 6048,
+        item_class = "tool",
+        item_name_english = "Strange Part: Robot Spies Destroyed"
+    },
+    "Strange Part: Taunt Kills" : {
+        id = 6051,
+        item_class = "tool",
+        item_name_english = "Strange Part: Kills with a Taunt Attack"
+    },
+    "Strange Part: Players Wearing Unusuals" : {
+        id = 6052,
+        item_class = "tool",
+        item_name_english = "Strange Part: Unusual-Wearing Player Kills"
+    },
+    "Strange Part: Burning Enemies Killed" : {
+        id = 6053,
+        item_class = "tool",
+        item_name_english = "Strange Part: Burning Enemy Kills"
+    },
+    "Strange Part: Killstreaks Ended" : {
+        id = 6054,
+        item_class = "tool",
+        item_name_english = "Strange Part: Killstreaks Ended"
+    },
+    "Strange Cosmetic Part: Killcam Taunts" : {
+        id = 6055,
+        item_class = "tool",
+        item_name_english = "Strange Cosmetic Part: Freezecam Taunt Appearances"
+    },
+    "Strange Part: Damage Dealt" : {
+        id = 6056,
+        item_class = "tool",
+        item_name_english = "Strange Part: Damage Dealt"
+    },
+    "Strange Cosmetic Part: Fires Survived" : {
+        id = 6057,
+        item_class = "tool",
+        item_name_english = "Strange Cosmetic Part: Fires Survived"
+    },
+    "Strange Part: Ally Healing Done" : {
+        id = 6058,
+        item_class = "tool",
+        item_name_english = "Strange Part: Allied Healing Done"
+    },
+    "Strange Part: Point-Blank Kills" : {
+        id = 6059,
+        item_class = "tool",
+        item_name_english = "Strange Part: Point-Blank Kills"
+    },
+    "Strange Cosmetic Part: Kills" : {
+        id = 6060,
+        item_class = "tool",
+        item_name_english = "Strange Cosmetic Part: Kills"
+    },
+    "Strange Part: Full Health Kills" : {
+        id = 6061,
+        item_class = "tool",
+        item_name_english = "Strange Part: Full Health Kills"
+    },
+    "Strange Part: Taunting Player Kills" : {
+        id = 6062,
+        item_class = "tool",
+        item_name_english = "Strange Part: Taunting Player Kills"
+    },
+    "Strange Part: Non-Critical Kills" : {
+        id = 6063,
+        item_class = "tool",
+        item_name_english = "Strange Part: Not Crit nor MiniCrit Kills"
+    },
+    "Strange Part: Players Hit" : {
+        id = 6064,
+        item_class = "tool",
+        item_name_english = "Strange Part: Player Hits"
+    },
+    "Strange Cosmetic Part: Assists" : {
+        id = 6065,
+        item_class = "tool",
+        item_name_english = "Strange Cosmetic Part: Assists"
+    },
+    "Strange Filter: Coldfront (Community)" : {
+        id = 6500,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Coldfront (Community)"
+    },
+    "Strange Filter: Egypt (Community)" : {
+        id = 6502,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Egypt (Community)"
+    },
+    "Strange Filter: Junction (Community)" : {
+        id = 6503,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Junction (Community)"
+    },
+    "Strange Filter: Mountain Lab (Community)" : {
+        id = 6504,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Mountain Lab (Community)"
+    },
+    "Strange Filter: Steel (Community)" : {
+        id = 6505,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Steel (Community)"
+    },
+    "Strange Filter: Gullywash (Community)" : {
+        id = 6506,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Gullywash (Community)"
+    },
+    "Strange Filter: Turbine (Community)" : {
+        id = 6507,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Turbine (Community)"
+    },
+    "Strange Filter: Fastlane (Community)" : {
+        id = 6508,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Fastlane (Community)"
+    },
+    "Strange Filter: Freight (Community)" : {
+        id = 6509,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Freight (Community)"
+    },
+    "Strange Filter: Yukon (Community)" : {
+        id = 6510,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Yukon (Community)"
+    },
+    "Strange Filter: Harvest (Community)" : {
+        id = 6511,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Harvest (Community)"
+    },
+    "Strange Filter: Lakeside (Community)" : {
+        id = 6512,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Lakeside (Community)"
+    },
+    "Strange Filter: Kong King (Community)" : {
+        id = 6513,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Kong King (Community)"
+    },
+    "Strange Filter: Frontier (Community)" : {
+        id = 6514,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Frontier (Community)"
+    },
+    "Strange Filter: Hoodoo (Community)" : {
+        id = 6515,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Hoodoo (Community)"
+    },
+    "Strange Filter: Nightfall (Community)" : {
+        id = 6516,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Nightfall (Community)"
+    },
+    "Strange Filter: Watchtower (Community)" : {
+        id = 6517,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Watchtower (Community)"
+    },
+    "Strange Filter: Offblast (Community)" : {
+        id = 6518,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Offblast (Community)"
+    },
+    "Strange Filter: Mann Manor (Community)" : {
+        id = 6519,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Mann Manor (Community)"
+    },
+    "Strange Filter: Process (Community)" : {
+        id = 6520,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Process (Community)"
+    },
+    "Strange Filter: Standin (Community)" : {
+        id = 6521,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Standin (Community)"
+    },
+    "Strangifier" : {
+        id = 6522,
+        item_class = "tool",
+        item_name_english = "Strangifier"
+    },
+    "Killstreakifier" : {
+        id = 6523,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Strange Filter: Snakewater (Community)" : {
+        id = 6524,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Snakewater (Community)"
+    },
+    "Killstreakifier Rare" : {
+        id = 6526,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Killstreakifier Basic" : {
+        id = 6527,
+        item_class = "tool",
+        item_name_english = "Kit"
+    },
+    "Strange Filter: Snowplow (Community)" : {
+        id = 6528,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Snowplow (Community)"
+    },
+    "Strange Filter: Borneo (Community)" : {
+        id = 6529,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Borneo (Community)"
+    },
+    "Strange Filter: Suijin (Community)" : {
+        id = 6530,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Suijin (Community)"
+    },
+    "Strange Filter: 2Fort Invasion (Community)" : {
+        id = 6531,
+        item_class = "tool",
+        item_name_english = "Strange Filter: 2Fort Invasion (Community)"
+    },
+    "Strange Filter: Probed (Community)" : {
+        id = 6532,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Probed (Community)"
+    },
+    "Strange Filter: Watergate (Community)" : {
+        id = 6533,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Watergate (Community)"
+    },
+    "Strange Filter: Byre (Community)" : {
+        id = 6534,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Byre (Community)"
+    },
+    "Strange Filter: Gorge Event (Community)" : {
+        id = 6535,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Gorge Event (Community)"
+    },
+    "Strange Filter: Sunshine Event (Community)" : {
+        id = 6536,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Sinshine (Community)"
+    },
+    "Strange Filter: Moonshine Event (Community)" : {
+        id = 6537,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Moonshine Event (Community)"
+    },
+    "Strange Filter: Millstone Event (Community)" : {
+        id = 6538,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Hellstone (Community)"
+    },
+    "Strange Filter: Snowycoast (Community)" : {
+        id = 6539,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Snowycoast (Community)"
+    },
+    "Strange Filter: Vanguard (Community)" : {
+        id = 6540,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Vanguard (Community)"
+    },
+    "Strange Filter: Landfall (Community)" : {
+        id = 6541,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Landfall (Community)"
+    },
+    "Strange Filter: Highpass (Community)" : {
+        id = 6542,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Highpass (Community)"
+    },
+    "Strange Filter: Competitive" : {
+        id = 6543,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Competitive"
+    },
+    "Strange Filter: Sunshine (Community)" : {
+        id = 6544,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Sunshine (Community)"
+    },
+    "Strange Filter: Metalworks (Community)" : {
+        id = 6545,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Metalworks (Community)"
+    },
+    "Strange Filter: Swiftwater (Community)" : {
+        id = 6546,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Swiftwater (Community)"
+    },
+    "Strange Filter: Maple Ridge Event (Community)" : {
+        id = 6547,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Maple Ridge Event (Community)"
+    },
+    "Strange Filter: Fifth Curve Event (Community)" : {
+        id = 6548,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Brimstone (Community)"
+    },
+    "Strange Filter: Pit of Death (Community)" : {
+        id = 6549,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Pit of Death (Community)"
+    },
+    "Strange Filter: Mossrock (Community)" : {
+        id = 6550,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Mossrock (Community)"
+    },
+    "Strange Filter: Lazarus (Community)" : {
+        id = 6551,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Lazarus (Community)"
+    },
+    "Strange Filter: Banana Bay (Community)" : {
+        id = 6552,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Banana Bay (Community)"
+    },
+    "Strange Filter: Enclosure (Community)" : {
+        id = 6553,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Enclosure (Community)"
+    },
+    "Strange Filter: 2Fort" : {
+        id = 6554,
+        item_class = "tool",
+        item_name_english = "Strange Filter: 2Fort"
+    },
+    "Strange Filter: Dustbowl" : {
+        id = 6555,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Dustbowl"
+    },
+    "Strange Filter: Upward" : {
+        id = 6556,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Upward"
+    },
+    "Strange Filter: Badwater" : {
+        id = 6557,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Badwater"
+    },
+    "Strange Filter: Hightower" : {
+        id = 6558,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Hightower"
+    },
+    "Strange Filter: Goldrush" : {
+        id = 6559,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Goldrush"
+    },
+    "Strange Filter: DeGroot Keep" : {
+        id = 6560,
+        item_class = "tool",
+        item_name_english = "Strange Filter: DeGroot Keep"
+    },
+    "Strange Filter: Thundermountain" : {
+        id = 6561,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Thundermountain"
+    },
+    "Strange Filter: Coaltown" : {
+        id = 6562,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Coaltown"
+    },
+    "Strange Filter: Mannhattan" : {
+        id = 6563,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Mannhattan"
+    },
+    "Strange Filter: Brazil (Community)" : {
+        id = 6564,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Brazil (Community)"
+    },
+    "Strange Filter: Bagel Event (Community)" : {
+        id = 6565,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Cauldron (Community)"
+    },
+    "Strange Filter: Rumble Event (Community)" : {
+        id = 6566,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Gravestone (Community)"
+    },
+    "Strange Filter: Monster Bash (Community)" : {
+        id = 6567,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Monster Bash (Community)"
+    },
+    "Strange Filter: Slasher (Community)" : {
+        id = 6568,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Slasher (Community)"
+    },
+    "Strange Filter: Cursed Cove (Community)" : {
+        id = 6569,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Cursed Cove (Community)"
+    },
+    "Strange Filter: Laughter (Community)" : {
+        id = 6570,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Laughter (Community)"
+    },
+    "Strange Filter: Precipice (Community)" : {
+        id = 6571,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Precipice (Community)"
+    },
+    "Strange Filter: Megalo (Community)" : {
+        id = 6572,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Megalo (Community)"
+    },
+    "Strange Filter: Hassle Castle (Community)" : {
+        id = 6573,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Hassle Castle (Community)"
+    },
+    "Strange Filter: Bloodwater (Community)" : {
+        id = 6574,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Bloodwater (Community)"
+    },
+    "Strange Filter: Undergrove Event (Community)" : {
+        id = 6575,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Moldergrove (Community)"
+    },
+    "Strange Filter: Pier (Community)" : {
+        id = 6576,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Pier (Community)"
+    },
+    "Strange Filter: SnowVille (Community)" : {
+        id = 6577,
+        item_class = "tool",
+        item_name_english = "Strange Filter: SnowVille (Community)"
+    },
+    "Strange Filter: Snowfall (Community)" : {
+        id = 6578,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Snowfall (Community)"
+    },
+    "Strange Filter: Wutville (Community)" : {
+        id = 6579,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Wutville (Community)"
+    },
+    "Strange Filter: Farmageddon (Community)" : {
+        id = 6580,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Farmageddon (Community)"
+    },
+    "Strange Filter: Los Muertos (Community)" : {
+        id = 6581,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Los Muertos (Community)"
+    },
+    "Strange Filter: Erebus (Community)" : {
+        id = 6582,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Erebus (Community)"
+    },
+    "Strange Filter: Terror (Community)" : {
+        id = 6583,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Terror (Community)"
+    },
+    "Strange Filter: Graveyard (Community)" : {
+        id = 6584,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Graveyard (Community)"
+    },
+    "Strange Filter: Sinthetic (Community)" : {
+        id = 6585,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Sinthetic (Community)"
+    },
+    "Strange Filter: Polar (Community)" : {
+        id = 6586,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Polar (Community)"
+    },
+    "Strange Filter: Bread Space (Community)" : {
+        id = 6587,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Bread Space (Community)"
+    },
+    "Strange Filter: Chilly (Community)" : {
+        id = 6588,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Chilly (Community)"
+    },
+    "Strange Filter: Cascade (Community)" : {
+        id = 6589,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Cascade (Community)"
+    },
+    "Strange Filter: Altitude (Community)" : {
+        id = 6590,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Altitude (Community)"
+    },
+    "Strange Filter: Doublefrost (Community)" : {
+        id = 6591,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Doublefrost (Community)"
+    },
+    "Strange Filter: Soul Mill (Community)" : {
+        id = 6592,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Soul-Mill (Community)"
+    },
+    "Strange Filter: Helltrain (Community)" : {
+        id = 6593,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Helltrain (Community)"
+    },
+    "Strange Filter: Bonesaw (Community)" : {
+        id = 6594,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Bonesaw (Community)"
+    },
+    "Strange Filter: Crasher (Community)" : {
+        id = 6595,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Crasher (Community)"
+    },
+    "Strange Filter: Ghoulpit (Community)" : {
+        id = 6596,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Ghoulpit (Community)"
+    },
+    "Strange Filter: Spookeyridge (Community)" : {
+        id = 6597,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Spookeyridge (Community)"
+    },
+    "Strange Filter: Frostwatch (Community)" : {
+        id = 6598,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Frostwatch (Community)"
+    },
+    "Strange Filter: Frostcliff (Community)" : {
+        id = 6599,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Frostcliff (Community)"
+    },
+    "Strange Filter: Rumford (Community)" : {
+        id = 6600,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Rumford (Community)"
+    },
+    "Strange Filter: Frosty (Community)" : {
+        id = 6601,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Frosty (Community)"
+    },
+    "Strange Filter: Coal Pit (Community)" : {
+        id = 6602,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Coal Pit (Community)"
+    },
+    "Strange Filter: Sharkbay (Community)" : {
+        id = 6603,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Sharkbay (Community)"
+    },
+    "Strange Filter: Rotunda (Community)" : {
+        id = 6604,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Rotunda (Community)"
+    },
+    "Strange Filter: Phoenix (Community)" : {
+        id = 6605,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Phoenix (Community)"
+    },
+    "Strange Filter: Cashworks (Community)" : {
+        id = 6606,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Cashworks (Community)"
+    },
+    "Strange Filter: Venice (Community)" : {
+        id = 6607,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Venice (Community)"
+    },
+    "Strange Filter: Reckoner (Community)" : {
+        id = 6608,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Reckoner (Community)"
+    },
+    "Strange Filter: Sulfur (Community)" : {
+        id = 6609,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Sulfur (Community)"
+    },
+    "Strange Filter: Hardwood (Community)" : {
+        id = 6610,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Hardwood (Community)"
+    },
+    "Strange Filter: Pelican Peak (Community)" : {
+        id = 6611,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Pelican Peak (Community)"
+    },
+    "Strange Filter: Selbyen (Community)" : {
+        id = 6612,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Selbyen (Community)"
+    },
+    "Strange Filter: VSH Tiny Rock (Community)" : {
+        id = 6613,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Tiny Rock (Community)"
+    },
+    "Strange Filter: VSH Distillery (Community)" : {
+        id = 6614,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Distillery (Community)"
+    },
+    "Strange Filter: VSH Skirmish (Community)" : {
+        id = 6615,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Skirmish (Community)"
+    },
+    "Strange Filter: VSH Nucleus (Community)" : {
+        id = 6616,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Nucleus VSH (Community)"
+    },
+    "Strange Filter: Perks (Community)" : {
+        id = 6617,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Perks (Community)"
+    },
+    "Strange Filter: Slime (Community)" : {
+        id = 6618,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Slime (Community)"
+    },
+    "Strange Filter: Lava Pit (Community)" : {
+        id = 6619,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Lava Pit (Community)"
+    },
+    "Strange Filter: Mannsylvania (Community)" : {
+        id = 6620,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Mannsylvania (Community)"
+    },
+    "Strange Filter: Sandcastle (Community)" : {
+        id = 6621,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Sandcastle (Community)"
+    },
+    "Strange Filter: Spineyard (Community)" : {
+        id = 6622,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Spineyard (Community)"
+    },
+    "Strange Filter: Corruption (Community)" : {
+        id = 6623,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Corruption (Community)"
+    },
+    "Strange Filter: Murky (Community)" : {
+        id = 6624,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Murky (Community)"
+    },
+    "Strange Filter: Atoll (Community)" : {
+        id = 6625,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Atoll (Community)"
+    },
+    "Strange Filter: Woods (Community)" : {
+        id = 6626,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Woods (Community)"
+    },
+    "Strange Filter: Sanitarium (Community)" : {
+        id = 6627,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Sanitarium (Community)"
+    },
+    "Strange Filter: Devastation (Community)" : {
+        id = 6628,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Devastation (Community)"
+    },
+    "Strange Filter: Snowtower (Community)" : {
+        id = 6629,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Snowtower (Community)"
+    },
+    "Strange Filter: Krampus (Community)" : {
+        id = 6630,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Krampus (Community)"
+    },
+    "Strange Filter: Haarp (Community)" : {
+        id = 6631,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Haarp (Community)"
+    },
+    "Strange Filter: Brew (Community)" : {
+        id = 6632,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Brew (Community)"
+    },
+    "Strange Filter: Hacksaw (Community)" : {
+        id = 6633,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Hacksaw (Community)"
+    },
+    "Strange Filter: Turbine Event (Community)" : {
+        id = 6634,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Turbine Center (Community)"
+    },
+    "Strange Filter: Carrier (Community)" : {
+        id = 6635,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Carrier (Community)"
+    },
+    "Strange Filter: Galleria (Community)" : {
+        id = 6636,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Galleria (Community)"
+    },
+    "Strange Filter: Emerge (Community)" : {
+        id = 6637,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Emerge (Community)"
+    },
+    "Strange Filter: Camber (Community)" : {
+        id = 6638,
+        item_class = "tool",
+        item_name_english = "Strange Filter: Camber (Community)"
     },
     "UGC Highlander 1st Place North American Platinum Season 6" : {
         id = 8000,
@@ -17715,6 +14125,201 @@
         item_class = "tf_wearable",
         item_name_english = "UGC Highlander Silver Participant"
     },
+    "Halloween Spell: Paint 1" : {
+        id = 8900,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Putrescent Pigmentation"
+    },
+    "Halloween Spell: Paint 2" : {
+        id = 8901,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Die Job"
+    },
+    "Halloween Spell: Paint 3" : {
+        id = 8902,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Chromatic Corruption"
+    },
+    "Halloween Spell: Paint 4" : {
+        id = 8903,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Spectral Spectrum"
+    },
+    "Halloween Spell: Paint 5" : {
+        id = 8904,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Sinister Staining"
+    },
+    "Halloween Spell: Soldier Voice" : {
+        id = 8905,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Soldier's Booming Bark"
+    },
+    "Halloween Spell: Scout Voice" : {
+        id = 8906,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Scout's Spectral Snarl"
+    },
+    "Halloween Spell: Sniper Voice" : {
+        id = 8907,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Sniper's Deep Downunder Drawl"
+    },
+    "Halloween Spell: Engineer Voice" : {
+        id = 8908,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Engineer's Gravelly Growl"
+    },
+    "Halloween Spell: Heavy Voice" : {
+        id = 8909,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Heavy's Bottomless Bass"
+    },
+    "Halloween Spell: Demoman Voice" : {
+        id = 8910,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Demoman's Cadaverous Croak"
+    },
+    "Halloween Spell: Pyro Voice" : {
+        id = 8911,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Pyro's Muffled Moan"
+    },
+    "Halloween Spell: Spy Voice" : {
+        id = 8912,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Spy's Creepy Croon"
+    },
+    "Halloween Spell: Medic Voice" : {
+        id = 8913,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Medic's Blood-curdling Bellow"
+    },
+    "Halloween Spell: Team Spirit Footprints" : {
+        id = 8914,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Team Spirit Footprints"
+    },
+    "Halloween Spell: Gangreen Footprints" : {
+        id = 8915,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Gangreen Footprints"
+    },
+    "Halloween Spell: Corpse Gray Footprints" : {
+        id = 8916,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Corpse Gray Footprints"
+    },
+    "Halloween Spell: Violent Violet Footprints" : {
+        id = 8917,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Violent Violet Footprints"
+    },
+    "Halloween Spell: Rotten Orange Footprints" : {
+        id = 8918,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Rotten Orange Footprints"
+    },
+    "Halloween Spell: Bruised Purple Footprints" : {
+        id = 8919,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Bruised Purple Footprints"
+    },
+    "Halloween Spell: Headless Horseshoes" : {
+        id = 8920,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Headless Horseshoes"
+    },
+    "Halloween Spell: Exorcism" : {
+        id = 8921,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Exorcism"
+    },
+    "Halloween Spell: Squash Rockets" : {
+        id = 8922,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Squash Rockets"
+    },
+    "Halloween Spell: Gourd Grenades" : {
+        id = 8923,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Gourd Grenades"
+    },
+    "Halloween Spell: Sentry Quad-Pumpkins" : {
+        id = 8924,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Sentry Quad-Pumpkins"
+    },
+    "Halloween Spell: Spectral Flame" : {
+        id = 8925,
+        item_class = "tool",
+        item_name_english = "Halloween Spell: Spectral Flame"
+    },
+    "Halloween Transmogrifier: Pyro" : {
+        id = 8926,
+        item_class = "tool",
+        item_name_english = "Pyro Costume Transmogrifier"
+    },
+    "Halloween Transmogrifier: Scout" : {
+        id = 8927,
+        item_class = "tool",
+        item_name_english = "Scout Costume Transmogrifier"
+    },
+    "Halloween Transmogrifier: Soldier" : {
+        id = 8928,
+        item_class = "tool",
+        item_name_english = "Soldier Costume Transmogrifier"
+    },
+    "Halloween Transmogrifier: Demo" : {
+        id = 8929,
+        item_class = "tool",
+        item_name_english = "Demo Costume Transmogrifier"
+    },
+    "Halloween Transmogrifier: Heavy" : {
+        id = 8930,
+        item_class = "tool",
+        item_name_english = "Heavy Costume Transmogrifier"
+    },
+    "Halloween Transmogrifier: Medic" : {
+        id = 8931,
+        item_class = "tool",
+        item_name_english = "Medic Costume Transmogrifier"
+    },
+    "Halloween Transmogrifier: Sniper" : {
+        id = 8932,
+        item_class = "tool",
+        item_name_english = "Sniper Costume Transmogrifier"
+    },
+    "Halloween Transmogrifier: Spy" : {
+        id = 8933,
+        item_class = "tool",
+        item_name_english = "Spy Costume Transmogrifier"
+    },
+    "Halloween Transmogrifier: Engineer" : {
+        id = 8934,
+        item_class = "tool",
+        item_name_english = "Engineer Costume Transmogrifier"
+    },
+    "Halloween Spellbook Page" : {
+        id = 8935,
+        item_class = "tool",
+        item_name_english = "Spellbook Page"
+    },
+    "Halloween Spellbook Page (Achievement)" : {
+        id = 8936,
+        item_class = "tool",
+        item_name_english = "Spellbook Page"
+    },
+    "Eternaween Enchantment" : {
+        id = 8937,
+        item_class = "tool",
+        item_name_english = "Enchantment: Eternaween"
+    },
+    "Glitched Circuit Board" : {
+        id = 8938,
+        item_class = "tf_wearable",
+        item_name_english = "Glitched Circuit Board"
+    },
     "UGC Highlander 1st Place Steel Season 15" : {
         id = 8939,
         item_class = "tf_wearable",
@@ -19150,6 +15755,11 @@
         item_class = "tf_wearable",
         item_name_english = "ozfortress Sixes Open Participant"
     },
+    "Taunt Unusualifier" : {
+        id = 9258,
+        item_class = "tool",
+        item_name_english = "Unusualifier"
+    },
     "LBTF2 6v6 Elite 1st Place Season 13" : {
         id = 9260,
         item_class = "tf_wearable",
@@ -20529,6 +17139,11 @@
         id = 9535,
         item_class = "tf_wearable",
         item_name_english = "Arms Race Participant Medal"
+    },
+    "Paintkit" : {
+        id = 9536,
+        item_class = "tool",
+        item_name_english = "War Paint"
     },
     "ozfortress Premier 1st Place Season 19" : {
         id = 9537,
@@ -40710,4624 +37325,8009 @@
         item_class = "tf_wearable",
         item_name_english = "TF2 Summer Brawl Participant"
     },
-    "World Traveler" : {
-        id = 1899,
-        item_class = "tf_wearable",
-        item_name_english = "World Traveler's Hat"
-    },
-    "Map Token Egypt" : {
-        id = 1900,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Egypt"
-    },
-    "Map Token Coldfront" : {
-        id = 1901,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Coldfront"
-    },
-    "Map Token Fastlane" : {
-        id = 1902,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Fastlane"
-    },
-    "Map Token Turbine" : {
-        id = 1903,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Turbine"
-    },
-    "Map Token Steel" : {
-        id = 1904,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Steel"
-    },
-    "Map Token Junction" : {
-        id = 1905,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Junction"
-    },
-    "Map Token Watchtower" : {
-        id = 1906,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Watchtower"
-    },
-    "Map Token Hoodoo" : {
-        id = 1907,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Hoodoo"
-    },
-    "Map Token Offblast" : {
-        id = 1908,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Offblast"
-    },
-    "Map Token Yukon" : {
-        id = 1909,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Yukon"
-    },
-    "Map Token Harvest" : {
-        id = 1910,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Harvest"
-    },
-    "Map Token Freight" : {
-        id = 1911,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Freight"
-    },
-    "Map Token Mountain Lab" : {
-        id = 1912,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Mountain Lab"
-    },
-    "Map Token Manor Event" : {
-        id = 1913,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Mann Manor"
-    },
-    "Map Token Nightfall" : {
-        id = 1914,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Nightfall"
-    },
-    "Map Token Frontier" : {
-        id = 1915,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Frontier"
-    },
-    "Map Token Lakeside" : {
-        id = 1916,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Lakeside"
-    },
-    "Map Token Gullywash" : {
-        id = 1917,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Gullywash"
-    },
-    "Map Token Kong King" : {
-        id = 1918,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Kong King"
-    },
-    "Map Token Process" : {
-        id = 1919,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Process"
-    },
-    "Map Token Standin" : {
-        id = 1920,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Standin"
-    },
-    "Map Token Snakewater" : {
-        id = 1921,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Snakewater"
-    },
-    "Map Token Snowplow" : {
-        id = 1922,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Snowplow"
-    },
-    "Map Token Borneo" : {
-        id = 1923,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Borneo"
-    },
-    "Map Token Suijin" : {
-        id = 1924,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Suijin"
-    },
-    "Map Token 2Fort Invasion" : {
-        id = 1925,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - 2Fort Invasion"
-    },
-    "Map Token Probed" : {
-        id = 1926,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Probed"
-    },
-    "Map Token Watergate" : {
-        id = 1927,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Watergate"
-    },
-    "Map Token Byre" : {
-        id = 1928,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Byre"
-    },
-    "Map Token Gorge Event" : {
-        id = 1929,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Gorge Event"
-    },
-    "Map Token Sunshine Event" : {
-        id = 1930,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Sinshine"
-    },
-    "Map Token Moonshine Event" : {
-        id = 1931,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Moonshine Event"
-    },
-    "Map Token Millstone Event" : {
-        id = 1932,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Hellstone"
-    },
-    "Map Token Snowycoast" : {
-        id = 1933,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Snowycoast"
-    },
-    "Map Token Vanguard" : {
-        id = 1934,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Vanguard"
-    },
-    "Map Token Landfall" : {
-        id = 1935,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Landfall"
-    },
-    "Map Token Highpass" : {
-        id = 1936,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Highpass"
-    },
-    "Map Token Sunshine" : {
-        id = 1937,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Sunshine"
-    },
-    "Map Token Metalworks" : {
-        id = 1938,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Metalworks"
-    },
-    "Map Token Swiftwater" : {
-        id = 1939,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Swiftwater"
-    },
-    "Map Token Maple Ridge Event" : {
-        id = 1940,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Maple Ridge Event"
-    },
-    "Map Token Fifth Curve Event" : {
-        id = 1941,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Brimstone"
-    },
-    "Map Token Pit Of Death" : {
-        id = 1942,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Pit of Death"
-    },
-    "Map Token Mossrock" : {
-        id = 1943,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Mossrock"
-    },
-    "Map Token Lazarus" : {
-        id = 1944,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Lazarus"
-    },
-    "Map Token Banana Bay" : {
-        id = 1945,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Banana Bay"
-    },
-    "Map Token Enclosure" : {
-        id = 1946,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Enclosure"
-    },
-    "Map Token Brazil" : {
-        id = 1947,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Brazil"
-    },
-    "Map Token Bagel Event" : {
-        id = 1948,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Cauldron"
-    },
-    "Map Token Rumble Event" : {
-        id = 1949,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Gravestone"
-    },
-    "Map Token Monster Bash" : {
-        id = 1950,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Monster Bash"
-    },
-    "Map Token Slasher" : {
-        id = 1951,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Slasher"
-    },
-    "Map Token Cursed Cove" : {
-        id = 1952,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Cursed Cove"
-    },
-    "Map Token Laughter" : {
-        id = 1953,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Laughter"
-    },
-    "Map Token Precipice" : {
-        id = 1954,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Precipice"
-    },
-    "Map Token Megalo" : {
-        id = 1955,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Megalo"
-    },
-    "Map Token Hassle Castle" : {
-        id = 1956,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Hassle Castle"
-    },
-    "Map Token Bloodwater" : {
-        id = 1957,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Bloodwater"
-    },
-    "Map Token Undergrove Event" : {
-        id = 1958,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Moldergrove"
-    },
-    "Map Token Pier" : {
-        id = 1959,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Pier"
-    },
-    "Map Token SnowVille" : {
-        id = 1960,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - SnowVille"
-    },
-    "Map Token Snowfall" : {
-        id = 1961,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Snowfall"
-    },
-    "Map Token Wutville" : {
-        id = 1962,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Wutville"
-    },
-    "Map Token Farmageddon" : {
-        id = 1963,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Farmageddon"
-    },
-    "Map Token Los Muertos" : {
-        id = 1964,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Los Muertos"
-    },
-    "Map Token Erebus" : {
-        id = 1965,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Erebus"
-    },
-    "Map Token Terror" : {
-        id = 1966,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Terror"
-    },
-    "Map Token Graveyard" : {
-        id = 1967,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Graveyard"
-    },
-    "Map Token Sinthetic" : {
-        id = 1968,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Sinthetic"
-    },
-    "Map Token Polar" : {
-        id = 1969,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Polar"
-    },
-    "Map Token Bread Space" : {
-        id = 1970,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Bread Space"
-    },
-    "Map Token Chilly" : {
-        id = 1971,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Chilly"
-    },
-    "Map Token Cascade" : {
-        id = 1972,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Cascade"
-    },
-    "Map Token Altitude" : {
-        id = 1973,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Altitude"
-    },
-    "Map Token Doublefrost" : {
-        id = 1974,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Doublefrost"
-    },
-    "Map Token Soul Mill" : {
-        id = 1975,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Soul-Mill"
-    },
-    "Map Token Helltrain" : {
-        id = 1976,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Helltrain"
-    },
-    "Map Token Bonesaw" : {
-        id = 1977,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Bonesaw"
-    },
-    "Map Token Crasher" : {
-        id = 1978,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Crasher"
-    },
-    "Map Token Ghoulpit" : {
-        id = 1979,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Ghoulpit"
-    },
-    "Map Token Spookeyridge" : {
-        id = 1980,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Spookeyridge"
-    },
-    "Map Token Frostwatch" : {
-        id = 1981,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Frostwatch"
-    },
-    "Map Token Frostcliff" : {
-        id = 1982,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Frostcliff"
-    },
-    "Map Token Rumford" : {
-        id = 1983,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Rumford"
-    },
-    "Map Token Frosty" : {
-        id = 1984,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Frosty"
-    },
-    "Map Token Coal Pit" : {
-        id = 1985,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Coal Pit"
-    },
-    "Map Token Sharkbay" : {
-        id = 1986,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Sharkbay"
-    },
-    "Map Token Rotunda" : {
-        id = 1987,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Rotunda"
-    },
-    "Map Token Phoenix" : {
-        id = 1988,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Phoenix"
-    },
-    "Map Token Cashworks" : {
-        id = 1989,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Cashworks"
-    },
-    "Map Token Venice" : {
-        id = 1990,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Venice"
-    },
-    "Map Token Reckoner" : {
-        id = 1991,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Reckoner"
-    },
-    "Map Token Sulfur" : {
-        id = 1992,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Sulfur"
-    },
-    "Map Token Hardwood" : {
-        id = 1993,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Hardwood"
-    },
-    "Map Token Pelican Peak" : {
-        id = 1994,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Pelican Peak"
-    },
-    "Map Token Selbyen" : {
-        id = 1995,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Selbyen"
-    },
-    "Map Token VSH Tiny Rock" : {
-        id = 1996,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Tiny Rock"
-    },
-    "Map Token VSH Distillery" : {
-        id = 1997,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Distillery"
-    },
-    "Map Token VSH Skirmish" : {
-        id = 1998,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Skirmish"
-    },
-    "Map Token VSH Nucleus" : {
-        id = 1999,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Nucleus VSH"
-    },
-    "Map Token Perks" : {
-        id = 2500,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Perks"
-    },
-    "Map Token Slime" : {
-        id = 2501,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Slime"
-    },
-    "Map Token Lava Pit" : {
-        id = 2502,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Lava Pit"
-    },
-    "Map Token Mannsylvania" : {
-        id = 2503,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Mannsylvania"
-    },
-    "Map Token Sandcastle" : {
-        id = 2504,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Sandcastle"
-    },
-    "Map Token Spineyard" : {
-        id = 2505,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Spineyard"
-    },
-    "Map Token Corruption" : {
-        id = 2506,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Corruption"
-    },
-    "Map Token Murky" : {
-        id = 2507,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Murky"
-    },
-    "Map Token Atoll" : {
-        id = 2508,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Atoll"
-    },
-    "Map Token Woods" : {
-        id = 2509,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Woods"
-    },
-    "Map Token Sanitarium" : {
-        id = 2510,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Sanitarium"
-    },
-    "Map Token Devastation" : {
-        id = 2511,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Devastation"
-    },
-    "Map Token Snowtower" : {
-        id = 2512,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Snowtower"
-    },
-    "Map Token Krampus" : {
-        id = 2513,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Krampus"
-    },
-    "Map Token Haarp" : {
-        id = 2514,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Haarp"
-    },
-    "Map Token Brew" : {
-        id = 2515,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Brew"
-    },
-    "Map Token Hacksaw" : {
-        id = 2516,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Hacksaw"
-    },
-    "Map Token Turbine Event" : {
-        id = 2517,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Turbine Center"
-    },
-    "Map Token Carrier" : {
-        id = 2518,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Carrier"
-    },
-    "Map Token Galleria" : {
-        id = 2519,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Galleria"
-    },
-    "Map Token Emerge" : {
-        id = 2520,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Emerge"
-    },
-    "Map Token Camber" : {
-        id = 2521,
-        item_class = "map_token",
-        item_name_english = "Map Stamp - Camber"
-    },
-    "Craft Bar Level 1" : {
-        id = 5000,
-        item_class = "craft_item",
-        item_name_english = "Scrap Metal"
-    },
-    "Craft Bar Level 2" : {
-        id = 5001,
-        item_class = "craft_item",
-        item_name_english = "Reclaimed Metal"
-    },
-    "Craft Bar Level 3" : {
-        id = 5002,
-        item_class = "craft_item",
-        item_name_english = "Refined Metal"
-    },
-    "Scout Class Token" : {
-        id = 5003,
-        item_class = "class_token",
-        item_name_english = "Class Token - Scout"
-    },
-    "Sniper Class Token" : {
-        id = 5004,
-        item_class = "class_token",
-        item_name_english = "Class Token - Sniper"
-    },
-    "Soldier Class Token" : {
-        id = 5005,
-        item_class = "class_token",
-        item_name_english = "Class Token - Soldier"
-    },
-    "Demoman Class Token" : {
-        id = 5006,
-        item_class = "class_token",
-        item_name_english = "Class Token - Demoman"
-    },
-    "Heavy Class Token" : {
-        id = 5007,
-        item_class = "class_token",
-        item_name_english = "Class Token - Heavy"
-    },
-    "Medic Class Token" : {
-        id = 5008,
-        item_class = "class_token",
-        item_name_english = "Class Token - Medic"
-    },
-    "Pyro Class Token" : {
-        id = 5009,
-        item_class = "class_token",
-        item_name_english = "Class Token - Pyro"
-    },
-    "Spy Class Token" : {
-        id = 5010,
-        item_class = "class_token",
-        item_name_english = "Class Token - Spy"
-    },
-    "Engineer Class Token" : {
-        id = 5011,
-        item_class = "class_token",
-        item_name_english = "Class Token - Engineer"
-    },
-    "Slot Token - Primary" : {
-        id = 5012,
-        item_class = "slot_token",
-        item_name_english = "Slot Token - Primary"
-    },
-    "Slot Token - Secondary" : {
-        id = 5013,
-        item_class = "slot_token",
-        item_name_english = "Slot Token - Secondary"
-    },
-    "Slot Token - Melee" : {
-        id = 5014,
-        item_class = "slot_token",
-        item_name_english = "Slot Token - Melee"
-    },
-    "Slot Token - PDA2" : {
-        id = 5018,
-        item_class = "slot_token",
-        item_name_english = "Slot Token - PDA2"
-    },
-    "Name Tag" : {
-        id = 5020,
-        item_class = "tool",
-        item_name_english = "Name Tag"
-    },
-    "Decoder Ring" : {
-        id = 5021,
-        item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
-    },
-    "Supply Crate" : {
-        id = 5022,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Crate"
-    },
-    "Paint Can" : {
-        id = 5023,
-        item_class = "tool",
-        item_name_english = "Paint Can"
-    },
-    "Customize Texture Tool" : {
-        id = 5026,
-        item_class = "tool",
-        item_name_english = "Decal Tool"
-    },
-    "Paint Can 1" : {
-        id = 5027,
-        item_class = "tool",
-        item_name_english = "Indubitably Green"
-    },
-    "Paint Can 2" : {
-        id = 5028,
-        item_class = "tool",
-        item_name_english = "Zepheniah's Greed"
-    },
-    "Paint Can 3" : {
-        id = 5029,
-        item_class = "tool",
-        item_name_english = "Noble Hatter's Violet"
-    },
-    "Paint Can 4" : {
-        id = 5030,
-        item_class = "tool",
-        item_name_english = "Color No. 216-190-216"
-    },
-    "Paint Can 5" : {
-        id = 5031,
-        item_class = "tool",
-        item_name_english = "A Deep Commitment to Purple"
-    },
-    "Paint Can 6" : {
-        id = 5032,
-        item_class = "tool",
-        item_name_english = "Mann Co. Orange"
-    },
-    "Paint Can 7" : {
-        id = 5033,
-        item_class = "tool",
-        item_name_english = "Muskelmannbraun"
-    },
-    "Paint Can 8" : {
-        id = 5034,
-        item_class = "tool",
-        item_name_english = "Peculiarly Drab Tincture"
-    },
-    "Paint Can 9" : {
-        id = 5035,
-        item_class = "tool",
-        item_name_english = "Radigan Conagher Brown"
-    },
-    "Paint Can 10" : {
-        id = 5036,
-        item_class = "tool",
-        item_name_english = "Ye Olde Rustic Colour"
-    },
-    "Paint Can 11" : {
-        id = 5037,
-        item_class = "tool",
-        item_name_english = "Australium Gold"
-    },
-    "Paint Can 12" : {
-        id = 5038,
-        item_class = "tool",
-        item_name_english = "Aged Moustache Grey"
-    },
-    "Paint Can 13" : {
-        id = 5039,
-        item_class = "tool",
-        item_name_english = "An Extraordinary Abundance of Tinge"
-    },
-    "Paint Can 14" : {
-        id = 5040,
-        item_class = "tool",
-        item_name_english = "A Distinctive Lack of Hue"
-    },
-    "Supply Crate 2" : {
-        id = 5041,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Crate"
-    },
-    "Gift Wrap" : {
-        id = 5042,
-        item_class = "tool",
-        item_name_english = "Gift Wrap"
-    },
-    "Wrapped Gift" : {
-        id = 5043,
-        item_class = "tool",
-        item_name_english = "A Carefully Wrapped Gift"
-    },
-    "Description Tag" : {
-        id = 5044,
-        item_class = "tool",
-        item_name_english = "Description Tag"
-    },
-    "Supply Crate 3" : {
-        id = 5045,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Crate"
-    },
-    "Paint Can Team Color" : {
-        id = 5046,
-        item_class = "tool",
-        item_name_english = "Team Spirit"
-    },
-    "Winter Crate" : {
-        id = 5048,
-        item_class = "supply_crate",
-        item_name_english = "Festive Winter Crate"
-    },
-    "Winter Key" : {
-        id = 5049,
-        item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
-    },
-    "Backpack Expander" : {
-        id = 5050,
-        item_class = "tool",
-        item_name_english = "Backpack Expander"
-    },
-    "Paint Can 15" : {
-        id = 5051,
-        item_class = "tool",
-        item_name_english = "Pink as Hell"
-    },
-    "Paint Can 16" : {
-        id = 5052,
-        item_class = "tool",
-        item_name_english = "A Color Similar to Slate"
-    },
-    "Paint Can 17" : {
-        id = 5053,
-        item_class = "tool",
-        item_name_english = "Drably Olive"
-    },
-    "Paint Can 18" : {
-        id = 5054,
-        item_class = "tool",
-        item_name_english = "The Bitter Taste of Defeat and Lime"
-    },
-    "Paint Can 19" : {
-        id = 5055,
-        item_class = "tool",
-        item_name_english = "The Color of a Gentlemann's Business Pants"
-    },
-    "Paint Can 20" : {
-        id = 5056,
-        item_class = "tool",
-        item_name_english = "Dark Salmon Injustice"
-    },
-    "Christmas Key 2010" : {
-        id = 5057,
-        item_class = "tool",
-        item_name_english = "Stocking Stuffer Key"
+    "concealedkiller_sniperrifle_nightowl" : {
+        id = 15000,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "concealedkiller_smg_woodsywidowmaker" : {
+        id = 15001,
+        item_class = "tf_weapon_smg",
+        item_name_english = "SMG"
+    },
+    "concealedkiller_scattergun_nightterror" : {
+        id = 15002,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "concealedkiller_shotgun_backwoodsboomstick" : {
+        id = 15003,
+        item_class = "tf_weapon_shotgun",
+        item_name_english = "Shotgun"
+    },
+    "concealedkiller_minigun_kingofthejungle" : {
+        id = 15004,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "concealedkiller_flamethrower_forestfire" : {
+        id = 15005,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "concealedkiller_rocketlauncher_woodlandwarrior" : {
+        id = 15006,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "concealedkiller_sniperrifle_purplerange" : {
+        id = 15007,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "concealedkiller_medigun_maskedmender" : {
+        id = 15008,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "concealedkiller_stickybomblauncher_suddenflurry" : {
+        id = 15009,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "concealedkiller_medigun_wrappedreviver" : {
+        id = 15010,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "concealedkiller_revolver_psychedelicslugger" : {
+        id = 15011,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "concealedkiller_stickybomblauncher_carpetbomber" : {
+        id = 15012,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "concealedkiller_pistol_redrockroscoe" : {
+        id = 15013,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "concealedkiller_rocketlauncher_sandcannon" : {
+        id = 15014,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "craftsmann_scattergun_tartantorpedo" : {
+        id = 15015,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "craftsmann_shotgun_rusticruiner" : {
+        id = 15016,
+        item_class = "tf_weapon_shotgun",
+        item_name_english = "Shotgun"
+    },
+    "craftsmann_flamethrower_barnburner" : {
+        id = 15017,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "craftsmann_pistol_homemadeheater" : {
+        id = 15018,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "craftsmann_sniperrifle_lumberfromdownunder" : {
+        id = 15019,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "craftsmann_minigun_ironwood" : {
+        id = 15020,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "craftsmann_scattergun_countrycrusher" : {
+        id = 15021,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "craftsmann_smg_plaidpotshotter" : {
+        id = 15022,
+        item_class = "tf_weapon_smg",
+        item_name_english = "SMG"
+    },
+    "craftsmann_sniperrifle_shotinthedark" : {
+        id = 15023,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "craftsmann_stickybomblauncher_blastedbombardier" : {
+        id = 15024,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "craftsmann_medigun_reclaimedreanimator" : {
+        id = 15025,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "craftsmann_minigun_antiqueannihilator" : {
+        id = 15026,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "craftsmann_revolver_oldcountry" : {
+        id = 15027,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "craftsmann_rocketlauncher_americanpastoral" : {
+        id = 15028,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "craftsmann_scattergun_backcountryblaster" : {
+        id = 15029,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "teufort_flamethrower_bovineblazemaker" : {
+        id = 15030,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "teufort_minigun_warroom" : {
+        id = 15031,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "teufort_smg_treadplatetormenter" : {
+        id = 15032,
+        item_class = "tf_weapon_smg",
+        item_name_english = "SMG"
+    },
+    "teufort_sniperrifle_bogtrotter" : {
+        id = 15033,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "teufort_flamethrower_earthskyandfire" : {
+        id = 15034,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "teufort_pistol_hickoryholepuncher" : {
+        id = 15035,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "teufort_scattergun_sprucedeuce" : {
+        id = 15036,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "teufort_smg_teamsprayer" : {
+        id = 15037,
+        item_class = "tf_weapon_smg",
+        item_name_english = "SMG"
+    },
+    "teufort_stickybomblauncher_rooftopwrangler" : {
+        id = 15038,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "teufort_medigun_civilservant" : {
+        id = 15039,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "teufort_minigun_citizenpain" : {
+        id = 15040,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "teufort_pistol_localhero" : {
+        id = 15041,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "teufort_revolver_mayor" : {
+        id = 15042,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "teufort_rocketlauncher_smalltownbringdown" : {
+        id = 15043,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "teufort_shotgun_civicduty" : {
+        id = 15044,
+        item_class = "tf_weapon_shotgun",
+        item_name_english = "Shotgun"
+    },
+    "powerhouse_stickybomblauncher_liquidasset" : {
+        id = 15045,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "powerhouse_pistol_blackdahlia" : {
+        id = 15046,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "powerhouse_shotgun_lightningrod" : {
+        id = 15047,
+        item_class = "tf_weapon_shotgun",
+        item_name_english = "Shotgun"
+    },
+    "powerhouse_stickybomblauncher_pinkelephant" : {
+        id = 15048,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "powerhouse_flamethrower_flashfryer" : {
+        id = 15049,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "powerhouse_medigun_sparkoflife" : {
+        id = 15050,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "powerhouse_revolver_deadreckoner" : {
+        id = 15051,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "powerhouse_rocketlauncher_shellshocker" : {
+        id = 15052,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "powerhouse_scattergun_currentevent" : {
+        id = 15053,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "powerhouse_flamethrower_turbinetorcher" : {
+        id = 15054,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "powerhouse_minigun_brickhouse" : {
+        id = 15055,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "powerhouse_pistol_sandstonespecial" : {
+        id = 15056,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "powerhouse_rocketlauncher_aquamarine" : {
+        id = 15057,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "powerhouse_smg_lowprofile" : {
+        id = 15058,
+        item_class = "tf_weapon_smg",
+        item_name_english = "SMG"
+    },
+    "powerhouse_sniperrifle_thunderbolt" : {
+        id = 15059,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "harvest_pistol_macabreweb" : {
+        id = 15060,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "harvest_pistol_nutcracker" : {
+        id = 15061,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "harvest_revolver_boneyard" : {
+        id = 15062,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "harvest_revolver_wildwood" : {
+        id = 15063,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "harvest_revolver_macabreweb" : {
+        id = 15064,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "harvest_scattergun_macabreweb" : {
+        id = 15065,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "harvest_flamethrower_autumn" : {
+        id = 15066,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "harvest_flamethrower_pumpkinpatch" : {
+        id = 15067,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "harvest_flamethrower_nutcracker" : {
+        id = 15068,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "harvest_scattergun_nutcracker" : {
+        id = 15069,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "harvest_sniperrifle_pumpkinpatch" : {
+        id = 15070,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "harvest_sniperrifle_boneyard" : {
+        id = 15071,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "harvest_sniperrifle_wildwood" : {
+        id = 15072,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "harvest_wrench_nutcracker" : {
+        id = 15073,
+        item_class = "tf_weapon_wrench",
+        item_name_english = "Wrench"
+    },
+    "harvest_wrench_autumn" : {
+        id = 15074,
+        item_class = "tf_weapon_wrench",
+        item_name_english = "Wrench"
+    },
+    "harvest_wrench_boneyard" : {
+        id = 15075,
+        item_class = "tf_weapon_wrench",
+        item_name_english = "Wrench"
+    },
+    "harvest_smg_wildwood" : {
+        id = 15076,
+        item_class = "tf_weapon_smg",
+        item_name_english = "SMG"
+    },
+    "harvest_grenadelauncher_autumn" : {
+        id = 15077,
+        item_class = "tf_weapon_grenadelauncher",
+        item_name_english = "Grenade Launcher"
+    },
+    "harvest_medigun_wildwood" : {
+        id = 15078,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "harvest_grenadelauncher_macabreweb" : {
+        id = 15079,
+        item_class = "tf_weapon_grenadelauncher",
+        item_name_english = "Grenade Launcher"
+    },
+    "harvest_knife_boneyard" : {
+        id = 15080,
+        item_class = "tf_weapon_knife",
+        item_name_english = "Knife"
+    },
+    "harvest_rocketlauncher_autumn" : {
+        id = 15081,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "harvest_stickybomblauncher_autumn" : {
+        id = 15082,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "harvest_stickybomblauncher_pumpkinpatch" : {
+        id = 15083,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "harvest_stickybomblauncher_macabreweb" : {
+        id = 15084,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "harvest_shotgun_autumn" : {
+        id = 15085,
+        item_class = "tf_weapon_shotgun",
+        item_name_english = "Shotgun"
+    },
+    "harvest_minigun_macabreweb" : {
+        id = 15086,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "harvest_minigun_pumpkinpatch" : {
+        id = 15087,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "harvest_minigun_nutcracker" : {
+        id = 15088,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "pyroland_flamethrower_balloonicorn" : {
+        id = 15089,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "pyroland_flamethrower_rainbow" : {
+        id = 15090,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "pyroland_grenadelauncher_rainbow" : {
+        id = 15091,
+        item_class = "tf_weapon_grenadelauncher",
+        item_name_english = "Grenade Launcher"
+    },
+    "pyroland_grenadelauncher_sweetdreams" : {
+        id = 15092,
+        item_class = "tf_weapon_grenadelauncher",
+        item_name_english = "Grenade Launcher"
+    },
+    "pyroland_knife_bluemew" : {
+        id = 15094,
+        item_class = "tf_weapon_knife",
+        item_name_english = "Knife"
+    },
+    "pyroland_knife_braincandy" : {
+        id = 15095,
+        item_class = "tf_weapon_knife",
+        item_name_english = "Knife"
+    },
+    "pyroland_knife_stabbedtohell" : {
+        id = 15096,
+        item_class = "tf_weapon_knife",
+        item_name_english = "Knife"
+    },
+    "pyroland_medigun_flowerpower" : {
+        id = 15097,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "pyroland_minigun_braincandy" : {
+        id = 15098,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "pyroland_minigun_mistercuddles" : {
+        id = 15099,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "pyroland_pistol_bluemew" : {
+        id = 15100,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "pyroland_pistol_braincandy" : {
+        id = 15101,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "pyroland_pistol_shottohell" : {
+        id = 15102,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "pyroland_revolver_flowerpower" : {
+        id = 15103,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "pyroland_rocketlauncher_bluemew" : {
+        id = 15104,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "pyroland_rocketlauncher_braincandy" : {
+        id = 15105,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "pyroland_scattergun_bluemew" : {
+        id = 15106,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "pyroland_scattergun_flowerpower" : {
+        id = 15107,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "pyroland_scattergun_shottohell" : {
+        id = 15108,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "pyroland_shotgun_flowerpower" : {
+        id = 15109,
+        item_class = "tf_weapon_shotgun",
+        item_name_english = "Shotgun"
+    },
+    "pyroland_smg_bluemew" : {
+        id = 15110,
+        item_class = "tf_weapon_smg",
+        item_name_english = "SMG"
+    },
+    "pyroland_sniperrifle_balloonicorn" : {
+        id = 15111,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "pyroland_sniperrifle_rainbow" : {
+        id = 15112,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "pyroland_stickybomblauncher_sweetdreams" : {
+        id = 15113,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "pyroland_wrench_torquedtohell" : {
+        id = 15114,
+        item_class = "tf_weapon_wrench",
+        item_name_english = "Wrench"
+    },
+    "gentlemanne_flamethrower_coffinnail" : {
+        id = 15115,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "gentlemanne_grenadelauncher_coffinnail" : {
+        id = 15116,
+        item_class = "tf_weapon_grenadelauncher",
+        item_name_english = "Grenade Launcher"
+    },
+    "gentlemanne_grenadelauncher_topshelf" : {
+        id = 15117,
+        item_class = "tf_weapon_grenadelauncher",
+        item_name_english = "Grenade Launcher"
+    },
+    "gentlemanne_knife_dressedtokill" : {
+        id = 15118,
+        item_class = "tf_weapon_knife",
+        item_name_english = "Knife"
+    },
+    "gentlemanne_knife_topshelf" : {
+        id = 15119,
+        item_class = "tf_weapon_knife",
+        item_name_english = "Knife"
+    },
+    "gentlemanne_medigun_coffinnail" : {
+        id = 15120,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "gentlemanne_medigun_dressedtokill" : {
+        id = 15121,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "gentlemanne_medigun_highrollers" : {
+        id = 15122,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "gentlemanne_minigun_coffinnail" : {
+        id = 15123,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "gentlemanne_minigun_dressedtokill" : {
+        id = 15124,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "gentlemanne_minigun_topshelf" : {
+        id = 15125,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "gentlemanne_pistol_dressedtokill" : {
+        id = 15126,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "gentlemanne_revolver_coffinnail" : {
+        id = 15127,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "gentlemanne_revolver_topshelf" : {
+        id = 15128,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "gentlemanne_rocketlauncher_coffinnail" : {
+        id = 15129,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "gentlemanne_rocketlauncher_highrollers" : {
+        id = 15130,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "gentlemanne_scattergun_coffinnail" : {
+        id = 15131,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "gentlemanne_shotgun_coffinnail" : {
+        id = 15132,
+        item_class = "tf_weapon_shotgun",
+        item_name_english = "Shotgun"
+    },
+    "gentlemanne_shotgun_dressedtokill" : {
+        id = 15133,
+        item_class = "tf_weapon_shotgun",
+        item_name_english = "Shotgun"
+    },
+    "gentlemanne_smg_highrollers" : {
+        id = 15134,
+        item_class = "tf_weapon_smg",
+        item_name_english = "SMG"
+    },
+    "gentlemanne_sniperrifle_coffinnail" : {
+        id = 15135,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "gentlemanne_sniperrifle_dressedtokill" : {
+        id = 15136,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "gentlemanne_stickybomblauncher_coffinnail" : {
+        id = 15137,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "gentlemanne_stickybomblauncher_dressedtokill" : {
+        id = 15138,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "gentlemanne_wrench_dressedtokill" : {
+        id = 15139,
+        item_class = "tf_weapon_wrench",
+        item_name_english = "Wrench"
+    },
+    "gentlemanne_wrench_topshelf" : {
+        id = 15140,
+        item_class = "tf_weapon_wrench",
+        item_name_english = "Wrench"
+    },
+    "warbird_flamethrower_warhawk" : {
+        id = 15141,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Flame Thrower"
+    },
+    "warbird_grenadelauncher_warhawk" : {
+        id = 15142,
+        item_class = "tf_weapon_grenadelauncher",
+        item_name_english = "Grenade Launcher"
+    },
+    "warbird_knife_blitzkrieg" : {
+        id = 15143,
+        item_class = "tf_weapon_knife",
+        item_name_english = "Knife"
+    },
+    "warbird_knife_airwolf" : {
+        id = 15144,
+        item_class = "tf_weapon_knife",
+        item_name_english = "Knife"
+    },
+    "warbird_medigun_blitzkrieg" : {
+        id = 15145,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "warbird_medigun_corsair" : {
+        id = 15146,
+        item_class = "tf_weapon_medigun",
+        item_name_english = "Medi Gun"
+    },
+    "warbird_minigun_butcherbird" : {
+        id = 15147,
+        item_class = "tf_weapon_minigun",
+        item_name_english = "Minigun"
+    },
+    "warbird_pistol_blitzkrieg" : {
+        id = 15148,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "Pistol"
+    },
+    "warbird_revolver_blitzkrieg" : {
+        id = 15149,
+        item_class = "tf_weapon_revolver",
+        item_name_english = "Revolver"
+    },
+    "warbird_rocketlauncher_warhawk" : {
+        id = 15150,
+        item_class = "tf_weapon_rocketlauncher",
+        item_name_english = "Rocket Launcher"
+    },
+    "warbird_scattergun_killerbee" : {
+        id = 15151,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "warbird_shotgun_redbear" : {
+        id = 15152,
+        item_class = "tf_weapon_shotgun",
+        item_name_english = "Shotgun"
+    },
+    "warbird_smg_blitzkrieg" : {
+        id = 15153,
+        item_class = "tf_weapon_smg",
+        item_name_english = "SMG"
+    },
+    "warbird_sniperrifle_airwolf" : {
+        id = 15154,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Sniper Rifle"
+    },
+    "warbird_stickybomblauncher_blitzkrieg" : {
+        id = 15155,
+        item_class = "tf_weapon_pipebomblauncher",
+        item_name_english = "Stickybomb Launcher"
+    },
+    "warbird_wrench_airwolf" : {
+        id = 15156,
+        item_class = "tf_weapon_wrench",
+        item_name_english = "Wrench"
+    },
+    "warbird_scattergun_corsair" : {
+        id = 15157,
+        item_class = "tf_weapon_scattergun",
+        item_name_english = "Scattergun"
+    },
+    "warbird_grenadelauncher_butcherbird" : {
+        id = 15158,
+        item_class = "tf_weapon_grenadelauncher",
+        item_name_english = "Grenade Launcher"
+    },
+    "Paintkit 102" : {
+        id = 16102,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 104" : {
+        id = 16104,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 105" : {
+        id = 16105,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 106" : {
+        id = 16106,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 109" : {
+        id = 16109,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 112" : {
+        id = 16112,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 113" : {
+        id = 16113,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 114" : {
+        id = 16114,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 120" : {
+        id = 16120,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 122" : {
+        id = 16122,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 130" : {
+        id = 16130,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 139" : {
+        id = 16139,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 143" : {
+        id = 16143,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 144" : {
+        id = 16144,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 151" : {
+        id = 16151,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 160" : {
+        id = 16160,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 161" : {
+        id = 16161,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 163" : {
+        id = 16163,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 300" : {
+        id = 16300,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 301" : {
+        id = 16301,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 302" : {
+        id = 16302,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 303" : {
+        id = 16303,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 304" : {
+        id = 16304,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 305" : {
+        id = 16305,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 306" : {
+        id = 16306,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 307" : {
+        id = 16307,
+        item_class = "tool",
+        item_name_english = "War Paint"
+    },
+    "Paintkit 308" : {
+        id = 16308,
+        item_class = "tool",
+        item_name_english = "War Paint"
     },
-    "Paint Can Team Color 2" : {
-        id = 5060,
+    "Paintkit 309" : {
+        id = 16309,
         item_class = "tool",
-        item_name_english = "Operator's Overalls"
+        item_name_english = "War Paint"
     },
-    "Paint Can Team Color 3" : {
-        id = 5061,
+    "Paintkit 310" : {
+        id = 16310,
         item_class = "tool",
-        item_name_english = "Waterlogged Lab Coat"
+        item_name_english = "War Paint"
     },
-    "Paint Can Team Color 4" : {
-        id = 5062,
+    "Paintkit 390" : {
+        id = 16390,
         item_class = "tool",
-        item_name_english = "Balaclavas Are Forever"
+        item_name_english = "War Paint"
     },
-    "Paint Can Team Color 5" : {
-        id = 5063,
+    "Paintkit 391" : {
+        id = 16391,
         item_class = "tool",
-        item_name_english = "An Air of Debonair"
+        item_name_english = "War Paint"
     },
-    "Paint Can Team Color 6" : {
-        id = 5064,
+    "Paintkit 200" : {
+        id = 17200,
         item_class = "tool",
-        item_name_english = "The Value of Teamwork"
+        item_name_english = "War Paint"
     },
-    "Paint Can Team Color 7" : {
-        id = 5065,
+    "Paintkit 201" : {
+        id = 17201,
         item_class = "tool",
-        item_name_english = "Cream Spirit"
-    },
-    "Summer Crate" : {
-        id = 5066,
-        item_class = "supply_crate",
-        item_name_english = "Refreshing Summer Cooler"
+        item_name_english = "War Paint"
     },
-    "Summer Key" : {
-        id = 5067,
+    "Paintkit 202" : {
+        id = 17202,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
-    },
-    "Supply Crate Rare" : {
-        id = 5068,
-        item_class = "supply_crate",
-        item_name_english = "Salvaged Mann Co. Supply Crate"
-    },
-    "Naughty Winter Crate 2011" : {
-        id = 5070,
-        item_class = "supply_crate",
-        item_name_english = "Naughty Winter Crate"
-    },
-    "Nice Winter Crate 2011" : {
-        id = 5071,
-        item_class = "supply_crate",
-        item_name_english = "Nice Winter Crate"
+        item_name_english = "War Paint"
     },
-    "Naughty Winter Key 2011" : {
-        id = 5072,
+    "Paintkit 203" : {
+        id = 17203,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Nice Winter Key 2011" : {
-        id = 5073,
+    "Paintkit 204" : {
+        id = 17204,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Something Special For Someone Special (Tool)" : {
-        id = 5074,
+    "Paintkit 205" : {
+        id = 17205,
         item_class = "tool",
-        item_name_english = "Something Special For Someone Special"
-    },
-    "Something Special For Someone Special (Wearable)" : {
-        id = 5075,
-        item_class = "tf_wearable",
-        item_name_english = "Something Special For Someone Special"
+        item_name_english = "War Paint"
     },
-    "Paint Can 21" : {
-        id = 5076,
+    "Paintkit 206" : {
+        id = 17206,
         item_class = "tool",
-        item_name_english = "A Mann's Mint"
+        item_name_english = "War Paint"
     },
-    "Paint Can 22" : {
-        id = 5077,
+    "Paintkit 207" : {
+        id = 17207,
         item_class = "tool",
-        item_name_english = "After Eight"
-    },
-    "Scorched Crate" : {
-        id = 5078,
-        item_class = "supply_crate",
-        item_name_english = "Scorched Crate"
+        item_name_english = "War Paint"
     },
-    "Scorched Key" : {
-        id = 5079,
+    "Paintkit 208" : {
+        id = 17208,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Fall Crate 2012" : {
-        id = 5080,
-        item_class = "supply_crate",
-        item_name_english = "Fall Crate"
-    },
-    "Fall Key 2012" : {
-        id = 5081,
+    "Paintkit 209" : {
+        id = 17209,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Account Upgrade To Premium" : {
-        id = 5082,
+    "Paintkit 210" : {
+        id = 17210,
         item_class = "tool",
-        item_name_english = "Upgrade to Premium Gift"
+        item_name_english = "War Paint"
     },
-    "Giftapult Gift Wrap" : {
-        id = 5083,
+    "Paintkit 211" : {
+        id = 17211,
         item_class = "tool",
-        item_name_english = "Giftapult"
+        item_name_english = "War Paint"
     },
-    "Wrapped Giftapult Package" : {
-        id = 5084,
+    "Paintkit 212" : {
+        id = 17212,
         item_class = "tool",
-        item_name_english = "Loaded Giftapult"
-    },
-    "Delivered Giftapult Package" : {
-        id = 5085,
-        item_class = "tool",
-        item_name_english = "Delivered Giftapult Package"
-    },
-    "Summer Starter Kit" : {
-        id = 5086,
-        item_class = "tf_wearable",
-        item_name_english = "Summer Starter Kit"
-    },
-    "Summer Adventure Pack" : {
-        id = 5087,
-        item_class = "tf_wearable",
-        item_name_english = "Summer Adventure Pack"
-    },
-    "RIFT Spider Hat Code" : {
-        id = 5500,
-        item_class = "tool",
-        item_name_english = "RIFT Well Spun Hat Claim Code"
-    },
-    "Goldfish" : {
-        id = 5600,
-        item_class = "craft_item",
-        item_name_english = "Roasted Goldfish"
-    },
-    "Pocket Lint" : {
-        id = 5601,
-        item_class = "craft_item",
-        item_name_english = "Charred Pocket Lint"
-    },
-    "Cheese Wheel" : {
-        id = 5602,
-        item_class = "craft_item",
-        item_name_english = "Smoked Cheese Wheel"
-    },
-    "Banana Peel" : {
-        id = 5603,
-        item_class = "craft_item",
-        item_name_english = "Burned Banana Peel"
-    },
-    "Barn Door Plank" : {
-        id = 5604,
-        item_class = "craft_item",
-        item_name_english = "Incinerated Barn Door Plank"
-    },
-    "Secret Diary" : {
-        id = 5605,
-        item_class = "tf_weapon_spellbook",
-        item_name_english = "Fireproof Secret Diary"
-    },
-    "Damaged Capacitor" : {
-        id = 5606,
-        item_class = "craft_item",
-        item_name_english = "Barely-Melted Capacitor"
-    },
-    "Pile Of Ash" : {
-        id = 5607,
-        item_class = "tf_wearable",
-        item_name_english = "Pile of Ash"
-    },
-    "Voodoo-Cursed Item (Armory)" : {
-        id = 5608,
-        item_class = "craft_item",
-        item_name_english = "Voodoo-Cursed Object"
-    },
-    "Voodoo-Cursed Old Boot" : {
-        id = 5609,
-        item_class = "craft_item",
-        item_name_english = "Voodoo-Cursed Old Boot"
-    },
-    "Voodoo-Cursed Skeleton" : {
-        id = 5610,
-        item_class = "craft_item",
-        item_name_english = "Voodoo-Cursed Skeleton"
-    },
-    "Voodoo-Cursed Bag Of Quicklime" : {
-        id = 5611,
-        item_class = "craft_item",
-        item_name_english = "Voodoo-Cursed Bag of Quicklime"
-    },
-    "Voodoo-Cursed Robot Arm" : {
-        id = 5612,
-        item_class = "craft_item",
-        item_name_english = "Voodoo-Cursed Robot Arm"
-    },
-    "Voodoo-Cursed Novelty Bass" : {
-        id = 5613,
-        item_class = "craft_item",
-        item_name_english = "Voodoo-Cursed Novelty Bass"
-    },
-    "Voodoo-Cursed Sticky-Bomb" : {
-        id = 5614,
-        item_class = "craft_item",
-        item_name_english = "Voodoo-Cursed Sticky-Bomb"
-    },
-    "Voodoo-Cursed Nail" : {
-        id = 5615,
-        item_class = "craft_item",
-        item_name_english = "Voodoo-Cursed Nail"
-    },
-    "Voodoo-Cursed Soul (Armory)" : {
-        id = 5616,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Soul"
-    },
-    "Zombie Scout" : {
-        id = 5617,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Scout Soul"
-    },
-    "Zombie Soldier" : {
-        id = 5618,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Soldier Soul"
-    },
-    "Zombie Heavy" : {
-        id = 5619,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Heavy Soul"
-    },
-    "Zombie Demo" : {
-        id = 5620,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Demoman Soul"
-    },
-    "Zombie Engineer" : {
-        id = 5621,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Engineer Soul"
-    },
-    "Zombie Medic" : {
-        id = 5622,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Medic Soul"
-    },
-    "Zombie Spy" : {
-        id = 5623,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Spy Soul"
-    },
-    "Zombie Pyro" : {
-        id = 5624,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Pyro Soul"
-    },
-    "Zombie Sniper" : {
-        id = 5625,
-        item_class = "tf_wearable",
-        item_name_english = "Voodoo-Cursed Sniper Soul"
-    },
-    "Pile Of Curses" : {
-        id = 5626,
-        item_class = "tf_wearable",
-        item_name_english = "Pile of Curses"
-    },
-    "Eerie Crate" : {
-        id = 5627,
-        item_class = "supply_crate",
-        item_name_english = "Eerie Crate"
+        item_name_english = "War Paint"
     },
-    "Eerie Key" : {
-        id = 5628,
+    "Paintkit 213" : {
+        id = 17213,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Naughty Winter Crate 2012" : {
-        id = 5629,
-        item_class = "supply_crate",
-        item_name_english = "Naughty Winter Crate 2012"
-    },
-    "Nice Winter Crate 2012" : {
-        id = 5630,
-        item_class = "supply_crate",
-        item_name_english = "Nice Winter Crate 2012"
-    },
-    "Naughty Winter Key 2012" : {
-        id = 5631,
+    "Paintkit 214" : {
+        id = 17214,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Nice Winter Key 2012" : {
-        id = 5632,
+    "Paintkit 215" : {
+        id = 17215,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Strange Bacon Grease" : {
-        id = 5633,
+    "Paintkit 217" : {
+        id = 17217,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Robo Crate 2013" : {
-        id = 5635,
-        item_class = "supply_crate",
-        item_name_english = "Robo Community Crate"
-    },
-    "Robo Key 2013" : {
-        id = 5636,
+    "Paintkit 218" : {
+        id = 17218,
         item_class = "tool",
-        item_name_english = "Robo Community Crate Key"
-    },
-    "Gift - 23 RoboKeys 2013" : {
-        id = 5637,
-        item_class = "tf_wearable",
-        item_name_english = "Pile of Robo Community Crate Key Gifts"
-    },
-    "Gift - 1 RoboKey 2013" : {
-        id = 5638,
-        item_class = "tf_wearable",
-        item_name_english = "A Random Robo Community Crate Key Gift"
+        item_name_english = "War Paint"
     },
-    "July 2013 Claim Check" : {
-        id = 5639,
-        item_class = "tf_wearable",
-        item_name_english = "Summer Claim Check"
-    },
-    "July 2013 Early Crate" : {
-        id = 5640,
-        item_class = "supply_crate",
-        item_name_english = "Summer Appetizer Crate"
-    },
-    "July 2013 Early Key" : {
-        id = 5641,
+    "Paintkit 220" : {
+        id = 17220,
         item_class = "tool",
-        item_name_english = "Summer Appetizer Key"
-    },
-    "July 2013 Crate 01" : {
-        id = 5642,
-        item_class = "supply_crate",
-        item_name_english = "Red Summer 2013 Cooler"
+        item_name_english = "War Paint"
     },
-    "July 2013 Key 01" : {
-        id = 5643,
+    "Paintkit 221" : {
+        id = 17221,
         item_class = "tool",
-        item_name_english = "Red Summer 2013 Cooler Key"
-    },
-    "July 2013 Crate 02" : {
-        id = 5644,
-        item_class = "supply_crate",
-        item_name_english = "Orange Summer 2013 Cooler"
+        item_name_english = "War Paint"
     },
-    "July 2013 Key 02" : {
-        id = 5645,
+    "Paintkit 223" : {
+        id = 17223,
         item_class = "tool",
-        item_name_english = "Orange Summer 2013 Cooler Key"
-    },
-    "July 2013 Crate 03" : {
-        id = 5646,
-        item_class = "supply_crate",
-        item_name_english = "Yellow Summer 2013 Cooler"
+        item_name_english = "War Paint"
     },
-    "July 2013 Key 03" : {
-        id = 5647,
+    "Paintkit 224" : {
+        id = 17224,
         item_class = "tool",
-        item_name_english = "Yellow Summer 2013 Cooler Key"
-    },
-    "July 2013 Crate 04" : {
-        id = 5648,
-        item_class = "supply_crate",
-        item_name_english = "Green Summer 2013 Cooler"
+        item_name_english = "War Paint"
     },
-    "July 2013 Key 04" : {
-        id = 5649,
+    "Paintkit 225" : {
+        id = 17225,
         item_class = "tool",
-        item_name_english = "Green Summer 2013 Cooler Key"
-    },
-    "July 2013 Crate 05" : {
-        id = 5650,
-        item_class = "supply_crate",
-        item_name_english = "Aqua Summer 2013 Cooler"
+        item_name_english = "War Paint"
     },
-    "July 2013 Key 05" : {
-        id = 5651,
+    "Paintkit 226" : {
+        id = 17226,
         item_class = "tool",
-        item_name_english = "Aqua Summer 2013 Cooler Key"
-    },
-    "July 2013 Crate 06" : {
-        id = 5652,
-        item_class = "supply_crate",
-        item_name_english = "Blue Summer 2013 Cooler"
+        item_name_english = "War Paint"
     },
-    "July 2013 Key 06" : {
-        id = 5653,
+    "Paintkit 228" : {
+        id = 17228,
         item_class = "tool",
-        item_name_english = "Blue Summer 2013 Cooler Key"
-    },
-    "July 2013 Crate 07" : {
-        id = 5654,
-        item_class = "supply_crate",
-        item_name_english = "Brown Summer 2013 Cooler"
+        item_name_english = "War Paint"
     },
-    "July 2013 Key 07" : {
-        id = 5655,
+    "Paintkit 230" : {
+        id = 17230,
         item_class = "tool",
-        item_name_english = "Brown Summer 2013 Cooler Key"
-    },
-    "July 2013 Crate 08" : {
-        id = 5656,
-        item_class = "supply_crate",
-        item_name_english = "Black Summer 2013 Cooler"
+        item_name_english = "War Paint"
     },
-    "July 2013 Key 08" : {
-        id = 5657,
+    "Paintkit 232" : {
+        id = 17232,
         item_class = "tool",
-        item_name_english = "Black Summer 2013 Cooler Key"
-    },
-    "Gift - 23 SummerKeys 2013" : {
-        id = 5658,
-        item_class = "tf_wearable",
-        item_name_english = "Pile of Summer Cooler Key Gifts"
-    },
-    "Gift - 1 SummerKey 2013" : {
-        id = 5659,
-        item_class = "tf_wearable",
-        item_name_english = "A Random Summer Cooler Key Gift"
-    },
-    "Supply Crate Rare 2" : {
-        id = 5660,
-        item_class = "supply_crate",
-        item_name_english = "Select Reserve Mann Co. Supply Crate"
-    },
-    "Pomson 6000 Strangifier" : {
-        id = 5661,
-        item_class = "tool",
-        item_name_english = "Strangifier"
-    },
-    "Robits Loot 01" : {
-        id = 5700,
-        item_class = "craft_item",
-        item_name_english = "Pristine Robot Currency Digester"
-    },
-    "Robits Loot 02" : {
-        id = 5701,
-        item_class = "craft_item",
-        item_name_english = "Pristine Robot Brainstorm Bulb"
-    },
-    "Robits Loot 03" : {
-        id = 5702,
-        item_class = "craft_item",
-        item_name_english = "Reinforced Robot Emotion Detector"
-    },
-    "Robits Loot 04" : {
-        id = 5703,
-        item_class = "craft_item",
-        item_name_english = "Reinforced Robot Humor Suppression Pump"
-    },
-    "Robits Loot 05" : {
-        id = 5704,
-        item_class = "craft_item",
-        item_name_english = "Reinforced Robot Bomb Stabilizer"
-    },
-    "Robits Loot 06" : {
-        id = 5705,
-        item_class = "craft_item",
-        item_name_english = "Battle-Worn Robot Taunt Processor"
-    },
-    "Robits Loot 07" : {
-        id = 5706,
-        item_class = "craft_item",
-        item_name_english = "Battle-Worn Robot KB-808"
-    },
-    "Robits Loot 08" : {
-        id = 5707,
-        item_class = "craft_item",
-        item_name_english = "Battle-Worn Robot Money Furnace"
-    },
-    "Fall 2013 Acorns Crate" : {
-        id = 5708,
-        item_class = "supply_crate",
-        item_name_english = "Fall 2013 Acorns Crate"
+        item_name_english = "War Paint"
     },
-    "Fall 2013 Gourd Crate" : {
-        id = 5709,
-        item_class = "supply_crate",
-        item_name_english = "Fall 2013 Gourd Crate"
-    },
-    "Fall 2013 Acorns Key" : {
-        id = 5710,
+    "Paintkit 234" : {
+        id = 17234,
         item_class = "tool",
-        item_name_english = "Fall 2013 Acorns Crate Key"
+        item_name_english = "War Paint"
     },
-    "Fall 2013 Gourd Key" : {
-        id = 5711,
+    "Paintkit 235" : {
+        id = 17235,
         item_class = "tool",
-        item_name_english = "Fall 2013 Gourd Crate Key"
-    },
-    "Halloween 2013 Crate" : {
-        id = 5712,
-        item_class = "supply_crate",
-        item_name_english = "Spooky Crate"
+        item_name_english = "War Paint"
     },
-    "Halloween 2013 Key" : {
-        id = 5713,
+    "Paintkit 236" : {
+        id = 17236,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
-    },
-    "Naughty Winter Crate 2013" : {
-        id = 5714,
-        item_class = "supply_crate",
-        item_name_english = "Naughty Winter Crate 2013"
-    },
-    "Nice Winter Crate 2013" : {
-        id = 5715,
-        item_class = "supply_crate",
-        item_name_english = "Nice Winter Crate 2013"
+        item_name_english = "War Paint"
     },
-    "Naughty Winter Key 2013" : {
-        id = 5716,
+    "Paintkit 237" : {
+        id = 17237,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Nice Winter Key 2013" : {
-        id = 5717,
+    "Paintkit 238" : {
+        id = 17238,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Self Gift - Stocking Stuffer 2013" : {
-        id = 5718,
-        item_class = "tf_wearable",
-        item_name_english = "Gift-Stuffed Stocking"
-    },
-    "Strongbox Crate 2014" : {
-        id = 5719,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Strongbox"
-    },
-    "Strongbox Key 2014" : {
-        id = 5720,
+    "Paintkit 239" : {
+        id = 17239,
         item_class = "tool",
-        item_name_english = "Mann Co. Strongbox Key"
+        item_name_english = "War Paint"
     },
-    "Pretty Boy's Pocket Pistol Strangifier" : {
-        id = 5721,
+    "Paintkit 240" : {
+        id = 17240,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Phlogistinator Strangifier" : {
-        id = 5722,
+    "Paintkit 241" : {
+        id = 17241,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Cleaner's Carbine Strangifier" : {
-        id = 5723,
+    "Paintkit 242" : {
+        id = 17242,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Private Eye Strangifier" : {
-        id = 5724,
+    "Paintkit 243" : {
+        id = 17243,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Big Chief Strangifier" : {
-        id = 5725,
+    "Paintkit 244" : {
+        id = 17244,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Rocket Launcher Killstreakifier Basic" : {
-        id = 5726,
+    "Paintkit 245" : {
+        id = 17245,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Scattergun Killstreakifier Basic" : {
-        id = 5727,
+    "Paintkit 246" : {
+        id = 17246,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Sniperrifle Killstreakifier Basic" : {
-        id = 5728,
+    "Paintkit 247" : {
+        id = 17247,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Shotgun Killstreakifier Basic" : {
-        id = 5729,
+    "Paintkit 248" : {
+        id = 17248,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Ubersaw Killstreakifier Basic" : {
-        id = 5730,
+    "Paintkit 249" : {
+        id = 17249,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "GRU Killstreakifier Basic" : {
-        id = 5731,
+    "Paintkit 250" : {
+        id = 17250,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Spy-cicle Launcher Killstreakifier Basic" : {
-        id = 5732,
+    "Paintkit 251" : {
+        id = 17251,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Axtinguisher Killstreakifier Basic" : {
-        id = 5733,
+    "Paintkit 252" : {
+        id = 17252,
         item_class = "tool",
-        item_name_english = "Kit"
-    },
-    "Supply Crate Ration" : {
-        id = 5734,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Munition"
-    },
-    "Supply Crate Ration 2" : {
-        id = 5735,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Munition"
-    },
-    "Short 2014 Community Crate A" : {
-        id = 5737,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Stockpile Crate"
-    },
-    "Short 2014 Community Crate B" : {
-        id = 5738,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Stockpile Crate"
-    },
-    "Short 2014 Taunt Crate" : {
-        id = 5739,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Audition Reel"
+        item_name_english = "War Paint"
     },
-    "Short 2014 Key" : {
-        id = 5740,
+    "Paintkit 253" : {
+        id = 17253,
         item_class = "tool",
-        item_name_english = "Mann Co. Stockpile Crate Key"
-    },
-    "Self Gift - Mutated Bread Box" : {
-        id = 5741,
-        item_class = "tf_wearable",
-        item_name_english = "Bread Box"
-    },
-    "Supply Crate Ration 3" : {
-        id = 5742,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Munition"
+        item_name_english = "War Paint"
     },
-    "StickyLauncher Killstreakifier Basic" : {
-        id = 5743,
+    "Paintkit 254" : {
+        id = 17254,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Minigun Killstreakifier Basic" : {
-        id = 5744,
+    "Paintkit 255" : {
+        id = 17255,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "DirectHit Killstreakifier Basic" : {
-        id = 5745,
+    "Paintkit 256" : {
+        id = 17256,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Huntsman Killstreakifier Basic" : {
-        id = 5746,
+    "Paintkit 257" : {
+        id = 17257,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Backburner Killstreakifier Basic" : {
-        id = 5747,
+    "Paintkit 258" : {
+        id = 17258,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Backscatter Killstreakifier Basic" : {
-        id = 5748,
+    "Paintkit 259" : {
+        id = 17259,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Kritzkrieg Killstreakifier Basic" : {
-        id = 5749,
+    "Paintkit 260" : {
+        id = 17260,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Ambassador Killstreakifier Basic" : {
-        id = 5750,
+    "Paintkit 261" : {
+        id = 17261,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Frontier Justice Killstreakifier Basic" : {
-        id = 5751,
+    "Paintkit 262" : {
+        id = 17262,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Supply Crate Ration 4" : {
-        id = 5752,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Munition"
-    },
-    "Air Strike Strangifier" : {
-        id = 5753,
+    "Paintkit 263" : {
+        id = 17263,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Classic Strangifier" : {
-        id = 5754,
+    "Paintkit 264" : {
+        id = 17264,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Manmelter Strangifier" : {
-        id = 5755,
+    "Paintkit 265" : {
+        id = 17265,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Vaccinator Strangifier" : {
-        id = 5756,
+    "Paintkit 266" : {
+        id = 17266,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Widowmaker Strangifier" : {
-        id = 5757,
+    "Paintkit 267" : {
+        id = 17267,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Anger Strangifier" : {
-        id = 5758,
+    "Paintkit 268" : {
+        id = 17268,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Apparition's Aspect Strangifier" : {
-        id = 5759,
+    "Paintkit 269" : {
+        id = 17269,
         item_class = "tool",
-        item_name_english = "Strangifier"
-    },
-    "Taunt Shuffle Crate" : {
-        id = 5760,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Director's Cut Reel"
+        item_name_english = "War Paint"
     },
-    "Summer Crate 2014" : {
-        id = 5761,
-        item_class = "supply_crate",
-        item_name_english = "Limited Late Summer Crate"
-    },
-    "Limited Summer 2014 Key" : {
-        id = 5762,
-        item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
-    },
-    "Halloween 2014 Scout Crate" : {
-        id = 5763,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Creepy Scout Crate"
-    },
-    "Halloween 2014 Pyro Crate" : {
-        id = 5764,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Creepy Pyro Crate"
-    },
-    "Halloween 2014 Heavy Crate" : {
-        id = 5765,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Creepy Heavy Crate"
-    },
-    "Halloween 2014 Engineer Crate" : {
-        id = 5766,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Creepy Engineer Crate"
-    },
-    "Halloween 2014 Spy Crate" : {
-        id = 5767,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Creepy Spy Crate"
-    },
-    "Halloween 2014 Sniper Crate" : {
-        id = 5768,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Creepy Sniper Crate"
-    },
-    "Halloween 2014 Soldier Crate" : {
-        id = 5769,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Creepy Soldier Crate"
-    },
-    "Halloween 2014 Medic Crate" : {
-        id = 5770,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Creepy Medic Crate"
-    },
-    "Halloween 2014 Demo Crate" : {
-        id = 5771,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Creepy Demo Crate"
-    },
-    "Halloween Giveaway Cauldron 2014 (Base)" : {
-        id = 5772,
-        item_class = "tf_wearable",
-        item_name_english = "Halloween Gift Cauldron"
-    },
-    "Halloween Giveaway Cauldron 2014 (Achievement)" : {
-        id = 5773,
-        item_class = "tf_wearable",
-        item_name_english = "Halloween Gift Cauldron"
-    },
-    "EOTL Community Crate" : {
-        id = 5774,
-        item_class = "supply_crate",
-        item_name_english = "End of the Line Community Crate"
-    },
-    "EOTL Community Key" : {
-        id = 5775,
+    "Paintkit 270" : {
+        id = 17270,
         item_class = "tool",
-        item_name_english = "End of the Line Key"
-    },
-    "Gift - 23 EOTL Keys" : {
-        id = 5776,
-        item_class = "tf_wearable",
-        item_name_english = "Pile of End of the Line Key Gifts"
+        item_name_english = "War Paint"
     },
-    "Gift - 1 EOTL Key" : {
-        id = 5777,
-        item_class = "tf_wearable",
-        item_name_english = "A Random End of the Line Key Gift"
-    },
-    "Duck Token" : {
-        id = 5778,
+    "Paintkit 271" : {
+        id = 17271,
         item_class = "tool",
-        item_name_english = "Duck Token"
-    },
-    "Gift - 23 Duck Tokens" : {
-        id = 5779,
-        item_class = "tf_wearable",
-        item_name_english = "Pile of Duck Token Gifts"
-    },
-    "Gift - 1 Duck Token" : {
-        id = 5780,
-        item_class = "tf_wearable",
-        item_name_english = "A Random Duck Token Gift"
-    },
-    "Supply Crate Ration 5" : {
-        id = 5781,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Munition"
+        item_name_english = "War Paint"
     },
-    "Cow Mangler 5000 Strangifier" : {
-        id = 5783,
+    "Paintkit 272" : {
+        id = 17272,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Third Degree Strangifier" : {
-        id = 5784,
+    "Paintkit 273" : {
+        id = 17273,
         item_class = "tool",
-        item_name_english = "Strangifier"
-    },
-    "Naughty Winter Crate 2014" : {
-        id = 5789,
-        item_class = "supply_crate",
-        item_name_english = "Naughty Winter Crate 2014"
-    },
-    "Nice Winter Crate 2014" : {
-        id = 5790,
-        item_class = "supply_crate",
-        item_name_english = "Nice Winter Crate 2014"
+        item_name_english = "War Paint"
     },
-    "Naughty Key 2014 Key" : {
-        id = 5791,
+    "Paintkit 275" : {
+        id = 17275,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Nice Key 2014 Key" : {
-        id = 5792,
+    "Paintkit 276" : {
+        id = 17276,
         item_class = "tool",
-        item_name_english = "Mann Co. Supply Crate Key"
+        item_name_english = "War Paint"
     },
-    "Flaregun Killstreakifier Basic" : {
-        id = 5793,
+    "Paintkit 277" : {
+        id = 17277,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Wrench Killstreakifier Basic" : {
-        id = 5794,
+    "Paintkit 278" : {
+        id = 17278,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Revolver Killstreakifier Basic" : {
-        id = 5795,
+    "Paintkit 279" : {
+        id = 17279,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Machina Killstreakifier Basic" : {
-        id = 5796,
+    "Paintkit 280" : {
+        id = 17280,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Baby Face Blaster Killstreakifier Basic" : {
-        id = 5797,
+    "Paintkit 281" : {
+        id = 17281,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Huo Long Heatmaker Killstreakifier Basic" : {
-        id = 5798,
+    "Paintkit 282" : {
+        id = 17282,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Loose Cannon Killstreakifier Basic" : {
-        id = 5799,
+    "Paintkit 283" : {
+        id = 17283,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Vaccinator Killstreakifier Basic" : {
-        id = 5800,
+    "Paintkit 284" : {
+        id = 17284,
         item_class = "tool",
-        item_name_english = "Kit"
+        item_name_english = "War Paint"
     },
-    "Air Strike Killstreakifier Basic" : {
-        id = 5801,
+    "Paintkit 285" : {
+        id = 17285,
         item_class = "tool",
-        item_name_english = "Kit"
-    },
-    "Supply Crate Ration 6" : {
-        id = 5802,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Munition"
-    },
-    "Supply Crate Ration 7" : {
-        id = 5803,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Munition"
+        item_name_english = "War Paint"
     },
-    "Righteous Bison Strangifier" : {
-        id = 5804,
+    "Paintkit 286" : {
+        id = 17286,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Summer 2015 Operation Key" : {
-        id = 5805,
+    "Paintkit 287" : {
+        id = 17287,
         item_class = "tool",
-        item_name_english = "Gun Mettle Key"
-    },
-    "Operation Summer 2015 Concealed Killer Case" : {
-        id = 5806,
-        item_class = "supply_crate",
-        item_name_english = "The Concealed Killer Weapons Case"
-    },
-    "Operation Summer 2015 Powerhouse Case" : {
-        id = 5807,
-        item_class = "supply_crate",
-        item_name_english = "The Powerhouse Weapons Case"
-    },
-    "Unused Summer 2015 Operation Pass" : {
-        id = 5808,
-        item_class = "craft_item",
-        item_name_english = "Gun Mettle Campaign Pass"
-    },
-    "Activated Summer 2015 Operation Pass" : {
-        id = 5809,
-        item_class = "craft_item",
-        item_name_english = "Gun Mettle Campaign Coin"
-    },
-    "Concealed Killer Collection Dummy" : {
-        id = 5810,
-        item_class = "craft_item",
-        item_name_english = "Concealed Killer Collection"
-    },
-    "Craftsmann Collection Dummy" : {
-        id = 5811,
-        item_class = "craft_item",
-        item_name_english = "Craftsmann Collection"
-    },
-    "Powerhouse Collection Dummy" : {
-        id = 5812,
-        item_class = "craft_item",
-        item_name_english = "Powerhouse Collection"
-    },
-    "Teufort Collection Dummy" : {
-        id = 5813,
-        item_class = "craft_item",
-        item_name_english = "Teufort Collection"
-    },
-    "Gun Mettle Cosmetics Collection Dummy" : {
-        id = 5814,
-        item_class = "craft_item",
-        item_name_english = "Gun Mettle Cosmetics Collection"
-    },
-    "Gun Mettle Cosmetic Key" : {
-        id = 5816,
-        item_class = "tool",
-        item_name_english = "Gun Mettle Cosmetic Key"
-    },
-    "Gun Mettle Cosmetic Case" : {
-        id = 5817,
-        item_class = "supply_crate",
-        item_name_english = "Gun Mettle Cosmetic Case"
+        item_name_english = "War Paint"
     },
-    "Strange Count Transfer Tool" : {
-        id = 5818,
+    "Paintkit 289" : {
+        id = 17289,
         item_class = "tool",
-        item_name_english = "Strange Count Transfer Tool"
-    },
-    "Unused Invasion Pass" : {
-        id = 5819,
-        item_class = "craft_item",
-        item_name_english = "Invasion Community Update Pass"
-    },
-    "Activated Invasion Pass" : {
-        id = 5820,
-        item_class = "craft_item",
-        item_name_english = "Invasion Community Update Coin"
+        item_name_english = "War Paint"
     },
-    "Invasion Key" : {
-        id = 5821,
+    "Paintkit 290" : {
+        id = 17290,
         item_class = "tool",
-        item_name_english = "Invasion Community Update Key"
-    },
-    "Invasion Case 01" : {
-        id = 5822,
-        item_class = "supply_crate",
-        item_name_english = "Quarantined Collection Case"
-    },
-    "Invasion Case 02" : {
-        id = 5823,
-        item_class = "supply_crate",
-        item_name_english = "Confidential Collection Case"
+        item_name_english = "War Paint"
     },
-    "Invasion Collection Dummy 01" : {
-        id = 5824,
-        item_class = "craft_item",
-        item_name_english = "Quarantined Collection"
-    },
-    "Invasion Collection Dummy 02" : {
-        id = 5825,
-        item_class = "craft_item",
-        item_name_english = "Confidential Collection"
-    },
-    "Activated Halloween Pass" : {
-        id = 5826,
-        item_class = "craft_item",
-        item_name_english = "Soul Gargoyle"
-    },
-    "Halloween 2015 Key" : {
-        id = 5827,
+    "Paintkit 291" : {
+        id = 17291,
         item_class = "tool",
-        item_name_english = "Gargoyle Key"
-    },
-    "Halloween 2015 case" : {
-        id = 5828,
-        item_class = "supply_crate",
-        item_name_english = "Gargoyle Case"
-    },
-    "Unused Operation Tough Break Pass" : {
-        id = 5829,
-        item_class = "craft_item",
-        item_name_english = "Tough Break Campaign Pass"
-    },
-    "Activated Operation Tough Break Pass" : {
-        id = 5830,
-        item_class = "craft_item",
-        item_name_english = "Tough Break Campaign Stamp"
-    },
-    "Tough Break Case 01 Pyroland" : {
-        id = 5831,
-        item_class = "supply_crate",
-        item_name_english = "Pyroland Weapons Case"
-    },
-    "Tough Break Case 02 Warbirds" : {
-        id = 5832,
-        item_class = "supply_crate",
-        item_name_english = "Warbird Weapons Case"
+        item_name_english = "War Paint"
     },
-    "Tough Break Key" : {
-        id = 5833,
+    "Paintkit 292" : {
+        id = 17292,
         item_class = "tool",
-        item_name_english = "Tough Break Key"
+        item_name_english = "War Paint"
     },
-    "Tough Break Collection Dummy 01" : {
-        id = 5834,
-        item_class = "craft_item",
-        item_name_english = "Harvest Collection"
-    },
-    "Tough Break Collection Dummy 02" : {
-        id = 5835,
-        item_class = "craft_item",
-        item_name_english = "Gentlemanne's Collection"
-    },
-    "Tough Break Collection Dummy 03" : {
-        id = 5836,
-        item_class = "craft_item",
-        item_name_english = "Pyroland Collection"
-    },
-    "Tough Break Collection Dummy 04" : {
-        id = 5837,
-        item_class = "craft_item",
-        item_name_english = "Warbird Collection"
-    },
-    "Winter 2015 Mystery Box" : {
-        id = 5838,
-        item_class = "tf_wearable",
-        item_name_english = "Smissmas 2015 Festive Gift"
-    },
-    "Festivizer" : {
-        id = 5839,
+    "Paintkit 293" : {
+        id = 17293,
         item_class = "tool",
-        item_name_english = "Festivizer"
-    },
-    "Tough Break Cosmetics Collection Dummy" : {
-        id = 5840,
-        item_class = "craft_item",
-        item_name_english = "Tough Break Cosmetics Collection"
+        item_name_english = "War Paint"
     },
-    "Tough Break Cosmetic Key" : {
-        id = 5841,
+    "Paintkit 294" : {
+        id = 17294,
         item_class = "tool",
-        item_name_english = "Tough Break Cosmetic Key"
-    },
-    "Tough Break Cosmetic Case" : {
-        id = 5842,
-        item_class = "supply_crate",
-        item_name_english = "Tough Break Cosmetic Case"
+        item_name_english = "War Paint"
     },
-    "Common Stat Clock" : {
-        id = 5843,
+    "Paintkit 295" : {
+        id = 17295,
         item_class = "tool",
-        item_name_english = "Strangifier"
+        item_name_english = "War Paint"
     },
-    "Fall 2013 Acorns Key New" : {
-        id = 5844,
+    "Paintkit 296" : {
+        id = 17296,
         item_class = "tool",
-        item_name_english = "Fall 2013 Acorns Crate Key"
+        item_name_english = "War Paint"
     },
-    "Strongbox Key 2014 New" : {
-        id = 5845,
+    "Paintkit 297" : {
+        id = 17297,
         item_class = "tool",
-        item_name_english = "Mann Co. Strongbox Key"
+        item_name_english = "War Paint"
     },
-    "Short 2014 Key New" : {
-        id = 5846,
+    "Paintkit 400" : {
+        id = 17400,
         item_class = "tool",
-        item_name_english = "Mann Co. Stockpile Crate Key"
+        item_name_english = "War Paint"
     },
-    "Halloween 2015 Key New" : {
-        id = 5847,
+    "Paintkit 401" : {
+        id = 17401,
         item_class = "tool",
-        item_name_english = "Gargoyle Key"
+        item_name_english = "War Paint"
     },
-    "Mayflower Cosmetic Key" : {
-        id = 5848,
+    "Paintkit 402" : {
+        id = 17402,
         item_class = "tool",
-        item_name_english = "Mayflower Cosmetic Key"
+        item_name_english = "War Paint"
     },
-    "Mayflower Cosmetic Case" : {
-        id = 5849,
-        item_class = "supply_crate",
-        item_name_english = "Mayflower Cosmetic Case"
-    },
-    "Keyless Cosmetic Crate Scout" : {
-        id = 5850,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Scout"
-    },
-    "Keyless Cosmetic Crate Sniper" : {
-        id = 5851,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Sniper"
-    },
-    "Keyless Cosmetic Crate Soldier" : {
-        id = 5852,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Soldier"
-    },
-    "Keyless Cosmetic Crate Demoman" : {
-        id = 5853,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Demo"
-    },
-    "Keyless Cosmetic Crate Medic" : {
-        id = 5854,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Medic"
-    },
-    "Keyless Cosmetic Crate Heavy" : {
-        id = 5855,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Heavy"
-    },
-    "Keyless Cosmetic Crate Pyro" : {
-        id = 5856,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Pyro"
-    },
-    "Keyless Cosmetic Crate Spy" : {
-        id = 5857,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Spy"
-    },
-    "Keyless Cosmetic Crate Engineer" : {
-        id = 5858,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Engineer"
-    },
-    "Supply Crate Ration 8" : {
-        id = 5859,
-        item_class = "supply_crate",
-        item_name_english = "Mann Co. Supply Munition"
-    },
-    "Keyless Cosmetic Crate MultiClass" : {
-        id = 5860,
-        item_class = "tf_wearable",
-        item_name_english = "Unlocked Cosmetic Crate Multi-Class"
-    },
-    "Halloween 2016 Case" : {
-        id = 5861,
-        item_class = "supply_crate",
-        item_name_english = "Creepy Crawly Case"
-    },
-    "Halloween 2016 Key" : {
-        id = 5862,
+    "Paintkit 403" : {
+        id = 17403,
         item_class = "tool",
-        item_name_english = "Creepy Crawly Key"
-    },
-    "Halloween 2015 Collection Dummy" : {
-        id = 5863,
-        item_class = "craft_item",
-        item_name_english = "Gargoyle Collection"
-    },
-    "Halloween 2016 Collection Dummy" : {
-        id = 5864,
-        item_class = "craft_item",
-        item_name_english = "Creepy Crawly Collection"
-    },
-    "Keyless Winter 2016 Case" : {
-        id = 5865,
-        item_class = "supply_crate",
-        item_name_english = "Unlocked Winter 2016 Cosmetic Case"
+        item_name_english = "War Paint"
     },
-    "Rainy Day Cosmetic Key" : {
-        id = 5866,
+    "Paintkit 404" : {
+        id = 17404,
         item_class = "tool",
-        item_name_english = "Rainy Day Cosmetic Key"
+        item_name_english = "War Paint"
     },
-    "Rainy Day Cosmetic Case" : {
-        id = 5867,
-        item_class = "supply_crate",
-        item_name_english = "Rainy Day Cosmetic Case"
-    },
-    "Unused Campaign 3 Pass" : {
-        id = 5868,
-        item_class = "craft_item",
-        item_name_english = "Jungle Inferno Campaign Pass"
-    },
-    "Activated Campaign 3 Pass" : {
-        id = 5869,
-        item_class = "tf_wearable_campaign_item",
-        item_name_english = "Jungle Inferno ConTracker"
-    },
-    "Abominable Cosmetic Case" : {
-        id = 5871,
-        item_class = "supply_crate",
-        item_name_english = "Abominable Cosmetic Case"
-    },
-    "Campaign 3 Cosmetics Case 1 Collection Dummy" : {
-        id = 5872,
-        item_class = "craft_item",
-        item_name_english = "Abominable Cosmetic Collection"
-    },
-    "Abominable Cosmetic Key" : {
-        id = 5873,
+    "Paintkit 405" : {
+        id = 17405,
         item_class = "tool",
-        item_name_english = "Abominable Cosmetic Key"
+        item_name_english = "War Paint"
     },
-    "Unleash the Beast Cosmetic Case" : {
-        id = 5875,
-        item_class = "supply_crate",
-        item_name_english = "Unleash the Beast Cosmetic Case"
-    },
-    "Campaign 3 Cosmetics Case 2 Collection Dummy" : {
-        id = 5876,
-        item_class = "craft_item",
-        item_name_english = "Unleash the Beast Cosmetic Collection"
-    },
-    "Unleash the Beast Cosmetic Key" : {
-        id = 5877,
+    "Paintkit 406" : {
+        id = 17406,
         item_class = "tool",
-        item_name_english = "Unleash the Beast Cosmetic Key"
-    },
-    "Campaign 3 Contract Paintkit Collection Dummy 1" : {
-        id = 5878,
-        item_class = "craft_item",
-        item_name_english = "Decorated War Hero Collection"
+        item_name_english = "War Paint"
     },
-    "Campaign 3 Contract Paintkit Collection Dummy 2" : {
-        id = 5879,
-        item_class = "craft_item",
-        item_name_english = "Contract Campaigner Collection"
-    },
-    "Campaign 3 Paintkit Case Collection Dummy 1" : {
-        id = 5880,
-        item_class = "craft_item",
-        item_name_english = "Jungle Jackpot Collection"
-    },
-    "Campaign 3 Paintkit Case Collection Dummy 2" : {
-        id = 5881,
-        item_class = "craft_item",
-        item_name_english = "Infernal Reward Collection"
-    },
-    "Jungle Jackpot War Paint Key" : {
-        id = 5882,
+    "Paintkit 407" : {
+        id = 17407,
         item_class = "tool",
-        item_name_english = "Jungle Jackpot War Paint Key"
-    },
-    "Jungle Jackpot War Paint Case" : {
-        id = 5883,
-        item_class = "supply_crate",
-        item_name_english = "Jungle Jackpot War Paint Case"
+        item_name_english = "War Paint"
     },
-    "Infernal Reward War Paint Key" : {
-        id = 5884,
+    "Paintkit 408" : {
+        id = 17408,
         item_class = "tool",
-        item_name_english = "Infernal Reward War Paint Key"
-    },
-    "Infernal Reward War Paint Case" : {
-        id = 5885,
-        item_class = "supply_crate",
-        item_name_english = "Infernal Reward War Paint Case"
-    },
-    "Self Gift - Stocking Stuffer 2017" : {
-        id = 5886,
-        item_class = "tf_wearable",
-        item_name_english = "Gift-Stuffed Stocking 2017"
+        item_name_english = "War Paint"
     },
-    "Winter 2017 Cosmetic Key" : {
-        id = 5887,
+    "Paintkit 409" : {
+        id = 17409,
         item_class = "tool",
-        item_name_english = "Winter 2017 Cosmetic Key"
+        item_name_english = "War Paint"
     },
-    "Winter 2017 Cosmetic Case" : {
-        id = 5888,
-        item_class = "supply_crate",
-        item_name_english = "Winter 2017 Cosmetic Case"
-    },
-    "Winter 2017 War Paint Key" : {
-        id = 5889,
+    "Paintkit 410" : {
+        id = 17410,
         item_class = "tool",
-        item_name_english = "Winter 2017 War Paint Key"
-    },
-    "Winter 2017 War Paint Case" : {
-        id = 5890,
-        item_class = "supply_crate",
-        item_name_english = "Winter 2017 War Paint Case"
+        item_name_english = "War Paint"
     },
-    "Jungle Inferno Contracts Pass" : {
-        id = 5891,
-        item_class = "craft_item",
-        item_name_english = "Jungle Inferno Contracts Pass"
-    },
-    "Blue Moon Cosmetic Key" : {
-        id = 5892,
+    "Paintkit 411" : {
+        id = 17411,
         item_class = "tool",
-        item_name_english = "Blue Moon Cosmetic Key"
-    },
-    "Blue Moon Cosmetic Case" : {
-        id = 5893,
-        item_class = "supply_crate",
-        item_name_english = "Blue Moon Cosmetic Case"
-    },
-    "Halloween 2018 Case" : {
-        id = 5894,
-        item_class = "supply_crate",
-        item_name_english = "Violet Vermin Case"
+        item_name_english = "War Paint"
     },
-    "Halloween 2018 Key" : {
-        id = 5895,
+    "Paintkit 412" : {
+        id = 17412,
         item_class = "tool",
-        item_name_english = "Violet Vermin Key"
-    },
-    "Halloween 2018 Collection Dummy" : {
-        id = 5896,
-        item_class = "craft_item",
-        item_name_english = "Violet Vermin Collection"
-    },
-    "Scream Fortress 2018 War Paint Case" : {
-        id = 5897,
-        item_class = "supply_crate",
-        item_name_english = "Scream Fortress X War Paint Case"
+        item_name_english = "War Paint"
     },
-    "Scream Fortress 2018 War Paint Key" : {
-        id = 5898,
+    "Paintkit 413" : {
+        id = 17413,
         item_class = "tool",
-        item_name_english = "Scream Fortress X War Paint Key"
+        item_name_english = "War Paint"
     },
-    "Scream Fortress 2018 War Paint Dummy" : {
-        id = 5899,
-        item_class = "craft_item",
-        item_name_english = "Scream Fortress X Collection"
-    },
-    "Self Gift - Stocking Stuffer 2018" : {
-        id = 5900,
-        item_class = "tf_wearable",
-        item_name_english = "Gift-Stuffed Stocking 2018"
-    },
-    "Winter 2018 Cosmetic Key" : {
-        id = 5901,
+    "Paintkit 414" : {
+        id = 17414,
         item_class = "tool",
-        item_name_english = "Winter 2018 Cosmetic Key"
-    },
-    "Winter 2018 Cosmetic Case" : {
-        id = 5902,
-        item_class = "supply_crate",
-        item_name_english = "Winter 2018 Cosmetic Case"
+        item_name_english = "War Paint"
     },
-    "Summer 2019 Cosmetic Key" : {
-        id = 5903,
+    "Paintkit 415" : {
+        id = 17415,
         item_class = "tool",
-        item_name_english = "Summer 2019 Cosmetic Key"
+        item_name_english = "War Paint"
     },
-    "Summer 2019 Cosmetic Case" : {
-        id = 5904,
-        item_class = "supply_crate",
-        item_name_english = "Summer 2019 Cosmetic Case"
-    },
-    "Halloween 2019 Case" : {
-        id = 5905,
-        item_class = "supply_crate",
-        item_name_english = "Spooky Spoils Case"
-    },
-    "Halloween 2019 Key" : {
-        id = 5906,
+    "Paintkit 416" : {
+        id = 17416,
         item_class = "tool",
-        item_name_english = "Spooky Spoils Key"
+        item_name_english = "War Paint"
     },
-    "Halloween 2019 Collection Dummy" : {
-        id = 5907,
-        item_class = "craft_item",
-        item_name_english = "Spooky Spoils Collection"
-    },
-    "Winter 2019 Cosmetic Key" : {
-        id = 5908,
+    "Paintkit 417" : {
+        id = 17417,
         item_class = "tool",
-        item_name_english = "Winter 2019 Cosmetic Key"
-    },
-    "Winter 2019 Cosmetic Case" : {
-        id = 5909,
-        item_class = "supply_crate",
-        item_name_english = "Winter 2019 Cosmetic Case"
-    },
-    "Self Gift - Stocking Stuffer 2019" : {
-        id = 5910,
-        item_class = "tf_wearable",
-        item_name_english = "Gift-Stuffed Stocking 2019"
+        item_name_english = "War Paint"
     },
-    "Winter 2019 War Paint Key" : {
-        id = 5911,
+    "Paintkit 418" : {
+        id = 17418,
         item_class = "tool",
-        item_name_english = "Winter 2019 War Paint Key"
+        item_name_english = "War Paint"
     },
-    "Winter 2019 War Paint Case" : {
-        id = 5912,
-        item_class = "supply_crate",
-        item_name_english = "Winter 2019 War Paint Case"
-    },
-    "Summer 2020 Cosmetic Key" : {
-        id = 5913,
+    "Paintkit 419" : {
+        id = 17419,
         item_class = "tool",
-        item_name_english = "Summer 2020 Cosmetic Key"
-    },
-    "Summer 2020 Cosmetic Case" : {
-        id = 5914,
-        item_class = "supply_crate",
-        item_name_english = "Summer 2020 Cosmetic Case"
+        item_name_english = "War Paint"
     },
-    "Halloween 2020 Case" : {
-        id = 5915,
-        item_class = "supply_crate",
-        item_name_english = "Wicked Windfall Case"
-    },
-    "Halloween 2020 Key" : {
-        id = 5916,
+    "Paintkit 420" : {
+        id = 17420,
         item_class = "tool",
-        item_name_english = "Wicked Windfall Key"
+        item_name_english = "War Paint"
     },
-    "Halloween 2020 Collection Dummy" : {
-        id = 5917,
-        item_class = "craft_item",
-        item_name_english = "Wicked Windfall Collection"
-    },
-    "Scream Fortress 2020 War Paint Case" : {
-        id = 5918,
+    "Warpaint Collection 1 Tier 1 Keyless Case" : {
+        id = 18000,
         item_class = "supply_crate",
-        item_name_english = "Scream Fortress XII War Paint Case"
-    },
-    "Scream Fortress 2020 War Paint Key" : {
-        id = 5919,
-        item_class = "tool",
-        item_name_english = "Scream Fortress XII War Paint Key"
-    },
-    "Scream Fortress 2020 War Paint Dummy" : {
-        id = 5920,
-        item_class = "craft_item",
-        item_name_english = "Scream Fortress XII Collection"
-    },
-    "Winter 2020 Cosmetic Key" : {
-        id = 5921,
-        item_class = "tool",
-        item_name_english = "Winter 2020 Cosmetic Key"
+        item_name_english = "'Decorated War Hero' War Paint\nCivilian Grade Keyless Case"
     },
-    "Winter 2020 Cosmetic Case" : {
-        id = 5922,
+    "Warpaint Collection 1 Tier 2 Keyless Case" : {
+        id = 18001,
         item_class = "supply_crate",
-        item_name_english = "Winter 2020 Cosmetic Case"
+        item_name_english = "'Decorated War Hero' War Paint\nFreelance Grade Keyless Case"
     },
-    "Self Gift - Stocking Stuffer 2020" : {
-        id = 5923,
-        item_class = "tf_wearable",
-        item_name_english = "Gift-Stuffed Stocking 2020"
-    },
-    "Winter 2020 War Paint Key" : {
-        id = 5924,
-        item_class = "tool",
-        item_name_english = "Winter 2020 War Paint Key"
-    },
-    "Winter 2020 War Paint Case" : {
-        id = 5925,
+    "Warpaint Collection 1 Tier 3 Keyless Case" : {
+        id = 18002,
         item_class = "supply_crate",
-        item_name_english = "Winter 2020 War Paint Case"
-    },
-    "Summer 2021 Cosmetic Key" : {
-        id = 5926,
-        item_class = "tool",
-        item_name_english = "Summer 2021 Cosmetic Key"
+        item_name_english = "'Decorated War Hero' War Paint\nMercenary Grade Keyless Case"
     },
-    "Summer 2021 Cosmetic Case" : {
-        id = 5927,
+    "Warpaint Collection 2 Tier 1 Keyless Case" : {
+        id = 18003,
         item_class = "supply_crate",
-        item_name_english = "Summer 2021 Cosmetic Case"
+        item_name_english = "'Contract Campaigner' War Paint\nCivilian Grade Keyless Case"
     },
-    "Halloween 2021 Case" : {
-        id = 5928,
+    "Warpaint Collection 2 Tier 2 Keyless Case" : {
+        id = 18004,
         item_class = "supply_crate",
-        item_name_english = "Crimson Cache Case"
-    },
-    "Halloween 2021 Key" : {
-        id = 5929,
-        item_class = "tool",
-        item_name_english = "Crimson Cache Key"
-    },
-    "Halloween 2021 Collection Dummy" : {
-        id = 5930,
-        item_class = "craft_item",
-        item_name_english = "Crimson Cache Collection"
+        item_name_english = "'Contract Campaigner' War Paint\nFreelance Grade Keyless Case"
     },
-    "Scream Fortress 2021 War Paint Case" : {
-        id = 5931,
+    "Warpaint Collection 2 Tier 3 Keyless Case" : {
+        id = 18005,
         item_class = "supply_crate",
-        item_name_english = "Scream Fortress XIII War Paint Case"
-    },
-    "Scream Fortress 2021 War Paint Key" : {
-        id = 5932,
-        item_class = "tool",
-        item_name_english = "Scream Fortress XIII War Paint Key"
-    },
-    "Scream Fortress 2021 War Paint Dummy" : {
-        id = 5933,
-        item_class = "craft_item",
-        item_name_english = "Scream Fortress XIII Collection"
-    },
-    "Winter 2021 Cosmetic Key" : {
-        id = 5934,
-        item_class = "tool",
-        item_name_english = "Winter 2021 Cosmetic Key"
-    },
-    "Winter 2021 Cosmetic Case" : {
-        id = 5935,
-        item_class = "supply_crate",
-        item_name_english = "Winter 2021 Cosmetic Case"
-    },
-    "Self Gift - Stocking Stuffer 2021" : {
-        id = 5936,
-        item_class = "tf_wearable",
-        item_name_english = "Gift-Stuffed Stocking 2021"
-    },
-    "Summer 2022 Cosmetic Key" : {
-        id = 5937,
-        item_class = "tool",
-        item_name_english = "Summer 2022 Cosmetic Key"
-    },
-    "Summer 2022 Cosmetic Case" : {
-        id = 5938,
-        item_class = "supply_crate",
-        item_name_english = "Summer 2022 Cosmetic Case"
-    },
-    "Halloween 2022 Case" : {
-        id = 5939,
-        item_class = "supply_crate",
-        item_name_english = "Ghoulish Gains Case"
-    },
-    "Halloween 2022 Key" : {
-        id = 5940,
-        item_class = "tool",
-        item_name_english = "Ghoulish Gains Key"
-    },
-    "Halloween 2022 Collection Dummy" : {
-        id = 5941,
-        item_class = "craft_item",
-        item_name_english = "Ghoulish Gains Collection"
-    },
-    "Scream Fortress 2022 War Paint Case" : {
-        id = 5942,
-        item_class = "supply_crate",
-        item_name_english = "Scream Fortress XIV War Paint Case"
-    },
-    "Scream Fortress 2022 War Paint Key" : {
-        id = 5943,
-        item_class = "tool",
-        item_name_english = "Scream Fortress XIV War Paint Key"
-    },
-    "Scream Fortress 2022 War Paint Dummy" : {
-        id = 5944,
-        item_class = "craft_item",
-        item_name_english = "Scream Fortress XIV Collection"
-    },
-    "Self Gift - Stocking Stuffer 2022" : {
-        id = 5945,
-        item_class = "tf_wearable",
-        item_name_english = "Gift-Stuffed Stocking 2022"
-    },
-    "Winter 2022 Cosmetic Key" : {
-        id = 5946,
-        item_class = "tool",
-        item_name_english = "Winter 2022 Cosmetic Key"
-    },
-    "Winter 2022 Cosmetic Case" : {
-        id = 5947,
-        item_class = "supply_crate",
-        item_name_english = "Winter 2022 Cosmetic Case"
-    },
-    "Summer 2023 Cosmetic Key" : {
-        id = 5948,
-        item_class = "tool",
-        item_name_english = "Summer 2023 Cosmetic Key"
-    },
-    "Summer 2023 Cosmetic Case" : {
-        id = 5949,
-        item_class = "supply_crate",
-        item_name_english = "Summer 2023 Cosmetic Case"
-    },
-    "Summer 2023 War Paint Key" : {
-        id = 5950,
-        item_class = "tool",
-        item_name_english = "Summer 2023 War Paint Key"
-    },
-    "Summer 2023 War Paint Case" : {
-        id = 5951,
-        item_class = "supply_crate",
-        item_name_english = "Summer 2023 War Paint Case"
-    },
-    "Halloween 2023 Case" : {
-        id = 5952,
-        item_class = "supply_crate",
-        item_name_english = "Bone-Chilling Bonanza Case"
-    },
-    "Halloween 2023 Key" : {
-        id = 5953,
-        item_class = "tool",
-        item_name_english = "Bone-Chilling Bonanza Key"
-    },
-    "Halloween 2023 Collection Dummy" : {
-        id = 5954,
-        item_class = "craft_item",
-        item_name_english = "Bone-Chilling Bonanza Collection"
-    },
-    "Self Gift - Stocking Stuffer 2023" : {
-        id = 5955,
-        item_class = "tf_wearable",
-        item_name_english = "Gift-Stuffed Stocking 2023"
-    },
-    "Winter 2023 Cosmetic Key" : {
-        id = 5956,
-        item_class = "tool",
-        item_name_english = "Winter 2023 Cosmetic Key"
-    },
-    "Winter 2023 Cosmetic Case" : {
-        id = 5957,
-        item_class = "supply_crate",
-        item_name_english = "Winter 2023 Cosmetic Case"
-    },
-    "Strange Part (Armory)" : {
-        id = 5999,
-        item_class = "tool",
-        item_name_english = "Strange Part"
-    },
-    "Strange Part: Heavies Killed" : {
-        id = 6000,
-        item_class = "tool",
-        item_name_english = "Strange Part: Heavies Killed"
-    },
-    "Strange Part: Demomen Killed" : {
-        id = 6001,
-        item_class = "tool",
-        item_name_english = "Strange Part: Demomen Killed"
-    },
-    "Strange Part: Soldiers Killed" : {
-        id = 6002,
-        item_class = "tool",
-        item_name_english = "Strange Part: Soldiers Killed"
-    },
-    "Strange Part: Scouts Killed" : {
-        id = 6003,
-        item_class = "tool",
-        item_name_english = "Strange Part: Scouts Killed"
-    },
-    "Strange Part: Engineers Killed" : {
-        id = 6004,
-        item_class = "tool",
-        item_name_english = "Strange Part: Engineers Killed"
-    },
-    "Strange Part: Snipers Killed" : {
-        id = 6005,
-        item_class = "tool",
-        item_name_english = "Strange Part: Snipers Killed"
-    },
-    "Strange Part: Pyros Killed" : {
-        id = 6006,
-        item_class = "tool",
-        item_name_english = "Strange Part: Pyros Killed"
-    },
-    "Strange Part: Medics Killed" : {
-        id = 6007,
-        item_class = "tool",
-        item_name_english = "Strange Part: Medics Killed"
-    },
-    "Strange Part: Spies Killed" : {
-        id = 6008,
-        item_class = "tool",
-        item_name_english = "Strange Part: Spies Killed"
-    },
-    "Strange Part: Buildings Destroyed" : {
-        id = 6009,
-        item_class = "tool",
-        item_name_english = "Strange Part: Buildings Destroyed"
-    },
-    "Strange Part: Projectiles Reflected" : {
-        id = 6010,
-        item_class = "tool",
-        item_name_english = "Strange Part: Projectiles Reflected"
-    },
-    "Strange Part: Headshot Kills" : {
-        id = 6011,
-        item_class = "tool",
-        item_name_english = "Strange Part: Headshot Kills"
-    },
-    "Strange Part: Airborne Enemies Killed" : {
-        id = 6012,
-        item_class = "tool",
-        item_name_english = "Strange Part: Airborne Enemies Killed"
-    },
-    "Strange Part: Enemies Gibbed" : {
-        id = 6013,
-        item_class = "tool",
-        item_name_english = "Strange Part: Gib Kills"
-    },
-    "Strange Part: Full Moon Kills" : {
-        id = 6015,
-        item_class = "tool",
-        item_name_english = "Strange Part: Full Moon Kills"
-    },
-    "Strange Part: Domination Kills" : {
-        id = 6016,
-        item_class = "tool",
-        item_name_english = "Strange Part: Domination Kills"
-    },
-    "Strange Part: Revenge Kills" : {
-        id = 6018,
-        item_class = "tool",
-        item_name_english = "Strange Part: Revenge Kills"
-    },
-    "Strange Part: Posthumous Kills" : {
-        id = 6019,
-        item_class = "tool",
-        item_name_english = "Strange Part: Posthumous Kills"
-    },
-    "Strange Part: Allies Extinguished" : {
-        id = 6020,
-        item_class = "tool",
-        item_name_english = "Strange Part: Teammates Extinguished"
-    },
-    "Strange Part: Critical Kills" : {
-        id = 6021,
-        item_class = "tool",
-        item_name_english = "Strange Part: Critical Kills"
-    },
-    "Strange Part: Kills While Explosive-Jumping" : {
-        id = 6022,
-        item_class = "tool",
-        item_name_english = "Strange Part: Kills While Explosive Jumping"
-    },
-    "Strange Part: Ubers Dropped" : {
-        id = 6023,
-        item_class = "tool",
-        item_name_english = "Strange Part: Medics Killed That Have Full ÜberCharge"
-    },
-    "Strange Part: Cloaked Spies Killed" : {
-        id = 6024,
-        item_class = "tool",
-        item_name_english = "Strange Part: Cloaked Spies Killed"
-    },
-    "Strange Part: Sappers Destroyed" : {
-        id = 6025,
-        item_class = "tool",
-        item_name_english = "Strange Part: Sappers Destroyed"
-    },
-    "Strange Part: Robots Destroyed" : {
-        id = 6026,
-        item_class = "tool",
-        item_name_english = "Strange Part: Robots Destroyed"
-    },
-    "Strange Part: Giant Robots Destroyed" : {
-        id = 6028,
-        item_class = "tool",
-        item_name_english = "Strange Part: Giant Robots Destroyed"
-    },
-    "Strange Part: Kills While Low-Health" : {
-        id = 6032,
-        item_class = "tool",
-        item_name_english = "Strange Part: Low-Health Kills"
-    },
-    "Strange Part: Halloween Kills" : {
-        id = 6033,
-        item_class = "tool",
-        item_name_english = "Strange Part: Halloween Kills"
-    },
-    "Strange Part: Robots Destroyed During Halloween" : {
-        id = 6034,
-        item_class = "tool",
-        item_name_english = "Strange Part: Robots Destroyed During Halloween"
-    },
-    "Strange Part: Defender Kills" : {
-        id = 6035,
-        item_class = "tool",
-        item_name_english = "Strange Part: Defender Kills"
-    },
-    "Strange Part: Underwater Kills" : {
-        id = 6036,
-        item_class = "tool",
-        item_name_english = "Strange Part: Underwater Kills"
-    },
-    "Strange Part: Kills While Ubercharged" : {
-        id = 6037,
-        item_class = "tool",
-        item_name_english = "Strange Part: Kills While Übercharged"
-    },
-    "Strange Part: Tanks Destroyed" : {
-        id = 6038,
-        item_class = "tool",
-        item_name_english = "Strange Part: Tanks Destroyed"
-    },
-    "Strange Part: Long-Distance Kills" : {
-        id = 6039,
-        item_class = "tool",
-        item_name_english = "Strange Part: Long-Distance Kills"
-    },
-    "Strange Part: Victory Time Kills" : {
-        id = 6041,
-        item_class = "tool",
-        item_name_english = "Strange Part: Kills During Victory Time"
-    },
-    "Strange Part: Robot Scout Kills" : {
-        id = 6042,
-        item_class = "tool",
-        item_name_english = "Strange Part: Robot Scouts Destroyed"
-    },
-    "Strange Part: Robot Spy Kills" : {
-        id = 6048,
-        item_class = "tool",
-        item_name_english = "Strange Part: Robot Spies Destroyed"
-    },
-    "Strange Part: Taunt Kills" : {
-        id = 6051,
-        item_class = "tool",
-        item_name_english = "Strange Part: Kills with a Taunt Attack"
-    },
-    "Strange Part: Players Wearing Unusuals" : {
-        id = 6052,
-        item_class = "tool",
-        item_name_english = "Strange Part: Unusual-Wearing Player Kills"
-    },
-    "Strange Part: Burning Enemies Killed" : {
-        id = 6053,
-        item_class = "tool",
-        item_name_english = "Strange Part: Burning Enemy Kills"
-    },
-    "Strange Part: Killstreaks Ended" : {
-        id = 6054,
-        item_class = "tool",
-        item_name_english = "Strange Part: Killstreaks Ended"
-    },
-    "Strange Cosmetic Part: Killcam Taunts" : {
-        id = 6055,
-        item_class = "tool",
-        item_name_english = "Strange Cosmetic Part: Freezecam Taunt Appearances"
-    },
-    "Strange Part: Damage Dealt" : {
-        id = 6056,
-        item_class = "tool",
-        item_name_english = "Strange Part: Damage Dealt"
-    },
-    "Strange Cosmetic Part: Fires Survived" : {
-        id = 6057,
-        item_class = "tool",
-        item_name_english = "Strange Cosmetic Part: Fires Survived"
-    },
-    "Strange Part: Ally Healing Done" : {
-        id = 6058,
-        item_class = "tool",
-        item_name_english = "Strange Part: Allied Healing Done"
-    },
-    "Strange Part: Point-Blank Kills" : {
-        id = 6059,
-        item_class = "tool",
-        item_name_english = "Strange Part: Point-Blank Kills"
-    },
-    "Strange Cosmetic Part: Kills" : {
-        id = 6060,
-        item_class = "tool",
-        item_name_english = "Strange Cosmetic Part: Kills"
-    },
-    "Strange Part: Full Health Kills" : {
-        id = 6061,
-        item_class = "tool",
-        item_name_english = "Strange Part: Full Health Kills"
-    },
-    "Strange Part: Taunting Player Kills" : {
-        id = 6062,
-        item_class = "tool",
-        item_name_english = "Strange Part: Taunting Player Kills"
-    },
-    "Strange Part: Non-Critical Kills" : {
-        id = 6063,
-        item_class = "tool",
-        item_name_english = "Strange Part: Not Crit nor MiniCrit Kills"
-    },
-    "Strange Part: Players Hit" : {
-        id = 6064,
-        item_class = "tool",
-        item_name_english = "Strange Part: Player Hits"
-    },
-    "Strange Cosmetic Part: Assists" : {
-        id = 6065,
-        item_class = "tool",
-        item_name_english = "Strange Cosmetic Part: Assists"
-    },
-    "Strange Filter: Coldfront (Community)" : {
-        id = 6500,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Coldfront (Community)"
-    },
-    "Strange Filter: Egypt (Community)" : {
-        id = 6502,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Egypt (Community)"
-    },
-    "Strange Filter: Junction (Community)" : {
-        id = 6503,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Junction (Community)"
-    },
-    "Strange Filter: Mountain Lab (Community)" : {
-        id = 6504,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Mountain Lab (Community)"
-    },
-    "Strange Filter: Steel (Community)" : {
-        id = 6505,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Steel (Community)"
-    },
-    "Strange Filter: Gullywash (Community)" : {
-        id = 6506,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Gullywash (Community)"
-    },
-    "Strange Filter: Turbine (Community)" : {
-        id = 6507,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Turbine (Community)"
-    },
-    "Strange Filter: Fastlane (Community)" : {
-        id = 6508,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Fastlane (Community)"
-    },
-    "Strange Filter: Freight (Community)" : {
-        id = 6509,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Freight (Community)"
-    },
-    "Strange Filter: Yukon (Community)" : {
-        id = 6510,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Yukon (Community)"
-    },
-    "Strange Filter: Harvest (Community)" : {
-        id = 6511,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Harvest (Community)"
-    },
-    "Strange Filter: Lakeside (Community)" : {
-        id = 6512,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Lakeside (Community)"
-    },
-    "Strange Filter: Kong King (Community)" : {
-        id = 6513,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Kong King (Community)"
-    },
-    "Strange Filter: Frontier (Community)" : {
-        id = 6514,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Frontier (Community)"
-    },
-    "Strange Filter: Hoodoo (Community)" : {
-        id = 6515,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Hoodoo (Community)"
-    },
-    "Strange Filter: Nightfall (Community)" : {
-        id = 6516,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Nightfall (Community)"
-    },
-    "Strange Filter: Watchtower (Community)" : {
-        id = 6517,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Watchtower (Community)"
-    },
-    "Strange Filter: Offblast (Community)" : {
-        id = 6518,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Offblast (Community)"
-    },
-    "Strange Filter: Mann Manor (Community)" : {
-        id = 6519,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Mann Manor (Community)"
-    },
-    "Strange Filter: Process (Community)" : {
-        id = 6520,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Process (Community)"
-    },
-    "Strange Filter: Standin (Community)" : {
-        id = 6521,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Standin (Community)"
-    },
-    "Strangifier" : {
-        id = 6522,
-        item_class = "tool",
-        item_name_english = "Strangifier"
-    },
-    "Killstreakifier" : {
-        id = 6523,
-        item_class = "tool",
-        item_name_english = "Kit"
-    },
-    "Strange Filter: Snakewater (Community)" : {
-        id = 6524,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Snakewater (Community)"
-    },
-    "Killstreakifier Rare" : {
-        id = 6526,
-        item_class = "tool",
-        item_name_english = "Kit"
-    },
-    "Killstreakifier Basic" : {
-        id = 6527,
-        item_class = "tool",
-        item_name_english = "Kit"
-    },
-    "Strange Filter: Snowplow (Community)" : {
-        id = 6528,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Snowplow (Community)"
-    },
-    "Strange Filter: Borneo (Community)" : {
-        id = 6529,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Borneo (Community)"
-    },
-    "Strange Filter: Suijin (Community)" : {
-        id = 6530,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Suijin (Community)"
-    },
-    "Strange Filter: 2Fort Invasion (Community)" : {
-        id = 6531,
-        item_class = "tool",
-        item_name_english = "Strange Filter: 2Fort Invasion (Community)"
-    },
-    "Strange Filter: Probed (Community)" : {
-        id = 6532,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Probed (Community)"
-    },
-    "Strange Filter: Watergate (Community)" : {
-        id = 6533,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Watergate (Community)"
-    },
-    "Strange Filter: Byre (Community)" : {
-        id = 6534,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Byre (Community)"
-    },
-    "Strange Filter: Gorge Event (Community)" : {
-        id = 6535,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Gorge Event (Community)"
-    },
-    "Strange Filter: Sunshine Event (Community)" : {
-        id = 6536,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Sinshine (Community)"
-    },
-    "Strange Filter: Moonshine Event (Community)" : {
-        id = 6537,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Moonshine Event (Community)"
-    },
-    "Strange Filter: Millstone Event (Community)" : {
-        id = 6538,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Hellstone (Community)"
-    },
-    "Strange Filter: Snowycoast (Community)" : {
-        id = 6539,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Snowycoast (Community)"
-    },
-    "Strange Filter: Vanguard (Community)" : {
-        id = 6540,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Vanguard (Community)"
-    },
-    "Strange Filter: Landfall (Community)" : {
-        id = 6541,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Landfall (Community)"
-    },
-    "Strange Filter: Highpass (Community)" : {
-        id = 6542,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Highpass (Community)"
-    },
-    "Strange Filter: Competitive" : {
-        id = 6543,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Competitive"
-    },
-    "Strange Filter: Sunshine (Community)" : {
-        id = 6544,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Sunshine (Community)"
-    },
-    "Strange Filter: Metalworks (Community)" : {
-        id = 6545,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Metalworks (Community)"
-    },
-    "Strange Filter: Swiftwater (Community)" : {
-        id = 6546,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Swiftwater (Community)"
-    },
-    "Strange Filter: Maple Ridge Event (Community)" : {
-        id = 6547,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Maple Ridge Event (Community)"
-    },
-    "Strange Filter: Fifth Curve Event (Community)" : {
-        id = 6548,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Brimstone (Community)"
-    },
-    "Strange Filter: Pit of Death (Community)" : {
-        id = 6549,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Pit of Death (Community)"
-    },
-    "Strange Filter: Mossrock (Community)" : {
-        id = 6550,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Mossrock (Community)"
-    },
-    "Strange Filter: Lazarus (Community)" : {
-        id = 6551,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Lazarus (Community)"
-    },
-    "Strange Filter: Banana Bay (Community)" : {
-        id = 6552,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Banana Bay (Community)"
-    },
-    "Strange Filter: Enclosure (Community)" : {
-        id = 6553,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Enclosure (Community)"
-    },
-    "Strange Filter: 2Fort" : {
-        id = 6554,
-        item_class = "tool",
-        item_name_english = "Strange Filter: 2Fort"
-    },
-    "Strange Filter: Dustbowl" : {
-        id = 6555,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Dustbowl"
-    },
-    "Strange Filter: Upward" : {
-        id = 6556,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Upward"
-    },
-    "Strange Filter: Badwater" : {
-        id = 6557,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Badwater"
-    },
-    "Strange Filter: Hightower" : {
-        id = 6558,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Hightower"
-    },
-    "Strange Filter: Goldrush" : {
-        id = 6559,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Goldrush"
-    },
-    "Strange Filter: DeGroot Keep" : {
-        id = 6560,
-        item_class = "tool",
-        item_name_english = "Strange Filter: DeGroot Keep"
-    },
-    "Strange Filter: Thundermountain" : {
-        id = 6561,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Thundermountain"
-    },
-    "Strange Filter: Coaltown" : {
-        id = 6562,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Coaltown"
-    },
-    "Strange Filter: Mannhattan" : {
-        id = 6563,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Mannhattan"
-    },
-    "Strange Filter: Brazil (Community)" : {
-        id = 6564,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Brazil (Community)"
-    },
-    "Strange Filter: Bagel Event (Community)" : {
-        id = 6565,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Cauldron (Community)"
-    },
-    "Strange Filter: Rumble Event (Community)" : {
-        id = 6566,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Gravestone (Community)"
-    },
-    "Strange Filter: Monster Bash (Community)" : {
-        id = 6567,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Monster Bash (Community)"
-    },
-    "Strange Filter: Slasher (Community)" : {
-        id = 6568,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Slasher (Community)"
-    },
-    "Strange Filter: Cursed Cove (Community)" : {
-        id = 6569,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Cursed Cove (Community)"
-    },
-    "Strange Filter: Laughter (Community)" : {
-        id = 6570,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Laughter (Community)"
-    },
-    "Strange Filter: Precipice (Community)" : {
-        id = 6571,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Precipice (Community)"
-    },
-    "Strange Filter: Megalo (Community)" : {
-        id = 6572,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Megalo (Community)"
-    },
-    "Strange Filter: Hassle Castle (Community)" : {
-        id = 6573,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Hassle Castle (Community)"
-    },
-    "Strange Filter: Bloodwater (Community)" : {
-        id = 6574,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Bloodwater (Community)"
-    },
-    "Strange Filter: Undergrove Event (Community)" : {
-        id = 6575,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Moldergrove (Community)"
-    },
-    "Strange Filter: Pier (Community)" : {
-        id = 6576,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Pier (Community)"
-    },
-    "Strange Filter: SnowVille (Community)" : {
-        id = 6577,
-        item_class = "tool",
-        item_name_english = "Strange Filter: SnowVille (Community)"
-    },
-    "Strange Filter: Snowfall (Community)" : {
-        id = 6578,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Snowfall (Community)"
-    },
-    "Strange Filter: Wutville (Community)" : {
-        id = 6579,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Wutville (Community)"
-    },
-    "Strange Filter: Farmageddon (Community)" : {
-        id = 6580,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Farmageddon (Community)"
-    },
-    "Strange Filter: Los Muertos (Community)" : {
-        id = 6581,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Los Muertos (Community)"
-    },
-    "Strange Filter: Erebus (Community)" : {
-        id = 6582,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Erebus (Community)"
-    },
-    "Strange Filter: Terror (Community)" : {
-        id = 6583,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Terror (Community)"
-    },
-    "Strange Filter: Graveyard (Community)" : {
-        id = 6584,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Graveyard (Community)"
-    },
-    "Strange Filter: Sinthetic (Community)" : {
-        id = 6585,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Sinthetic (Community)"
-    },
-    "Strange Filter: Polar (Community)" : {
-        id = 6586,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Polar (Community)"
-    },
-    "Strange Filter: Bread Space (Community)" : {
-        id = 6587,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Bread Space (Community)"
-    },
-    "Strange Filter: Chilly (Community)" : {
-        id = 6588,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Chilly (Community)"
-    },
-    "Strange Filter: Cascade (Community)" : {
-        id = 6589,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Cascade (Community)"
-    },
-    "Strange Filter: Altitude (Community)" : {
-        id = 6590,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Altitude (Community)"
-    },
-    "Strange Filter: Doublefrost (Community)" : {
-        id = 6591,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Doublefrost (Community)"
-    },
-    "Strange Filter: Soul Mill (Community)" : {
-        id = 6592,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Soul-Mill (Community)"
-    },
-    "Strange Filter: Helltrain (Community)" : {
-        id = 6593,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Helltrain (Community)"
-    },
-    "Strange Filter: Bonesaw (Community)" : {
-        id = 6594,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Bonesaw (Community)"
-    },
-    "Strange Filter: Crasher (Community)" : {
-        id = 6595,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Crasher (Community)"
-    },
-    "Strange Filter: Ghoulpit (Community)" : {
-        id = 6596,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Ghoulpit (Community)"
-    },
-    "Strange Filter: Spookeyridge (Community)" : {
-        id = 6597,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Spookeyridge (Community)"
-    },
-    "Strange Filter: Frostwatch (Community)" : {
-        id = 6598,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Frostwatch (Community)"
-    },
-    "Strange Filter: Frostcliff (Community)" : {
-        id = 6599,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Frostcliff (Community)"
-    },
-    "Strange Filter: Rumford (Community)" : {
-        id = 6600,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Rumford (Community)"
-    },
-    "Strange Filter: Frosty (Community)" : {
-        id = 6601,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Frosty (Community)"
-    },
-    "Strange Filter: Coal Pit (Community)" : {
-        id = 6602,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Coal Pit (Community)"
-    },
-    "Strange Filter: Sharkbay (Community)" : {
-        id = 6603,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Sharkbay (Community)"
-    },
-    "Strange Filter: Rotunda (Community)" : {
-        id = 6604,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Rotunda (Community)"
-    },
-    "Strange Filter: Phoenix (Community)" : {
-        id = 6605,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Phoenix (Community)"
-    },
-    "Strange Filter: Cashworks (Community)" : {
-        id = 6606,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Cashworks (Community)"
-    },
-    "Strange Filter: Venice (Community)" : {
-        id = 6607,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Venice (Community)"
-    },
-    "Strange Filter: Reckoner (Community)" : {
-        id = 6608,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Reckoner (Community)"
-    },
-    "Strange Filter: Sulfur (Community)" : {
-        id = 6609,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Sulfur (Community)"
-    },
-    "Strange Filter: Hardwood (Community)" : {
-        id = 6610,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Hardwood (Community)"
-    },
-    "Strange Filter: Pelican Peak (Community)" : {
-        id = 6611,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Pelican Peak (Community)"
-    },
-    "Strange Filter: Selbyen (Community)" : {
-        id = 6612,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Selbyen (Community)"
-    },
-    "Strange Filter: VSH Tiny Rock (Community)" : {
-        id = 6613,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Tiny Rock (Community)"
-    },
-    "Strange Filter: VSH Distillery (Community)" : {
-        id = 6614,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Distillery (Community)"
-    },
-    "Strange Filter: VSH Skirmish (Community)" : {
-        id = 6615,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Skirmish (Community)"
-    },
-    "Strange Filter: VSH Nucleus (Community)" : {
-        id = 6616,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Nucleus VSH (Community)"
-    },
-    "Strange Filter: Perks (Community)" : {
-        id = 6617,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Perks (Community)"
-    },
-    "Strange Filter: Slime (Community)" : {
-        id = 6618,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Slime (Community)"
-    },
-    "Strange Filter: Lava Pit (Community)" : {
-        id = 6619,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Lava Pit (Community)"
-    },
-    "Strange Filter: Mannsylvania (Community)" : {
-        id = 6620,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Mannsylvania (Community)"
-    },
-    "Strange Filter: Sandcastle (Community)" : {
-        id = 6621,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Sandcastle (Community)"
-    },
-    "Strange Filter: Spineyard (Community)" : {
-        id = 6622,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Spineyard (Community)"
-    },
-    "Strange Filter: Corruption (Community)" : {
-        id = 6623,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Corruption (Community)"
-    },
-    "Strange Filter: Murky (Community)" : {
-        id = 6624,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Murky (Community)"
-    },
-    "Strange Filter: Atoll (Community)" : {
-        id = 6625,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Atoll (Community)"
-    },
-    "Strange Filter: Woods (Community)" : {
-        id = 6626,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Woods (Community)"
-    },
-    "Strange Filter: Sanitarium (Community)" : {
-        id = 6627,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Sanitarium (Community)"
-    },
-    "Strange Filter: Devastation (Community)" : {
-        id = 6628,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Devastation (Community)"
-    },
-    "Strange Filter: Snowtower (Community)" : {
-        id = 6629,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Snowtower (Community)"
-    },
-    "Strange Filter: Krampus (Community)" : {
-        id = 6630,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Krampus (Community)"
-    },
-    "Strange Filter: Haarp (Community)" : {
-        id = 6631,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Haarp (Community)"
-    },
-    "Strange Filter: Brew (Community)" : {
-        id = 6632,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Brew (Community)"
-    },
-    "Strange Filter: Hacksaw (Community)" : {
-        id = 6633,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Hacksaw (Community)"
-    },
-    "Strange Filter: Turbine Event (Community)" : {
-        id = 6634,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Turbine Center (Community)"
-    },
-    "Strange Filter: Carrier (Community)" : {
-        id = 6635,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Carrier (Community)"
-    },
-    "Strange Filter: Galleria (Community)" : {
-        id = 6636,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Galleria (Community)"
-    },
-    "Strange Filter: Emerge (Community)" : {
-        id = 6637,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Emerge (Community)"
-    },
-    "Strange Filter: Camber (Community)" : {
-        id = 6638,
-        item_class = "tool",
-        item_name_english = "Strange Filter: Camber (Community)"
-    },
-    "Halloween Transmogrifier: Pyro" : {
-        id = 8926,
-        item_class = "tool",
-        item_name_english = "Pyro Costume Transmogrifier"
-    },
-    "Halloween Transmogrifier: Scout" : {
-        id = 8927,
-        item_class = "tool",
-        item_name_english = "Scout Costume Transmogrifier"
-    },
-    "Halloween Transmogrifier: Soldier" : {
-        id = 8928,
-        item_class = "tool",
-        item_name_english = "Soldier Costume Transmogrifier"
-    },
-    "Halloween Transmogrifier: Demo" : {
-        id = 8929,
-        item_class = "tool",
-        item_name_english = "Demo Costume Transmogrifier"
-    },
-    "Halloween Transmogrifier: Heavy" : {
-        id = 8930,
-        item_class = "tool",
-        item_name_english = "Heavy Costume Transmogrifier"
-    },
-    "Halloween Transmogrifier: Medic" : {
-        id = 8931,
-        item_class = "tool",
-        item_name_english = "Medic Costume Transmogrifier"
-    },
-    "Halloween Transmogrifier: Sniper" : {
-        id = 8932,
-        item_class = "tool",
-        item_name_english = "Sniper Costume Transmogrifier"
-    },
-    "Halloween Transmogrifier: Spy" : {
-        id = 8933,
-        item_class = "tool",
-        item_name_english = "Spy Costume Transmogrifier"
-    },
-    "Halloween Transmogrifier: Engineer" : {
-        id = 8934,
-        item_class = "tool",
-        item_name_english = "Engineer Costume Transmogrifier"
-    },
-    "Halloween Spellbook Page" : {
-        id = 8935,
-        item_class = "tool",
-        item_name_english = "Spellbook Page"
-    },
-    "Halloween Spellbook Page (Achievement)" : {
-        id = 8936,
-        item_class = "tool",
-        item_name_english = "Spellbook Page"
-    },
-    "Eternaween Enchantment" : {
-        id = 8937,
-        item_class = "tool",
-        item_name_english = "Enchantment: Eternaween"
-    },
-    "Glitched Circuit Board" : {
-        id = 8938,
-        item_class = "tf_wearable",
-        item_name_english = "Glitched Circuit Board"
-    },
-    "Taunt Unusualifier" : {
-        id = 9258,
-        item_class = "tool",
-        item_name_english = "Unusualifier"
-    },
-    "Polycount Pyro Bundle" : {
-        id = 2000,
-        item_class = "bundle",
-        item_name_english = "The Gas Jockey's Gear"
-    },
-    "Polycount Spy Bundle" : {
-        id = 2001,
-        item_class = "bundle",
-        item_name_english = "The Saharan Spy"
-    },
-    "Polycount Soldier Bundle" : {
-        id = 2002,
-        item_class = "bundle",
-        item_name_english = "The Tank Buster"
-    },
-    "Polycount Sniper Bundle" : {
-        id = 2003,
-        item_class = "bundle",
-        item_name_english = "The Croc-o-Style Kit"
-    },
-    "Polycount Scout Bundle" : {
-        id = 2004,
-        item_class = "bundle",
-        item_name_english = "The Special Delivery"
-    },
-    "Polycount Bundle" : {
-        id = 2005,
-        item_class = "bundle",
-        item_name_english = "Polycount Pack"
-    },
-    "Halloween Noise Maker Bundle" : {
-        id = 2006,
-        item_class = "bundle",
-        item_name_english = "Noise Maker Bundle"
-    },
-    "Map Token Bundle" : {
-        id = 2007,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Medieval Medic Bundle" : {
-        id = 2008,
-        item_class = "bundle",
-        item_name_english = "The Medieval Medic"
-    },
-    "Hibernating Bear Bundle" : {
-        id = 2009,
-        item_class = "bundle",
-        item_name_english = "The Hibernating Bear"
-    },
-    "Expert's Ordnance Bundle" : {
-        id = 2010,
-        item_class = "bundle",
-        item_name_english = "The Expert's Ordnance"
-    },
-    "Winter Update Bundle" : {
-        id = 2011,
-        item_class = "bundle",
-        item_name_english = "Winter Update Pack"
-    },
-    "Fancy Hat Bundle" : {
-        id = 2012,
-        item_class = "bundle",
-        item_name_english = "Box of Fancy Hats"
-    },
-    "Excessive Bundle of Bundles" : {
-        id = 2013,
-        item_class = "bundle",
-        item_name_english = "A Bargaining Manne's Bundle of Bargains"
-    },
-    "Nasty Weapon Bundle" : {
-        id = 2014,
-        item_class = "bundle",
-        item_name_english = "Pile of Nasty Weapons"
-    },
-    "Map Token Bundle 2" : {
-        id = 2015,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Shogun Complete Bundle" : {
-        id = 2016,
-        item_class = "bundle",
-        item_name_english = "The Emperor's Assortment"
-    },
-    "Japan Charity Bundle" : {
-        id = 2017,
-        item_class = "bundle",
-        item_name_english = "Japan Charity Bundle"
-    },
-    "Scout Starter Bundle" : {
-        id = 2018,
-        item_class = "bundle",
-        item_name_english = "Scout Starter Pack"
-    },
-    "Soldier Starter Bundle" : {
-        id = 2019,
-        item_class = "bundle",
-        item_name_english = "Soldier Starter Pack"
-    },
-    "Pyro Starter Bundle" : {
-        id = 2020,
-        item_class = "bundle",
-        item_name_english = "Pyro Starter Pack"
-    },
-    "Demoman Starter Bundle" : {
-        id = 2021,
-        item_class = "bundle",
-        item_name_english = "Demoman Starter Pack"
-    },
-    "Heavy Starter Bundle" : {
-        id = 2022,
-        item_class = "bundle",
-        item_name_english = "Heavy Starter Pack"
-    },
-    "Engineer Starter Bundle" : {
-        id = 2023,
-        item_class = "bundle",
-        item_name_english = "Engineer Starter Pack"
-    },
-    "Medic Starter Bundle" : {
-        id = 2024,
-        item_class = "bundle",
-        item_name_english = "Medic Starter Pack"
-    },
-    "Sniper Starter Bundle" : {
-        id = 2025,
-        item_class = "bundle",
-        item_name_english = "Sniper Starter Pack"
-    },
-    "Spy Starter Bundle" : {
-        id = 2026,
-        item_class = "bundle",
-        item_name_english = "Spy Starter Pack"
-    },
-    "Mobster Monday Bundle" : {
-        id = 2028,
-        item_class = "bundle",
-        item_name_english = "Mobster Monday Bundle"
-    },
-    "TimbukTuesday Bundle" : {
-        id = 2029,
-        item_class = "bundle",
-        item_name_english = "Timbuk-Tuesday Bundle"
-    },
-    "World War Wednesday Bundle" : {
-        id = 2030,
-        item_class = "bundle",
-        item_name_english = "World War Wednesday Bundle"
-    },
-    "Meet the Medic! Bundle" : {
-        id = 2031,
-        item_class = "bundle",
-        item_name_english = "Meet the Medic! Bundle"
-    },
-    "Uber Bundle" : {
-        id = 2032,
-        item_class = "bundle",
-        item_name_english = "The Uber Update Bundle"
-    },
-    "Summer Sun Bundle" : {
-        id = 2033,
-        item_class = "bundle",
-        item_name_english = "Summer Sun Bundle"
-    },
-    "Dr. Grordbort's Victory Pack" : {
-        id = 2034,
-        item_class = "bundle",
-        item_name_english = "Dr. Grordbort's Victory Pack"
-    },
-    "Dr. Grordbort ComicCon Promo Code" : {
-        id = 2035,
-        item_class = "bundle",
-        item_name_english = "#TF_Bundle_DrGComicCon"
-    },
-    "Bethesda Employee Bundle" : {
-        id = 2036,
-        item_class = "bundle",
-        item_name_english = "Bethesda Employee Bundle"
-    },
-    "Tripwire Employee Bundle" : {
-        id = 2037,
-        item_class = "bundle",
-        item_name_english = "Tripwire Employee Bundle"
-    },
-    "Bethesda Employee Bundle Genuine" : {
-        id = 2038,
-        item_class = "bundle",
-        item_name_english = "Bethesda Employee Bundle"
-    },
-    "Tripwire Employee Bundle Genuine" : {
-        id = 2039,
-        item_class = "bundle",
-        item_name_english = "Tripwire Employee Bundle"
-    },
-    "Deus Ex Promo Bundle" : {
-        id = 2040,
-        item_class = "bundle",
-        item_name_english = "The Manno-Technology Bundle"
-    },
-    "Deus Ex Purity Fist Promo" : {
-        id = 2041,
-        item_class = "bundle",
-        item_name_english = "#TF_Bundle_DeusExFistPromo"
-    },
-    "DOTA2 Gamescom Winners Finals PROMO Bundle" : {
-        id = 2042,
-        item_class = "bundle",
-        item_name_english = "#TF_Bundle_DOTA2GamescomWinnersFinals"
-    },
-    "DOTA2 Gamescom Losers Finals PROMO Bundle" : {
-        id = 2043,
-        item_class = "bundle",
-        item_name_english = "#TF_Bundle_DOTA2GamescomLosersFinals"
-    },
-    "DOTA2 Gamescom Championship PROMO Bundle" : {
-        id = 2044,
-        item_class = "bundle",
-        item_name_english = "#TF_Bundle_DOTA2GamescomChampionship"
-    },
-    "Deus Ex Self-Made Bundle" : {
-        id = 2045,
-        item_class = "bundle",
-        item_name_english = "#TF_Bundle_DeusExSelfMade"
-    },
-    "Shogun Complete Genuine Bundle" : {
-        id = 2046,
-        item_class = "bundle",
-        item_name_english = "The Emperor's Assortment"
-    },
-    "Killer Exclusive PCGamer Bundle" : {
-        id = 2047,
-        item_class = "bundle",
-        item_name_english = "#TF_Bundle_KillerExclusive"
-    },
-    "Deus Ex Contest Bundle" : {
-        id = 2048,
-        item_class = "bundle",
-        item_name_english = "#TF_Bundle_DeusExContest"
-    },
-    "Map Token Bundle 3" : {
-        id = 2049,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Football Manager 2012 Promo Bundle" : {
-        id = 2050,
-        item_class = "bundle",
-        item_name_english = "Footballer's Kit"
-    },
-    "Demo Halloween 2011 Bundle" : {
-        id = 2051,
-        item_class = "bundle",
-        item_name_english = "The Highland Hound Bundle"
-    },
-    "Scout Halloween 2011 Bundle" : {
-        id = 2052,
-        item_class = "bundle",
-        item_name_english = "The Curse-a-Nature Bundle"
-    },
-    "Pyro Halloween 2011 Bundle" : {
-        id = 2053,
-        item_class = "bundle",
-        item_name_english = "The Infernal Imp Bundle"
-    },
-    "Medic Halloween 2011 Bundle" : {
-        id = 2054,
-        item_class = "bundle",
-        item_name_english = "The Mad Doktor Bundle"
-    },
-    "Soldier Halloween 2011 Bundle" : {
-        id = 2055,
-        item_class = "bundle",
-        item_name_english = "The Tin Soldier Bundle"
-    },
-    "Spy Halloween 2011 Bundle" : {
-        id = 2056,
-        item_class = "bundle",
-        item_name_english = "The Invisible Rogue Bundle"
-    },
-    "Heavy Halloween 2011 Bundle" : {
-        id = 2057,
-        item_class = "bundle",
-        item_name_english = "The FrankenHeavy Bundle"
-    },
-    "Sniper Halloween 2011 Bundle" : {
-        id = 2058,
-        item_class = "bundle",
-        item_name_english = "The Camper Van Helsing Bundle"
-    },
-    "Engineer Halloween 2011 Bundle" : {
-        id = 2059,
-        item_class = "bundle",
-        item_name_english = "The Brundle Bundle Bundle"
-    },
-    "Halloween 2011 Bundle" : {
-        id = 2060,
-        item_class = "bundle",
-        item_name_english = "Halloween 2011 Costume Bundle of Bundles"
-    },
-    "Archimedes Promo" : {
-        id = 2061,
-        item_class = "bundle",
-        item_name_english = "Archimedes Promo"
-    },
-    "Dr. Grordbort's Brainiac Pack" : {
-        id = 2062,
-        item_class = "bundle",
-        item_name_english = "Dr. Grordbort's Brainiac Pack"
-    },
-    "Dr. Grordbort's Moonman Pack" : {
-        id = 2063,
-        item_class = "bundle",
-        item_name_english = "Dr. Grordbort's Moonman Pack"
-    },
-    "Dr. Grordbort's Moonbrain Double Pack" : {
-        id = 2064,
-        item_class = "bundle",
-        item_name_english = "Dr. Grordbort's Moonbrain Double Pack"
-    },
-    "Santa's Little Accomplice Bundle" : {
-        id = 2065,
-        item_class = "bundle",
-        item_name_english = "Santa's Little Accomplice Bundle"
-    },
-    "Pet Balloonicorn Promo" : {
-        id = 2066,
-        item_class = "bundle",
-        item_name_english = "Pet Balloonicorn Promo"
-    },
-    "Sandvich Promo" : {
-        id = 2067,
-        item_class = "bundle",
-        item_name_english = "Sandvich Promo"
-    },
-    "Companion Square Promo" : {
-        id = 2068,
-        item_class = "bundle",
-        item_name_english = "Companion Square Promo"
-    },
-    "Soldier Equalizer Escape Plan Bundle" : {
-        id = 2069,
-        item_class = "bundle",
-        item_name_english = "The Pickaxe Pack"
-    },
-    "Robot Chicken Hat Promo" : {
-        id = 2070,
-        item_class = "bundle",
-        item_name_english = "Robot Chicken Hat Promo"
-    },
-    "Urban Professional Bundle" : {
-        id = 2071,
-        item_class = "bundle",
-        item_name_english = "Urban Professional Bundle"
-    },
-    "Dumpster Diver Bundle" : {
-        id = 2072,
-        item_class = "bundle",
-        item_name_english = "Dumpster Diver Bundle"
-    },
-    "Public Enemy Bundle" : {
-        id = 2073,
-        item_class = "bundle",
-        item_name_english = "Public Enemy Bundle"
-    },
-    "Pyromania Bundle" : {
-        id = 2074,
-        item_class = "bundle",
-        item_name_english = "Pyromania Mega Bundle"
-    },
-    "Summer 2012 Community Bundle" : {
-        id = 2075,
-        item_class = "bundle",
-        item_name_english = "Summer 2012 Community Bundle"
-    },
-    "Sleeping Dogs Bundle" : {
-        id = 2076,
-        item_class = "bundle",
-        item_name_english = "Triad Bundle"
-    },
-    "QuakeCon2012 Bundle" : {
-        id = 2077,
-        item_class = "bundle",
-        item_name_english = "QuakeCon Bundle"
-    },
-    "Steam Translation Bundle" : {
-        id = 2078,
-        item_class = "bundle",
-        item_name_english = "Steam Translation Bundle"
-    },
-    "Map Token Bundle 4" : {
-        id = 2079,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Hero Academy Gold Bundle" : {
-        id = 2080,
-        item_class = "bundle",
-        item_name_english = "Hero Academy Gold Pack"
-    },
-    "Sleeping Dogs Employee Bundle" : {
-        id = 2081,
-        item_class = "bundle",
-        item_name_english = "Triad Bundle"
-    },
-    "Portal 2 Soundtrack Promo" : {
-        id = 2082,
-        item_class = "bundle",
-        item_name_english = "Portal 2 Soundtrack Promo"
-    },
-    "Red Heavy Action Figure Promo" : {
-        id = 2083,
-        item_class = "bundle",
-        item_name_english = "Red Heavy Action Figure Promo"
-    },
-    "Red Pyro Action Figure Promo" : {
-        id = 2084,
-        item_class = "bundle",
-        item_name_english = "Red Pyro Action Figure Promo"
-    },
-    "Red Demoman Action Figure Promo" : {
-        id = 2085,
-        item_class = "bundle",
-        item_name_english = "Red Demoman Action Figure Promo"
-    },
-    "Red Soldier Action Figure Promo" : {
-        id = 2086,
-        item_class = "bundle",
-        item_name_english = "Red Soldier Action Figure Promo"
-    },
-    "Blue Heavy Action Figure Promo" : {
-        id = 2087,
-        item_class = "bundle",
-        item_name_english = "Blue Heavy Action Figure Promo"
-    },
-    "Blue Pyro Action Figure Promo" : {
-        id = 2088,
-        item_class = "bundle",
-        item_name_english = "Blue Pyro Action Figure Promo"
-    },
-    "Blue Demoman Action Figure Promo" : {
-        id = 2089,
-        item_class = "bundle",
-        item_name_english = "Blue Demoman Action Figure Promo"
-    },
-    "Blue Soldier Action Figure Promo" : {
-        id = 2090,
-        item_class = "bundle",
-        item_name_english = "Blue Soldier Action Figure Promo"
-    },
-    "Total War Bundle" : {
-        id = 2091,
-        item_class = "bundle",
-        item_name_english = "Total War Bundle"
-    },
-    "Halloween 2012 Community Bundle" : {
-        id = 2092,
-        item_class = "bundle",
-        item_name_english = "Halloween 2012 Community Bundle"
-    },
-    "Name Tag For Bundles" : {
-        id = 2093,
-        item_class = "tool",
-        item_name_english = "Name Tag"
-    },
-    "Scout Starter Bundle No Hat" : {
-        id = 2094,
-        item_class = "bundle",
-        item_name_english = "Scout Starter Pack"
-    },
-    "Soldier Starter Bundle No Hat" : {
-        id = 2095,
-        item_class = "bundle",
-        item_name_english = "Soldier Starter Pack"
-    },
-    "Pyro Starter Bundle No Hat" : {
-        id = 2096,
-        item_class = "bundle",
-        item_name_english = "Pyro Starter Pack"
-    },
-    "Demoman Starter Bundle No Hat" : {
-        id = 2097,
-        item_class = "bundle",
-        item_name_english = "Demoman Starter Pack"
-    },
-    "Heavy Starter Bundle No Hat" : {
-        id = 2098,
-        item_class = "bundle",
-        item_name_english = "Heavy Starter Pack"
-    },
-    "Engineer Starter Bundle No Hat" : {
-        id = 2099,
-        item_class = "bundle",
-        item_name_english = "Engineer Starter Pack"
-    },
-    "Medic Starter Bundle No Hat" : {
-        id = 2100,
-        item_class = "bundle",
-        item_name_english = "Medic Starter Pack"
-    },
-    "Sniper Starter Bundle No Hat" : {
-        id = 2101,
-        item_class = "bundle",
-        item_name_english = "Sniper Starter Pack"
-    },
-    "Spy Starter Bundle No Hat" : {
-        id = 2102,
-        item_class = "bundle",
-        item_name_english = "Spy Starter Pack"
-    },
-    "Purity Fist Promo" : {
-        id = 2103,
-        item_class = "bundle",
-        item_name_english = "Purity Fist Promo"
-    },
-    "The Henchmann Bundle" : {
-        id = 2104,
-        item_class = "bundle",
-        item_name_english = "The Henchmann Bundle"
-    },
-    "The Rockzo Bundle" : {
-        id = 2105,
-        item_class = "bundle",
-        item_name_english = "The Rockzo Bundle"
-    },
-    "The Brutananadilewski Bundle" : {
-        id = 2106,
-        item_class = "bundle",
-        item_name_english = "The Brutananadilewski Bundle"
-    },
-    "The Adult Swim Bundle" : {
-        id = 2107,
-        item_class = "bundle",
-        item_name_english = "The Adult Swim Bundle"
-    },
-    "Winter 2012 Bundle" : {
-        id = 2108,
-        item_class = "bundle",
-        item_name_english = "Smissmas 2012 Bundle"
-    },
-    "Pet Balloonicorn Plush Promo" : {
-        id = 2109,
-        item_class = "bundle",
-        item_name_english = "Pet Balloonicorn Promo"
-    },
-    "Sandvich v2 Promo" : {
-        id = 2110,
-        item_class = "bundle",
-        item_name_english = "Sandvich Promo"
-    },
-    "Oculus Rift Promo" : {
-        id = 2111,
-        item_class = "bundle",
-        item_name_english = "Oculus Rift Promo"
-    },
-    "Red Engineer Action Figure Promo" : {
-        id = 2112,
-        item_class = "bundle",
-        item_name_english = "Red Engineer Action Figure Promo"
-    },
-    "Blue Engineer Action Figure Promo" : {
-        id = 2113,
-        item_class = "bundle",
-        item_name_english = "Blue Engineer Action Figure Promo"
-    },
-    "Red Spy Action Figure Promo" : {
-        id = 2114,
-        item_class = "bundle",
-        item_name_english = "Red Spy Action Figure Promo"
-    },
-    "Blue Spy Action Figure Promo" : {
-        id = 2115,
-        item_class = "bundle",
-        item_name_english = "Blue Spy Action Figure Promo"
-    },
-    "Red Sniper Action Figure Promo" : {
-        id = 2116,
-        item_class = "bundle",
-        item_name_english = "Red Sniper Action Figure Promo"
-    },
-    "Blue Sniper Action Figure Promo" : {
-        id = 2117,
-        item_class = "bundle",
-        item_name_english = "Blue Sniper Action Figure Promo"
-    },
-    "Red Scout Action Figure Promo" : {
-        id = 2118,
-        item_class = "bundle",
-        item_name_english = "Red Scout Action Figure Promo"
-    },
-    "Blue Scout Action Figure Promo" : {
-        id = 2119,
-        item_class = "bundle",
-        item_name_english = "Blue Scout Action Figure Promo"
-    },
-    "Red Medic Action Figure Promo" : {
-        id = 2120,
-        item_class = "bundle",
-        item_name_english = "Red Medic Action Figure Promo"
-    },
-    "Blue Medic Action Figure Promo" : {
-        id = 2121,
-        item_class = "bundle",
-        item_name_english = "Blue Medic Action Figure Promo"
-    },
-    "Team Fortress Chess Promo" : {
-        id = 2122,
-        item_class = "bundle",
-        item_name_english = "Team Fortress Chess Promo"
-    },
-    "Map Token Bundle 5" : {
-        id = 2123,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "The Byzantine Bundle" : {
-        id = 2124,
-        item_class = "bundle",
-        item_name_english = "The Byzantine Bundle"
-    },
-    "Map Token Bundle 6" : {
-        id = 2125,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Halloween 2013 Everything Bundle" : {
-        id = 2126,
-        item_class = "bundle",
-        item_name_english = "Halloween 2013 Community Bundle"
-    },
-    "TF2mixup Community Event 2013 Promo" : {
-        id = 2127,
-        item_class = "bundle",
-        item_name_english = "TF2mixup Community Event 2013 Promo"
-    },
-    "Robot Heavy Collectible Figure Promo" : {
-        id = 2128,
-        item_class = "bundle",
-        item_name_english = "Robot Heavy Collectible Figure Promo"
-    },
-    "Love & War Taunt Bundle" : {
-        id = 2129,
-        item_class = "bundle",
-        item_name_english = "Love And War Taunts Bundle"
-    },
-    "Love & War Weapons Bundle" : {
-        id = 2130,
-        item_class = "bundle",
-        item_name_english = "Love And War Weapons Bundle"
-    },
-    "Love & War Cosmetics Bundle" : {
-        id = 2131,
-        item_class = "bundle",
-        item_name_english = "Love And War Cosmetics Bundle"
-    },
-    "Spycrab Promo" : {
-        id = 2132,
-        item_class = "bundle",
-        item_name_english = "Spycrab Promo"
-    },
-    "RPS Promo" : {
-        id = 2133,
-        item_class = "bundle",
-        item_name_english = "RPS Promo"
-    },
-    "Alien: Isolation Promo Bundle" : {
-        id = 2134,
-        item_class = "bundle",
-        item_name_english = "Alien: Isolation Promo"
-    },
-    "Halloween 2014 Everything Bundle" : {
-        id = 2135,
-        item_class = "bundle",
-        item_name_english = "Halloween 2014 Community Bundle"
-    },
-    "Robot Pyro Collectible Figure Promo" : {
-        id = 2136,
-        item_class = "bundle",
-        item_name_english = "Robot Pyro Collectible Figure Promo"
-    },
-    "TF2mixup Community Event 2014 Promo" : {
-        id = 2137,
-        item_class = "bundle",
-        item_name_english = "TF2mixup Community Event 2014 Promo"
-    },
-    "Map Token Bundle 7" : {
-        id = 2138,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 8" : {
-        id = 2139,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 9" : {
-        id = 2140,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Yogscast Jingle Jam 2015 Promo" : {
-        id = 2141,
-        item_class = "bundle",
-        item_name_english = "Yogscast Jingle Jam 2015 Promo"
-    },
-    "Batman Arkham Knight Promo Bundle" : {
-        id = 2142,
-        item_class = "bundle",
-        item_name_english = "Batman Arkham Knight Promo"
-    },
-    "Map Token Bundle 10" : {
-        id = 2143,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Tough Break Community Maps Bundle" : {
-        id = 2144,
-        item_class = "bundle",
-        item_name_english = "Tough Break Community Maps Bundle"
-    },
-    "Love & War Cosmetics Bundle New" : {
-        id = 2145,
-        item_class = "bundle",
-        item_name_english = "Love And War Cosmetics Bundle"
-    },
-    "Scout Starter Bundle v2" : {
-        id = 2146,
-        item_class = "bundle",
-        item_name_english = "Scout Starter Pack"
-    },
-    "Soldier Starter Bundle v2" : {
-        id = 2147,
-        item_class = "bundle",
-        item_name_english = "Soldier Starter Pack"
-    },
-    "Pyro Starter Bundle v2" : {
-        id = 2148,
-        item_class = "bundle",
-        item_name_english = "Pyro Starter Pack"
-    },
-    "Demoman Starter Bundle v2" : {
-        id = 2149,
-        item_class = "bundle",
-        item_name_english = "Demoman Starter Pack"
-    },
-    "Heavy Starter Bundle v2" : {
-        id = 2150,
-        item_class = "bundle",
-        item_name_english = "Heavy Starter Pack"
-    },
-    "Engineer Starter Bundle v2" : {
-        id = 2151,
-        item_class = "bundle",
-        item_name_english = "Engineer Starter Pack"
-    },
-    "Medic Starter Bundle v2" : {
-        id = 2152,
-        item_class = "bundle",
-        item_name_english = "Medic Starter Pack"
-    },
-    "Sniper Starter Bundle v2" : {
-        id = 2153,
-        item_class = "bundle",
-        item_name_english = "Sniper Starter Pack"
-    },
-    "Spy Starter Bundle v2" : {
-        id = 2154,
-        item_class = "bundle",
-        item_name_english = "Spy Starter Pack"
-    },
-    "Map Token Bundle 11" : {
-        id = 2155,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 12" : {
-        id = 2156,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Yogscast Jingle Jam 2016 Promo" : {
-        id = 2157,
-        item_class = "bundle",
-        item_name_english = "Yogscast Jingle Jam 2016 Promo"
-    },
-    "ChefSteps Joule Promo" : {
-        id = 2158,
-        item_class = "bundle",
-        item_name_english = "ChefSteps Joule Promo"
-    },
-    "Team Fortress 2 Soundtrack Promo" : {
-        id = 2159,
-        item_class = "bundle",
-        item_name_english = "Team Fortress 2 Soundtrack Promo"
-    },
-    "Map Token Bundle 13" : {
-        id = 2160,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Yogscast Jingle Jam 2017 Promo" : {
-        id = 2161,
-        item_class = "bundle",
-        item_name_english = "Yogscast Jingle Jam 2017 Promo"
-    },
-    "Map Token Bundle 14" : {
-        id = 2162,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 15" : {
-        id = 2163,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 16" : {
-        id = 2164,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 17" : {
-        id = 2165,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 18" : {
-        id = 2166,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 19" : {
-        id = 2167,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 20" : {
-        id = 2168,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 21" : {
-        id = 2169,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Team Fortress 2 Soundtrack Promo Untradable" : {
-        id = 2170,
-        item_class = "bundle",
-        item_name_english = "Team Fortress 2 Soundtrack Promo"
-    },
-    "Map Token Bundle 22" : {
-        id = 2171,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 23" : {
-        id = 2172,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Map Token Bundle 24" : {
-        id = 2173,
-        item_class = "bundle",
-        item_name_english = "Map Stamps Collection"
-    },
-    "Halloween Spell: Paint 1" : {
-        id = 8900,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Putrescent Pigmentation"
-    },
-    "Halloween Spell: Paint 2" : {
-        id = 8901,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Die Job"
-    },
-    "Halloween Spell: Paint 3" : {
-        id = 8902,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Chromatic Corruption"
-    },
-    "Halloween Spell: Paint 4" : {
-        id = 8903,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Spectral Spectrum"
-    },
-    "Halloween Spell: Paint 5" : {
-        id = 8904,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Sinister Staining"
-    },
-    "Halloween Spell: Soldier Voice" : {
-        id = 8905,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Soldier's Booming Bark"
-    },
-    "Halloween Spell: Scout Voice" : {
-        id = 8906,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Scout's Spectral Snarl"
-    },
-    "Halloween Spell: Sniper Voice" : {
-        id = 8907,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Sniper's Deep Downunder Drawl"
-    },
-    "Halloween Spell: Engineer Voice" : {
-        id = 8908,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Engineer's Gravelly Growl"
-    },
-    "Halloween Spell: Heavy Voice" : {
-        id = 8909,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Heavy's Bottomless Bass"
-    },
-    "Halloween Spell: Demoman Voice" : {
-        id = 8910,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Demoman's Cadaverous Croak"
-    },
-    "Halloween Spell: Pyro Voice" : {
-        id = 8911,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Pyro's Muffled Moan"
-    },
-    "Halloween Spell: Spy Voice" : {
-        id = 8912,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Spy's Creepy Croon"
-    },
-    "Halloween Spell: Medic Voice" : {
-        id = 8913,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Medic's Blood-curdling Bellow"
-    },
-    "Halloween Spell: Team Spirit Footprints" : {
-        id = 8914,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Team Spirit Footprints"
-    },
-    "Halloween Spell: Gangreen Footprints" : {
-        id = 8915,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Gangreen Footprints"
-    },
-    "Halloween Spell: Corpse Gray Footprints" : {
-        id = 8916,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Corpse Gray Footprints"
-    },
-    "Halloween Spell: Violent Violet Footprints" : {
-        id = 8917,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Violent Violet Footprints"
-    },
-    "Halloween Spell: Rotten Orange Footprints" : {
-        id = 8918,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Rotten Orange Footprints"
-    },
-    "Halloween Spell: Bruised Purple Footprints" : {
-        id = 8919,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Bruised Purple Footprints"
-    },
-    "Halloween Spell: Headless Horseshoes" : {
-        id = 8920,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Headless Horseshoes"
-    },
-    "Halloween Spell: Exorcism" : {
-        id = 8921,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Exorcism"
-    },
-    "Halloween Spell: Squash Rockets" : {
-        id = 8922,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Squash Rockets"
-    },
-    "Halloween Spell: Gourd Grenades" : {
-        id = 8923,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Gourd Grenades"
-    },
-    "Halloween Spell: Sentry Quad-Pumpkins" : {
-        id = 8924,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Sentry Quad-Pumpkins"
-    },
-    "Halloween Spell: Spectral Flame" : {
-        id = 8925,
-        item_class = "tool",
-        item_name_english = "Halloween Spell: Spectral Flame"
+        item_name_english = "'Contract Campaigner' War Paint\nMercenary Grade Keyless Case"
     },
     "Cosmetic Strangifier Recipe 1" : {
         id = 20000,
         item_class = "tool",
-        item_name_english = "Recipe"
+        item_name_english = "Chemistry Set"
     },
     "Cosmetic Strangifier Recipe 1 Rare" : {
         id = 20001,
         item_class = "tool",
-        item_name_english = "Recipe"
+        item_name_english = "Chemistry Set"
     },
     "MvM Killstreak Recipe 1" : {
         id = 20002,
         item_class = "tool",
-        item_name_english = "Recipe"
+        item_name_english = "Fabricator"
     },
     "MvM Killstreak Recipe 2" : {
         id = 20003,
         item_class = "tool",
-        item_name_english = "Recipe"
+        item_name_english = "Fabricator"
     },
     "Cosmetic Strangifier Recipe 2" : {
         id = 20005,
         item_class = "tool",
-        item_name_english = "Recipe"
+        item_name_english = "Chemistry Set"
     },
     "Collector Recipe 1" : {
         id = 20006,
         item_class = "tool",
-        item_name_english = "Recipe"
+        item_name_english = "Chemistry Set"
     },
     "Festive Collector Recipe 2013" : {
         id = 20007,
         item_class = "tool",
-        item_name_english = "Recipe"
+        item_name_english = "Chemistry Set"
     },
     "Rebuild Strange Weapon Recipe" : {
         id = 20008,
         item_class = "tool",
-        item_name_english = "Recipe"
+        item_name_english = "Chemistry Set"
     },
     "Cosmetic Strangifier Recipe 3" : {
         id = 20009,
         item_class = "tool",
-        item_name_english = "Recipe"
+        item_name_english = "Chemistry Set"
+    },
+    "quest25000" : {
+        id = 25000,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25001" : {
+        id = 25001,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25002" : {
+        id = 25002,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25003" : {
+        id = 25003,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25004" : {
+        id = 25004,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25005" : {
+        id = 25005,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25006" : {
+        id = 25006,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25007" : {
+        id = 25007,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25008" : {
+        id = 25008,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25009" : {
+        id = 25009,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25010" : {
+        id = 25010,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25011" : {
+        id = 25011,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25012" : {
+        id = 25012,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25013" : {
+        id = 25013,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25014" : {
+        id = 25014,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25015" : {
+        id = 25015,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25016" : {
+        id = 25016,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25017" : {
+        id = 25017,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25018" : {
+        id = 25018,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25019" : {
+        id = 25019,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25020" : {
+        id = 25020,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25021" : {
+        id = 25021,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25022" : {
+        id = 25022,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25023" : {
+        id = 25023,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25024" : {
+        id = 25024,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25025" : {
+        id = 25025,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25026" : {
+        id = 25026,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25027" : {
+        id = 25027,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25028" : {
+        id = 25028,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25029" : {
+        id = 25029,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25030" : {
+        id = 25030,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25031" : {
+        id = 25031,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25032" : {
+        id = 25032,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25033" : {
+        id = 25033,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25034" : {
+        id = 25034,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25035" : {
+        id = 25035,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25036" : {
+        id = 25036,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25037" : {
+        id = 25037,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25038" : {
+        id = 25038,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25039" : {
+        id = 25039,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25040" : {
+        id = 25040,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25041" : {
+        id = 25041,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25042" : {
+        id = 25042,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25043" : {
+        id = 25043,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25044" : {
+        id = 25044,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25045" : {
+        id = 25045,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25046" : {
+        id = 25046,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25047" : {
+        id = 25047,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25048" : {
+        id = 25048,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25049" : {
+        id = 25049,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25050" : {
+        id = 25050,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25051" : {
+        id = 25051,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "quest25052" : {
+        id = 25052,
+        item_class = "tool",
+        item_name_english = ""
+    },
+    "The Electric Badge-aloo" : {
+        id = 30000,
+        item_class = "tf_wearable",
+        item_name_english = "Electric Badge-aloo"
+    },
+    "Modest Metal Pile of Scrap" : {
+        id = 30001,
+        item_class = "tf_wearable",
+        item_name_english = "Modest Metal Pile of Scrap"
+    },
+    "Letch's LED" : {
+        id = 30002,
+        item_class = "tf_wearable",
+        item_name_english = "Letch's LED"
+    },
+    "The Galvanized Gibus" : {
+        id = 30003,
+        item_class = "tf_wearable",
+        item_name_english = "Galvanized Gibus"
+    },
+    "Soldered Sensei" : {
+        id = 30004,
+        item_class = "tf_wearable",
+        item_name_english = "Soldered Sensei"
+    },
+    "Shooter's Tin Topi" : {
+        id = 30005,
+        item_class = "tf_wearable",
+        item_name_english = "Shooter's Tin Topi"
+    },
+    "Noble Nickel Amassment of Hats" : {
+        id = 30006,
+        item_class = "tf_wearable",
+        item_name_english = "Noble Nickel Amassment of Hats"
+    },
+    "Base Metal Billycock" : {
+        id = 30007,
+        item_class = "tf_wearable",
+        item_name_english = "Base Metal Billycock"
+    },
+    "Towering Titanium Pillar of Hats" : {
+        id = 30008,
+        item_class = "tf_wearable",
+        item_name_english = "Towering Titanium Pillar of Hats"
+    },
+    "The Megapixel Beard" : {
+        id = 30009,
+        item_class = "tf_wearable",
+        item_name_english = "Megapixel Beard"
+    },
+    "The HDMI Patch" : {
+        id = 30010,
+        item_class = "tf_wearable",
+        item_name_english = "HDMI Patch"
+    },
+    "The Bolted Bombardier" : {
+        id = 30011,
+        item_class = "tf_wearable",
+        item_name_english = "Bolted Bombardier"
+    },
+    "The Titanium Towel" : {
+        id = 30012,
+        item_class = "tf_wearable",
+        item_name_english = "Titanium Towel"
+    },
+    "The Gridiron Guardian" : {
+        id = 30013,
+        item_class = "tf_wearable",
+        item_name_english = "Gridiron Guardian"
+    },
+    "Tyrantium Helmet" : {
+        id = 30014,
+        item_class = "tf_wearable",
+        item_name_english = "Tyrantium Helmet"
+    },
+    "Battery Canteens" : {
+        id = 30015,
+        item_class = "tf_powerup_bottle",
+        item_name_english = "Battery Canteens"
+    },
+    "The FR-0" : {
+        id = 30016,
+        item_class = "tf_wearable",
+        item_name_english = "FR-0"
+    },
+    "Steel Shako" : {
+        id = 30017,
+        item_class = "tf_wearable",
+        item_name_english = "Steel Shako"
+    },
+    "The Bot Dogger" : {
+        id = 30018,
+        item_class = "tf_wearable",
+        item_name_english = "Bot Dogger"
+    },
+    "Ye Oiled Baker Boy" : {
+        id = 30019,
+        item_class = "tf_wearable",
+        item_name_english = "Ye Oiled Baker Boy"
+    },
+    "The Scrap Sack" : {
+        id = 30020,
+        item_class = "tf_wearable",
+        item_name_english = "Scrap Sack"
+    },
+    "The Pure Tin Capotain" : {
+        id = 30021,
+        item_class = "tf_wearable",
+        item_name_english = "Pure Tin Capotain"
+    },
+    "Plumber's Pipe" : {
+        id = 30022,
+        item_class = "tf_wearable",
+        item_name_english = "Plumber's Pipe"
+    },
+    "Teddy Robobelt" : {
+        id = 30023,
+        item_class = "tf_wearable",
+        item_name_english = "Teddy Robobelt"
+    },
+    "The Cyborg Stunt Helmet" : {
+        id = 30024,
+        item_class = "tf_wearable",
+        item_name_english = "Cyborg Stunt Helmet"
+    },
+    "The Electric Escorter" : {
+        id = 30025,
+        item_class = "tf_wearable",
+        item_name_english = "Electric Escorter"
+    },
+    "Full Metal Drill Hat" : {
+        id = 30026,
+        item_class = "tf_wearable",
+        item_name_english = "Full Metal Drill Hat"
+    },
+    "The Bolt Boy" : {
+        id = 30027,
+        item_class = "tf_wearable",
+        item_name_english = "Bolt Boy"
+    },
+    "The Metal Slug" : {
+        id = 30028,
+        item_class = "tf_wearable",
+        item_name_english = "Metal Slug"
+    },
+    "The Broadband Bonnet" : {
+        id = 30029,
+        item_class = "tf_wearable",
+        item_name_english = "Broadband Bonnet"
+    },
+    "Bonk Leadwear" : {
+        id = 30030,
+        item_class = "tf_wearable",
+        item_name_english = "Bonk Leadwear"
+    },
+    "The Plug-In Prospector" : {
+        id = 30031,
+        item_class = "tf_wearable",
+        item_name_english = "Plug-In Prospector"
+    },
+    "The Rusty Reaper" : {
+        id = 30032,
+        item_class = "tf_wearable",
+        item_name_english = "Rusty Reaper"
+    },
+    "Soldier's Sparkplug" : {
+        id = 30033,
+        item_class = "tf_wearable",
+        item_name_english = "Soldier's Sparkplug"
+    },
+    "The Bolted Bicorne" : {
+        id = 30034,
+        item_class = "tf_wearable",
+        item_name_english = "Bolted Bicorne"
+    },
+    "The Timeless Topper" : {
+        id = 30035,
+        item_class = "tf_wearable",
+        item_name_english = "Timeless Topper"
+    },
+    "The Filamental" : {
+        id = 30036,
+        item_class = "tf_wearable",
+        item_name_english = "Filamental"
+    },
+    "The Strontium Stove Pipe" : {
+        id = 30037,
+        item_class = "tf_wearable",
+        item_name_english = "Strontium Stove Pipe"
+    },
+    "Firewall Helmet" : {
+        id = 30038,
+        item_class = "tf_wearable",
+        item_name_english = "Firewall Helmet"
+    },
+    "Respectless Robo-Glove" : {
+        id = 30039,
+        item_class = "tf_wearable",
+        item_name_english = "Respectless Robo-Glove"
+    },
+    "Pyro's Boron Beanie" : {
+        id = 30040,
+        item_class = "tf_wearable",
+        item_name_english = "Pyro's Boron Beanie"
+    },
+    "Halogen Head Lamp" : {
+        id = 30041,
+        item_class = "tf_wearable",
+        item_name_english = "Halogen Head Lamp"
+    },
+    "Platinum Pickelhaube" : {
+        id = 30042,
+        item_class = "tf_wearable",
+        item_name_english = "Platinum Pickelhaube"
+    },
+    "The Virus Doctor" : {
+        id = 30043,
+        item_class = "tf_wearable",
+        item_name_english = "Virus Doctor"
+    },
+    "Texas Tin-Gallon" : {
+        id = 30044,
+        item_class = "tf_wearable",
+        item_name_english = "Texas Tin-Gallon"
+    },
+    "Titanium Tyrolean" : {
+        id = 30045,
+        item_class = "tf_wearable",
+        item_name_english = "Titanium Tyrolean"
+    },
+    "Practitioner's Processing Mask" : {
+        id = 30046,
+        item_class = "tf_wearable",
+        item_name_english = "Practitioner's Processing Mask"
+    },
+    "Bootleg Base Metal Billycock" : {
+        id = 30047,
+        item_class = "tf_wearable",
+        item_name_english = "Bootleg Base Metal Billycock"
+    },
+    "Mecha-Medes" : {
+        id = 30048,
+        item_class = "tf_wearable",
+        item_name_english = "Mecha-Medes"
+    },
+    "The Tungsten Toque" : {
+        id = 30049,
+        item_class = "tf_wearable",
+        item_name_english = "Tungsten Toque"
+    },
+    "The Steam Pipe" : {
+        id = 30050,
+        item_class = "tf_wearable",
+        item_name_english = "Steam Pipe"
+    },
+    "The Data Mining Light" : {
+        id = 30051,
+        item_class = "tf_wearable",
+        item_name_english = "Data Mining Light"
+    },
+    "The Byte'd Beak" : {
+        id = 30052,
+        item_class = "tf_wearable",
+        item_name_english = "Byte'd Beak"
+    },
+    "The Googol Glass Eyes" : {
+        id = 30053,
+        item_class = "tf_wearable",
+        item_name_english = "Googol Glass Eyes"
+    },
+    "The Bunsen Brave" : {
+        id = 30054,
+        item_class = "tf_wearable",
+        item_name_english = "Bunsen Brave"
+    },
+    "The Scrumpy Strongbox" : {
+        id = 30055,
+        item_class = "tf_wearable",
+        item_name_english = "Scrumpy Strongbox"
+    },
+    "The Dual-Core Devil Doll" : {
+        id = 30056,
+        item_class = "tf_wearable",
+        item_name_english = "Dual-Core Devil Doll"
+    },
+    "The Bolted Birdcage" : {
+        id = 30057,
+        item_class = "tf_wearable",
+        item_name_english = "Bolted Birdcage"
+    },
+    "The Crosslinker's Coil" : {
+        id = 30058,
+        item_class = "tf_wearable",
+        item_name_english = "Crosslinker's Coil"
+    },
+    "The Beastly Bonnet" : {
+        id = 30059,
+        item_class = "tf_wearable",
+        item_name_english = "Beastly Bonnet"
+    },
+    "The Cheet Sheet" : {
+        id = 30060,
+        item_class = "tf_wearable",
+        item_name_english = "Cheet Sheet"
+    },
+    "The Tartantaloons" : {
+        id = 30061,
+        item_class = "tf_wearable",
+        item_name_english = "Tartantaloons"
+    },
+    "The Steel Sixpack" : {
+        id = 30062,
+        item_class = "tf_wearable",
+        item_name_english = "Steel Sixpack"
+    },
+    "The Centurion" : {
+        id = 30063,
+        item_class = "tf_wearable",
+        item_name_english = "Centurion"
+    },
+    "The Tartan Shade" : {
+        id = 30064,
+        item_class = "tf_wearable",
+        item_name_english = "Tartan Shade"
+    },
+    "The Hardy Laurel" : {
+        id = 30065,
+        item_class = "tf_wearable",
+        item_name_english = "Hardy Laurel"
+    },
+    "The Brotherhood of Arms" : {
+        id = 30066,
+        item_class = "tf_wearable",
+        item_name_english = "Brotherhood of Arms"
+    },
+    "The Well-Rounded Rifleman" : {
+        id = 30067,
+        item_class = "tf_wearable",
+        item_name_english = "Well-Rounded Rifleman"
+    },
+    "The Breakneck Baggies" : {
+        id = 30068,
+        item_class = "tf_wearable",
+        item_name_english = "Breakneck Baggies"
+    },
+    "The Powdered Practitioner" : {
+        id = 30069,
+        item_class = "tf_wearable",
+        item_name_english = "Powdered Practitioner"
+    },
+    "The Pocket Pyro" : {
+        id = 30070,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Pyro"
+    },
+    "The Cloud Crasher" : {
+        id = 30071,
+        item_class = "tf_wearable",
+        item_name_english = "Cloud Crasher"
+    },
+    "The Pom-Pommed Provocateur" : {
+        id = 30072,
+        item_class = "tf_wearable",
+        item_name_english = "Pom-Pommed Provocateur"
+    },
+    "The Dark Age Defender" : {
+        id = 30073,
+        item_class = "tf_wearable",
+        item_name_english = "Dark Age Defender"
+    },
+    "The Tyurtlenek" : {
+        id = 30074,
+        item_class = "tf_wearable",
+        item_name_english = "Tyurtlenek"
+    },
+    "The Mair Mask" : {
+        id = 30075,
+        item_class = "tf_wearable",
+        item_name_english = "Mair Mask"
+    },
+    "The Bigg Mann on Campus" : {
+        id = 30076,
+        item_class = "tf_wearable",
+        item_name_english = "Bigg Mann on Campus"
+    },
+    "The Cool Cat Cardigan" : {
+        id = 30077,
+        item_class = "tf_wearable",
+        item_name_english = "Cool Cat Cardigan"
+    },
+    "Greased Lightning" : {
+        id = 30078,
+        item_class = "tf_wearable",
+        item_name_english = "Greased Lightning"
+    },
+    "The Red Army Robin" : {
+        id = 30079,
+        item_class = "tf_wearable",
+        item_name_english = "Red Army Robin"
+    },
+    "The Heavy-Weight Champ" : {
+        id = 30080,
+        item_class = "tf_wearable",
+        item_name_english = "Heavy-Weight Champ"
+    },
+    "The Tsarboosh" : {
+        id = 30081,
+        item_class = "tf_wearable",
+        item_name_english = "Tsarboosh"
+    },
+    "The Glasgow Great Helm" : {
+        id = 30082,
+        item_class = "tf_wearable",
+        item_name_english = "Glasgow Great Helm"
+    },
+    "The Caffeine Cooler" : {
+        id = 30083,
+        item_class = "tf_wearable",
+        item_name_english = "Caffeine Cooler"
+    },
+    "The Half-Pipe Hurdler" : {
+        id = 30084,
+        item_class = "tf_wearable",
+        item_name_english = "Half-Pipe Hurdler"
+    },
+    "The Macho Mann" : {
+        id = 30085,
+        item_class = "tf_wearable",
+        item_name_english = "Macho Mann"
+    },
+    "The Trash Toter" : {
+        id = 30086,
+        item_class = "tf_wearable",
+        item_name_english = "Trash Toter"
+    },
+    "The Dry Gulch Gulp" : {
+        id = 30087,
+        item_class = "tf_wearable",
+        item_name_english = "Dry Gulch Gulp"
+    },
+    "El Muchacho" : {
+        id = 30089,
+        item_class = "tf_wearable",
+        item_name_english = "El Muchacho"
+    },
+    "The Backpack Broiler" : {
+        id = 30090,
+        item_class = "tf_wearable",
+        item_name_english = "Backpack Broiler"
+    },
+    "The Burning Bandana" : {
+        id = 30091,
+        item_class = "tf_wearable",
+        item_name_english = "Burning Bandana"
+    },
+    "The Soot Suit" : {
+        id = 30092,
+        item_class = "tf_wearable",
+        item_name_english = "Soot Suit"
+    },
+    "The Hive Minder" : {
+        id = 30093,
+        item_class = "tf_wearable",
+        item_name_english = "Hive Minder"
+    },
+    "The Katyusha" : {
+        id = 30094,
+        item_class = "tf_wearable",
+        item_name_english = "Katyusha"
+    },
+    "Das Hazmattenhatten" : {
+        id = 30095,
+        item_class = "tf_wearable",
+        item_name_english = "Das Hazmattenhatten"
+    },
+    "Das Feelinbeterbager" : {
+        id = 30096,
+        item_class = "tf_wearable",
+        item_name_english = "Das Feelinbeterbager"
+    },
+    "Das Ubersternmann" : {
+        id = 30097,
+        item_class = "tf_wearable",
+        item_name_english = "Das Ubersternmann"
+    },
+    "Das Metalmeatencasen" : {
+        id = 30098,
+        item_class = "tf_wearable",
+        item_name_english = "Das Metalmeatencasen"
+    },
+    "The Pardner's Pompadour" : {
+        id = 30099,
+        item_class = "tf_wearable",
+        item_name_english = "Pardner's Pompadour"
+    },
+    "The Birdman of Australiacatraz" : {
+        id = 30100,
+        item_class = "tf_wearable",
+        item_name_english = "Birdman of Australiacatraz"
+    },
+    "The Cobber Chameleon" : {
+        id = 30101,
+        item_class = "tf_wearable",
+        item_name_english = "Cobber Chameleon"
+    },
+    "The Falconer" : {
+        id = 30103,
+        item_class = "tf_wearable",
+        item_name_english = "Falconer"
+    },
+    "Graybanns" : {
+        id = 30104,
+        item_class = "tf_wearable",
+        item_name_english = "Graybanns"
+    },
+    "The Black Watch" : {
+        id = 30105,
+        item_class = "tf_wearable",
+        item_name_english = "Black Watch"
+    },
+    "The Tartan Spartan" : {
+        id = 30106,
+        item_class = "tf_wearable",
+        item_name_english = "Tartan Spartan"
+    },
+    "The Gaelic Golf Bag" : {
+        id = 30107,
+        item_class = "tf_wearable",
+        item_name_english = "Gaelic Golf Bag"
+    },
+    "The Borscht Belt" : {
+        id = 30108,
+        item_class = "tf_wearable",
+        item_name_english = "Borscht Belt"
+    },
+    "Das Naggenvatcher" : {
+        id = 30109,
+        item_class = "tf_wearable",
+        item_name_english = "Das Naggenvatcher"
+    },
+    "The Whiskey Bib" : {
+        id = 30110,
+        item_class = "tf_wearable",
+        item_name_english = "Whiskey Bib"
+    },
+    "The Stormin' Norman" : {
+        id = 30112,
+        item_class = "tf_wearable",
+        item_name_english = "Stormin' Norman"
+    },
+    "The Flared Frontiersman" : {
+        id = 30113,
+        item_class = "tf_wearable",
+        item_name_english = "Flared Frontiersman"
+    },
+    "The Valley Forge" : {
+        id = 30114,
+        item_class = "tf_wearable",
+        item_name_english = "Valley Forge"
+    },
+    "The Compatriot" : {
+        id = 30115,
+        item_class = "tf_wearable",
+        item_name_english = "Compatriot"
+    },
+    "The Caribbean Conqueror" : {
+        id = 30116,
+        item_class = "tf_wearable",
+        item_name_english = "Caribbean Conqueror"
+    },
+    "The Colonial Clogs" : {
+        id = 30117,
+        item_class = "tf_wearable",
+        item_name_english = "Colonial Clogs"
+    },
+    "The Whirly Warrior" : {
+        id = 30118,
+        item_class = "tf_wearable",
+        item_name_english = "Whirly Warrior"
+    },
+    "The Federal Casemaker" : {
+        id = 30119,
+        item_class = "tf_wearable",
+        item_name_english = "Federal Casemaker"
+    },
+    "The Rebel Rouser" : {
+        id = 30120,
+        item_class = "tf_wearable",
+        item_name_english = "Rebel Rouser"
+    },
+    "Das Maddendoktor" : {
+        id = 30121,
+        item_class = "tf_wearable",
+        item_name_english = "Das Maddendoktor"
+    },
+    "The Bear Necessities" : {
+        id = 30122,
+        item_class = "tf_wearable",
+        item_name_english = "Bear Necessities"
+    },
+    "The Harmburg" : {
+        id = 30123,
+        item_class = "tf_wearable",
+        item_name_english = "Harmburg"
+    },
+    "The Gaelic Garb" : {
+        id = 30124,
+        item_class = "tf_wearable",
+        item_name_english = "Gaelic Garb"
+    },
+    "The Rogue's Brogues" : {
+        id = 30125,
+        item_class = "tf_wearable",
+        item_name_english = "Rogue's Brogues"
+    },
+    "The Shogun's Shoulder Guard" : {
+        id = 30126,
+        item_class = "tf_wearable",
+        item_name_english = "Shogun's Shoulder Guard"
+    },
+    "Das Gutenkutteharen" : {
+        id = 30127,
+        item_class = "tf_wearable",
+        item_name_english = "Das Gutenkutteharen"
+    },
+    "The Belgian Detective" : {
+        id = 30128,
+        item_class = "tf_wearable",
+        item_name_english = "Belgian Detective"
+    },
+    "The Hornblower" : {
+        id = 30129,
+        item_class = "tf_wearable",
+        item_name_english = "Hornblower"
+    },
+    "Lieutenant Bites" : {
+        id = 30130,
+        item_class = "tf_wearable",
+        item_name_english = "Lieutenant Bites"
+    },
+    "The Brawling Buccaneer" : {
+        id = 30131,
+        item_class = "tf_wearable",
+        item_name_english = "Brawling Buccaneer"
+    },
+    "The Blood Banker" : {
+        id = 30132,
+        item_class = "tf_wearable",
+        item_name_english = "Blood Banker"
+    },
+    "The After Dark" : {
+        id = 30133,
+        item_class = "tf_wearable",
+        item_name_english = "After Dark"
+    },
+    "The Delinquent's Down Vest" : {
+        id = 30134,
+        item_class = "tf_wearable",
+        item_name_english = "Delinquent's Down Vest"
+    },
+    "Wet Works" : {
+        id = 30135,
+        item_class = "tf_wearable",
+        item_name_english = "Wet Works"
+    },
+    "Baron von Havenaplane" : {
+        id = 30136,
+        item_class = "tf_wearable",
+        item_name_english = "Baron von Havenaplane"
+    },
+    "Das Fantzipantzen" : {
+        id = 30137,
+        item_class = "tf_wearable",
+        item_name_english = "Das Fantzipantzen"
+    },
+    "The Bolshevik Biker" : {
+        id = 30138,
+        item_class = "tf_wearable",
+        item_name_english = "Bolshevik Biker"
+    },
+    "The Pampered Pyro" : {
+        id = 30139,
+        item_class = "tf_wearable",
+        item_name_english = "Pampered Pyro"
+    },
+    "The Virtual Viewfinder" : {
+        id = 30140,
+        item_class = "tf_wearable",
+        item_name_english = "Virtual Viewfinder"
+    },
+    "The Gabe Glasses" : {
+        id = 30141,
+        item_class = "tf_wearable",
+        item_name_english = "Gabe Glasses"
+    },
+    "The Founding Father" : {
+        id = 30142,
+        item_class = "tf_wearable",
+        item_name_english = "Founding Father"
+    },
+    "tw_demobot_armor" : {
+        id = 30143,
+        item_class = "tf_wearable",
+        item_name_english = "Demobot Armor"
+    },
+    "tw_demobot_helmet" : {
+        id = 30144,
+        item_class = "tf_wearable",
+        item_name_english = "Demobot Helmet"
+    },
+    "tw_engineerbot_armor" : {
+        id = 30145,
+        item_class = "tf_wearable",
+        item_name_english = "Engineerbot Armor"
+    },
+    "tw_engineerbot_helmet" : {
+        id = 30146,
+        item_class = "tf_wearable",
+        item_name_english = "Engineerbot Helmet"
+    },
+    "tw_heavybot_armor" : {
+        id = 30147,
+        item_class = "tf_wearable",
+        item_name_english = "Heavybot Armor"
+    },
+    "tw_heavybot_helmet" : {
+        id = 30148,
+        item_class = "tf_wearable",
+        item_name_english = "Heavybot Helmet"
+    },
+    "tw_medibot_chariot" : {
+        id = 30149,
+        item_class = "tf_wearable",
+        item_name_english = "Medicbot Chariot"
+    },
+    "tw_medibot_hat" : {
+        id = 30150,
+        item_class = "tf_wearable",
+        item_name_english = "Medicbot Hat"
+    },
+    "tw_pyrobot_armor" : {
+        id = 30151,
+        item_class = "tf_wearable",
+        item_name_english = "Pyrobot Armor"
+    },
+    "tw_pyrobot_helmet" : {
+        id = 30152,
+        item_class = "tf_wearable",
+        item_name_english = "Pyrobot Helmet"
+    },
+    "tw_scoutbot_armor" : {
+        id = 30153,
+        item_class = "tf_wearable",
+        item_name_english = "Scoutbot Armor"
+    },
+    "tw_scoutbot_hat" : {
+        id = 30154,
+        item_class = "tf_wearable",
+        item_name_english = "Scoutbot Hat"
+    },
+    "tw_sniperbot_armor" : {
+        id = 30155,
+        item_class = "tf_wearable",
+        item_name_english = "Sniperbot Armor"
+    },
+    "tw_sniperbot_helmet" : {
+        id = 30156,
+        item_class = "tf_wearable",
+        item_name_english = "Sniperbot Helmet"
+    },
+    "tw_soldierbot_armor" : {
+        id = 30157,
+        item_class = "tf_wearable",
+        item_name_english = "Soldierbot Armor"
+    },
+    "tw_soldierbot_helmet" : {
+        id = 30158,
+        item_class = "tf_wearable",
+        item_name_english = "Soldierbot Helmet"
+    },
+    "tw_spybot_armor" : {
+        id = 30159,
+        item_class = "tf_wearable",
+        item_name_english = "Spybot Armor"
+    },
+    "tw_spybot_hood" : {
+        id = 30160,
+        item_class = "tf_wearable",
+        item_name_english = "Spybot Hood"
+    },
+    "tw_sentrybuster" : {
+        id = 30161,
+        item_class = "tf_wearable",
+        item_name_english = "Sentrybuster"
+    },
+    "The Bone Dome" : {
+        id = 30162,
+        item_class = "tf_wearable",
+        item_name_english = "Bone Dome"
+    },
+    "The Air Raider" : {
+        id = 30163,
+        item_class = "tf_wearable",
+        item_name_english = "Air Raider"
+    },
+    "The Viking Braider" : {
+        id = 30164,
+        item_class = "tf_wearable",
+        item_name_english = "Viking Braider"
+    },
+    "The Cuban Bristle Crisis" : {
+        id = 30165,
+        item_class = "tf_wearable",
+        item_name_english = "Cuban Bristle Crisis"
+    },
+    "The Beep Boy" : {
+        id = 30167,
+        item_class = "tf_wearable",
+        item_name_english = "Beep Boy"
+    },
+    "The Special Eyes" : {
+        id = 30168,
+        item_class = "tf_wearable",
+        item_name_english = "Special Eyes"
+    },
+    "Trickster's Turnout Gear" : {
+        id = 30169,
+        item_class = "tf_wearable",
+        item_name_english = "Trickster's Turnout Gear"
+    },
+    "The Chronomancer" : {
+        id = 30170,
+        item_class = "tf_wearable",
+        item_name_english = "Chronomancer"
+    },
+    "The Medical Mystery" : {
+        id = 30171,
+        item_class = "tf_wearable",
+        item_name_english = "Medical Mystery"
+    },
+    "The Gold Digger" : {
+        id = 30172,
+        item_class = "tf_wearable",
+        item_name_english = "Gold Digger"
+    },
+    "Brim-Full Of Bullets" : {
+        id = 30173,
+        item_class = "tf_wearable",
+        item_name_english = "Brim-Full of Bullets"
+    },
+    "The Cotton Head" : {
+        id = 30175,
+        item_class = "tf_wearable",
+        item_name_english = "Cotton Head"
+    },
+    "Pop-eyes" : {
+        id = 30176,
+        item_class = "tf_wearable",
+        item_name_english = "Pop-Eyes"
+    },
+    "Hong Kong Cone" : {
+        id = 30177,
+        item_class = "tf_wearable",
+        item_name_english = "Hong Kong Cone"
+    },
+    "Weight Room Warmer" : {
+        id = 30178,
+        item_class = "tf_wearable",
+        item_name_english = "Weight Room Warmer"
+    },
+    "The Hurt Locher" : {
+        id = 30179,
+        item_class = "tf_wearable",
+        item_name_english = "Hurt Locher"
+    },
+    "Pirate Bandana" : {
+        id = 30180,
+        item_class = "tf_wearable",
+        item_name_english = "Pirate Bandana"
+    },
+    "Li'l Snaggletooth" : {
+        id = 30181,
+        item_class = "tf_wearable",
+        item_name_english = "Li'l Snaggletooth"
+    },
+    "L'homme Burglerre" : {
+        id = 30182,
+        item_class = "tf_wearable",
+        item_name_english = "L'homme Burglerre"
+    },
+    "Escapist" : {
+        id = 30183,
+        item_class = "tf_wearable",
+        item_name_english = "Escapist"
+    },
+    "The Flapjack" : {
+        id = 30185,
+        item_class = "tf_wearable",
+        item_name_english = "Flapjack"
+    },
+    "A Brush with Death" : {
+        id = 30186,
+        item_class = "tf_wearable",
+        item_name_english = "A Brush with Death"
+    },
+    "The Slick Cut" : {
+        id = 30187,
+        item_class = "tf_wearable",
+        item_name_english = "Slick Cut"
+    },
+    "The Frenchman's Formals" : {
+        id = 30189,
+        item_class = "tf_wearable",
+        item_name_english = "Frenchman's Formals"
+    },
+    "The Ward" : {
+        id = 30190,
+        item_class = "tf_wearable",
+        item_name_english = "Ward"
+    },
+    "The Beast From Below" : {
+        id = 30191,
+        item_class = "tf_wearable",
+        item_name_english = "Beast from Below"
+    },
+    "Hard-Headed Hardware" : {
+        id = 30192,
+        item_class = "tf_wearable",
+        item_name_english = "Hard-Headed Hardware"
+    },
+    "Cap'n Calamari" : {
+        id = 30193,
+        item_class = "tf_wearable",
+        item_name_english = "Cap'n Calamari"
+    },
+    "The Spectralnaut" : {
+        id = 30194,
+        item_class = "tf_wearable",
+        item_name_english = "Spectralnaut"
+    },
+    "Ethereal Hood" : {
+        id = 30195,
+        item_class = "tf_wearable",
+        item_name_english = "Ethereal Hood"
+    },
+    "The Maniac's Manacles" : {
+        id = 30196,
+        item_class = "tf_wearable",
+        item_name_english = "Maniac's Manacles"
+    },
+    "The Second Opinion" : {
+        id = 30197,
+        item_class = "tf_wearable",
+        item_name_english = "Second Opinion"
+    },
+    "The Pocket Horsemann" : {
+        id = 30198,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Horsemann"
+    },
+    "The Last Bite" : {
+        id = 30199,
+        item_class = "tf_wearable",
+        item_name_english = "Last Bite"
+    },
+    "The Baphomet Trotters" : {
+        id = 30200,
+        item_class = "tf_wearable",
+        item_name_english = "Baphomet Trotters"
+    },
+    "Burny's Boney Bonnet" : {
+        id = 30203,
+        item_class = "tf_wearable",
+        item_name_english = "Burny's Boney Bonnet"
+    },
+    "The Crispy Golden Locks" : {
+        id = 30204,
+        item_class = "tf_wearable",
+        item_name_english = "Crispy Golden Locks"
+    },
+    "The Scorched Skirt" : {
+        id = 30205,
+        item_class = "tf_wearable",
+        item_name_english = "Scorched Skirt"
+    },
+    "The Accursed Apparition" : {
+        id = 30206,
+        item_class = "tf_wearable",
+        item_name_english = "Accursed Apparition"
+    },
+    "The Hound's Hood" : {
+        id = 30207,
+        item_class = "tf_wearable",
+        item_name_english = "Hound's Hood"
+    },
+    "The Terrier Trousers" : {
+        id = 30208,
+        item_class = "tf_wearable",
+        item_name_english = "Terrier Trousers"
+    },
+    "The Horrific Head of Hare" : {
+        id = 30211,
+        item_class = "tf_wearable",
+        item_name_english = "Horrific Head of Hare"
+    },
+    "The Snaggletoothed Stetson" : {
+        id = 30212,
+        item_class = "tf_wearable",
+        item_name_english = "Snaggletoothed Stetson"
+    },
+    "Up Pyroscopes" : {
+        id = 30213,
+        item_class = "tf_wearable",
+        item_name_english = "Up Pyroscopes"
+    },
+    "The One-Way Ticket" : {
+        id = 30214,
+        item_class = "tf_wearable",
+        item_name_english = "One-Way Ticket"
+    },
+    "The Birdie Bonnet" : {
+        id = 30215,
+        item_class = "tf_wearable",
+        item_name_english = "Birdie Bonnet"
+    },
+    "The External Organ" : {
+        id = 30216,
+        item_class = "tf_wearable",
+        item_name_english = "External Organ"
+    },
+    "Ivan The Inedible" : {
+        id = 30217,
+        item_class = "tf_wearable",
+        item_name_english = "Ivan the Inedible"
+    },
+    "The Rugged Respirator" : {
+        id = 30218,
+        item_class = "tf_wearable",
+        item_name_english = "Rugged Respirator"
+    },
+    "The Squid's Lid" : {
+        id = 30219,
+        item_class = "tf_wearable",
+        item_name_english = "Squid's Lid"
+    },
+    "The Hollowhead" : {
+        id = 30220,
+        item_class = "tf_wearable",
+        item_name_english = "Hollowhead"
+    },
+    "Grub Grenades" : {
+        id = 30221,
+        item_class = "tf_wearable",
+        item_name_english = "Grub Grenades"
+    },
+    "The Gothic Guise" : {
+        id = 30222,
+        item_class = "tf_wearable",
+        item_name_english = "Gothic Guise"
+    },
+    "The Grease Monkey" : {
+        id = 30223,
+        item_class = "tf_wearable",
+        item_name_english = "Grease Monkey"
+    },
+    "The Alternative Medicine Mann" : {
+        id = 30224,
+        item_class = "tf_wearable",
+        item_name_english = "Alternative Medicine Mann"
+    },
+    "The Cauterizer's Caudal Appendage" : {
+        id = 30225,
+        item_class = "tf_wearable",
+        item_name_english = "Cauterizer's Caudal Appendage"
+    },
+    "Polly Putrid" : {
+        id = 30226,
+        item_class = "tf_wearable",
+        item_name_english = "Polly Putrid"
+    },
+    "The Faux Manchu" : {
+        id = 30227,
+        item_class = "tf_wearable",
+        item_name_english = "Faux Manchu"
+    },
+    "The Hidden Dragon" : {
+        id = 30228,
+        item_class = "tf_wearable",
+        item_name_english = "Hidden Dragon"
+    },
+    "The Lo-Grav Loafers" : {
+        id = 30229,
+        item_class = "tf_wearable",
+        item_name_english = "Lo-Grav Loafers"
+    },
+    "The Surgeon's Space Suit" : {
+        id = 30230,
+        item_class = "tf_wearable",
+        item_name_english = "Surgeon's Space Suit"
+    },
+    "The Face Plante" : {
+        id = 30231,
+        item_class = "tf_wearable",
+        item_name_english = "Face Plante"
+    },
+    "Das Blutliebhaber" : {
+        id = 30232,
+        item_class = "tf_wearable",
+        item_name_english = "Das Blutliebhaber"
+    },
+    "The Trepanabotomizer" : {
+        id = 30233,
+        item_class = "tf_wearable",
+        item_name_english = "Trepanabotomizer"
+    },
+    "The Sackcloth Spook" : {
+        id = 30234,
+        item_class = "tf_wearable",
+        item_name_english = "Sackcloth Spook"
+    },
+    "The Mucous Membrain" : {
+        id = 30235,
+        item_class = "tf_wearable",
+        item_name_english = "Mucous Membrain"
+    },
+    "Pin Pals" : {
+        id = 30236,
+        item_class = "tf_wearable",
+        item_name_english = "Pin Pals"
+    },
+    "Medimedes" : {
+        id = 30237,
+        item_class = "tf_wearable",
+        item_name_english = "Medimedes"
+    },
+    "The Chicken Kiev" : {
+        id = 30238,
+        item_class = "tf_wearable",
+        item_name_english = "Chicken Kiev"
+    },
+    "The Freedom Feathers" : {
+        id = 30239,
+        item_class = "tf_wearable",
+        item_name_english = "Freedom Feathers"
+    },
+    "The Headtaker's Hood" : {
+        id = 30240,
+        item_class = "tf_wearable",
+        item_name_english = "Headtaker's Hood"
+    },
+    "The Transylvania Top" : {
+        id = 30241,
+        item_class = "tf_wearable",
+        item_name_english = "Transylvania Top"
+    },
+    "The Candleer" : {
+        id = 30242,
+        item_class = "tf_wearable",
+        item_name_english = "Candleer"
+    },
+    "The Horsemann's Hand-Me-Down" : {
+        id = 30243,
+        item_class = "tf_wearable",
+        item_name_english = "Horsemann's Hand-Me-Down"
+    },
+    "Bozo's Bouffant" : {
+        id = 30245,
+        item_class = "tf_wearable",
+        item_name_english = "Bozo's Bouffant"
+    },
+    "Faun Feet" : {
+        id = 30247,
+        item_class = "tf_wearable",
+        item_name_english = "Faun Feet"
+    },
+    "The Halloweiner" : {
+        id = 30248,
+        item_class = "tf_wearable",
+        item_name_english = "Halloweiner"
+    },
+    "The Lordly Lapels" : {
+        id = 30249,
+        item_class = "tf_wearable",
+        item_name_english = "Lordly Lapels"
+    },
+    "The Cadaver's Capper" : {
+        id = 30251,
+        item_class = "tf_wearable",
+        item_name_english = "Cadaver's Capper"
+    },
+    "Guano" : {
+        id = 30252,
+        item_class = "tf_wearable",
+        item_name_english = "Guano"
+    },
+    "The Sprinting Cephalopod" : {
+        id = 30253,
+        item_class = "tf_wearable",
+        item_name_english = "Sprinting Cephalopod"
+    },
+    "Unidentified Following Object" : {
+        id = 30254,
+        item_class = "tf_wearable",
+        item_name_english = "Unidentified Following Object"
+    },
+    "The Beacon from Beyond" : {
+        id = 30255,
+        item_class = "tf_wearable",
+        item_name_english = "Beacon from Beyond"
+    },
+    "The Hyperbaric Bowler" : {
+        id = 30256,
+        item_class = "tf_wearable",
+        item_name_english = "Hyperbaric Bowler"
+    },
+    "The Death Support Pack" : {
+        id = 30257,
+        item_class = "tf_wearable",
+        item_name_english = "Death Support Pack"
+    },
+    "The Carious Chameleon" : {
+        id = 30258,
+        item_class = "tf_wearable",
+        item_name_english = "Carious Chameleon"
+    },
+    "The Monster's Stompers" : {
+        id = 30259,
+        item_class = "tf_wearable",
+        item_name_english = "Monster's Stompers"
+    },
+    "The Bountiful Bow" : {
+        id = 30260,
+        item_class = "tf_wearable",
+        item_name_english = "Bountiful Bow"
+    },
+    "The Candyman's Cap" : {
+        id = 30261,
+        item_class = "tf_wearable",
+        item_name_english = "Candyman's Cap"
+    },
+    "The Vicar's Vestments" : {
+        id = 30263,
+        item_class = "tf_wearable",
+        item_name_english = "Vicar's Vestments"
+    },
+    "The Hardium Helm" : {
+        id = 30264,
+        item_class = "tf_wearable",
+        item_name_english = "Hardium Helm"
+    },
+    "The Jupiter Jumpers" : {
+        id = 30265,
+        item_class = "tf_wearable",
+        item_name_english = "Jupiter Jumpers"
+    },
+    "The Space Bracers" : {
+        id = 30266,
+        item_class = "tf_wearable",
+        item_name_english = "Space Bracers"
+    },
+    "The Handhunter" : {
+        id = 30267,
+        item_class = "tf_wearable",
+        item_name_english = "Handhunter"
+    },
+    "The Spellbinder's Bonnet" : {
+        id = 30268,
+        item_class = "tf_wearable",
+        item_name_english = "Spellbinder's Bonnet"
+    },
+    "The Macabre Mask" : {
+        id = 30269,
+        item_class = "tf_wearable",
+        item_name_english = "Macabre Mask"
+    },
+    "The Shaman's Skull" : {
+        id = 30270,
+        item_class = "tf_wearable",
+        item_name_english = "Shaman's Skull"
+    },
+    "The Vicious Visage" : {
+        id = 30273,
+        item_class = "tf_wearable",
+        item_name_english = "Vicious Visage"
+    },
+    "The Tuque or Treat" : {
+        id = 30274,
+        item_class = "tf_wearable",
+        item_name_english = "Tuque or Treat"
+    },
+    "The Horned Honcho" : {
+        id = 30275,
+        item_class = "tf_wearable",
+        item_name_english = "Horned Honcho"
+    },
+    "Lieutenant Bites the Dust" : {
+        id = 30276,
+        item_class = "tf_wearable",
+        item_name_english = "Lieutenant Bites the Dust"
+    },
+    "The Grisly Gumbo" : {
+        id = 30277,
+        item_class = "tf_wearable",
+        item_name_english = "Grisly Gumbo"
+    },
+    "The Dark Helm" : {
+        id = 30278,
+        item_class = "tf_wearable",
+        item_name_english = "Dark Helm"
+    },
+    "Archimedes the Undying" : {
+        id = 30279,
+        item_class = "tf_wearable",
+        item_name_english = "Archimedes the Undying"
+    },
+    "The Monstrous Mandible" : {
+        id = 30280,
+        item_class = "tf_wearable",
+        item_name_english = "Monstrous Mandible"
+    },
+    "The Shaolin Sash" : {
+        id = 30281,
+        item_class = "tf_wearable",
+        item_name_english = "Shaolin Sash"
+    },
+    "The Mann-Bird of Aberdeen" : {
+        id = 30282,
+        item_class = "tf_wearable",
+        item_name_english = "Mann-Bird of Aberdeen"
+    },
+    "The Foul Cowl" : {
+        id = 30283,
+        item_class = "tf_wearable",
+        item_name_english = "Foul Cowl"
+    },
+    "Sir Shootsalot" : {
+        id = 30284,
+        item_class = "tf_wearable",
+        item_name_english = "Sir Shootsalot"
+    },
+    "The Corpsemopolitan" : {
+        id = 30285,
+        item_class = "tf_wearable",
+        item_name_english = "Corpsemopolitan"
+    },
+    "The Glob" : {
+        id = 30286,
+        item_class = "tf_wearable",
+        item_name_english = "Glob"
+    },
+    "The Hallowed Headcase" : {
+        id = 30287,
+        item_class = "tf_wearable",
+        item_name_english = "Hallowed Headcase"
+    },
+    "Carrion Companion" : {
+        id = 30288,
+        item_class = "tf_wearable",
+        item_name_english = "Carrion Companion"
+    },
+    "Quoth" : {
+        id = 30289,
+        item_class = "tf_wearable",
+        item_name_english = "Quoth"
+    },
+    "PY-40 Incinibot" : {
+        id = 30290,
+        item_class = "tf_wearable",
+        item_name_english = "PY-40 Incinibot"
+    },
+    "The Parasight" : {
+        id = 30292,
+        item_class = "tf_wearable",
+        item_name_english = "Parasight"
+    },
+    "Teutonkahmun" : {
+        id = 30293,
+        item_class = "tf_wearable",
+        item_name_english = "Teutonkahmun"
+    },
+    "The Larval Lid" : {
+        id = 30294,
+        item_class = "tf_wearable",
+        item_name_english = "Larval Lid"
+    },
+    "The Manneater" : {
+        id = 30295,
+        item_class = "tf_wearable",
+        item_name_english = "Manneater"
+    },
+    "The Creature From The Heap" : {
+        id = 30296,
+        item_class = "tf_wearable",
+        item_name_english = "Creature from the Heap"
+    },
+    "The Magical Mercenary" : {
+        id = 30297,
+        item_class = "tf_wearable",
+        item_name_english = "Magical Mercenary"
+    },
+    "The Raven's Visage" : {
+        id = 30298,
+        item_class = "tf_wearable",
+        item_name_english = "Raven's Visage"
+    },
+    "Ramses' Regalia" : {
+        id = 30299,
+        item_class = "tf_wearable",
+        item_name_english = "Ramses' Regalia"
+    },
+    "The Haunted Hat" : {
+        id = 30300,
+        item_class = "tf_wearable",
+        item_name_english = "Haunted Hat"
+    },
+    "Bozo's Brogues" : {
+        id = 30301,
+        item_class = "tf_wearable",
+        item_name_english = "Bozo's Brogues"
+    },
+    "The Cryptic Keepsake" : {
+        id = 30302,
+        item_class = "tf_wearable",
+        item_name_english = "Cryptic Keepsake"
+    },
+    "The Abhorrent Appendages" : {
+        id = 30303,
+        item_class = "tf_wearable",
+        item_name_english = "Abhorrent Appendages"
+    },
+    "The Blizzard Breather" : {
+        id = 30304,
+        item_class = "tf_wearable",
+        item_name_english = "Blizzard Breather"
+    },
+    "The Sub Zero Suit" : {
+        id = 30305,
+        item_class = "tf_wearable",
+        item_name_english = "Sub Zero Suit"
+    },
+    "The Dictator" : {
+        id = 30306,
+        item_class = "tf_wearable",
+        item_name_english = "Dictator"
+    },
+    "Neckwear Headwear" : {
+        id = 30307,
+        item_class = "tf_wearable",
+        item_name_english = "Neckwear Headwear"
+    },
+    "The Trail-Blazer" : {
+        id = 30308,
+        item_class = "tf_wearable",
+        item_name_english = "Trail-Blazer"
+    },
+    "Dead of Night" : {
+        id = 30309,
+        item_class = "tf_wearable",
+        item_name_english = "Dead of Night"
+    },
+    "The Snow Scoper" : {
+        id = 30310,
+        item_class = "tf_wearable",
+        item_name_english = "Snow Scoper"
+    },
+    "The Nunhood" : {
+        id = 30311,
+        item_class = "tf_wearable",
+        item_name_english = "Nunhood"
+    },
+    "The Angel of Death" : {
+        id = 30312,
+        item_class = "tf_wearable",
+        item_name_english = "Angel of Death"
+    },
+    "The Kiss King" : {
+        id = 30313,
+        item_class = "tf_wearable",
+        item_name_english = "Kiss King"
+    },
+    "The Slo-Poke" : {
+        id = 30314,
+        item_class = "tf_wearable",
+        item_name_english = "Slo-Poke"
+    },
+    "Minnesota Slick" : {
+        id = 30315,
+        item_class = "tf_wearable",
+        item_name_english = "Minnesota Slick"
+    },
+    "The Toy Soldier" : {
+        id = 30316,
+        item_class = "tf_wearable",
+        item_name_english = "Toy Soldier"
+    },
+    "The Five-Month Shadow" : {
+        id = 30317,
+        item_class = "tf_wearable",
+        item_name_english = "Five-Month Shadow"
+    },
+    "The Mann of Reason" : {
+        id = 30318,
+        item_class = "tf_wearable",
+        item_name_english = "Mann of Reason"
+    },
+    "The Mann of the House" : {
+        id = 30319,
+        item_class = "tf_wearable",
+        item_name_english = "Mann of the House"
+    },
+    "Chucklenuts" : {
+        id = 30320,
+        item_class = "tf_wearable",
+        item_name_english = "Chucklenuts"
+    },
+    "Tiny Timber" : {
+        id = 30321,
+        item_class = "tf_wearable",
+        item_name_english = "Tiny Timber"
+    },
+    "Face Full of Festive" : {
+        id = 30322,
+        item_class = "tf_wearable",
+        item_name_english = "Face Full of Festive"
+    },
+    "The Ruffled Ruprecht" : {
+        id = 30323,
+        item_class = "tf_wearable",
+        item_name_english = "Ruffled Ruprecht"
+    },
+    "The Golden Garment" : {
+        id = 30324,
+        item_class = "tf_wearable",
+        item_name_english = "Golden Garment"
+    },
+    "The Little Drummer Mann" : {
+        id = 30325,
+        item_class = "tf_wearable",
+        item_name_english = "Little Drummer Mann"
+    },
+    "The Scout Shako" : {
+        id = 30326,
+        item_class = "tf_wearable",
+        item_name_english = "Scout Shako"
+    },
+    "The Toy Tailor" : {
+        id = 30327,
+        item_class = "tf_wearable",
+        item_name_english = "Toy Tailor"
+    },
+    "The Extra Layer" : {
+        id = 30328,
+        item_class = "tf_wearable",
+        item_name_english = "Extra Layer"
+    },
+    "The Polar Pullover" : {
+        id = 30329,
+        item_class = "tf_wearable",
+        item_name_english = "Polar Pullover"
+    },
+    "The Dogfighter" : {
+        id = 30330,
+        item_class = "tf_wearable",
+        item_name_english = "Dogfighter"
+    },
+    "Antarctic Parka" : {
+        id = 30331,
+        item_class = "tf_wearable",
+        item_name_english = "Antarctic Parka"
+    },
+    "Runner's Warm-Up" : {
+        id = 30332,
+        item_class = "tf_wearable",
+        item_name_english = "Runner's Warm-Up"
+    },
+    "Highland High Heels" : {
+        id = 30333,
+        item_class = "tf_wearable",
+        item_name_english = "Highland High Heels"
+    },
+    "Tartan Tyrolean" : {
+        id = 30334,
+        item_class = "tf_wearable",
+        item_name_english = "Tartan Tyrolean"
+    },
+    "Marshall's Mutton Chops" : {
+        id = 30335,
+        item_class = "tf_wearable",
+        item_name_english = "Marshall's Mutton Chops"
+    },
+    "The Trencher's Topper" : {
+        id = 30336,
+        item_class = "tf_wearable",
+        item_name_english = "Trencher's Topper"
+    },
+    "The Trencher's Tunic" : {
+        id = 30337,
+        item_class = "tf_wearable",
+        item_name_english = "Trencher's Tunic"
+    },
+    "Ground Control" : {
+        id = 30338,
+        item_class = "tf_wearable",
+        item_name_english = "Ground Control"
+    },
+    "The Killer's Kit" : {
+        id = 30339,
+        item_class = "tf_wearable",
+        item_name_english = "Killer's Kit"
+    },
+    "Stylish DeGroot" : {
+        id = 30340,
+        item_class = "tf_wearable",
+        item_name_english = "Stylish DeGroot"
+    },
+    "Ein" : {
+        id = 30341,
+        item_class = "tf_wearable",
+        item_name_english = "Ein"
+    },
+    "The Heavy Lifter" : {
+        id = 30342,
+        item_class = "tf_wearable",
+        item_name_english = "Heavy Lifter"
+    },
+    "Gone Commando" : {
+        id = 30343,
+        item_class = "tf_wearable",
+        item_name_english = "Gone Commando"
+    },
+    "Bullet Buzz" : {
+        id = 30344,
+        item_class = "tf_wearable",
+        item_name_english = "Bullet Buzz"
+    },
+    "The Leftover Trap" : {
+        id = 30345,
+        item_class = "tf_wearable",
+        item_name_english = "Leftover Trap"
+    },
+    "The Trash Man" : {
+        id = 30346,
+        item_class = "tf_wearable",
+        item_name_english = "Trash Man"
+    },
+    "The Scotch Saver" : {
+        id = 30347,
+        item_class = "tf_wearable",
+        item_name_english = "Scotch Saver"
+    },
+    "Bushi-Dou" : {
+        id = 30348,
+        item_class = "tf_wearable",
+        item_name_english = "Bushi-Dou"
+    },
+    "The Fashionable Megalomaniac" : {
+        id = 30349,
+        item_class = "tf_wearable",
+        item_name_english = "Fashionable Megalomaniac"
+    },
+    "The Dough Puncher" : {
+        id = 30350,
+        item_class = "tf_wearable",
+        item_name_english = "Dough Puncher"
+    },
+    "The Teutonic Toque" : {
+        id = 30351,
+        item_class = "tf_wearable",
+        item_name_english = "Teutonic Toque"
+    },
+    "The Mustachioed Mann" : {
+        id = 30352,
+        item_class = "tf_wearable",
+        item_name_english = "Mustachioed Mann"
+    },
+    "The Backstabber's Boomslang" : {
+        id = 30353,
+        item_class = "tf_wearable",
+        item_name_english = "Backstabber's Boomslang"
+    },
+    "The Rat Stompers" : {
+        id = 30354,
+        item_class = "tf_wearable",
+        item_name_english = "Rat Stompers"
+    },
+    "Sole Mate" : {
+        id = 30355,
+        item_class = "tf_wearable",
+        item_name_english = "Sole Mate"
+    },
+    "The Heat of Winter" : {
+        id = 30356,
+        item_class = "tf_wearable",
+        item_name_english = "Heat of Winter"
+    },
+    "The Dark Falkirk Helm" : {
+        id = 30357,
+        item_class = "tf_wearable",
+        item_name_english = "Dark Falkirk Helm"
+    },
+    "The Sole Saviors" : {
+        id = 30358,
+        item_class = "tf_wearable",
+        item_name_english = "Sole Saviors"
+    },
+    "The Huntsman's Essentials" : {
+        id = 30359,
+        item_class = "tf_wearable",
+        item_name_english = "Huntsman's Essentials"
+    },
+    "The Napoleon Complex" : {
+        id = 30360,
+        item_class = "tf_wearable",
+        item_name_english = "Napoleon Complex"
+    },
+    "The Colonel's Coat" : {
+        id = 30361,
+        item_class = "tf_wearable",
+        item_name_english = "Colonel's Coat"
+    },
+    "The Law" : {
+        id = 30362,
+        item_class = "tf_wearable",
+        item_name_english = "Law"
+    },
+    "The Juggernaut Jacket" : {
+        id = 30363,
+        item_class = "tf_wearable",
+        item_name_english = "Juggernaut Jacket"
+    },
+    "The Warmth Preserver" : {
+        id = 30364,
+        item_class = "tf_wearable",
+        item_name_english = "Warmth Preserver"
+    },
+    "The Smock Surgeon" : {
+        id = 30365,
+        item_class = "tf_wearable",
+        item_name_english = "Smock Surgeon"
+    },
+    "The Sangu Sleeves" : {
+        id = 30366,
+        item_class = "tf_wearable",
+        item_name_english = "Sangu Sleeves"
+    },
+    "The Cute Suit" : {
+        id = 30367,
+        item_class = "tf_wearable",
+        item_name_english = "Cute Suit"
+    },
+    "The War Goggles" : {
+        id = 30368,
+        item_class = "tf_wearable",
+        item_name_english = "War Goggles"
+    },
+    "The Eliminators Safeguard" : {
+        id = 30369,
+        item_class = "tf_wearable",
+        item_name_english = "Eliminator's Safeguard"
+    },
+    "The Archers Groundings" : {
+        id = 30371,
+        item_class = "tf_wearable",
+        item_name_english = "Archer's Groundings"
+    },
+    "Combat Slacks" : {
+        id = 30372,
+        item_class = "tf_wearable",
+        item_name_english = "Combat Slacks"
+    },
+    "The Toowoomba Tunic" : {
+        id = 30373,
+        item_class = "tf_wearable",
+        item_name_english = "Toowoomba Tunic"
+    },
+    "The Sammy Cap" : {
+        id = 30374,
+        item_class = "tf_wearable",
+        item_name_english = "Sammy Cap"
+    },
+    "The Deep Cover Operator" : {
+        id = 30375,
+        item_class = "tf_wearable",
+        item_name_english = "Deep Cover Operator"
+    },
+    "The Ticket Boy" : {
+        id = 30376,
+        item_class = "tf_wearable",
+        item_name_english = "Ticket Boy"
+    },
+    "The Antarctic Researcher" : {
+        id = 30377,
+        item_class = "tf_wearable",
+        item_name_english = "Antarctic Researcher"
+    },
+    "Heer's Helmet" : {
+        id = 30378,
+        item_class = "tf_wearable",
+        item_name_english = "Heer's Helmet"
+    },
+    "The Gaiter Guards" : {
+        id = 30379,
+        item_class = "tf_wearable",
+        item_name_english = "Gaiter Guards"
+    },
+    "The Classified Coif" : {
+        id = 30388,
+        item_class = "tf_wearable",
+        item_name_english = "Classified Coif"
+    },
+    "The Rogue's Robe" : {
+        id = 30389,
+        item_class = "tf_wearable",
+        item_name_english = "Rogue's Robe"
+    },
+    "The Spook Specs" : {
+        id = 30390,
+        item_class = "tf_wearable",
+        item_name_english = "Spook Specs"
+    },
+    "The Sengoku Scorcher" : {
+        id = 30391,
+        item_class = "tf_wearable",
+        item_name_english = "Sengoku Scorcher"
+    },
+    "The Man in Slacks" : {
+        id = 30392,
+        item_class = "tf_wearable",
+        item_name_english = "Man in Slacks"
+    },
+    "The Razor Cut" : {
+        id = 30393,
+        item_class = "tf_wearable",
+        item_name_english = "Razor Cut"
+    },
+    "The Frickin' Sweet Ninja Hood" : {
+        id = 30394,
+        item_class = "tf_wearable",
+        item_name_english = "Frickin' Sweet Ninja Hood"
+    },
+    "The Southie Shinobi" : {
+        id = 30395,
+        item_class = "tf_wearable",
+        item_name_english = "Southie Shinobi"
+    },
+    "The Red Socks" : {
+        id = 30396,
+        item_class = "tf_wearable",
+        item_name_english = "Red Socks"
+    },
+    "The Bruiser's Bandanna" : {
+        id = 30397,
+        item_class = "tf_wearable",
+        item_name_english = "Bruiser's Bandanna"
+    },
+    "The Gas Guzzler" : {
+        id = 30398,
+        item_class = "tf_wearable",
+        item_name_english = "Gas Guzzler"
+    },
+    "The Smoking Skid Lid" : {
+        id = 30399,
+        item_class = "tf_wearable",
+        item_name_english = "Smoking Skid Lid"
+    },
+    "The Lunatic's Leathers" : {
+        id = 30400,
+        item_class = "tf_wearable",
+        item_name_english = "Lunatic's Leathers"
+    },
+    "Yuri's Revenge" : {
+        id = 30401,
+        item_class = "tf_wearable",
+        item_name_english = "Yuri's Revenge"
+    },
+    "The Tools of the Trade" : {
+        id = 30402,
+        item_class = "tf_wearable",
+        item_name_english = "Tools of the Trade"
+    },
+    "The Joe-on-the-Go" : {
+        id = 30403,
+        item_class = "tf_wearable",
+        item_name_english = "Joe-on-the-Go"
+    },
+    "The Aviator Assassin" : {
+        id = 30404,
+        item_class = "tf_wearable",
+        item_name_english = "Aviator Assassin"
+    },
+    "The Sky Captain" : {
+        id = 30405,
+        item_class = "tf_wearable",
+        item_name_english = "Sky Captain"
+    },
+    "The Peacenik's Ponytail" : {
+        id = 30406,
+        item_class = "tf_wearable",
+        item_name_english = "Peacenik's Ponytail"
+    },
+    "The Level Three Chin" : {
+        id = 30407,
+        item_class = "tf_wearable",
+        item_name_english = "Level Three Chin"
+    },
+    "The Egghead's Overalls" : {
+        id = 30408,
+        item_class = "tf_wearable",
+        item_name_english = "Egghead's Overalls"
+    },
+    "The Lonesome Loafers" : {
+        id = 30409,
+        item_class = "tf_wearable",
+        item_name_english = "Lonesome Loafers"
+    },
+    "Ze Ubermensch" : {
+        id = 30410,
+        item_class = "tf_wearable",
+        item_name_english = "Ze Übermensch"
+    },
+    "The Au Courant Assassin" : {
+        id = 30411,
+        item_class = "tf_wearable",
+        item_name_english = "Au Courant Assassin"
+    },
+    "The Endothermic Exowear" : {
+        id = 30412,
+        item_class = "tf_wearable",
+        item_name_english = "Endothermic Exowear"
+    },
+    "The Merc's Mohawk" : {
+        id = 30413,
+        item_class = "tf_wearable",
+        item_name_english = "Merc's Mohawk"
+    },
+    "The Eye-Catcher" : {
+        id = 30414,
+        item_class = "tf_wearable",
+        item_name_english = "Eye-Catcher"
+    },
+    "The Medicine Manpurse" : {
+        id = 30415,
+        item_class = "tf_wearable",
+        item_name_english = "Medicine Manpurse"
+    },
+    "Employee of the Mmmph" : {
+        id = 30416,
+        item_class = "tf_wearable",
+        item_name_english = "Employee of the Mmmph"
+    },
+    "The Frymaster" : {
+        id = 30417,
+        item_class = "tf_wearable",
+        item_name_english = "Frymaster"
+    },
+    "The Combustible Kabuto" : {
+        id = 30418,
+        item_class = "tf_wearable",
+        item_name_english = "Combustible Kabuto"
+    },
+    "The Chronoscarf" : {
+        id = 30419,
+        item_class = "tf_wearable",
+        item_name_english = "Chronoscarf"
+    },
+    "The Danger" : {
+        id = 30420,
+        item_class = "tf_wearable",
+        item_name_english = "Danger"
+    },
+    "The Frontier Djustice" : {
+        id = 30421,
+        item_class = "tf_wearable",
+        item_name_english = "Frontier Djustice"
+    },
+    "Vive La France" : {
+        id = 30422,
+        item_class = "tf_wearable",
+        item_name_english = "Vive La France"
+    },
+    "The Scoper's Smoke" : {
+        id = 30423,
+        item_class = "tf_wearable",
+        item_name_english = "Scoper's Smoke"
+    },
+    "The Triggerman's Tacticals" : {
+        id = 30424,
+        item_class = "tf_wearable",
+        item_name_english = "Triggerman's Tacticals"
+    },
+    "Tipped Lid" : {
+        id = 30425,
+        item_class = "tf_wearable",
+        item_name_english = "Tipped Lid"
+    },
+    "The Paisley Pro" : {
+        id = 30426,
+        item_class = "tf_wearable",
+        item_name_english = "Paisley Pro"
+    },
+    "The Argyle Ace" : {
+        id = 30427,
+        item_class = "tf_wearable",
+        item_name_english = "Argyle Ace"
+    },
+    "The Pomade Prince" : {
+        id = 30428,
+        item_class = "tf_wearable",
+        item_name_english = "Pomade Prince"
+    },
+    "The Allbrero" : {
+        id = 30429,
+        item_class = "tf_wearable",
+        item_name_english = "Allbrero"
+    },
+    "Seeing Double" : {
+        id = 30430,
+        item_class = "tf_wearable",
+        item_name_english = "Seeing Double"
+    },
+    "Six Pack Abs" : {
+        id = 30431,
+        item_class = "tf_wearable",
+        item_name_english = "Six Pack Abs"
+    },
+    "The Spycrab" : {
+        id = 30467,
+        item_class = "tf_wearable",
+        item_name_english = "Spycrab"
+    },
+    "Horace" : {
+        id = 30469,
+        item_class = "tf_wearable",
+        item_name_english = "Horace"
+    },
+    "The Biomech Backpack" : {
+        id = 30470,
+        item_class = "tf_wearable",
+        item_name_english = "Biomech Backpack"
+    },
+    "The Alien Cranium" : {
+        id = 30471,
+        item_class = "tf_wearable",
+        item_name_english = "Alien Cranium"
+    },
+    "The Xeno Suit" : {
+        id = 30472,
+        item_class = "tf_wearable",
+        item_name_english = "Xeno Suit"
+    },
+    "The MK 50" : {
+        id = 30473,
+        item_class = "tf_wearable",
+        item_name_english = "MK 50"
+    },
+    "The Nostromo Napalmer" : {
+        id = 30474,
+        item_class = "tf_weapon_flamethrower",
+        item_name_english = "Nostromo Napalmer"
+    },
+    "The Mishap Mercenary" : {
+        id = 30475,
+        item_class = "tf_wearable",
+        item_name_english = "Mishap Mercenary"
+    },
+    "The Lady Killer" : {
+        id = 30476,
+        item_class = "tf_wearable",
+        item_name_english = "Lady Killer"
+    },
+    "The Lone Survivor" : {
+        id = 30477,
+        item_class = "tf_wearable",
+        item_name_english = "Lone Survivor"
+    },
+    "Poacher's Safari Jacket" : {
+        id = 30478,
+        item_class = "tf_wearable",
+        item_name_english = "Poacher's Safari Jacket"
+    },
+    "Thirst Blood" : {
+        id = 30479,
+        item_class = "tf_wearable",
+        item_name_english = "Thirst Blood"
+    },
+    "Mann of the Seven Sees" : {
+        id = 30480,
+        item_class = "tf_wearable",
+        item_name_english = "Mann of the Seven Sees"
+    },
+    "Hillbilly Speed-Bump" : {
+        id = 30481,
+        item_class = "tf_wearable",
+        item_name_english = "Hillbilly Speed Bump"
+    },
+    "The Unshaved Bear" : {
+        id = 30482,
+        item_class = "tf_wearable",
+        item_name_english = "Unshaved Bear"
+    },
+    "Pocket Heavy" : {
+        id = 30483,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Heavy"
+    },
+    "The Dadliest Catch" : {
+        id = 30484,
+        item_class = "tf_wearable",
+        item_name_english = "Dadliest Catch"
+    },
+    "Herzensbrecher" : {
+        id = 30486,
+        item_class = "tf_wearable",
+        item_name_english = "Herzensbrecher"
+    },
+    "Hundekopf" : {
+        id = 30487,
+        item_class = "tf_wearable",
+        item_name_english = "Hundkopf"
+    },
+    "Kriegsmaschine-9000" : {
+        id = 30488,
+        item_class = "tf_wearable",
+        item_name_english = "Kriegsmaschine-9000"
+    },
+    "Transylvanian Toupe" : {
+        id = 30489,
+        item_class = "tf_wearable",
+        item_name_english = "Vampire Makeover"
+    },
+    "Vampiric Vesture" : {
+        id = 30490,
+        item_class = "tf_wearable",
+        item_name_english = "Vampiric Vesture"
+    },
+    "Nugget Noggin" : {
+        id = 30491,
+        item_class = "tf_wearable",
+        item_name_english = "Nugget Noggin"
+    },
+    "Fowl Fists" : {
+        id = 30492,
+        item_class = "tf_wearable",
+        item_name_english = "Fowl Fists"
+    },
+    "Talon Trotters" : {
+        id = 30493,
+        item_class = "tf_wearable",
+        item_name_english = "Talon Trotters"
+    },
+    "Head Hunter" : {
+        id = 30494,
+        item_class = "tf_wearable",
+        item_name_english = "Head Hunter"
+    },
+    "Claws And Infect" : {
+        id = 30495,
+        item_class = "tf_wearable",
+        item_name_english = "Claws And Infect"
+    },
+    "Crazy Legs" : {
+        id = 30496,
+        item_class = "tf_wearable",
+        item_name_english = "Crazy Legs"
+    },
+    "Ghost of Spies Checked Past" : {
+        id = 30497,
+        item_class = "tf_wearable",
+        item_name_english = "Ghost of Spies Checked Past"
+    },
+    "The Hooded Haunter" : {
+        id = 30498,
+        item_class = "tf_wearable",
+        item_name_english = "Hooded Haunter"
+    },
+    "Conspiratorial Cut" : {
+        id = 30499,
+        item_class = "tf_wearable",
+        item_name_english = "Cranial Conspiracy"
+    },
+    "Skinless Slashers" : {
+        id = 30500,
+        item_class = "tf_wearable",
+        item_name_english = "Scaly Scrapers"
+    },
+    "Marsupial Man" : {
+        id = 30501,
+        item_class = "tf_wearable",
+        item_name_english = "Marsupial Man"
+    },
+    "Kanga Kickers" : {
+        id = 30502,
+        item_class = "tf_wearable",
+        item_name_english = "Kanga Kickers"
+    },
+    "Roo Rippers" : {
+        id = 30503,
+        item_class = "tf_wearable",
+        item_name_english = "Roo Rippers"
+    },
+    "Marsupial Muzzle" : {
+        id = 30504,
+        item_class = "tf_wearable",
+        item_name_english = "Marsupial Muzzle"
+    },
+    "Shadowman's Shade" : {
+        id = 30505,
+        item_class = "tf_wearable",
+        item_name_english = "Shadowman's Shade"
+    },
+    "Nightmare Hunter" : {
+        id = 30506,
+        item_class = "tf_wearable",
+        item_name_english = "Nightmare Hunter"
+    },
+    "Rogue's Rabbit" : {
+        id = 30507,
+        item_class = "tf_wearable",
+        item_name_english = "Rogue's Rabbit"
+    },
+    "Iron Fist" : {
+        id = 30508,
+        item_class = "tf_wearable",
+        item_name_english = "Iron Fist"
+    },
+    "Beep Man" : {
+        id = 30509,
+        item_class = "tf_wearable",
+        item_name_english = "Beep Man"
+    },
+    "Soul of 'Spenser's Past" : {
+        id = 30510,
+        item_class = "tf_wearable",
+        item_name_english = "Soul of 'Spensers Past"
+    },
+    "Tiny Texan" : {
+        id = 30511,
+        item_class = "tf_wearable",
+        item_name_english = "Tiny Texan"
+    },
+    "Facepeeler" : {
+        id = 30512,
+        item_class = "tf_wearable",
+        item_name_english = "Facepeeler"
+    },
+    "Mr. Mundee's Wild Ride" : {
+        id = 30513,
+        item_class = "tf_wearable",
+        item_name_english = "Mr. Mundee's Wild Ride"
+    },
+    "Templar's Spirit" : {
+        id = 30514,
+        item_class = "tf_wearable",
+        item_name_english = "Templar's Spirit"
+    },
+    "Wings of Purity" : {
+        id = 30515,
+        item_class = "tf_wearable",
+        item_name_english = "Wings of Purity"
+    },
+    "Forgotten King's Restless Head" : {
+        id = 30516,
+        item_class = "tf_wearable",
+        item_name_english = "Forgotten King's Restless Head"
+    },
+    "Forgotten King's Pauldrons" : {
+        id = 30517,
+        item_class = "tf_wearable",
+        item_name_english = "Forgotten King's Pauldrons"
+    },
+    "Eyeborg" : {
+        id = 30518,
+        item_class = "tf_wearable",
+        item_name_english = "Eyeborg"
+    },
+    "Explosive Mind" : {
+        id = 30519,
+        item_class = "tf_wearable",
+        item_name_english = "Mannhattan Project"
+    },
+    "Ghoul Gibbin' Gear" : {
+        id = 30520,
+        item_class = "tf_wearable",
+        item_name_english = "Ghoul Gibbin' Gear"
+    },
+    "Hellhunter's Headpiece" : {
+        id = 30521,
+        item_class = "tf_wearable",
+        item_name_english = "Hellhunter's Headpiece"
+    },
+    "Supernatural Stalker" : {
+        id = 30522,
+        item_class = "tf_wearable",
+        item_name_english = "Supernatural Stalker"
+    },
+    "Garden Bristles" : {
+        id = 30523,
+        item_class = "tf_wearable",
+        item_name_english = "Garden Bristles"
+    },
+    "Battle Bird" : {
+        id = 30524,
+        item_class = "tf_wearable",
+        item_name_english = "Battle Bird"
+    },
+    "Creature's Grin" : {
+        id = 30525,
+        item_class = "tf_wearable",
+        item_name_english = "Creature's Grin"
+    },
+    "Arsonist Apparatus" : {
+        id = 30526,
+        item_class = "tf_wearable",
+        item_name_english = "Arsonist Apparatus"
+    },
+    "Moccasin Machinery" : {
+        id = 30527,
+        item_class = "tf_wearable",
+        item_name_english = "Moccasin Machinery"
+    },
+    "Lollichop Licker" : {
+        id = 30528,
+        item_class = "tf_wearable",
+        item_name_english = "Lollichop Licker"
+    },
+    "Mr. Juice" : {
+        id = 30529,
+        item_class = "tf_wearable",
+        item_name_english = "Mr. Juice"
+    },
+    "Vampyro" : {
+        id = 30530,
+        item_class = "tf_wearable",
+        item_name_english = "Vampyro"
+    },
+    "Bone-Cut Belt" : {
+        id = 30531,
+        item_class = "tf_wearable",
+        item_name_english = "Bone-Cut Belt"
+    },
+    "Bull Locks" : {
+        id = 30532,
+        item_class = "tf_wearable",
+        item_name_english = "Bull Locks"
+    },
+    "Minsk Beef" : {
+        id = 30533,
+        item_class = "tf_wearable",
+        item_name_english = "Minsk Beef"
+    },
+    "Immobile Suit" : {
+        id = 30534,
+        item_class = "tf_wearable",
+        item_name_english = "Immobile Suit"
+    },
+    "Kritz Or Treat Canteen" : {
+        id = 30535,
+        item_class = "tf_powerup_bottle",
+        item_name_english = "Kritz or Treat Canteen"
+    },
+    "Cursed Cruise" : {
+        id = 30536,
+        item_class = "tf_wearable",
+        item_name_english = "Li'l Dutchman"
+    },
+    "EOTL_Skier" : {
+        id = 30538,
+        item_class = "tf_wearable",
+        item_name_english = "Wartime Warmth"
+    },
+    "EOTL_Insulated_innovator" : {
+        id = 30539,
+        item_class = "tf_wearable",
+        item_name_english = "Insulated Inventor"
+    },
+    "EOTL_blinks_breeches" : {
+        id = 30540,
+        item_class = "tf_wearable",
+        item_name_english = "Brooklyn Booties"
+    },
+    "EOTL_demo_dynamite" : {
+        id = 30541,
+        item_class = "tf_wearable",
+        item_name_english = "Double Dynamite"
+    },
+    "EOTL_Brisk-weather Beanie" : {
+        id = 30542,
+        item_class = "tf_wearable",
+        item_name_english = "Coldsnap Cap"
+    },
+    "EOTL_winter_pants" : {
+        id = 30543,
+        item_class = "tf_wearable",
+        item_name_english = "Snow Stompers"
+    },
+    "EOTL_pyro_sweater" : {
+        id = 30544,
+        item_class = "tf_wearable",
+        item_name_english = "North Polar Fleece"
+    },
+    "EOTL_Flat_cap" : {
+        id = 30545,
+        item_class = "tf_wearable",
+        item_name_english = "Fur-Lined Fighter"
+    },
+    "EOTL_FURCAP" : {
+        id = 30546,
+        item_class = "tf_wearable",
+        item_name_english = "Boxcar Bomber"
+    },
+    "EOTL_summerhat" : {
+        id = 30547,
+        item_class = "tf_wearable",
+        item_name_english = "Bomber's Bucket Hat"
+    },
+    "EOTL_soldier_garrison" : {
+        id = 30548,
+        item_class = "tf_wearable",
+        item_name_english = "Screamin' Eagle"
+    },
+    "EOTL_hiphunter_hat" : {
+        id = 30549,
+        item_class = "tf_wearable",
+        item_name_english = "Winter Woodsman"
+    },
+    "EOTL_hiphunter_jacket" : {
+        id = 30550,
+        item_class = "tf_wearable",
+        item_name_english = "Snow Sleeves"
+    },
+    "EOTL_hiphunter_boots" : {
+        id = 30551,
+        item_class = "tf_wearable",
+        item_name_english = "Flashdance Footies"
+    },
+    "EOTL_thermal_sleeves" : {
+        id = 30552,
+        item_class = "tf_wearable",
+        item_name_english = "Thermal Tracker"
+    },
+    "EOTL_soldierhat" : {
+        id = 30553,
+        item_class = "tf_wearable",
+        item_name_english = "Condor Cap"
+    },
+    "EOTL_beard" : {
+        id = 30554,
+        item_class = "tf_wearable",
+        item_name_english = "Mistaken Movember"
+    },
+    "EOTL_demopants" : {
+        id = 30555,
+        item_class = "tf_wearable",
+        item_name_english = "Double Dog Dare Demo Pants"
+    },
+    "EOTL_Ursa Major" : {
+        id = 30556,
+        item_class = "tf_wearable",
+        item_name_english = "Sleeveless in Siberia"
+    },
+    "EOTL_sheavyshirt" : {
+        id = 30557,
+        item_class = "tf_wearable",
+        item_name_english = "Hunter Heavy"
+    },
+    "EOTL_Coldfront Curbstompers" : {
+        id = 30558,
+        item_class = "tf_wearable",
+        item_name_english = "Coldfront Curbstompers"
+    },
+    "End of the Line Community Update Medal" : {
+        id = 30559,
+        item_class = "tf_wearable",
+        item_name_english = "End of the Line Community Update Medal"
+    },
+    "The Bootenkhamuns" : {
+        id = 30561,
+        item_class = "tf_wearable",
+        item_name_english = "Bootenkhamuns"
+    },
+    "Jungle Booty" : {
+        id = 30563,
+        item_class = "tf_wearable",
+        item_name_english = "Jungle Booty"
+    },
+    "Orion's Belt" : {
+        id = 30564,
+        item_class = "tf_wearable",
+        item_name_english = "Orion's Belt"
+    },
+    "The Crown of the Old Kingdom" : {
+        id = 30567,
+        item_class = "tf_wearable",
+        item_name_english = "Crown of the Old Kingdom"
+    },
+    "The Tomb Readers" : {
+        id = 30569,
+        item_class = "tf_wearable",
+        item_name_english = "Tomb Readers"
+    },
+    "Pool Party Taunt" : {
+        id = 30570,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Pool Party"
+    },
+    "Brimstone" : {
+        id = 30571,
+        item_class = "tf_wearable",
+        item_name_english = "Brimstone"
+    },
+    "Taunt: The Boston Breakdance" : {
+        id = 30572,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Boston Breakdance"
+    },
+    "dec2014 Marauders Mask" : {
+        id = 30573,
+        item_class = "tf_wearable",
+        item_name_english = "Mountebank's Masque"
+    },
+    "dec2014 Truands Tunic" : {
+        id = 30574,
+        item_class = "tf_wearable",
+        item_name_english = "Courtier's Collar"
+    },
+    "dec2014 Fools Footwear" : {
+        id = 30575,
+        item_class = "tf_wearable",
+        item_name_english = "Harlequin's Hooves"
+    },
+    "dec2014 CoPilot_2014" : {
+        id = 30576,
+        item_class = "tf_wearable",
+        item_name_english = "Co-Pilot"
+    },
+    "dec2014 Skullcap" : {
+        id = 30578,
+        item_class = "tf_wearable",
+        item_name_english = "Skullcap"
+    },
+    "dec2014 2014_pyromancer_hood" : {
+        id = 30580,
+        item_class = "tf_wearable",
+        item_name_english = "Pyromancer's Hood"
+    },
+    "dec2014 Pyromancer's Raiments" : {
+        id = 30581,
+        item_class = "tf_wearable",
+        item_name_english = "Pyromancer's Raiments"
+    },
+    "dec2014 Black Knights Bascinet" : {
+        id = 30582,
+        item_class = "tf_wearable",
+        item_name_english = "Black Knight's Bascinet"
+    },
+    "dec2014 Torchers Tabard" : {
+        id = 30583,
+        item_class = "tf_wearable",
+        item_name_english = "Torcher's Tabard"
+    },
+    "dec2014 Armoured Appendages" : {
+        id = 30584,
+        item_class = "tf_wearable",
+        item_name_english = "Charred Chainmail"
+    },
+    "dec2014 Viking Helmet" : {
+        id = 30586,
+        item_class = "tf_wearable",
+        item_name_english = "Valhalla Helm"
+    },
+    "dec2014 Viking Boots" : {
+        id = 30587,
+        item_class = "tf_wearable",
+        item_name_english = "Storm Stompers"
+    },
+    "dec2014 heavy_parka" : {
+        id = 30588,
+        item_class = "tf_wearable",
+        item_name_english = "Siberian Facehugger"
+    },
+    "dec2014 The Big Papa" : {
+        id = 30589,
+        item_class = "tf_wearable",
+        item_name_english = "Old Man Frost"
+    },
+    "dec2014 engineer_detectiveholster" : {
+        id = 30590,
+        item_class = "tf_wearable",
+        item_name_english = "Holstered Heaters"
+    },
+    "dec2014 engineer_detectiveradio" : {
+        id = 30591,
+        item_class = "tf_wearable",
+        item_name_english = "Cop Caller"
+    },
+    "dec2014 engineer_detectiveglasses" : {
+        id = 30592,
+        item_class = "tf_wearable",
+        item_name_english = "Conagher's Combover"
+    },
+    "dec2014 engineer_seal" : {
+        id = 30593,
+        item_class = "tf_wearable",
+        item_name_english = "Clubsy The Seal"
+    },
+    "dec2014 medic_unknown_mann" : {
+        id = 30595,
+        item_class = "tf_wearable",
+        item_name_english = "Unknown Mann"
+    },
+    "dec2014 Surgeon's Shako" : {
+        id = 30596,
+        item_class = "tf_wearable",
+        item_name_english = "Surgeon's Shako"
+    },
+    "dec2014 hunter_beard" : {
+        id = 30597,
+        item_class = "tf_wearable",
+        item_name_english = "Bushman's Bristles"
+    },
+    "dec2014 hunter_ushanka" : {
+        id = 30598,
+        item_class = "tf_wearable",
+        item_name_english = "Professional's Ushanka"
+    },
+    "dec2014 hunter_vest" : {
+        id = 30599,
+        item_class = "tf_wearable",
+        item_name_english = "Marksman's Mohair"
+    },
+    "dec2014 Wally Pocket" : {
+        id = 30600,
+        item_class = "tf_wearable",
+        item_name_english = "Wally Pocket"
+    },
+    "eotl_winter_coat" : {
+        id = 30601,
+        item_class = "tf_wearable",
+        item_name_english = "Cold Snap Coat"
+    },
+    "dec2014 The Puffy Provocateur" : {
+        id = 30602,
+        item_class = "tf_wearable",
+        item_name_english = "Puffy Provocateur"
+    },
+    "dec2014 Stealthy Scarf" : {
+        id = 30603,
+        item_class = "tf_wearable",
+        item_name_english = "Stealthy Scarf"
+    },
+    "dec2014 Comforter" : {
+        id = 30604,
+        item_class = "tf_wearable",
+        item_name_english = "Scot Bonnet"
+    },
+    "dec2014 Thermal Insulation Layer" : {
+        id = 30605,
+        item_class = "tf_wearable",
+        item_name_english = "Thermal Insulation Layer"
+    },
+    "dec2014 Pocket Momma" : {
+        id = 30606,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Momma"
+    },
+    "The Pocket Raiders" : {
+        id = 30607,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Raiders"
+    },
+    "Taunt: The Killer Solo" : {
+        id = 30609,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Killer Solo"
+    },
+    "Taunt: Most Wanted" : {
+        id = 30614,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Most Wanted"
+    },
+    "Taunt: The Boxtrot" : {
+        id = 30615,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Box Trot"
+    },
+    "Taunt: The Proletariat Showoff" : {
+        id = 30616,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Proletariat Posedown"
+    },
+    "Taunt: Bucking Bronco" : {
+        id = 30618,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Bucking Bronco"
+    },
+    "Taunt: Burstchester" : {
+        id = 30621,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Burstchester"
+    },
+    "The Rotation Sensation" : {
+        id = 30623,
+        item_class = "tf_wearable",
+        item_name_english = "Rotation Sensation"
+    },
+    "The Physician's Protector" : {
+        id = 30625,
+        item_class = "tf_wearable",
+        item_name_english = "Physician's Protector"
+    },
+    "The Vascular Vestment" : {
+        id = 30626,
+        item_class = "tf_wearable",
+        item_name_english = "Vascular Vestment"
+    },
+    "Bruce's Bonnet" : {
+        id = 30627,
+        item_class = "tf_wearable",
+        item_name_english = "Bruce's Bonnet"
+    },
+    "Outta' Sight" : {
+        id = 30628,
+        item_class = "tf_wearable",
+        item_name_english = "Outta Sight"
+    },
+    "Support Spurs" : {
+        id = 30629,
+        item_class = "tf_wearable",
+        item_name_english = "Support Spurs"
+    },
+    "Lurker's Leathers" : {
+        id = 30631,
+        item_class = "tf_wearable",
+        item_name_english = "Lurker's Leathers"
+    },
+    "Commissar's Coat" : {
+        id = 30633,
+        item_class = "tf_wearable",
+        item_name_english = "Commissar's Coat"
+    },
+    "Sheriff's Stetson" : {
+        id = 30634,
+        item_class = "tf_wearable",
+        item_name_english = "Sheriff's Stetson"
+    },
+    "Wild West Waistcoat" : {
+        id = 30635,
+        item_class = "tf_wearable",
+        item_name_english = "Wild West Waistcoat"
+    },
+    "Fortunate Son" : {
+        id = 30636,
+        item_class = "tf_wearable",
+        item_name_english = "Fortunate Son"
+    },
+    "Flak Jack" : {
+        id = 30637,
+        item_class = "tf_wearable",
+        item_name_english = "Flak Jack"
+    },
+    "Captain Cardbeard Cutthroat" : {
+        id = 30640,
+        item_class = "tf_wearable",
+        item_name_english = "Captain Cardbeard Cutthroat"
+    },
+    "Potassium Bonnett" : {
+        id = 30643,
+        item_class = "tf_wearable",
+        item_name_english = "Potassium Bonnet"
+    },
+    "White Russian" : {
+        id = 30644,
+        item_class = "tf_wearable",
+        item_name_english = "White Russian"
+    },
+    "El Duderino" : {
+        id = 30645,
+        item_class = "tf_wearable",
+        item_name_english = "El Duderino"
+    },
+    "Captain Space Mann" : {
+        id = 30646,
+        item_class = "tf_wearable",
+        item_name_english = "Captain Space Mann"
+    },
+    "Phononaut" : {
+        id = 30647,
+        item_class = "tf_wearable",
+        item_name_english = "Phononaut"
+    },
+    "Corona Australis" : {
+        id = 30648,
+        item_class = "tf_wearable",
+        item_name_english = "Corona Australis"
+    },
+    "Final Frontiersman" : {
+        id = 30649,
+        item_class = "tf_wearable",
+        item_name_english = "Final Frontiersman"
+    },
+    "Starduster" : {
+        id = 30650,
+        item_class = "tf_wearable",
+        item_name_english = "Starduster"
+    },
+    "The Graylien" : {
+        id = 30651,
+        item_class = "tf_wearable",
+        item_name_english = "Graylien"
+    },
+    "Phobos Filter" : {
+        id = 30652,
+        item_class = "tf_wearable",
+        item_name_english = "Phobos Filter"
+    },
+    "Sucker Slug" : {
+        id = 30653,
+        item_class = "tf_wearable",
+        item_name_english = "Sucker Slug"
+    },
+    "Life Support System" : {
+        id = 30654,
+        item_class = "tf_wearable",
+        item_name_english = "Life Support System"
+    },
+    "Rocket Operator" : {
+        id = 30655,
+        item_class = "tf_wearable",
+        item_name_english = "Rocket Operator"
+    },
+    "Universal Translator" : {
+        id = 30658,
+        item_class = "tf_wearable",
+        item_name_english = "Universal Translator"
+    },
+    "Cadet Visor" : {
+        id = 30661,
+        item_class = "tf_wearable",
+        item_name_english = "Cadet Visor"
+    },
+    "A Head Full of Hot Air" : {
+        id = 30662,
+        item_class = "tf_wearable",
+        item_name_english = "A Head Full of Hot Air"
+    },
+    "Jupiter Jetpack" : {
+        id = 30663,
+        item_class = "tf_wearable",
+        item_name_english = "Jupiter Jetpack"
+    },
+    "The Space Diver" : {
+        id = 30664,
+        item_class = "tf_wearable",
+        item_name_english = "Space Diver"
+    },
+    "Shooting Star" : {
+        id = 30665,
+        item_class = "tf_weapon_sniperrifle",
+        item_name_english = "Shooting Star"
+    },
+    "The C.A.P.P.E.R" : {
+        id = 30666,
+        item_class = "tf_weapon_pistol",
+        item_name_english = "C.A.P.P.E.R"
+    },
+    "Batsaber" : {
+        id = 30667,
+        item_class = "tf_weapon_bat",
+        item_name_english = "Batsaber"
+    },
+    "The Giger Counter" : {
+        id = 30668,
+        item_class = "tf_weapon_laser_pointer",
+        item_name_english = "Giger Counter"
+    },
+    "Space Hamster Hammy" : {
+        id = 30669,
+        item_class = "tf_wearable",
+        item_name_english = "Space Hamster Hammy"
+    },
+    "Invasion Community Update Medal" : {
+        id = 30670,
+        item_class = "tf_wearable",
+        item_name_english = "Invasion Community Update Medal"
+    },
+    "Taunt: True Scotsman's Call" : {
+        id = 30671,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Bad Pipes"
+    },
+    "Taunt: Zoomin' Broom" : {
+        id = 30672,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Zoomin' Broom"
+    },
+    "Taunt: Soldier's Requiem" : {
+        id = 30673,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Soldier's Requiem"
+    },
+    "Roboot" : {
+        id = 30675,
+        item_class = "tf_wearable",
+        item_name_english = "Roboot"
+    },
+    "The Face of Mercy" : {
+        id = 30676,
+        item_class = "tf_wearable",
+        item_name_english = "Face of Mercy"
+    },
+    "El Caballero" : {
+        id = 30680,
+        item_class = "tf_wearable",
+        item_name_english = "El Caballero"
+    },
+    "El Patron" : {
+        id = 30681,
+        item_class = "tf_wearable",
+        item_name_english = "El Patron"
+    },
+    "Smokey Sombrero" : {
+        id = 30682,
+        item_class = "tf_wearable",
+        item_name_english = "Smokey Sombrero"
+    },
+    "Neptune's Nightmare" : {
+        id = 30684,
+        item_class = "tf_wearable",
+        item_name_english = "Neptune's Nightmare"
+    },
+    "Thrilling Tracksuit" : {
+        id = 30685,
+        item_class = "tf_wearable",
+        item_name_english = "Thrilling Tracksuit"
+    },
+    "Death Racer's Helmet" : {
+        id = 30686,
+        item_class = "tf_wearable",
+        item_name_english = "Death Racer's Helmet"
+    },
+    "Grim Tweeter" : {
+        id = 30693,
+        item_class = "tf_wearable",
+        item_name_english = "Grim Tweeter"
+    },
+    "Iron Lung" : {
+        id = 30698,
+        item_class = "tf_wearable",
+        item_name_english = "Iron Lung"
+    },
+    "Duck Billed Hatypus" : {
+        id = 30700,
+        item_class = "tf_wearable",
+        item_name_english = "Duck Billed Hatypus"
+    },
+    "Prehistoric Pullover" : {
+        id = 30704,
+        item_class = "tf_wearable",
+        item_name_english = "Prehistoric Pullover"
+    },
+    "Catastrophic Companions" : {
+        id = 30706,
+        item_class = "tf_wearable",
+        item_name_english = "Catastrophic Companions"
+    },
+    "Dead'er Alive" : {
+        id = 30707,
+        item_class = "tf_wearable",
+        item_name_english = "Dead'er Alive"
+    },
+    "The Hellmet" : {
+        id = 30708,
+        item_class = "tf_wearable",
+        item_name_english = "Hellmet"
+    },
+    "Crusader's Getup" : {
+        id = 30716,
+        item_class = "tf_wearable",
+        item_name_english = "Crusader's Getup"
+    },
+    "Arthropod's Aspect" : {
+        id = 30717,
+        item_class = "tf_wearable",
+        item_name_english = "Arthropod's Aspect"
+    },
+    "B'aaarrgh-n-Bicorne" : {
+        id = 30718,
+        item_class = "tf_wearable",
+        item_name_english = "B'aaarrgh-n-Bicorne"
+    },
+    "B'aaarrgh-n-Britches" : {
+        id = 30719,
+        item_class = "tf_wearable",
+        item_name_english = "B'aaarrgh-n-Britches"
+    },
+    "Arkham Cowl" : {
+        id = 30720,
+        item_class = "tf_wearable",
+        item_name_english = "Arkham Cowl"
+    },
+    "The Firefly" : {
+        id = 30721,
+        item_class = "tf_wearable",
+        item_name_english = "Firefly"
+    },
+    "Batter's Bracers" : {
+        id = 30722,
+        item_class = "tf_wearable",
+        item_name_english = "Batter's Bracers"
+    },
+    "The Hood of Sorrows" : {
+        id = 30723,
+        item_class = "tf_wearable",
+        item_name_english = "Hood of Sorrows"
+    },
+    "Fear Monger" : {
+        id = 30724,
+        item_class = "tf_wearable",
+        item_name_english = "Fear Monger"
+    },
+    "Pocket Villains" : {
+        id = 30726,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Villains"
+    },
+    "The Caped Crusader" : {
+        id = 30727,
+        item_class = "tf_wearable",
+        item_name_english = "Caped Crusader"
+    },
+    "Buttler" : {
+        id = 30728,
+        item_class = "tf_wearable",
+        item_name_english = "Buttler"
+    },
+    "Teufort Knight" : {
+        id = 30733,
+        item_class = "tf_wearable",
+        item_name_english = "Teufort Knight"
+    },
+    "Sidekick's Side Slick" : {
+        id = 30735,
+        item_class = "tf_wearable",
+        item_name_english = "Sidekick's Side Slick"
+    },
+    "The Bat Backup" : {
+        id = 30736,
+        item_class = "tf_wearable",
+        item_name_english = "Bat Backup"
+    },
+    "Crook Combatant" : {
+        id = 30737,
+        item_class = "tf_wearable",
+        item_name_english = "Crook Combatant"
+    },
+    "Batbelt" : {
+        id = 30738,
+        item_class = "tf_wearable",
+        item_name_english = "Batbelt"
+    },
+    "Promo Fear Monger" : {
+        id = 30739,
+        item_class = "tf_wearable",
+        item_name_english = "Fear Monger"
+    },
+    "Promo Arkham Cowl" : {
+        id = 30740,
+        item_class = "tf_wearable",
+        item_name_english = "Arkham Cowl"
+    },
+    "Promo The Firefly" : {
+        id = 30741,
+        item_class = "tf_wearable",
+        item_name_english = "Firefly"
+    },
+    "Shin Shredders" : {
+        id = 30742,
+        item_class = "tf_wearable",
+        item_name_english = "Shin Shredders"
+    },
+    "The Patriot Peak" : {
+        id = 30743,
+        item_class = "tf_wearable",
+        item_name_english = "Patriot Peak"
+    },
+    "The Diplomat" : {
+        id = 30744,
+        item_class = "tf_wearable",
+        item_name_english = "Diplomat"
+    },
+    "Siberian Sweater" : {
+        id = 30745,
+        item_class = "tf_wearable",
+        item_name_english = "Siberian Sweater"
+    },
+    "A Well Wrapped Hat" : {
+        id = 30746,
+        item_class = "tf_wearable",
+        item_name_english = "A Well Wrapped Hat"
+    },
+    "The Gift Bringer" : {
+        id = 30747,
+        item_class = "tf_wearable",
+        item_name_english = "Gift Bringer"
+    },
+    "The Chill Chullo" : {
+        id = 30748,
+        item_class = "tf_wearable",
+        item_name_english = "Chill Chullo"
+    },
+    "Winter Backup" : {
+        id = 30749,
+        item_class = "tf_wearable",
+        item_name_english = "Winter Backup"
+    },
+    "Medical Monarch" : {
+        id = 30750,
+        item_class = "tf_wearable",
+        item_name_english = "Medical Monarch"
+    },
+    "Bonk Batter's Backup" : {
+        id = 30751,
+        item_class = "tf_wearable",
+        item_name_english = "Bonk Batter's Backup"
+    },
+    "Chicago Overcoat" : {
+        id = 30752,
+        item_class = "tf_wearable",
+        item_name_english = "Chicago Overcoat"
+    },
+    "A Hat to Kill For" : {
+        id = 30753,
+        item_class = "tf_wearable",
+        item_name_english = "A Hat to Kill For"
+    },
+    "Hot Heels" : {
+        id = 30754,
+        item_class = "tf_wearable",
+        item_name_english = "Hot Heels"
+    },
+    "Berlin Brain Bowl" : {
+        id = 30755,
+        item_class = "tf_wearable",
+        item_name_english = "Berlin Brain Bowl"
+    },
+    "Bunnyhopper's Ballistics Vest" : {
+        id = 30756,
+        item_class = "tf_wearable",
+        item_name_english = "Bunnyhopper's Ballistics Vest"
+    },
+    "Prinny Pouch" : {
+        id = 30757,
+        item_class = "tf_wearable",
+        item_name_english = "Prinny Pouch"
+    },
+    "Prinny Machete" : {
+        id = 30758,
+        item_class = "saxxy",
+        item_name_english = "Prinny Machete"
+    },
+    "Prinny Hat" : {
+        id = 30759,
+        item_class = "tf_wearable",
+        item_name_english = "Prinny Hat"
+    },
+    "Taunt: The Fubar Fanfare" : {
+        id = 30761,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Fubar Fanfare"
+    },
+    "Taunt: Disco Fever" : {
+        id = 30762,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Disco Fever"
+    },
+    "Taunt: The Balloonibouncer" : {
+        id = 30763,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Balloonibouncer"
+    },
+    "The Airdog" : {
+        id = 30767,
+        item_class = "tf_wearable",
+        item_name_english = "Airdog"
+    },
+    "Bedouin Bandana" : {
+        id = 30768,
+        item_class = "tf_wearable",
+        item_name_english = "Bedouin Bandana"
+    },
+    "Herald's Helm" : {
+        id = 30769,
+        item_class = "tf_wearable",
+        item_name_english = "Herald's Helm"
+    },
+    "Courtly Cuirass" : {
+        id = 30770,
+        item_class = "tf_wearable",
+        item_name_english = "Courtly Cuirass"
+    },
+    "Squire's Sabatons" : {
+        id = 30771,
+        item_class = "tf_wearable",
+        item_name_english = "Squire's Sabatons"
+    },
+    "The Surgical Survivalist" : {
+        id = 30773,
+        item_class = "tf_wearable",
+        item_name_english = "Surgical Survivalist"
+    },
+    "The Dead Head" : {
+        id = 30775,
+        item_class = "tf_wearable",
+        item_name_english = "Dead Head"
+    },
+    "The Lurking Legionnaire" : {
+        id = 30777,
+        item_class = "tf_wearable",
+        item_name_english = "Lurking Legionnaire"
+    },
+    "The Dayjogger" : {
+        id = 30779,
+        item_class = "tf_wearable",
+        item_name_english = "Dayjogger"
+    },
+    "The Patriot's Pouches" : {
+        id = 30780,
+        item_class = "tf_wearable",
+        item_name_english = "Patriot's Pouches"
+    },
+    "Dad Duds" : {
+        id = 30785,
+        item_class = "tf_wearable",
+        item_name_english = "Dad Duds"
+    },
+    "The Gauzed Gaze" : {
+        id = 30786,
+        item_class = "tf_wearable",
+        item_name_english = "Gauzed Gaze"
+    },
+    "The Demo's Dustcatcher" : {
+        id = 30788,
+        item_class = "tf_wearable",
+        item_name_english = "Demo's Dustcatcher"
+    },
+    "The Scoped Spartan" : {
+        id = 30789,
+        item_class = "tf_wearable",
+        item_name_english = "Scoped Spartan"
+    },
+    "Colossal Cranium" : {
+        id = 30792,
+        item_class = "tf_wearable",
+        item_name_english = "Colossal Cranium"
+    },
+    "Aerobatics Demonstrator" : {
+        id = 30793,
+        item_class = "tf_wearable",
+        item_name_english = "Aerobatics Demonstrator"
+    },
+    "Final Frontier Freighter" : {
+        id = 30794,
+        item_class = "tf_wearable",
+        item_name_english = "Final Frontier Freighter"
+    },
+    "Hovering Hotshot" : {
+        id = 30795,
+        item_class = "tf_wearable",
+        item_name_english = "Hovering Hotshot"
+    },
+    "The Toadstool Topper" : {
+        id = 30796,
+        item_class = "tf_wearable",
+        item_name_english = "Toadstool Topper"
+    },
+    "Showstopper" : {
+        id = 30797,
+        item_class = "tf_wearable",
+        item_name_english = "Showstopper"
+    },
+    "Big Topper" : {
+        id = 30798,
+        item_class = "tf_wearable",
+        item_name_english = "Big Topper"
+    },
+    "Combustible Cutie" : {
+        id = 30799,
+        item_class = "tf_wearable",
+        item_name_english = "Combustible Cutie"
+    },
+    "The Cranial Carcharodon" : {
+        id = 30800,
+        item_class = "tf_wearable",
+        item_name_english = "Cranial Carcharodon"
+    },
+    "Spooktacles" : {
+        id = 30801,
+        item_class = "tf_wearable",
+        item_name_english = "Spooktacles"
+    },
+    "Heavy Tourism" : {
+        id = 30803,
+        item_class = "tf_wearable",
+        item_name_english = "Heavy Tourism"
+    },
+    "The El Paso Poncho" : {
+        id = 30804,
+        item_class = "tf_wearable",
+        item_name_english = "El Paso Poncho"
+    },
+    "The Wide-Brimmed Bandito" : {
+        id = 30805,
+        item_class = "tf_wearable",
+        item_name_english = "Wide-Brimmed Bandito"
+    },
+    "The Corpus Christi Cranium" : {
+        id = 30806,
+        item_class = "tf_wearable",
+        item_name_english = "Corpus Christi Cranium"
+    },
+    "Spirit of the Bombing Past" : {
+        id = 30807,
+        item_class = "tf_wearable",
+        item_name_english = "Spirit of the Bombing Past"
+    },
+    "Class Crown" : {
+        id = 30808,
+        item_class = "tf_wearable",
+        item_name_english = "Class Crown"
+    },
+    "The Wing Mann" : {
+        id = 30809,
+        item_class = "tf_wearable",
+        item_name_english = "Wing Mann"
+    },
+    "Nasty Norsemann" : {
+        id = 30810,
+        item_class = "tf_wearable",
+        item_name_english = "Nasty Norsemann"
+    },
+    "Pestering Jester" : {
+        id = 30811,
+        item_class = "tf_wearable",
+        item_name_english = "Pestering Jester"
+    },
+    "Mo'Horn" : {
+        id = 30812,
+        item_class = "tf_wearable",
+        item_name_english = "Mo'Horn"
+    },
+    "The Surgeon's Sidearms" : {
+        id = 30813,
+        item_class = "tf_wearable",
+        item_name_english = "Surgeon's Sidearms"
+    },
+    "Lil' Bitey" : {
+        id = 30814,
+        item_class = "tf_wearable",
+        item_name_english = "Lil' Bitey"
+    },
+    "Mad Mask" : {
+        id = 30815,
+        item_class = "tf_wearable",
+        item_name_english = "Mad Mask"
+    },
+    "Taunt: Second Rate Sorcery" : {
+        id = 30816,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Second Rate Sorcery"
+    },
+    "Burly Beast" : {
+        id = 30817,
+        item_class = "tf_wearable",
+        item_name_english = "Burly Beast"
+    },
+    "Socked and Loaded" : {
+        id = 30818,
+        item_class = "tf_wearable",
+        item_name_english = "Socked and Loaded"
+    },
+    "Flammable Favor" : {
+        id = 30819,
+        item_class = "tf_wearable",
+        item_name_english = "Flammable Favor"
+    },
+    "Snowwing" : {
+        id = 30820,
+        item_class = "tf_wearable",
+        item_name_english = "Snowwing"
+    },
+    "Packable Provisions" : {
+        id = 30821,
+        item_class = "tf_wearable",
+        item_name_english = "Packable Provisions"
+    },
+    "Handy Canes" : {
+        id = 30822,
+        item_class = "tf_wearable",
+        item_name_english = "Handy Canes"
+    },
+    "Bomb Beanie" : {
+        id = 30823,
+        item_class = "tf_wearable",
+        item_name_english = "Bomb Beanie"
+    },
+    "The Electric Twanger" : {
+        id = 30824,
+        item_class = "tf_wearable",
+        item_name_english = "Electric Twanger"
+    },
+    "Santarchimedes" : {
+        id = 30825,
+        item_class = "tf_wearable",
+        item_name_english = "Santarchimedes"
+    },
+    "Sweet Smissmas Sweater" : {
+        id = 30826,
+        item_class = "tf_wearable",
+        item_name_english = "Sweet Smissmas Sweater"
+    },
+    "Brain-Warming Wear" : {
+        id = 30827,
+        item_class = "tf_wearable",
+        item_name_english = "Brain-Warming Wear"
+    },
+    "The Snowmann" : {
+        id = 30829,
+        item_class = "tf_wearable",
+        item_name_english = "Snowmann"
+    },
+    "The Bomber Knight" : {
+        id = 30830,
+        item_class = "tf_wearable",
+        item_name_english = "Bomber Knight"
+    },
+    "Reader's Choice" : {
+        id = 30831,
+        item_class = "tf_wearable",
+        item_name_english = "Reader's Choice"
+    },
+    "Woolen Warmer" : {
+        id = 30833,
+        item_class = "tf_wearable",
+        item_name_english = "Woolen Warmer"
+    },
+    "Pyro the Flamedeer" : {
+        id = 30835,
+        item_class = "tf_wearable",
+        item_name_english = "Pyro the Flamedeer"
+    },
+    "Elf Esteem" : {
+        id = 30836,
+        item_class = "tf_wearable",
+        item_name_english = "Elf Esteem"
+    },
+    "The Head Prize" : {
+        id = 30838,
+        item_class = "tf_wearable",
+        item_name_english = "Head Prize"
+    },
+    "Taunt: Didgeridrongo" : {
+        id = 30839,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Didgeridrongo"
+    },
+    "Taunt: Scotsmann's Stagger" : {
+        id = 30840,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Scotsmann's Stagger"
+    },
+    "Taunt: The Dueling Banjo" : {
+        id = 30842,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Dueling Banjo"
+    },
+    "Taunt: The Russian Arms Race" : {
+        id = 30843,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Russian Arms Race"
+    },
+    "Taunt: The Soviet Strongarm" : {
+        id = 30844,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Soviet Strongarm"
+    },
+    "Taunt: The Jumping Jack" : {
+        id = 30845,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Jumping Jack"
+    },
+    "Plumber's Cap" : {
+        id = 30846,
+        item_class = "tf_wearable",
+        item_name_english = "Plumber's Cap"
+    },
+    "The Upgrade" : {
+        id = 30848,
+        item_class = "tf_wearable",
+        item_name_english = "Upgrade"
+    },
+    "Pocket Pauling" : {
+        id = 30849,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Pauling"
+    },
+    "Flakcatcher" : {
+        id = 30853,
+        item_class = "tf_wearable",
+        item_name_english = "Flakcatcher"
+    },
+    "Down Under Duster" : {
+        id = 30856,
+        item_class = "tf_wearable",
+        item_name_english = "Down Under Duster"
+    },
+    "Guilden Guardian" : {
+        id = 30857,
+        item_class = "tf_wearable",
+        item_name_english = "Guilden Guardian"
+    },
+    "Hawk Eyed Hunter" : {
+        id = 30858,
+        item_class = "tf_wearable",
+        item_name_english = "Hawk-Eyed Hunter"
+    },
+    "Airtight Arsonist" : {
+        id = 30859,
+        item_class = "tf_wearable",
+        item_name_english = "Airtight Arsonist"
+    },
+    "Field Practice" : {
+        id = 30862,
+        item_class = "tf_wearable",
+        item_name_english = "Field Practice"
+    },
+    "Blast Defense" : {
+        id = 30863,
+        item_class = "tf_wearable",
+        item_name_english = "Blast Defense"
+    },
+    "Warhood" : {
+        id = 30866,
+        item_class = "tf_wearable",
+        item_name_english = "Warhood"
+    },
+    "The Lightning Lid" : {
+        id = 30867,
+        item_class = "tf_wearable",
+        item_name_english = "Lightning Lid"
+    },
+    "Legendary Lid" : {
+        id = 30868,
+        item_class = "tf_wearable",
+        item_name_english = "Legendary Lid"
+    },
+    "Messenger's Mail Bag" : {
+        id = 30869,
+        item_class = "tf_wearable",
+        item_name_english = "Messenger's Mail Bag"
+    },
+    "Flash of Inspiration" : {
+        id = 30871,
+        item_class = "tf_wearable",
+        item_name_english = "Flash of Inspiration"
+    },
+    "Head Mounted Double Observatory" : {
+        id = 30872,
+        item_class = "tf_wearable",
+        item_name_english = "Head Mounted Double Observatory"
+    },
+    "Airborne Attire" : {
+        id = 30873,
+        item_class = "tf_wearable",
+        item_name_english = "Airborne Attire"
+    },
+    "Archer's Sterling" : {
+        id = 30874,
+        item_class = "tf_wearable",
+        item_name_english = "Archer's Sterling"
+    },
+    "Speedster's Spandex" : {
+        id = 30875,
+        item_class = "tf_wearable",
+        item_name_english = "Speedster's Spandex"
+    },
+    "Taunt: The Headcase" : {
+        id = 30876,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Headcase"
+    },
+    "The Hunter in Darkness" : {
+        id = 30877,
+        item_class = "tf_wearable",
+        item_name_english = "Hunter in Darkness"
+    },
+    "Quizzical Quetzal" : {
+        id = 30878,
+        item_class = "tf_wearable",
+        item_name_english = "Quizzical Quetzal"
+    },
+    "The Aztec Warrior" : {
+        id = 30879,
+        item_class = "tf_wearable",
+        item_name_english = "Aztec Warrior"
+    },
+    "Pocket Saxton" : {
+        id = 30880,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Saxton"
+    },
+    "The Croaking Hazard" : {
+        id = 30881,
+        item_class = "tf_wearable",
+        item_name_english = "Croaking Hazard"
+    },
+    "Jungle Wreath" : {
+        id = 30882,
+        item_class = "tf_wearable",
+        item_name_english = "Jungle Wreath"
+    },
+    "The Slithering Scarf" : {
+        id = 30883,
+        item_class = "tf_wearable",
+        item_name_english = "Slithering Scarf"
+    },
+    "Aloha Apparel" : {
+        id = 30884,
+        item_class = "tf_wearable",
+        item_name_english = "Aloha Apparel"
+    },
+    "The Nuke" : {
+        id = 30885,
+        item_class = "tf_wearable",
+        item_name_english = "Nuke"
+    },
+    "Bananades" : {
+        id = 30886,
+        item_class = "tf_wearable",
+        item_name_english = "Bananades"
+    },
+    "The War Eagle" : {
+        id = 30887,
+        item_class = "tf_wearable",
+        item_name_english = "War Eagle"
+    },
+    "Jungle Jersey" : {
+        id = 30888,
+        item_class = "tf_wearable",
+        item_name_english = "Jungle Jersey"
+    },
+    "Transparent Trousers" : {
+        id = 30889,
+        item_class = "tf_wearable",
+        item_name_english = "Transparent Trousers"
+    },
+    "Forest Footwear" : {
+        id = 30890,
+        item_class = "tf_wearable",
+        item_name_english = "Forest Footwear"
+    },
+    "The Cammy Jammies" : {
+        id = 30891,
+        item_class = "tf_wearable",
+        item_name_english = "Cammy Jammies"
+    },
+    "The Conspicuous Camouflage" : {
+        id = 30892,
+        item_class = "tf_wearable",
+        item_name_english = "Conspicuous Camouflage"
+    },
+    "The Classy Capper" : {
+        id = 30893,
+        item_class = "tf_wearable",
+        item_name_english = "Classy Capper"
+    },
+    "The Most Dangerous Mane" : {
+        id = 30894,
+        item_class = "tf_wearable",
+        item_name_english = "Most Dangerous Mane"
+    },
+    "Rifleman's Regalia" : {
+        id = 30895,
+        item_class = "tf_wearable",
+        item_name_english = "Rifleman's Regalia"
+    },
+    "Attack Packs" : {
+        id = 30896,
+        item_class = "tf_wearable",
+        item_name_english = "Attack Packs"
+    },
+    "The Shellmet" : {
+        id = 30897,
+        item_class = "tf_wearable",
+        item_name_english = "Shellmet"
+    },
+    "Sharp Chest Pain" : {
+        id = 30898,
+        item_class = "tf_wearable",
+        item_name_english = "Sharp Chest Pain"
+    },
+    "The Crit Cloak" : {
+        id = 30899,
+        item_class = "tf_wearable",
+        item_name_english = "Crit Cloak"
+    },
+    "Fireman's Essentials" : {
+        id = 30900,
+        item_class = "tf_wearable",
+        item_name_english = "Fireman's Essentials"
+    },
+    "D-eye-monds" : {
+        id = 30901,
+        item_class = "tf_wearable",
+        item_name_english = "D-eye-monds"
+    },
+    "Deity's Dress" : {
+        id = 30902,
+        item_class = "tf_wearable",
+        item_name_english = "Deity's Dress"
+    },
+    "Feathered Fiend" : {
+        id = 30903,
+        item_class = "tf_wearable",
+        item_name_english = "Feathered Fiend"
+    },
+    "Sacrificial Stone" : {
+        id = 30904,
+        item_class = "tf_wearable",
+        item_name_english = "Sacrificial Stone"
+    },
+    "The Hot Huaraches" : {
+        id = 30905,
+        item_class = "tf_wearable",
+        item_name_english = "Hot Huaraches"
+    },
+    "Vitals Vest" : {
+        id = 30906,
+        item_class = "tf_wearable",
+        item_name_english = "Vitals Vest"
+    },
+    "Battle Boonie" : {
+        id = 30907,
+        item_class = "tf_wearable",
+        item_name_english = "Battle Boonie"
+    },
+    "Conaghers' Utility Idol" : {
+        id = 30908,
+        item_class = "tf_wearable",
+        item_name_english = "Conaghers' Utility Idol"
+    },
+    "Tropical Toad" : {
+        id = 30909,
+        item_class = "tf_wearable",
+        item_name_english = "Tropical Toad"
+    },
+    "Heavy Harness" : {
+        id = 30910,
+        item_class = "tf_wearable",
+        item_name_english = "Heavy Harness"
+    },
+    "Fat Man's Field Cap" : {
+        id = 30911,
+        item_class = "tf_wearable",
+        item_name_english = "Fat Man's Field Cap"
+    },
+    "Commando Elite" : {
+        id = 30912,
+        item_class = "tf_wearable",
+        item_name_english = "Commando Elite"
+    },
+    "Siberian Tigerstripe" : {
+        id = 30913,
+        item_class = "tf_wearable",
+        item_name_english = "Siberian Tigerstripe"
+    },
+    "The Aztec Aggressor" : {
+        id = 30914,
+        item_class = "tf_wearable",
+        item_name_english = "Aztec Aggressor"
+    },
+    "The Pithy Professional" : {
+        id = 30915,
+        item_class = "tf_wearable",
+        item_name_english = "Pithy Professional"
+    },
+    "Bait and Bite" : {
+        id = 30916,
+        item_class = "tf_wearable",
+        item_name_english = "Bait and Bite"
+    },
+    "Taunt: The Trackman's Touchdown" : {
+        id = 30917,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Trackman's Touchdown"
+    },
+    "Taunt: Surgeon's Squeezebox" : {
+        id = 30918,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Surgeon's Squeezebox"
+    },
+    "Taunt: The Skating Scorcher" : {
+        id = 30919,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Skating Scorcher"
+    },
+    "Taunt: The Bunnyhopper" : {
+        id = 30920,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Bunnyhopper"
+    },
+    "Taunt: Runner's Rhythm" : {
+        id = 30921,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Runner's Rhythm"
+    },
+    "Taunt: Luxury Lounge" : {
+        id = 30922,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Luxury Lounge"
+    },
+    "Sledder's Sidekick" : {
+        id = 30923,
+        item_class = "tf_wearable",
+        item_name_english = "Sledder's Sidekick"
+    },
+    "Balloonihoodie" : {
+        id = 30928,
+        item_class = "tf_wearable",
+        item_name_english = "Balloonihoodie"
+    },
+    "Pocket Yeti" : {
+        id = 30929,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Yeti"
+    },
+    "Trucker's Topper" : {
+        id = 30930,
+        item_class = "tf_wearable",
+        item_name_english = "Trucker's Topper"
+    },
+    "Burning Beanie" : {
+        id = 30936,
+        item_class = "tf_wearable",
+        item_name_english = "Burning Beanie"
+    },
+    "The Cat's Pajamas" : {
+        id = 30937,
+        item_class = "tf_wearable",
+        item_name_english = "Cat's Pajamas"
+    },
+    "Coldfront Commander" : {
+        id = 30939,
+        item_class = "tf_wearable",
+        item_name_english = "Coldfront Commander"
+    },
+    "Coldfront Carapace" : {
+        id = 30940,
+        item_class = "tf_wearable",
+        item_name_english = "Coldfront Carapace"
+    },
+    "Blast Blocker" : {
+        id = 30945,
+        item_class = "tf_wearable",
+        item_name_english = "Blast Blocker"
+    },
+    "Hungover Hero" : {
+        id = 30954,
+        item_class = "tf_wearable",
+        item_name_english = "Hungover Hero"
+    },
+    "The Handsome Hitman" : {
+        id = 30955,
+        item_class = "tf_wearable",
+        item_name_english = "Handsome Hitman"
+    },
+    "Puffy Polar Cap" : {
+        id = 30958,
+        item_class = "tf_wearable",
+        item_name_english = "Puffy Polar Cap"
+    },
+    "The Sinner's Shade" : {
+        id = 30959,
+        item_class = "tf_wearable",
+        item_name_english = "Sinner's Shade"
+    },
+    "Wild West Whiskers" : {
+        id = 30960,
+        item_class = "tf_wearable",
+        item_name_english = "Wild West Whiskers"
+    },
+    "Polar Bear" : {
+        id = 30964,
+        item_class = "tf_wearable",
+        item_name_english = "Polar Bear"
+    },
+    "Brass Bucket" : {
+        id = 30969,
+        item_class = "tf_wearable",
+        item_name_english = "Brass Bucket"
+    },
+    "Down Tundra Coat" : {
+        id = 30971,
+        item_class = "tf_wearable",
+        item_name_english = "Down Tundra Coat"
+    },
+    "Pocket Santa" : {
+        id = 30972,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Santa"
+    },
+    "Melody Of Misery" : {
+        id = 30973,
+        item_class = "tf_wearable",
+        item_name_english = "Melody of Misery"
+    },
+    "The Caribou Companion" : {
+        id = 30974,
+        item_class = "tf_wearable",
+        item_name_english = "Caribou Companion"
+    },
+    "Robin Walkers" : {
+        id = 30975,
+        item_class = "tf_wearable",
+        item_name_english = "Robin Walkers"
+    },
+    "The Tundra Top" : {
+        id = 30976,
+        item_class = "tf_wearable",
+        item_name_english = "Tundra Top"
+    },
+    "Antarctic Eyewear" : {
+        id = 30977,
+        item_class = "tf_wearable",
+        item_name_english = "Antarctic Eyewear"
+    },
+    "The Head Hedge" : {
+        id = 30978,
+        item_class = "tf_wearable",
+        item_name_english = "Head Hedge"
+    },
+    "The Frag Proof Fragger" : {
+        id = 30979,
+        item_class = "tf_wearable",
+        item_name_english = "Frag Proof Fragger"
+    },
+    "Tsar Platinum" : {
+        id = 30980,
+        item_class = "tf_wearable",
+        item_name_english = "Tsar Platinum"
+    },
+    "Starboard Crusader" : {
+        id = 30981,
+        item_class = "tf_wearable",
+        item_name_english = "Starboard Crusader"
+    },
+    "Scourge of the Sky" : {
+        id = 30982,
+        item_class = "tf_wearable",
+        item_name_english = "Scourge of the Sky"
+    },
+    "Veterans Attire" : {
+        id = 30983,
+        item_class = "tf_wearable",
+        item_name_english = "Veteran's Attire"
+    },
+    "Sky High Fly Guy" : {
+        id = 30984,
+        item_class = "tf_wearable",
+        item_name_english = "Sky High Fly Guy"
+    },
+    "Private Maggot Muncher" : {
+        id = 30985,
+        item_class = "tf_wearable",
+        item_name_english = "Private Maggot Muncher"
+    },
+    "The Hot Case" : {
+        id = 30986,
+        item_class = "tf_wearable",
+        item_name_english = "Hot Case"
+    },
+    "The Burning Question" : {
+        id = 30987,
+        item_class = "tf_wearable",
+        item_name_english = "Burning Question"
+    },
+    "Aristotle" : {
+        id = 30988,
+        item_class = "tf_wearable",
+        item_name_english = "Aristotle"
+    },
+    "Assassin's Attire" : {
+        id = 30989,
+        item_class = "tf_wearable",
+        item_name_english = "Assassin's Attire"
+    },
+    "Wipe Out Wraps" : {
+        id = 30990,
+        item_class = "tf_wearable",
+        item_name_english = "Wipe Out Wraps"
+    },
+    "Blizzard Britches" : {
+        id = 30991,
+        item_class = "tf_wearable",
+        item_name_english = "Blizzard Britches"
+    },
+    "The Cold Case" : {
+        id = 30992,
+        item_class = "tf_wearable",
+        item_name_english = "Cold Case"
+    },
+    "Punk's Pomp" : {
+        id = 30993,
+        item_class = "tf_wearable",
+        item_name_english = "Punk's Pomp"
+    },
+    "A Shell of a Mann" : {
+        id = 30994,
+        item_class = "tf_wearable",
+        item_name_english = "A Shell of a Mann"
+    },
+    "Dell in the Shell" : {
+        id = 30995,
+        item_class = "tf_wearable",
+        item_name_english = "Dell in the Shell"
+    },
+    "Terror-antula" : {
+        id = 30996,
+        item_class = "tf_wearable",
+        item_name_english = "Terror-antula"
+    },
+    "Deadbeats" : {
+        id = 30997,
+        item_class = "tf_wearable",
+        item_name_english = "Deadbeats"
+    },
+    "Lucky Cat Hat" : {
+        id = 30998,
+        item_class = "tf_wearable",
+        item_name_english = "Lucky Cat Hat"
+    },
+    "Olympic Leapers" : {
+        id = 30999,
+        item_class = "tf_wearable",
+        item_name_english = "Olympic Leapers"
+    },
+    "Hephaistos' Handcraft" : {
+        id = 31000,
+        item_class = "tf_wearable",
+        item_name_english = "Hephaistos' Handcraft"
+    },
+    "Athenian Attire" : {
+        id = 31001,
+        item_class = "tf_wearable",
+        item_name_english = "Athenian Attire"
+    },
+    "The Tank Top" : {
+        id = 31002,
+        item_class = "tf_wearable",
+        item_name_english = "Tank Top"
+    },
+    "Vampire Vanquisher" : {
+        id = 31003,
+        item_class = "tf_wearable",
+        item_name_english = "Vampire Vanquisher"
+    },
+    "Pyro in Chinatown" : {
+        id = 31004,
+        item_class = "tf_wearable",
+        item_name_english = "Pyro in Chinatown"
+    },
+    "Scopers Scales" : {
+        id = 31005,
+        item_class = "tf_wearable",
+        item_name_english = "Scoper's Scales"
+    },
+    "Mr. Quackers" : {
+        id = 31006,
+        item_class = "tf_wearable",
+        item_name_english = "Mr. Quackers"
+    },
+    "The Arachno-Arsonist" : {
+        id = 31007,
+        item_class = "tf_wearable",
+        item_name_english = "Arachno-Arsonist"
+    },
+    "Mann-O-War" : {
+        id = 31008,
+        item_class = "tf_wearable",
+        item_name_english = "Mann-O-War"
+    },
+    "Crocodile Mun-Dee" : {
+        id = 31009,
+        item_class = "tf_wearable",
+        item_name_english = "Crocodile Mun-Dee"
+    },
+    "Highway Star" : {
+        id = 31010,
+        item_class = "tf_wearable",
+        item_name_english = "Highway Star"
+    },
+    "Defragmenting Hard Hat 17%" : {
+        id = 31011,
+        item_class = "tf_wearable",
+        item_name_english = "Defragmenting Hard Hat 17%"
+    },
+    "Aim Assistant" : {
+        id = 31012,
+        item_class = "tf_wearable",
+        item_name_english = "Aim Assistant"
+    },
+    "Mini-Engy" : {
+        id = 31013,
+        item_class = "tf_wearable",
+        item_name_english = "Mini-Engy"
+    },
+    "Dressperado" : {
+        id = 31014,
+        item_class = "tf_wearable",
+        item_name_english = "Dressperado"
+    },
+    "Bandit's Boots" : {
+        id = 31015,
+        item_class = "tf_wearable",
+        item_name_english = "Bandit's Boots"
+    },
+    "Murderer's Motif" : {
+        id = 31016,
+        item_class = "tf_wearable",
+        item_name_english = "Murderer's Motif"
+    },
+    "Gaelic Glutton" : {
+        id = 31017,
+        item_class = "tf_wearable",
+        item_name_english = "Gaelic Glutton"
+    },
+    "The Polar Pal" : {
+        id = 31018,
+        item_class = "tf_wearable",
+        item_name_english = "Polar Pal"
+    },
+    "Pocket Admin" : {
+        id = 31019,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Admin"
+    },
+    "Bread Heads" : {
+        id = 31020,
+        item_class = "tf_wearable",
+        item_name_english = "Bread Heads"
+    },
+    "The Catcher's Companion" : {
+        id = 31021,
+        item_class = "tf_wearable",
+        item_name_english = "Catcher's Companion"
+    },
+    "Juvenile's Jumper" : {
+        id = 31022,
+        item_class = "tf_wearable",
+        item_name_english = "Juvenile's Jumper"
+    },
+    "Millennial Mercenary" : {
+        id = 31023,
+        item_class = "tf_wearable",
+        item_name_english = "Millennial Mercenary"
+    },
+    "The Crack Pot" : {
+        id = 31024,
+        item_class = "tf_wearable",
+        item_name_english = "Crack Pot"
+    },
+    "Climbing Commander" : {
+        id = 31025,
+        item_class = "tf_wearable",
+        item_name_english = "Climbing Commander"
+    },
+    "Pocket Pardner" : {
+        id = 31026,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Pardner"
+    },
+    "Miser's Muttonchops" : {
+        id = 31027,
+        item_class = "tf_wearable",
+        item_name_english = "Miser's Muttonchops"
+    },
+    "Snowcapped" : {
+        id = 31028,
+        item_class = "tf_wearable",
+        item_name_english = "Snowcapped"
+    },
+    "Cool Capuchon" : {
+        id = 31029,
+        item_class = "tf_wearable",
+        item_name_english = "Cool Capuchon"
+    },
+    "Paka Parka" : {
+        id = 31030,
+        item_class = "tf_wearable",
+        item_name_english = "Paka Parka"
+    },
+    "Wise Whiskers" : {
+        id = 31031,
+        item_class = "tf_wearable",
+        item_name_english = "Wise Whiskers"
+    },
+    "The Puggyback" : {
+        id = 31032,
+        item_class = "tf_wearable",
+        item_name_english = "Puggyback"
+    },
+    "Harry" : {
+        id = 31033,
+        item_class = "tf_wearable",
+        item_name_english = "Harry"
+    },
+    "Mighty Mitre" : {
+        id = 31034,
+        item_class = "tf_wearable",
+        item_name_english = "Mighty Mitre"
+    },
+    "The Dumb Bell" : {
+        id = 31035,
+        item_class = "tf_wearable",
+        item_name_english = "Dumb Bell"
+    },
+    "Stapler's Specs" : {
+        id = 31036,
+        item_class = "tf_wearable",
+        item_name_english = "Stapler's Specs"
+    },
+    "Dynamite Abs" : {
+        id = 31037,
+        item_class = "tf_wearable",
+        item_name_english = "Dynamite Abs"
+    },
+    "Backbreaker's Skullcracker" : {
+        id = 31038,
+        item_class = "tf_wearable",
+        item_name_english = "Backbreaker's Skullcracker"
+    },
+    "Backbreaker's Guards" : {
+        id = 31039,
+        item_class = "tf_wearable",
+        item_name_english = "Backbreaker's Guards"
+    },
+    "Unforgiven Glory" : {
+        id = 31040,
+        item_class = "tf_wearable",
+        item_name_english = "Unforgiven Glory"
+    },
+    "Melted Mop" : {
+        id = 31041,
+        item_class = "tf_wearable",
+        item_name_english = "Melted Mop"
+    },
+    "The Bottle Cap" : {
+        id = 31042,
+        item_class = "tf_wearable",
+        item_name_english = "Bottle Cap"
+    },
+    "The Pompous Privateer" : {
+        id = 31043,
+        item_class = "tf_wearable",
+        item_name_english = "Pompous Privateer"
+    },
+    "The Peacebreaker" : {
+        id = 31044,
+        item_class = "tf_wearable",
+        item_name_english = "Peacebreaker"
+    },
+    "Dancing Doe" : {
+        id = 31045,
+        item_class = "tf_wearable",
+        item_name_english = "Dancing Doe"
+    },
+    "Texas Toast" : {
+        id = 31046,
+        item_class = "tf_wearable",
+        item_name_english = "Texas Toast"
+    },
+    "The Fiery Phoenix" : {
+        id = 31047,
+        item_class = "tf_wearable",
+        item_name_english = "Fiery Phoenix"
+    },
+    "Shutterbug" : {
+        id = 31048,
+        item_class = "tf_wearable",
+        item_name_english = "Shutterbug"
+    },
+    "Brain Interface" : {
+        id = 31049,
+        item_class = "tf_wearable",
+        item_name_english = "Brain Interface"
+    },
+    "Spawn Camper" : {
+        id = 31050,
+        item_class = "tf_wearable",
+        item_name_english = "Spawn Camper"
+    },
+    "Wanderer's Wear" : {
+        id = 31051,
+        item_class = "tf_wearable",
+        item_name_english = "Wanderer's Wear"
+    },
+    "Mediterranean Mercenary" : {
+        id = 31052,
+        item_class = "tf_wearable",
+        item_name_english = "Mediterranean Mercenary"
+    },
+    "Kapitan's Kaftan" : {
+        id = 31053,
+        item_class = "tf_wearable",
+        item_name_english = "Kapitan's Kaftan"
+    },
+    "The Bare Necessities" : {
+        id = 31054,
+        item_class = "tf_wearable",
+        item_name_english = "Bare Necessities"
+    },
+    "Wagga Wagga Wear" : {
+        id = 31055,
+        item_class = "tf_wearable",
+        item_name_english = "Wagga Wagga Wear"
+    },
+    "Speedy Scoundrel" : {
+        id = 31056,
+        item_class = "tf_wearable",
+        item_name_english = "Speedy Scoundrel"
+    },
+    "Bobby Bonnet" : {
+        id = 31057,
+        item_class = "tf_wearable",
+        item_name_english = "Bobby Bonnet"
+    },
+    "Bat Hat" : {
+        id = 31058,
+        item_class = "tf_wearable",
+        item_name_english = "Bat Hat"
+    },
+    "Mister Bones" : {
+        id = 31059,
+        item_class = "tf_wearable",
+        item_name_english = "Mister Bones"
+    },
+    "Binoculus" : {
+        id = 31060,
+        item_class = "tf_wearable",
+        item_name_english = "BINOCULUS!"
+    },
+    "Pocket Halloween Boss" : {
+        id = 31061,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket Halloween Boss"
+    },
+    "Bread Biter" : {
+        id = 31062,
+        item_class = "tf_wearable",
+        item_name_english = "Bread Biter"
+    },
+    "The Horrible Horns" : {
+        id = 31063,
+        item_class = "tf_wearable",
+        item_name_english = "Horrible Horns"
+    },
+    "The Trick Stabber" : {
+        id = 31064,
+        item_class = "tf_wearable",
+        item_name_english = "Trick Stabber"
+    },
+    "Head of the Dead" : {
+        id = 31065,
+        item_class = "tf_wearable",
+        item_name_english = "Head of the Dead"
+    },
+    "Skullbrero" : {
+        id = 31066,
+        item_class = "tf_wearable",
+        item_name_english = "Skullbrero"
+    },
+    "Candy Cranium" : {
+        id = 31067,
+        item_class = "tf_wearable",
+        item_name_english = "Candy Cranium"
+    },
+    "Pyro Shark" : {
+        id = 31068,
+        item_class = "tf_wearable",
+        item_name_english = "Pyro Shark"
+    },
+    "El Zapateador" : {
+        id = 31069,
+        item_class = "tf_wearable",
+        item_name_english = "El Zapateador"
+    },
+    "Party Poncho" : {
+        id = 31070,
+        item_class = "tf_wearable",
+        item_name_english = "Party Poncho"
+    },
+    "Racc Mann" : {
+        id = 31071,
+        item_class = "tf_wearable",
+        item_name_english = "Racc Mann"
+    },
+    "Voodoo Vizier" : {
+        id = 31072,
+        item_class = "tf_wearable",
+        item_name_english = "Voodoo Vizier"
+    },
+    "Avian Amante" : {
+        id = 31073,
+        item_class = "tf_wearable",
+        item_name_english = "Avian Amante"
+    },
+    "El Mostacho" : {
+        id = 31074,
+        item_class = "tf_wearable",
+        item_name_english = "El Mostacho"
+    },
+    "Eingineer" : {
+        id = 31075,
+        item_class = "tf_wearable",
+        item_name_english = "Eingineer"
+    },
+    "Pyr'o Lantern" : {
+        id = 31076,
+        item_class = "tf_wearable",
+        item_name_english = "Pyr'o Lantern"
+    },
+    "Madmann's Muzzle" : {
+        id = 31077,
+        item_class = "tf_wearable",
+        item_name_english = "Madmann's Muzzle"
+    },
+    "Derangement Garment" : {
+        id = 31078,
+        item_class = "tf_wearable",
+        item_name_english = "Derangement Garment"
+    },
+    "Soviet Strongmann" : {
+        id = 31079,
+        item_class = "tf_wearable",
+        item_name_english = "Soviet Strongmann"
+    },
+    "Convict Cap" : {
+        id = 31080,
+        item_class = "tf_wearable",
+        item_name_english = "Convict Cap"
+    },
+    "Fuel Injector" : {
+        id = 31081,
+        item_class = "tf_wearable",
+        item_name_english = "Fuel Injector"
+    },
+    "Remorseless Raptor" : {
+        id = 31082,
+        item_class = "tf_wearable",
+        item_name_english = "Remorseless Raptor"
+    },
+    "Wild Whip" : {
+        id = 31083,
+        item_class = "tf_wearable",
+        item_name_english = "Wild Whip"
+    },
+    "Elizabeth the Third" : {
+        id = 31084,
+        item_class = "tf_wearable",
+        item_name_english = "Elizabeth the Third"
+    },
+    "Bumble Beenie" : {
+        id = 31085,
+        item_class = "tf_wearable",
+        item_name_english = "Bumble Beenie"
+    },
+    "Pebbles the Penguin" : {
+        id = 31086,
+        item_class = "tf_wearable",
+        item_name_english = "Pebbles the Penguin"
+    },
+    "Yule Hog" : {
+        id = 31087,
+        item_class = "tf_wearable",
+        item_name_english = "Yule Hog"
+    },
+    "Gingerbread Mann" : {
+        id = 31088,
+        item_class = "tf_wearable",
+        item_name_english = "Gingerbread Mann"
+    },
+    "Smissmas Saxton" : {
+        id = 31089,
+        item_class = "tf_wearable",
+        item_name_english = "Smissmas Saxton"
+    },
+    "Globetrotter" : {
+        id = 31090,
+        item_class = "tf_wearable",
+        item_name_english = "Globetrotter"
+    },
+    "Citizen Cane" : {
+        id = 31091,
+        item_class = "tf_wearable",
+        item_name_english = "Citizen Cane"
+    },
+    "Candy Crown" : {
+        id = 31092,
+        item_class = "tf_wearable",
+        item_name_english = "Candy Crown"
+    },
+    "Glittering Garland" : {
+        id = 31093,
+        item_class = "tf_wearable",
+        item_name_english = "Glittering Garland"
+    },
+    "Winter Wrap Up" : {
+        id = 31094,
+        item_class = "tf_wearable",
+        item_name_english = "Winter Wrap Up"
+    },
+    "Public Speaker" : {
+        id = 31095,
+        item_class = "tf_wearable",
+        item_name_english = "Public Speaker"
+    },
+    "Discovision" : {
+        id = 31096,
+        item_class = "tf_wearable",
+        item_name_english = "Discovision"
+    },
+    "Provisions Cap" : {
+        id = 31097,
+        item_class = "tf_wearable",
+        item_name_english = "Provisions Cap"
+    },
+    "Telefragger Toque" : {
+        id = 31098,
+        item_class = "tf_wearable",
+        item_name_english = "Telefragger Toque"
+    },
+    "Pocket-Medes" : {
+        id = 31099,
+        item_class = "tf_wearable",
+        item_name_english = "Pocket-Medes"
+    },
+    "Spiky Viking" : {
+        id = 31100,
+        item_class = "tf_wearable",
+        item_name_english = "Spiky Viking"
+    },
+    "The Missing Piece" : {
+        id = 31101,
+        item_class = "tf_wearable",
+        item_name_english = "Missing Piece"
+    },
+    "The Mislaid Sweater" : {
+        id = 31102,
+        item_class = "tf_wearable",
+        item_name_english = "Mislaid Sweater"
+    },
+    "Hypno-eyes" : {
+        id = 31103,
+        item_class = "tf_wearable",
+        item_name_english = "Hypno-Eyes"
+    },
+    "Breadcrab" : {
+        id = 31104,
+        item_class = "tf_wearable",
+        item_name_english = "Breadcrab"
+    },
+    "Loaf Loafers" : {
+        id = 31105,
+        item_class = "tf_wearable",
+        item_name_english = "Loaf Loafers"
+    },
+    "Sophisticated Smoker" : {
+        id = 31106,
+        item_class = "tf_wearable",
+        item_name_english = "Sophisticated Smoker"
+    },
+    "Flamehawk" : {
+        id = 31107,
+        item_class = "tf_wearable",
+        item_name_english = "Flamehawk"
+    },
+    "Fire Fighter" : {
+        id = 31108,
+        item_class = "tf_wearable",
+        item_name_english = "Fire Fighter"
+    },
+    "Crabe de Chapeau" : {
+        id = 31109,
+        item_class = "tf_wearable",
+        item_name_english = "Crabe de Chapeau"
+    },
+    "Bird's Eye Viewer" : {
+        id = 31110,
+        item_class = "tf_wearable",
+        item_name_english = "Bird's Eye Viewer"
+    },
+    "Hawk Warrior" : {
+        id = 31111,
+        item_class = "tf_wearable",
+        item_name_english = "Hawk Warrior"
+    },
+    "Bazaar Bauble" : {
+        id = 31112,
+        item_class = "tf_wearable",
+        item_name_english = "Bazaar Bauble"
+    },
+    "Breach and Bomb" : {
+        id = 31113,
+        item_class = "tf_wearable",
+        item_name_english = "Breach and Bomb"
+    },
+    "Head Of Defense" : {
+        id = 31114,
+        item_class = "tf_wearable",
+        item_name_english = "Head of Defense"
+    },
+    "Hazard Headgear" : {
+        id = 31115,
+        item_class = "tf_wearable",
+        item_name_english = "Hazard Headgear"
+    },
+    "Soda Specs" : {
+        id = 31116,
+        item_class = "tf_wearable",
+        item_name_english = "Soda Specs"
+    },
+    "California Cap" : {
+        id = 31117,
+        item_class = "tf_wearable",
+        item_name_english = "California Cap"
+    },
+    "Poolside Polo" : {
+        id = 31118,
+        item_class = "tf_wearable",
+        item_name_english = "Poolside Polo"
+    },
+    "Tools of the Tourist" : {
+        id = 31119,
+        item_class = "tf_wearable",
+        item_name_english = "Tools of the Tourist"
+    },
+    "The Jarmaments" : {
+        id = 31120,
+        item_class = "tf_wearable",
+        item_name_english = "Jarmaments"
+    },
+    "Flatliner" : {
+        id = 31121,
+        item_class = "tf_wearable",
+        item_name_english = "Flatliner"
+    },
+    "Self-Care" : {
+        id = 31122,
+        item_class = "tf_wearable",
+        item_name_english = "Self-Care"
+    },
+    "Momma Kiev" : {
+        id = 31123,
+        item_class = "tf_wearable",
+        item_name_english = "Momma Kiev"
+    },
+    "Smoking Jacket" : {
+        id = 31124,
+        item_class = "tf_wearable",
+        item_name_english = "Smoking Jacket"
+    },
+    "Impish Ears" : {
+        id = 31125,
+        item_class = "tf_wearable",
+        item_name_english = "Impish Ears"
+    },
+    "Balloonicorpse" : {
+        id = 31126,
+        item_class = "tf_wearable",
+        item_name_english = "Balloonicorpse"
+    },
+    "Gourd Grin" : {
+        id = 31127,
+        item_class = "tf_wearable",
+        item_name_english = "Gourd Grin"
+    },
+    "Hollowed Helm" : {
+        id = 31128,
+        item_class = "tf_wearable",
+        item_name_english = "Hollowed Helm"
+    },
+    "A Handsome Handy Thing" : {
+        id = 31129,
+        item_class = "tf_wearable",
+        item_name_english = "A Handsome Handy Thing"
+    },
+    "King Cardbeard" : {
+        id = 31130,
+        item_class = "tf_wearable",
+        item_name_english = "King Cardbeard"
+    },
+    "Sir Pumpkinton" : {
+        id = 31131,
+        item_class = "tf_wearable",
+        item_name_english = "Sir Pumpkinton"
+    },
+    "Wrap-A-Khamon" : {
+        id = 31132,
+        item_class = "tf_wearable",
+        item_name_english = "Wrap-A-Khamon"
+    },
+    "The Boom Boxers" : {
+        id = 31133,
+        item_class = "tf_wearable",
+        item_name_english = "Boom Boxers"
+    },
+    "Eye-see-you" : {
+        id = 31134,
+        item_class = "tf_wearable",
+        item_name_english = "Eye-See-You"
+    },
+    "Handsome Devil" : {
+        id = 31135,
+        item_class = "tf_wearable",
+        item_name_english = "Handsome Devil"
+    },
+    "Misfortune Fedora" : {
+        id = 31136,
+        item_class = "tf_wearable",
+        item_name_english = "Misfortune Fedora"
+    },
+    "War Blunder" : {
+        id = 31137,
+        item_class = "tf_wearable",
+        item_name_english = "War Blunder"
+    },
+    "Grounded Flyboy" : {
+        id = 31138,
+        item_class = "tf_wearable",
+        item_name_english = "Grounded Flyboy"
+    },
+    "Rolfe Copter" : {
+        id = 31139,
+        item_class = "tf_wearable",
+        item_name_english = "Rolfe Copter"
+    },
+    "The Pug Mug" : {
+        id = 31140,
+        item_class = "tf_wearable",
+        item_name_english = "Pug Mug"
+    },
+    "The Treehugger" : {
+        id = 31141,
+        item_class = "tf_wearable",
+        item_name_english = "Treehugger"
+    },
+    "Mannvich" : {
+        id = 31142,
+        item_class = "tf_wearable",
+        item_name_english = "Mannvich"
+    },
+    "The Seared Sorcerer" : {
+        id = 31143,
+        item_class = "tf_wearable",
+        item_name_english = "Seared Sorcerer"
+    },
+    "The Fire Tooth" : {
+        id = 31144,
+        item_class = "tf_wearable",
+        item_name_english = "Fire Tooth"
+    },
+    "Flavorful Baggies" : {
+        id = 31145,
+        item_class = "tf_wearable",
+        item_name_english = "Flavorful Baggies"
+    },
+    "Calamitous Cauldron" : {
+        id = 31146,
+        item_class = "tf_wearable",
+        item_name_english = "Calamitous Cauldron"
+    },
+    "Semi-tame Trapper's Hat" : {
+        id = 31147,
+        item_class = "tf_wearable",
+        item_name_english = "Semi-Tame Trapper's Hat"
+    },
+    "Wavefinder" : {
+        id = 31148,
+        item_class = "tf_wearable",
+        item_name_english = "Wavefinder"
+    },
+    "Glow from Below" : {
+        id = 31149,
+        item_class = "tf_wearable",
+        item_name_english = "Glow from Below"
+    },
+    "Goblineer" : {
+        id = 31150,
+        item_class = "tf_wearable",
+        item_name_english = "Goblineer"
+    },
+    "The Ghoul Box" : {
+        id = 31151,
+        item_class = "tf_wearable",
+        item_name_english = "Ghoul Box"
+    },
+    "All Hallows' Hatte" : {
+        id = 31152,
+        item_class = "tf_wearable",
+        item_name_english = "All Hallows' Hatte"
+    },
+    "Taunt: The Pooped Deck" : {
+        id = 31153,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Pooped Deck"
+    },
+    "Taunt: Time Out Therapy" : {
+        id = 31154,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Time Out Therapy"
+    },
+    "Taunt: Rocket Jockey" : {
+        id = 31155,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Rocket Jockey"
+    },
+    "Taunt: The Boston Boarder" : {
+        id = 31156,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Boston Boarder"
+    },
+    "Taunt: Scorcher's Solo" : {
+        id = 31157,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Scorcher's Solo"
+    },
+    "Taunt: Texas Truckin" : {
+        id = 31160,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Texas Truckin'"
+    },
+    "Taunt: Spin-to-Win" : {
+        id = 31161,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Spin-to-Win"
+    },
+    "Taunt: The Fist Bump" : {
+        id = 31162,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Fist Bump"
+    },
+    "Particulate Protector" : {
+        id = 31163,
+        item_class = "tf_wearable",
+        item_name_english = "Particulate Protector"
+    },
+    "Candy Cantlers" : {
+        id = 31164,
+        item_class = "tf_wearable",
+        item_name_english = "Candy Cantlers"
+    },
+    "Jolly Jingler" : {
+        id = 31165,
+        item_class = "tf_wearable",
+        item_name_english = "Jolly Jingler"
+    },
+    "The Smissmass Sorcerer" : {
+        id = 31166,
+        item_class = "tf_wearable",
+        item_name_english = "Smissmas Sorcerer"
+    },
+    "Festive Flip-thwomps" : {
+        id = 31167,
+        item_class = "tf_wearable",
+        item_name_english = "Festive Flip-Thwomps"
+    },
+    "Towering Pillar of Beanies" : {
+        id = 31168,
+        item_class = "tf_wearable",
+        item_name_english = "Towering Pillar of Beanies"
+    },
+    "Shoestring Santa" : {
+        id = 31169,
+        item_class = "tf_wearable",
+        item_name_english = "Shoestring Santa"
+    },
+    "Professional's Pom Pom" : {
+        id = 31170,
+        item_class = "tf_wearable",
+        item_name_english = "Professional's Pom-Pom"
+    },
+    "Reindoonibeanie" : {
+        id = 31171,
+        item_class = "tf_wearable",
+        item_name_english = "Reindoonibeanie"
+    },
+    "Festive Fascinator" : {
+        id = 31172,
+        item_class = "tf_wearable",
+        item_name_english = "Festive Fascinator"
+    },
+    "Towering Pile Of Presents" : {
+        id = 31173,
+        item_class = "tf_wearable",
+        item_name_english = "Towering Pile of Presents"
+    },
+    "The Round-A-Bout" : {
+        id = 31174,
+        item_class = "tf_wearable",
+        item_name_english = "Round-A-Bout"
+    },
+    "Blitzen Bowl" : {
+        id = 31175,
+        item_class = "tf_wearable",
+        item_name_english = "Blitzen Bowl"
+    },
+    "Elf Care Provider" : {
+        id = 31176,
+        item_class = "tf_wearable",
+        item_name_english = "Elf Care Provider"
+    },
+    "Night Ward" : {
+        id = 31177,
+        item_class = "tf_wearable",
+        item_name_english = "Night Ward"
+    },
+    "SandMann's Brush" : {
+        id = 31178,
+        item_class = "tf_wearable",
+        item_name_english = "SandMann's Brush"
+    },
+    "BedBug Protection" : {
+        id = 31179,
+        item_class = "tf_wearable",
+        item_name_english = "BedBug Protection"
+    },
+    "Bear Walker" : {
+        id = 31180,
+        item_class = "tf_wearable",
+        item_name_english = "Bear Walker"
+    },
+    "The Killing Tree" : {
+        id = 31181,
+        item_class = "tf_wearable",
+        item_name_english = "Killing Tree"
+    },
+    "Helm Helm" : {
+        id = 31182,
+        item_class = "tf_wearable",
+        item_name_english = "Helm Helm"
+    },
+    "Ballooniphones" : {
+        id = 31183,
+        item_class = "tf_wearable",
+        item_name_english = "Ballooniphones"
+    },
+    "Manndatory Attire" : {
+        id = 31184,
+        item_class = "tf_wearable",
+        item_name_english = "Manndatory Attire"
+    },
+    "Brim of Fire" : {
+        id = 31185,
+        item_class = "tf_wearable",
+        item_name_english = "Brim of Fire"
+    },
+    "Reel Fly Hat" : {
+        id = 31186,
+        item_class = "tf_wearable",
+        item_name_english = "Reel Fly Hat"
+    },
+    "Hook Line and Cinder" : {
+        id = 31187,
+        item_class = "tf_wearable",
+        item_name_english = "Hook, Line, and Cinder"
+    },
+    "Water Waders" : {
+        id = 31188,
+        item_class = "tf_wearable",
+        item_name_english = "Water Waders"
+    },
+    "The Sightliner" : {
+        id = 31189,
+        item_class = "tf_wearable",
+        item_name_english = "Sightliner"
+    },
+    "Snack Stack" : {
+        id = 31190,
+        item_class = "tf_wearable",
+        item_name_english = "Snack Stack"
+    },
+    "Two Punch Mann" : {
+        id = 31191,
+        item_class = "tf_wearable",
+        item_name_english = "Two Punch Mann"
+    },
+    "Wild Brim Slouch" : {
+        id = 31192,
+        item_class = "tf_wearable",
+        item_name_english = "Wild Brim Slouch"
+    },
+    "Crocodile Dandy" : {
+        id = 31193,
+        item_class = "tf_wearable",
+        item_name_english = "Crocodile Dandy"
+    },
+    "Crustaceous Cowl" : {
+        id = 31194,
+        item_class = "tf_wearable",
+        item_name_english = "Crustaceous Cowl"
+    },
+    "Fast Food" : {
+        id = 31195,
+        item_class = "tf_wearable",
+        item_name_english = "Fast Food"
+    },
+    "Meal Dealer" : {
+        id = 31196,
+        item_class = "tf_wearable",
+        item_name_english = "Meal Dealer"
+    },
+    "Fried Batter" : {
+        id = 31197,
+        item_class = "tf_wearable",
+        item_name_english = "Fried Batter"
+    },
+    "Roaming Roman" : {
+        id = 31198,
+        item_class = "tf_wearable",
+        item_name_english = "Roaming Roman"
+    },
+    "The Panisher" : {
+        id = 31199,
+        item_class = "tf_wearable",
+        item_name_english = "Panisher"
+    },
+    "Thousand-Yard Stare" : {
+        id = 31200,
+        item_class = "tf_wearable",
+        item_name_english = "Thousand-Yard Stare"
+    },
+    "Taunt: The Drunken Sailor" : {
+        id = 31201,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Drunken Sailor"
+    },
+    "Taunt: The Profane Puppeteer" : {
+        id = 31202,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Profane Puppeteer"
+    },
+    "Taunt: The Mannbulance!" : {
+        id = 31203,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Mannbulance!"
+    },
+    "Taunt: Bare Knuckle Beatdown" : {
+        id = 31207,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Bare Knuckle Beatdown"
+    },
+    "Creepy Crawlers" : {
+        id = 31208,
+        item_class = "tf_wearable",
+        item_name_english = "Creepy Crawlers"
+    },
+    "Spooky Head-Bouncers" : {
+        id = 31209,
+        item_class = "tf_wearable",
+        item_name_english = "Spooky Head-Bouncers"
+    },
+    "Towering Patch of Pumpkins" : {
+        id = 31210,
+        item_class = "tf_wearable",
+        item_name_english = "Towering Patch of Pumpkins"
+    },
+    "Twisted Topper" : {
+        id = 31211,
+        item_class = "tf_wearable",
+        item_name_english = "Twisted Topper"
+    },
+    "Beanie The All-Gnawing" : {
+        id = 31212,
+        item_class = "tf_wearable",
+        item_name_english = "Beanie The All-Gnawing"
+    },
+    "Eyequarium" : {
+        id = 31213,
+        item_class = "tf_wearable",
+        item_name_english = "Eyequarium"
+    },
+    "Second-head Headwear" : {
+        id = 31214,
+        item_class = "tf_wearable",
+        item_name_english = "Second-Head Headwear"
+    },
+    "Alakablamicon" : {
+        id = 31215,
+        item_class = "tf_wearable",
+        item_name_english = "Alakablamicon"
+    },
+    "Hat Outta Hell" : {
+        id = 31216,
+        item_class = "tf_wearable",
+        item_name_english = "Hat Outta Hell"
+    },
+    "Goalkeeper" : {
+        id = 31217,
+        item_class = "tf_wearable",
+        item_name_english = "Goalkeeper"
+    },
+    "The Bone Cone" : {
+        id = 31218,
+        item_class = "tf_wearable",
+        item_name_english = "Bone Cone"
+    },
+    "The Scariest Mask EVER" : {
+        id = 31219,
+        item_class = "tf_wearable",
+        item_name_english = "Scariest Mask EVER"
+    },
+    "Trickster's Treats" : {
+        id = 31220,
+        item_class = "tf_wearable",
+        item_name_english = "Trickster's Treats"
+    },
+    "Wandering Wraith" : {
+        id = 31221,
+        item_class = "tf_wearable",
+        item_name_english = "Wandering Wraith"
+    },
+    "Smiling Somen" : {
+        id = 31222,
+        item_class = "tf_wearable",
+        item_name_english = "Smiling Somen"
+    },
+    "The Hook, Line, and Thinker" : {
+        id = 31223,
+        item_class = "tf_wearable",
+        item_name_english = "Hook, Line, and Thinker"
+    },
+    "Optic Nerve" : {
+        id = 31224,
+        item_class = "tf_wearable",
+        item_name_english = "Optic Nerve"
+    },
+    "Death Stare" : {
+        id = 31225,
+        item_class = "tf_wearable",
+        item_name_english = "Death Stare"
+    },
+    "The Corpse Carrier" : {
+        id = 31226,
+        item_class = "tf_wearable",
+        item_name_english = "Corpse Carrier"
+    },
+    "Gruesome Gourd" : {
+        id = 31227,
+        item_class = "tf_wearable",
+        item_name_english = "Gruesome Gourd"
+    },
+    "Poopy Doe" : {
+        id = 31228,
+        item_class = "tf_wearable",
+        item_name_english = "Poopy Doe"
+    },
+    "Batter's Beak" : {
+        id = 31229,
+        item_class = "tf_wearable",
+        item_name_english = "Batter's Beak"
+    },
+    "War Dog" : {
+        id = 31230,
+        item_class = "tf_wearable",
+        item_name_english = "War Dog"
+    },
+    "The Miami Rooster" : {
+        id = 31231,
+        item_class = "tf_wearable",
+        item_name_english = "Miami Rooster"
+    },
+    "Computron 5000" : {
+        id = 31232,
+        item_class = "tf_wearable",
+        item_name_english = "Computron 5000"
+    },
+    "Taunt: The Homerunner's Hobby" : {
+        id = 31233,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Homerunner's Hobby"
+    },
+    "Taunt: Doctor's Defibrillators" : {
+        id = 31236,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Doctor's Defibrillators"
+    },
+    "Taunt: Shooter's Stakeout" : {
+        id = 31237,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Shooter's Stakeout"
+    },
+    "Taunt: The Hot Wheeler" : {
+        id = 31239,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Hot Wheeler"
+    },
+    "El Fiestibrero" : {
+        id = 31241,
+        item_class = "tf_wearable",
+        item_name_english = "El Fiestibrero"
+    },
+    "Gnome Dome" : {
+        id = 31242,
+        item_class = "tf_wearable",
+        item_name_english = "Gnome Dome"
+    },
+    "Jolly Jester" : {
+        id = 31243,
+        item_class = "tf_wearable",
+        item_name_english = "Jolly Jester"
+    },
+    "Seasonal Spring" : {
+        id = 31244,
+        item_class = "tf_wearable",
+        item_name_english = "Seasonal Spring"
+    },
+    "Oh Deer!" : {
+        id = 31245,
+        item_class = "tf_wearable",
+        item_name_english = "Oh Deer!"
+    },
+    "The Giftcrafter" : {
+        id = 31246,
+        item_class = "tf_wearable",
+        item_name_english = "Giftcrafter"
+    },
+    "Merry Cone" : {
+        id = 31247,
+        item_class = "tf_wearable",
+        item_name_english = "Merry Cone"
+    },
+    "Brain Cane" : {
+        id = 31248,
+        item_class = "tf_wearable",
+        item_name_english = "Brain Cane"
+    },
+    "Reindoonihorns" : {
+        id = 31249,
+        item_class = "tf_wearable",
+        item_name_english = "Reindoonihorns"
+    },
+    "Cozy Catchers" : {
+        id = 31250,
+        item_class = "tf_wearable",
+        item_name_english = "Cozy Catchers"
+    },
+    "Ominous Offering" : {
+        id = 31251,
+        item_class = "tf_wearable",
+        item_name_english = "Ominous Offering"
+    },
+    "Festive Frames" : {
+        id = 31252,
+        item_class = "tf_wearable",
+        item_name_english = "Festive Frames"
+    },
+    "Elf Ignition" : {
+        id = 31253,
+        item_class = "tf_wearable",
+        item_name_english = "Elf Ignition"
+    },
+    "Train Of Thought" : {
+        id = 31254,
+        item_class = "tf_wearable",
+        item_name_english = "Train of Thought"
+    },
+    "Mooshanka" : {
+        id = 31255,
+        item_class = "tf_wearable",
+        item_name_english = "Mooshanka"
+    },
+    "Elf Defence" : {
+        id = 31256,
+        item_class = "tf_wearable",
+        item_name_english = "Elf Defense"
+    },
+    "Festive Cover-Up" : {
+        id = 31257,
+        item_class = "tf_wearable",
+        item_name_english = "Festive Cover-Up"
+    },
+    "Seasonal Employee" : {
+        id = 31258,
+        item_class = "tf_wearable",
+        item_name_english = "Seasonal Employee"
+    },
+    "Hat Chocolate" : {
+        id = 31259,
+        item_class = "tf_wearable",
+        item_name_english = "Hat Chocolate"
+    },
+    "Elf-Made Bandanna" : {
+        id = 31260,
+        item_class = "tf_wearable",
+        item_name_english = "Elf-Made Bandanna"
+    },
+    "The Decorated Veteran" : {
+        id = 31261,
+        item_class = "tf_wearable",
+        item_name_english = "Decorated Veteran"
+    },
+    "Undercover Brolly" : {
+        id = 31262,
+        item_class = "tf_wearable",
+        item_name_english = "Undercover Brolly"
+    },
+    "Kazan Karategi" : {
+        id = 31263,
+        item_class = "tf_wearable",
+        item_name_english = "Kazan Karategi"
+    },
+    "The Western Wraps" : {
+        id = 31264,
+        item_class = "tf_wearable",
+        item_name_english = "Western Wraps"
+    },
+    "Soda Cap" : {
+        id = 31265,
+        item_class = "tf_wearable",
+        item_name_english = "Soda Cap"
+    },
+    "Fizzy Pharmacist" : {
+        id = 31266,
+        item_class = "tf_wearable",
+        item_name_english = "Fizzy Pharmacist"
+    },
+    "Squatter's Right" : {
+        id = 31267,
+        item_class = "tf_wearable",
+        item_name_english = "Squatter's Right"
+    },
+    "Combat Casual" : {
+        id = 31268,
+        item_class = "tf_wearable",
+        item_name_english = "Combat Casual"
+    },
+    "Rocko" : {
+        id = 31269,
+        item_class = "tf_wearable",
+        item_name_english = "Rocko"
+    },
+    "Tropical Camo" : {
+        id = 31270,
+        item_class = "tf_wearable",
+        item_name_english = "Tropical Camo"
+    },
+    "Hawaiian Hunter" : {
+        id = 31271,
+        item_class = "tf_wearable",
+        item_name_english = "Hawaiian Hunter"
+    },
+    "The Lawnmaker" : {
+        id = 31272,
+        item_class = "tf_wearable",
+        item_name_english = "Lawnmaker"
+    },
+    "Head Banger" : {
+        id = 31273,
+        item_class = "tf_wearable",
+        item_name_english = "Head Banger"
+    },
+    "The Hawaiian Hangover" : {
+        id = 31274,
+        item_class = "tf_wearable",
+        item_name_english = "Hawaiian Hangover"
+    },
+    "Barefoot Brawler" : {
+        id = 31275,
+        item_class = "tf_wearable",
+        item_name_english = "Barefoot Brawler"
+    },
+    "The Chaser" : {
+        id = 31276,
+        item_class = "tf_wearable",
+        item_name_english = "Chaser"
+    },
+    "The Detective" : {
+        id = 31277,
+        item_class = "tf_wearable",
+        item_name_english = "Detective"
+    },
+    "Tactical Turtleneck" : {
+        id = 31278,
+        item_class = "tf_wearable",
+        item_name_english = "Tactical Turtleneck"
+    },
+    "Night Vision Gawkers" : {
+        id = 31279,
+        item_class = "tf_wearable",
+        item_name_english = "Night Vision Gawkers"
+    },
+    "Monsieur Grenouille" : {
+        id = 31280,
+        item_class = "tf_wearable",
+        item_name_english = "Monsieur Grenouille"
+    },
+    "The Ripped Rider" : {
+        id = 31281,
+        item_class = "tf_wearable",
+        item_name_english = "Ripped Rider"
+    },
+    "The Throttlehead" : {
+        id = 31282,
+        item_class = "tf_wearable",
+        item_name_english = "Throttlehead"
+    },
+    "The Team Player" : {
+        id = 31283,
+        item_class = "tf_wearable",
+        item_name_english = "Team Player"
+    },
+    "Boston Brain Bucket" : {
+        id = 31284,
+        item_class = "tf_wearable",
+        item_name_english = "Boston Brain Bucket"
+    },
+    "Pest's Pads" : {
+        id = 31285,
+        item_class = "tf_wearable",
+        item_name_english = "Pest's Pads"
+    },
+    "Taunt: Texas Twirl 'Em" : {
+        id = 31286,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Texas Twirl 'Em"
+    },
+    "Taunt: The Scaredy-cat!" : {
+        id = 31288,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Scaredy-cat!"
+    },
+    "Taunt: The Crypt Creeper" : {
+        id = 31289,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Crypt Creeper"
+    },
+    "Taunt: The Travel Agent" : {
+        id = 31290,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Travel Agent"
+    },
+    "Taunt: Drunk Mann's Cannon" : {
+        id = 31291,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Drunk Mann's Cannon"
+    },
+    "Taunt: Shanty Shipmate" : {
+        id = 31292,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Shanty Shipmate"
+    },
+    "Beaten and Bruised" : {
+        id = 31293,
+        item_class = "tf_wearable",
+        item_name_english = "Beaten and Bruised"
+    },
+    "Starlight Sorcerer" : {
+        id = 31294,
+        item_class = "tf_wearable",
+        item_name_english = "Starlight Sorcerer"
+    },
+    "The Onimann" : {
+        id = 31295,
+        item_class = "tf_wearable",
+        item_name_english = "Onimann"
+    },
+    "Propaniac" : {
+        id = 31296,
+        item_class = "tf_wearable",
+        item_name_english = "Propaniac"
+    },
+    "Dustbowl Devil" : {
+        id = 31297,
+        item_class = "tf_wearable",
+        item_name_english = "Dustbowl Devil"
+    },
+    "More Gun Marshal" : {
+        id = 31298,
+        item_class = "tf_wearable",
+        item_name_english = "More Gun Marshal"
+    },
+    "The Lavish Labwear" : {
+        id = 31299,
+        item_class = "tf_wearable",
+        item_name_english = "Lavish Labwear"
+    },
+    "Victorian Villainy" : {
+        id = 31300,
+        item_class = "tf_wearable",
+        item_name_english = "Victorian Villainy"
+    },
+    "The Turncoat" : {
+        id = 31301,
+        item_class = "tf_wearable",
+        item_name_english = "Turncoat"
+    },
+    "The Imp's Imprint" : {
+        id = 31302,
+        item_class = "tf_wearable",
+        item_name_english = "Imp's Imprint"
+    },
+    "The Masked Fiend" : {
+        id = 31303,
+        item_class = "tf_wearable",
+        item_name_english = "Masked Fiend"
+    },
+    "Horror Shawl" : {
+        id = 31304,
+        item_class = "tf_wearable",
+        item_name_english = "Horror Shawl"
+    },
+    "Road Rage" : {
+        id = 31305,
+        item_class = "tf_wearable",
+        item_name_english = "Road Rage"
+    },
+    "Road Block" : {
+        id = 31306,
+        item_class = "tf_wearable",
+        item_name_english = "Road Block"
+    },
+    "Alcoholic Automaton" : {
+        id = 31307,
+        item_class = "tf_wearable",
+        item_name_english = "Alcoholic Automaton"
+    },
+    "Nightbane Brim" : {
+        id = 31308,
+        item_class = "tf_wearable",
+        item_name_english = "Nightbane Brim"
+    },
+    "Bombard Brigadier" : {
+        id = 31309,
+        item_class = "tf_wearable",
+        item_name_english = "Bombard Brigadier"
+    },
+    "Firearm Protector" : {
+        id = 31310,
+        item_class = "tf_wearable",
+        item_name_english = "Firearm Protector"
+    },
+    "Safety Stripes" : {
+        id = 31311,
+        item_class = "tf_wearable",
+        item_name_english = "Safety Stripes"
+    },
+    "Cranial Cowl" : {
+        id = 31312,
+        item_class = "tf_wearable",
+        item_name_english = "Cranial Cowl"
+    },
+    "Headhunter's Brim" : {
+        id = 31313,
+        item_class = "tf_wearable",
+        item_name_english = "Headhunter's Brim"
+    },
+    "Hunting Cloak" : {
+        id = 31314,
+        item_class = "tf_wearable",
+        item_name_english = "Hunting Cloak"
+    },
+    "Misha's Maw" : {
+        id = 31315,
+        item_class = "tf_wearable",
+        item_name_english = "Misha's Maw"
+    },
+    "Cabinet Mann" : {
+        id = 31316,
+        item_class = "tf_wearable",
+        item_name_english = "Cabinet Mann"
+    },
+    "The Fire Breather" : {
+        id = 31317,
+        item_class = "tf_wearable",
+        item_name_english = "Fire Breather"
+    },
+    "Magical Mount" : {
+        id = 31318,
+        item_class = "tf_wearable",
+        item_name_english = "Magical Mount"
+    },
+    "The Pony Express" : {
+        id = 31319,
+        item_class = "tf_wearable",
+        item_name_english = "Pony Express"
+    },
+    "Taunt: Russian Rubdown" : {
+        id = 31320,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Russian Rubdown"
+    },
+    "Taunt: Tailored Terminal" : {
+        id = 31321,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Tailored Terminal"
+    },
+    "Taunt: Roasty Toasty" : {
+        id = 31322,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Roasty Toasty"
+    },
+    "Trapper's Flap" : {
+        id = 31323,
+        item_class = "tf_wearable",
+        item_name_english = "Trapper's Flap"
+    },
+    "Battle Bear" : {
+        id = 31324,
+        item_class = "tf_wearable",
+        item_name_english = "Battle Bear"
+    },
+    "Colonel Kringle" : {
+        id = 31325,
+        item_class = "tf_wearable",
+        item_name_english = "Colonel Kringle"
+    },
+    "Lumbercap" : {
+        id = 31326,
+        item_class = "tf_wearable",
+        item_name_english = "Lumbercap"
+    },
+    "Festive Rack" : {
+        id = 31327,
+        item_class = "tf_wearable",
+        item_name_english = "Festive Rack"
+    },
+    "Firebrand" : {
+        id = 31328,
+        item_class = "tf_wearable",
+        item_name_english = "Firebrand"
+    },
+    "Partizan" : {
+        id = 31329,
+        item_class = "tf_wearable",
+        item_name_english = "Partizan"
+    },
+    "The Soft Hard Hat" : {
+        id = 31331,
+        item_class = "tf_wearable",
+        item_name_english = "Soft Hard Hat"
+    },
+    "The Cool Warm Sweater" : {
+        id = 31332,
+        item_class = "tf_wearable",
+        item_name_english = "Cool Warm Sweater"
+    },
+    "Arctic Mole" : {
+        id = 31333,
+        item_class = "tf_wearable",
+        item_name_english = "Arctic Mole"
+    },
+    "Underminer's Overcoat" : {
+        id = 31334,
+        item_class = "tf_wearable",
+        item_name_english = "Underminer's Overcoat"
+    },
+    "Bulb Bonnet" : {
+        id = 31335,
+        item_class = "tf_wearable",
+        item_name_english = "Bulb Bonnet"
+    },
+    "Cold Blooded Coat" : {
+        id = 31336,
+        item_class = "tf_wearable",
+        item_name_english = "Cold Blooded Coat"
+    },
+    "Frostbite Bonnet" : {
+        id = 31337,
+        item_class = "tf_wearable",
+        item_name_english = "Frostbite Bonnet"
+    },
+    "Infiltrator's Insulation" : {
+        id = 31338,
+        item_class = "tf_wearable",
+        item_name_english = "Infiltrator's Insulation"
+    },
+    "Motley Sleeves" : {
+        id = 31339,
+        item_class = "tf_wearable",
+        item_name_english = "Motley Sleeves"
+    },
+    "Crosshair Cardigan" : {
+        id = 31340,
+        item_class = "tf_wearable",
+        item_name_english = "Crosshair Cardigan"
+    },
+    "Plaid Lad" : {
+        id = 31341,
+        item_class = "tf_wearable",
+        item_name_english = "Plaid Lad"
+    },
+    "Glasgow Bankroll" : {
+        id = 31342,
+        item_class = "tf_wearable",
+        item_name_english = "Glasgow Bankroll"
+    },
+    "The Wooly Pulli" : {
+        id = 31343,
+        item_class = "tf_wearable",
+        item_name_english = "Wooly Pulli"
+    },
+    "Oktoberfester" : {
+        id = 31344,
+        item_class = "tf_wearable",
+        item_name_english = "Oktoberfester"
+    },
+    "Ol' Reliable" : {
+        id = 31345,
+        item_class = "tf_wearable",
+        item_name_english = "Ol' Reliable"
+    },
+    "Heavy Heating" : {
+        id = 31346,
+        item_class = "tf_wearable",
+        item_name_english = "Heavy Heating"
+    },
+    "Taunt: Star-Spangled Strategy" : {
+        id = 31347,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Star-Spangled Strategy"
+    },
+    "Taunt: Killer Joke" : {
+        id = 31348,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Killer Joke"
+    },
+    "Taunt: The Head Doctor" : {
+        id = 31349,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Head Doctor"
+    },
+    "Taunt: Tuefort Tango" : {
+        id = 31351,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Teufort Tango"
+    },
+    "Taunt: The Road Rager" : {
+        id = 31352,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Road Rager"
+    },
+    "Taunt: The Killer Signature" : {
+        id = 31354,
+        item_class = "no_entity",
+        item_name_english = "Taunt: The Killer Signature"
+    },
+    "Full Metal Helmet" : {
+        id = 31355,
+        item_class = "tf_wearable",
+        item_name_english = "Full Metal Helmet"
+    },
+    "Brothers in Blues" : {
+        id = 31356,
+        item_class = "tf_wearable",
+        item_name_english = "Brothers in Blues"
+    },
+    "The Flame Warrior" : {
+        id = 31357,
+        item_class = "tf_wearable",
+        item_name_english = "Flame Warrior"
+    },
+    "The Soho Sleuth" : {
+        id = 31358,
+        item_class = "tf_wearable",
+        item_name_english = "Soho Sleuth"
+    },
+    "The Firestalker" : {
+        id = 31359,
+        item_class = "tf_wearable",
+        item_name_english = "Firestalker"
+    },
+    "The Glorious Gambeson" : {
+        id = 31360,
+        item_class = "tf_wearable",
+        item_name_english = "Glorious Gambeson"
+    },
+    "The Bushman" : {
+        id = 31361,
+        item_class = "tf_wearable",
+        item_name_english = "Bushman"
+    },
+    "Cranium Cover" : {
+        id = 31362,
+        item_class = "tf_wearable",
+        item_name_english = "Cranium Cover"
+    },
+    "Preventative Measure" : {
+        id = 31363,
+        item_class = "tf_wearable",
+        item_name_english = "Preventative Measure"
+    },
+    "Uber-Wear" : {
+        id = 31364,
+        item_class = "tf_wearable",
+        item_name_english = "Über-Wear"
+    },
+    "Medical Emergency" : {
+        id = 31365,
+        item_class = "tf_wearable",
+        item_name_english = "Medical Emergency"
+    },
+    "Brimmed Bootlegger" : {
+        id = 31366,
+        item_class = "tf_wearable",
+        item_name_english = "Brimmed Bootlegger"
+    },
+    "Prohibition Opposition" : {
+        id = 31367,
+        item_class = "tf_wearable",
+        item_name_english = "Prohibition Opposition"
+    },
+    "Brother Mann" : {
+        id = 31368,
+        item_class = "tf_wearable",
+        item_name_english = "Brother Mann"
+    },
+    "Heavy Metal" : {
+        id = 31369,
+        item_class = "tf_wearable",
+        item_name_english = "Heavy Metal"
+    },
+    "Hog Heels" : {
+        id = 31370,
+        item_class = "tf_wearable",
+        item_name_english = "Hog Heels"
+    },
+    "The Blast Bowl" : {
+        id = 31371,
+        item_class = "tf_wearable",
+        item_name_english = "Blast Bowl"
+    },
+    "The Shrapnel Shell" : {
+        id = 31372,
+        item_class = "tf_wearable",
+        item_name_english = "Shrapnel Shell"
+    },
+    "Cargo Constructor" : {
+        id = 31373,
+        item_class = "tf_wearable",
+        item_name_english = "Cargo Constructor"
+    },
+    "Hazard Handler" : {
+        id = 31374,
+        item_class = "tf_wearable",
+        item_name_english = "Hazard Handler"
+    },
+    "Cranium Cooler" : {
+        id = 31375,
+        item_class = "tf_wearable",
+        item_name_english = "Cranium Cooler"
+    },
+    "Cleaner's Cap" : {
+        id = 31376,
+        item_class = "tf_wearable",
+        item_name_english = "Cleaner's Cap"
+    },
+    "Le Professionnel" : {
+        id = 31377,
+        item_class = "tf_wearable",
+        item_name_english = "Le Professionnel"
+    },
+    "Close Quarters Cover" : {
+        id = 31378,
+        item_class = "tf_wearable",
+        item_name_english = "Close Quarters Cover"
+    },
+    "Stealth Bomber" : {
+        id = 31379,
+        item_class = "tf_wearable",
+        item_name_english = "Stealth Bomber"
+    },
+    "Taunt: Roar O'War" : {
+        id = 31380,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Roar O'War"
+    },
+    "Taunt: Neck Snap" : {
+        id = 31381,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Neck Snap"
+    },
+    "Taunt: Borrowed Bones" : {
+        id = 31382,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Borrowed Bones"
+    },
+    "Ludicrously Lunatic Lunon Fedora" : {
+        id = 31383,
+        item_class = "tf_wearable",
+        item_name_english = "Ludicrously Lunatic Lunon Fedora"
+    },
+    "Demonic Dome" : {
+        id = 31384,
+        item_class = "tf_wearable",
+        item_name_english = "Demonic Dome"
+    },
+    "The Mean Captain" : {
+        id = 31385,
+        item_class = "tf_wearable",
+        item_name_english = "Mean Captain"
+    },
+    "Clown's Cover-Up" : {
+        id = 31386,
+        item_class = "tf_wearable",
+        item_name_english = "Clown's Cover-Up"
+    },
+    "Shortness Of Breath" : {
+        id = 31387,
+        item_class = "tf_wearable",
+        item_name_english = "Shortness Of Breath"
+    },
+    "Warlock's Warcloak" : {
+        id = 31388,
+        item_class = "tf_wearable",
+        item_name_english = "Warlock's Warcloak"
+    },
+    "Dead Heat" : {
+        id = 31389,
+        item_class = "tf_wearable",
+        item_name_english = "Dead Heat"
+    },
+    "Splitting Headache" : {
+        id = 31390,
+        item_class = "tf_wearable",
+        item_name_english = "Splitting Headache"
+    },
+    "Thunder Dome" : {
+        id = 31391,
+        item_class = "tf_wearable",
+        item_name_english = "Thunder Dome"
+    },
+    "Stunt Suit" : {
+        id = 31392,
+        item_class = "tf_wearable",
+        item_name_english = "Stunt Suit"
+    },
+    "Mad Lad" : {
+        id = 31393,
+        item_class = "tf_wearable",
+        item_name_english = "Mad Lad"
+    },
+    "Dell Dynamic" : {
+        id = 31394,
+        item_class = "tf_wearable",
+        item_name_english = "Dell Dynamic"
+    },
+    "Constructor's Cover" : {
+        id = 31395,
+        item_class = "tf_wearable",
+        item_name_english = "Constructor's Cover"
+    },
+    "Classic Criminal" : {
+        id = 31396,
+        item_class = "tf_wearable",
+        item_name_english = "Classic Criminal"
+    },
+    "Concealed Convict" : {
+        id = 31397,
+        item_class = "tf_wearable",
+        item_name_english = "Concealed Convict"
+    },
+    "Six-Eyed Specs" : {
+        id = 31398,
+        item_class = "tf_wearable",
+        item_name_english = "Six-Eyed Specs"
+    },
+    "Medical Mummy" : {
+        id = 31399,
+        item_class = "tf_wearable",
+        item_name_english = "Medical Mummy"
+    },
+    "The Main Cast" : {
+        id = 31400,
+        item_class = "tf_wearable",
+        item_name_english = "Main Cast"
+    },
+    "Power Spike" : {
+        id = 31401,
+        item_class = "tf_wearable",
+        item_name_english = "Power Spike"
+    },
+    "Bare Bear Bones" : {
+        id = 31402,
+        item_class = "tf_wearable",
+        item_name_english = "Bare Bear Bones"
+    },
+    "The Make Ogre" : {
+        id = 31403,
+        item_class = "tf_wearable",
+        item_name_english = "Make Ogre"
+    },
+    "Sightseer" : {
+        id = 31404,
+        item_class = "tf_wearable",
+        item_name_english = "Sightseer"
+    },
+    "Sharpshooter's Shroud" : {
+        id = 31405,
+        item_class = "tf_wearable",
+        item_name_english = "Sharpshooter's Shroud"
+    },
+    "The Last Laugh" : {
+        id = 31406,
+        item_class = "tf_wearable",
+        item_name_english = "Last Laugh"
+    },
+    "Jumping Jester" : {
+        id = 31407,
+        item_class = "tf_wearable",
+        item_name_english = "Jumping Jester"
+    },
+    "Blastphomet" : {
+        id = 31408,
+        item_class = "tf_wearable",
+        item_name_english = "Blastphomet"
+    },
+    "Spyder" : {
+        id = 31409,
+        item_class = "tf_wearable",
+        item_name_english = "Spyder"
+    },
+    "Carry-Van" : {
+        id = 31410,
+        item_class = "tf_wearable",
+        item_name_english = "Carry-Van"
+    },
+    "Fiercesome Fluorescence" : {
+        id = 31411,
+        item_class = "tf_wearable",
+        item_name_english = "Fiercesome Fluorescence"
+    },
+    "Taunt: Cheers!" : {
+        id = 31412,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Cheers!"
+    },
+    "Taunt: Mourning Mercs" : {
+        id = 31413,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Mourning Mercs"
+    },
+    "Taunt: Foul Play" : {
+        id = 31414,
+        item_class = "no_entity",
+        item_name_english = "Taunt: Foul Play"
+    },
+    "Boarder's Beanie" : {
+        id = 31415,
+        item_class = "tf_wearable",
+        item_name_english = "Boarder's Beanie"
+    },
+    "Cozy Cover-Up" : {
+        id = 31416,
+        item_class = "tf_wearable",
+        item_name_english = "Cozy Cover-Up"
+    },
+    "The Dapper Dickens" : {
+        id = 31417,
+        item_class = "tf_wearable",
+        item_name_english = "Dapper Dickens"
+    },
+    "Trench Warefarer" : {
+        id = 31418,
+        item_class = "tf_wearable",
+        item_name_english = "Trench Warfarer"
+    },
+    "Wanderer's Wool" : {
+        id = 31419,
+        item_class = "tf_wearable",
+        item_name_english = "Wanderer's Wool"
+    },
+    "The Puffed Practitioner" : {
+        id = 31420,
+        item_class = "tf_wearable",
+        item_name_english = "Puffed Practitioner"
+    },
+    "The Frigid Fashion" : {
+        id = 31421,
+        item_class = "tf_wearable",
+        item_name_english = "Frigid Fashion"
+    },
+    "Nightcap" : {
+        id = 31422,
+        item_class = "tf_wearable",
+        item_name_english = "Nightcap"
+    },
+    "Lazy Lounger" : {
+        id = 31423,
+        item_class = "tf_wearable",
+        item_name_english = "Lazy Lounger"
+    },
+    "Slumber Slacks" : {
+        id = 31424,
+        item_class = "tf_wearable",
+        item_name_english = "Slumber Slacks"
+    },
+    "Clue Hairdo" : {
+        id = 31425,
+        item_class = "tf_wearable",
+        item_name_english = "Clue Hairdo"
+    },
+    "Sleuth Suit" : {
+        id = 31426,
+        item_class = "tf_wearable",
+        item_name_english = "Sleuth Suit"
+    },
+    "Strasbourg Scholar" : {
+        id = 31427,
+        item_class = "tf_wearable",
+        item_name_english = "Strasbourg Scholar"
+    },
+    "The Covert Covers" : {
+        id = 31428,
+        item_class = "tf_wearable",
+        item_name_english = "Covert Covers"
+    },
+    "Scruffed 'n Stitched" : {
+        id = 31429,
+        item_class = "tf_wearable",
+        item_name_english = "Scruffed 'n Stitched"
+    },
+    "Rugged Rags" : {
+        id = 31430,
+        item_class = "tf_wearable",
+        item_name_english = "Rugged Rags"
+    },
+    "Masked Loyalty" : {
+        id = 31431,
+        item_class = "tf_wearable",
+        item_name_english = "Masked Loyalty"
+    },
+    "Impact Impaler" : {
+        id = 31432,
+        item_class = "tf_wearable",
+        item_name_english = "Impact Impaler"
+    },
+    "Torcher's Trench Coat" : {
+        id = 31433,
+        item_class = "tf_wearable",
+        item_name_english = "Torcher's Trench Coat"
+    },
+    "Balkan's Brute" : {
+        id = 31434,
+        item_class = "tf_wearable",
+        item_name_english = "Balkan's Brute"
+    },
+    "Bigger Mann on Campus" : {
+        id = 31435,
+        item_class = "tf_wearable",
+        item_name_english = "Bigger Mann on Campus"
+    },
+    "Isotopic Insulator" : {
+        id = 31436,
+        item_class = "tf_wearable",
+        item_name_english = "Isotopic Insulator"
+    },
+    "Bonk Beanie" : {
+        id = 31437,
+        item_class = "tf_wearable",
+        item_name_english = "Bonk Beanie"
     }
 }

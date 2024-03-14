@@ -152,7 +152,7 @@ local popext_funcs = {
 		if (spellbook == null) 
 		{
 			local weapon = Entities.CreateByClassname("tf_weapon_spellbook")
-			SetPropInt(weapon, STRING_NETPROP_ITEMDEF, ID_SPELLBOOK_MAGAZINE_STOCK)
+			SetPropInt(weapon, STRING_NETPROP_ITEMDEF, ID_BASIC_SPELLBOOK)
 			SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
 			SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
 

@@ -11,8 +11,8 @@ LOCALE: typing.Final[str] = 'english'
  # Max depth is relatively low as there shouldn't be too many references in prefabs
 MAX_RECURSION_DEPTH: typing.Final[str] = 50
 OUTPUT_TABLE_NAME: typing.Final[str] = 'PopExtUtil.ItemMap'
-OUTPUT_DIR: typing.Final[str] = './output'
-OUTPUT_FILE_NAME: typing.Final[str] = 'tf_item_map.nut'
+OUTPUT_DIR: typing.Final[str] = f'{os.path.dirname(__file__)}/output'
+OUTPUT_FILE_NAME: typing.Final[str] = 'item_map.nut'
 
 # TODO: Path hardcoded currently for win32, but can be detected easily from libraryfolders.vdf.
 tf_path = f'{os.environ['ProgramW6432']}/Steam/steamapps/common/Team Fortress 2/tf'
@@ -40,9 +40,11 @@ def schema_block_from_prefabs(prefabs: dict, block: dict, _depth: int = 0) -> di
 
     # Merge prefab reference keys to block.
     for prefab in prefab_refs:
-        block.update(schema_block_from_prefabs(prefabs, prefabs[prefab], _depth + 1))
-    block.pop('prefab', None)
+        prefab_block = schema_block_from_prefabs(prefabs, prefabs[prefab], _depth + 1)
+        # Prioritise original block values.
+        block = {**prefab_block, **block}
 
+    block.pop('prefab', None)
     return block
 
 def ItemMap_to_squirrel(tablename: str, inputdict: dict, indent: str = '    ', globalscope: bool = True) -> list:
@@ -64,7 +66,7 @@ def ItemMap_to_squirrel(tablename: str, inputdict: dict, indent: str = '    ', g
     """
 
     generation_time = datetime.datetime.now(datetime.timezone.utc)
-    _outputlist = ['// TFItemMap generated at ' + generation_time.strftime('%H:%M %Y/%m/%d UTC')]
+    _outputlist = ['// TFItemMap generated on ' + generation_time.strftime('%H:%M %Y/%m/%d UTC')]
 
     if globalscope:
         _outputlist.append(f'::{tablename} <- {{')
@@ -108,9 +110,10 @@ if __name__ == "__main__":
     # TODO: Should .lower() items_game keys, though doesn't matter for now since it's likely
     #        a generated file.
     items = items_game['items_game']['items']
-    # TODO: Sort items dict numerically ascending
     prefabs = items_game['items_game']['prefabs']
     del items_game  # Free some memory, item schema is fat.
+    # Sort "items" entries by index numerically ascending
+    items = {'default': items.pop('default'), **dict(sorted(items.items(), key=lambda item: int(item[0])))}
 
     # Temporary: Locfile is .lower()ed as VDF is not case-sensitive.
     #            .casefold() would be the correct way of handling this, but VDF does not use
@@ -146,10 +149,12 @@ if __name__ == "__main__":
             except KeyError:
                 items_dict[value['name']][item_localised] = ''
 
-    print(f'Writing to \'{OUTPUT_DIR}/{OUTPUT_FILE_NAME}\'... ', end='', flush=True)
+    full_output_path = os.path.abspath(f'{OUTPUT_DIR}/{OUTPUT_FILE_NAME}')
+    print(f'Writing to \'{full_output_path}\'... ', end='', flush=True)
+
     if not os.path.exists(OUTPUT_DIR):
         os.makedirs(OUTPUT_DIR)
-    with open(f'{OUTPUT_DIR}/{OUTPUT_FILE_NAME}', mode='wt', encoding='utf-8', newline='\n') as fp:
+    with open(full_output_path, mode='wt', encoding='utf-8', newline='\n') as fp:
         fp.write(ItemMap_to_squirrel(OUTPUT_TABLE_NAME, items_dict))
     print('Done.')
 
