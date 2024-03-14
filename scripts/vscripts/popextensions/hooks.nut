@@ -200,11 +200,11 @@ PopExt <- popExtEntity.GetScriptScope()
 							flags = flags | MVM_CLASS_FLAG_ALWAYSCRIT
 	
 						// Compensate for the decreasing of normal tank icon
-						if (GetWaveIconSpawnCount("tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL) > 0 && GetWaveIconSpawnCount(icon.name, flags) > 0)
-							IncrementWaveIconSpawnCount("tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1, false)
+						if (PopExt.GetWaveIconSpawnCount("tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL) > 0 && PopExt.GetWaveIconSpawnCount(icon.name, flags) > 0)
+						PopExt.IncrementWaveIconSpawnCount("tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1, false)
 	
 						// Decrement custom tank icon when killed.
-						DecrementWaveIconSpawnCount(icon.name, flags, 1, false)
+						PopExt.DecrementWaveIconSpawnCount(icon.name, flags, 1, false)
 					}
 	
 					PopExtHooks.FireHooksParam(victim, scope, "OnDeath", params)
@@ -216,10 +216,10 @@ PopExt <- popExtEntity.GetScriptScope()
 				PopExt.waveIconsFunction()
 		
 			foreach(i, v in PopExtHooks.tankIcons)
-				_PopIncrementTankIcon(v)
+				PopExt._PopIncrementTankIcon(v)
 		
 			foreach(i, v in PopExtHooks.icons)
-				_PopIncrementIcon(v)
+				PopExt._PopIncrementIcon(v)
 		
 		}
 		function OnGameEvent_teamplay_round_start(params) {

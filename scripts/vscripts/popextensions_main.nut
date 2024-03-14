@@ -1,14 +1,16 @@
-// ::popExtensionsVersion <- 6; //don't bother with versioning for now since we're constantly updating it
+//date = last major version push (new features)
+//suffix = patch
+::popExtensionsVersion <- "03.14.2024.1"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
 ::__popname <- NetProps.GetPropString(o, "m_iszMvMPopfileName")
 // ::commentaryNode <- SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
 
-::Main <- {
+::PopExtMain <- {
+
 	//save popfile name in global scope when we first initialize
 	//if the popfile name changed, a new pop has loaded, clean everything up.
-
 	function PlayerCleanup(player) {
 		NetProps.SetPropInt(player, "m_nRenderMode", 0)
 		NetProps.SetPropInt(player, "m_clrRender", 0xFFFFFF)
@@ -35,7 +37,12 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		local player = GetPlayerFromUserID(params.userid)
 		if (!player.IsBotOfType(1337)) return
 
-		Main.PlayerCleanup(player)
+		PopExtMain.PlayerCleanup(player)
+
+		//remove these on death instead of on spawn
+		foreach (tag in __tagarray)
+			if (player.HasBotTag(tag))
+				player.RemoveBotTag(tag)
 	}
 
 	function OnGameEvent_teamplay_round_start(params) {
@@ -44,7 +51,8 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 			if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
 				EntFireByHandle(wearable, "Kill", "", -1, null, null)
 				
-		if (__popname == NetProps.GetPropString(o, "m_iszMvMPopfileName")) return
+		//same pop, don't run clean-up
+		if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
 
 		EntFire("_popext*", "Kill")
 		EntFire("__util*", "Kill")
@@ -56,7 +64,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 
 			if (player == null) continue
 
-			Main.PlayerCleanup(player)
+			PopExtMain.PlayerCleanup(player)
 		}
 
 		try delete ::MissionAttributes catch(e) return
@@ -69,10 +77,11 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		try delete ::VCD_SOUNDSCRIPT_MAP catch(e) return
 		try delete ::PopExtUtil catch(e) return
 		try delete ::__popname catch(e) return
-		try delete ::Main catch(e) return
+		try delete ::__tagarray catch(e) return
+		try delete ::PopExtMain catch(e) return
 	}
 }
-__CollectGameEventCallbacks(Main)
+__CollectGameEventCallbacks(PopExtMain)
 
 function Include(path) {
 	try IncludeScript(format("popextensions/%s", path), root) catch(e) printl(e)
