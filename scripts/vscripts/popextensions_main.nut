@@ -1,3 +1,4 @@
+// ::popExtensionsVersion <- 6; //don't bother with versioning for now since we're constantly updating it
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -14,24 +15,40 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
-		if (scope.len() < 4) return
+		if (scope.len() < 5) return
 
 		local ignore_table = {
 			"self"      : null
 			"__vname"   : null
 			"__vrefs"   : null
 			"Preserved" : null
+			"popWearablesToDestroy" : null
 		}
 		foreach (k, v in scope)
 			if (!(k in ignore_table))
 				delete scope[k]
 	}
 
+	//clean up bot scope on death
+	function OnGameEvent_player_death(params) {
+
+		local player = GetPlayerFromUserID(params.userid)
+		if (!player.IsBotOfType(1337)) return
+
+		Main.PlayerCleanup(player)
+	}
+
 	function OnGameEvent_teamplay_round_start(params) {
 
+		for (local wearable; wearable = FindByClassname(wearable, "tf_wearable*");)
+			if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
+				EntFireByHandle(wearable, "Kill", "", -1, null, null)
+				
 		if (__popname == NetProps.GetPropString(o, "m_iszMvMPopfileName")) return
 
-		EntFire("_popextensions*", "Kill")
+		EntFire("_popext*", "Kill")
+		EntFire("__util*", "Kill")
+		EntFire("__bot*", "Kill")
 
 		for (local i = 1; i <= MaxClients().tointeger(); i++) {
 
@@ -43,6 +60,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		}
 
 		try delete ::MissionAttributes catch(e) return
+		try delete ::CustomAttributes catch(e) return
 		try delete ::PopExt catch(e) return
 		try delete ::PopExtTags catch(e) return
 		try delete ::PopExtHooks catch(e) return
@@ -68,6 +86,7 @@ Include("hooks") //must include before popextensions
 Include("popextensions")
 
 Include("robotvoicelines") //must include before missionattributes
+Include("customattributes") //must include before missionattributes
 Include("missionattributes")
 
 Include("botbehavior") //must include before tags
