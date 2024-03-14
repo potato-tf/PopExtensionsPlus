@@ -394,7 +394,7 @@ function CustomAttributes::CritWhenHealthBelow(player, item, value = -1) {
     if (wep == null) return
     
     player.GetScriptScope().PlayerThinkTable.CritWhenHealthBelow <- function() {
-
+        
             if (player.GetHealth() > value && !player.IsCritBoosted())
             {
                 player.AddCond(COND_CRITBOOST, true)
@@ -434,6 +434,22 @@ function CustomAttributes::BuildSmallSentry(player, item) {
     }
 }
 
+function CustomAttributes::RadiusSleeper(player, item) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamagePostTable.RadiusSleeper <- function(params) {
+
+        local victim = GetPlayerFromUserID(params.userid)
+        local attacker = GetPlayerFromUserID(params.attacker)
+
+        if (victim == null || attacker == null || attacker != player || GetPropFloat(attacker.GetActiveWeapon(), "m_flChargedDamage") >= 150.0) return
+
+        SpawnEntityFromTable("tf_projectile_jar", {origin = victim.EyePosition()})
+    }
+}
+
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
     //TODO: set up error handler
@@ -442,7 +458,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
     local scope = player.GetScriptScope()
     local valuepercent = (value.tofloat() * 100).tointeger()
     if (!("attribinfo" in scope)) scope.attribinfo <- {}
-
+    printl(attr + " : " + value)
 	switch(attr) {
 
         case "fires milk bolt":
@@ -473,7 +489,6 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         case "last shot crits":
             CustomAttributes.LastShotCrits(player, item)
             scope.attribinfo[attr] <- "Crit boost on last shot"
-
         break
 
         case "wet immunity": 
@@ -493,7 +508,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         
         case "teleport instead of die":
             CustomAttributes.TeleportInsteadOfDie(player, item, value)
-            scope.attribinfo[attr] <- format("%d percent chance of teleporting to spawn with 1 health instead of dying", valuepercent)
+            scope.attribinfo[attr] <- format("%d ⁰/₀ chance of teleporting to spawn with 1 health instead of dying", valuepercent)
         break
         
         case "mult dmg vs same class":
@@ -503,11 +518,11 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "uber on damage taken":
             CustomAttributes.UberOnDamageTaken(player, item, value)
-            scope.attribinfo[attr] <- format("On take damage: %d percent chance of gaining invicibility for 3 seconds", valuepercent)
+            scope.attribinfo[attr] <- format("On take damage: %d ⁰/₀ chance of gaining invicibility for 3 seconds", valuepercent)
         break
 
         case "build small sentries":
-            CustomAttributes.BuildSmallSentry(player, item, value)
+            CustomAttributes.BuildSmallSentry(player, item)
             scope.attribinfo[attr] <- "Sentries are 20% smaller. have 33% less health, take 25% less metal to upgrade"
         break
 
@@ -519,6 +534,14 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         case "mvm sentry ammo":
             CustomAttributes.SentryAmmo(player, item, value)
             scope.attribinfo[attr] <- format("Sentry ammo multiplied by %f", value.tofloat())
+        break
+
+        //FULLY CUSTOM ATTRIBUTES BELOW
+        //no hidden dev alternative
+
+        case "radius sleeper":
+            CustomAttributes.RadiusSleeper(player, item)
+            scope.attribinfo[attr] <- "On full charge headshot: create jarate explosion on victim"
         break
     }
 
