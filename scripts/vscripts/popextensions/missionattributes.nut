@@ -1126,8 +1126,7 @@ function MissionAttributes::MissionAttr(...) {
 			foreach (k, v in value)
 			{
 				if (typeof k == "string" && (typeof v == "integer" || typeof v == "float"))
-					if (k in CustomAttributes.Attrs)
-						CustomAttributes.AddAttr(player, k, v)
+					if (k in CustomAttributes.Attrs) CustomAttributes.AddAttr(player, k, v)
 					else
 						EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", k, v.tofloat()), -1, null, null)
 			
@@ -1578,6 +1577,7 @@ function MissionAttributes::MissionAttr(...) {
 			}
 
 			// Allow money collection
+			local collectionradius = 0
 			scope.PlayerThinkTable.ReverseMVMCurrencyThink <- function() {
 
 				// Save money netprops because we fuck it in the loop below
@@ -1587,9 +1587,11 @@ function MissionAttributes::MissionAttr(...) {
 
 				// Find currency near us
 				local origin = self.GetOrigin()
-				for ( local ent; ent = FindByClassnameWithin(ent, "item_currencypack_*", origin, 64); ) {
+				self.GetPlayerClass() != TF_CLASS_SCOUT ? collectionradius = 72 : collectionradius = 288
+
+				for ( local ent; ent = FindByClassnameWithin(ent, "item_currencypack_*", origin, collectionradius); ) {
 					// Move the money to the origin and respawn it to allow us to collect it after it touches the ground
-					ent.SetAbsOrigin(Vector())
+					ent.SetAbsOrigin(Vector(0, 0, INT_MIN))
 					ent.DispatchSpawn()
 				}
 

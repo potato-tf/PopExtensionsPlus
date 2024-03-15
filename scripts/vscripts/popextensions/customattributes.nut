@@ -52,6 +52,11 @@
         "airblast dashes": null
         "mult sniper charge per sec with enemy under crosshair": null
         "sniper beep with enemy under crosshair": null
+        "crit when health below": null
+
+        //begin non-dev fully custom attributes
+        "radius sleeper": null
+        "explosive bullets": null
     }
 
     Events = {
@@ -389,18 +394,14 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
 }
 
 function CustomAttributes::CritWhenHealthBelow(player, item, value = -1) {
-
-    local wep = PopExtUtil.HasItemInLoadout(player, item)
-    if (wep == null) return
     
     player.GetScriptScope().PlayerThinkTable.CritWhenHealthBelow <- function() {
         
-            if (player.GetHealth() > value && !player.IsCritBoosted())
-            {
-                player.AddCond(COND_CRITBOOST, true)
-                return
-            }
-            player.RemoveCond(COND_CRITBOOST)
+        if (player.GetHealth() < value)
+        {
+            player.AddCondEx(COND_CRITBOOST, 0.033, player)
+            return
+        }
     }
 }
 
@@ -444,7 +445,7 @@ function CustomAttributes::RadiusSleeper(player, item) {
         local victim = GetPlayerFromUserID(params.userid)
         local attacker = GetPlayerFromUserID(params.attacker)
 
-        if (victim == null || attacker == null || attacker != player || GetPropFloat(attacker.GetActiveWeapon(), "m_flChargedDamage") >= 150.0) return
+        if (victim == null || attacker == null || attacker != player || GetPropFloat(attacker.GetActiveWeapon(), "m_flChargedDamage") < 150.0) return
 
         SpawnEntityFromTable("tf_projectile_jar", {origin = victim.EyePosition()})
     }
@@ -458,7 +459,6 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
     local scope = player.GetScriptScope()
     local valuepercent = (value.tofloat() * 100).tointeger()
     if (!("attribinfo" in scope)) scope.attribinfo <- {}
-    printl(attr + " : " + value)
 	switch(attr) {
 
         case "fires milk bolt":
@@ -508,7 +508,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         
         case "teleport instead of die":
             CustomAttributes.TeleportInsteadOfDie(player, item, value)
-            scope.attribinfo[attr] <- format("%d ⁰/₀ chance of teleporting to spawn with 1 health instead of dying", valuepercent)
+            scope.attribinfo[attr] <- format("%d⁒ chance of teleporting to spawn with 1 health instead of dying", valuepercent)
         break
         
         case "mult dmg vs same class":
@@ -518,7 +518,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "uber on damage taken":
             CustomAttributes.UberOnDamageTaken(player, item, value)
-            scope.attribinfo[attr] <- format("On take damage: %d ⁰/₀ chance of gaining invicibility for 3 seconds", valuepercent)
+            scope.attribinfo[attr] <- format("On take damage: %d⁒ chance of gaining invicibility for 3 seconds", valuepercent)
         break
 
         case "build small sentries":
@@ -543,24 +543,33 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             CustomAttributes.RadiusSleeper(player, item)
             scope.attribinfo[attr] <- "On full charge headshot: create jarate explosion on victim"
         break
+
+        case "explosive bullets":
     }
 
     local cooldowntime = 3.0
 
     local scope = player.GetScriptScope()
+    local formattedtable = []
+
+    local formatted = ""
+
+    foreach (desc, attr in scope.attribinfo)
+        if (!formatted.find(attr))
+            formattedtable.append(format("%s:\n\n%s\n\n\n", desc, attr))
+            
+    local i = 0
     scope.PlayerThinkTable.ShowAttribInfo <- function() {
 
         if (!player.IsInspecting() || Time() < cooldowntime) return
-
-        local formatted = ""
-
-        foreach (desc, attr in scope.attribinfo)
-            if (!formatted.find(attr))
-                formatted += format("%s:\n\n%s\n\n\n", desc, attr)
-
-        printl(formatted.len())
-        PopExtUtil.ShowHudHint(formatted, player, 3.0 - SINGLE_TICK)
-
+        
+        if (i+1 < formattedtable.len()) 
+            PopExtUtil.ShowHudHint(format("%s %s", formattedtable[i], formattedtable[i+1]), player, 3.0 - SINGLE_TICK)
+        else
+            PopExtUtil.ShowHudHint(formattedtable[i], player, 3.0 - SINGLE_TICK)
+        
+        i += 2
+        if (i >= formattedtable.len()) i = 0
         cooldowntime = Time() + 3.0
     }
 }

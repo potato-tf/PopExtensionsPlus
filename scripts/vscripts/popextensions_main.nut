@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "03.14.2024.4"
+::popExtensionsVersion <- "03.14.2024.5"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -38,11 +38,6 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		if (!player.IsBotOfType(1337)) return
 
 		PopExtMain.PlayerCleanup(player)
-
-		//remove these on death instead of on spawn
-		foreach (tag in __tagarray)
-			if (player.HasBotTag(tag))
-				player.RemoveBotTag(tag)
 	}
 
 	function OnGameEvent_teamplay_round_start(params) {
