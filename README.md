@@ -15,7 +15,11 @@ scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes
 ## MissionAttributes
 - Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  Forcibly disable romevision, turn players into Robots, apply global item attributes or conditions to players, and way more than can be reasonably listed here
 
-## Bot Tags (WIP)
+## Advanced entity spawning system, rafmod PointTemplate converter
+
+Inside the python folder you will find a script to convert rafmod's PointTemplates spawner to a vscript equivalent.  Download the latest version of python if you don't have it, run the script, select your popfile, and a script file containing all the templates will be output to a new VScript alternative.  note that you will need to manually spawn these entities again using the `SpawnTemplate.SpawnTemplate()` function 
+
+## Bot Tags
 
 - Dozens of bot tags that mimic many of the rafmod/sigmod TFBot keyvalues
 - Enables a variety of AI mechanics previously exclusive to rafmod/sigmod. Spellcasting bots, custom spawn locations, homing rockets, the list goes on.
@@ -57,7 +61,7 @@ tf_whip_speed_increase
 
 ## MissionAttributes Example
 
-Mission attributes are collected in a table on wave init.  The function for doing so is `CollectMissionAttrs()`
+Mission attributes are collected in a table on wave init.  The function for doing so is `MissionAttrs()`
 
 ```
         // Add or replace existing InitWaveOutput with code below
@@ -73,7 +77,7 @@ Mission attributes are collected in a table on wave init.  The function for doin
                 // Load popextensions script
                 IncludeScript(`popextensions_main.nut`)
 
-                CollectMissionAttrs({
+                MissionAttrs({
 
                     `NoReanimators`: 1
                     `666Wavebar`: 1
