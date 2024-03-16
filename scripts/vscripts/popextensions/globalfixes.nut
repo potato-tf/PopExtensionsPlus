@@ -171,6 +171,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			player.GetScriptScope().PlayerThinkTable.HoldFireThink <- function() {
 
+				printl(activegun.Clip1())
 				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
 				local activegun = player.GetActiveWeapon()

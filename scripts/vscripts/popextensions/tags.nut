@@ -11,10 +11,10 @@ local popext_funcs = {
 		if (args.len() == 1) {
 			if (args[0].tointeger() == 43) {
 				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
-				function MoveToSpec(params) {
+				bot.GetScriptScope().DeathHookTable.MoveToSpec <- function (params) {
 					EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 				}
-				// bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
+				
 			}
 			else
 				bot.AddCond(args[0].tointeger())
@@ -26,10 +26,9 @@ local popext_funcs = {
 
 	popext_reprogrammed = function(bot, args) {
 		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
-		function MoveToSpec(params) {
+		bot.GetScriptScope().DeathHookTable.MoveToSpec <- function (params) {
 			EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 		}
-		// bot.GetScriptScope().DeathHookTable.MoveToSpec <- MoveToSpec
 	}
 
 	// popext_reprogrammed_neutral = function(bot, args) {
@@ -45,6 +44,11 @@ local popext_funcs = {
 
 	popext_usehumanmodel = function(bot, args) {
 		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", PopExtUtil.Classes[bot.GetPlayerClass()]))
+	}
+
+	popext_usecustommodel = function(bot, args) {
+		if (!IsModelPrecached(args[0])) PrecacheModel(args[0])
+		bot.SetCustomModelWithClassAnimations(args[0])
 	}
 
 	popext_usehumananims = function(bot, args) {
@@ -148,15 +152,16 @@ local popext_funcs = {
 		//equip a spellbook if the bot doesn't have one
 		if (spellbook == null) 
 		{
-			local weapon = Entities.CreateByClassname("tf_weapon_spellbook")
-			SetPropInt(weapon, STRING_NETPROP_ITEMDEF, ID_BASIC_SPELLBOOK)
-			SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
-			SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
+			local book = Entities.CreateByClassname("tf_weapon_spellbook")
+			SetPropInt(book, STRING_NETPROP_ITEMDEF, ID_BASIC_SPELLBOOK)
+			SetPropBool(book, "m_AttributeManager.m_Item.m_bInitialized", true)
+			SetPropBool(book, "m_bValidatedAttachedEntity", true)
+			SetPropEntityArray(bot, "m_hMyWeapons", book, book.GetSlot())
 
-			weapon.SetTeam(bot.GetTeam())
-			Entities.DispatchSpawn(weapon)
+			book.SetTeam(bot.GetTeam())
+			DispatchSpawn(book)
 	
-			bot.Weapon_Equip(weapon)
+			bot.Weapon_Equip(book)
 
 			//try again next think
 			return
@@ -198,27 +203,27 @@ local popext_funcs = {
 
 		//kill the existing romevision
 		EntFireByHandle(bot, "RunScriptCode", @"
-		local killrome = []
+			local killrome = []
 
-		if (self.IsBotOfType(1337))
-			for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
-				if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
-					killrome.append(child)
+			if (self.IsBotOfType(1337))
+				for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
+					if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
+						killrome.append(child)
 
-		for(local i = killrome.len() - 1; i >= 0; i--) killrome[i].Kill()
+			for (local i = killrome.len() - 1; i >= 0; i--) killrome[i].Kill()
 
-		local cosmetics = PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()]
+			local cosmetics = PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()]
 
-		if (self.GetModelName() == `models/bots/demo/bot_sentry_buster.mdl`)
-		{
-			PopExtUtil.CreatePlayerWearable(self, PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()][2])
-			return
-		}
-		foreach (cosmetic in cosmetics)
-		{
-			local wearable = PopExtUtil.CreatePlayerWearable(self, cosmetic)
-			SetPropString(wearable, `m_iName`, `__bot_romevision_model`)
-		}
+			if (self.GetModelName() == `models/bots/demo/bot_sentry_buster.mdl`)
+			{
+				PopExtUtil.CreatePlayerWearable(self, PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()][2])
+				return
+			}
+			foreach (cosmetic in cosmetics)
+			{
+				local wearable = PopExtUtil.CreatePlayerWearable(self, cosmetic)
+				SetPropString(wearable, `m_iName`, `__bot_romevision_model`)
+			}
 		", -1, null, null)
 	}
 
@@ -239,6 +244,7 @@ local popext_funcs = {
 		local cooldown = Time() + interval
 
 		bot.GetScriptScope().PlayerThinkTable.RingOfFireThink <-  function() {
+
 			if (Time() < cooldown) return
 
 			local origin = bot.GetOrigin()
@@ -405,8 +411,7 @@ local popext_funcs = {
 			}
 		}
 	}
-
-	//this is a very simple method for giving bots weapons.
+	
 	popext_giveweapon = function(bot, args) {
 
 		local weapon = Entities.CreateByClassname(args[0])

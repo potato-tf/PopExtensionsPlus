@@ -110,12 +110,14 @@ if (!("ScriptUnloadTable" in ROOT))
 		}
 		function OnGameEvent_teamplay_broadcast_audio(params) {
 
+			if (MissionAttributes.SoundsToReplace.len() == 0) return
+			
 			if (params.sound in MissionAttributes.SoundsToReplace)
 			{
 				foreach (player in PopExtUtil.HumanArray) 
 					StopSoundOn(params.sound, player)
 
-				if (MissionAttributes.SoundsToReplace.len() == 0 || MissionAttributes.SoundsToReplace[params.sound] == null) return
+				if (MissionAttributes.SoundsToReplace[params.sound] == null) return
 
 				EmitSoundEx({sound_name = MissionAttributes.SoundsToReplace[params.sound]})
 			}
@@ -180,9 +182,7 @@ function MissionAttributes::MissionAttr(...) {
 	local success = true
 	switch(attr) {
 
-	// =========================================================
-
-	case "ForceHoliday":
+	// =========================================
 		// Replicates sigsegv-mvm: ForceHoliday.
 		// Forces a tf_holiday for the mission.
 		// Supported Holidays are:
@@ -190,6 +190,9 @@ function MissionAttributes::MissionAttr(...) {
 		//	1 - Birthday
 		//	2 - Halloween
 		//	3 - Christmas
+	// =========================================
+
+	case "ForceHoliday":
 		// @param Holiday		Holiday number to force.
 		// @error TypeError		If type is not an integer.
 		// @error IndexError	If invalid holiday number is passed.
@@ -212,9 +215,12 @@ function MissionAttributes::MissionAttr(...) {
 
 	break
 
-	// ========================================================
+	// =================================
+	// disable random crits for red bots
+	// =================================
 
 	case "RedBotsNoRandomCrit":
+
 		function MissionAttributes::RedBotsNoRandomCrit(params)
 		{
 			local player = GetPlayerFromUserID(params.userid)
@@ -224,9 +230,12 @@ function MissionAttributes::MissionAttr(...) {
 		}
 		MissionAttributes.SpawnHookTable.RedBotsNoRandomCrit <- MissionAttributes.RedBotsNoRandomCrit
 
-	// ========================================================
+	// =====================
+	// disable crit pumpkins
+	// =====================
 
 	case "NoCrumpkins":
+
 		local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl");
 		function MissionAttributes::NoCrumpkins() {
 			switch(value) {
@@ -244,9 +253,12 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.ThinkTable.NoCrumpkins <- MissionAttributes.NoCrumpkins
 	break
 
-	// =========================================================
+	// ===================
+	// disable reanimators
+	// ===================
 
 	case "NoReanimators":
+
 		if (value < 1) return
 
 		function MissionAttributes::NoReanimators(params) {
@@ -257,9 +269,12 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.DeathHookTable.NoReanimators <- MissionAttributes.NoReanimators
 	break
 
-	// =========================================================
+	// ===========================
+	// allow standing on bot heads
+	// ===========================
 
 	case "StandableHeads":
+		
 		local movekeys = IN_FORWARD | IN_BACK | IN_LEFT | IN_RIGHT
 		function MissionAttributes::StandableHeads(params) {
 			local player = GetPlayerFromUserID(params.userid)
@@ -276,13 +291,19 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.StandableHeads <- MissionAttributes.StandableHeads
 	break
 
-	// =========================================================
+	// =================================================
+	// doesn't work until wave switches, won't work on W1
+	// =================================================
 
-	case "666Wavebar": //doesn't work until wave switches, won't work on W1
-		SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMEventPopfileType", value)
+	case "666Wavebar":
+		function MissionAttributes::EventWavebar(params = null) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value) }
+		MissionAttributes.EventWavebar()
+		MissionAttributes.StartWaveTable.EventWavebar <- MissionAttributes.EventWavebar
 	break
 
-	// =========================================================
+	// ===================================
+	// sets the wave number on the wavebar
+	// ===================================
 
 	case "WaveNum":
 		function MissionAttributes::SetWaveNum(params = null) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value) }
@@ -290,7 +311,9 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.StartWaveTable.SetWaveNum <- MissionAttributes.SetWaveNum
 	break
 
-	// =========================================================
+	// =======================================
+	// sets the max wave number on the wavebar
+	// =======================================
 
 	case "MaxWaveNum":		
 	function MissionAttributes::SetMaxWaveNum(params = null) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value) }
@@ -299,6 +322,9 @@ function MissionAttributes::MissionAttr(...) {
 	break
 
 	// =========================================================
+	// UNFINISHED
+	// =========================================================
+
 	case "NegativeDmgHeals":
 		// function MissionAttributes::NegativeDmgHeals(params) {
 		// 	local player = params.const_entity
@@ -314,7 +340,9 @@ function MissionAttributes::MissionAttr(...) {
 		// }
 		// MissionAttributes.TakeDamageTable.NegativeDmgHeals <- MissionAttributes.NegativeDmgHeals
 	break
-	// =========================================================
+	// ==============================================================
+	// Allows spies to place multiple sappers when item meter is full
+	// ==============================================================
 
 	case "MultiSapper":
 		function MissionAttributes::MultiSapper(params) {
@@ -334,6 +362,7 @@ function MissionAttributes::MissionAttr(...) {
 	// =========================================================
 
 	//all of these could just be set directly in the pop easily, however popfile's have a 4096 character limit for vscript so might as well save space
+
 	case "NoRefunds":
 		SetConvar("tf_mvm_respec_enabled", 0);
 	break
@@ -469,6 +498,18 @@ function MissionAttributes::MissionAttr(...) {
 
 	// =========================================================
 
+	case "GrapplingHookEnable":
+		SetConvar("tf_grapplinghook_enable", value)
+	break
+
+	// =========================================================
+
+	case "GiantScale":
+		SetConvar("tf_mvm_miniboss_scale", value)
+	break
+
+	// =========================================================
+
 	case "VacNumCharges":
 		SetConvar("weapon_medigun_resist_num_chunks", value)
 	break
@@ -558,7 +599,9 @@ function MissionAttributes::MissionAttr(...) {
 		SetConvar("tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1)
 	break
 
-	// =========================================================
+	// =====================
+	// Disable sniper lasers 
+	// =====================
 
 	case "SniperHideLasers":
 		if (value < 1) return
@@ -574,7 +617,9 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.ThinkTable.SniperHideLasers <- MissionAttributes.SniperHideLasers
 	break
 
-	// =========================================================
+	// ===================================
+	// lose wave when all players are dead
+	// ===================================
 
 	case "TeamWipeWaveLoss":
 		function MissionAttributes::TeamWipeWaveLoss(params) {
@@ -584,8 +629,10 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.DeathHookTable.TeamWipeWaveLoss <- MissionAttributes.TeamWipeWaveLoss
 	break
 
-	// =========================================================
-	
+	// =================================================================================
+	// change sentry kill count per mini-boss kill.  -4 will make giants count as 1 kill
+	// =================================================================================
+
 	case "GiantSentryKillCountOffset":
 
 		function MissionAttributes::GiantSentryKillCount(params) {
@@ -603,19 +650,20 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.DeathHookTable.GiantSentryKillCount <- MissionAttributes.GiantSentryKillCount
 	break
 
-	// =========================================================
+	// ========================================================================
+	// set reset time for flags (bombs).
+	// accepts a key/value table of flag targetnames and their new return times
+	// can also just accept a float value to apply to all flags
+	// ========================================================================
+
 	case "FlagResetTime":
 		function MissionAttributes::FlagResetTime() {
 			for (local flag; flag = FindByClassname(flag, "item_teamflag");)
 			{
-				if (typeof value == "string")
+				if (typeof value == "table")
 				{
-					local values = split(value, " ")
-					foreach (v in values)
-					{
-						local split = v.split("|")
-						EntFire(split[0], "SetReturnTime", split[1])
-					}
+					foreach (k, v in value)
+						EntFire(k, "SetReturnTime", v)
 						
 				} 
 				else if (typeof value == "integer" || typeof value == "float")
@@ -624,7 +672,9 @@ function MissionAttributes::MissionAttr(...) {
 		}
 	break
 
-	// =========================================================
+	// ===========================
+	// enable bot headshots (jank)
+	// ===========================
 
 	case "BotHeadshots":
 		if (value < 1) return
@@ -651,23 +701,20 @@ function MissionAttributes::MissionAttr(...) {
 		}
 
 		MissionAttributes.TakeDamageTable.BotHeadshots <- MissionAttributes.BotHeadshots
+		
 	break
 
-	// =========================================================
-
-	//Uses bitflags to enable certain behavior
+	// ==============================================================
+	// Uses bitflags to enable certain behavior
 	// 1  = Robot animations (excluding sticky demo and jetpack pyro)
 	// 2  = Human animations
 	// 4  = Enable footstep sfx
 	// 8  = Enable voicelines (WIP)
 	// 16 = Enable viewmodels (WIP)
-
-	//example: MissionAttr(`PlayersAreRobots`, 6) - Human animations and footsteps enabled
-	//example: MissionAttr(`PlayersAreRobots`, 2 | 4) - Same thing if you are lazy
-
-	// TODO: Make PlayersAreRobots 16 and HandModelOverride incompatible
+	// ==============================================================
 
 	case "PlayersAreRobots":
+		// TODO: Make PlayersAreRobots 16 and HandModelOverride incompatible
 		// Doesn't work
 		/*
 		ScriptLoadTable.PlayersAreRobotsReset <- function() {
@@ -809,13 +856,13 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.PlayersAreRobots <- MissionAttributes.PlayersAreRobots
 	break
 
-	// =========================================================
-
-		//Uses bitflags to change behavior:
-		// 1 = Blu bots use human models.
-		// 2 = Blu bots use zombie models. Overrides human models.
-		// 4 = Red bots use human models.
-		// 4 = Red bots use zombie models. Overrides human models.
+	// =======================================================
+	// Uses bitflags to change behavior:
+	// 1 = Blu bots use human models.
+	// 2 = Blu bots use zombie models. Overrides human models.
+	// 4 = Red bots use human models.
+	// 4 = Red bots use zombie models. Overrides human models.
+	// =======================================================
 
 		case "BotsAreHumans":
 			function MissionAttributes::BotsAreHumans(params) {
@@ -838,9 +885,12 @@ function MissionAttributes::MissionAttr(...) {
 				MissionAttributes.SpawnHookTable.BotsAreHumans <- MissionAttributes.BotsAreHumans
 		break
 
-	// =========================================================
-
+	// ==============================================================
+	// 1 = disables romevision on bots 2 = disables rome carrier tank
+	// ==============================================================
+	
 	case "NoRome":
+
 		local carrierPartsIndex = GetModelIndex("models/bots/boss_bot/carrier_parts.mdl")
 
 		function MissionAttributes::NoRome(params) {
@@ -855,7 +905,6 @@ function MissionAttributes::MissionAttr(...) {
 								EntFireByHandle(child, `Kill`, ``, -1, null, null)
 			", -1, null, null)
 
-			//set value to 2 to also un-rome the carrier tank
 			if (value < 2 || noromecarrier) return
 
 			local carrier = FindByName(null, "botship_dynamic") //some maps have a targetname for it
@@ -940,19 +989,9 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.DeathHookTable.RareSpellRateGiant <- MissionAttributes.RareSpellRateGiant
 	break
 
-	// =========================================================
-
-	case "GrapplingHookEnable":
-		SetConvar("tf_grapplinghook_enable", value)
-	break
-
-	// =========================================================
-
-	case "GiantScale":
-		SetConvar("tf_mvm_miniboss_scale", value)
-	break
-
-	// =========================================================
+	// ===========================================================================================
+	//skeleton's spawned by bots or tf_zombie entities will no longer split into smaller skeletons
+	// ===========================================================================================
 
 	case "NoSkeleSplit":
 		function MissionAttributes::NoSkeleSplit() {
@@ -979,7 +1018,9 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.ThinkTable.NoSkeleSplit <- MissionAttributes.NoSkeleSplit
 	break
 
-	// =========================================================
+	// ====================================================================
+	// ready-up countdown time.  Values below 9 will disable starting music
+	// ====================================================================
 
 	case "WaveStartCountdown":
 		function MissionAttributes::WaveStartCountdown() {
@@ -996,7 +1037,9 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.ThinkTable.WaveStartCountdown <- MissionAttributes.WaveStartCountdown
 	break
 
-	// =========================================================
+	// ============================================
+	// array of xyz values to spawn path_tracks at
+	// ============================================
 
 	case "ExtraTankPath":
 		local tracks = []
@@ -1029,11 +1072,9 @@ function MissionAttributes::MissionAttr(...) {
 
 		break
 
-	// =========================================================
-
-	// MissionAttr("HandModelOverride", "path")
-	// MissionAttr("HandModelOverride", ["defaultpath", "scoutpath", "sniperpath"])
-	// "path" and "defaultpath" will have %class in the string replaced with the player class
+	// =======================================
+	// replace viewmodel arms with custom ones
+	// =======================================
 
 	case "HandModelOverride":
 
@@ -1087,22 +1128,28 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.HandModelOverride <- MissionAttributes.HandModelOverride
 	break
 
-	// =========================================================
+	// ===========================================================
+	// add cond to every player on spawn with an optional duration
+	// ===========================================================
 
 	case "AddCond":
 		function MissionAttributes::AddCond(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
-			player.RemoveCond(value)
+			player.RemoveCondEx(value, true)
 
-			local duration = (args.len() > 2) ? args[2] : -1
-			EntFireByHandle(player, "RunScriptCode", format("self.AddCondEx(%d, %f, null)", value, duration), -1, null, null)
+			if (typeof value == "array") 
+				EntFireByHandle(player, "RunScriptCode", format("self.AddCondEx(%d, %f, null)", value[0], value[1]), -1, null, null)
+			else if (typeof value == "integer") 
+				EntFireByHandle(player, "RunScriptCode", format("self.AddCond(%d)", value), -1, null, null)
 		}
 		MissionAttributes.SpawnHookTable.AddCond <- MissionAttributes.AddCond
 	break
 
-	// =========================================================
+	// ======================================================
+	// add/modify player attributes, can be filtered by class
+	// ======================================================
 
 	case "PlayerAttributes":
 		//setting maxhealth attribs doesn't update current HP
@@ -1161,7 +1208,9 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.PlayerAttributes <- MissionAttributes.PlayerAttributes
 	break
 
-	// =========================================================
+	// ======================================================================
+	// add/modify item attributes, can be filtered by item index or classname
+	// ======================================================================
 
 	case "ItemAttributes":
 		function MissionAttributes::ItemAttributes(params) {
@@ -1305,11 +1354,13 @@ function MissionAttributes::MissionAttr(...) {
 		foreach (sound, override in value) MissionAttributes.SoundsToReplace[sound] <- override
 	break
 
-	// =========================================================
-
+	// =====================================
+	// uses bitflags to enable random crits:
 	// 1 - Blue humans
 	// 2 - Blue robots
 	// 4 - Red  robots
+	// =====================================
+
 	case "EnableRandomCrits":
 		if (value == 0.0) return
 
@@ -1469,6 +1520,15 @@ function MissionAttributes::MissionAttr(...) {
 		}
 		MissionAttributes.TakeDamageTable.EnableRandomCritsTakeDamage <- MissionAttributes.EnableRandomCritsTakeDamage
 	break
+
+	// =======================================
+	// 1 = enables basic Reverse MvM behavior
+	// 2 = blu players cannot pick up bombs
+	// 4 = blu players have infinite ammo
+	// 8 = blu spies have infinite cloak
+	// 16 = blu players have spawn protection
+	// 32 = blu players cannot attack in spawn
+	// =======================================
 
 	case "ReverseMVM":
 		// Prevent bots on red team from hogging slots so players can always join and get switched to blue
@@ -1940,7 +2000,8 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.ReverseMVMSpawn <- MissionAttributes.ReverseMVMSpawn
 	break
 
-	//Options to revert global fixes below:
+	// Options to revert global fixes below:
+	// View globalfixes.nut for more info
 
 	// =========================================================
 
@@ -1959,6 +2020,7 @@ function MissionAttributes::MissionAttr(...) {
 	// =========================================================
 
 	// Don't add attribute to clean-up list if it could not be found.
+
 	default:
 		ParseError(format("Could not find mission attribute '%s'", attr))
 		success = false
@@ -1980,12 +2042,18 @@ MissionAttrEntity.ValidateScriptScope();
 MissionAttrEntity.GetScriptScope().MissionAttrThink <- MissionAttrThink
 AddThinkToEnt(MissionAttrEntity, "MissionAttrThink")
 
-// This only supports k : value pairs, if you want var args call MissionAttr directly
+// This only supports key : value pairs, if you want var args call MissionAttr directly
 function MissionAttrs(attrs = {}) {
 	foreach (attr, value in attrs)
 		MissionAttributes.MissionAttr(attr, value)
-
 }
+
+//super truncated version incase the pop character limit becomes an issue.
+function MAtrs(attrs = {}) {
+	foreach (attr, value in attrs)
+		MissionAttributes.MissionAttr(attr, value)
+}
+
 // Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
 function MissionAttr(...) {
 	MissionAttr.acall(vargv.insert(0, MissionAttributes))
