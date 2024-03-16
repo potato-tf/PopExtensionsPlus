@@ -1126,7 +1126,8 @@ function MissionAttributes::MissionAttr(...) {
 			foreach (k, v in value)
 			{
 				if (typeof k == "string" && (typeof v == "integer" || typeof v == "float"))
-					if (k in CustomAttributes.Attrs) CustomAttributes.AddAttr(player, k, v)
+					if (k in CustomAttributes.Attrs) 
+						CustomAttributes.AddAttr(player, k, v, player.GetActiveWeapon())
 					else
 						EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", k, v.tofloat()), -1, null, null)
 			
@@ -1134,7 +1135,7 @@ function MissionAttributes::MissionAttr(...) {
 				local table = value[tfclass]
 				foreach (k, v in table) {
 					if (k in CustomAttributes.Attrs)
-						CustomAttributes.AddAttr(player, k, v)
+						CustomAttributes.AddAttr(player, k, v, player.GetActiveWeapon())
 					else {
 						local valformat = ""
 						if (typeof v == "integer")
@@ -1157,7 +1158,6 @@ function MissionAttributes::MissionAttr(...) {
 				}
 			}
 		}
-
 		MissionAttributes.SpawnHookTable.PlayerAttributes <- MissionAttributes.PlayerAttributes
 	break
 
@@ -1178,7 +1178,7 @@ function MissionAttributes::MissionAttr(...) {
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 				if (wep == null) continue
 
-				local info = [PopExtUtil.GetItemIndex(wep), wep.GetClassname()]
+				local info = [PopExtUtil.GetItemIndex(wep), wep.GetClassname(), wep]
 				foreach (item in info)
 					if (item in value)
 						foreach(k, v in value[item])
@@ -1487,7 +1487,7 @@ function MissionAttributes::MissionAttr(...) {
 					continue
 				}
 
-				++player_count
+				player_count++
 			}
 
 			// Readying up starts the round
@@ -1904,7 +1904,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			//bitflags
 			//cannot pick up intel
-			if (value & 2)
+			if (value & 2 && !IsPlayerABot(player))
 				player.AddCustomAttribute("cannot pick up intelligence", 1, -1)
 			
 			//remove ammo drain

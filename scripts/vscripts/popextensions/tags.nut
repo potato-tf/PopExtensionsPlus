@@ -276,15 +276,36 @@ local popext_funcs = {
 
 		PopExtTags.TakeDamageTable.WeaponResistTakeDamage <- function(params)
 		{
-			if ((!params.const_entity.IsPlayer() || params.weapon == null) && (params.weapon.GetClassname() != weapon || PopExtUtil.GetItemIndex(params.weapon) != weapon.tointeger())) return
+			local player = params.const_entity
+			if (!player.IsPlayer() || params.attacker == null || params.weapon == null || !PopExtUtil.HasItemInLoadout(player, params.weapon)) return
 
-			if (params.damage * amount < params.const_entity.GetHealth()) params.damage *= amount
+			if (params.damage * amount < player.GetHealth()) params.damage *= amount
 		}
 	}
 
 	popext_setskin = function(bot, args) {
+
 		SetPropBool(bot, "m_bForcedSkin", true)
 		SetPropInt(bot, "m_nForcedSkin", args[0].tointeger())
+
+		PopExtTags.DeathHookTable.ResetSkin <- function(params) {
+
+			local b = GetPlayerFromUserID(params.userid)
+
+			if (b == bot) {
+				SetPropBool(bot, "m_bForcedSkin", true)
+				SetPropInt(bot, "m_nForcedSkin", 1)
+			}
+		}
+		PopExtTags.TeamSwitchTable.ResetSkin <- function(params) {
+
+			local b = GetPlayerFromUserID(params.userid)
+
+			if (b == bot && params.team == TEAM_SPECTATOR) {
+				SetPropBool(bot, "m_bForcedSkin", true)
+				SetPropInt(bot, "m_nForcedSkin", 1)
+			}
+		}
 	}
 
 	popext_dispenseroverride = function(bot, args) {
@@ -305,6 +326,7 @@ local popext_funcs = {
 		bot.GetScriptScope().BuiltObjectTable.DispenserBuildOverride <- function(params) {
 
 			local obj = params.object
+
 			//dispenser built, stop force firing
 			if (!alwaysfire) bot.PressFireButton(0.0)
 
@@ -325,6 +347,7 @@ local popext_funcs = {
 					}
 					AddThinkToEnt(building, "CheckBuiltThink")
 				}
+
 				//kill the first alwaysfire built dispenser when leaving spawn
 				local hint = FindByClassnameWithin(null, "bot_hint*", building.GetOrigin(), 16)
 
@@ -403,6 +426,7 @@ local popext_funcs = {
 	popext_usebestweapon = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.BestWeaponThink <- function() {
+
 			switch(bot.GetPlayerClass()) {
 			case 1: //TF_CLASS_SCOUT
 
@@ -476,6 +500,7 @@ local popext_funcs = {
 		local ignoreDisguisedSpies = (args_len > 3) ? args[3].tointeger() : 1
 
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
+
 			for (local projectile; projectile = Entities.FindByClassname(projectile, "tf_projectile_*");) {
 				if (projectile.GetOwner() != bot || !Homing.IsValidProjectile(projectile, PopExtUtil.HomingProjectiles)) continue
 				// Any other parameters needed by the projectile thinker can be set here
@@ -484,6 +509,7 @@ local popext_funcs = {
 		}
 
 		PopExtTags.TakeDamageTable.HomingTakeDamage <- function(params) {
+
 			if (!params.const_entity.IsPlayer()) return
 
 			local classname = params.inflictor.GetClassname()
@@ -493,7 +519,6 @@ local popext_funcs = {
 		}
 	}
 	popext_rocketcustomtrail = function (bot, args) {
-
 		
 		bot.GetScriptScope().PlayerThinkTable.ProjectileTrailThink <- function() {
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
@@ -511,6 +536,10 @@ local popext_funcs = {
 				projectile.AddEFlags(EFL_NO_ROTORWASH_PUSH)
 			}
 		}
+	}
+	popext_customweaponmodel = function(bot, args) {
+
+		bot.GetActiveWeapon().SetModelSimple(args[0])
 	}
 	popext_spawnhere = function(bot, args) {
 
@@ -669,14 +698,21 @@ local popext_funcs = {
 ::Homing <- {
 	// Modify the AttachProjectileThinker function to accept projectile speed adjustment if needed
 	function AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies = true, ignoreStealthedSpies = true) {
-		local projectile_speed = projectile.GetAbsVelocity().Norm()
-
-		// printl("speed: " + projectile_speed)
-
+		
 		projectile.ValidateScriptScope()
 		local projectile_scope = projectile.GetScriptScope()
+		if (!("speedmultiplied" in projectile_scope)) projectile_scope.speedmultiplied <- false
+
+		local projectile_speed = projectile.GetAbsVelocity().Norm()
+
+		if (!projectile_scope.speedmultiplied) {
+			projectile_speed *= speed_mult
+			projectile_scope.speedmultiplied = true
+		}
+		// printl("speed: " + projectile_speed)
+
 		projectile_scope.turn_power			  <- turn_power
-		projectile_scope.projectile_speed	  <- projectile_speed // * speed_mult
+		projectile_scope.projectile_speed	  <- projectile_speed
 		projectile_scope.ignoreDisguisedSpies <- ignoreDisguisedSpies
 		projectile_scope.ignoreStealthedSpies <- ignoreStealthedSpies
 
@@ -709,7 +745,7 @@ local popext_funcs = {
 
 	function IsValidTarget(victim, distance, min_distance, projectile) {
 
-		local scope = projectile.GetScriptScope()
+		local projectile_scope = projectile.GetScriptScope()
 		// Early out if basic conditions aren't met
 		if (distance > min_distance || victim.GetTeam() == projectile.GetTeam() || !PopExtUtil.IsAlive(victim)) {
 			return false
@@ -722,12 +758,12 @@ local popext_funcs = {
 			}
 
 			// Check for stealth and disguise conditions if not ignored
-			// if (!scope.ignoreStealthedSpies && (victim.IsStealthed() || victim.IsFullyInvisible())) {
-			// 	return false
-			// }
-			// if (!scope.ignoreDisguisedSpies && victim.GetDisguiseTarget() != null) {
-			// 	return false
-			// }
+			if (!projectile_scope.ignoreStealthedSpies && (victim.IsStealthed() || victim.IsFullyInvisible())) {
+				return false
+			}
+			if (!projectile_scope.ignoreDisguisedSpies && victim.GetDisguiseTarget() != null) {
+				return false
+			}
 		}
 
 		return true
@@ -808,6 +844,7 @@ local popext_funcs = {
 
 	TakeDamageTable = {}
 	DeathHookTable = {}
+	TeamSwitchTable = {}
 
 	function AI_BotSpawn(bot) {
 		local scope = bot.GetScriptScope()
@@ -874,6 +911,8 @@ local popext_funcs = {
 
 		local bot = GetPlayerFromUserID(params.userid)
 		if (params.team == TEAM_SPECTATOR) AddThinkToEnt(bot, null)
+
+		foreach (_, func in PopExtTags.TeamSwitchTable) func(params)
 	}
 
 	function OnGameEvent_player_death(params) {

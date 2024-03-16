@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "03.14.2024.5"
+::popExtensionsVersion <- "03.15.2024.1"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")

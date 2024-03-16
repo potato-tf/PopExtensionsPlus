@@ -68,7 +68,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				PopExtUtil.PlayerRobotModel(player, botmodel)
 
 				//overwrite the existing bot model think to remove it after taunt
-				function BotModelThink() {
+				victim.GetScriptScope().PlayerThinkTable.BotModelThink <- function() {
 
 					if (Time() > victim.GetTauntRemoveTime()) {
 						if (wearable != null) wearable.Destroy()
@@ -82,7 +82,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 					return -1
 				}
-				victim.GetScriptScope().PlayerThinkTable.BotModelThink <- BotModelThink
 			}
 		}
 	}
@@ -138,7 +137,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337) || player.GetPlayerClass() != TF_CLASS_SCOUT) return
 
-			function MoneyThink() {
+			player.GetScriptScope().PlayerThinkTable.MoneyThink <- function() {
 				if (player.GetPlayerClass() != TF_CLASS_SCOUT) {
 					delete player.GetScriptScope().PlayerThinkTable.MoneyThink
 					return
@@ -147,7 +146,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				for (local money; money = FindByClassnameWithin(money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS);)
 					money.SetOrigin(origin)
 			}
-			player.GetScriptScope().PlayerThinkTable.MoneyThink <- MoneyThink
 		}
 
 		function RemoveYERAttribute(params) {
@@ -171,7 +169,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			local scope = player.GetScriptScope()
 			scope.holdingfire <- false
 
-			function HoldFireThink() {
+			player.GetScriptScope().PlayerThinkTable.HoldFireThink <- function() {
 
 				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
@@ -193,8 +191,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 					return -1
 				}
 			}
-
-			player.GetScriptScope().PlayerThinkTable.HoldFireThink <- HoldFireThink
 		}
 		
 		// Doesn't fully work correctly, need to investigate
@@ -306,11 +302,11 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 }
 __CollectGameEventCallbacks(GlobalFixes.Events)
 
-function GlobalFixesThink() {
+GlobalFixesEntity.ValidateScriptScope()
+
+GlobalFixesEntity.GetScriptScope().GlobalFixesThink <- function() {
 	foreach(_, func in GlobalFixes.ThinkTable) func()
 	return -1
 }
 
-GlobalFixesEntity.ValidateScriptScope()
-GlobalFixesEntity.GetScriptScope().GlobalFixesThink <- GlobalFixesThink
 AddThinkToEnt(GlobalFixesEntity, "GlobalFixesThink")
