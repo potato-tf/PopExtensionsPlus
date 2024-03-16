@@ -44,7 +44,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 				if (parent != null) {
 					//this function is defined in popextensions.nut
-					SetParentLocalOrigin(entity, parent)
+					PopExtUtil.SetParentLocalOrigin(entity, parent)
 
 					//entities parented to players do not kill itself when the player dies as the player entity is not considered killed
 					if (parent.IsPlayer()) {
@@ -72,7 +72,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 						EntFire(target, action, param, delay, null)
 					}
 				}
-				
+
 				if (parent.IsPlayer()) {
 					// copied from popextensions_hooks.nut
 					if (scope.OnParentKilledOutputArray.len() > 0) {
@@ -99,7 +99,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 					else {
 						if (keepalive == true) {
 							//spawn template again after being killed
-							SpawnTemplate(pointtemplate, null, lastorigin + origin, lastangles + angles)
+							SpawnTemplate.SpawnTemplate(pointtemplate, null, lastorigin + origin, lastangles + angles)
 						}
 
 						//fire OnParentKilledOutputs
@@ -247,15 +247,15 @@ PopExt.globalTemplateSpawnCount   <- 0
 			foreach(entity in PopExt.wavePointTemplates)
 				if (entity.IsValid())
 					entity.Kill()
-	
+
 			PopExt.wavePointTemplates.clear()
 		}
-	
+
 		function OnGameEvent_mvm_wave_failed(params) //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
 		{
 			//messy
 			foreach(param in PopExt.waveSchedulePointTemplates) {
-				SpawnTemplate(param[0], null, param[1], param[2])
+				SpawnTemplate.SpawnTemplate(param[0], null, param[1], param[2])
 			}
 		}
 	}
