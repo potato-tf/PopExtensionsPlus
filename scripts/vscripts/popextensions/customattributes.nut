@@ -178,7 +178,7 @@ function CustomAttributes::DmgVsSameClass(player, item, value) {
         local victim = params.const_entity
         local attacker = params.attacker
 
-        if (!attacker.IsPlayer() || !victim.IsPlayer() || attacker.GetPlayerClass() != victim.GetPlayerClass()) return
+        if (!attacker.IsPlayer() || !victim.IsPlayer() || attacker.GetPlayerClass() != victim.GetPlayerClass() || player.GetActiveWeapon() != wep) return
 
         params.damage *= value
     }
@@ -192,7 +192,7 @@ function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
     scope.PlayerThinkTable.MeleeCleaveAttack <- function() {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
-        if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0) return
+        if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0|| player.GetActiveWeapon() != wep) return
 
         scope.cleaved = false
 
@@ -203,7 +203,7 @@ function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
         if (scope.cleaved) return
 
         local wep = PopExtUtil.HasItemInLoadout(player, item)
-        if (wep == null) return
+        if (wep == null || player.GetActiveWeapon() != wep) return
 
         scope.cleaved = true
         // params.early_out = true
@@ -274,7 +274,7 @@ function CustomAttributes::UberOnDamageTaken(player, item, value) {
     
         local damagedplayer = params.const_entity
 
-        if (damagedplayer != player || RandomInt(0, 1) > value || damagedplayer.IsInvulnerable()) return
+        if (damagedplayer != player || RandomInt(0, 1) > value || damagedplayer.IsInvulnerable() || player.GetActiveWeapon() != wep) return
         
         damagedplayer.AddCondEx(COND_UBERCHARGE, 3.0, player)
         params.early_out = true
@@ -282,6 +282,9 @@ function CustomAttributes::UberOnDamageTaken(player, item, value) {
 }
 
 function CustomAttributes::TurnToIce(player, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
 
     //cleanup before spawning a new one
     for (local knife; knife = FindByClassname(knife, "tf_weapon_knife");)
@@ -303,10 +306,9 @@ function CustomAttributes::TurnToIce(player, item) {
     CustomAttributes.TakeDamageTable.TurnToIce <- function(params) {
 
         local attacker = params.attacker
-        if (PopExtUtil.HasItemInLoadout(attacker, item) == null) return true
 
         local victim = params.const_entity
-        if (victim.IsPlayer() && attacker == player && params.damage >= victim.GetHealth())
+        if (victim.IsPlayer() && attacker == player && params.damage >= victim.GetHealth() && player.GetActiveWeapon() == wep)
         {
             victim.TakeDamageCustom(attacker, victim, freeze_proxy_weapon, Vector(), Vector(), params.damage, params.damage_type, params.damage_custom | TF_DMG_CUSTOM_BACKSTAB)
 
@@ -323,6 +325,9 @@ function CustomAttributes::TeleporterSpeedBoost(player, item) {
     local scope = player.GetScriptScope()
     scope.speedboostteleporter <- true
 
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
     CustomAttributes.PlayerTeleportTable.TeleporterSpeedBoost <- function(params) {
 
         if (params.builderid != PopExtUtil.GetPlayerUserID(player)) return
@@ -335,6 +340,9 @@ function CustomAttributes::TeleporterSpeedBoost(player, item) {
 function CustomAttributes::CanBreatheUnderwater(player, item) {
     
     local painfinished = GetPropInt(player, "m_PainFinished")
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
 
     player.GetScriptScope().PlayerThinkTable.CanBreatheUnderwater <- function() {
 
@@ -346,6 +354,9 @@ function CustomAttributes::CanBreatheUnderwater(player, item) {
     }
 }
 function CustomAttributes::MultSwimSpeed(player, item, value = 1.25) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
 
     //local speedmult = 1.254901961
     local maxspeed = GetPropFloat(player, "m_flMaxspeed")
@@ -365,10 +376,13 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
 
     local scope = player.GetScriptScope()
     scope.lastshotcritsnextattack <- 0.0
-    
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
     scope.PlayerThinkTable.LastShotCrits <- function() {
 
-        if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
+        if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || player.GetActiveWeapon() != wep) return
 
         scope.lastshotcritsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
         try {
@@ -386,9 +400,12 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
 }
 
 function CustomAttributes::CritWhenHealthBelow(player, item, value = -1) {
-    
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
     player.GetScriptScope().PlayerThinkTable.CritWhenHealthBelow <- function() {
-        
+
         if (player.GetHealth() < value)
         {
             player.AddCondEx(COND_CRITBOOST, 0.033, player)
@@ -399,9 +416,13 @@ function CustomAttributes::CritWhenHealthBelow(player, item, value = -1) {
 
 function CustomAttributes::WetImmunity(player, item) {
 
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
     local wetconds = [TF_COND_MAD_MILK, TF_COND_URINE, TF_COND_GAS]
 
     player.GetScriptScope().PlayerThinkTable.WetImmunity <- function() {
+
         foreach (cond in wetconds)
             if (player.InCond(cond))
                 player.RemoveCondEx(cond, true)
@@ -414,7 +435,10 @@ function CustomAttributes::BuildSmallSentry(player, item) {
     if (!("BuiltObjectTable") in scope) return
 
     scope.BuiltObjectTable.BuildSmallSentry <- function(params) {
-        
+
+        local wep = PopExtUtil.HasItemInLoadout(player, item)
+        if (wep == null) return
+
         if (params.object != OBJ_SENTRYGUN) return
 
         local sentry = EntIndexToHScript(params.index)
@@ -444,6 +468,7 @@ function CustomAttributes::ExplosiveBullets(player, item, value) {
     local scope = player.GetScriptScope()
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
 
     //cleanup before spawning a new one
     for (local launcher; launcher = FindByClassname(launcher, "tf_weapon_grenadelauncher");)
