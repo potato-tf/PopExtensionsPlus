@@ -57,6 +57,7 @@
         //begin non-dev fully custom attributes
         "radius sleeper": null
         "explosive bullets": null
+        "alt-fire disabled": null
     }
 
     Events = {
@@ -527,6 +528,68 @@ function CustomAttributes::ExplosiveBullets(player, item, value) {
     }
 }
 
+//REIMPLEMENTED VANILLA ATTRIBUTES
+
+function CustomAttributes::AltFireDisabled(player, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local scope = player.GetScriptScope()
+
+    scope.PlayerThinkTable.AltFireDisabled <- function() {
+        if (player.GetActiveWeapon() != wep) return
+        
+        SetPropInt(player, "m_afButtonDisabled", IN_ATTACK2)
+    }
+}
+
+function CustomAttributes::CustomProjectileModel(player, item, value) {
+
+    local projmodel = PrecacheModel(value)
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local scope = player.GetScriptScope()
+
+    scope.PlayerThinkTable.CustomProjectileModel <- function() {
+
+        if (player.GetActiveWeapon() != wep) return
+        
+        for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
+            if (projectile.GetOwner() == player && GetPropInt(projectile, "m_nModelIndex") != projmodel)
+                projectile.SetModel(value)
+    } 
+}
+
+function CustomAttributes::ShahanshahAttributeBelowHP(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    
+    CustomAttributes.TakeDamageTable.ShahanshahAttributeBelowHP <- function(params) {
+
+        if (params.weapon != wep || player.GetActiveWeapon() != wep) return
+        
+        if (player.GetHealth() < player.GetMaxHealth() / 2)
+            params.damage *= value
+    }
+}
+
+function CustomAttributes::ShahanshahAttributeAboveHP(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    
+    CustomAttributes.TakeDamageTable.ShahanshahAttributeAboveHP <- function(params) {
+
+        if (params.weapon != wep || player.GetActiveWeapon() != wep) return
+        
+        if (player.GetHealth() > player.GetMaxHealth() / 2)
+            params.damage *= value
+    }
+}
+
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
@@ -628,6 +691,31 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             CustomAttributes.ExplosiveBullets(player, item, value)
             scope.attribinfo[attr] <- format("Fires explosive rounds that deal %d damage", value)
         break
+
+        //VANILLA ATTRIBUTE REIMPLEMENTATIONS
+        
+        //only really recommended for bots
+        case "alt-fire disabled":
+            CustomAttributes.AltFireDisabled(player, item)
+            scope.attribinfo[attr] <- "Secondary fire disabled"
+        break
+
+        case "custom projectile model":
+            CustomAttributes.CustomProjectileModel(player, item, value)
+            local split = split(value, "/")
+            scope.attribinfo[attr] <- format("Fires custom projectile model: %s" split[split.len() - 1])
+        break
+
+        case "dmg bonus while half dead":
+            CustomAttributes.ShahanshahAttributeBelowHP(player, item, value)
+            scope.attribinfo[attr] <- format("damage bonus while under 50% health" value)
+        break
+
+        case "dmg penalty while half alive":
+            CustomAttributes.ShahanshahAttributeAboveHP(player, item, value)
+            scope.attribinfo[attr] <- format("damage penalty while above 50% health" value)
+        break
+
     }
 
     local cooldowntime = 3.0

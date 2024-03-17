@@ -1289,6 +1289,9 @@ function PopExtUtil::GetPlayerReadyCount() {
 }
 
 function PopExtUtil::GetWeaponMaxAmmo(player, wep) {
+	
+	if (wep == null) return
+
 	local slot      = wep.GetSlot()
 	local classname = wep.GetClassname()
 	local itemid    = PopExtUtil.GetItemIndex(wep)
