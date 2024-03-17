@@ -1137,12 +1137,16 @@ function MissionAttributes::MissionAttr(...) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
 
-			player.RemoveCondEx(value, true)
+			if (typeof value == "array") {
 
-			if (typeof value == "array") 
+				player.RemoveCondEx(value[0], true)
 				EntFireByHandle(player, "RunScriptCode", format("self.AddCondEx(%d, %f, null)", value[0], value[1]), -1, null, null)
-			else if (typeof value == "integer") 
+			}
+			else if (typeof value == "integer") {
+
+				player.RemoveCond(value)
 				EntFireByHandle(player, "RunScriptCode", format("self.AddCond(%d)", value), -1, null, null)
+			}
 		}
 		MissionAttributes.SpawnHookTable.AddCond <- MissionAttributes.AddCond
 	break
