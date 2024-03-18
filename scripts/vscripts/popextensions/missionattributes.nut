@@ -750,7 +750,7 @@ function MissionAttributes::MissionAttr(...) {
 			}
 
 			if (value & 2) {
-				if (value & 1) value | 1 //incompatible flags
+				if (value & 1) value = value & 1 //incompatible flags
 				PopExtUtil.PlayerRobotModel(player, model)
 			}
 
@@ -814,27 +814,24 @@ function MissionAttributes::MissionAttr(...) {
 			} else if ("RobotVOThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotVOThink
 
 			if (value & 16) {
+
 				if ("HandModelOverride" in MissionAttributes.SpawnHookTable) return
 
-				scope.PlayerThinkTable.RobotArmThink <- function() {
+				local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
+				local playervm = GetPropEntity(player, "m_hViewModel")
+				playervm.GetOrigin()
 
-					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
-					local playervm = GetPropEntity(player, "m_hViewModel")
-					playervm.GetOrigin()
+				if (playervm == null) return
 
-					if (playervm == null) return
+				if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 
-					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
+				for (local i = 0; i < SLOT_COUNT; i++) {
 
-					for (local i = 0; i < SLOT_COUNT; i++) {
+					local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+					if (wep == null || wep.GetModelName() == vmodel) continue
 
-						local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
-						if (wep == null || wep.GetModelName() == vmodel) continue
-
-						wep.SetModelSimple(vmodel)
-						wep.SetCustomViewModel(vmodel)
-
-					}
+					wep.SetModelSimple(vmodel)
+					wep.SetCustomViewModel(vmodel)
 				}
 
 			} else if ("RobotArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotArmThink
@@ -1660,7 +1657,6 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Allow pack collection
 			scope.PlayerThinkTable.ReverseMVMPackThink <- function() {
-
 				local origin = self.GetOrigin()
 				for ( local ent; ent = FindByClassnameWithin(ent, "item_*", origin, 40); ) {
 					if (ent.GetEFlags() & EFL_USER) continue

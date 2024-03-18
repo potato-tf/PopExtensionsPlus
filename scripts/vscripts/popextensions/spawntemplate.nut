@@ -143,14 +143,16 @@ PopExt.globalTemplateSpawnCount   <- 0
 		//establish "flags"
 		foreach(index, entity in pointtemplatecopy) {
 			if (typeof(index) == "string") {
-				if (index == "NoFixup" && entity == true) nofixup = true
-				else if (index == "KeepAlive" && entity == true) keepalive = true
-				else if (index == "RemoveIfKilled") scope.removeifkilled <- entity
+				if (index.tolower() == "nofixup" && (entity == 1 || entity)) nofixup = true
+				else if (index.tolower() == "keepalive" && (entity == 1 || entity)) keepalive = true
+				else if (index.tolower() == "removeifkilled") scope.removeifkilled <- entity
 			}
 		}
 
 		//perform name fixup
 		if (nofixup == false) {
+			for (local i = 0; i < scope.EntityFixedUpTargetName.len(); i ++)
+				printl(scope.EntityFixedUpTargetName[i])
 			//first, get list of targetnames in the point template for name fixup
 			foreach(index, entity in pointtemplatecopy) {
 				if (typeof(entity) == "table") {
@@ -192,6 +194,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 				foreach(classname, keyvalues in entity) {
 					if (classname == "OnSpawnOutput") {
 						scope.OnSpawnOutputArray.append(keyvalues)
+						foreach(k, v in keyvalues) printl(k + " : " + v)
 					}
 					else if (classname == "OnParentKilledOutput") {
 						scope.OnParentKilledOutputArray.append(keyvalues)
@@ -226,7 +229,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 							if (typeof(maxs) == "Vector") maxs =  maxs.ToKVString()
 
 							//overwrite responsecontext even if someone fills it in for some reason
-							keyvalues.responsecontext <- mins + " " + maxs
+							keyvalues.responsecontext <- format("%s %s", mins, maxs)
 						}
 
 						template.AddTemplate(classname, keyvalues)
