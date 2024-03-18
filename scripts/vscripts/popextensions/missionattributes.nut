@@ -832,23 +832,28 @@ function MissionAttributes::MissionAttr(...) {
 				if ("HandModelOverride" in MissionAttributes.SpawnHookTable) return
 
 				function RobotArmThink() {
+
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 					local playervm = GetPropEntity(player, "m_hViewModel")
+					playervm.GetOrigin()
+
 					if (playervm == null) return
+
 					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 
 					for (local i = 0; i < SLOT_COUNT; i++) {
 
 						local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
-						if (wep == null || (wep.GetModelName() == vmodel)) continue
+						if (wep == null || wep.GetModelName() == vmodel) continue
 
 						wep.SetModelSimple(vmodel)
 						wep.SetCustomViewModel(vmodel)
+					
 					}
 				}
 
-				if (!("RobotArmThink" in scope.PlayerThinkTable))
-					scope.PlayerThinkTable.RobotArmThink <- RobotArmThink
+				// if (!("RobotArmThink" in scope.PlayerThinkTable))
+				scope.PlayerThinkTable.RobotArmThink <- RobotArmThink
 
 			} else if ("RobotArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotArmThink
 		}
