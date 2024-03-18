@@ -304,7 +304,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "WaveNum":
 		MissionAttributes.StartWaveTable.SetWaveNum <- function(params) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value) }
-		MissionAttributes.SetWaveNum()
+		MissionAttributes.StartWaveTable.SetWaveNum(null)
 	break
 
 	// =======================================
@@ -313,7 +313,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "MaxWaveNum":
 		MissionAttributes.StartWaveTable.SetMaxWaveNum <- function(params) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value) }
-	MissionAttributes.SetMaxWaveNum()
+	MissionAttributes.StartWaveTable.SetMaxWaveNum(null)
 	break
 
 	// =========================================================
