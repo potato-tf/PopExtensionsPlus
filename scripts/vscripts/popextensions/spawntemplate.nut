@@ -3,7 +3,7 @@ PopExt.waveSchedulePointTemplates <- []
 PopExt.wavePointTemplates         <- []
 PopExt.globalTemplateSpawnCount   <- 0
 
-::SpawnTemplate <- {
+::SpawnTemplates <- {
 	//spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
 	function SpawnTemplate(pointtemplate, parent = null, origin = Vector(), angles = QAngle()) {
 		// credit to ficool2
@@ -30,10 +30,11 @@ PopExt.globalTemplateSpawnCount   <- 0
 				entities.append(value)
 			}
 		})
-		function scope::PostSpawn(named_entities) {
+		scope.PostSpawn <- function(named_entities) {
 			//can only set bounding box size for brush entities after they spawn
 			foreach(entity in Entities) {
-				local buf = split(GetPropString(entity, "m_iszResponseContext"), ",")
+				local responsecontext = GetPropString(entity, "m_iszResponseContext")
+				local buf = responsecontext.find(",") ? split(responsecontext, ",") : split(responsecontext, " ")
 				if (buf.len() == 6) {
 					entity.SetSize(Vector(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger()), Vector(buf[3].tointeger(), buf[4].tointeger(), buf[5].tointeger()))
 					entity.SetSolid(2)
@@ -99,7 +100,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 					else {
 						if (keepalive == true) {
 							//spawn template again after being killed
-							SpawnTemplate.SpawnTemplate(pointtemplate, null, lastorigin + origin, lastangles + angles)
+							SpawnTemplates.SpawnTemplate(pointtemplate, null, lastorigin + origin, lastangles + angles)
 						}
 
 						//fire OnParentKilledOutputs
@@ -136,7 +137,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 		}
 
 		//make a copy of the pointtemplate
-		local pointtemplatecopy = CopyTable(pointtemplate)
+		local pointtemplatecopy = PopExtUtil.CopyTable(pointtemplate)
 
 		//establish "flags"
 		foreach(index, entity in pointtemplatecopy) {
@@ -199,7 +200,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 						if ("origin" in keyvalues) {
 							//if origin is a string, construct vectors to perform math on them if needed
 							if (typeof(keyvalues.origin) == "string") {
-								local buf = split(keyvalues.origin, ",")
+								local buf = keyvalues.origin.find(",") ? split(keyvalues.origin, ",") : split(keyvalues.origin, " ")
 								keyvalues.origin = Vector(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger())
 							}
 							keyvalues.origin += origin
@@ -209,7 +210,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 						if ("angles" in keyvalues){
 							//if angles is a string, construct qangles to perform math on them if needed
 							if (typeof(keyvalues.angles) == "string") {
-								local buf = split(keyvalues.angles, ",")
+								local buf = keyvalues.angles.find(",") ? split(keyvalues.angles, ",") : split(keyvalues.angles, " ")
 								keyvalues.angles = QAngle(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger())
 							}
 							keyvalues.angles += angles
@@ -255,9 +256,9 @@ PopExt.globalTemplateSpawnCount   <- 0
 		{
 			//messy
 			foreach(param in PopExt.waveSchedulePointTemplates) {
-				SpawnTemplate.SpawnTemplate(param[0], null, param[1], param[2])
+				SpawnTemplates.SpawnTemplate(param[0], null, param[1], param[2])
 			}
 		}
 	}
 }
-__CollectGameEventCallbacks(SpawnTemplate.Events)
+__CollectGameEventCallbacks(SpawnTemplates.Events)

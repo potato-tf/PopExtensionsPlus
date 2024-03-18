@@ -343,6 +343,23 @@ function PopExtUtil::ShowChatMessage(target, fmt, ...) {
 
 // example
 // ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT)
+function PopExtUtil::CopyTable(table) {
+    if (table == null) return
+    local newtable = {}
+    foreach (key, value in table)
+    {
+        newtable[key] <- value
+        if (typeof(value) == "table" || typeof(value) == "array")
+        {
+            newtable[key] = CopyTable(value)
+        }
+        else 
+        {
+            newtable[key] <- value
+        }
+    }
+    return newtable
+}
 
 function PopExtUtil::HexToRgb(hex) {
 
