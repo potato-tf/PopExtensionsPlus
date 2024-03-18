@@ -269,13 +269,13 @@ function PopulatorThink() {
 			scope.curVel    <- tank.GetAbsVelocity()
 			scope.curSpeed  <- scope.curVel.Length()
 			scope.curHealth <- tank.GetHealth()
+			scope.lastHealthStage <- 0
 			scope.lastHealthPercentage <- GetPropFloat(tank, "m_lastHealthPercentage")
 
 			scope.Updates <- function() {
 				this.curPos    <- self.GetOrigin()
 				this.curVel    <- self.GetAbsVelocity()
 				this.curSpeed  <- curVel.Length()
-				this.curHealth <- self.GetHealth()
 				this.lastHealthPercentage <- GetPropFloat(self, "m_lastHealthPercentage")
 			}
 			scope.TankThinkTable.Updates <- scope.Updates
@@ -285,12 +285,29 @@ function PopulatorThink() {
 			AddThinkToEnt(tank, "TankThinks")
 
 			if ("popProperty" in scope && "IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
+				//todo check for tank spawn sound, test turning off reset locomotion, test null model hitbox in raf and here, test rage on same team tank
 				scope.popProperty.DisableTracks <- true
 				scope.popProperty.DisableBomb <- true
-				// scope.popProperty.TankModel <- "models/bots/boss_bot/boss_blimp_pure.mdl"
+				if (!("TankModel" in scope.popProperty)) {
+					scope.popProperty.TankModel <- {
+						Default = "models/bots/boss_bot/boss_blimp.mdl"
+						Damage1 = "models/bots/boss_bot/boss_blimp_damage1.mdl"
+						Damage2 = "models/bots/boss_bot/boss_blimp_damage2.mdl"
+						Damage3 = "models/bots/boss_bot/boss_blimp_damage3.mdl"
+						LeftTrack = "models/bots/boss_bot/tankred_track_l.mdl"
+						RightTrack = "models/bots/boss_bot/tankred_track_r.mdl"
+						Bomb = "models/bots/boss_bot/bombblue_mechanism.mdl"
+					}
+					local tankModelNamesPrecached = {}
+
+					foreach(k, v in scope.popProperty.TankModel)
+						tankModelNamesPrecached[k] <- PrecacheModel(v)
+
+					scope.popProperty.TankModelPrecached <- tankModelNamesPrecached
+				}
 
 				tank.SetAbsAngles(QAngle(0, tank.GetAbsAngles().y, 0))
-				tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1")
+				tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1") // todo callscriptfunction
 				// scope.blimpModel <- PrecacheModel("models/bots/boss_bot/boss_blimp_pure.mdl")
 
 				local tankspeed = GetPropFloat(tank, "m_speed")
@@ -298,6 +315,8 @@ function PopulatorThink() {
 
 				scope.BlimpThink <- function() {
 					// for(local i=0; i<=3; i++) SetPropIntArray(self, "m_nModelIndexOverrides", blimpModel, i)
+					SetPropIntArray(self, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 0)
+					SetPropIntArray(self, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 3)
 					self.SetAbsOrigin(blimpTrain.GetOrigin())
 					self.GetLocomotionInterface().Reset()
 				}
@@ -339,6 +358,8 @@ function PopulatorThink() {
 
 				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 0)
 				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 3)
+
+				//todo ^ apply in a every tick think
 
 				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
 					if (child.GetClassname() != "prop_dynamic") continue
@@ -385,46 +406,50 @@ function PopulatorThink() {
 			}
 		}
 		else {
-			if (!("lastHealth" in scope)) {
-				scope.lastHealth      <- tank.GetHealth()
-				scope.lastHealthStage <- 0
-			}
+			// if (("changeTankModelIndex" in scope)) {
+				// if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
+					// tank.SetModelSimple(scope.popProperty.TankModel[scope.changeTankModelIndex])
 
-			if (("changeTankModelIndex" in scope)) {
-				if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
-					tank.SetModelSimple(scope.popProperty.TankModel[scope.changeTankModelIndex])
+				// SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 0)
+				// SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 3)
 
-				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 0)
-				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 3)
+				// delete scope.changeTankModelIndex
+			// }
 
-				delete scope.changeTankModelIndex
-			}
+			if (scope.curHealth != tank.GetHealth()) {
+				// local health_per_model = scope.maxHealth / 4
+				// local health_threshold = scope.maxHealth - health_per_model
+				// local health_stage
 
-			if (scope.lastHealth != tank.GetHealth()) {
-				local health_per_model = tank.GetMaxHealth() / 4
-				local health_threshold = tank.GetMaxHealth() - health_per_model
+				// for (health_stage = 0; health_stage < 3; health_stage++) {
+					// if (tank.GetHealth() > health_threshold)
+						// break
+
+					// health_threshold -= health_per_model
+				// }
+				
 				local health_stage
-
-				for (health_stage = 0; health_stage < 3; health_stage++) {
-					if (tank.GetHealth() > health_threshold)
-						break
-
-					health_threshold -= health_per_model
+				if (tank.GetHealth() <= 0) {
+					health_stage = 3
+				} else {
+					health_stage = floor((scope.maxHealth.tofloat() - tank.GetHealth())/scope.maxHealth * 4)
 				}
+				
+				// local health_stage = tank.GetHealth() < 0 ? 3 : floor((scope.maxHealth - tank.GetHealth())/scope.maxHealth.tofloat() * 4)
 
-				if (scope.lastHealthStage != health_stage && "popProperty" in scope && "TankModel" in scope.popProperty) {
+				if (scope.lastHealthStage != health_stage && "popProperty" in scope && "TankModel" in scope.popProperty) { // todo put check for whether damage models exist to avoid temp invis
 					local name = health_stage == 0 ? "Default" : "Damage" + health_stage
-					scope.changeTankModelIndex <- name
+					// scope.changeTankModelIndex <- name
 
-					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly)) {
-						tank.SetModelSimple(scope.popProperty.TankModel[name])
-					}
+					// if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly)) {
+						// tank.SetModelSimple(scope.popProperty.TankModel[name])
+					// }
 
-					SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 0)
-					SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 3)
+					// SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 0)
+					// SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 3)
 				}
 
-				scope.lastHealth = tank.GetHealth()
+				scope.curHealth = tank.GetHealth() //set this here instead of Updates think to prevent conflict
 				scope.lastHealthStage = health_stage
 			}
 		}
