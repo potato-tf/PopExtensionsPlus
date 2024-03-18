@@ -152,7 +152,6 @@ PopExt.globalTemplateSpawnCount   <- 0
 		//perform name fixup
 		if (nofixup == false) {
 			for (local i = 0; i < scope.EntityFixedUpTargetName.len(); i ++)
-				printl(scope.EntityFixedUpTargetName[i])
 			//first, get list of targetnames in the point template for name fixup
 			foreach(index, entity in pointtemplatecopy) {
 				if (typeof(entity) == "table") {
@@ -194,7 +193,6 @@ PopExt.globalTemplateSpawnCount   <- 0
 				foreach(classname, keyvalues in entity) {
 					if (classname == "OnSpawnOutput") {
 						scope.OnSpawnOutputArray.append(keyvalues)
-						foreach(k, v in keyvalues) printl(k + " : " + v)
 					}
 					else if (classname == "OnParentKilledOutput") {
 						scope.OnParentKilledOutputArray.append(keyvalues)
