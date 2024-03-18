@@ -1529,7 +1529,6 @@ function MissionAttributes::MissionAttr(...) {
 		// TODO: Needs testing
 		// also need to reset it
 		//MissionAttributes.SetConvar("tf_mvm_defenders_team_size", 999)
-
 		MissionAttributes.ThinkTable.ReverseMVMThink <- function() {
 			// Enforce max team size
 			local player_count  = 0
@@ -1558,6 +1557,11 @@ function MissionAttributes::MissionAttr(...) {
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
+			if ("ReverseMVMCurrencyThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.ReverseMVMCurrencyThink
+			if ("ReverseMVMPackThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMPackThink
+			if ("ReverseMVMLaserThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMLaserThink
+			if ("ReverseMVMDrainAmmoThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink
+			
 			EntFire("item_teamflag", "AddOutput", "OnPickupTeam1 !self:ForceResetSilent::0:-1")
 
 			// Switch to blue team
@@ -1746,7 +1750,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Drain player ammo on weapon usage
 			scope.PlayerThinkTable.ReverseMVMDrainAmmoThink <- function() {
-
+				if (value & 4) return
 				local buttons = NetProps.GetPropInt(self, "m_nButtons");
 
 				local wep = player.GetActiveWeapon()
@@ -1913,7 +1917,7 @@ function MissionAttributes::MissionAttr(...) {
 			if (player.GetPlayerClass() == TF_CLASS_ENGINEER)
 			{
 				scope.BuiltObjectTable.DrainMetal <- function(params) {
-
+					if (value & 4) return
 					local player = GetPlayerFromUserID(params.userid)
 					local scope = player.GetScriptScope()
 					local curmetal = GetPropIntArray(player, "m_iAmmo", TF_AMMO_METAL)
@@ -1959,14 +1963,6 @@ function MissionAttributes::MissionAttr(...) {
 			//cannot pick up intel
 			if (value & 2 && !IsPlayerABot(player))
 				player.AddCustomAttribute("cannot pick up intelligence", 1, -1)
-
-			//remove ammo drain
-			//we should probably avoid adding it to the think table altogether but whatever
-			if (value & 4)
-			{
-				try delete scope.BuiltObjectTable.DrainMetal catch(e) return
-				try delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink catch(e) return
-			}
 
 			//infinite cloak
 			if (value & 8 && player.GetPlayerClass() == TF_CLASS_SPY)
