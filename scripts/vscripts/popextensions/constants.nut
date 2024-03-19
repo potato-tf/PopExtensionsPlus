@@ -462,6 +462,12 @@ const MAXAMMO_BASE_SNIPER_SECONDARY = 75
 
 const MAXAMMO_BASE_SPY_PRIMARY = 24
 
+//m_nModelIndexOverrides
+const VISION_MODE_NONE      = 0
+const VISION_MODE_PYRO      = 1
+const VISION_MODE_HALLOWEEN = 2
+const VISION_MODE_ROME      = 3
+
 //random useful constants
 const FLT_SMALL = 0.0000001
 const FLT_MIN   = 1.175494e-38
