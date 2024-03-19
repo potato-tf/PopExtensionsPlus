@@ -1,19 +1,19 @@
+// Allow expression constants
+::CONST <- getconsttable()
+
+//my disappointment is immeasureable, and my day is ruined.
+
 //"reminder that constants are resolved at preprocessor level and not runtime"
 //"if you add them dynamically to the table they wont show up until you execute a new script as the preprocessor isnt aware yet"
 
-//fold into both const and root table to work around this.
+//the performance difference here is not worth refactoring everything around using the constant table so whatever
 
-::CONST <- getconsttable()
 ::ROOT <- getroottable()
 
 if (!("ConstantNamingConvention" in ROOT)) {
-
 	foreach(a, b in Constants)
 		foreach(k, v in b)
-		{
-			CONST[k] <- v != null ? v : 0
 			ROOT[k] <- v != null ? v : 0
-		}
 }
 
 CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
@@ -30,10 +30,6 @@ foreach(k, v in ::Entities.getclass())
 foreach(k, v in ::EntityOutputs.getclass())
 	if (k != "IsValid" && !(k in ROOT))
 		ROOT[k] <- ::EntityOutputs[k].bindenv(::EntityOutputs)
-
-foreach(k, v in ::NavMesh.getclass())
-	if (k != "IsValid" && !(k in ROOT))
-		ROOT[k] <- ::NavMesh[k].bindenv(::NavMesh)
 
 const MATTR_ERROR = "MissionAttr ERROR: "
 const STRING_NETPROP_ITEMDEF = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
@@ -64,12 +60,6 @@ const COND_UBERCHARGE = 57 //TF_COND_INVULNERABLE_CARD_EFFECT
 // CONST.COLOR_DEEP_RED <- "\x07FF0000"
 // CONST.COLOR_LIME <- "\x0722FF22"
 // CONST.COLOR_YELLOW <- "\x07FFFF66"
-
-//m_nModelIndexOverrides
-const VISION_MODE_NONE      = 0
-const VISION_MODE_PYRO      = 1
-const VISION_MODE_HALLOWEEN = 2
-const VISION_MODE_ROME      = 3
 
 // m_iSelectedSpellIndex
 const SPELL_ROLLING    = -2
@@ -130,9 +120,6 @@ const TTYPE_NONE     = 0
 const TTYPE_ENTRANCE = 1
 const TTYPE_EXIT     = 2
 
-const SHAKE_START = 0
-const SHAKE_STOP = 1
-
 // tf_gamerules m_iRoundState
 const GR_STATE_BONUS        = 9
 const GR_STATE_BETWEEN_RNDS = 10
@@ -143,21 +130,6 @@ const LIFE_DYING       = 1 // playing death animation or still falling off of a 
 const LIFE_DEAD        = 2 // dead. lying still.
 const LIFE_RESPAWNABLE = 3
 const LIFE_DISCARDBODY = 4
-
-//pattach points
-const PATTACH_ABSORIGIN 		= 0
-const PATTACH_ABSORIGIN_FOLLOW  = 1
-const PATTACH_CUSTOMORIGIN 		= 2
-const PATTACH_POINT 			= 3
-const PATTACH_POINT_FOLLOW 		= 4
-const PATTACH_WORLDORIGIN 		= 5
-const PATTACH_ROOTBONE_FOLLOW 	= 6
-
-// Object flags
-const OF_ALLOW_REPEAT_PLACEMENT      = 1
-const OF_MUST_BE_BUILT_ON_ATTACHMENT = 2
-const OF_DOESNT_HAVE_A_MODEL         = 4
-const OF_PLAYER_DESTRUCTION          = 8
 
 // EmitSoundEx flags
 const SND_NOFLAGS         = 0
@@ -202,18 +174,6 @@ const DMG_DONT_COUNT_DAMAGE_TOWARDS_CRIT_RATE = 67108864 //DMG_DISSOLVE
 const DMG_IGNORE_MAXHEALTH = 2
 const DMG_IGNORE_DEBUFFS = 4
 
-//stun flags
-const TF_STUN_NONE = 0
-const TF_STUN_MOVEMENT = 1
-const TF_STUN_CONTROLS = 2
-const TF_STUN_MOVEMENT_FORWARD_ONLY = 4
-const TF_STUN_SPECIAL_SOUND = 8
-const TF_STUN_DODGE_COOLDOWN = 16
-const TF_STUN_NO_EFFECTS = 32
-const TF_STUN_LOSER_STATE = 64
-const TF_STUN_BY_TRIGGER = 128
-const TF_STUN_BOTH = 256
-
 // Bot behavior flags
 // only useful for bot_generator
 const TFBOT_IGNORE_ENEMY_SCOUTS      = 1
@@ -257,26 +217,20 @@ CONST.MVM_CLASS_FLAG_MINIBOSS        <- 1 << 3 // Giant icon flag. Support and m
 CONST.MVM_CLASS_FLAG_ALWAYSCRIT      <- 1 << 4 // Crit icon flag. Support and mission icons do not display crit outline when set
 CONST.MVM_CLASS_FLAG_SUPPORT_LIMITED <- 1 << 5 // Support limited flag. Game uses it together with support flag
 
-// trigger_* entity spawnflags
-const SF_TRIGGER_ALLOW_CLIENTS                = 1
-const SF_TRIGGER_ALLOW_NPCS                   = 2
-const SF_TRIGGER_ALLOW_PUSHABLES              = 4
-const SF_TRIGGER_ALLOW_PHYSICS                = 8
-const SF_TRIGGER_ONLY_PLAYER_ALLY_NPCS        = 16
-const SF_TRIGGER_ONLY_CLIENTS_IN_VEHICLES     = 32
-const SF_TRIGGER_ALLOW_ALL                    = 64
-const SF_TRIG_PUSH_ONCE                       = 128
+//trigger entity spawnflags
+const SF_TRIGGER_ALLOW_CLIENTS            = 1
+const SF_TRIGGER_ALLOW_NPCS               = 2
+const SF_TRIGGER_ALLOW_PUSHABLES          = 4
+const SF_TRIGGER_ALLOW_PHYSICS            = 8
+const SF_TRIGGER_ONLY_PLAYER_ALLY_NPCS    = 16
+const SF_TRIGGER_ONLY_CLIENTS_IN_VEHICLES = 32
+const SF_TRIGGER_ALLOW_ALL                = 64
+const SF_TRIG_PUSH_ONCE                   = 128
 const SF_TRIG_PUSH_AFFECT_PLAYER_ON_LADDER    = 256
 const SF_TRIGGER_ONLY_CLIENTS_OUT_OF_VEHICLES = 512
-const SF_TRIG_TOUCH_DEBRIS                    = 1024
-const SF_TRIGGER_ONLY_NPCS_IN_VEHICLES        = 2048
-const SF_TRIGGER_DISALLOW_BOTS                = 4096
-
-// game_text entity spawnflags
-const SF_ENVTEXT_ALLPLAYERS = 1
-
-// Button spawnflags
-const SF_BUTTON_LOCKED = 2048
+const SF_TRIG_TOUCH_DEBRIS                = 1024
+const SF_TRIGGER_ONLY_NPCS_IN_VEHICLES    = 2048
+const SF_TRIGGER_DISALLOW_BOTS            = 4096
 
 // Player speak concepts
 const MP_CONCEPT_FIREWEAPON           = 0
@@ -508,13 +462,11 @@ const MAXAMMO_BASE_SNIPER_SECONDARY = 75
 
 const MAXAMMO_BASE_SPY_PRIMARY = 24
 
-// Content masks
-CONST.MASK_OPAQUE      <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_OPAQUE)
-CONST.MASK_PLAYERSOLID <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
-CONST.MASK_SOLID_BRUSHONLY <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE)
-
-// NavMesh related
-const STEP_HEIGHT = 18
+//m_nModelIndexOverrides
+const VISION_MODE_NONE      = 0
+const VISION_MODE_PYRO      = 1
+const VISION_MODE_HALLOWEEN = 2
+const VISION_MODE_ROME      = 3
 
 //random useful constants
 const FLT_SMALL = 0.0000001
