@@ -41,7 +41,7 @@ WaveSchedule
 				// EntFire(`wave_init_relay`, `Trigger`)
 
 				// Load popextensions script
-				IncludeScript(`popextensions_main.nut`, getroottable())
+				IncludeScript(`popextensions_main`, getroottable())
 
 				MissionAttrs({
 					`NoReanimators`: 1
@@ -50,7 +50,7 @@ WaveSchedule
 					`WaveStartCountdown`: 1 //ready-up countdown time.  Values below 9 will disable starting music
 					// `PlayersAreRobots`: 2|4|8|16 //see missionattributes.nut for bitflag info
 					`ReverseMVM`: 1|16|32  //see missionattributes.nut for bitflag info
-					`SpellRateCommon`: 0.5 
+					`SpellRateCommon`: 0.5
 					`NoSkeleSplit`: 1
 					`WaveNum`: 3 //sets the wave number on the wavebar
 					`MaxWaveNum`: 60 //sets the max wave number on the wavebar
@@ -101,7 +101,7 @@ WaveSchedule
 							`fires milk bolt`: 1
 							`set turn to ice`: 1
 						}
-						`tf_weapon_sword`: { 
+						`tf_weapon_sword`: {
 							`melee cleave attack`: 1024
 						}
 						`tf_weapon_wrench`: {
@@ -120,7 +120,7 @@ WaveSchedule
 		DoneOutput
 		{
 			Target wave_finished_relay
-			Action trigger
+			Action Trigger
 		}
 		// WaveSpawn
 		// {
@@ -154,20 +154,20 @@ WaveSchedule
 		// 			Item "TF_WEAPON_SPELLBOOK"
 		// 			// Attributes IgnoreEnemies
 		// 			// WeaponRestrictions PrimaryOnly
-		// 			CharacterAttributes 
+		// 			CharacterAttributes
 		// 			{
 		// 				"damage bonus" -10
 		// 			}
 		// 		}
 		// }
-		WaveSpawn 
+		WaveSpawn
 		{
 
 			Name "Wave1a"
 			Where spawnbot
-			TotalCount 10
-			MaxActive 10
-			SpawnCount 10
+			TotalCount 2
+			MaxActive 2
+			SpawnCount 1
 			WaitBeforeStarting 1
 			WaitBetweenSpawns 5
 			TFBot
@@ -182,7 +182,7 @@ WaveSchedule
 				// Tag "popext_fireweapon|2048"
 				Tag "popext_rocketcustomtrail|eyeboss_projectile"
 			}
-			
+
 		}
 
 	}
@@ -195,20 +195,21 @@ WaveSchedule
             Action RunScriptCode
             Param "
                 // The original InitWaveOutput trigger, change if necessary
-                EntFire(`wave_init_relay`, `Trigger`)
+                // EntFire(`wave_init_relay`, `Trigger`)
 
                 // Load popextensions script
-				IncludeScript(`popextensions_main.nut`, getroottable())
+				IncludeScript(`popextensions_main`, getroottable())
 				MissionAttrs({
 					`WaveStartCountdown`: 1
-					`ExtraTankPath`: [`951 689 388`, `1011 274 388`, `884 -701 389`] //array of xyz coordinates for extra tank paths
-					`666Wavebar`: 1 //this will not work on wave 1!
+					`ExtraTankPath`: [`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`] //array of xyz coordinates for extra tank paths
+					// `666Wavebar`: 1 //this will not work on wave 1!
 				})
+				MissionAttrs({`ExtraTankPath`: [`640 5404 350`, `640 4810 350`, `640 4400 550`, `1100 4100 650`, `1636 3900 770`]})
 
                 // Set custom wave icons inside this function
                 PopExt.SetWaveIconsFunction(function() {
-                    // Use custom icon for a tank, first remove the regular tank icon
-                    PopExt.SetWaveIconSpawnCount(`tank`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 0)
+                    // Use custom icon for a tank, first remove one of the regular tank icons
+                    PopExt.SetWaveIconSpawnCount(`tank`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
                     // Add our custom tank icon
                     PopExt.SetWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
                 })
@@ -218,11 +219,11 @@ WaveSchedule
                     // Called when the tank is spawned
                     OnSpawn = function(tank, name) {
                         // Create a prop on top of the tank
-                        local prop = SpawnEntityFromTable(`prop_dynamic`, {model = `models/props_badlands/barrel01.mdl`, origin = `0 0 200`})
+                        local prop = SpawnEntityFromTable(`prop_dynamic`, {model = `models/props_badlands/barrel01.mdl`, origin = `0 0 79`})
 
                         // Create an ignite trigger
                         local trigger = SpawnEntityFromTable(`trigger_ignite`, {origin = `0 0 100`, spawnflags = `1`})
-                        PopExtUtil.SetupTriggerBounds(trigger, Vector(-200,-200,-200), Vector(200,200,200))
+                        PopExtUtil.SetupTriggerBounds(trigger, Vector(-175,-175,-175), Vector(175,175,175))
                         PopExtUtil.SetParentLocalOrigin([prop, trigger], tank)
 
                         ClientPrint(null, 2, `OnSpawnTank`)
@@ -234,33 +235,75 @@ WaveSchedule
                         // Decrement custom tank icon when killed
                         DecrementWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
                     }
+					// Customizable parameters
+					Scale = `0.5`
+					DisableSmoke = true
+					// DisableTracks = true
+					// DisableBomb = true
+					// TankModel = `models/props_2fort/cow001_reference.mdl`
+					// TankModelVisionOnly = true // Sets the tank's model without changing the hitbox
                 })
+				PopExt.AddTankName(`tank2`, {
+					// Turns the tank into a blimp
+					IsBlimp = true
+					StartTrack = `extratankpath2_1`
+					// Optionally set custom models (or don't set to use the default blimp model)
+					// TankModel = `models/bots/boss_bot/boss_blimp_pure.mdl`
+					// TankModel = {
+						// Default = `models/bots/boss_bot/boss_blimp.mdl`
+						// Damage1 = `models/bots/boss_bot/boss_blimp_damage1.mdl`
+						// Damage2 = `models/bots/boss_bot/boss_blimp_damage2.mdl`
+						// Damage3 = `models/bots/boss_bot/boss_blimp_damage3.mdl`
+						// LeftTrack = `models/bots/boss_bot/tankred_track_l.mdl`
+						// RightTrack = `models/bots/boss_bot/tankred_track_r.mdl`
+						// Bomb = `models/bots/boss_bot/bombblue_mechanism.mdl`
+					// }
+				})
             "
         }
+		StartWaveOutput
+		{
+			Target wave_start_relay
+			Action Trigger
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action Trigger
+		}
 		WaveSpawn
 		{
 			Name "Wave2"
-			TotalCount 3
+			TotalCount 1
 			TotalCurrency 0
-
-			FirstSpawnOutput
-			{
-				Target boss_spawn_relay
-				Action Trigger
-			}
 
 			Tank
 			{
 				Health 100
 				Speed 75
-				Name "abc"
+				Name "abcd"
 				StartingPathTrackNode "extratankpath1_1"
 
-				OnKilledOutput
+				OnBombDroppedOutput
 				{
-					Target boss_dead_relay
+					Target boss_deploy_relay
 					Action Trigger
 				}
+			}
+		}
+		WaveSpawn
+		{
+			Name "Wave2"
+			TotalCount 1
+			TotalCurrency 0
+
+			Tank
+			{
+				Health 100
+				Speed 70
+				Name "tank2"
+				Skin 1
+				StartingPathTrackNode "extratankpath2_1"
 
 				OnBombDroppedOutput
 				{

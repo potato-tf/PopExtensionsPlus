@@ -67,11 +67,14 @@ PopExt <- popExtEntity.GetScriptScope()
 		function OnScriptHook_OnTakeDamage(params) {
 			local victim = params.const_entity
 			if (victim != null && ((victim.IsPlayer() && victim.IsBotOfType(1337)) || victim.GetClassname() == "tank_boss")) {
+
 				local scope = victim.GetScriptScope()
 
-				if (victim.GetClassname() == "tank_boss" && params.damage >= victim.GetHealth() && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides) 
+				if (victim.GetClassname() == "tank_boss" && params.damage >= victim.GetHealth() && "popProperty" in scope && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides) 
 					EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
 				
+				if ("popProperty" in scope && "SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides)
+					EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
 				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamage", params)
 			}
 	
@@ -159,7 +162,6 @@ PopExt <- popExtEntity.GetScriptScope()
 				PopExtHooks.FireHooksParam(attacker, scope, "OnDealDamagePost", params)
 			}
 		}
-	
 		function OnGameEvent_player_death(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player != null && player.IsBotOfType(1337)) {
@@ -191,6 +193,9 @@ PopExt <- popExtEntity.GetScriptScope()
 	
 				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamagePost", params)
 	
+				if (dead && "popProperty" in scope && "SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides)
+					StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
+
 				if (dead && !("popFiredDeathHook" in scope)) {
 					scope.popFiredDeathHook <- true
 					if ("popProperty" in scope && "Icon" in scope.popProperty) {
@@ -310,19 +315,17 @@ function PopulatorThink() {
 				//this one needs to be done when the tank is deploying instead
 				if ("Deploy" in scope.popProperty.SoundOverrides) {
 					return
-					// if (!scope.deploysoundreplaced) {
 
-					// 	StopSoundOn("MVM.TankDeploy", tank)
-					// 	EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Deploy, entity = tank})
-					// 	scope.startsoundreplaced = true
+					if (!scope.deploysoundreplaced) {
 
-					// }
+						StopSoundOn("MVM.TankDeploy", tank)
+						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Deploy, entity = tank})
+						scope.startsoundreplaced = true
+
+					}
 				}
 			}
 
-			if ("popProperty" in scope && "EngineLoopSound" in scope.popProperty) {
-				
-			}
 			if ("popProperty" in scope && "IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
 				//todo alias Model to TankModel, check for tank spawn sound, test turning off reset locomotion, test null model hitbox in raf and here, test rage on same team tank
 				scope.popProperty.DisableTracks <- true
@@ -349,7 +352,7 @@ function PopulatorThink() {
 				tank.SetAbsAngles(QAngle(0, tank.GetAbsAngles().y, 0))
 				tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1") // todo callscriptfunction
 				local tankspeed = GetPropFloat(tank, "m_speed")
-				scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), speed = tankspeed, startspeed = tankspeed, target = "extratankpath2_1"})
+				scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), speed = tankspeed, startspeed = tankspeed, target = scope.popProperty.StartTrack})
 
 				scope.TankThinkTable.BlimpThink <- function() {
 					self.SetAbsOrigin(blimpTrain.GetOrigin())

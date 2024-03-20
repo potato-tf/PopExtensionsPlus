@@ -1013,35 +1013,37 @@ function MissionAttributes::MissionAttr(...) {
 	// ============================================
 
 	case "ExtraTankPath":
-		local tracks = []
 		if (typeof value != "array") {
 			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
 			success = false
 			break
 		}
 
-		MissionAttributes.PathNum++
+		foreach (path in value) {
+			
+			local tracks = []
 
-		foreach (i, pos in value) {
+			MissionAttributes.PathNum++
 
-			local org = split(pos, " ")
+			foreach (i, pos in path) {
 
-			local track = SpawnEntityFromTable("path_track", {
-				targetname = format("extratankpath%d_%d", MissionAttributes.PathNum, i+1)
-				origin = Vector(org[0].tointeger(), org[1].tointeger(), org[2].tointeger())
-			})
-			tracks.append(track)
+				local org = split(pos, " ")
 
-			// printf("%s spawned at %s\n", track.GetName(), track.GetOrigin().ToKVString())
-		}
+				local track = SpawnEntityFromTable("path_track", {
+					targetname = format("extratankpath%d_%d", MissionAttributes.PathNum, i+1)
+					origin = Vector(org[0].tointeger(), org[1].tointeger(), org[2].tointeger())
+				})
+				tracks.append(track)
+			}
 
 		tracks.append(null) //dummy value to put at the end
 
 		for (local i = 0; i < tracks.len() - 1; i++)
 			if (tracks[i] != null)
 				SetPropEntity(tracks[i], "m_pnext", tracks[i+1])
-
-		break
+		}
+	break
+			
 
 	// =======================================
 	// replace viewmodel arms with custom ones
