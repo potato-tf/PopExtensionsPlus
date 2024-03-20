@@ -126,10 +126,6 @@ __CollectGameEventCallbacks(CustomAttributes.Events)
 function CustomAttributes::FireMilkBolt(player, item, value = 5.0) {
 
     local scope = player.GetScriptScope()
-    scope.milkboltnextattack <- 0.0
-    if (scope.milkboltnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0) return
-
-    local scope = player.GetScriptScope()
     scope.milkboltfired <- false
 
     scope.PlayerThinkTable.FireMilkBolt <- function() {
@@ -193,7 +189,7 @@ function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
     scope.PlayerThinkTable.MeleeCleaveAttack <- function() {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
-        if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0|| player.GetActiveWeapon() != wep) return
+        if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0 || player.GetActiveWeapon() != wep) return
 
         scope.cleaved = false
 
@@ -469,7 +465,6 @@ function CustomAttributes::ExplosiveBullets(player, item, value) {
     local scope = player.GetScriptScope()
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
-    printl(wep)
     if (wep == null) return
 
     //cleanup before spawning a new one
@@ -495,9 +490,7 @@ function CustomAttributes::ExplosiveBullets(player, item, value) {
 
     scope.PlayerThinkTable.ExplosiveBullets <- function() {
         
-        if (player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || (scope.curammo == GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1) || ("curclip" in scope && scope.curclip != wep.Clip1()))) return
-
-        printl("test")
+        if (player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flLastFireTime") || ("curclip" in scope && scope.curclip != wep.Clip1())) return
 
         local grenade = CreateByClassname("tf_projectile_pipe")
         SetPropEntity(grenade, "m_hOwnerEntity", launcher)
@@ -522,7 +515,7 @@ function CustomAttributes::ExplosiveBullets(player, item, value) {
                 grenade.SetOrigin(trace.enthit.EyePosition() + Vector(0, 0, 45))
         }
 
-        scope.explosivebulletsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
+        scope.explosivebulletsnextattack = GetPropFloat(wep, "m_flLastFireTime")
         scope.curammo = GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1)
         if ("curclip" in scope) scope.curclip = wep.Clip1()
 
@@ -672,7 +665,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "crit when health below":
             CustomAttributes.CritWhenHealthBelow(player, item, value)
-            scope.attribinfo[attr] <- format("Player is crit boosted when below %d health.", value)
+            scope.attribinfo[attr] <- format("Player is crit boosted when below %d health", value)
         break
 
         case "mvm sentry ammo":
@@ -696,6 +689,8 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
         
         //only really recommended for bots
+        //certain things like cow mangler charge effects and minigun spin-up animations still play, despite secondary fire being disabled
+
         case "alt-fire disabled":
             CustomAttributes.AltFireDisabled(player, item)
             scope.attribinfo[attr] <- "Secondary fire disabled"

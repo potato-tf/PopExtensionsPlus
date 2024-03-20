@@ -151,7 +151,6 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 		//perform name fixup
 		if (nofixup == false) {
-			for (local i = 0; i < scope.EntityFixedUpTargetName.len(); i ++)
 			//first, get list of targetnames in the point template for name fixup
 			foreach(index, entity in pointtemplatecopy) {
 				if (typeof(entity) == "table") {
@@ -209,7 +208,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 						}
 						else keyvalues.origin <- origin
 
-						if ("angles" in keyvalues){
+						if ("angles" in keyvalues) {
 							//if angles is a string, construct qangles to perform math on them if needed
 							if (typeof(keyvalues.angles) == "string") {
 								local buf = keyvalues.angles.find(",") ? split(keyvalues.angles, ",") : split(keyvalues.angles, " ")

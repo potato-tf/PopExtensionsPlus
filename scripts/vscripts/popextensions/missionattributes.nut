@@ -1198,7 +1198,6 @@ function MissionAttributes::MissionAttr(...) {
 
 				foreach (a, b in v)
 				{
-					printl(a + " : " + b)
 					if (a in CustomAttributes.Attrs)
 						CustomAttributes.AddAttr(player, a, b, wep)
 					else
