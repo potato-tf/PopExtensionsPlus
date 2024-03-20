@@ -1,5 +1,6 @@
 function Precache()
 {
+    local classname = self.GetClassname()
     if (classname == "obj_sentrygun" && GetPropInt(self, "m_spawnflags") & 64)
         SetPropBool(self, "m_bMiniBuilding", true);
 }
@@ -33,10 +34,13 @@ function OnPostSpawn()
     //fix func_rotating capping at 360,000 degrees
     else if (classname == "func_rotating")
     {
+        local thinkinterval = 1
         local maxangle = 180000.0 //max angle is actually 360,000.0 not 180,000.0.  Reset it early because whatever
-        function RotateFixThink()
+        local xyz = [0.0, 0.0, 0.0]
+        
+        self.ValidateScriptScope()
+        self.GetScriptScope().RotateFixThink <- function()
         {
-            local xyz = [0.0, 0.0, 0.0]
             for (local i = 0; i < 3; i++)
             {
                 xyz[i] = GetPropFloat(self, format("m_angRotation[%d]", i))
@@ -49,36 +53,34 @@ function OnPostSpawn()
             }
             return thinkinterval
         }
-        self.ValidateScriptScope()
-        self.GetScriptScope().RotateFixThink <- RotateFixThink
         AddThinkToEnt(self, "RotateFixThink")
 
         //fix killing func_rotating before stopping sound causing sound to play forever
         //UNTESTED
 
         self.AddEFlags(EFL_KILLME)
-        function RotatingKill()
+        function InputKill()
         {
-            rotate.RemoveEFlags(EFL_KILLME)
+            self.RemoveEFlags(EFL_KILLME)
             SetPropFloat(self, "m_flVolume", 0.01)
             self.StopSound(GetPropString(self, "m_NoiseRunning"))
             self.Kill()
             return false
         }
-        function RotatingKillHierarchy()
+        function InputKillHierarchy()
         {
-            rotate.RemoveEFlags(EFL_KILLME)
+            self.RemoveEFlags(EFL_KILLME)
             SetPropFloat(self, "m_flVolume", 0.01)
             self.StopSound(GetPropString(self, "m_NoiseRunning"))
             self.Kill()
             return false
         }
         self.ValidateScriptScope()
-        self.GetScriptScope().InputKill <- RotatingKill
-        self.GetScriptScope().Inputkill <- RotatingKill
-        self.GetScriptScope().InputKillHierarchy <- RotatingKillHierarchy
-        self.GetScriptScope().Inputkillhierarchy <- RotatingKillHierarchy
-        RotatingKillHierarchy()
+        self.GetScriptScope().InputKill <- InputKill
+        self.GetScriptScope().Inputkill <- InputKill
+        self.GetScriptScope().InputKillHierarchy <- InputKillHierarchy
+        self.GetScriptScope().Inputkillhierarchy <- InputKillHierarchy
+        InputKillHierarchy()
     }
     ::RotateEvent <- {
         function OnGameEvent_recalculate_holidays(_)
@@ -86,9 +88,7 @@ function OnPostSpawn()
             if (GetRoundState() != GR_STATE_PREROUND) return
 
             for (local rotate; rotate = FindByClassname(rotate, "func_rotating");)
-            {  
-                RotatingKillHierarchy()
-            }
+                EntFireByHandle(rotate, "Kill", "", -1, null, null)
         }
     }
     __CollectGameEventCallbacks(RotateEvent);

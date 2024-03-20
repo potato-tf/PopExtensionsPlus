@@ -438,7 +438,7 @@ function PopExtUtil::SetupTriggerBounds(trigger, mins = null, maxs = null) {
 		SetPropVector(trigger, "m_Collision.m_vecMaxs", maxs)
 	}
 
-	trigger.SetSolid(Constants.ESolidType.SOLID_BBOX)
+	trigger.SetSolid(SOLID_BBOX)
 }
 
 function PopExtUtil::PrintTable(table) {

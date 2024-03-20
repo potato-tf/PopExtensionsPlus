@@ -101,16 +101,16 @@ class AI_Bot {
 			if (dist <= 67000 && IsVisible(projectile)) //67700
 			{
 				switch (botLevel) {
-				case 1: // Basic Airblast, only deflect if in FOV
+				case 1: // Normal Skill, only deflect if in FOV
 					if (!IsInFieldOfView(projectile))
 						return
 				break
 
-				case 2: // Advanced Airblast, deflect regardless of FOV
+				case 2: // Hard skill, deflect regardless of FOV
 					LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
 				break
 
-				case 3: // Expert Airblast, deflect regardless of FOV back to Sender
+				case 3: // Expert skill, deflect regardless of FOV back to Sender
 					local owner = projectile.GetOwner()
 					if (owner != null) {
 						local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
@@ -216,7 +216,6 @@ class AI_Bot {
 			SetThreat(params.attacker, true)
 		}
 	}
-
 	function OnUpdate() {
 		cur_pos     = bot.GetOrigin()
 		cur_vel     = bot.GetAbsVelocity()
@@ -227,6 +226,9 @@ class AI_Bot {
 
 		time = Time()
 
+		// foreach (k, v in bot.GetLocomotionInterface()) 
+		// printl(bot.GetLocomotionInterface())
+		// printl(bot.GetVisionInterface())
 		foreach(_, func in scope.PlayerThinkTable) func()
 
 		//SwitchToBestWeapon()

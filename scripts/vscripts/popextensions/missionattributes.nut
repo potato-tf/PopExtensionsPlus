@@ -295,7 +295,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "666Wavebar":
 		MissionAttributes.StartWaveTable.EventWavebar <- function(params) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value) }
-		MissionAttributes.EventWavebar()
+		MissionAttributes.StartWaveTable.EventWavebar(null)
 	break
 
 	// ===================================
@@ -1150,7 +1150,7 @@ function MissionAttributes::MissionAttr(...) {
 				if (!(tfclass in value)) continue
 				local table = value[tfclass]
 				foreach (k, v in table) {
-					if (k in CustomAttributes.Attrs)
+					if (k in CustomAttributes.Attrs && !player.IsBotOfType(1337))
 						CustomAttributes.AddAttr(player, k, v, player.GetActiveWeapon())
 					else {
 						local valformat = ""
@@ -2018,7 +2018,7 @@ function MissionAttributes::MissionAttr(...) {
 }
 
 function MissionAttrThink() {
-	foreach (_, func in MissionAttributes.ThinkTable) func()
+	try foreach (_, func in MissionAttributes.ThinkTable) func() catch(e) return
 	return -1
 }
 

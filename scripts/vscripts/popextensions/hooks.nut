@@ -68,6 +68,10 @@ PopExt <- popExtEntity.GetScriptScope()
 			local victim = params.const_entity
 			if (victim != null && ((victim.IsPlayer() && victim.IsBotOfType(1337)) || victim.GetClassname() == "tank_boss")) {
 				local scope = victim.GetScriptScope()
+
+				if (victim.GetClassname() == "tank_boss" && params.damage >= victim.GetHealth() && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides) 
+					EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
+				
 				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamage", params)
 			}
 	
@@ -178,8 +182,8 @@ PopExt <- popExtEntity.GetScriptScope()
 				delete player.GetScriptScope().popWearablesToDestroy
 			}
 		}
-	
 		function OnGameEvent_npc_hurt(params) {
+
 			local victim = EntIndexToHScript(params.entindex)
 			if (victim != null && victim.GetClassname() == "tank_boss") {
 				local scope = victim.GetScriptScope()
@@ -212,6 +216,7 @@ PopExt <- popExtEntity.GetScriptScope()
 			}
 		}
 		function OnGameEvent_mvm_begin_wave(params) {
+
 			if ("waveIconsFunction" in PopExt)
 				PopExt.waveIconsFunction()
 		
@@ -223,6 +228,7 @@ PopExt <- popExtEntity.GetScriptScope()
 		
 		}
 		function OnGameEvent_teamplay_round_start(params) {
+
 			if ("waveIconsFunction" in PopExt)
 				delete PopExt.waveIconsFunction
 		
@@ -235,73 +241,120 @@ __CollectGameEventCallbacks(PopExtHooks.Events)
 function PopulatorThink() {
 
 	for (local tank; tank = FindByClassname(tank, "tank_boss");) {
+
 		tank.ValidateScriptScope()
 		local scope = tank.GetScriptScope()
 
 		if (!("created" in scope)) {
-			scope.created <- true
+			scope.created         <- true
+			scope.TankThinkTable  <- {}
+			scope.maxHealth       <- tank.GetMaxHealth()
+			scope.team            <- tank.GetTeam()
+			scope.loopsoundreplaced <- false
+			scope.startsoundreplaced <- false
 
-			if (!("TankThinkTable" in scope)) scope.TankThinkTable <- {}
+			scope.curHealth       <- tank.GetHealth()
+			scope.lastHealthStage <- 0
+			scope.TankThinkTable.Updates <- function() {
+				this.curPos       <- self.GetOrigin()
+				this.curVel       <- self.GetAbsVelocity()
+				this.curSpeed     <- curVel.Length()
+				this.lastHealthPercentage <- GetPropFloat(self, "m_lastHealthPercentage")
+			}
 
 			local tankName = tank.GetName().tolower()
-
 			foreach(name, table in tankNamesWildcard) {
-				if (name == tankName || name == tankName.slice(0, name.len())) {
+				if (name == tankName || name == tankName.slice(0, name.len()))
 					PopExtHooks.AddHooksToScope(tankName, table, scope)
+			}
+			if (tankName in tankNames)
+				PopExtHooks.AddHooksToScope(tankName, tankNames[tankName], scope)
 
-					if ("OnSpawn" in table)
-						table.OnSpawn(tank, tankName)
+			if ("popProperty" in scope && "SoundOverrides" in scope.popProperty) {
+				
+				foreach (k, v in scope.popProperty.SoundOverrides)
+					PrecacheSound(v)
+					
+				local cooldowntime = 0.0
+
+				if ("Ping" in scope.popProperty.SoundOverrides) {
+
+					scope.TankThinkTable.PingSound <- function() {
+					
+						StopSoundOn("MVM.TankPing", self)
+	
+						if (Time() < cooldowntime) return
+	
+						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Ping, entity = tank})
+
+						cooldowntime = Time() + 5.0
+					}
+				}
+				if ("EngineLoop" in scope.popProperty.SoundOverrides) {
+					if (!scope.loopsoundreplaced) {
+						
+						StopSoundOn("MVM.TankEngineLoop", tank)
+						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank})
+						scope.loopsoundreplaced = true
+					}
+				}
+				if ("Start" in scope.popProperty.SoundOverrides) {
+					if (!scope.startsoundreplaced) {
+
+						StopSoundOn("MVM.TankStart", tank)
+						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Start, entity = tank})
+						scope.startsoundreplaced = true
+
+					}
+				}
+				//this one needs to be done when the tank is deploying instead
+				if ("Deploy" in scope.popProperty.SoundOverrides) {
+					return
+					// if (!scope.deploysoundreplaced) {
+
+					// 	StopSoundOn("MVM.TankDeploy", tank)
+					// 	EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Deploy, entity = tank})
+					// 	scope.startsoundreplaced = true
+
+					// }
 				}
 			}
 
-			if (tankName in tankNames) {
-				local table = tankNames[tankName]
-				PopExtHooks.AddHooksToScope(tankName, table, scope)
-
-				if ("OnSpawn" in table)
-					table.OnSpawn(tank, tankName)
+			if ("popProperty" in scope && "EngineLoopSound" in scope.popProperty) {
+				
 			}
-
-			scope.maxHealth <- tank.GetMaxHealth()
-			scope.team      <- tank.GetTeam()
-
-			scope.curPos    <- tank.GetOrigin()
-			scope.curVel    <- tank.GetAbsVelocity()
-			scope.curSpeed  <- scope.curVel.Length()
-			scope.curHealth <- tank.GetHealth()
-			scope.lastHealthPercentage <- GetPropFloat(tank, "m_lastHealthPercentage")
-
-			scope.Updates <- function() {
-				this.curPos    <- self.GetOrigin()
-				this.curVel    <- self.GetAbsVelocity()
-				this.curSpeed  <- curVel.Length()
-				this.curHealth <- self.GetHealth()
-				this.lastHealthPercentage <- GetPropFloat(self, "m_lastHealthPercentage")
-			}
-			scope.TankThinkTable.Updates <- scope.Updates
-
-			scope.TankThinks <- function() { foreach (name, func in scope.TankThinkTable) func(); return -1 }
-
-			AddThinkToEnt(tank, "TankThinks")
-
 			if ("popProperty" in scope && "IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
+				//todo alias Model to TankModel, check for tank spawn sound, test turning off reset locomotion, test null model hitbox in raf and here, test rage on same team tank
 				scope.popProperty.DisableTracks <- true
 				scope.popProperty.DisableBomb <- true
-				// scope.popProperty.TankModel <- "models/bots/boss_bot/boss_blimp_pure.mdl"
+				scope.popProperty.DisableSmoke <- true
+
+				//set default blimp model if not specified
+				if (!("TankModel" in scope.popProperty)) {
+					local blimpModel = {
+						TankModel = {
+							Default = "models/bots/boss_bot/boss_blimp.mdl"
+							Damage1 = "models/bots/boss_bot/boss_blimp_damage1.mdl"
+							Damage2 = "models/bots/boss_bot/boss_blimp_damage2.mdl"
+							Damage3 = "models/bots/boss_bot/boss_blimp_damage3.mdl"
+							LeftTrack = "models/bots/boss_bot/tankred_track_l.mdl"
+							RightTrack = "models/bots/boss_bot/tankred_track_r.mdl"
+							Bomb = "models/bots/boss_bot/bombblue_mechanism.mdl"
+						}
+					}
+
+					PopExtHooks.AddHooksToScope(tank, blimpModel, scope)
+				}
 
 				tank.SetAbsAngles(QAngle(0, tank.GetAbsAngles().y, 0))
-				tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1")
-				// scope.blimpModel <- PrecacheModel("models/bots/boss_bot/boss_blimp_pure.mdl")
-
+				tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1") // todo callscriptfunction
 				local tankspeed = GetPropFloat(tank, "m_speed")
-				scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), speed = tankspeed, startspeed = tankspeed, target = "extratankpath1_1"})
+				scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), speed = tankspeed, startspeed = tankspeed, target = "extratankpath2_1"})
 
-				scope.BlimpThink <- function() {
-					// for(local i=0; i<=3; i++) SetPropIntArray(self, "m_nModelIndexOverrides", blimpModel, i)
+				scope.TankThinkTable.BlimpThink <- function() {
 					self.SetAbsOrigin(blimpTrain.GetOrigin())
 					self.GetLocomotionInterface().Reset()
 				}
-				scope.TankThinkTable.BlimpThink <- scope.BlimpThink
 			}
 
 			if ("popProperty" in scope && "DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
@@ -325,22 +378,29 @@ function PopulatorThink() {
 			}
 
 			if ("popProperty" in scope && "DisableSmoke" in scope.popProperty && scope.popProperty.DisableSmoke) {
-				scope.DisableSmoke <- function() {
+
+				scope.TankThinkTable.DisableSmoke <- function() {
 					//disables smokestack, will emit one smoke particle when spawning and when moving out from under low ceilings (solid brushes 300 units or lower)
 					EntFireByHandle(self, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 				}
-				scope.TankThinkTable.DisableSmoke <- scope.DisableSmoke
 			}
 
+			if ("popProperty" in scope && "Scale" in scope.popProperty)
+				EntFireByHandle(tank, "SetModelScale", scope.popProperty.Scale, -1, null, null)
+
 			if ("popProperty" in scope && "TankModel" in scope.popProperty) {
-				if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly)) {
-					tank.SetModelSimple(scope.popProperty.TankModel.Default)
+				if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
+					tank.SetModelSimple(scope.popProperty.TankModel.Default) //changes bbox size
+
+				scope.curModel <- scope.popProperty.TankModelPrecached.Default
+				
+				scope.TankThinkTable.SetTankModel <- function() {
+					SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_NONE)
+					SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_ROME)
 				}
 
-				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 0)
-				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached.Default, 3)
-
 				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+
 					if (child.GetClassname() != "prop_dynamic") continue
 
 					local replace_model     = -1
@@ -383,48 +443,44 @@ function PopulatorThink() {
 					}
 				}
 			}
+
+			scope.TankThinks <- function() { foreach (name, func in scope.TankThinkTable) func(); return -1 }
+			scope.TankThinks() //run thinks for availability in OnSpawn
+			AddThinkToEnt(tank, "TankThinks")
+
+			foreach(name, table in tankNamesWildcard) {
+
+				if ((name == tankName || name == tankName.slice(0, name.len())) && "OnSpawn" in table)
+					table.OnSpawn(tank, tankName)
+			}
+
+			if (tankName in tankNames) {
+				local table = tankNames[tankName]
+				if ("OnSpawn" in table)
+					table.OnSpawn(tank, tankName)
+			}
 		}
 		else {
-			if (!("lastHealth" in scope)) {
-				scope.lastHealth      <- tank.GetHealth()
-				scope.lastHealthStage <- 0
-			}
-
-			if (("changeTankModelIndex" in scope)) {
-				if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
-					tank.SetModelSimple(scope.popProperty.TankModel[scope.changeTankModelIndex])
-
-				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 0)
-				SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[scope.changeTankModelIndex], 3)
-
-				delete scope.changeTankModelIndex
-			}
-
-			if (scope.lastHealth != tank.GetHealth()) {
-				local health_per_model = tank.GetMaxHealth() / 4
-				local health_threshold = tank.GetMaxHealth() - health_per_model
+			//sets damaged tank models
+			if (scope.curHealth != tank.GetHealth()) {
 				local health_stage
-
-				for (health_stage = 0; health_stage < 3; health_stage++) {
-					if (tank.GetHealth() > health_threshold)
-						break
-
-					health_threshold -= health_per_model
+				if (tank.GetHealth() <= 0) {
+					health_stage = 3
+				} else {
+					//determines how many quarters of maxHealth the tank has received in damage
+					health_stage = floor((scope.maxHealth - tank.GetHealth())/scope.maxHealth.tofloat() * 4)
 				}
 
 				if (scope.lastHealthStage != health_stage && "popProperty" in scope && "TankModel" in scope.popProperty) {
 					local name = health_stage == 0 ? "Default" : "Damage" + health_stage
-					scope.changeTankModelIndex <- name
 
-					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly)) {
+					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
 						tank.SetModelSimple(scope.popProperty.TankModel[name])
-					}
 
-					SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 0)
-					SetPropIntArray(tank, "m_nModelIndexOverrides", scope.popProperty.TankModelPrecached[name], 3)
+					scope.curModel <- scope.popProperty.TankModelPrecached[name]
 				}
 
-				scope.lastHealth = tank.GetHealth()
+				scope.curHealth = tank.GetHealth() //set this here instead of Updates think to prevent conflict
 				scope.lastHealthStage = health_stage
 			}
 		}
@@ -454,6 +510,7 @@ function PopulatorThink() {
 			}
 			// Make sure that ondeath hook is fired always
 			if (!alive && "popFiredDeathHook" in scope) {
+
 				local scope = player.GetScriptScope() // TODO: we already got scope above?
 				if (!scope.popFiredDeathHook)
 					PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)

@@ -116,6 +116,10 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			for (local skeles; skeles = FindByClassname(skeles, "tf_zombie");) 
 				skeles.FlagForUpdate(true)
 		}
+		function SmoothHoresmann() {
+			for (local hatman; hatman = FindByClassname(hatman, "headless_hatman");)
+				hatman.FlagForUpdate(true)
+		}
 	}
 
 	DeathHookTable = {
@@ -168,28 +172,27 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			local scope = player.GetScriptScope()
 			scope.holdingfire <- false
+			scope.lastfiretime <- 0.0
 
 			player.GetScriptScope().PlayerThinkTable.HoldFireThink <- function() {
 
-				printl(activegun.Clip1())
+				printl(GetPropFloat(player.GetActiveWeapon(), "m_flEnergy"))
+
 				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
 				local activegun = player.GetActiveWeapon()
-				
 				if (activegun == null) return
-
-				if (activegun.Clip1() == 0)
+				local clip = activegun.Clip1()
+				
+				if (clip == 0)
 				{
 					player.AddBotAttribute(SUPPRESS_FIRE)
 					scope.holdingfire = true
-					return -1
 				}
-
-				else if (activegun.Clip1() == activegun.GetMaxClip1() && scope.holdingfire)
+				else if (clip == activegun.GetMaxClip1() && scope.holdingfire)
 				{
 					player.RemoveBotAttribute(SUPPRESS_FIRE)
 					scope.holdingfire = false
-					return -1
 				}
 			}
 		}

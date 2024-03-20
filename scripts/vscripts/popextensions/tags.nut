@@ -1,8 +1,7 @@
 //behavior tags
 IncludeScript("popextensions/botbehavior", getroottable())
 
-local tagfile = format("%s_tags.nut", split(split(__popname, "/")[2], ".")[0])
-IncludeScript(tagfile, getroottable())
+try IncludeScript(format("%s_tags.nut", split(split(__popname, "/")[2], ".")[0]), getroottable()) catch(e) printl(e)
 PopExtUtil.PlayerManager.ValidateScriptScope()
 
 local popext_funcs = {
@@ -262,19 +261,17 @@ local popext_funcs = {
 			cooldown = Time() + interval
 		}
 	}
-	// popext_meleeai = function(bot, args) {
-	// 	local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
+	popext_meleeai = function(bot, args) {
+		local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
 
-	// 	function MeleeAIThink() {
-	// 		local threat = FindThreat(visionoverride)
+		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- function() {
+			local threat = FindThreat(visionoverride)
 			
-	// 		if (threat == null || threat.IsFullyInvisible() || threat.IsStealthed()) return
-
-	// 		SetThreat(threat, true)
-	// 	}
-
-	// 	bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- MeleeAIThink
-	// }
+			if (threat == null || threat.IsFullyInvisible() || threat.IsStealthed()) return
+			
+			LookAt(threat.EyePosition(), 50, 50)
+		}
+	}
 
 	popext_weaponresist = function(bot, args) {
 		local weapon = args[0]
@@ -311,6 +308,13 @@ local popext_funcs = {
 				SetPropBool(bot, "m_bForcedSkin", true)
 				SetPropInt(bot, "m_nForcedSkin", 1)
 			}
+		}
+	}
+
+	popext_doubledonk = function(bot, args) {
+		bot.GetScriptScope().PlayerThinkTable.DoubleDonker <- function() {
+			local distance = GetThreatDistanceSqr()
+			printl("holdtime: " + (2 * exp(-distance / 10) + 0.5))
 		}
 	}
 

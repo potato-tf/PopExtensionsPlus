@@ -61,6 +61,12 @@ const COND_UBERCHARGE = 57 //TF_COND_INVULNERABLE_CARD_EFFECT
 // CONST.COLOR_LIME <- "\x0722FF22"
 // CONST.COLOR_YELLOW <- "\x07FFFF66"
 
+//m_nModelIndexOverrides
+const VISION_MODE_NONE      = 0
+const VISION_MODE_PYRO      = 1
+const VISION_MODE_HALLOWEEN = 2
+const VISION_MODE_ROME      = 3
+
 // m_iSelectedSpellIndex
 const SPELL_ROLLING    = -2
 const SPELL_EMPTY      = -1
