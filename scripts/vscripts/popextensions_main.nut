@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "03.18.2024.4"
+::popExtensionsVersion <- "03.19.2024.1"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -84,7 +84,8 @@ function Include(path) {
 
 Include("constants") //constants must include first
 Include("itemdef_constants") //constants must include first
-Include("util") //must include second
+Include("item_map") //must include second
+Include("util") //must include third
 
 Include("hooks") //must include before popextensions
 Include("popextensions")

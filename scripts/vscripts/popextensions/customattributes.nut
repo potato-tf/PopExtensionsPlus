@@ -469,6 +469,7 @@ function CustomAttributes::ExplosiveBullets(player, item, value) {
     local scope = player.GetScriptScope()
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
+    printl(wep)
     if (wep == null) return
 
     //cleanup before spawning a new one
@@ -494,9 +495,9 @@ function CustomAttributes::ExplosiveBullets(player, item, value) {
 
     scope.PlayerThinkTable.ExplosiveBullets <- function() {
         
-        if (player.GetActiveWeapon() != wep) return
-        if (scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || (scope.curammo == GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1) || ("curclip" in scope) && scope.curclip != wep.Clip1())) return
+        if (player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || (scope.curammo == GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1) || ("curclip" in scope && scope.curclip != wep.Clip1()))) return
 
+        printl("test")
 
         local grenade = CreateByClassname("tf_projectile_pipe")
         SetPropEntity(grenade, "m_hOwnerEntity", launcher)

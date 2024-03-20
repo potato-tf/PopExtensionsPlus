@@ -1,5 +1,5 @@
 // TFItemMap generated at 06:37 2024/03/13 UTC
-::PopExtUtil.ItemMap <- {
+::PopExtItems <- {
     "default" : {
         id = "default",
         item_class = "tf_wearable",

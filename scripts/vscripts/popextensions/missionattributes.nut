@@ -1190,25 +1190,26 @@ function MissionAttributes::MissionAttr(...) {
 				success = false
 				return
 			}
-
-			for (local i = 0; i < SLOT_COUNT; i++) {
-				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+			
+			foreach(k, v in value)
+			{
+				local wep = PopExtUtil.HasItemInLoadout(player, k)
 				if (wep == null) continue
 
-				local info = [PopExtUtil.GetItemIndex(wep), wep.GetClassname(), wep]
-				foreach (item in info)
-					if (item in value)
-						foreach(k, v in value[item])
-						{
-							if (k in CustomAttributes.Attrs)
-								CustomAttributes.AddAttr(player, k, v, item)
-							else
-							{
-								wep.AddAttribute(k, v, -1)
-								wep.ReapplyProvision()
-							}
-						}
+				foreach (a, b in v)
+				{
+					printl(a + " : " + b)
+					if (a in CustomAttributes.Attrs)
+						CustomAttributes.AddAttr(player, a, b, wep)
+					else
+					{
+						wep.AddAttribute(a, b, -1)
+						wep.ReapplyProvision()
+					}
+				}
+
 			}
+				
 		}
 
 	break

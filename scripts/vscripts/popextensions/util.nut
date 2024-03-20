@@ -845,7 +845,7 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 function PopExtUtil::HasItemInLoadout(player, index) {
 	local t = null
 	for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-		if (child.GetClassname() == index || child == index || PopExtUtil.GetItemIndex(child) == index) {
+		if (child.GetClassname() == index || child == index || PopExtUtil.GetItemIndex(child) == index || (index in PopExtItems && PopExtUtil.GetItemIndex(child) == PopExtItems[index].id)) {
 			t = child
 			break
 		}
