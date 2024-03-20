@@ -17,7 +17,7 @@ scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes
 
 ## Advanced entity spawning system, rafmod PointTemplate converter
 
-Inside the python folder you will find a script to convert rafmod's PointTemplates spawner to a vscript equivalent.  Download the latest version of python if you don't have it, run the script, select your popfile, and a script file containing all the templates will be output to a new VScript alternative.  note that you will need to manually spawn these entities again using the `SpawnTemplate.SpawnTemplate()` function 
+Inside the python folder you will find a script to convert rafmod's PointTemplates spawner to a vscript equivalent.  Download the latest version of python if you don't have it, run the script, select your popfile, and a script file containing all the templates will be output to a new VScript alternative.  note that you will need to manually spawn these entities again using the `SpawnTemplate.SpawnTemplate()` function
 
 ## Bot Tags
 
@@ -37,6 +37,20 @@ Copy/paste all of your bot tags from every bot into a script file with the same 
 - Fixed HoldFireUntilReload on every weapon
 - Dragons Fury cannot be reflected.
 
+## Custom entity additions/spawnflags
+This library supports custom entity features and spawnflags to enable certain behaviors.  You can add these in the PointTemplate spawner, or in Hammer with SmartEdit disabled.  Simply add `popextensions/ent_additions` to the `vscripts` keyvalue of the entity
+
+### func_rotating
+- No longer freezes and prints the `Bad SetLocalAngles` console error when one of the rotation angles exceeds 360,000 degrees.
+- Fixes killing the entity before stopping the rotate sound causing the sound to play forever.  Fixes the sound continuing to play after it is killed on round restart as well.
+### obj_sentrygun
+- 64: Spawn as Mini-Sentry
+### light_dynamic
+- 16: Start Disabled
+### func_button, func_rot_button, momentary_rot_button
+- 2048: Start Locked (now works as intended for all buttons)
+- 16384: Not Solid
+
 ## Reverse MvM
 - Native Reverse MvM support (WIP)
 
@@ -47,7 +61,6 @@ Copy/paste all of your bot tags from every bot into a script file with the same 
 - All the original features of popextensions for adding spawn/death output hooks to bots and tanks are still supported, making this library a drop-in replacement.
 -
 # IMPORTANT NOTE FOR SERVER OWNERS
-
 This library has a handful of features that rely on convars that are not included by default in `cfg/vscript_convar_allowlist.txt`.  You will need to modify this cfg file to add the following convars:
 
 ```
@@ -60,8 +73,7 @@ tf_whip_speed_increase
 # Examples
 
 ## MissionAttributes Example
-
-Mission attributes are collected in a table on wave init.  The function for doing so is `MissionAttrs()`
+Mission attributes are collected in a table on wave init.  The function for doing so is `MissionAttrs({})`
 
 ```
         // Add or replace existing InitWaveOutput with code below
@@ -224,4 +236,4 @@ this library includes the function `function MissionAttributes::SetConvar`.  Thi
 
 As shown above in the mission attributes example.  It is possible to apply global attribute changes to players and specific items.  ItemAttributes supports item indexes or classnames for weapons.
 
-**Due to a limitation with VScripts AddAttribute/AddCustomAttribute functions, string attributes cannot be set**.  This means setting attributes such as `custom projectile model` are not possible
+**Due to a limitation with VScripts AddAttribute/AddCustomAttribute functions, string attributes cannot be set**.
