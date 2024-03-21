@@ -176,14 +176,12 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			player.GetScriptScope().PlayerThinkTable.HoldFireThink <- function() {
 
-				printl(GetPropFloat(player.GetActiveWeapon(), "m_flEnergy"))
-
 				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
 				local activegun = player.GetActiveWeapon()
 				if (activegun == null) return
 				local clip = activegun.Clip1()
-				
+				printl(clip)
 				if (clip == 0)
 				{
 					player.AddBotAttribute(SUPPRESS_FIRE)

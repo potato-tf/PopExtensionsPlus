@@ -509,7 +509,6 @@ local popext_funcs = {
 		local ignoreDisguisedSpies = (args_len > 3) ? args[3].tointeger() : 1
 
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
-
 			for (local projectile; projectile = Entities.FindByClassname(projectile, "tf_projectile_*");) {
 				if (projectile.GetOwner() != bot || !Homing.IsValidProjectile(projectile, PopExtUtil.HomingProjectiles)) continue
 				// Any other parameters needed by the projectile thinker can be set here
@@ -859,7 +858,7 @@ local popext_funcs = {
 		local scope = bot.GetScriptScope()
 
 		scope.bot <- AI_Bot(bot)
-		scope.PlayerThinkTable <- {}
+		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 		
 		foreach(tag in __tagarray) {
 			if (bot.HasBotTag(tag)) {

@@ -1008,9 +1008,18 @@ function MissionAttributes::MissionAttr(...) {
 		}
 	break
 
-	// ============================================
-	// array of xyz values to spawn path_tracks at
-	// ============================================
+	// =======================================================================================================================
+	// array of arrays with xyz values to spawn path_tracks at
+	// path_track names are ordered based on where they are listed in the array
+	
+	// example: 
+	
+	//`ExtraTankPath`: [
+	//	[`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`], // starting node: extratankpath1_1
+	//	[`640 5404 350`, `640 4810 350`, `640 4400 550`, `1100 4100 650`, `1636 3900 770`] //starting node: extratankpath2_1
+	//]
+	// the last track in the list will have _lastnode appended to the targetname
+	// ======================================================================================================================
 
 	case "ExtraTankPath":
 		if (typeof value != "array") {
@@ -1018,7 +1027,7 @@ function MissionAttributes::MissionAttr(...) {
 			success = false
 			break
 		}
-
+		if (!("ExtraTankPathTracks" in MissionAttributes)) MissionAttributes.ExtraTankPathTracks <- []
 		foreach (path in value) {
 			
 			local tracks = []
@@ -1026,7 +1035,6 @@ function MissionAttributes::MissionAttr(...) {
 			MissionAttributes.PathNum++
 
 			foreach (i, pos in path) {
-
 				local org = split(pos, " ")
 
 				local track = SpawnEntityFromTable("path_track", {
@@ -1036,8 +1044,11 @@ function MissionAttributes::MissionAttr(...) {
 				tracks.append(track)
 			}
 
+		local lastnode = tracks[tracks.len() - 1]
+		PopExtUtil.SetTargetname(lastnode, format("%s_lastnode", GetPropString(lastnode, "m_iName")))
+		
 		tracks.append(null) //dummy value to put at the end
-
+	
 		for (local i = 0; i < tracks.len() - 1; i++)
 			if (tracks[i] != null)
 				SetPropEntity(tracks[i], "m_pnext", tracks[i+1])

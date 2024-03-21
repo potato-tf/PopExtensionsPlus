@@ -70,11 +70,14 @@ PopExt <- popExtEntity.GetScriptScope()
 
 				local scope = victim.GetScriptScope()
 
-				if (victim.GetClassname() == "tank_boss" && params.damage >= victim.GetHealth() && "popProperty" in scope && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides) 
+				if (victim.GetClassname() == "tank_boss" && params.damage >= victim.GetHealth())
+				{
+					if ("popProperty" in scope && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides)
 					EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
 				
-				if ("popProperty" in scope && "SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides)
-					EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
+					if (params.damage >= victim.GetHealth() && "popProperty" in scope && "SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides)
+						EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
+				}
 				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamage", params)
 			}
 	
