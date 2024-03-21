@@ -1762,7 +1762,6 @@ function MissionAttributes::MissionAttr(...) {
 			// Drain player ammo on weapon usage
 			scope.PlayerThinkTable.ReverseMVMDrainAmmoThink <- function() {
 				if (value & 4) return
-				if (player.IsBotOfType(1337)) return
 				local buttons = NetProps.GetPropInt(self, "m_nButtons");
 
 				local wep = player.GetActiveWeapon()
