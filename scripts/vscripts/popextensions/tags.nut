@@ -11,7 +11,7 @@ local popext_funcs = {
 			if (args[0].tointeger() == 43) {
 				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
 				PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
-					local bot = GetPlayerFromUserID(bot)
+					// local bot = GetPlayerFromUserID(bot)
 					if (!IsPlayerABot(bot)) return
 					EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 				}
@@ -28,7 +28,7 @@ local popext_funcs = {
 	popext_reprogrammed = function(bot, args) {
 		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
 		PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
-			local bot = GetPlayerFromUserID(bot)
+			// local bot = GetPlayerFromUserID(params.userid)
 			if (!IsPlayerABot(bot)) return
 			EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 		}
