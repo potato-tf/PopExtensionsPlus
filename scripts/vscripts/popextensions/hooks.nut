@@ -64,20 +64,32 @@ PopExt <- popExtEntity.GetScriptScope()
 				func(entity, param)
 	}
 	Events = {
+		
 		function OnScriptHook_OnTakeDamage(params) {
 			local victim = params.const_entity
-			if (victim != null && ((victim.IsPlayer() && victim.IsBotOfType(1337)) || victim.GetClassname() == "tank_boss")) {
+			local attacker = params.attacker
+			if (victim != null) {
 
 				local scope = victim.GetScriptScope()
+				if (victim.GetClassname() == "tank_boss") {
 
-				if (victim.GetClassname() == "tank_boss" && params.damage >= victim.GetHealth())
-				{
-					if ("popProperty" in scope && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides)
-					EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
-				
-					if (params.damage >= victim.GetHealth() && "popProperty" in scope && "SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides)
-						EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
+					if (params.damage >= victim.GetHealth()) {
+						if ("popProperty" in scope && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides)
+						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
+					
+						if (params.damage >= victim.GetHealth() && "popProperty" in scope && "SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides)
+							EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
+					}
+					if ("popProperty" in scope && "CritImmune" in scope.popProperty && scope.popProperty.CritImmune)
+						params.damage_type = params.damage_type & DMG_CRITICAL
+
+				} else if (attacker != null && victim.IsPlayer() && attacker.GetClassname() == "tank_boss") {
+
+					local scope = attacker.GetScriptScope()
+					if ("popProperty" in scope && "CrushDamageMult" in scope.popProperty)
+					params.damage *= scope.popProperty.CrushDamageMult
 				}
+
 				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamage", params)
 			}
 	
@@ -260,6 +272,7 @@ function PopulatorThink() {
 			scope.team            <- tank.GetTeam()
 			scope.loopsoundreplaced <- false
 			scope.startsoundreplaced <- false
+			scope.teamchanged <- false
 
 			scope.curHealth       <- tank.GetHealth()
 			scope.lastHealthStage <- 0
@@ -327,6 +340,12 @@ function PopulatorThink() {
 
 					}
 				}
+			}
+
+			if ("popProperty" in scope && "Team" in scope.popProperty && !scope.teamchanged) {
+				tank.SetTeam(scope.popProperty.Team)
+				scope.teamchanged = true
+				scope.team = tank.GetTeam()
 			}
 
 			if ("popProperty" in scope && "IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
