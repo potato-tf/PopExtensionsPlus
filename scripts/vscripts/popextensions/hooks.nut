@@ -16,7 +16,7 @@ PopExt <- popExtEntity.GetScriptScope()
 			// Entries in hook table must begin with 'On' to be considered hooks
 			if (hookName[0] == 'O' && hookName[1] == 'n') {
 				if (!("popHooks" in scope)) {
-					scope["popHooks"] <- {}
+					scope.popHooks <- {}
 				}
 
 				if (!(hookName in scope.popHooks)) {
@@ -27,7 +27,7 @@ PopExt <- popExtEntity.GetScriptScope()
 			}
 			else {
 				if (!("popProperty" in scope)) {
-					scope["popProperty"] <- {}
+					scope.popProperty <- {}
 				}
 				scope.popProperty[hookName] <- func
 
@@ -71,22 +71,23 @@ PopExt <- popExtEntity.GetScriptScope()
 			if (victim != null) {
 
 				local scope = victim.GetScriptScope()
-				if (victim.GetClassname() == "tank_boss") {
+				local attackerscope = attacker.GetScriptScope()
+				if (victim.GetClassname() == "tank_boss" && "popProperty" in scope) {
 
 					if (params.damage >= victim.GetHealth()) {
-						if ("popProperty" in scope && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides)
+						if ("SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides)
 						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
+						victim.RemoveEFlags(EFL_KILLME)
 					
-						if (params.damage >= victim.GetHealth() && "popProperty" in scope && "SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides)
+						if (params.damage >= victim.GetHealth() && "SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides)
 							EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
 					}
-					if ("popProperty" in scope && "CritImmune" in scope.popProperty && scope.popProperty.CritImmune)
+					if ("CritImmune" in scope.popProperty && scope.popProperty.CritImmune)
 						params.damage_type = params.damage_type & DMG_CRITICAL
 
-				} else if (attacker != null && victim.IsPlayer() && attacker.GetClassname() == "tank_boss") {
+				} else if (attacker != null && attacker.GetClassname() == "tank_boss" && "popProperty" in attackerscope && victim.IsPlayer()) {
 
-					local scope = attacker.GetScriptScope()
-					if ("popProperty" in scope && "CrushDamageMult" in scope.popProperty)
+					if ("CrushDamageMult" in scope.popProperty)
 					params.damage *= scope.popProperty.CrushDamageMult
 				}
 
@@ -254,6 +255,15 @@ PopExt <- popExtEntity.GetScriptScope()
 		
 			tankIcons <- []
 			icons     <- []
+
+			for (local tank; tank = FindByClassname(tank, "tank_boss");) {
+				local scope = tank.GetScriptScope()
+				if ("popProperty" in scope && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides) {
+					EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank, flags = SND_STOP})
+					tank.RemoveEFlags(EFL_KILLME)
+					EntFireByHandle(tank, "Kill", "", -1, null, null)
+				}
+			}
 		}
 	}
 }
@@ -290,181 +300,185 @@ function PopulatorThink() {
 			}
 			if (tankName in tankNames)
 				PopExtHooks.AddHooksToScope(tankName, tankNames[tankName], scope)
-
-			if ("popProperty" in scope && "SoundOverrides" in scope.popProperty) {
+			if ("popProperty" in scope) {
+				if ("SoundOverrides" in scope.popProperty) {
 				
-				foreach (k, v in scope.popProperty.SoundOverrides)
-					PrecacheSound(v)
-					
-				local cooldowntime = 0.0
-
-				if ("Ping" in scope.popProperty.SoundOverrides) {
-
-					scope.TankThinkTable.PingSound <- function() {
-					
-						StopSoundOn("MVM.TankPing", self)
-	
-						if (Time() < cooldowntime) return
-	
-						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Ping, entity = tank})
-
-						cooldowntime = Time() + 5.0
-					}
-				}
-				if ("EngineLoop" in scope.popProperty.SoundOverrides) {
-					if (!scope.loopsoundreplaced) {
+					foreach (k, v in scope.popProperty.SoundOverrides)
+						PrecacheSound(v)
 						
-						StopSoundOn("MVM.TankEngineLoop", tank)
-						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank})
-						scope.loopsoundreplaced = true
-					}
-				}
-				if ("Start" in scope.popProperty.SoundOverrides) {
-					if (!scope.startsoundreplaced) {
-
-						StopSoundOn("MVM.TankStart", tank)
-						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Start, entity = tank})
-						scope.startsoundreplaced = true
-
-					}
-				}
-				//this one needs to be done when the tank is deploying instead
-				if ("Deploy" in scope.popProperty.SoundOverrides) {
-					return
-
-					if (!scope.deploysoundreplaced) {
-
-						StopSoundOn("MVM.TankDeploy", tank)
-						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Deploy, entity = tank})
-						scope.startsoundreplaced = true
-
-					}
-				}
-			}
-
-			if ("popProperty" in scope && "Team" in scope.popProperty && !scope.teamchanged) {
-				tank.SetTeam(scope.popProperty.Team)
-				scope.teamchanged = true
-				scope.team = tank.GetTeam()
-			}
-
-			if ("popProperty" in scope && "IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
-				//todo alias Model to TankModel, check for tank spawn sound, test turning off reset locomotion, test null model hitbox in raf and here, test rage on same team tank
-				scope.popProperty.DisableTracks <- true
-				scope.popProperty.DisableBomb <- true
-				scope.popProperty.DisableSmoke <- true
-
-				//set default blimp model if not specified
-				if (!("TankModel" in scope.popProperty)) {
-					local blimpModel = {
-						TankModel = {
-							Default = "models/bots/boss_bot/boss_blimp.mdl"
-							Damage1 = "models/bots/boss_bot/boss_blimp_damage1.mdl"
-							Damage2 = "models/bots/boss_bot/boss_blimp_damage2.mdl"
-							Damage3 = "models/bots/boss_bot/boss_blimp_damage3.mdl"
-							LeftTrack = "models/bots/boss_bot/tankred_track_l.mdl"
-							RightTrack = "models/bots/boss_bot/tankred_track_r.mdl"
-							Bomb = "models/bots/boss_bot/bombblue_mechanism.mdl"
+					local cooldowntime = 0.0
+					if ("Ping" in scope.popProperty.SoundOverrides) {
+	
+						scope.TankThinkTable.PingSound <- function() {
+						
+							StopSoundOn("MVM.TankPing", self)
+		
+							if (Time() < cooldowntime) return
+		
+							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Ping, entity = tank})
+	
+							cooldowntime = Time() + 5.0
 						}
 					}
-
-					PopExtHooks.AddHooksToScope(tank, blimpModel, scope)
-				}
-
-				tank.SetAbsAngles(QAngle(0, tank.GetAbsAngles().y, 0))
-				tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1") // todo callscriptfunction
-				local tankspeed = GetPropFloat(tank, "m_speed")
-				scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), speed = tankspeed, startspeed = tankspeed, target = scope.popProperty.StartTrack})
-
-				scope.TankThinkTable.BlimpThink <- function() {
-					self.SetAbsOrigin(blimpTrain.GetOrigin())
-					self.GetLocomotionInterface().Reset()
-				}
-			}
-
-			if ("popProperty" in scope && "DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
-				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-					if (child.GetClassname() != "prop_dynamic") continue
-
-					if (child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl") {
-						SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | 32)
+					if ("EngineLoop" in scope.popProperty.SoundOverrides) {
+						if (!scope.loopsoundreplaced) {
+							
+							tank.AddEFlags(EFL_KILLME)
+							StopSoundOn("MVM.TankEngineLoop", tank)
+							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank})
+							scope.loopsoundreplaced = true
+						}
+					}
+					if ("Start" in scope.popProperty.SoundOverrides) {
+						if (!scope.startsoundreplaced) {
+	
+							StopSoundOn("MVM.TankStart", tank)
+							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Start, entity = tank})
+							scope.startsoundreplaced = true
+	
+						}
+					}
+					//this one needs to be done when the tank is deploying instead
+					if ("Deploy" in scope.popProperty.SoundOverrides) {
+						return
+	
+						if (!scope.deploysoundreplaced) {
+	
+							StopSoundOn("MVM.TankDeploy", tank)
+							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Deploy, entity = tank})
+							scope.startsoundreplaced = true
+	
+						}
 					}
 				}
-			}
-
-			if ("popProperty" in scope && "DisableBomb" in scope.popProperty && scope.popProperty.DisableBomb) {
-				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-					if (child.GetClassname() != "prop_dynamic") continue
-
-					if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl") {
-						SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | 32)
-					}
+	
+				if ("Team" in scope.popProperty && !scope.teamchanged) {
+					tank.SetTeam(scope.popProperty.Team)
+					scope.teamchanged = true
+					scope.team = tank.GetTeam()
 				}
-			}
-
-			if ("popProperty" in scope && "DisableSmoke" in scope.popProperty && scope.popProperty.DisableSmoke) {
-
-				scope.TankThinkTable.DisableSmoke <- function() {
-					//disables smokestack, will emit one smoke particle when spawning and when moving out from under low ceilings (solid brushes 300 units or lower)
-					EntFireByHandle(self, "DispatchEffect", "ParticleEffectStop", -1, null, null)
-				}
-			}
-
-			if ("popProperty" in scope && "Scale" in scope.popProperty)
-				EntFireByHandle(tank, "SetModelScale", scope.popProperty.Scale, -1, null, null)
-
-			if ("popProperty" in scope && "TankModel" in scope.popProperty) {
-				if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
-					tank.SetModelSimple(scope.popProperty.TankModel.Default) //changes bbox size
-
-				scope.curModel <- scope.popProperty.TankModelPrecached.Default
-				
-				scope.TankThinkTable.SetTankModel <- function() {
-					SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_NONE)
-					SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_ROME)
-				}
-
-				for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-
-					if (child.GetClassname() != "prop_dynamic") continue
-
-					local replace_model     = -1
-					local replace_model_str = ""
-					local is_track          = false
-					local childModelName    = child.GetModelName()
-
-					if ("Bomb" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/bomb_mechanism.mdl") {
-						replace_model     = scope.popProperty.TankModelPrecached.Bomb
-						replace_model_str = scope.popProperty.TankModel.Bomb
-					}
-					else if ("LeftTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_L.mdl") {
-						replace_model     = scope.popProperty.TankModelPrecached.LeftTrack
-						replace_model_str = scope.popProperty.TankModel.LeftTrack
-						is_track          = true
-					}
-					else if ("RightTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_R.mdl") {
-						replace_model     = scope.popProperty.TankModelPrecached.RightTrack
-						replace_model_str = scope.popProperty.TankModel.RightTrack
-						is_track          = true
-					}
-
-					if (replace_model != -1) {
-						child.SetModel(replace_model_str)
-						SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 0)
-						SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 3)
-					}
-
-					if (is_track) {
-						child.ValidateScriptScope()
-						child.GetScriptScope().RestartTrackAnim <- function() {
-							local animSequence = self.LookupSequence("forward")
-							if (animSequence != -1) {
-								self.SetSequence(animSequence)
-								self.SetPlaybackRate(1.0)
-								self.SetCycle(0)
+	
+				if ("NoScreenShake" in scope.popProperty && scope.popProperty.NoScreenShake)
+					ScreenShake(tank.GetOrigin(), 0.0, 0.0, 0.0, 1000.0, SHAKE_STOP, false)
+	
+				if ("IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
+					//todo alias Model to TankModel, check for tank spawn sound, test turning off reset locomotion, test null model hitbox in raf and here, test rage on same team tank
+					scope.popProperty.DisableTracks <- true
+					scope.popProperty.DisableBomb <- true
+					scope.popProperty.DisableSmoke <- true
+	
+					//set default blimp model if not specified
+					if (!("TankModel" in scope.popProperty)) {
+						local blimpModel = {
+							TankModel = {
+								Default = "models/bots/boss_bot/boss_blimp.mdl"
+								Damage1 = "models/bots/boss_bot/boss_blimp_damage1.mdl"
+								Damage2 = "models/bots/boss_bot/boss_blimp_damage2.mdl"
+								Damage3 = "models/bots/boss_bot/boss_blimp_damage3.mdl"
+								LeftTrack = "models/bots/boss_bot/tankred_track_l.mdl"
+								RightTrack = "models/bots/boss_bot/tankred_track_r.mdl"
+								Bomb = "models/bots/boss_bot/bombblue_mechanism.mdl"
 							}
 						}
-						EntFireByHandle(child, "CallScriptFunction", "RestartTrackAnim", -1, null, null)
+	
+						PopExtHooks.AddHooksToScope(tank, blimpModel, scope)
+					}
+	
+					tank.SetAbsAngles(QAngle(0, tank.GetAbsAngles().y, 0))
+					tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1") // todo callscriptfunction
+					local tankspeed = GetPropFloat(tank, "m_speed")
+					scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), speed = tankspeed, startspeed = tankspeed, target = scope.popProperty.StartTrack})
+	
+					scope.TankThinkTable.BlimpThink <- function() {
+						self.SetAbsOrigin(blimpTrain.GetOrigin())
+						self.GetLocomotionInterface().Reset()
+					}
+				}
+	
+				if ("DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
+					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+						if (child.GetClassname() != "prop_dynamic") continue
+	
+						if (child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl") {
+							SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | 32)
+						}
+					}
+				}
+	
+				if ("DisableBomb" in scope.popProperty && scope.popProperty.DisableBomb) {
+					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+						if (child.GetClassname() != "prop_dynamic") continue
+	
+						if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl") {
+							SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | 32)
+						}
+					}
+				}
+	
+				if ("DisableSmoke" in scope.popProperty && scope.popProperty.DisableSmoke) {
+	
+					scope.TankThinkTable.DisableSmoke <- function() {
+						//disables smokestack, will emit one smoke particle when spawning and when moving out from under low ceilings (solid brushes 300 units or lower)
+						EntFireByHandle(self, "DispatchEffect", "ParticleEffectStop", -1, null, null)
+					}
+				}
+	
+				if ("Scale" in scope.popProperty)
+					EntFireByHandle(tank, "SetModelScale", scope.popProperty.Scale, -1, null, null)
+	
+				if ("TankModel" in scope.popProperty) {
+					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
+						tank.SetModelSimple(scope.popProperty.TankModel.Default) //changes bbox size
+	
+					scope.curModel <- scope.popProperty.TankModelPrecached.Default
+					
+					scope.TankThinkTable.SetTankModel <- function() {
+						SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_NONE)
+						SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_ROME)
+					}
+	
+					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+	
+						if (child.GetClassname() != "prop_dynamic") continue
+	
+						local replace_model     = -1
+						local replace_model_str = ""
+						local is_track          = false
+						local childModelName    = child.GetModelName()
+	
+						if ("Bomb" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/bomb_mechanism.mdl") {
+							replace_model     = scope.popProperty.TankModelPrecached.Bomb
+							replace_model_str = scope.popProperty.TankModel.Bomb
+						}
+						else if ("LeftTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_L.mdl") {
+							replace_model     = scope.popProperty.TankModelPrecached.LeftTrack
+							replace_model_str = scope.popProperty.TankModel.LeftTrack
+							is_track          = true
+						}
+						else if ("RightTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_R.mdl") {
+							replace_model     = scope.popProperty.TankModelPrecached.RightTrack
+							replace_model_str = scope.popProperty.TankModel.RightTrack
+							is_track          = true
+						}
+	
+						if (replace_model != -1) {
+							child.SetModel(replace_model_str)
+							SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 0)
+							SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 3)
+						}
+	
+						if (is_track) {
+							child.ValidateScriptScope()
+							child.GetScriptScope().RestartTrackAnim <- function() {
+								local animSequence = self.LookupSequence("forward")
+								if (animSequence != -1) {
+									self.SetSequence(animSequence)
+									self.SetPlaybackRate(1.0)
+									self.SetCycle(0)
+								}
+							}
+							EntFireByHandle(child, "CallScriptFunction", "RestartTrackAnim", -1, null, null)
+						}
 					}
 				}
 			}
@@ -496,7 +510,7 @@ function PopulatorThink() {
 					health_stage = floor((scope.maxHealth - tank.GetHealth())/scope.maxHealth.tofloat() * 4)
 				}
 
-				if (scope.lastHealthStage != health_stage && "popProperty" in scope && "TankModel" in scope.popProperty) {
+				if (scope.lastHealthStage != health_stage && "TankModel" in scope.popProperty) {
 					local name = health_stage == 0 ? "Default" : "Damage" + health_stage
 
 					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
