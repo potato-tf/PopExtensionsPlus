@@ -687,7 +687,8 @@ function MissionAttributes::MissionAttr(...) {
 			if (GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD) return //check for headshot
 			if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || PopExtUtil.GetItemIndex(player.GetActiveWeapon()) == ID_SYDNEY_SLEEPER)) return //ignore sydney sleeper and SMGs
 			if (player.GetPlayerClass() == TF_CLASS_SPY && PopExtUtil.GetItemIndex(player.GetActiveWeapon()) != ID_AMBASSADOR) return //ambassador only
-			params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL) //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
+			params.damage_type = params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL) //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
+			params.damage_custom = params.damage_custom | TF_DMG_CUSTOM_HEADSHOT
 			return true
 		}
 
@@ -1564,9 +1565,10 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.ReverseMVMSpawn <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
+			if (player.IsBotOfType(1337)) return
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-
+			
 			if ("ReverseMVMCurrencyThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.ReverseMVMCurrencyThink
 			if ("ReverseMVMPackThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMPackThink
 			if ("ReverseMVMLaserThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMLaserThink
@@ -1760,6 +1762,7 @@ function MissionAttributes::MissionAttr(...) {
 			// Drain player ammo on weapon usage
 			scope.PlayerThinkTable.ReverseMVMDrainAmmoThink <- function() {
 				if (value & 4) return
+				if (player.IsBotOfType(1337)) return
 				local buttons = NetProps.GetPropInt(self, "m_nButtons");
 
 				local wep = player.GetActiveWeapon()
