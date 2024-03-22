@@ -879,17 +879,6 @@ local popext_funcs = {
 		return -1
 	}
 	
-	function OnGameEvent_post_inventory_application(params) {
-		local bot = GetPlayerFromUserID(params.userid)
-		if (!bot.IsBotOfType(1337)) return
-
-		bot.ValidateScriptScope()
-		local scope = bot.GetScriptScope()
-		scope.BotThink <- PopExtTags.BotThink
-		
-		EntFireByHandle(bot, "RunScriptCode", "AddThinkToEnt(self, `BotThink`)", -1, null, null)
-		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
-	}
 	function OnScriptHook_OnTakeDamage(params) {
 
 		local scope = params.attacker.GetScriptScope()

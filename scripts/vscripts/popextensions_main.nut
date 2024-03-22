@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "03.22.2024.1"
+::popExtensionsVersion <- "03.22.2024.2"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -33,7 +33,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 
 	function OnGameEvent_post_inventory_application(params) {
 
-		PopExtMain.PlayerCleanup(GetPlayerFromUserID(params.userid))	
+		PopExtMain.PlayerCleanup(GetPlayerFromUserID(params.userid))
 
 		local player = GetPlayerFromUserID(params.userid)
 		player.ValidateScriptScope()
@@ -41,17 +41,28 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 
 		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
-		foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
-
 		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
 
-		if (player.GetScriptThinkFunc() == "") AddThinkToEnt(player, "PlayerThinks")
+		AddThinkToEnt(player, "PlayerThinks")
 
 		if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope))
 		{
 			scope.BuiltObjectTable <- {}
 			scope.buildings <- []
 		}
+
+		local bot = player
+		if (bot.IsBotOfType(1337))
+		{
+			scope.BotThink <- PopExtTags.BotThink
+
+			EntFireByHandle(bot, "RunScriptCode", "AddThinkToEnt(self, `BotThink`)", -1, null, null)
+			EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
+		}
+
+		foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
+		foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
+		foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
 	}
 	function OnGameEvent_player_changeclass(params) {
 		local player = GetPlayerFromUserID(params.userid)
@@ -112,7 +123,7 @@ __CollectGameEventCallbacks(PopExtMain)
 for (local i = 1; i <= MaxClients().tointeger(); i++)
 	if (PlayerInstanceFromIndex(i) != null)
 		EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", 0.015, null, null)
-		
+
 function Include(path) {
 	try IncludeScript(format("popextensions/%s", path), root) catch(e) printl(e)
 }

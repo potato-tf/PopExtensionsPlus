@@ -16,6 +16,7 @@ if (!("ScriptUnloadTable" in ROOT))
 
 	ThinkTable      = {}
 	TakeDamageTable = {}
+	TakeDamageTablePost = {}
 	SpawnHookTable  = {}
 	DeathHookTable  = {}
 	// InitWaveTable = {}
@@ -51,6 +52,7 @@ if (!("ScriptUnloadTable" in ROOT))
 	Events = {
 
 		function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
+		function OnGameEvent_player_hurt(params) { foreach (_, func in MissionAttributes.TakeDamageTablePost) func(params) }
 		function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 		function OnGameEvent_mvm_begin_wave(params) { foreach (_, func in MissionAttributes.StartWaveTable) func(params) }
@@ -653,6 +655,7 @@ function MissionAttributes::MissionAttr(...) {
 			local player = params.attacker, victim = params.const_entity
 			victim.ValidateScriptScope()
 			local scope = victim.GetScriptScope()
+			local wep = params.weapon
 			// //gib bots on explosive/crit dmg, doesn't work
 			// if (!victim.IsMiniBoss() && (params.damage_type & DMG_CRITICAL || params.damage_type & DMG_BLAST))
 			// {
@@ -662,27 +665,25 @@ function MissionAttributes::MissionAttr(...) {
 			// }
 
 			//re-enable headshots for snipers and ambassador
-			if (!player.IsPlayer() || !victim.IsPlayer() || IsPlayerABot(player)) return //check if non-bot victim
+			if (
+				!player.IsPlayer() || !victim.IsPlayer() ||   //check if non-bot victim
 
-			if (player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER) return //check if we're spy/sniper
+				player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER || //check if we're spy/sniper
 
-			if (GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD) return //check for headshot
+				GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD || //check for headshot
 
-			if (player.GetPlayerClass() == TF_CLASS_SNIPER && (player.GetActiveWeapon().GetSlot() == SLOT_SECONDARY || PopExtUtil.GetItemIndex(player.GetActiveWeapon()) == ID_SYDNEY_SLEEPER)) return //ignore sydney sleeper and SMGs
+				player.GetPlayerClass() == TF_CLASS_SNIPER && (wep.GetSlot() == SLOT_SECONDARY || PopExtUtil.GetItemIndex(wep) == ID_SYDNEY_SLEEPER) || //ignore sydney sleeper and SMGs
 
-			if (player.GetPlayerClass() == TF_CLASS_SPY && PopExtUtil.GetItemIndex(player.GetActiveWeapon()) != ID_AMBASSADOR) return //ambassador only
+				GetPropFloat(wep, "m_flChargedDamage") < 150.0 && PopExtUtil.GetItemIndex(wep) == ID_CLASSIC || //check classic charge
+				
+				player.GetPlayerClass() == TF_CLASS_SPY && PopExtUtil.GetItemIndex(wep) != ID_AMBASSADOR || // check for ambassador
+				
+				victim.InCond(TF_COND_BLEEDING) && GetPropInt(victim, "m_iStunFlags") & TF_STUN_MOVEMENT //check for explosive headshot victim.
+			) return 
 
-			// params.damage_type = params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL) //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
-			// params.damage_custom = params.damage_custom | TF_DMG_CUSTOM_HEADSHOT
-			
-			// SetPropBool(PopExtUtil.GameRules, "m_bPlayingMannVsMachine", false)
-			CTFBot.AddBotAttribute.call(player, ALWAYS_CRIT)
-			victim.TakeDamageCustom(params.inflictor, params.attacker, params.weapon, params.damage_force, params.damage_position, params.damage, params.damage_type | (DMG_USE_HITLOCATIONS | DMG_CRITICAL), params.damage_custom | TF_DMG_CUSTOM_HEADSHOT)
-			// SetPropBool(PopExtUtil.GameRules, "m_bPlayingMannVsMachine", true)
-
-			params.early_out = true
+			params.damage_type = params.damage_type | DMG_CRITICAL //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
+			params.damage_stats = TF_DMG_CUSTOM_HEADSHOT
 		}
-
 	break
 
 	// ==============================================================
@@ -1134,8 +1135,10 @@ function MissionAttributes::MissionAttr(...) {
 			"hidden maxhealth non buffed": null,
 		}
 		MissionAttributes.SpawnHookTable.PlayerAttributes <- function(params) {
+
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
+			
 			if (typeof value != "table") {
 				MissionAttributes.RaiseValueError("PlayerAttributes", value, "Value must be table")
 				success = false

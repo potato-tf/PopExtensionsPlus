@@ -57,7 +57,12 @@
         //begin non-dev fully custom attributes
         "radius sleeper": null
         "explosive bullets": null
+
+        //begin vanilla rewrite attributes
         "alt-fire disabled": null
+        "custom projectile model": null
+        "dmg bonus while half dead": null
+        "dmg bonus while half alive": null
     }
 
     Events = {
@@ -67,25 +72,16 @@
             return
         }
         
-		function OnScriptHook_OnTakeDamage(params) {
-            local victim = params.const_entity
-            local attacker = params.attacker
-
-            if (!("attribinfo" in attacker.GetScriptScope()) && !("attribinfo" in victim.GetScriptScope())) return
-
-            foreach (_, func in CustomAttributes.TakeDamageTable) func(params); 
-        }
+		function OnScriptHook_OnTakeDamage(params) { foreach (_, func in CustomAttributes.TakeDamageTable) func(params); }
 		function OnGameEvent_player_hurt(params) { foreach (_, func in CustomAttributes.TakeDamagePostTable) func(params) }
 		function OnGameEvent_player_death(params) { foreach (_, func in CustomAttributes.DeathHookTable) func(params) }
-		function OnGameEvent_player_teleported(params) {  foreach (_, func in CustomAttributes.PlayerTeleportTable) func(params) }
-		// function OnGameEvent_player_disconnect(params) { foreach (_, func in CustomAttributes.DisconnectTable) func(params) }
-		// function OnGameEvent_mvm_begin_wave(params) { foreach (_, func in CustomAttributes.StartWaveTable) func(params) }
+		function OnGameEvent_player_teleported(params) { foreach (_, func in CustomAttributes.PlayerTeleportTable) func(params) }
 
 		function OnGameEvent_post_inventory_application(params) {
-
-            GetPlayerFromUserID(params.userid).GetScriptScope().teleporterspeedboost <- false
             
-			foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
+            local player = GetPlayerFromUserID(params.userid)
+            player.ValidateScriptScope()
+            player.GetScriptScope().teleporterspeedboost <- false
 		}
 
 		function OnGameEvent_recalculate_holidays(params) {
@@ -147,8 +143,12 @@ function CustomAttributes::TeleportInsteadOfDie(player, item, value) {
         if (RandomFloat(0, 1) > value.tofloat()) return
 
         local player = params.const_entity
-        
-        if (!player.IsPlayer() || player.GetHealth() > params.damage || player.IsInvulnerable() || PopExtUtil.IsPointInRespawnRoom(player.EyePosition())) return
+        local scope = player.GetScriptScope()
+        if (
+            !player.IsPlayer() || player.GetHealth() > params.damage || 
+            !("attribinfo" in scope) || !("teleport instead of die" in scope.attribinfo) ||
+            player.IsInvulnerable() || PopExtUtil.IsPointInRespawnRoom(player.EyePosition())
+        ) return
 
         local health = player.GetHealth()
         params.early_out = true
@@ -164,7 +164,16 @@ function CustomAttributes::DmgVsSameClass(player, item, value) {
         local victim = params.const_entity
         local attacker = params.attacker
 
-        if (!attacker.IsPlayer() || !victim.IsPlayer() || attacker.GetPlayerClass() != victim.GetPlayerClass() || player.GetActiveWeapon() != wep) return
+        local wep = PopExtUtil.HasItemInLoadout(attacker, item)
+        if (wep == null) return
+        
+        local scope = attacker.GetScriptScope()
+        if (
+            !attacker.IsPlayer() || !victim.IsPlayer() ||
+            !("attribinfo" in scope) || !("mult dmg vs same class" in scope.attribinfo) ||
+            attacker.GetPlayerClass() != victim.GetPlayerClass() || 
+            player.GetActiveWeapon() != wep
+        ) return
 
         params.damage *= value
     }
@@ -178,7 +187,7 @@ function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
     scope.PlayerThinkTable.MeleeCleaveAttack <- function() {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
-        if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0 || player.GetActiveWeapon() != wep) return
+        if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0 || player.GetActiveWeapon() != wep || !("attribinfo" in scope) || !("melee cleave attack" in scope.attribinfo)) return
 
         scope.cleaved = false
 
@@ -186,7 +195,7 @@ function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
     }
     CustomAttributes.TakeDamageTable.MeleeCleaveAttack <- function(params) {
         
-        if (scope.cleaved) return
+        if (scope.cleaved || !("attribinfo" in scope) || !("melee cleave attack" in scope.attribinfo)) return
 
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null || player.GetActiveWeapon() != wep) return
@@ -260,7 +269,11 @@ function CustomAttributes::UberOnDamageTaken(player, item, value) {
     
         local damagedplayer = params.const_entity
 
-        if (damagedplayer != player || RandomInt(0, 1) > value || damagedplayer.IsInvulnerable() || player.GetActiveWeapon() != wep) return
+        if (
+            damagedplayer != player || RandomInt(0, 1) > value ||
+            !("attribinfo" in scope) || !("uber on damage taken" in scope.attribinfo) ||
+            damagedplayer.IsInvulnerable() || player.GetActiveWeapon() != wep
+        ) return
         
         damagedplayer.AddCondEx(COND_UBERCHARGE, 3.0, player)
         params.early_out = true
@@ -309,7 +322,6 @@ function CustomAttributes::TurnToIce(player, item) {
 function CustomAttributes::TeleporterSpeedBoost(player, item) {
 
     local scope = player.GetScriptScope()
-    scope.speedboostteleporter <- true
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
@@ -319,7 +331,7 @@ function CustomAttributes::TeleporterSpeedBoost(player, item) {
         if (params.builderid != PopExtUtil.GetPlayerUserID(player)) return
         local teleportedplayer = GetPlayerFromUserID(params.userid)
 
-        if ("speedboostteleporter" in scope && scope.speedboostteleporter) teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
+        if (!("attribinfo" in scope) || !("mod teleporter speed boost" in scope.attribinfo)) teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
     }
 }
 
@@ -330,9 +342,13 @@ function CustomAttributes::CanBreatheUnderwater(player, item) {
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
-    player.GetScriptScope().PlayerThinkTable.CanBreatheUnderwater <- function() {
+    local scope = player.GetScriptScope()
+   scope.PlayerThinkTable.CanBreatheUnderwater <- function() {
 
-        if (player.GetWaterLevel() == 3) {
+        if (!("attribinfo" in scope) || !("can breathe underwater" in scope.attribinfo)) return
+
+        if (player.GetWaterLevel() == 3)
+        {
             SetPropFloat(player, "m_PainFinished", FLT_MAX)
             return
         }
@@ -347,7 +363,10 @@ function CustomAttributes::MultSwimSpeed(player, item, value = 1.25) {
     //local speedmult = 1.254901961
     local maxspeed = GetPropFloat(player, "m_flMaxspeed")
 
-    player.GetScriptScope().PlayerThinkTable.MultSwimSpeed <- function() {
+    local scope = player.GetScriptScope()
+    scope.PlayerThinkTable.MultSwimSpeed <- function() {
+
+        if (!("attribinfo" in scope) || !("mult swim speed" in scope.attribinfo)) return
         
         if (player.GetWaterLevel() == 3) 
         {
@@ -368,11 +387,14 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
 
     scope.PlayerThinkTable.LastShotCrits <- function() {
 
+        if (!("attribinfo" in scope) || !("last shot crits" in scope.attribinfo)) return
+
         if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || player.GetActiveWeapon() != wep) return
 
         scope.lastshotcritsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
-        try {
 
+        try 
+        {
             if (wep.Clip1() != 1 && !player.IsCritBoosted())
             {
                 player.RemoveCondEx(COND_CRITBOOST, true)
@@ -443,6 +465,9 @@ function CustomAttributes::RadiusSleeper(player, item) {
 
         local victim = GetPlayerFromUserID(params.userid)
         local attacker = GetPlayerFromUserID(params.attacker)
+        local scope = attacker.GetScriptScope()
+
+        if (!("attribinfo" in scope) || !("radius sleeper" in scope.attribinfo)) return
 
         if (victim == null || attacker == null || attacker != player || GetPropFloat(attacker.GetActiveWeapon(), "m_flChargedDamage") < 150.0) return
 
@@ -479,7 +504,7 @@ function CustomAttributes::ExplosiveBullets(player, item, value) {
 
     scope.PlayerThinkTable.ExplosiveBullets <- function() {
         
-        if (player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flLastFireTime") || ("curclip" in scope && scope.curclip != wep.Clip1())) return
+        if (!("attribinfo" in scope) || !("explosive bullets" in scope.attribinfo) || player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flLastFireTime") || ("curclip" in scope && scope.curclip != wep.Clip1())) return
 
         local grenade = CreateByClassname("tf_projectile_pipe")
         SetPropEntity(grenade, "m_hOwnerEntity", launcher)
@@ -521,7 +546,8 @@ function CustomAttributes::AltFireDisabled(player, item) {
     local scope = player.GetScriptScope()
 
     scope.PlayerThinkTable.AltFireDisabled <- function() {
-        if (player.GetActiveWeapon() != wep) return
+        
+        if (!("attribinfo" in scope) || !("alt-fire disabled" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
         
         SetPropInt(player, "m_afButtonDisabled", IN_ATTACK2)
     }
@@ -537,7 +563,7 @@ function CustomAttributes::CustomProjectileModel(player, item, value) {
 
     scope.PlayerThinkTable.CustomProjectileModel <- function() {
 
-        if (player.GetActiveWeapon() != wep) return
+        if (!("attribinfo" in scope) || !("custom projectile model" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
         
         for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
             if (projectile.GetOwner() == player && GetPropInt(projectile, "m_nModelIndex") != projmodel)
@@ -552,7 +578,7 @@ function CustomAttributes::ShahanshahAttributeBelowHP(player, item, value) {
     
     CustomAttributes.TakeDamageTable.ShahanshahAttributeBelowHP <- function(params) {
 
-        if (params.weapon != wep || player.GetActiveWeapon() != wep) return
+        if (!("attribinfo" in scope) || !("dmg bonus while half dead" in scope.attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
         
         if (player.GetHealth() < player.GetMaxHealth() / 2)
             params.damage *= value
@@ -566,7 +592,7 @@ function CustomAttributes::ShahanshahAttributeAboveHP(player, item, value) {
     
     CustomAttributes.TakeDamageTable.ShahanshahAttributeAboveHP <- function(params) {
 
-        if (params.weapon != wep || player.GetActiveWeapon() != wep) return
+        if (!("attribinfo" in scope) || !("dmg penalty while half alive" in scope.attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
         
         if (player.GetHealth() > player.GetMaxHealth() / 2)
             params.damage *= value
@@ -581,7 +607,11 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
     if (!(attr in CustomAttributes.Attrs)) return
 
     local scope = player.GetScriptScope()
-    local valuepercent = (value.tofloat() * 100).tointeger()
+
+    local valuepercent = 0
+    if (typeof value == "float")
+        valuepercent = (value.tofloat() * 100).tointeger()
+
     if (!("attribinfo" in scope)) scope.attribinfo <- {}
 
 	switch(attr) {
@@ -686,18 +716,17 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "custom projectile model":
             CustomAttributes.CustomProjectileModel(player, item, value)
-            local split = split(value, "/")
-            scope.attribinfo[attr] <- format("Fires custom projectile model: %s" split[split.len() - 1])
+            scope.attribinfo[attr] <- format("Fires custom projectile model: %s", value)
         break
 
         case "dmg bonus while half dead":
             CustomAttributes.ShahanshahAttributeBelowHP(player, item, value)
-            scope.attribinfo[attr] <- format("damage bonus while under 50% health" value)
+            scope.attribinfo[attr] <- format("damage bonus while under 50% health", value)
         break
 
         case "dmg penalty while half alive":
             CustomAttributes.ShahanshahAttributeAboveHP(player, item, value)
-            scope.attribinfo[attr] <- format("damage penalty while above 50% health" value)
+            scope.attribinfo[attr] <- format("damage penalty while above 50% health", value)
         break
 
     }

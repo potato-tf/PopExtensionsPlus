@@ -174,7 +174,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			scope.holdingfire <- false
 			scope.lastfiretime <- 0.0
 
-			player.GetScriptScope().PlayerThinkTable.HoldFireThink <- function() {
+			scope.PlayerThinkTable.HoldFireThink <- function() {
 
 				if (!player.HasBotAttribute(HOLD_FIRE_UNTIL_FULL_RELOAD)) return
 
@@ -214,7 +214,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			scope.lastvelocity <- player.GetAbsVelocity()
 			scope.nextthink <- -1
 			scope.PlayerThinkTable.EngineerBuildingPushbackFix <- function() {
-				if (nextthink > -1 && Time() < nextthink) return
+				if (scope.nextthink > -1 && Time() < scope.nextthink) return
 				
 				if (!PopExtUtil.IsAlive(self)) return
 				
@@ -225,7 +225,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				local lastfire  = GetPropFloat(wep, "m_flLastFireTime")
 				
 				// We might have been pushed by an engineer building something, lets double check
-				if( fabs((lastvelocity - velocity).Length() - 700) < epsilon) {
+				if( fabs((scope.lastvelocity - velocity).Length() - 700) < epsilon) {
 					// Blast jumping can generate this type of velocity change in a frame, lets check for that
 					if (self.InCond(TF_COND_BLASTJUMPING) && classname in blastjump_weapons && (Time() - lastfire < 0.1))
 						return
@@ -271,7 +271,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 	Events = {
 
 		function OnScriptHook_OnTakeDamage(params) { foreach(_, func in GlobalFixes.TakeDamageTable) func(params) }
-		// function OnGameEvent_player_spawn(params) { foreach (_, func in GlobalFixes.SpawnHookTable) func(params) }
 		function OnGameEvent_player_death(params) { foreach(_, func in GlobalFixes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach(_, func in GlobalFixes.DisconnectTable) func(params) }
 		// Hook all wave inits to reset parsing error counter.
