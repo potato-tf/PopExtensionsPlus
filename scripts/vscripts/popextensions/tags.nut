@@ -2,6 +2,7 @@
 IncludeScript("popextensions/botbehavior", getroottable())
 
 try IncludeScript(format("%s_tags.nut", split(split(__popname, "/")[2], ".")[0]), getroottable()) catch(e) printl(e)
+
 PopExtUtil.PlayerManager.ValidateScriptScope()
 
 local popext_funcs = {

@@ -126,6 +126,9 @@ const TTYPE_NONE     = 0
 const TTYPE_ENTRANCE = 1
 const TTYPE_EXIT     = 2
 
+const SHAKE_START = 0
+const SHAKE_STOP = 1
+
 // tf_gamerules m_iRoundState
 const GR_STATE_BONUS        = 9
 const GR_STATE_BETWEEN_RNDS = 10
