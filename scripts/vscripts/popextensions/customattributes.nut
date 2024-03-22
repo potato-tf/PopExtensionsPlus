@@ -609,7 +609,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
     local scope = player.GetScriptScope()
 
     local valuepercent = 0
-    if (typeof value == "float")
+    if (typeof value == "float" || typeof value == "integer")
         valuepercent = (value.tofloat() * 100).tointeger()
 
     if (!("attribinfo" in scope)) scope.attribinfo <- {}
