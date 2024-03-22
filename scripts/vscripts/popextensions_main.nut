@@ -17,7 +17,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
-		if (scope.len() < 5) return
+		if (scope.len() <= 5) return
 
 		local ignore_table = {
 			"self"      : null
