@@ -184,18 +184,6 @@
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-
-			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
-
-			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
-
-			AddThinkToEnt(player, "PlayerThinks")
-
-			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) 
-			{
-				scope.BuiltObjectTable <- {}
-				scope.buildings <- [-1, array(2), -1]
-			}
 			
 			//sort weapons by slot
 			local myweapons = {}
@@ -264,11 +252,6 @@ PopExtUtil.RespawnOverride.GetScriptScope().InputStartTouch <- RespawnStartTouch
 PopExtUtil.RespawnOverride.GetScriptScope().Inputstarttouch <- RespawnStartTouch;
 PopExtUtil.RespawnOverride.GetScriptScope().InputEndTouch <- RespawnEndTouch;
 PopExtUtil.RespawnOverride.GetScriptScope().Inputendtouch <- RespawnEndTouch;
-
-//HACK: forces post_inventory_application to fire on pop load
-for (local i = 1; i <= MAX_CLIENTS; i++)
-	if (PlayerInstanceFromIndex(i) != null)
-		EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", SINGLE_TICK, null, null)
 
 function PopExtUtil::IsLinuxServer() {
 	return RAND_MAX != 32767
@@ -832,23 +815,33 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 	SetPropInt(player, "m_nRenderMode", 1)
 	SetPropInt(player, "m_clrRender", 0)
 
-	function PopExtUtil::BotModelThink() {
-		if (wearable && (player.IsTaunting() || wearable.GetMoveParent() != player))
+	scope.PlayerThinkTable.BotModelThink <- function() {
+		if (wearable.IsValid() && (player.IsTaunting() || wearable.GetMoveParent() != player))
 			EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player)
 		return -1
 	}
-
-	if (!(BotModelThink in scope.PlayerThinkTable))
-		scope.PlayerThinkTable.BotModelThink <- BotModelThink
 }
 
 function PopExtUtil::HasItemInLoadout(player, index) {
 	local t = null
+
 	for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
 		if (child.GetClassname() == index || child == index || PopExtUtil.GetItemIndex(child) == index || (index in PopExtItems && PopExtUtil.GetItemIndex(child) == PopExtItems[index].id)) {
 			t = child
 			break
 		}
+	}
+	
+	if (t != null) return t
+
+	//didn't find weapon in children, go through m_hMyWeapons instead
+	for (local i = 0; i < SLOT_COUNT; i++) {
+		local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+		
+		if (wep == null || wep.GetClassname() != index || wep != index || PopExtUtil.GetItemIndex(wep) != index || (index in PopExtItems && PopExtUtil.GetItemIndex(wep) == PopExtItems[index].id)) continue
+		
+		t = wep
+		break
 	}
 	return t
 }

@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "03.20.2024.1"
+::popExtensionsVersion <- "03.22.2024.1"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -29,6 +29,36 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		foreach (k, v in scope)
 			if (!(k in ignore_table))
 				delete scope[k]
+	}
+
+	function OnGameEvent_post_inventory_application(params) {
+
+		PopExtMain.PlayerCleanup(GetPlayerFromUserID(params.userid))	
+
+		local player = GetPlayerFromUserID(params.userid)
+		player.ValidateScriptScope()
+		local scope = player.GetScriptScope()
+
+		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+
+		foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
+
+		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
+
+		if (player.GetScriptThinkFunc() == "") AddThinkToEnt(player, "PlayerThinks")
+
+		if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope))
+		{
+			scope.BuiltObjectTable <- {}
+			scope.buildings <- []
+		}
+	}
+	function OnGameEvent_player_changeclass(params) {
+		local player = GetPlayerFromUserID(params.userid)
+
+		for (local model; model = FindByName(model, "__bot_bonemerge_model");)
+			if (model.GetMoveParent() == player)
+				EntFireByHandle(model, "Kill", "", -1, null, null)
 	}
 
 	//clean up bot scope on death
@@ -78,6 +108,11 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 }
 __CollectGameEventCallbacks(PopExtMain)
 
+//HACK: forces post_inventory_application to fire on pop load
+for (local i = 1; i <= MaxClients().tointeger(); i++)
+	if (PlayerInstanceFromIndex(i) != null)
+		EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", 0.015, null, null)
+		
 function Include(path) {
 	try IncludeScript(format("popextensions/%s", path), root) catch(e) printl(e)
 }

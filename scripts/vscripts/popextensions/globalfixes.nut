@@ -274,22 +274,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		// function OnGameEvent_player_spawn(params) { foreach (_, func in GlobalFixes.SpawnHookTable) func(params) }
 		function OnGameEvent_player_death(params) { foreach(_, func in GlobalFixes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach(_, func in GlobalFixes.DisconnectTable) func(params) }
-
-		function OnGameEvent_post_inventory_application(params) {
-			local player = GetPlayerFromUserID(params.userid)
-
-			player.ValidateScriptScope()
-			local scope = player.GetScriptScope()
-
-			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
-
-			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) 
-			{
-				scope.BuiltObjectTable <- {}
-				scope.buildings <- [-1, array(2), -1]
-			}
-			foreach(_, func in GlobalFixes.SpawnHookTable) func(params)
-		}
 		// Hook all wave inits to reset parsing error counter.
 
 		function OnGameEvent_recalculate_holidays(params) {

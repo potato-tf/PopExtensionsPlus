@@ -11,11 +11,10 @@ local popext_funcs = {
 		if (args.len() == 1) {
 			if (args[0].tointeger() == 43) {
 				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
-				PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
-					// local bot = GetPlayerFromUserID(bot)
-					if (!IsPlayerABot(bot)) return
-					EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
-				}
+				// PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
+				// 	if (!IsPlayerABot(bot)) return
+				// 	EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
+				// }
 				
 			}
 			else
@@ -28,11 +27,10 @@ local popext_funcs = {
 
 	popext_reprogrammed = function(bot, args) {
 		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
-		PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
-			// local bot = GetPlayerFromUserID(params.userid)
-			if (!IsPlayerABot(bot)) return
-			EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
-		}
+		// PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
+		// 	if (!IsPlayerABot(bot)) return
+		// 	EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
+		// }
 	}
 
 	// popext_reprogrammed_neutral = function(bot, args) {
@@ -863,7 +861,6 @@ local popext_funcs = {
 		local scope = bot.GetScriptScope()
 
 		scope.bot <- AI_Bot(bot)
-		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 		
 		foreach(tag in __tagarray) {
 			if (bot.HasBotTag(tag)) {
@@ -891,18 +888,6 @@ local popext_funcs = {
 		scope.BotThink <- PopExtTags.BotThink
 		
 		EntFireByHandle(bot, "RunScriptCode", "AddThinkToEnt(self, `BotThink`)", -1, null, null)
-
-		if (!bot.IsBotOfType(1337)) return
-
-		local items = {
-
-			PlayerThinkTable = {}
-		}
-		foreach (k,v in items) if (!(k in scope)) scope[k] <- v
-		// foreach (k, v in scope) printl(k + " : " + v)
-		if (bot.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) scope.BuiltObjectTable <- {}
-
-		// PopExtTags.AI_BotSpawn(bot)
 		EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 	}
 	function OnScriptHook_OnTakeDamage(params) {

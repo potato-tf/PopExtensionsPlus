@@ -67,9 +67,15 @@
             return
         }
         
-		function OnScriptHook_OnTakeDamage(params) { foreach (_, func in CustomAttributes.TakeDamageTable) func(params); }
+		function OnScriptHook_OnTakeDamage(params) {
+            local victim = params.const_entity
+            local attacker = params.attacker
+
+            if (!("attribinfo" in attacker.GetScriptScope()) && !("attribinfo" in victim.GetScriptScope())) return
+
+            foreach (_, func in CustomAttributes.TakeDamageTable) func(params); 
+        }
 		function OnGameEvent_player_hurt(params) { foreach (_, func in CustomAttributes.TakeDamagePostTable) func(params) }
-		// function OnGameEvent_player_spawn(params) { foreach (_, func in CustomAttributes.SpawnHookTable) func(params) }
 		function OnGameEvent_player_death(params) { foreach (_, func in CustomAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_teleported(params) {  foreach (_, func in CustomAttributes.PlayerTeleportTable) func(params) }
 		// function OnGameEvent_player_disconnect(params) { foreach (_, func in CustomAttributes.DisconnectTable) func(params) }
@@ -77,29 +83,9 @@
 
 		function OnGameEvent_post_inventory_application(params) {
 
-			local player = GetPlayerFromUserID(params.userid)
-			player.ValidateScriptScope()
-			local scope = player.GetScriptScope()	
-
-            local items = {
-
-                PlayerThinkTable = {}
-                teleporterspeedboost = false
-                // PlayerTeleportTable = {}
-            }
-
-            foreach (k,v in items) if (!(k in scope)) scope[k] <- v
-
+            GetPlayerFromUserID(params.userid).GetScriptScope().teleporterspeedboost <- false
+            
 			foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
-
-			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
-
-			AddThinkToEnt(player, "PlayerThinks")
-
-			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope)) 
-			{
-				scope.BuiltObjectTable <- {}
-			}
 		}
 
 		function OnGameEvent_recalculate_holidays(params) {
@@ -130,7 +116,8 @@ function CustomAttributes::FireMilkBolt(player, item, value = 5.0) {
 
     scope.PlayerThinkTable.FireMilkBolt <- function() {
         
-        if (player.GetActiveWeapon() != wep) return
+        local wep = PopExtUtil.HasItemInLoadout(player, item)
+        if (wep == null || player.GetActiveWeapon() != wep) return
 
         if (PopExtUtil.InButton(player, IN_ATTACK2)) 
         {
@@ -153,6 +140,8 @@ function CustomAttributes::FireMilkBolt(player, item, value = 5.0) {
     }
 }
 function CustomAttributes::TeleportInsteadOfDie(player, item, value) {
+
+
     CustomAttributes.TakeDamageTable.TeleportInsteadOfDie <- function(params) {
 
         if (RandomFloat(0, 1) > value.tofloat()) return
@@ -587,8 +576,7 @@ function CustomAttributes::ShahanshahAttributeAboveHP(player, item, value) {
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
-    if (wep == null) return
-
+    if (wep == null || player.IsBotOfType(1337)) return
     //TODO: set up error handler
     if (!(attr in CustomAttributes.Attrs)) return
 
@@ -660,7 +648,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "build small sentries":
             CustomAttributes.BuildSmallSentry(player, item)
-            scope.attribinfo[attr] <- "Sentries are 20% smaller. have 33% less health, take 25% less metal to upgrade"
+            scope.attribinfo[attr] <- "Sentries are 20⁒ smaller. have 33⁒ less health, take 25⁒ less metal to upgrade"
         break
 
         case "crit when health below":
