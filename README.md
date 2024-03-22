@@ -17,7 +17,7 @@ scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes
 
 ## Advanced entity spawning system, rafmod PointTemplate converter
 
-Inside the python folder you will find a script to convert rafmod's PointTemplates spawner to a vscript equivalent.  Download the latest version of python if you don't have it, run the script, select your popfile, and a script file containing all the templates will be output to a new VScript alternative.  note that you will need to manually spawn these entities again using the `SpawnTemplate.SpawnTemplate()` function
+Inside the python folder you will find a script to convert rafmod's PointTemplates spawner to a vscript equivalent.  Download the latest version of python if you don't have it, run the script, select your popfile, and a script file containing all the templates will be output to a new VScript alternative.  note that you will need to manually spawn these entities again using the `SpawnTemplates.SpawnTemplate()` function
 
 ## Bot Tags
 
