@@ -16,7 +16,7 @@ The library is segmented has a very wide variety of features.  The stucture of t
 
 - **PopExt**: This is the original popextensions library, **all functions from the original popextensions library must be prefixed with PopExt now**
 - **PopExtHooks**: This is the original hooks.nut file for popextensions.  These functions generally don't need to be touched by the end user
-- **PopExtUtil**:  A wide variety of utility functions.  All functions are listed in util.nut and prefixed with `PopExtUtil.`  **Some functions previously included in the general popextensions.nut file have been moved here**
+- **PopExtUtil**:  A wide variety of utility functions.  All functions are listed in util.nut and prefixed with `PopExtUtil.`  **Some functions previously included in popextensions.nut have been moved here**
 - **MissionAttributes**: Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  All keyvalues are documented in `missionattributes.nut`
 - **SpawnTemplates**: drop-in replacement for rafmod's PointTemplate spawning system, a python script has been supplied to convert your old missions to this new format.
 - **Tags**: Every bot tag and what it does is documented in the tags.nut file.  These functions generally don't need to be touched by the end user
