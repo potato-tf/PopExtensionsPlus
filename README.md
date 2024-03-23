@@ -57,11 +57,11 @@ The following functions have been moved to a separate utility file and are prefi
 - CreatePlayerWearable
 
 Example:  
-`CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)` 
+```CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)```
 
 is now 
 
-`PopExtUtil.CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)`
+```PopExtUtil.CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)```
 
 # Global fixes and balance changes
 - The holiday punch can tickle robots once more, with working animations!
