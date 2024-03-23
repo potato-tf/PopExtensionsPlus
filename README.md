@@ -12,16 +12,24 @@ scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes
 
 # How To Use:
 
-The library is segmented has a very wide variety of features.  The stucture of the library is as follows:
+The stucture of the library is as follows:
 
 - **PopExt**: This is the original popextensions library, **all functions from the original popextensions library must be prefixed with PopExt now**
+  
 - **PopExtHooks**: This is the original hooks.nut file for popextensions.  These functions generally don't need to be touched by the end user
+  
 - **PopExtUtil**:  A wide variety of utility functions.  All functions are listed in util.nut and prefixed with `PopExtUtil.`  **Some functions previously included in popextensions.nut have been moved here**
+  
 - **MissionAttributes**: Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  All keyvalues are documented in `missionattributes.nut`
+  
 - **SpawnTemplates**: drop-in replacement for rafmod's PointTemplate spawning system, a python script has been supplied to convert your old missions to this new format.
+  
 - **Tags**: Every bot tag and what it does is documented in the tags.nut file.  These functions generally don't need to be touched by the end user
+  
 - **CustomAttributes**: this works in combination with MissionAttributes and Tags to allow creating completely custom player and item attributes that can be applied to both players and bots.
+  
 - **Entity Additions**: This is a file that is run directly on an entity in the `vscripts` keyvalue.  **It is not used like other scripts in this library!**
+  
 - **Main**: This is the main cleanup and include file.  These functions generally don't need to be touched by the end user.
 
 # Backwards compatibility with popextensions
