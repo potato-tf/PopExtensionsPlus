@@ -59,7 +59,10 @@ This library supports custom entity features and spawnflags to enable certain be
 
 ## Backwards Compatible
 - All the original features of popextensions for adding spawn/death output hooks to bots and tanks are still supported, making this library a drop-in replacement.
--
+
+### IMPORTANT:
+All of the previous popextensions functions have been prefixed with `PopExt.`  This means functions such as `AddTankName`
+
 # IMPORTANT NOTE FOR SERVER OWNERS
 This library has a handful of features that rely on convars that are not included by default in `cfg/vscript_convar_allowlist.txt`.  You will need to modify this cfg file to add the following convars:
 
@@ -140,13 +143,13 @@ The example below makes bots with tag abc green, spawns a barrel prop on bot's h
                 // If you are hitting the 4096 character limit inside this script, it would be required to put hooks into separate file
                 // IncludeScript(`mypophooks`)
                 // Add event hooks for bots with specifed Tag.
-                AddRobotTag(`abc`, {
+                PopExt.AddRobotTag(`abc`, {
                     // Called when the robot is spawned
                     OnSpawn = function(bot, tag) {
                         bot.KeyValueFromString(`rendercolor`, `0 255 0`)
                         bot.GiveWeapon(`Frying Pan`)
                         // Create a barrel prop on bot's head
-                        CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)
+                        PopExtUtil.CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)
                     },
                     // Called when the robot is killed
                     // Params as in player_death event in https://wiki.alliedmods.net/Team_Fortress_2_Events
@@ -175,15 +178,15 @@ Example below makes all tanks that begin with name abc red and spawn with a prop
                 IncludeScript(`popextensions_main.nut`)
 
                 // Set custom wave icons inside this function
-                SetWaveIconsFunction(function() {
+                PopExt.SetWaveIconsFunction(function() {
                     // Use custom icon for a tank, first remove the regular tank icon
-                    SetWaveIconSpawnCount(`tank`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 0)
+                    PopExt.SetWaveIconSpawnCount(`tank`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 0)
                     // Add our custom tank icon
-                    SetWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
+                    PopExt.SetWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
                 })
 
                 // Add event hooks for tanks with specified Name, also supports wildcard suffix
-                AddTankName(`abc*`, {
+                PopExt.AddTankName(`abc*`, {
                     // Called when the tank is spawned
                     OnSpawn = function(tank, name) {
                         // Create a prop on top of the tank
@@ -191,8 +194,8 @@ Example below makes all tanks that begin with name abc red and spawn with a prop
 
                         // Create an ignite trigger
                         local trigger = SpawnEntityFromTable(`trigger_ignite`, {origin = `0 0 100`, spawnflags = `1`})
-                        SetupTriggerBounds(trigger, Vector(-200,-200,-200), Vector(200,200,200))
-                        SetParentLocalOrigin([prop, trigger], tank)
+                        PopExtUtil.SetupTriggerBounds(trigger, Vector(-200,-200,-200), Vector(200,200,200))
+                        PopExtUtil.SetParentLocalOrigin([prop, trigger], tank)
 
                         ClientPrint(null, 2, `OnSpawnTank`)
                         tank.KeyValueFromString(`rendercolor`, `255 0 0`)
@@ -201,7 +204,7 @@ Example below makes all tanks that begin with name abc red and spawn with a prop
                     // Params as in https://wiki.alliedmods.net/Team_Fortress_2_Events#player_hurt:~:text=level-,npc_hurt,-Name%3A
                     OnDeath = function(tank, params) {
                         // Decrement custom tank icon when killed
-                        DecrementWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
+                        PopExt.DecrementWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
                     }
                 })
             "
