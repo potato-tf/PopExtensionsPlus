@@ -229,7 +229,7 @@ local popext_funcs = {
 		", -1, null, null)
 	}
 
-	popext_customattrib = function(bot, args) {
+	popext_customattr = function(bot, args) {
 		local args_len = args.len()
 		if (args_len == 2)
 			CustomAttributes.AddAttr(bot, args[0], args[1])
