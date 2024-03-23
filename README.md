@@ -24,6 +24,43 @@ The library is segmented has a very wide variety of features.  The stucture of t
 - **Entity Additions**: This is a file that is run directly on an entity in the `vscripts` keyvalue.  **It is not used like other scripts in this library!**
 - **Main**: This is the main cleanup and include file.  These functions generally don't need to be touched by the end user.
 
+# Backwards compatibility with popextensions
+
+All functions from the original popextensions library have been prefixed with `PopExt`.  This means that this code
+```
+SetWaveIconsFunction(function() {
+  // Use custom icon for a tank, first remove the regular tank icon
+  SetWaveIconSpawnCount(`tank`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 0)
+  // Add our custom tank icon
+  SetWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
+})
+```
+
+Must be rewritten like this:
+```
+PopExt.SetWaveIconsFunction(function() {
+  // Use custom icon for a tank, first remove the regular tank icon
+  PopExt.SetWaveIconSpawnCount(`tank`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 0)
+  // Add our custom tank icon
+  PopExt.SetWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
+})
+```
+
+
+The following functions have been moved to a separate utility file and are prefixed with `PopExtUtil.` instead:
+
+- SetParentLocalOrigin
+- SetParentLocalOriginDo
+- SetupTriggerBounds
+- PrintTable
+- DoPrintTable
+- CreatePlayerWearable
+
+Example:  
+`CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)` 
+is now 
+`PopExtUtil.CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)`
+
 # Global fixes and balance changes
 - The holiday punch can tickle robots once more, with working animations!
 - Your Eternal Reward disguises are no longer delayed.
