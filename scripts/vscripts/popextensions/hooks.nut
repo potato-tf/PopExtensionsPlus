@@ -84,13 +84,13 @@ PopExt <- popExtEntity.GetScriptScope()
 					}
 					if ("CritImmune" in scope.popProperty && scope.popProperty.CritImmune)
 						params.damage_type = params.damage_type &~ DMG_CRITICAL
-					
 
-				} 
+
+				}
 				else if (attacker != null && attacker.GetClassname() == "tank_boss" && "popProperty" in attackerscope && victim.IsPlayer())
 					if ("CrushDamageMult" in attackerscope.popProperty)
 						params.damage *= attackerscope.popProperty.CrushDamageMult
-				
+
 
 				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamage", params)
 			}
@@ -256,7 +256,7 @@ PopExt <- popExtEntity.GetScriptScope()
 			}
 		}
 		function OnGameEvent_recalculate_holidays(params) {
-			
+
 			if ("waveIconsFunction" in PopExt)
 				delete PopExt.waveIconsFunction
 
@@ -265,7 +265,7 @@ PopExt <- popExtEntity.GetScriptScope()
 
 			local tankstokill = []
 			for (local tank; tank = FindByClassname(tank, "tank_boss");) {
-			
+
 				local scope = tank.GetScriptScope()
 
 				EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank, flags = SND_STOP})
@@ -292,8 +292,6 @@ function PopulatorThink() {
 			scope.TankThinkTable  <- {}
 			scope.maxHealth       <- tank.GetMaxHealth()
 			scope.team            <- tank.GetTeam()
-			scope.loopsoundreplaced <- false
-			scope.startsoundreplaced <- false
 			scope.teamchanged <- false
 
 			scope.curHealth       <- tank.GetHealth()
@@ -332,25 +330,18 @@ function PopulatorThink() {
 						}
 					}
 					if ("EngineLoop" in scope.popProperty.SoundOverrides) {
-						if (!scope.loopsoundreplaced) {
 
 							StopSoundOn("MVM.TankEngineLoop", tank)
 							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank})
-							scope.loopsoundreplaced = true
-						}
+							delete scope.popProperty.SoundOverrides.EngineLoop
 					}
 					if ("Start" in scope.popProperty.SoundOverrides) {
-						if (!scope.startsoundreplaced) {
-
-							StopSoundOn("MVM.TankStart", tank)
-							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Start, entity = tank})
-							scope.startsoundreplaced = true
-
-						}
+						StopSoundOn("MVM.TankStart", tank)
+						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Start, entity = tank})
+						delete scope.popProperty.SoundOverrides.Start
 					}
 					if ("Deploy" in scope.popProperty.SoundOverrides) {
 
-						scope.deploysoundplayed <- false
 						scope.TankThinkTable.DeploySound <- function() {
 
 							if (self.GetSequence() != self.LookupSequence("deploy") || scope.deploysoundplayed) return
@@ -361,7 +352,7 @@ function PopulatorThink() {
 								EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank, flags = SND_STOP})
 
 							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Deploy, entity = tank})
-							scope.deploysoundplayed = true
+							delete scope.popProperty.SoundOverrides.Deploy
 						}
 					}
 				}
@@ -410,6 +401,10 @@ function PopulatorThink() {
 					}
 				}
 
+				if ("SpawnTemplate" in scope.popProperty) {
+					SpawnTemplates.SpawnTemplate(scope.SpawnTemplate, tank, tank.GetOrigin(), tank.GetLocalAngles())
+					delete scope.popProperty.SpawnTemplate
+				}
 				if ("DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
 					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
 						if (child.GetClassname() != "prop_dynamic") continue

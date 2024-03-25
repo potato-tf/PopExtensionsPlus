@@ -6,7 +6,7 @@ try IncludeScript(format("%s_tags.nut", split(split(__popname, "/")[2], ".")[0])
 PopExtUtil.PlayerManager.ValidateScriptScope()
 
 local popext_funcs = {
-	
+
 	popext_addcond = function(bot, args) {
 		if (args.len() == 1) {
 			if (args[0].tointeger() == 43) {
@@ -15,7 +15,7 @@ local popext_funcs = {
 				// 	if (!IsPlayerABot(bot)) return
 				// 	EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 				// }
-				
+
 			}
 			else
 				bot.AddCond(args[0].tointeger())
@@ -72,7 +72,7 @@ local popext_funcs = {
 	}
 
 	popext_fireweapon = function(bot, args) {
-		
+
 		local args_len = args.len()
 		local button = args[0].tointeger()
 		local cooldown = (args_len > 1) ? args[1].tointeger() : 3
@@ -102,7 +102,7 @@ local popext_funcs = {
 			cooldowntime = Time() + cooldown
 		}
 	}
-	
+
 	popext_weaponswitch = function(bot, args) {
 
 		local args_len = args.len()
@@ -137,7 +137,7 @@ local popext_funcs = {
 			cooldowntime = Time() + cooldown
 		}
 	}
-	
+
 	popext_spell = function(bot, args) {
 
 		local args_len = args.len()
@@ -148,11 +148,11 @@ local popext_funcs = {
 		local ifhealthbelow = (args_len > 4) ? args[4].tointeger() : INT_MAX
 		local charges = (args_len > 5) ? args[5].tointeger() : 1
 		local ifseetarget = (args_len > 6) ? args[6].tointeger() : 1
-		
+
 		local spellbook = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
 
 		//equip a spellbook if the bot doesn't have one
-		if (spellbook == null) 
+		if (spellbook == null)
 		{
 			local book = Entities.CreateByClassname("tf_weapon_spellbook")
 			SetPropInt(book, STRING_NETPROP_ITEMDEF, ID_BASIC_SPELLBOOK)
@@ -162,7 +162,7 @@ local popext_funcs = {
 
 			book.SetTeam(bot.GetTeam())
 			DispatchSpawn(book)
-	
+
 			bot.Weapon_Equip(book)
 
 			//try again next think
@@ -201,6 +201,10 @@ local popext_funcs = {
 			cooldowntime = Time() + cooldown
 		}
 	}
+
+	popext_spawntemplate = function(bot, args) {
+		SpawnTemplates.SpawnTemplate(args[0], bot, bot.GetOrigin(), bot.GetLocalAngles())
+	}
 	popext_forceromevision = function(bot, args) {
 
 		//kill the existing romevision
@@ -236,7 +240,7 @@ local popext_funcs = {
 		else if (args_len == 3)
 			CustomAttributes.AddAttr(bot, args[0], args[1], args[2])
 	}
-	
+
 	popext_ringoffire = function(bot, args) {
 		local args_len = args.len()
 		local damage = (args_len > 0) ? args[0].tofloat() : 7.5
@@ -269,9 +273,9 @@ local popext_funcs = {
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- function() {
 			local threat = FindThreat(visionoverride)
-			
+
 			if (threat == null || threat.IsFullyInvisible() || threat.IsStealthed()) return
-			
+
 			LookAt(threat.EyePosition(), 50, 50)
 		}
 	}
@@ -418,7 +422,7 @@ local popext_funcs = {
 			}
 		}
 	}
-	
+
 	popext_giveweapon = function(bot, args) {
 
 		local weapon = Entities.CreateByClassname(args[0])
@@ -530,11 +534,11 @@ local popext_funcs = {
 		}
 	}
 	popext_rocketcustomtrail = function (bot, args) {
-		
+
 		bot.GetScriptScope().PlayerThinkTable.ProjectileTrailThink <- function() {
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
 				if (projectile.GetEFlags() & EFL_NO_ROTORWASH_PUSH || GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
-				
+
 				if (args.len() > 1) EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 				// EntFireByHandle(projectile, "RunScriptCode", format("DispatchParticleEffect(`%s`, self.GetOrigin(), self.GetAngles())", args[0]), SINGLE_TICK, null, null)
 				local particle = SpawnEntityFromTable("trigger_particle", {
@@ -670,26 +674,26 @@ local popext_funcs = {
 		}
 	}
 	popext_dropweapon = function(bot, args) {
-	
+
 		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- function(params) {
-	
+
 			printl("dropping weapon")
 			local slot = (args.len() > 0) ? args[0].tointeger() : -1
 			local wep  = (slot == -1) ? bot.GetActiveWeapon() : PopExtUtil.GetItemInSlot(bot, slot)
 			if (wep == null) return
-	
+
 			local itemid = PopExtUtil.GetItemIndex(wep)
 			local wearable = CreateByClassname("tf_wearable")
-	
+
 			SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
 			SetPropInt(wearable, STRING_NETPROP_ITEMDEF, itemid)
-	
+
 			wearable.DispatchSpawn();
-	
+
 			local modelname = wearable.GetModelName()
-	
+
 			wearable.Destroy()
-	
+
 			local droppedweapon = CreateByClassname("tf_dropped_weapon")
 			SetPropInt(droppedweapon, "m_Item.m_iItemDefinitionIndex", itemid)
 			SetPropInt(droppedweapon, "m_Item.m_iEntityLevel", 5)
@@ -697,11 +701,11 @@ local popext_funcs = {
 			SetPropBool(droppedweapon, "m_Item.m_bInitialized", true)
 			droppedweapon.SetModelSimple(modelname)
 			droppedweapon.SetOrigin(bot.GetOrigin())
-	
+
 			droppedweapon.DispatchSpawn()
-	
+
 			// Store attributes in scope, when it gets picked up add the attributes to the real weapon
-	
+
 		}
 	}
 
@@ -709,7 +713,7 @@ local popext_funcs = {
 ::Homing <- {
 	// Modify the AttachProjectileThinker function to accept projectile speed adjustment if needed
 	function AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies = true, ignoreStealthedSpies = true) {
-		
+
 		projectile.ValidateScriptScope()
 		local projectile_scope = projectile.GetScriptScope()
 		if (!("speedmultiplied" in projectile_scope)) projectile_scope.speedmultiplied <- false
@@ -784,7 +788,7 @@ local popext_funcs = {
 	function FaceTowards(new_target, projectile, projectile_speed) {
 		local scope = projectile.GetScriptScope()
 		local desired_dir = new_target.EyePosition() - projectile.GetOrigin()
-		
+
 		desired_dir.Norm()
 
 		local current_dir = projectile.GetForwardVector()
@@ -861,7 +865,7 @@ local popext_funcs = {
 		local scope = bot.GetScriptScope()
 
 		scope.bot <- AI_Bot(bot)
-		
+
 		foreach(tag in __tagarray) {
 			if (bot.HasBotTag(tag)) {
 				local args = split(tag, "|")
@@ -870,7 +874,7 @@ local popext_funcs = {
 					popext_funcs[func](bot, args)
 			}
 		}
-		
+
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
 	}
 	function BotThink()
@@ -878,7 +882,7 @@ local popext_funcs = {
 		bot.OnUpdate()
 		return -1
 	}
-	
+
 	function OnScriptHook_OnTakeDamage(params) {
 
 		local scope = params.attacker.GetScriptScope()
