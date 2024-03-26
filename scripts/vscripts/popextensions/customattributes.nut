@@ -57,6 +57,22 @@
         //begin non-dev fully custom attributes
         "radius sleeper": null
         "explosive bullets": null
+        "old sandman stun": null
+        "stun on hit": null
+        "is miniboss": null
+        "is invisible": null
+        "cannot upgrade": null
+        "always crit": null
+        "dont count damage towards crit rate": null
+        "no damage falloff": null
+        "can headshot": null
+        "cannot headshot": null
+        "cannot be headshot": null
+        "projectile lifetime": null
+        "mult dmg vs tanks": null
+        "mult dmg vs giants": null
+        "set damage type": null
+        "set damage type custom": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -64,7 +80,7 @@
         "dmg bonus while half dead": null
         "dmg bonus while half alive": null
     }
-
+   
     Events = {
 
         function Cleanup()
@@ -536,6 +552,225 @@ function CustomAttributes::ExplosiveBullets(player, item, value) {
     }
 }
 
+function CustomAttributes::OldSandmanStun(player, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local scope = player.GetScriptScope()
+
+    CustomAttributes.TakeDamageTable.OldSandmanStun <- function(params) {
+        local attacker = params.attacker
+        local victim = params.const_entity
+
+        if (params.damage_stats == TF_DMG_CUSTOM_BASEBALL && params.weapon == wep)
+            PopExtUtil.StunPlayer(victim, 5, TF_STUN_CONTROLS)
+    }
+}
+
+function CustomAttributes::StunOnHit(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local scope = player.GetScriptScope()
+
+    CustomAttributes.TakeDamageTable.StunOnHit <- function(params) {
+
+        if (!params.const_entity.IsPlayer() || params.weapon != wep || (value.len() == 4 && value[3] && params.const_entity.IsMiniBoss())) return
+
+        PopExtUtil.StunPlayer(params.const_entity, value[0], value[1], 0, value[2])
+    }
+}
+
+function CustomAttributes::IsMiniBoss(player, item) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    player.GetScriptScope().PlayerThinkTable.IsMiniBoss <- function() {
+
+        if (player.GetActiveWeapon() == wep && !player.IsMiniBoss() && player.GetModelScale() == 1.0) {
+
+            player.SetIsMiniBoss(true)
+            player.SetModelScale(1.75, -1)
+        } 
+        else if (player.GetActiveWeapon() != wep && player.IsMiniBoss() && player.GetModelScale() == 1.75) {
+
+            player.SetIsMiniBoss(false)
+            player.SetModelScale(1.0, -1)
+        }
+    }
+}
+
+function CustomAttributes::IsInvisible(player, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    player.GetScriptScope.PlayerThinkTable.IsInvisible <- function() {
+
+        if (player.GetActiveWeapon() != wep || PopExtUtil.HasEffect(EF_NODRAW)) return
+        wep.DisableDraw()
+    }
+}
+function CustomAttributes::CannotUpgrade(player, item) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    player.GetScriptScope.PlayerThinkTable.CannotUpgrade <- function() {
+
+        if (player.GetActiveWeapon() == wep && GetPropBool(player, "m_bInUpgradeZone")) {
+
+            SetPropBool(player, "m_bInUpgradeZone", false)
+            ClientPrint(player, HUD_PRINTCENTER, "This weapon cannot be upgraded")
+        }
+    }
+}
+
+function CustomAttributes::AlwaysCrit(player, item) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    player.GetScriptScope.PlayerThinkTable.AlwaysCrit <- function() {
+
+        if (player.GetActiveWeapon() == wep)
+            player.AddCondEx(COND_CRITBOOST, 0.033, player)
+    }
+}
+
+function CustomAttributes::DmgNoCritRate(player, item) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.DmgNoCritRate <- function(params) {
+
+        if (params.weapon != wep) return
+        params.damage_type = params.damage_type | DMG_DONT_COUNT_DAMAGE_TOWARDS_CRIT_RATE
+    }
+}
+
+function CustomAttributes::NoDamageFalloff(player, item) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.NoDamageFalloff <- function(params) {
+
+        if (params.weapon != wep) return
+
+        params.damage_type = params.damage_type &~ DMG_USEDISTANCEMOD
+    }
+}
+
+function CustomAttributes::CanHeadshot(player, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.CanHeadshot <- function(params) {
+
+        if (params.weapon != wep) return
+
+        params.damage_type = params.damage_type | DMG_CRITICAL
+        params.damage_stats = TF_DMG_CUSTOM_HEADSHOT
+    }
+}
+function CustomAttributes::CannotHeadshot(player, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.CannotHeadshot <- function(params) {
+
+        if (params.weapon != wep || params.damage_stats != TF_DMG_CUSTOM_HEADSHOT) return
+
+        params.damage_type = params.damage_type &~ DMG_CRITICAL
+        params.damage_stats = TF_DMG_CUSTOM_NONE
+    }
+}
+
+function CustomAttributes::CannotBeHeadshot(player, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.CannotBeHeadshot <- function(params) {
+        
+        local scope = params.const_entity.GetScriptScope()
+
+        if (!params.const_entity.IsPlayer() || !("attribinfo" in scope) || !("cannot be headshot" in scope.attribinfo)) return
+
+        params.damage_type = params.damage_type &~ DMG_CRITICAL
+        params.damage_stats = TF_DMG_CUSTOM_NONE
+    }
+}
+
+function CustomAttributes::ProjectileLifeTime(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    player.GetScriptScope().PlayerThinkTable.ProjectileLifeTime <- function() {
+        for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");) {
+            if ((projectile.GetOwner() == player && player.GetActiveWeapon() == wep) || (HasProp(projectile, "m_hThrower") && GetPropEntity(projectile, "m_hThrower") == player && GetPropEntity(projectile, "m_hLauncher") == wep))
+                EntFireByHandle(projectile, "Kill", "", value, null, null)
+        }
+    }
+}
+
+function CustomAttributes::MultDmgVsGiants(player, item, value) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.MultDmgVsGiants <- function(params) {
+
+        local victim = params.const_entity, attacker = params.attacker
+
+        if (victim.IsPlayer() && victim.IsMiniBoss() && params.weapon == wep) params.damage *= value
+    }
+}
+
+function CustomAttributes::MultDmgVsTanks(player, item, value) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.MultDmgVsGiants <- function(params) {
+
+        local victim = params.const_entity, attacker = params.attacker
+
+        if (victim.GetClassname() == "tank_boss" && params.weapon == wep) params.damage *= value
+    }
+}
+
+function CustomAttributes::SetDamageType(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.SetDamageType <- function(params) {
+
+        if (params.weapon == wep) params.damage_type = value
+    }
+}
+
+function CustomAttributes::SetDamageTypeCustom(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.SetDamageType <- function(params) {
+
+        if (params.weapon == wep) params.damage_stats = value
+    }
+}
+
+
 //REIMPLEMENTED VANILLA ATTRIBUTES
 
 function CustomAttributes::AltFireDisabled(player, item) {
@@ -702,6 +937,86 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         case "explosive bullets":
             CustomAttributes.ExplosiveBullets(player, item, value)
             scope.attribinfo[attr] <- format("Fires explosive rounds that deal %d damage", value)
+        break
+
+        case "old sandman stun":
+            CustomAttributes.OldSandmanStun(player, item)
+            scope.attribinfo[attr] <- "Uses pre-JI stun mechanics"
+        break
+
+        case "stun on hit":
+            CustomAttributes.StunOnHit(player, item, value)
+            scope.attribinfo[attr] <- format("Stuns victim for %f seconds on hit", value[0].tofloat())
+        break
+
+        case "is miniboss": 
+            CustomAttributes.IsMiniBoss(player, item)
+            scope.attribinfo[attr] <- "When weapon is active: player becomes giant"
+        break
+
+        case "is invisible": 
+            CustomAttributes.IsInvisible(player, item)
+            scope.attribinfo[attr] <- "Weapon is invisible"
+        break
+
+        case "cannot upgrade":
+            CustomAttributes.CannotUpgrade(player, item)
+            scope.attribinfo[attr] <- "Weapon cannot be upgraded"
+        break
+
+        case "always crit":
+            CustomAttributes.AlwaysCrit(player, item)
+            scope.attribinfo[attr] <- "Weapon always crits"
+        break
+
+        case "dont count damage towards crit rate":
+            CustomAttributes.DmgNoCritRate(player, item)
+            scope.attribinfo[attr] <- "Damage doesn't count towards crit rate"
+        break
+
+        case "no damage falloff":
+            CustomAttributes.NoDamageFalloff(player, item)
+            scope.attribinfo[attr] <- "Weapon has no damage fall-off"
+        break
+
+        case "can headshot":
+            CustomAttributes.CanHeadshot(player, item)
+            scope.attribinfo[attr] <- "Crits on headshot"
+        break
+
+        case "cannot headshot":
+            CustomAttributes.CannotHeadshot(player, item)
+            scope.attribinfo[attr] <- "Cannot headshot"
+        break
+
+        case "cannot be headshot":
+            CustomAttributes.CannotBeHeadshot(player, item)
+            scope.attribinfo[attr] <- "Immune to headshots"
+        break
+
+        case "projectile lifetime":
+            CustomAttributes.ProjectileLifeTime(player, item, value)
+            scope.attribinfo[attr] <- format("projectile disappears after %f seconds", value.tofloat())
+        break
+
+        case "mult dmg vs tanks":
+            CustomAttributes.MultDmgVsTanks(player, item, value)
+            scope.attribinfo[attr] <- format("Damage vs tanks multiplied by %f", value.tofloat())
+        break
+
+        case "mult dmg vs giants":
+            CustomAttributes.MultDmgVsGiants(player, item, value)
+            scope.attribinfo[attr] <- format("Damage vs giants multiplied by %f", value.tofloat())
+        break
+
+        case "set damage type":
+            CustomAttributes.SetDamageType(player, item, value)
+            scope.attribinfo[attr] <- format("Damage type set to %d", value)
+        break
+
+        case "set damage type custom":
+            CustomAttributes.SetDamageTypeCustom(player, item, value)
+            scope.attribinfo[attr] <- format("Custom damage type set to %d", value)
         break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
