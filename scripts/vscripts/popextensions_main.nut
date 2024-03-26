@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "03.25.2024.1"
+::popExtensionsVersion <- "03.25.2024.2"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -115,6 +115,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		try delete ::__popname catch(e) return
 		try delete ::__tagarray catch(e) return
 		try delete ::PopExtMain catch(e) return
+		try delete ::PointTemplates catch(e) return
 	}
 }
 __CollectGameEventCallbacks(PopExtMain)
