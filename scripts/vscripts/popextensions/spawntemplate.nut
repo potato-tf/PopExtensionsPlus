@@ -6,7 +6,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 ::SpawnTemplates <- {
 	//spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
 	function SpawnTemplate(pointtemplate, parent = null, origin = Vector(), angles = QAngle()) {
-		
+
 		// credit to ficool2
 		PopExt.globalTemplateSpawnCount <- PopExt.globalTemplateSpawnCount + 1
 
@@ -89,7 +89,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 						FireOnParentKilledOutputs()
 
-						playerscope.popHooks["OnDeath"].append(FireOnParentKilledOutputs);
+						playerscope.popHooks["OnDeath"].append(FireOnParentKilledOutputs)
 					}
 				}
 				//use own think instead of parent's think
@@ -254,7 +254,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 		}
 
 		function OnGameEvent_mvm_wave_failed(params) //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
-		{			
+		{
 			foreach(entity in PopExt.wavePointTemplates)
 				if (entity.IsValid())
 					entity.Kill()
