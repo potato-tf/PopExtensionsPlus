@@ -6,7 +6,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 ::SpawnTemplates <- {
 	//spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
 	function SpawnTemplate(pointtemplate, parent = null, origin = Vector(), angles = QAngle()) {
-
+		
 		// credit to ficool2
 		PopExt.globalTemplateSpawnCount <- PopExt.globalTemplateSpawnCount + 1
 
@@ -64,14 +64,14 @@ PopExt.globalTemplateSpawnCount   <- 0
 				}
 			}
 			if (parent != null) {
-				local FireOnParentKilledOutputs = function() {
+				function FireOnParentKilledOutputs() {
 					foreach(output in scope.OnParentKilledOutputArray) {
 						local target = output.Target
 						local action = output.Action
-						local param  = ("Param" in output) ? output.Param.tostring() : null
-						local delay  = ("Delay" in output) ? output.Delay.tofloat() : 0
+						local param  = ("Param" in output) ? output.Param.tostring() : ""
+						local delay  = ("Delay" in output) ? output.Delay.tofloat() : -1
 
-						EntFire(target, action, param, delay, null)
+						EntFire(target, action, param, delay)
 					}
 				}
 
@@ -80,20 +80,24 @@ PopExt.globalTemplateSpawnCount   <- 0
 					if (scope.OnParentKilledOutputArray.len() > 0) {
 						local playerscope = parent.GetScriptScope()
 
-						if (!("popHooks" in playerscope)) {
-							playerscope["popHooks"] <- {}
-						}
-						if (!("OnDeath" in playerscope.popHooks)) {
-							playerscope.popHooks["OnDeath"] <- []
-						}
+						// if (!("popHooks" in playerscope)) {
+						// 	playerscope["popHooks"] <- {}
+						// }
+						// if (!("OnDeath" in playerscope.popHooks)) {
+						// 	playerscope.popHooks["OnDeath"] <- []
+						// }
 
+						// FireOnParentKilledOutputs()
+
+						// playerscope.popHooks["OnDeath"].append(FireOnParentKilledOutputs)
+						
 						FireOnParentKilledOutputs()
-
-						playerscope.popHooks["OnDeath"].append(FireOnParentKilledOutputs)
+						if (!("TemplatesToKill" in playerscope)) playerscope.TemplatesToKill <- []
+						playerscope.TemplatesToKill.append(FireOnParentKilledOutputs);
 					}
 				}
 				//use own think instead of parent's think
-				local function CheckIfKilled() {
+				function CheckIfKilled() {
 					if (parent.IsValid()) {
 						lastorigin <- parent.GetOrigin()
 						lastangles <- parent.GetAbsAngles()
@@ -122,15 +126,14 @@ PopExt.globalTemplateSpawnCount   <- 0
 					}
 					return -1
 				}
-				scope.CheckIfKilled <- CheckIfKilled
-				AddThinkToEnt(template, "CheckIfKilled")
+				"PlayerThinkTable" in scope ? scope.PlayerThinkTable.CheckIfKilled <- CheckIfKilled : scope.CheckIfKilled <- CheckIfKilled; AddThinkToEnt(template, "CheckIfKilled")
 			}
 
 			//fire OnSpawnOutputs
 			foreach(output in OnSpawnOutputArray) {
 				local target = output.Target
 				local action = output.Action
-				local param  = ("Param" in output) ? output.Param.tostring() : null
+				local param  = ("Param" in output) ? output.Param.tostring() : ""
 				local delay  = ("Delay" in output) ? output.Delay.tofloat() : 0
 
 				EntFire(target, action, param, delay, null)
@@ -254,7 +257,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 		}
 
 		function OnGameEvent_mvm_wave_failed(params) //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
-		{
+		{			
 			foreach(entity in PopExt.wavePointTemplates)
 				if (entity.IsValid())
 					entity.Kill()
@@ -262,6 +265,14 @@ PopExt.globalTemplateSpawnCount   <- 0
 			foreach(param in PopExt.waveSchedulePointTemplates) {
 				SpawnTemplates.SpawnTemplate(param[0], null, param[1], param[2])
 			}
+		}
+		function OnGameEvent_player_death(params) {
+			local player = GetPlayerFromUserID(params.userid)
+			local scope = player.GetScriptScope()
+
+			if ("TemplatesToKill" in scope)
+				foreach (func in scope.TemplatesToKill)
+					func()
 		}
 	}
 }
