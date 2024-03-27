@@ -750,7 +750,7 @@ function CustomAttributes::MultDmgVsTanks(player, item, value) {
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
-    CustomAttributes.TakeDamageTable.MultDmgVsGiants <- function(params) {
+    CustomAttributes.TakeDamageTable.MultDmgVsTanks <- function(params) {
 
         local victim = params.const_entity, attacker = params.attacker
 
