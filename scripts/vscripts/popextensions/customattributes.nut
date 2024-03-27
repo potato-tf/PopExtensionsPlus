@@ -614,7 +614,7 @@ function CustomAttributes::IsInvisible(player, item) {
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
-    player.GetScriptScope.PlayerThinkTable.IsInvisible <- function() {
+    player.GetScriptScope().PlayerThinkTable.IsInvisible <- function() {
 
         if (player.GetActiveWeapon() != wep || PopExtUtil.HasEffect(EF_NODRAW)) return
         wep.DisableDraw()
@@ -625,12 +625,15 @@ function CustomAttributes::CannotUpgrade(player, item) {
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
-    player.GetScriptScope.PlayerThinkTable.CannotUpgrade <- function() {
+    player.GetScriptScope().PlayerThinkTable.CannotUpgrade <- function() {
 
-        if (player.GetActiveWeapon() == wep && GetPropBool(player, "m_bInUpgradeZone")) {
+        if (player.GetActiveWeapon() == wep && GetPropBool(player, "m_Shared.m_bInUpgradeZone")) {
 
-            SetPropBool(player, "m_bInUpgradeZone", false)
+            SetPropBool(player, "m_Shared.m_bInUpgradeZone", false)
+            DoEntFire("func_upgradestation", "EndTouch", "", -1, player, player)
+            DoEntFire("func_upgradestation", "Disable", "", -1, player, player)
             ClientPrint(player, HUD_PRINTCENTER, "This weapon cannot be upgraded")
+            DoEntFire("func_upgradestation", "Enable", "", SINGLE_TICK, player, player)
         }
     }
 }
@@ -640,7 +643,7 @@ function CustomAttributes::AlwaysCrit(player, item) {
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
-    player.GetScriptScope.PlayerThinkTable.AlwaysCrit <- function() {
+    player.GetScriptScope().PlayerThinkTable.AlwaysCrit <- function() {
 
         if (player.GetActiveWeapon() == wep)
             player.AddCondEx(COND_CRITBOOST, 0.033, player)
@@ -679,7 +682,8 @@ function CustomAttributes::CanHeadshot(player, item) {
 
     CustomAttributes.TakeDamageTable.CanHeadshot <- function(params) {
 
-        if (params.weapon != wep) return
+        local victim = params.const_entity
+        if (params.weapon != wep || !victim.IsPlayer() || GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD) return
 
         params.damage_type = params.damage_type | DMG_CRITICAL
         params.damage_stats = TF_DMG_CUSTOM_HEADSHOT
