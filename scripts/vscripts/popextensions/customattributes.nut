@@ -73,6 +73,9 @@
         "mult dmg vs giants": null
         "set damage type": null
         "set damage type custom": null
+        "reloads full clip at once": null
+        "fire full clip at once": null
+        "passive reload": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -481,6 +484,9 @@ function CustomAttributes::RadiusSleeper(player, item) {
 
         local victim = GetPlayerFromUserID(params.userid)
         local attacker = GetPlayerFromUserID(params.attacker)
+
+        if (attacker == null) return
+
         local scope = attacker.GetScriptScope()
 
         if (!("attribinfo" in scope) || !("radius sleeper" in scope.attribinfo)) return
@@ -770,6 +776,39 @@ function CustomAttributes::SetDamageTypeCustom(player, item, value) {
     }
 }
 
+function CustomAttributes::PassiveReload(player, item) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    player.GetScriptScope().PlayerThinkTable.PassiveReload <- function() {
+
+        if (player.GetActiveWeapon() != wep && wep.Clip1() != wep.GetMaxClip1())
+            wep.SetClip1(wep.GetMaxClip1())
+    }
+}
+
+function CustomAttributes::ReloadFullClipAtOnce(player, item) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    
+    local scope = player.GetScriptScope()
+
+    scope.PlayerThinkTable.ReloadFullClipAtOnce <- function() {
+        
+        if (player.GetActiveWeapon() == wep && wep.Clip1() == 0)
+            scope.isreloading <- true
+
+        
+        if (player.GetActiveWeapon() == wep && ("isreloading" in scope) && scope.isreloading && wep.Clip1() != 0) {
+
+            wep.SetClip1(wep.GetMaxClip1())
+            scope.isreloading = false
+        }
+    }
+}
+
 
 //REIMPLEMENTED VANILLA ATTRIBUTES
 
@@ -782,9 +821,13 @@ function CustomAttributes::AltFireDisabled(player, item) {
 
     scope.PlayerThinkTable.AltFireDisabled <- function() {
         
-        if (!("attribinfo" in scope) || !("alt-fire disabled" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
-        
-        SetPropInt(player, "m_afButtonDisabled", IN_ATTACK2)
+        if ("attribinfo" in scope && "alt-fire disabled" in scope.attribinfo && player.GetActiveWeapon() == wep) 
+        {
+            SetPropInt(player, "m_afButtonDisabled", IN_ATTACK2)
+            SetPropFloat(wep, "m_flNextSecondaryAttack", INT_MAX)
+            return
+        }
+        SetPropInt(player, "m_afButtonDisabled", 0)
     }
 }
 
@@ -1017,6 +1060,21 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         case "set damage type custom":
             CustomAttributes.SetDamageTypeCustom(player, item, value)
             scope.attribinfo[attr] <- format("Custom damage type set to %d", value)
+        break
+
+        case "reloads full clip at once":
+            CustomAttributes.ReloadFullClipAtOnce(player, item)
+            scope.attribinfo[attr] <- "weapon reloads entire clip at once"
+        break
+
+        case "fire full clip at once":
+            CustomAttributes.FireFullClipAtOnce(player, item)
+            scope.attribinfo[attr] <- "weapon fires full clip at once"
+        break
+
+        case "passive reload":
+            CustomAttributes.PassiveReload(player, item)
+            scope.attribinfo[attr] <- "Weapon reloads when holstered"
         break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS

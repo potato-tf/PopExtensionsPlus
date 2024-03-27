@@ -29,6 +29,12 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		}
 		*/
 
+		function BotGibFix(params) {
+			local victim = params.const_entity
+			if (victim.IsPlayer() && !victim.IsMiniBoss() && (params.damage_type & DMG_CRITICAL || params.damage_type & DMG_BLAST))
+				victim.SetModelScale(1.0000001, 0.0)
+		}
+
 		// Quick hacky non-GetAttribute version
 		function HuntsmanDamageBonusFix(params) {
 			local wep       = params.weapon

@@ -656,13 +656,6 @@ function MissionAttributes::MissionAttr(...) {
 			victim.ValidateScriptScope()
 			local scope = victim.GetScriptScope()
 			local wep = params.weapon
-			// //gib bots on explosive/crit dmg, doesn't work
-			// if (!victim.IsMiniBoss() && (params.damage_type & DMG_CRITICAL || params.damage_type & DMG_BLAST))
-			// {
-			//	victim.SetModelScale(1.00000001, 0.0);
-			//	// EntFireByHandle(victim, "CallScriptFunction", "dmg", -1, null, null); //wait 1 frame
-			//	return
-			// }
 
 			//re-enable headshots for snipers and ambassador
 			if (
@@ -1592,8 +1585,6 @@ function MissionAttributes::MissionAttr(...) {
 			if ("ReverseMVMPackThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMPackThink
 			if ("ReverseMVMLaserThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMLaserThink
 			if ("ReverseMVMDrainAmmoThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink
-			
-			EntFire("item_teamflag", "AddOutput", "OnPickupTeam1 !self:ForceResetSilent::0:-1")
 
 			// Switch to blue team
 			// TODO: Need to fix players getting stuck in spec on wave fail, mission complete, etc
@@ -1611,8 +1602,9 @@ function MissionAttributes::MissionAttr(...) {
 
 			// Temporary solution for engie wrangler laser
 			scope.handled_laser   <- false
-			scope.laser_spawntime <- -1
 			scope.PlayerThinkTable.ReverseMVMLaserThink <- function() {
+
+				if (!("laser_spawntime" in scope)) scope.laser_spawntime <- -1
 
 				if (!PopExtUtil.IsAlive(player) || player.GetTeam() == TEAM_SPECTATOR) return
 
