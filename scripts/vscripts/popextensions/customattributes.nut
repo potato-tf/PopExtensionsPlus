@@ -781,10 +781,18 @@ function CustomAttributes::PassiveReload(player, item) {
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
-    player.GetScriptScope().PlayerThinkTable.PassiveReload <- function() {
+    local scope = player.GetScriptScope()
+    scope.PlayerThinkTable.PassiveReload <- function() {
+
+        local ammo = GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1)
 
         if (player.GetActiveWeapon() != wep && wep.Clip1() != wep.GetMaxClip1())
+        {
+            if (!("ReverseMVMDrainAmmoThink" in scope.PlayerThinkTable)) //already takes care of this
+                SetPropIntArray(player, "m_iAmmo", ammo - (wep.GetMaxClip1() - wep.Clip1()), wep.GetSlot() + 1)
+
             wep.SetClip1(wep.GetMaxClip1())
+        }
     }
 }
 
