@@ -889,14 +889,6 @@ local popext_funcs = {
 
 		foreach (_, func in PopExtTags.TakeDamageTable) { func(params) }
 	}
-	function OnGameEvent_player_builtobject(params) {
-
-		local scope = GetPlayerFromUserID(params.userid).GetScriptScope()
-
-		if (!("BuiltObjectTable" in scope)) return
-
-		foreach (_, func in scope.BuiltObjectTable) func(params)
-	}
 
 	function OnGameEvent_player_team(params) {
 

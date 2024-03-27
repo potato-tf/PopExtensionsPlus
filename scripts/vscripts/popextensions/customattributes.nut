@@ -76,6 +76,10 @@
         "reloads full clip at once": null
         "fire full clip at once": null
         "passive reload": null
+        "mult projectile scale": null
+        "mult building scale": null
+        "mult crit dmg": null
+        "arrow ignite": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -621,19 +625,28 @@ function CustomAttributes::IsInvisible(player, item) {
     }
 }
 function CustomAttributes::CannotUpgrade(player, item) {
-    
+
+    // EntFire("func_upgradestation", "RunScriptCode", "SetPropString(self, `m_iFilterName`, `__upgradefilter`)")
+
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
+    local index = PopExtUtil.GetItemIndex(wep)
+    local classname = GetPropString(wep, "m_iClassname")
     player.GetScriptScope().PlayerThinkTable.CannotUpgrade <- function() {
 
-        if (player.GetActiveWeapon() == wep && GetPropBool(player, "m_Shared.m_bInUpgradeZone")) {
-
-            SetPropBool(player, "m_Shared.m_bInUpgradeZone", false)
+        if (GetPropBool(player, "m_Shared.m_bInUpgradeZone") && PopExtUtil.GetItemIndex(wep) != -1) {
             DoEntFire("func_upgradestation", "EndTouch", "", -1, player, player)
-            DoEntFire("func_upgradestation", "Disable", "", -1, player, player)
+            // EntFireByHandle(player, "RunScriptCode", "SetPropBool(self, `m_Shared.m_bInUpgradeZone`, false)", -1, null, null)
             ClientPrint(player, HUD_PRINTCENTER, "This weapon cannot be upgraded")
-            DoEntFire("func_upgradestation", "Enable", "", SINGLE_TICK, player, player)
+            SetPropInt(wep, STRING_NETPROP_ITEMDEF, -1)
+            SetPropString(wep, "m_iClassname", "")
+            return
+        }
+
+        else if (!GetPropBool(player, "m_Shared.m_bInUpgradeZone") && PopExtUtil.GetItemIndex(wep) == -1) {
+            SetPropString(wep, "m_iClassname", classname)
+            SetPropInt(wep, STRING_NETPROP_ITEMDEF, index)
         }
     }
 }
@@ -670,7 +683,6 @@ function CustomAttributes::NoDamageFalloff(player, item) {
     CustomAttributes.TakeDamageTable.NoDamageFalloff <- function(params) {
 
         if (params.weapon != wep) return
-
         params.damage_type = params.damage_type &~ DMG_USEDISTANCEMOD
     }
 }
@@ -821,6 +833,62 @@ function CustomAttributes::ReloadFullClipAtOnce(player, item) {
     }
 }
 
+function CustomAttributes::MultProjectileScale(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local scope = player.GetScriptScope()
+
+    scope.PlayerThinkTable.CustomProjectileModel <- function() {
+
+        if (!("attribinfo" in scope) || !("mult projectile scale" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+        
+        for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
+            if (projectile.GetOwner() == player && projectile.GetModelScale() != value)
+                projectile.SetModelScale(value, 0.0)
+    } 
+}
+
+function CustomAttributes::MultBuildingScale(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local scope = player.GetScriptScope()
+
+    if (!("BuiltObjectTable") in scope) return
+
+    scope.BuiltObjectTable.MultBuildingScale <- function(params) {
+        local building = EntIndexToHScript(params.index)
+        if (GetPropEntity(building, "m_hBuilder") == player && "mult building scale" in scope.attribinfo)
+            building.SetModelScale(value, 0.0)
+
+    }
+}
+
+function CustomAttributes::MultCritDmg(player, item, value) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    CustomAttributes.TakeDamageTable.MultCritDmg <- function(params) {
+
+        if (params.damage_type & DMG_CRITICAL) params.damage *= value
+    }
+}
+
+function CustomAttributes::IgniteArrow(player, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    player.GetScriptScope().PlayerThinkTable.IgniteArrow <- function() {
+
+        if (HasProp(wep, "m_bArrowAlight") && !GetPropBool(wep, "m_bArrowAlight")) 
+            SetPropBool(wep, "m_bArrowAlight", true)
+    }
+}
 
 //REIMPLEMENTED VANILLA ATTRIBUTES
 
@@ -1031,7 +1099,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "no damage falloff":
             CustomAttributes.NoDamageFalloff(player, item)
-            scope.attribinfo[attr] <- "Weapon has no damage fall-off"
+            scope.attribinfo[attr] <- "Weapon has no damage fall-off or ramp-up"
         break
 
         case "can headshot":
@@ -1041,7 +1109,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "cannot headshot":
             CustomAttributes.CannotHeadshot(player, item)
-            scope.attribinfo[attr] <- "Cannot headshot"
+            scope.attribinfo[attr] <- "weapon cannot headshot"
         break
 
         case "cannot be headshot":
@@ -1086,7 +1154,32 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "passive reload":
             CustomAttributes.PassiveReload(player, item)
-            scope.attribinfo[attr] <- "Weapon reloads when holstered"
+            scope.attribinfo[attr] <- "weapon reloads when holstered"
+        break
+
+        case "mult projectile scale":
+            CustomAttributes.MultProjectileScale(player, item, value)
+            scope.attribinfo[attr] <- format("projectile scale multiplied by %f", value.tofloat())
+        break
+
+        case "mult building scale":
+            CustomAttributes.MultBuildingScale(player, item, value)
+            scope.attribinfo[attr] <- format("building scale multiplied by %f", value.tofloat())
+        break
+
+        case "mult crit dmg":
+            CustomAttributes.MultCritDmg(player, item, value)
+            scope.attribinfo[attr] <- format("crit damage multiplied by %f", value.tofloat())
+        break
+
+        case "arrow ignite": 
+            CustomAttributes.IgniteArrow(player, item)
+            scope.attribinfo[attr] <- "arrows are always ignited"
+        break
+
+        case "cannot upgrade":
+            CustomAttributes.CannotUpgrade(player, item)
+            scope.attribinfo[attr] <- "weapon cannot be upgraded"
         break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
