@@ -80,6 +80,13 @@
         "mult building scale": null
         "mult crit dmg": null
         "arrow ignite": null
+        "add cond on hit": null
+        "remove cond on hit": null
+        "self add cond on hit": null
+        "add cond on kill": null
+        "add cond when active": null
+        "fire input on hit":  null
+        "fire input on kill":  null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -158,26 +165,105 @@ function CustomAttributes::FireMilkBolt(player, item, value = 5.0) {
         
     }
 }
-function CustomAttributes::TeleportInsteadOfDie(player, item, value) {
 
+function CustomAttributes::AddCondOnHit(player, item, value) {
 
-    CustomAttributes.TakeDamageTable.TeleportInsteadOfDie <- function(params) {
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    
+    CustomAttributes.TakeDamageTable.AddCondOnHit <- function(params) {
 
-        if (RandomFloat(0, 1) > value.tofloat()) return
+        local victim = GetPlayerFromUserID(params.userid)
+        local attacker = GetPlayerFromUserID(params.attacker)
 
-        local player = params.const_entity
-        local scope = player.GetScriptScope()
-        if (
-            !player.IsPlayer() || player.GetHealth() > params.damage || 
-            !("attribinfo" in scope) || !("teleport instead of die" in scope.attribinfo) ||
-            player.IsInvulnerable() || PopExtUtil.IsPointInRespawnRoom(player.EyePosition())
-        ) return
+        if (victim == null || !victim.IsPlayer() || (typeof value == "array" && victim.InCond(value[0])) || (typeof value == "integer" && victim.InCond(value))|| attacker == null || attacker != player || params.weapon != wep) return
 
-        local health = player.GetHealth()
-        params.early_out = true
+        typeof value == "array" ? victim.AddCondEx(v[0], v[1], attacker) : victim.AddCond(value)
+    }
+}
+
+function CustomAttributes::RemoveCondOnHit(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    
+    CustomAttributes.TakeDamageTable.RemoveCondOnHit <- function(params) {
+
+        if (victim == null || !victim.IsPlayer() || attacker == null || attacker != player || weapon != wep) return
+
+        victim.RemoveCondEx(value, true)
+    }
+}
+
+function CustomAttributes::SelfAddCondOnHit(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    
+    CustomAttributes.TakeDamageTable.SelfAddCondOnHit <- function(params) {
+        local victim = params.victim, attacker = params.attacker
+
+        if (attacker == null || !attacker.IsPlayer() || (typeof value == "array" && attacker.InCond(value[0])) || (typeof value == "integer" && attacker.InCond(value)))
+
+        typeof value == "array" ? attacker.AddCondEx(v[0], v[1], attacker) : attacker.AddCond(value)
+    }
+}
+
+function CustomAttributes::SelfAddCondOnKill(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+    
+    CustomAttributes.DeathHookTable.SelfAddCondOnKill <- function(params) {
+        local attacker = GetPlayerFromUserID(params.attacker)
+        local victim = GetPlayerFromUserID(params.userid)
+
+        if (victim == null || attacker == null || !attacker.IsPlayer()) return
         
-        player.ForceRespawn()
-        EntFireByHandle(player, "RunScriptCode","self.SetHealth(1)", -1, null, null)
+        typeof value == "array" ? attacker.AddCondEx(v[0], v[1], attacker) : attacker.AddCond(value)
+    }
+}
+
+function CustomAttributes::FireInputOnHit(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local args = split(value, "^")
+    local targetname = value[0]
+    local input = value[1]
+    local param = ""
+    local delay = -1
+    if (value.len() > 2) param = value[2]
+    if (value.len() > 3) delay = value[3]
+
+    CustomAttributes.TakeDamageTable.FireInputOnHit <- function(params) {
+    
+        if (params.attacker != player || params.weapon != wep) return
+
+        targetname = "!self" ? EntFireByHandle(params.attacker, input, param, delay, null, null) : DoEntFire(targetname, input, param, delay, null, null)
+    
+    }
+}
+
+function CustomAttributes::FireInputOnKill(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local args = split(value, "^")
+    local targetname = value[0]
+    local input = value[1]
+    local param = ""
+    local delay = -1
+    if (value.len() > 2) param = value[2]
+    if (value.len() > 3) delay = value[3]
+
+    CustomAttributes.DeathHookTable.FireInputOnKill <- function(params) {
+    
+        if (GetPlayerFromUserID(params.attacker) != player || params.weapon != wep) return
+
+        targetname = "!self" ? EntFireByHandle(GetPlayerFromUserID(params.attacker), input, param, delay, null, null) : DoEntFire(targetname, input, param, delay, null, null)
     }
 }
 
@@ -201,6 +287,40 @@ function CustomAttributes::DmgVsSameClass(player, item, value) {
         params.damage *= value
     }
 }
+
+function CustomAttributes::MultDmgVsAirborne(player, item, value) {
+
+    CustomAttributes.TakeDamageTable.MultDmgVsAirborne <- function(params) {
+
+        local victim = params.const_entity
+        if (victim != null && victim.IsPlayer() && GetPropEntity(victim, "m_hGroundEntity") == null)
+            params.damage *= value
+    }
+}
+
+function CustomAttributes::TeleportInsteadOfDie(player, item, value) {
+
+
+    CustomAttributes.TakeDamageTable.TeleportInsteadOfDie <- function(params) {
+
+        if (RandomFloat(0, 1) > value.tofloat()) return
+
+        local player = params.const_entity
+        local scope = player.GetScriptScope()
+        if (
+            !player.IsPlayer() || player.GetHealth() > params.damage || 
+            !("attribinfo" in scope) || !("teleport instead of die" in scope.attribinfo) ||
+            player.IsInvulnerable() || PopExtUtil.IsPointInRespawnRoom(player.EyePosition())
+        ) return
+
+        local health = player.GetHealth()
+        params.early_out = true
+        
+        player.ForceRespawn()
+        EntFireByHandle(player, "RunScriptCode","self.SetHealth(1)", -1, null, null)
+    }
+}
+
 function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
     local scope = player.GetScriptScope()
@@ -662,6 +782,19 @@ function CustomAttributes::AlwaysCrit(player, item) {
             player.AddCondEx(COND_CRITBOOST, 0.033, player)
     }
 }
+
+function CustomAttributes::AddCondWhenActive(player, item, value) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    player.GetScriptScope().PlayerThinkTable.AddCondWhenActive <- function() {
+
+        if (player.GetActiveWeapon() == wep)
+            player.AddCondEx(value, 0.033, player)
+    }
+}
+
 
 function CustomAttributes::DmgNoCritRate(player, item) {
     
@@ -1132,6 +1265,11 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             scope.attribinfo[attr] <- format("Damage vs giants multiplied by %f", value.tofloat())
         break
 
+        case "mult dmg vs airborne":
+            CustomAttributes.MultDmgVsAirborne(player, item, value)
+            scope.attribinfo[attr] <- format("damage multiplied by %f against airborne targets", value.tofloat())
+        break
+
         case "set damage type":
             CustomAttributes.SetDamageType(player, item, value)
             scope.attribinfo[attr] <- format("Damage type set to %d", value)
@@ -1180,6 +1318,40 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         case "cannot upgrade":
             CustomAttributes.CannotUpgrade(player, item)
             scope.attribinfo[attr] <- "weapon cannot be upgraded"
+        break
+
+        case "add cond on hit": 
+            CustomAttributes.AddCondOnHit(player, item, value)
+            scope.attribinfo[attr] <- format("applies cond %d to victim on hit", typeof value == "array" ? value[0] : value)
+        break
+        
+        case "remove cond on hit":
+            CustomAttributes.RemoveCondOnHit(player, item, value)
+            scope.attribinfo[attr] <- format("Remove cond %d on hit", value)
+        break
+
+        case "self add cond on hit":
+            CustomAttributes.SelfAddCondOnHit(player, item, value)
+            scope.attribinfo[attr] <- format("applies cond %d to self on hit", typeof value == "array" ? value[0] : value)
+        break
+
+        case "add cond on kill": 
+            CustomAttributes.SelfAddCondOnKill(player, item, value)
+            scope.attribinfo[attr] <- format("applies cond %d to self on kill", typeof value == "array" ? value[0] : value)
+        break
+
+        case "add cond when active":
+            CustomAttributes.AddCondWhenActive(player, item, value)
+            scope.attribinfo[attr] <- format("when active: player receives cond %d", value)
+            
+        case "fire input on hit":
+            CustomAttributes.FireInputOnHit(player, item, value) 
+            scope.attribinfo[attr] <- format("fires custom entity input on hit: %s", value)
+        break
+
+        case "fire input on kill":
+            CustomAttributes.FireInputOnKill(player, item, value) 
+            scope.attribinfo[attr] <- format("fires custom entity input on kill: %s", value)
         break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
