@@ -1,7 +1,7 @@
 //behavior tags
 IncludeScript("popextensions/botbehavior", getroottable())
 
-try IncludeScript(format("%s_tags.nut", split(split(__popname, "/")[2], ".")[0]), getroottable()) catch(e) printl(e)
+try IncludeScript(format("%s_tags.nut", split(split(__popname, "/")[2], ".")[0]), getroottable()) catch(e) ::__tagarray <- []
 
 PopExtUtil.PlayerManager.ValidateScriptScope()
 
