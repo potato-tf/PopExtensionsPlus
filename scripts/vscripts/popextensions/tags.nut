@@ -297,11 +297,25 @@ local popext_funcs = {
 		local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- function() {
-			local threat = FindThreat(visionoverride)
 
-			if (threat == null || threat.IsFullyInvisible() || threat.IsStealthed()) return
+			local t = FindThreat(visionoverride, false)
 
-			LookAt(threat.EyePosition(), 50, 50)
+			if (t == null || t.IsFullyInvisible() || t.IsStealthed()) return
+
+			SetThreat(t, true)
+			LookAt(t.EyePosition(), 50, 50)
+		}
+	}
+
+	popext_mobber = function (bot, args) {
+
+		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
+			
+			local t = FindThreat(INT_MAX, false)
+
+			if (t == null || t.IsFullyInvisible() || t.IsStealthed()) return
+
+			UpdatePath(t.GetOrigin())
 		}
 	}
 
@@ -886,10 +900,7 @@ local popext_funcs = {
 	DeathHookTable = {}
 	TeamSwitchTable = {}
 
-	function AI_BotSpawn(bot) {
-		local scope = bot.GetScriptScope()
-
-		scope.bot <- AI_Bot(bot)
+	function EvaluateTags(bot) {
 
 		foreach(tag in __tagarray) {
 			if (bot.HasBotTag(tag)) {
@@ -899,11 +910,21 @@ local popext_funcs = {
 					popext_funcs[func](bot, args)
 			}
 		}
+	}
+	function AI_BotSpawn(bot) {
+		local scope = null 
+		
+		try scope = bot.GetScriptScope() catch(e) return
+
+		this.EvaluateTags(bot)
+
+		scope.bot <- AI_Bot(bot)
 
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
 	}
 	function BotThink()
 	{
+		// try bot.OnUpdate() catch(e) return
 		bot.OnUpdate()
 		return -1
 	}
@@ -912,7 +933,7 @@ local popext_funcs = {
 
 		local scope = params.attacker.GetScriptScope()
 
-		foreach (_, func in PopExtTags.TakeDamageTable) { func(params) }
+		foreach (_, func in this.TakeDamageTable) { func(params) }
 	}
 
 	function OnGameEvent_player_team(params) {
@@ -920,7 +941,7 @@ local popext_funcs = {
 		local bot = GetPlayerFromUserID(params.userid)
 		if (params.team == TEAM_SPECTATOR) AddThinkToEnt(bot, null)
 
-		foreach (_, func in PopExtTags.TeamSwitchTable) func(params)
+		foreach (_, func in this.TeamSwitchTable) func(params)
 	}
 
 	function OnGameEvent_player_death(params) {
@@ -930,7 +951,7 @@ local popext_funcs = {
 
 		local scope = bot.GetScriptScope()
 		bot.ClearAllBotTags()
-		foreach (_, func in PopExtTags.DeathHookTable) func(params)
+		foreach (_, func in this.DeathHookTable) func(params)
 
 		AddThinkToEnt(bot, null)
 	}

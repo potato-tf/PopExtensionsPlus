@@ -534,9 +534,7 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
         if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || player.GetActiveWeapon() != wep) return
 
         scope.lastshotcritsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
-
-        try 
-        {
+        
             if (wep.Clip1() != 1 && !player.IsCritBoosted())
             {
                 player.RemoveCondEx(COND_CRITBOOST, true)
@@ -544,8 +542,6 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
             }
             
             if (!player.IsCritBoosted()) player.AddCondEx(COND_CRITBOOST, value, null)
-            
-        } catch(e) printl(e)
     }
 }
 

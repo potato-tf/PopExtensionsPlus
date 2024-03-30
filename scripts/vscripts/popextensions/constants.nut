@@ -30,6 +30,10 @@ foreach(k, v in ::Entities.getclass())
 foreach(k, v in ::EntityOutputs.getclass())
 	if (k != "IsValid" && !(k in ROOT))
 		ROOT[k] <- ::EntityOutputs[k].bindenv(::EntityOutputs)
+	
+foreach(k, v in ::NavMesh.getclass())
+	if (k != "IsValid" && !(k in ROOT))
+		ROOT[k] <- ::NavMesh[k].bindenv(::NavMesh)
 
 const MATTR_ERROR = "MissionAttr ERROR: "
 const STRING_NETPROP_ITEMDEF = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"

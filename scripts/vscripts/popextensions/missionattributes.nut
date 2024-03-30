@@ -37,8 +37,8 @@ if (!("ScriptUnloadTable" in ROOT))
 
 	function Cleanup()
 	{
-		MissionAttributes.ResetConvars()
-		MissionAttributes.PathNum = 0
+		this.ResetConvars()
+		this.PathNum = 0
 		foreach (bot in PopExtUtil.BotArray)
 			if (bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
@@ -1328,7 +1328,7 @@ function MissionAttributes::MissionAttr(...) {
 	break
 
 	case "DisableSound":
-		if (typeof value != "array") MissionAttributes.RaiseValueError("DisableSound", value, "value must be an array")
+		if (typeof value != "array") this.RaiseValueError("DisableSound", value, "value must be an array")
 
 		MissionAttributes.ThinkTable.DisableSounds <- function() {
 			
@@ -1340,15 +1340,15 @@ function MissionAttributes::MissionAttr(...) {
 					StopSoundOn(sound, player)
 					player.StopSound(sound)
 				}
-				
-				StopSoundOn(PopExtUtil.Worldspawn, player)
+
+				StopSoundOn(sound, PopExtUtil.Worldspawn)
 				PopExtUtil.Worldspawn.StopSound(sound)
 			}
 		}
 	break
 
 	case "SoundOverrides":
-		if (typeof value != "table") MissionAttributes.RaiseValueError("SoundOverrides", value, "value must be a table")
+		if (typeof value != "table") this.RaiseValueError("SoundOverrides", value, "value must be a table")
 
 		foreach (sound, override in value) 
 			if (override != null) 
@@ -1367,7 +1367,7 @@ function MissionAttributes::MissionAttr(...) {
 						player.StopSound(sound)
 					}
 
-					StopSoundOn(PopExtUtil.Worldspawn, player)
+					StopSoundOn(sound, PopExtUtil.Worldspawn)
 					PopExtUtil.Worldspawn.StopSound(sound)
 				}
 			}
@@ -2085,7 +2085,7 @@ function MissionAttributes::MissionAttr(...) {
 }
 
 function MissionAttrThink() {
-	try foreach (_, func in MissionAttributes.ThinkTable) func() catch(e) printl(e)
+	foreach (_, func in MissionAttributes.ThinkTable) func()
 	return -1
 }
 

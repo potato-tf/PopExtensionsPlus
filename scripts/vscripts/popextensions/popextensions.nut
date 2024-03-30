@@ -71,6 +71,9 @@ function PopExt::_PopIncrementIcon(icon) {
 }
 
 function PopExt::AddCustomTankIcon(name, count, isCrit = false, isBoss = true, isSupport = false, isSupportLimited = false) {
+
+	if (PopExtUtil.IsLinuxServer()) return
+	
 	local icon = {
 		name      = name
 		count     = count
@@ -84,6 +87,9 @@ function PopExt::AddCustomTankIcon(name, count, isCrit = false, isBoss = true, i
 }
 
 function PopExt::AddCustomIcon(name, count, isCrit = false, isBoss = false, isSupport = false, isSupportLimited = false) {
+
+	if (PopExtUtil.IsLinuxServer()) return
+
 	local icon = {
 		name      = name
 		count     = count

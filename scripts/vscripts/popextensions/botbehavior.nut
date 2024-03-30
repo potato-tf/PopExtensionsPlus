@@ -3,9 +3,13 @@ class AI_Bot {
 		this.bot       = bot
 		this.scope     = bot.GetScriptScope()
 		this.team      = bot.GetTeam()
-		this.cur_ammo  = 0
-		this.cur_melee = false
+		// this.cur_ammo  = 0
+		// this.cur_melee = false
+		this.locomotion = bot.GetLocomotionInterface()
+		
+		this.time = Time()
 
+		this.threat 			= null
 		this.threat_time        = 0.0
 		this.threat_lost_time   = 0.0
 		this.threat_aim_time    = 0.0
@@ -14,6 +18,11 @@ class AI_Bot {
 		this.fire_next_time     = 0.0
 		this.aim_time           = FLT_MAX
 		this.random_aim_time    = 0.0
+
+		this.path = []
+		this.path_index = 0
+		this.path_areas = {}
+		this.path_recompute_time = 0.0
 
 		this.botLevel = bot.GetDifficulty()
 	}
@@ -62,13 +71,13 @@ class AI_Bot {
 		return (target.GetOrigin() - bot.GetOrigin()).LengthSqr()
 	}
 
-	function FindThreat(min_dist_sqr) {
+	function FindThreat(min_dist_sqr, must_be_visible = true) {
 		local closestThreat = null
 		local closestThreatDist = min_dist_sqr
 
 		foreach (player in PopExtUtil.PlayerArray) {
 
-			if (player == bot || !PopExtUtil.IsAlive(player) || player.GetTeam() == team || !IsThreatVisible(player)) continue
+			if (player == bot || !PopExtUtil.IsAlive(player) || player.GetTeam() == team || (must_be_visible && !IsThreatVisible(player))) continue
 
 			local dist = GetThreatDistanceSqr(player)
 			if (dist < closestThreatDist) {
@@ -236,6 +245,68 @@ class AI_Bot {
 
 		return -1
 	}
+	function FindPathToThreat()
+	{
+		if (path_recompute_time < time)
+		{
+			local threat_cur_pos = threat.GetOrigin()
+			
+			if ((path.len() == 0) || ((threat_pos - threat_cur_pos).LengthSqr() > 4096.0)) // 64
+			{
+				local area = GetThreatArea(threat)
+				if (area != null)
+				{
+					UpdatePath(threat_cur_pos)
+				}
+				
+				threat_pos = threat_cur_pos
+			}
+			
+			path_recompute_time = time + 0.5
+		}
+	}
+	function ResetPath()
+	{
+		path_areas.clear()
+		path.clear()
+		path_index = 0
+
+		local kill = []
+		for (local rope; rope = FindByName(rope, "__rope");) kill.append(rope)
+
+		foreach (k in kill) k.Kill()
+	}
+	function UpdatePath(target_pos)
+	{
+		ResetPath()
+		local pos_start = bot.GetOrigin()
+		local pos_end = target_pos
+
+		
+		local area_start = GetNavArea(pos_start, 128.0)
+		local area_end = GetNavArea(pos_end, 128.0)
+
+		if (area_start == null)
+			area_start = GetNearestNavArea(pos_start, 128.0, false, true)
+		if (area_end == null)
+			area_end = GetNearestNavArea(pos_end, 128.0, false, true)
+
+		if (area_start == null || area_end == null)
+			return false
+
+		GetNavAreasFromBuildPath(area_start, area_end, pos_end, 0.0, TEAM_ANY, false, path_areas)
+
+		foreach (k, v in path_areas)
+		{
+			path.append(v)
+			// SpawnEntityFromTable("prop_dynamic", {
+			// 	model = "models/props_moonbase/moon_gravel_crystal_blue.mdl"
+			// 	targetname = "__rope"
+			// 	origin = v.GetCenter() + Vector(0, 0, 50)
+			// })
+		}
+	}
+
 
 	bot   = null
 	scope = null
@@ -243,6 +314,7 @@ class AI_Bot {
 	time  = null
 
 	botLevel = null
+	locomotion = null
 
 	cur_pos     = null
 	cur_vel     = null
@@ -261,6 +333,11 @@ class AI_Bot {
 	threat_behind_time = null
 	threat_visible     = null
 	threat_pos         = null
+
+	path				= null
+	path_index			= null
+	path_areas			= null
+	path_recompute_time	= null
 
 	fire_next_time  = null
 	aim_time        = null
