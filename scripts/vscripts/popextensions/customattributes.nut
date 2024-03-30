@@ -230,19 +230,18 @@ function CustomAttributes::FireInputOnHit(player, item, value) {
     if (wep == null) return
 
     local args = split(value, "^")
-    local targetname = value[0]
-    local input = value[1]
+    local targetname = args[0]
+    local input = args[1]
     local param = ""
     local delay = -1
-    if (value.len() > 2) param = value[2]
-    if (value.len() > 3) delay = value[3]
+    if (args.len() > 2) param = args[2]
+    if (args.len() > 3) delay = args[3]
 
     CustomAttributes.TakeDamageTable.FireInputOnHit <- function(params) {
-    
+
         if (params.attacker != player || params.weapon != wep) return
 
-        targetname = "!self" ? EntFireByHandle(params.attacker, input, param, delay, null, null) : DoEntFire(targetname, input, param, delay, null, null)
-    
+        targetname == "!self" ? EntFireByHandle(params.attacker, input, param, delay.tofloat(), null, null) : DoEntFire(targetname, input, param, delay.tofloat(), null, null)
     }
 }
 
@@ -252,12 +251,12 @@ function CustomAttributes::FireInputOnKill(player, item, value) {
     if (wep == null) return
 
     local args = split(value, "^")
-    local targetname = value[0]
-    local input = value[1]
+    local targetname = args[0]
+    local input = args[1]
     local param = ""
     local delay = -1
-    if (value.len() > 2) param = value[2]
-    if (value.len() > 3) delay = value[3]
+    if (args.len() > 2) param = args[2]
+    if (args.len() > 3) delay = args[3]
 
     CustomAttributes.DeathHookTable.FireInputOnKill <- function(params) {
     
@@ -1093,8 +1092,9 @@ function CustomAttributes::ShahanshahAttributeAboveHP(player, item, value) {
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
-    if (wep == null || player.IsBotOfType(1337)) return
+    if (wep == null) return
     //TODO: set up error handler
+
     if (!(attr in CustomAttributes.Attrs)) return
 
     local scope = player.GetScriptScope()

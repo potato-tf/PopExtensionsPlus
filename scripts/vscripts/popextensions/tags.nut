@@ -236,7 +236,7 @@ local popext_funcs = {
 	popext_customattr = function(bot, args) {
 		local args_len = args.len()
 		if (args_len == 2)
-			CustomAttributes.AddAttr(bot, args[0], args[1])
+			CustomAttributes.AddAttr(bot, args[0], args[1], bot.GetActiveWeapon())
 		else if (args_len == 3)
 			CustomAttributes.AddAttr(bot, args[0], args[1], args[2])
 	}
