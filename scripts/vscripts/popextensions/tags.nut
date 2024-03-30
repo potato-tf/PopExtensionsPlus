@@ -44,6 +44,31 @@ local popext_funcs = {
 			bot.PressAltFireButton(args[1].tointeger())
 	}
 
+	popext_deathsound = function(bot, args) {
+		
+		PopExtTags.DeathHookTable.DeathSound <- function(params) {
+
+			local victim = GetPlayerFromUserID(params.userid)
+			
+			if (victim != bot) return
+
+			EmitSoundEx({sound_name = args[0], entity = victim})
+		}
+	}
+
+	popext_stepsound = function(bot, args) {
+		
+		scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
+		
+		bot.GetScriptScope().PlayerThinkTable.Stepsound <- function() {
+
+			if (GetPropInt(self,"m_Local.m_nStepside") != stepside)
+				EmitSoundEx({sound_name = args[0], entity = bot})
+
+			scope.stepside = GetPropInt(self,"m_Local.m_nStepside")
+		}
+	}
+
 	popext_usehumanmodel = function(bot, args) {
 		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", PopExtUtil.Classes[bot.GetPlayerClass()]))
 	}

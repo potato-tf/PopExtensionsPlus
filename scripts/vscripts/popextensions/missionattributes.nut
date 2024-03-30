@@ -53,7 +53,6 @@ if (!("ScriptUnloadTable" in ROOT))
 
 		function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
 		function OnGameEvent_player_hurt(params) { foreach (_, func in MissionAttributes.TakeDamageTablePost) func(params) }
-		function OnGameEvent_player_death(params) { foreach (_, func in MissionAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 		function OnGameEvent_mvm_begin_wave(params) { foreach (_, func in MissionAttributes.StartWaveTable) func(params) }
 		function OnGameEvent_player_team(params) {
@@ -66,6 +65,20 @@ if (!("ScriptUnloadTable" in ROOT))
 		}
 		// Hook all wave inits to reset parsing error counter.
 
+		function OnGameEvent_player_death(params) { 
+
+			if (MissionAttributes.SoundsToReplace.len() != 0)
+			{
+				foreach (sound, override in MissionAttributes.SoundsToReplace)
+					foreach (player in PopExtUtil.HumanArray)
+					{
+						StopSoundOn(sound, player)
+						EmitSoundEx({sound_name = MissionAttributes.SoundsToReplace[override], entity = player})
+					}
+			}
+
+			foreach (_, func in MissionAttributes.DeathHookTable) func(params) 
+		}
 		function OnGameEvent_recalculate_holidays(params) 
 		{
 
@@ -1314,6 +1327,26 @@ function MissionAttributes::MissionAttr(...) {
 		}
 	break
 
+	case "DisableSound":
+		if (typeof value != "array") MissionAttributes.RaiseValueError("DisableSound", value, "value must be an array")
+
+		MissionAttributes.ThinkTable.DisableSounds <- function() {
+			
+			foreach (sound in value)
+			{
+
+				foreach (player in PopExtUtil.HumanArray) 
+				{
+					StopSoundOn(sound, player)
+					player.StopSound(sound)
+				}
+				
+				StopSoundOn(PopExtUtil.Worldspawn, player)
+				PopExtUtil.Worldspawn.StopSound(sound)
+			}
+		}
+	break
+
 	case "SoundOverrides":
 		if (typeof value != "table") MissionAttributes.RaiseValueError("SoundOverrides", value, "value must be a table")
 
@@ -1333,6 +1366,9 @@ function MissionAttributes::MissionAttr(...) {
 						StopSoundOn(sound, player)
 						player.StopSound(sound)
 					}
+
+					StopSoundOn(PopExtUtil.Worldspawn, player)
+					PopExtUtil.Worldspawn.StopSound(sound)
 				}
 			}
 		}
