@@ -1,6 +1,3 @@
-# PopExtensions+
-VScript extensions for use inside population files
-
 This is a greatly expanded fork of the original PopExtensions that aims to recreate many of the features in sigsegv/rafradek's server plugins.
 
 The roadmap for what needs to be added to this script can be found [here](https://trello.com/b/rHmwlmCL/popextensions-todo-list).  We encourage anyone and everyone to submit pull requests to recreate the missing features in VScript.
