@@ -135,7 +135,7 @@ def convert_proptype(prop, propval, arrayval):
 	# 	print(COLOR['CYAN'],'Alternatively:',COLOR['ENDC'],COLOR['GREEN'], 's, i, f, e, b, v', COLOR['ENDC'])
 	# 	proptype = input('Property Type: ')
 	# 	manualset = True
-	# else: 
+	# else:
 	proptype = propdict[prop]
 
 	if proptype.startswith('i'):
@@ -166,7 +166,7 @@ def convert_proptype(prop, propval, arrayval):
 	else:
 
 		return f'NetProps.SetProp{proptype}(self, `{prop}`, {propval})'
-	
+
 		# if proptype == 'String':
 		# 	if prop == 'm_iszMvMPopfileName':
 		# 		# log.append('ALERT: Changing m_iszMvMPopfileName can break map rotation! Change back to default on mission complete')
@@ -179,7 +179,7 @@ def convert_proptype(prop, propval, arrayval):
 
 		# else:
 			# return f'NetProps.SetProp{proptype}(self, `{prop}`, {propval})'
-	
+
 customweapons = {}
 def convert_raf_keyvalues(value):
 	# print(value.split(','))
@@ -406,7 +406,7 @@ def convert_raf_keyvalues(value):
 		else:
 			value = ','.join(splitval)
 		return value
-	
+
 #print pointtemplates in new format
 def convertpointtemplates(pop, indentationnumber, depth):
 	newindent = 0
@@ -488,7 +488,44 @@ def convertpointtemplates(pop, indentationnumber, depth):
 					else:
 						print(newvalue + ',')
 
-try: 
+stemplates = []
+def convertspawntemplates(pop):
+
+	lines = open(pop, 'r', encoding='utf-8').readlines()
+
+	# spawntemplates = [l.strip() for l in file if 'spawntemplate' in l.lower()]
+	for i, line in enumerate(lines):
+		if 'spawntemplate' in line.lower() and len(line.split()) == 1:
+			spawntemplates = {}
+			j = i + 1
+			while j < len(lines) and '}' not in lines[j-1]:
+				content = lines[j].strip()
+				if content:
+					splitcontent = content.split('\n')[0].split()
+					# print(splitcontent)
+					if len(splitcontent) > 1:
+
+						if splitcontent[0].lower() == 'name':
+							spawntemplates[splitcontent[0]] = splitcontent[1]
+						elif splitcontent[0].lower() == 'origin' or splitcontent[0].lower() == 'angles':
+							spawntemplates[splitcontent[0]] = f'{splitcontent[1]} {splitcontent[2]} {splitcontent[3]}'
+				j += 1
+			# print(spawntemplates)
+			stemplates.append(spawntemplates)
+	# print(stemplates)
+	funcs = []
+	for template in stemplates:
+		if len(template) < 1: continue
+		func = f'SpawnTemplates.SpawnTemplate({template["Name"]}, null'
+		if 'Origin' in template:
+			func = func + f', {template["Origin"]}'
+		if 'Angles' in template:
+			func = func + f', {template["Angles"]}'
+		func = func + ')'
+		funcs.append(func)
+
+pop = None
+try:
 	import tkinter as tk
 	from tkinter import filedialog
 
@@ -496,24 +533,25 @@ try:
 	root.withdraw()
 
 	file_path = filedialog.askopenfilename()
+	pop = file_path
 	popfile = open(file_path, 'r', encoding='utf-8').read()
-	
+
 except:
 	from os import walk
 	popfiles = {}
 	for _, _, files in walk('./'):
 		i = 0
 		for file in files:
-			if not file.endswith('.pop'): 
+			if not file.endswith('.pop'):
 				continue
 			i += 1
 			print(i, f': {file}')
 			popfiles[i] = file
 
 	file_path = input("enter the number for the file you would like to convert: ")
+	pop = popfiles.get(int(file_path))
 
-
-	popfile = open(popfiles.get(int(file_path)),'r', encoding='utf-8').read()
+	popfile = open(pop,'r', encoding='utf-8').read()
 
 # Remove comments
 while popfile.find('//') != -1:
@@ -541,3 +579,6 @@ convertpointtemplates(keylist, 0, 0)
 sys.stdout.close()
 # Restore sys.stdout to our old saved file handler
 sys.stdout = stdout_fileno
+
+# write out spawntemplates
+convertspawntemplates(pop)
