@@ -491,7 +491,9 @@ def convertpointtemplates(pop, indentationnumber, depth):
 stemplates = []
 def convertspawntemplates(pop):
 
-	lines = open(pop, 'r', encoding='utf-8').readlines()
+	file = open(pop, 'r', encoding='utf-8')
+
+	lines = file.readlines()
 
 	# spawntemplates = [l.strip() for l in file if 'spawntemplate' in l.lower()]
 	for i, line in enumerate(lines):
@@ -523,6 +525,10 @@ def convertspawntemplates(pop):
 			func = func + f', {template["Angles"]}'
 		func = func + ')'
 		funcs.append(func)
+
+	for f in list(set(funcs)):
+		with open(pop[:-4] + "_point_templates.nut", 'a') as file:
+			file.write(f'{f}\n')
 
 pop = None
 try:
@@ -569,7 +575,7 @@ keylist = getpointtemplates(parsed, [])
 stdout_fileno = sys.stdout
 
 # Redirect sys.stdout to the file
-output = open(file_path[:-4] + "_point_templates.nut", "a+")
+output = open(f'{pop}_point_templates.nut', 'a+')
 sys.stdout = output
 sys.stdout.reconfigure(encoding='utf-8')
 
