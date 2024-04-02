@@ -575,7 +575,7 @@ keylist = getpointtemplates(parsed, [])
 stdout_fileno = sys.stdout
 
 # Redirect sys.stdout to the file
-output = open(f'{pop}_point_templates.nut', 'a+')
+output = open(f'{pop[:-4]}_point_templates.nut', 'a+')
 sys.stdout = output
 sys.stdout.reconfigure(encoding='utf-8')
 
