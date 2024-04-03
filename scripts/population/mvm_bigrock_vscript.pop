@@ -41,34 +41,45 @@ WaveSchedule
 				// EntFire(`wave_init_relay`, `Trigger`)
 
 				// Load popextensions script
-				IncludeScript(`popextensions_main`, getroottable())
+				IncludeScript(`popextensions_main.nut`, getroottable())
+
+				// IncludeScript(`tensai_pointtemplates.nut`)
 
 				MissionAttrs({
+
 					`NoReanimators`: 1
 					`ForceHoliday`: 8
-					`NoRome`: 2 //1 = disables romevision on bots 2 = disables rome carrier tank
-					`WaveStartCountdown`: 1 //ready-up countdown time.  Values below 9 will disable starting music
-					// `PlayersAreRobots`: 2|4|8|16 //see missionattributes.nut for bitflag info
-					`ReverseMVM`: 1|16|32  //see missionattributes.nut for bitflag info
-					`SpellRateCommon`: 0.5
+					`NoRome`: 2
+					`BotHeadshots`: 1
+					`NoCrumpkins`: 1
+					`WaveStartCountdown`: 3
+					`PlayersAreRobots`: 1|8|16 //see missionattributes.nut for bitflag info
+					`ReverseMVM`: 1|2|8|16|32|64  //see missionattributes.nut for bitflag info
+					`SpellRateCommon`: 0.5 
 					`NoSkeleSplit`: 1
-					`WaveNum`: 3 //sets the wave number on the wavebar
-					`MaxWaveNum`: 60 //sets the max wave number on the wavebar
-					`StandableHeads`: 1 //allow standing on bot heads
-					`MultiSapper`: 1 //allow spies to place multiple sappers
-					`TeamWipeWaveLoss`: 1 //fail the wave if all players are dead
-					`GiantSentryKillCountOffset`: -4 //change sentry kill count per mini-boss kill.  -4 will make giants count as 1 kill
+					`WaveNum`: 3
+					`MaxWaveNum`: 60
+					`StandableHeads`: 1
+					`MultiSapper`: 1
+					`TeamWipeWaveLoss`: 1
+					`GiantSentryKillCountOffset`: -4
 
 					`SoundOverrides` : { //overrides teamplay_broadcast_audio sounds
 						`Announcer.MVM_Get_To_Upgrade`: null
-						`Game.TeamRoundStart3`: null
+						`music.mvm_end_last_wave`: null
+						`Game.YourTeamWon`: null
+						`MVM.PlayerDied`: null
 					}
+
+					`AddCond`: [32, 10] //speed boost for 10s
+
 					`PlayerAttributes`: {
 
-						// `damage bonus`: 10,
+						`damage bonus`: 10,
 						`can breathe under water`: 1,
 						`mult swim speed`: 3,
 						`teleport instead of die`: 1,
+						`crit when health below`: 75,
 
 						[TF_CLASS_SCOUT] = {
 							`damage bonus` : 5,
@@ -85,30 +96,55 @@ WaveSchedule
 						[TF_CLASS_DEMOMAN] = {
 							`fire rate bonus` : 0.5,
 						}
-					}
+					},
 					`ItemAttributes`: {
 						`tf_weapon_scattergun` : {
 							`max health additive bonus` : 100
 							`fire rate bonus` : 0.5
 							`Reload time decreased` : 0.5
 							`clip size bonus` : 2
-						}
+							`reloads full clip at once`: 1
+							`passive reload`: 1
+						},
 						`tf_weapon_rocketlauncher` : {
 							`fire rate penalty` : 3
 							`damage bonus` : 10
+							`custom projectile model`: `models/player/heavy.mdl`
+							`add cond when active`: 91
+							// `self add cond on hit`: [91, 1]
+						},
+						`tf_weapon_pistol` : {
+							`passive reload`: 1
+						},
+						`tf_weapon_shotgun`: {
+							`reloads full clip at once`: 1
 						}
 						`tf_weapon_crossbow` : {
 							`fires milk bolt`: 1
 							`set turn to ice`: 1
-						}
-						`tf_weapon_sword`: {
-							`melee cleave attack`: 1024
-						}
+							`radius sleeper`: 1
+						},
+						[132] = { //item id, eyelander
+							`melee cleave attack`: 32
+							`stun on hit`: { duration = 4 type = 2 speedmult = 0.2 stungiants = true }
+						},
 						`tf_weapon_wrench`: {
-							`mult teleporter recharge rate` : 2
+							// `mult teleporter recharge rate` : 2
+							`build small sentries`: 1
+						},
+						`The Sydney Sleeper`: { //localized name in items_game.txt/item_map.nut
+							`radius sleeper`: 1
+							`explosive bullets`: 30
+						}
+						`The Sandman` : {
+							`old sandman stun`: 1
+						}
+						`Iron Curtain` : {
+							`alt-fire disabled`: 1
 						}
 					}
 				})
+				//parameters: text, prefix color, prefix text, sync with game_text true/false
 				Info(`This is an explanation text example|PAUSE 2|Explanation text can support pauses, and optionally syncing chat prints with the game_text|By default, text lifetime is determined by the length of the sentence|See PopExtUtil::Explanation in util.nut for more info`, `FFFF66`, `Explanation: `, true)
 			"
 		}
@@ -120,198 +156,176 @@ WaveSchedule
 		DoneOutput
 		{
 			Target wave_finished_relay
-			Action Trigger
+			Action trigger
 		}
 		// WaveSpawn
 		// {
 		// 	Name "Wave1"
 		// 	Where spawnbot
 		// 	TotalCount 50
-		// 	MaxActive 20
-		// 	SpawnCount 10
+		// 	MaxActive 5
+		// 	SpawnCount 5
 		// 	WaitBeforeStarting 0
 		// 	TotalCurrency 200
-		// 		TFBot
+		// 	TFBot
+		// 	{
+		// 		// Tag "popext_forceromevision"
+		// 		// Tag "popext_addcond|32|10"
+		// 		// Tag "popext_usehumanmodel"
+		// 		// Tag "popext_alwaysglow"
+		// 		// Tag "popext_usebestweapon"
+		// 		// Tag "popext_giveweapon|tf_weapon_shotgun_pyro|425" //family business
+		// 		// Tag "popext_homingprojectile|1.0|1.0"
+		// 		// Tag "popext_improvedairblast"
+		// 		// Tag "popext_usehumananims"
+		// 		// Tag "popext_spell|11|5|2"
+		// 		// Tag "popext_ringoffire|20|2"
+		// 		Tag "popext_meleeai"
+		// 		Tag "popext_reprogrammed"
+		// 		// Tag "popext_weaponswitch|2"
+		// 		// Tag "popext_weaponresist|tf_weapon_minigun|99999"
+		// 		// Tag "popext_weaponresist|11|0.01" //stock heavy shotgun
+		// 		Class Pyro
+		// 		Skill Hard
+		// 		// Item "The Thermal Thruster"
+		// 		// Item "TF_WEAPON_SPELLBOOK"
+		// 		// Attributes IgnoreEnemies
+		// 		// WeaponRestrictions PrimaryOnly
+		// 		CharacterAttributes 
 		// 		{
-		// 			Tag "popext_forceromevision"
-		// 			Tag "popext_addcond|32|10"
-		// 			Tag "popext_usehumanmodel"
-		// 			Tag "popext_alwaysglow"
-		// 			// Tag "popext_usebestweapon"
-		// 			Tag "popext_giveweapon|tf_weapon_shotgun_pyro|425" //family business
-		// 			Tag "popext_homingprojectile|1.0|1.0"
-		// 			Tag "popext_improvedairblast"
-		// 			Tag "popext_usehumananims"
-		// 			Tag "popext_spell|11|5|2"
-		// 			Tag "popext_ringoffire|20|2"
-		// 			Tag "popext_meleeai"
-		// 			// Tag "popext_weaponswitch|2"
-		// 			Tag "popext_weaponresist|tf_weapon_minigun|99999"
-		// 			// Tag "popext_weaponresist|11|0.01" //stock heavy shotgun
-		// 			Class Pyro
-		// 			Skill Hard
-		// 			// Item "The Thermal Thruster"
-		// 			Item "TF_WEAPON_SPELLBOOK"
-		// 			// Attributes IgnoreEnemies
-		// 			// WeaponRestrictions PrimaryOnly
-		// 			CharacterAttributes
-		// 			{
-		// 				"damage bonus" -10
-		// 			}
+		// 			"damage bonus" -10
 		// 		}
+		// 	}
 		// }
-		WaveSpawn
+		WaveSpawn 
 		{
 
 			Name "Wave1a"
 			Where spawnbot
-			TotalCount 2
-			MaxActive 2
-			SpawnCount 1
+			TotalCount 10
+			MaxActive 5
+			SpawnCount 5
 			WaitBeforeStarting 1
 			WaitBetweenSpawns 5
 			TFBot
 			{
 				Template T_TFBot_Giant_Soldier
-				Attributes HoldFireUntilFullReload
-				// Item "The Cow Mangler 5000"
-				Tag "popext_homingprojectile|1.0|1.0"
+				Attributes HoldFireUntilFullReload //now works with every clip-based weapon
+				Item "The Cow Mangler 5000"
+				// Tag "popext_homingprojectile|0.5|1.0"
+				Tag "popext_homingprojectile|0.5|0.5"
 				Tag "popext_reprogrammed"
-				Tag "popext_spawnhere|-779.491150 3302.379883 312.992340"
-				Tag "popext_customattrib|wet immunity|1"
+				Tag "popext_spawnhere|-779.491150 3302.379883 312.992340|3" //custom spawn origin
+				Tag "popext_customattr|wet immunity|1"
+				Tag "popext_weaponresist|298|20" //20x damage from iron curtain
+				Tag "popext_setskin|0" //red skin
 				// Tag "popext_fireweapon|2048"
 				Tag "popext_rocketcustomtrail|eyeboss_projectile"
 			}
-
 		}
-
 	}
 
 	Wave
 	{
-        InitWaveOutput
+		InitWaveOutput
         {
             Target gamerules // gamerules or tf_gamerules, depending on the map
             Action RunScriptCode
             Param "
-                // The original InitWaveOutput trigger, change if necessary
-                // EntFire(`wave_init_relay`, `Trigger`)
-
-                // Load popextensions script
-				IncludeScript(`popextensions_main`, getroottable())
-				MissionAttrs({
-					`WaveStartCountdown`: 1
-					`ExtraTankPath`: [`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`] //array of xyz coordinates for extra tank paths
-					// `666Wavebar`: 1 //this will not work on wave 1!
-				})
-				MissionAttrs({`ExtraTankPath`: [`640 5404 350`, `640 4810 350`, `640 4400 550`, `1100 4100 650`, `1636 3900 770`]})
-
-                // Set custom wave icons inside this function
-                PopExt.SetWaveIconsFunction(function() {
-                    // Use custom icon for a tank, first remove one of the regular tank icons
-                    PopExt.SetWaveIconSpawnCount(`tank`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
-                    // Add our custom tank icon
-                    PopExt.SetWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
+                IncludeScript(`popextensions_main`, getroottable())
+                MissionAttrs({
+                    `WaveStartCountdown`: 1
+                    `ExtraTankPath`: [
+						[`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`],
+						[`640 5404 350`, `640 4810 350`, `640 4400 550`, `1100 4100 650`, `1636 3900 770`]
+					]
+					`SoundOverrides` : { //overrides teamplay_broadcast_audio sounds
+						`Announcer.MVM_Get_To_Upgrade`: null
+						`music.mvm_end_last_wave`: null
+						`Game.YourTeamWon`: null
+					}
                 })
 
-                // Add event hooks for tanks with specified Name, also supports wildcard suffix
+                // PopExt.SetWaveIconsFunction(function() {
+                    // PopExt.SetWaveIconSpawnCount(`blimp2_lite`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
+                    // PopExt.SetWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
+                // })
+
                 PopExt.AddTankName(`abc*`, {
-                    // Called when the tank is spawned
                     OnSpawn = function(tank, name) {
-                        // Create a prop on top of the tank
                         local prop = SpawnEntityFromTable(`prop_dynamic`, {model = `models/props_badlands/barrel01.mdl`, origin = `0 0 79`})
 
-                        // Create an ignite trigger
                         local trigger = SpawnEntityFromTable(`trigger_ignite`, {origin = `0 0 100`, spawnflags = `1`})
                         PopExtUtil.SetupTriggerBounds(trigger, Vector(-175,-175,-175), Vector(175,175,175))
                         PopExtUtil.SetParentLocalOrigin([prop, trigger], tank)
 
-                        ClientPrint(null, 2, `OnSpawnTank`)
                         tank.KeyValueFromString(`rendercolor`, `255 0 0`)
                     },
-                    // Called when the tank is destroyed
-                    // Params as in https://wiki.alliedmods.net/Team_Fortress_2_Events#player_hurt:~:text=level-,npc_hurt,-Name%3A
-                    OnDeath = function(tank, params) {
-                        // Decrement custom tank icon when killed
-                        DecrementWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
-                    }
-					// Customizable parameters
-					Scale = `0.5`
-					DisableSmoke = true
-					// DisableTracks = true
-					// DisableBomb = true
-					// TankModel = `models/props_2fort/cow001_reference.mdl`
-					// TankModelVisionOnly = true // Sets the tank's model without changing the hitbox
+                    // OnDeath = function(tank, params) {
+                    //     PopExt.DecrementWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
+                    // }
+                    Scale = `0.5`
+                    DisableSmoke = true
                 })
-				PopExt.AddTankName(`tank2`, {
-					// Turns the tank into a blimp
-					IsBlimp = true
-					StartTrack = `extratankpath2_1`
-					// Optionally set custom models (or don't set to use the default blimp model)
-					// TankModel = `models/bots/boss_bot/boss_blimp_pure.mdl`
-					// TankModel = {
-						// Default = `models/bots/boss_bot/boss_blimp.mdl`
-						// Damage1 = `models/bots/boss_bot/boss_blimp_damage1.mdl`
-						// Damage2 = `models/bots/boss_bot/boss_blimp_damage2.mdl`
-						// Damage3 = `models/bots/boss_bot/boss_blimp_damage3.mdl`
-						// LeftTrack = `models/bots/boss_bot/tankred_track_l.mdl`
-						// RightTrack = `models/bots/boss_bot/tankred_track_r.mdl`
-						// Bomb = `models/bots/boss_bot/bombblue_mechanism.mdl`
-					// }
-				})
+				PopExt.AddCustomTankIcon(`blimp2_lite`, 1, true, false, false, false)
+                PopExt.AddTankName(`tank2`, {
+                    IsBlimp = true
+					StartTrack = `extratankpath2_1` //this is only required for blimps so the func_tracktrain knows where to go
+					CritImmune = true
+					NoScreenShake = true
+					CrushDamageMult = 0
+					Team = 2
+					SoundOverrides = {
+						Ping = `)npc/combine_gunship/ping_search.wav`
+						Start = `ui/chime_rd_2base_pos.wav`
+						EngineLoop = `npc/combine_gunship/dropship_engine_distant_loop1.wav`
+						Destroy = `ui/chime_rd_2base_neg.wav`
+						Deploy = `ui/chime_rd_2base_neg.wav`
+					}
+                })
             "
+		}
+        // WaveSpawn
+        // {
+        //     Name "Wave2"
+        //     TotalCount 1
+        //     TotalCurrency 0
+
+        //     Tank
+        //     {
+        //         Health 100
+        //         Speed 75
+        //         Name "abcd"
+        //         StartingPathTrackNode "extratankpath1_1"
+
+        //         OnBombDroppedOutput
+        //         {
+        //             Target boss_deploy_relay
+        //             Action Trigger
+        //         }
+        //     }
+        // }
+        WaveSpawn
+        {
+            Name "Wave2"
+            TotalCount 1
+            TotalCurrency 0
+
+            Tank
+            {
+                Health 10000
+                Speed 70
+                Name "tank2"
+                Skin 0
+                StartingPathTrackNode "extratankpath2_1"
+
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
         }
-		StartWaveOutput
-		{
-			Target wave_start_relay
-			Action Trigger
-		}
-		DoneOutput
-		{
-			Target wave_finished_relay
-			Action Trigger
-		}
-		WaveSpawn
-		{
-			Name "Wave2"
-			TotalCount 1
-			TotalCurrency 0
-
-			Tank
-			{
-				Health 100
-				Speed 75
-				Name "abcd"
-				StartingPathTrackNode "extratankpath1_1"
-
-				OnBombDroppedOutput
-				{
-					Target boss_deploy_relay
-					Action Trigger
-				}
-			}
-		}
-		WaveSpawn
-		{
-			Name "Wave2"
-			TotalCount 1
-			TotalCurrency 0
-
-			Tank
-			{
-				Health 100
-				Speed 70
-				Name "tank2"
-				Skin 1
-				StartingPathTrackNode "extratankpath2_1"
-
-				OnBombDroppedOutput
-				{
-					Target boss_deploy_relay
-					Action Trigger
-				}
-			}
-		}
 	}
 }
 

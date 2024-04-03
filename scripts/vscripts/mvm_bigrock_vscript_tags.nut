@@ -21,5 +21,6 @@
 	"popext_rocketcustomtrail|eyeboss_projectile"
 	"popext_reprogrammed"
 	"popext_setskin|0"
-	"popext_spawnhere|-779.491150 3302.379883 312.992340"
+	"popext_meleeai"
+	"popext_spawnhere|-779.491150 3302.379883 312.992340|3"
 ]

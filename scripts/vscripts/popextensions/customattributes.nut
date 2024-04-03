@@ -700,11 +700,20 @@ function CustomAttributes::StunOnHit(player, item, value) {
 
     local scope = player.GetScriptScope()
 
+    local duration = 5, type = 2, speedmult = 0.2, stungiants = true
+    
+    if ("duration" in value) duration = value.duration 
+    if ("type" in value) type = value.type 
+    if ("speedmult" in value) speedmult = value.speedmult
+    if ("stungiants" in value) stungiants = value.stungiants
+    
+    // `stun on hit`: { duration = 4 type = 2 speedmult = 0.2 stungiants = false] //in order: stun duration in seconds, stun type, stun movespeed multiplier, can stun giants true/false
+
     CustomAttributes.TakeDamageTable.StunOnHit <- function(params) {
 
-        if (!params.const_entity.IsPlayer() || params.weapon != wep || (value.len() == 4 && value[3] && params.const_entity.IsMiniBoss())) return
+        if (!params.const_entity.IsPlayer() || params.weapon != wep || (!stungiants && params.const_entity.IsMiniBoss())) return
 
-        PopExtUtil.StunPlayer(params.const_entity, value[0], value[1], 0, value[2])
+        PopExtUtil.StunPlayer(params.const_entity, duration, type, 0, speedmult)
     }
 }
 
@@ -927,7 +936,8 @@ function CustomAttributes::PassiveReload(player, item) {
 
     local scope = player.GetScriptScope()
     scope.PlayerThinkTable.PassiveReload <- function() {
-
+        
+        if (!wep.IsValid()) return
         local ammo = GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1)
 
         if (player.GetActiveWeapon() != wep && wep.Clip1() != wep.GetMaxClip1())
@@ -1198,7 +1208,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "stun on hit":
             CustomAttributes.StunOnHit(player, item, value)
-            scope.attribinfo[attr] <- format("Stuns victim for %f seconds on hit", value[0].tofloat())
+            scope.attribinfo[attr] <- format("Stuns victim for %f seconds on hit", value["duration"].tofloat())
         break
 
         case "is miniboss": 
@@ -1339,7 +1349,8 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         case "add cond when active":
             CustomAttributes.AddCondWhenActive(player, item, value)
             scope.attribinfo[attr] <- format("when active: player receives cond %d", value)
-            
+        break
+
         case "fire input on hit":
             CustomAttributes.FireInputOnHit(player, item, value) 
             scope.attribinfo[attr] <- format("fires custom entity input on hit: %s", value)
