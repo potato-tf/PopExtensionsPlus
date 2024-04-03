@@ -293,6 +293,7 @@ function PopulatorThink() {
 			scope.maxHealth       <- tank.GetMaxHealth()
 			scope.team            <- tank.GetTeam()
 			scope.teamchanged <- false
+			scope.engineloopreplaced <- false
 
 			scope.curHealth       <- tank.GetHealth()
 			scope.lastHealthStage <- 0
@@ -329,11 +330,11 @@ function PopulatorThink() {
 							cooldowntime = Time() + 5.0
 						}
 					}
-					if ("EngineLoop" in scope.popProperty.SoundOverrides) {
+					if ("EngineLoop" in scope.popProperty.SoundOverrides && !scope.engineloopreplaced) {
 
 							StopSoundOn("MVM.TankEngineLoop", tank)
 							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank})
-							delete scope.popProperty.SoundOverrides.EngineLoop
+							scope.engineloopreplaced = true
 					}
 					if ("Start" in scope.popProperty.SoundOverrides) {
 						StopSoundOn("MVM.TankStart", tank)
@@ -344,7 +345,7 @@ function PopulatorThink() {
 
 						scope.TankThinkTable.DeploySound <- function() {
 
-							if (self.GetSequence() != self.LookupSequence("deploy") || scope.deploysoundplayed) return
+							if (self.GetSequence() != self.LookupSequence("deploy")) return
 
 							StopSoundOn("MVM.TankDeploy", self)
 
