@@ -671,12 +671,13 @@ function MissionAttributes::MissionAttr(...) {
 			local wep = params.weapon
 
 			//re-enable headshots for snipers and ambassador
-			if (
+			if ("attribinfo" in scope && !("can headshot" in scope.attribinfo) || ( //first check for "can headshot", ignore all other checks if so
+
 				!player.IsPlayer() || !victim.IsPlayer() ||   //check if non-bot victim
 
 				player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER || //check if we're spy/sniper
 
-				GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD || //check for headshot
+				(GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD && (wep.GetClassname() != "tf_weapon_compound_bow" && params.damage_stats != TF_DMG_CUSTOM_HEADSHOT)) || //check for headshot.  Huntsman handles headshots differently
 
 				player.GetPlayerClass() == TF_CLASS_SNIPER && (wep.GetSlot() == SLOT_SECONDARY || PopExtUtil.GetItemIndex(wep) == ID_SYDNEY_SLEEPER) || //ignore sydney sleeper and SMGs
 
@@ -685,7 +686,8 @@ function MissionAttributes::MissionAttr(...) {
 				player.GetPlayerClass() == TF_CLASS_SPY && PopExtUtil.GetItemIndex(wep) != ID_AMBASSADOR || // check for ambassador
 				
 				victim.InCond(TF_COND_BLEEDING) && GetPropInt(victim, "m_iStunFlags") & TF_STUN_MOVEMENT //check for explosive headshot victim.
-			) return 
+			)
+			) return
 
 			params.damage_type = params.damage_type | DMG_CRITICAL //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
 			params.damage_stats = TF_DMG_CUSTOM_HEADSHOT

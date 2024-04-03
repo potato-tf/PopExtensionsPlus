@@ -87,6 +87,7 @@
         "add cond when active": null
         "fire input on hit":  null
         "fire input on kill":  null
+        "replace weapon fire sound": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -737,6 +738,33 @@ function CustomAttributes::IsMiniBoss(player, item) {
     }
 }
 
+function CustomAttributes::ReplaceFireSound(player, item, value) {
+    
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    PrecacheSound(value[1])
+    PrecacheScriptSound(value[1])
+
+    local scope = player.GetScriptScope()
+    scope.attacksound <- 0.0
+    scope.PlayerThinkTable.ReplaceFireSound <- function() {
+
+        player.StopSound(value[0])
+        StopSoundOn(value[0], player)
+
+        if (!("attacksound" in scope) || GetPropFloat(wep, "m_flLastFireTime") == scope.attacksound) return
+
+        printl(scope.attacksound + " : " + GetPropFloat(wep, "m_flLastFireTime"))
+
+        EmitSoundEx({sound_name = value[1], entity = self, channel = CHAN_WEAPON})
+        // EntFireByHandle(player, "RunScriptCode", "EmitSoundEx({sound_name = "+value[1]+", entity = self})", -1, null, null)
+
+        scope.attacksound = GetPropFloat(wep, "m_flLastFireTime")
+    }
+    
+}
+
 function CustomAttributes::IsInvisible(player, item) {
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
@@ -1214,6 +1242,11 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
         case "is miniboss": 
             CustomAttributes.IsMiniBoss(player, item)
             scope.attribinfo[attr] <- "When weapon is active: player becomes giant"
+        break
+
+        case "replace weapon fire sound":
+            CustomAttributes.ReplaceFireSound(player, item, value)
+            scope.attribinfo[attr] <- format("Weapon fire sound replaced with %s", value[1])
         break
 
         case "is invisible": 
