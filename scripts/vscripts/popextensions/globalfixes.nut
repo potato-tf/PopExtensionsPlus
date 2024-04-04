@@ -199,6 +199,45 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				}
 			}
 		}
+
+		function RestoreGiantFootsteps(params) {
+
+			local player = GetPlayerFromUserID(params.userid)
+
+			if (!player.IsBotOfType(1337) || !player.IsMiniBoss()) return
+			player.AddCustomAttribute("override footstep sound set", 0, -1)
+
+			local validclasses = {
+				[TF_CLASS_SCOUT] = null,
+				[TF_CLASS_SOLDIER] = null,
+				[TF_CLASS_PYRO] = null ,
+				[TF_CLASS_DEMOMAN] = null ,
+				[TF_CLASS_HEAVYWEAPONS] = null
+			}
+
+			if (!(player.GetPlayerClass() in validclasses)) return
+
+			local cstring = PopExtUtil.Classes[player.GetPlayerClass()]
+
+			local footstepsound = format("^mvm/giant_%s/giant_%s_step0%d.wav", cstring, cstring, RandomInt(1, 4))
+
+			if (player.GetPlayerClass() == TF_CLASS_DEMOMAN)
+				footstepsound = format("^mvm/giant_demoman/giant_demoman_step0%d.wav", RandomInt(1, 4))
+
+			if (IsSoundPrecached(footstepsound)) PrecacheSound(footstepsound)
+
+			player.ValidateScriptScope()
+			local scope = player.GetScriptScope()
+
+			scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
+			scope.PlayerThinkTable.RestoreGiantFootsteps <- function() {
+
+				if (GetPropInt(player, "m_Local.m_nStepside") != scope.stepside)
+					player.EmitSound(footstepsound)
+
+				scope.stepside = GetPropInt(player, "m_Local.m_nStepside")
+			}
+		}
 		
 		// Doesn't fully work correctly, need to investigate
 		function EngineerBuildingPushbackFix(params) {

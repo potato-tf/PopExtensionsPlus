@@ -670,24 +670,31 @@ function MissionAttributes::MissionAttr(...) {
 			local scope = victim.GetScriptScope()
 			local wep = params.weapon
 
-			//re-enable headshots for snipers and ambassador
-			if ("attribinfo" in scope && !("can headshot" in scope.attribinfo) || ( //first check for "can headshot", ignore all other checks if so
+			function CanHeadshot()
+			{
+				//check for head hitgroup, or for headshot dmg type but no crit dmg type (huntsman quirk)
+				if (GetPropInt(victim, "m_LastHitGroup") == HITGROUP_HEAD || (params.damage_stats == TF_DMG_CUSTOM_HEADSHOT && !(params.damage_type & DMG_CRITICAL)))
+				{
+					//are we sniper and do we have a non-sleeper primary?
+					if (player.GetPlayerClass() == TF_CLASS_SNIPER && wep.GetSlot() != SLOT_SECONDARY && PopExtUtil.GetItemIndex(wep) != ID_SYDNEY_SLEEPER)
+						return true
 
-				!player.IsPlayer() || !victim.IsPlayer() ||   //check if non-bot victim
+					//are we using classic and is charge meter > 150?  This isn't correct but no GetAttributeValue
+					if (GetPropFloat(wep, "m_flChargedDamage") >= 150.0 && PopExtUtil.GetItemIndex(wep) == ID_CLASSIC)
+						return true
+					
+					//are we using the ambassador?
+					if (PopExtUtil.GetItemIndex(wep) == ID_AMBASSADOR)
+						return true
 
-				player.GetPlayerClass() != TF_CLASS_SPY && player.GetPlayerClass() != TF_CLASS_SNIPER || //check if we're spy/sniper
-
-				(GetPropInt(victim, "m_LastHitGroup") != HITGROUP_HEAD && (wep.GetClassname() != "tf_weapon_compound_bow" && params.damage_stats != TF_DMG_CUSTOM_HEADSHOT)) || //check for headshot.  Huntsman handles headshots differently
-
-				player.GetPlayerClass() == TF_CLASS_SNIPER && (wep.GetSlot() == SLOT_SECONDARY || PopExtUtil.GetItemIndex(wep) == ID_SYDNEY_SLEEPER) || //ignore sydney sleeper and SMGs
-
-				GetPropFloat(wep, "m_flChargedDamage") < 150.0 && PopExtUtil.GetItemIndex(wep) == ID_CLASSIC || //check classic charge
+					//did the victim just get explosive headshot? only checks for bleed cond + stun effect so can be edge cases where this returns false erroneously.
+					if (!victim.InCond(TF_COND_BLEEDING) && !(GetPropInt(victim, "m_iStunFlags") & TF_STUN_MOVEMENT)) //check for explosive headshot victim.
+						return true
+				}
+				return false
+			}
 				
-				player.GetPlayerClass() == TF_CLASS_SPY && PopExtUtil.GetItemIndex(wep) != ID_AMBASSADOR || // check for ambassador
-				
-				victim.InCond(TF_COND_BLEEDING) && GetPropInt(victim, "m_iStunFlags") & TF_STUN_MOVEMENT //check for explosive headshot victim.
-			)
-			) return
+			if (!CanHeadshot()) return
 
 			params.damage_type = params.damage_type | DMG_CRITICAL //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
 			params.damage_stats = TF_DMG_CUSTOM_HEADSHOT
@@ -1206,12 +1213,13 @@ function MissionAttributes::MissionAttr(...) {
 				return
 			}
 			
-			foreach(k, v in value)
+			function ApplyAttributes(item, attr)
 			{
-				local wep = PopExtUtil.HasItemInLoadout(player, k)
-				if (wep == null) continue
 
-				foreach (a, b in v)
+				local wep = PopExtUtil.HasItemInLoadout(player, item)
+				if (wep == null) return
+				
+				foreach (a, b in attr)
 				{
 					if (a in CustomAttributes.Attrs)
 						CustomAttributes.AddAttr(player, a, b, wep)
@@ -1221,16 +1229,35 @@ function MissionAttributes::MissionAttr(...) {
 						wep.ReapplyProvision()
 					}
 				}
+			}
+			
+			foreach(k, v in value)
+			{
+				local idarray = []
 
+				if (typeof k == "string" && k.find(","))
+				{
+					idarray = split(k, ",")
+
+					if (idarray.len() > 1) 
+						idarray.apply(function (val) {return val.tointeger()})
+					k = idarray
+				}
+				if (typeof k == "array")
+					foreach (item in k)
+						ApplyAttributes(item, v)
+				else
+					ApplyAttributes(k, v)
 			}
 				
 		}
 
 	break
 
-	// =========================================================
-
+	// ============================================================
 	// TODO: once we have our own giveweapon functions, finish this
+	// ============================================================
+
 	case "LoadoutControl":
 		MissionAttributes.SpawnHookTable.LoadoutControl <- function(params) {
 			local player = GetPlayerFromUserID(params.userid)
@@ -1349,13 +1376,48 @@ function MissionAttributes::MissionAttr(...) {
 		}
 	break
 
+	// ============================================================================
+	// very inconsistent
+	// currently can only override death and teamplay_broadcast_audio sounds
+	// any other sounds played by weapons or players cannot be easily replaced here
+	// see `replace weapon fire sound` and more in customattributes.nut
+	// ============================================================================
+
 	case "SoundOverrides":
+
 		if (typeof value != "table") this.RaiseValueError("SoundOverrides", value, "value must be a table")
 
+		local DeathSounds = {
+
+			"MVM.GiantCommonExplodes": null
+			"MVM.SentryBusterExplode": null
+		}
+
+		//teamplay_broadcast_audio overrides
 		foreach (sound, override in value) 
 			if (override != null) 
 				MissionAttributes.SoundsToReplace[sound] <- override
-		
+
+		//sounds played on bot death (giant/buster explosions)
+		MissionAttributes.TakeDamageTable.SoundOverrides <- function(params) {
+			local victim = params.const_entity
+			
+			if (params.damage < victim.GetHealth()) return
+
+			foreach (sound, override in value)
+			{
+				if (sound in DeathSounds)
+				{
+					StopSoundOn(sound, player)
+					player.StopSound(sound)
+					
+					if (override == null) return
+
+					EmitSoundEx({sound_name = override, entity = victim})
+				}
+			}
+		}
+
 		//catch-all for disabling non teamplay_broadcast_audio sfx
 		MissionAttributes.ThinkTable.DisableSounds <- function() {
 
@@ -1363,7 +1425,7 @@ function MissionAttributes::MissionAttr(...) {
 			{
 				if (override == null) 
 				{
-					foreach (player in PopExtUtil.HumanArray) 
+					foreach (player in PopExtUtil.PlayerArray) 
 					{
 						StopSoundOn(sound, player)
 						player.StopSound(sound)
@@ -1374,6 +1436,7 @@ function MissionAttributes::MissionAttr(...) {
 				}
 			}
 		}
+
 	break
 
 	case "NoThrillerTaunt":
@@ -2049,6 +2112,12 @@ function MissionAttributes::MissionAttr(...) {
 				scope.PlayerThinkTable.RemoveFootsteps <- function() {
 					if (!player.IsMiniBoss()) player.SetIsMiniBoss(true)
 				}
+
+				//stop explosion sound
+				MissionAttributes.DeathHookTable.RemoveFootsteps <- function(params) {
+					foreach (player in PopExtUtil.HumanArray)
+						StopSoundOn("MVM.GiantCommonExplodes", player)
+				}
 			}
 		}
 	break
@@ -2070,6 +2139,16 @@ function MissionAttributes::MissionAttr(...) {
 			delete GlobalFixes.TakeDamageTable.YERDisguiseFix
 	break
 
+	case "DefaultGiantFoosteps":
+		foreach(bot in PopExtUtil.BotArray)
+		{
+			if ("RestoreGiantFootsteps" in bot.GetScriptScope().PlayerThinkTable)
+				delete bot.GetScriptScope().PlayerThinkTable.RestoreGiantFootsteps
+
+			bot.AddCustomAttribute("override footstep sound set", 2.0, -1)
+		}
+
+	break
 	// =========================================================
 
 	// Don't add attribute to clean-up list if it could not be found.

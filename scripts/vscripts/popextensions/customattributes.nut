@@ -269,12 +269,12 @@ function CustomAttributes::FireInputOnKill(player, item, value) {
 
 function CustomAttributes::DmgVsSameClass(player, item, value) {
     
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
     CustomAttributes.TakeDamageTable.DmgVsSameClass <- function(params) {
         local victim = params.const_entity
         local attacker = params.attacker
-
-        local wep = PopExtUtil.HasItemInLoadout(attacker, item)
-        if (wep == null) return
         
         local scope = attacker.GetScriptScope()
         if (
@@ -290,6 +290,10 @@ function CustomAttributes::DmgVsSameClass(player, item, value) {
 
 function CustomAttributes::MultDmgVsAirborne(player, item, value) {
 
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
     CustomAttributes.TakeDamageTable.MultDmgVsAirborne <- function(params) {
 
         local victim = params.const_entity
@@ -300,6 +304,9 @@ function CustomAttributes::MultDmgVsAirborne(player, item, value) {
 
 function CustomAttributes::TeleportInsteadOfDie(player, item, value) {
 
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
 
     CustomAttributes.TakeDamageTable.TeleportInsteadOfDie <- function(params) {
 
@@ -323,13 +330,16 @@ function CustomAttributes::TeleportInsteadOfDie(player, item, value) {
 
 function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
     local scope = player.GetScriptScope()
 
     scope.cleavenextattack <- 0.0
     scope.cleaved <- false
 
     scope.PlayerThinkTable.MeleeCleaveAttack <- function() {
-        local wep = PopExtUtil.HasItemInLoadout(player, item)
+        
         if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0 || player.GetActiveWeapon() != wep || !("attribinfo" in scope) || !("melee cleave attack" in scope.attribinfo)) return
 
         scope.cleaved = false
@@ -748,16 +758,15 @@ function CustomAttributes::ReplaceFireSound(player, item, value) {
 
     local scope = player.GetScriptScope()
     scope.attacksound <- 0.0
+
     scope.PlayerThinkTable.ReplaceFireSound <- function() {
 
-        player.StopSound(value[0])
         StopSoundOn(value[0], player)
+        player.StopSound(value[0])
 
         if (!("attacksound" in scope) || GetPropFloat(wep, "m_flLastFireTime") == scope.attacksound) return
 
-        printl(scope.attacksound + " : " + GetPropFloat(wep, "m_flLastFireTime"))
-
-        EmitSoundEx({sound_name = value[1], entity = self, channel = CHAN_WEAPON})
+        EmitSoundEx({sound_name = value[1], entity = self})
         // EntFireByHandle(player, "RunScriptCode", "EmitSoundEx({sound_name = "+value[1]+", entity = self})", -1, null, null)
 
         scope.attacksound = GetPropFloat(wep, "m_flLastFireTime")
