@@ -307,7 +307,7 @@ local popext_funcs = {
 		}
 	}
 
-	popext_mobber = function (bot, args) {
+	popext_mobber = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
 			
@@ -315,7 +315,23 @@ local popext_funcs = {
 
 			if (t == null || t.IsFullyInvisible() || t.IsStealthed()) return
 
-			UpdatePath(t.GetOrigin())
+			// Move(t)
+			UpdatePathAndMove(t.GetOrigin())
+		}
+	}
+
+	popext_movetopoint = function(bot, args) {
+
+		bot.GetScriptScope().PlayerThinkTable.MoveToPoint <- function() {
+			UpdatePathAndMove(args[0])
+		}
+	}
+
+	popext_movetoent = function(bot, args) {
+
+		local entorigin = FindByName(null, args[0]).GetOrigin()
+		bot.GetScriptScope().PlayerThinkTable.MoveToEnt <- function() {
+			UpdatePathAndMove(entorigin)
 		}
 	}
 
@@ -924,8 +940,8 @@ local popext_funcs = {
 	}
 	function BotThink()
 	{
-		// try bot.OnUpdate() catch(e) return
-		bot.OnUpdate()
+		try bot.OnUpdate() catch(e) return
+		// bot.OnUpdate()
 		return -1
 	}
 

@@ -256,7 +256,7 @@ class AI_Bot {
 				local area = GetThreatArea(threat)
 				if (area != null)
 				{
-					UpdatePath(threat_cur_pos)
+					UpdatePathAndMove(threat_cur_pos)
 				}
 				
 				threat_pos = threat_cur_pos
@@ -276,7 +276,7 @@ class AI_Bot {
 
 		foreach (k in kill) k.Kill()
 	}
-	function UpdatePath(target_pos)
+	function UpdatePathAndMove(target_pos)
 	{
 		ResetPath()
 		local pos_start = bot.GetOrigin()
@@ -295,16 +295,15 @@ class AI_Bot {
 			return false
 
 		GetNavAreasFromBuildPath(area_start, area_end, pos_end, 0.0, TEAM_ANY, false, path_areas)
-
+		
 		foreach (k, v in path_areas)
-		{
 			path.append(v)
-			// SpawnEntityFromTable("prop_dynamic", {
-			// 	model = "models/props_moonbase/moon_gravel_crystal_blue.mdl"
-			// 	targetname = "__rope"
-			// 	origin = v.GetCenter() + Vector(0, 0, 50)
-			// })
-		}
+		
+		path.reverse()
+
+		foreach(p in path)
+			locomotion.Approach(p.GetCenter(), 1.0)
+		
 	}
 
 
