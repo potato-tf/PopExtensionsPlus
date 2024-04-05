@@ -25,6 +25,8 @@ class AI_Bot {
 		this.path_recompute_time = 0.0
 
 		this.botLevel = bot.GetDifficulty()
+
+		this.navdebug = true
 	}
 
 	function IsLookingTowards(target, cos_tolerance) {
@@ -238,7 +240,7 @@ class AI_Bot {
 		// foreach (k, v in bot.GetLocomotionInterface()) 
 		// printl(bot.GetLocomotionInterface())
 		// printl(bot.GetVisionInterface())
-		foreach(_, func in scope.PlayerThinkTable) func()
+		foreach (_, func in scope.PlayerThinkTable) func()
 
 		//SwitchToBestWeapon()
 		//DrawDebugInfo()
@@ -296,14 +298,75 @@ class AI_Bot {
 
 		GetNavAreasFromBuildPath(area_start, area_end, pos_end, 0.0, TEAM_ANY, false, path_areas)
 		
-		foreach (k, v in path_areas)
-			path.append(v)
-		
-		path.reverse()
+		foreach (name, area in path_areas)
+		{
+			local navareasize = (area.GetSizeX() * area.GetSizeY())
+			local vec_max = bot.GetBoundingMaxs(), vec_min = bot.GetBoundingMins()
+			
+			local diff_x = vec_max.x - vec_min.x
+			local diff_y = vec_max.y - vec_min.y
+			local diff_z = vec_max.z - vec_min.z
 
-		foreach(p in path)
-			locomotion.Approach(p.GetCenter(), 1.0)
+			# Calculate areas of faces
+			// local area_x = diff_y * diff_z
+			// local area_y = diff_x * diff_z 
+			// local area_z = diff_x * diff_y 
+
+			# Total surface area
+			local botareasize = diff_x * diff_y  # Two faces per axis
+			// printl(navareasize + " : " + botareasize)
+
+			local adjacentcount = 0
+			for (local i = 0; i < NUM_DIRECTIONS; i++)
+				if (area.GetAdjacentCount(i) != 0) adjacentcount++
+
+			// likely a corner nav square we'll get stuck on
+			if (navareasize < botareasize && adjacentcount < 4)
+			{
+				if (navdebug)
+				{
+					area.DebugDrawFilled(255, 0, 0, 255, 1.0, true, SINGLE_TICK)
+					DebugDrawText(area.GetCenter()+ Vector(0, 0, 10), "TOO SMALL!", false, SINGLE_TICK)
+				}
+
+				local potentialareas = {}
+
+				//check all surrounding connected nav areas
+				for (local i = 0; i < NUM_DIRECTIONS; i++)
+					area.GetAdjacentAreas(i, potentialareas)
+				
+				
+				foreach (_, a in potentialareas)
+				{
+					local potentialadjacentcount = 0
+
+					for (local i = 0; i < NUM_DIRECTIONS; i++)
+						if (a.GetAdjacentCount(i) != 0) potentialadjacentcount++
+
+					if (potentialadjacentcount < 4 || a.GetSizeX() * a.GetSizeY() < botareasize) continue
+	
+					if (navdebug)
+						a.DebugDrawFilled(0, 0, 255, 255, 1.0, true, SINGLE_TICK)
+
+					// area = a
+					break
+				}
+			}
+
+			path.append(area)
+			if (navdebug)
+				DebugDrawText(area.GetCenter(), name, false, SINGLE_TICK)
+		}
+
+		if (navdebug)
+			foreach (p in path)
+				p.DebugDrawFilled(0, 255, 0, 254, 1.0, true, SINGLE_TICK)
+			
+		if (path.len())
+			locomotion.Approach(path[0].FindRandomSpot(), 1.0)
 		
+		// if (bot.GetOrigin() - path[0].GetCenter().LengthSqr() < 50.0) path.remove(0)
+
 	}
 
 
@@ -344,4 +407,6 @@ class AI_Bot {
 	random_aim_time = null
 
 	cosmetic = null
+
+	navdebug = null
 }

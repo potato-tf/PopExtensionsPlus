@@ -58,14 +58,14 @@ local popext_funcs = {
 
 	popext_stepsound = function(bot, args) {
 		
-		scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
+		scope.stepside <- GetPropInt(bot, "m_Local.m_nStepside")
 		
 		bot.GetScriptScope().PlayerThinkTable.Stepsound <- function() {
 
-			if (GetPropInt(self,"m_Local.m_nStepside") != stepside)
+			if (GetPropInt(bot, "m_Local.m_nStepside") != stepside)
 				EmitSoundEx({sound_name = args[0], entity = bot})
 
-			scope.stepside = GetPropInt(self,"m_Local.m_nStepside")
+			scope.stepside = GetPropInt(bot, "m_Local.m_nStepside")
 		}
 	}
 
@@ -940,8 +940,8 @@ local popext_funcs = {
 	}
 	function BotThink()
 	{
-		try bot.OnUpdate() catch(e) return
-		// bot.OnUpdate()
+		// try bot.OnUpdate() catch(e) return
+		bot.OnUpdate()
 		return -1
 	}
 
