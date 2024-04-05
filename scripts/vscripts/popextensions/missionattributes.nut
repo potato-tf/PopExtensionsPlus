@@ -73,6 +73,7 @@ if (!("ScriptUnloadTable" in ROOT))
 					foreach (player in PopExtUtil.HumanArray)
 					{
 						StopSoundOn(sound, player)
+						if (override == null) return
 						EmitSoundEx({sound_name = MissionAttributes.SoundsToReplace[override], entity = player})
 					}
 			}
@@ -827,6 +828,7 @@ function MissionAttributes::MissionAttr(...) {
 
 				local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
 				local playervm = GetPropEntity(player, "m_hViewModel")
+				if (playervm == null) return
 				playervm.GetOrigin()
 
 				if (playervm == null) return
@@ -1391,12 +1393,26 @@ function MissionAttributes::MissionAttr(...) {
 
 			"MVM.GiantCommonExplodes": null
 			"MVM.SentryBusterExplode": null
+			"MVM.PlayerDied": null
+		}
+		local BroadcastAudioSounds = {
+			"Game.YourTeamWon": null
+			"MVM.Warning": null
+			"music.mvm_end_last_wave": null
+			"music.mvm_end_tank_wave": null
+			"Announcer.MVM_Final_Wave_End": null
+			"Announcer.MVM_Get_To_Upgrade": null
+			"Announcer.MVM_Robots_Planted": null
+			"Announcer.MVM_Final_Wave_End": null
+			"Announcer.MVM_Tank_Alert_Spawn": null
+			"Announcer.MVM_Tank_Alert_Another": null
+			"Announcer.MVM_An_Engineer_Bot_Is_Dead": null
+			"Announcer.MVM_An_Engineer_Bot_Is_Dead_But_Not_Teleporter": null
 		}
 
 		//teamplay_broadcast_audio overrides
-		foreach (sound, override in value) 
-			if (override != null) 
-				MissionAttributes.SoundsToReplace[sound] <- override
+		foreach (sound, override in value)
+			MissionAttributes.SoundsToReplace[sound] <- override
 
 		//sounds played on bot death (giant/buster explosions)
 		MissionAttributes.TakeDamageTable.SoundOverrides <- function(params) {
@@ -1408,8 +1424,8 @@ function MissionAttributes::MissionAttr(...) {
 			{
 				if (sound in DeathSounds)
 				{
-					StopSoundOn(sound, player)
-					player.StopSound(sound)
+					StopSoundOn(sound, victim)
+					victim.StopSound(sound)
 					
 					if (override == null) return
 
@@ -1423,7 +1439,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			foreach (sound, override in value) 
 			{
-				if (override == null) 
+				if (override == null && !(sound in DeathSounds) && !(sound in BroadcastAudioSounds)) 
 				{
 					foreach (player in PopExtUtil.PlayerArray) 
 					{

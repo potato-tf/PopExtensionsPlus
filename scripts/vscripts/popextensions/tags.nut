@@ -302,8 +302,18 @@ local popext_funcs = {
 
 			if (t == null || t.IsFullyInvisible() || t.IsStealthed()) return
 
-			SetThreat(t, true)
-			LookAt(t.EyePosition(), 50, 50)
+			if (threat != t) 
+			{
+				bot.AddBotAttribute(SUPPRESS_FIRE)
+				SetThreat(t, false)
+				LookAt(t.EyePosition(), 50, 50)
+				bot.SetAttentionFocus(t)
+			}
+			EntFireByHandle(bot, "RunScriptCode", "self.RemoveBotAttribute(SUPPRESS_FIRE)", -1, null, null)
+			// bot.RemoveBotAttribute(SUPPRESS_FIRE)
+
+			if (!bot.HasBotTag("popext_mobber"))
+				UpdatePathAndMove(t.GetOrigin())
 		}
 	}
 

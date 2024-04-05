@@ -26,7 +26,7 @@ class AI_Bot {
 
 		this.botLevel = bot.GetDifficulty()
 
-		this.navdebug = true
+		this.navdebug = false
 	}
 
 	function IsLookingTowards(target, cos_tolerance) {
@@ -171,9 +171,9 @@ class AI_Bot {
 		}
 
 		if (fire_next_time > time) {
-			bot.AddBotAttribute(SUPPRESS_FIRE)
+			bot.AddBotAttribute(IGNORE_ENEMIES)
 			bot.PressFireButton()
-			bot.RemoveBotAttribute(SUPPRESS_FIRE)
+			bot.RemoveBotAttribute(IGNORE_ENEMIES)
 			return false
 		}
 

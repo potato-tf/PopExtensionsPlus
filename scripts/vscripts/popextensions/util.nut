@@ -861,8 +861,6 @@ function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speed
 			spawnflags = 1
 		})
 	}
-	utilstun.SetSolid(2)
-	utilstun.SetSize(Vector(-1, -1, -1), Vector())	
 
 	EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
 }
@@ -878,8 +876,6 @@ function PopExtUtil::Ignite(player, duration = 10.0, damage = 1)
 			damage = damage
 			spawnflags = 1
 		})
-		utilignite.SetSolid(2)
-		utilignite.SetSize(Vector(-1, -1, -1), Vector())
 	}
 	EntFireByHandle(utilignite, "StartTouch", "", -1, player, player)
 	EntFireByHandle(utilignite, "EndTouch", "", SINGLE_TICK, player, player)
