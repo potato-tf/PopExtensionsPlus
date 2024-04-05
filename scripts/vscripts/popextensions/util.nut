@@ -184,7 +184,7 @@
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-			
+
 			//sort weapons by slot
 			local myweapons = {}
 			for (local i = 0; i < SLOT_COUNT; i++) {
@@ -336,7 +336,7 @@ function PopExtUtil::CopyTable(table) {
         {
             newtable[key] = CopyTable(value)
         }
-        else 
+        else
         {
             newtable[key] <- value
         }
@@ -741,7 +741,7 @@ function PopExtUtil::IsPointInRespawnRoom(point)
 		trigger.RemoveSolidFlags(4) // FSOLID_NOT_SOLID
 		triggers.append(trigger)
 	}
-	
+
 	local trace =
 	{
 		start = point,
@@ -749,7 +749,7 @@ function PopExtUtil::IsPointInRespawnRoom(point)
 		mask = 0
 	}
 	TraceLineEx(trace)
-	
+
 	foreach (trigger in triggers)
 	{
 		trigger.SetCollisionGroup(25) // special collision group used by respawnrooms only
@@ -831,15 +831,15 @@ function PopExtUtil::HasItemInLoadout(player, index) {
 			break
 		}
 	}
-	
+
 	if (t != null) return t
 
 	//didn't find weapon in children, go through m_hMyWeapons instead
 	for (local i = 0; i < SLOT_COUNT; i++) {
 		local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
-		
+
 		if (wep == null || wep.GetClassname() != index || wep != index || PopExtUtil.GetItemIndex(wep) != index || (index in PopExtItems && PopExtUtil.GetItemIndex(wep) == PopExtItems[index].id)) continue
-		
+
 		t = wep
 		break
 	}
@@ -848,19 +848,28 @@ function PopExtUtil::HasItemInLoadout(player, index) {
 
 function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5) {
 
-	local utilstun = FindByName(null, "__utilstun")
+	// CreateByClassname is significantly faster than SpawnEntityFromTable
 
-	if (utilstun == null) {
-		utilstun = SpawnEntityFromTable("trigger_stun", {	
-			targetname = "__utilstun"
-			stun_type = type
-			stun_duration = duration
-			move_speed_reduction = speedreduce
-			trigger_delay = delay
-			StartDisabled = 0
-			spawnflags = 1
-		})
-	}
+	// local utilstun = SpawnEntityFromTable("trigger_stun", {
+	// 	targetname = "__utilstun"
+	// 	stun_type = type
+	// 	stun_duration = duration
+	// 	move_speed_reduction = speedreduce
+	// 	trigger_delay = delay
+	// 	StartDisabled = 0
+	// 	spawnflags = 1
+	// })
+
+	local utilstun = CreateByClassname("trigger_stun")
+
+	utilstun.KeyValueFromString("targetname", "__utilstun")
+	utilstun.KeyValueFromInt("stun_type", type)
+	utilstun.KeyValueFromFloat("stun_duration", duration.tofloat())
+	utilstun.KeyValueFromFloat("move_speed_reduction", speedreduce.tofloat())
+	utilstun.KeyValueFromFloat("trigger_delay", delay.tofloat())
+	utilstun.KeyValueFromInt("spawnflags", 1)
+
+	utilstun.DispatchSpawn()
 
 	EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
 }
@@ -1295,7 +1304,7 @@ function PopExtUtil::GetPlayerReadyCount() {
 }
 
 function PopExtUtil::GetWeaponMaxAmmo(player, wep) {
-	
+
 	if (wep == null) return
 
 	local slot      = wep.GetSlot()
