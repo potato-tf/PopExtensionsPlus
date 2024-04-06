@@ -136,7 +136,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			if (!player.IsBotOfType(1337)) return
 
 			for (local money; money = FindByClassname(money, "item_currencypack*");)
-				money.SetAbsVelocity(Vector())
+				money.SetAbsVelocity(Vector(1, 1, 1)) //0 velocity breaks our reverse mvm money pickup methods.  set to 1hu instead
 		}
 	}
 
@@ -148,13 +148,16 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			if (player.IsBotOfType(1337) || player.GetPlayerClass() != TF_CLASS_SCOUT) return
 
 			player.GetScriptScope().PlayerThinkTable.MoneyThink <- function() {
-				if (player.GetPlayerClass() != TF_CLASS_SCOUT) {
+
+				if (player.GetPlayerClass() != TF_CLASS_SCOUT || "ReverseMVMCurrencyThink" in player.GetScriptScope().PlayerThinkTable) {
 					delete player.GetScriptScope().PlayerThinkTable.MoneyThink
 					return
 				}
+
 				local origin = player.GetOrigin()
 				for (local money; money = FindByClassnameWithin(money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS);)
 					money.SetOrigin(origin)
+				
 			}
 		}
 

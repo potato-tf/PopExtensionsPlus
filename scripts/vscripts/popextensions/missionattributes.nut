@@ -1786,11 +1786,40 @@ function MissionAttributes::MissionAttr(...) {
 				local origin = self.GetOrigin()
 				self.GetPlayerClass() != TF_CLASS_SCOUT ? collectionradius = 72 : collectionradius = 288
 
-				for ( local ent; ent = FindByClassnameWithin(ent, "item_currencypack_*", origin, collectionradius); ) {
+				for ( local moneypile; moneypile = FindByClassnameWithin(moneypile, "item_currencypack_*", origin, collectionradius); ) 
+				{
 					// Move the money to the origin and respawn it to allow us to collect it after it touches the ground
-					ent.SetAbsOrigin(Vector(0, 0, INT_MIN))
-					ent.DispatchSpawn()
+					for (local hurt; hurt = FindByClassname(hurt, "trigger_hurt");)
+					{	
+						// moneypile.ValidateScriptScope()
+						// moneypile.GetScriptScope().CollectThink <- function() {
+							// printl(self.GetVelocity().Length())
+							if (moneypile.GetVelocity().Length() == 0) 
+							{
+								// moneypile.SetOrigin(Vector(0, 0, FLT_MIN))
+								
+								moneypile.SetOrigin(hurt.GetOrigin())
+								DispatchSpawn(moneypile)
+								EmitSoundOn("MVM.MoneyPickup", player)
+							}
+						// }
+						AddThinkToEnt(moneypile, "CollectThink")
+					}
+						// EntFireByHandle(moneypile, "RunScriptCode", format(@"
+						// 		printl(self.GetVelocity())
+						// 		for (local hurt; hurt = FindByClassname(hurt, `trigger_hurt`);)
+						// 		{	
+						// 			EmitSoundOn(`MVM.MoneyPickup`, self)
+						// 			self.SetOrigin(hurt.GetOrigin())
+						// 			DispatchSpawn(self)
+						// 		}
+						// 		// The money counters are fucked from what we did in the above loop, fix it here
+						// 		SetPropInt(PopExtUtil.ObjectiveResource, `m_nMvMWorldMoney`, %d)
+						// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_previousWaveStats.nCreditsDropped`, %d)
+						// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_currentWaveStats.nCreditsDropped`, %d)
+						// ", money, prev_wave_money, current_wave_money), -1, null, null)
 				}
+				
 
 				// The money counters are fucked from what we did in the above loop, fix it here
 				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney", money)
