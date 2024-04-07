@@ -124,8 +124,9 @@ class AI_Bot {
 				case 3: // Expert skill, deflect regardless of FOV back to Sender
 					local owner = projectile.GetOwner()
 					if (owner != null) {
-						local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
-						LookAt(owner_head, INT_MAX, INT_MAX)
+						// local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
+						// LookAt(owner_head, INT_MAX, INT_MAX)
+						LookAt(owner.EyePosition(), INT_MAX, INT_MAX)
 					}
 				break
 				}

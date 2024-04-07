@@ -222,23 +222,31 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			local cstring = PopExtUtil.Classes[player.GetPlayerClass()]
 
-			local footstepsound = format("^mvm/giant_%s/giant_%s_step0%d.wav", cstring, cstring, RandomInt(1, 4))
-
-			if (player.GetPlayerClass() == TF_CLASS_DEMOMAN)
-				footstepsound = format("^mvm/giant_demoman/giant_demoman_step0%d.wav", RandomInt(1, 4))
-
-			if (IsSoundPrecached(footstepsound)) PrecacheSound(footstepsound)
-
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
 			scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
+			scope.stepcount <- 0
 			scope.PlayerThinkTable.RestoreGiantFootsteps <- function() {
 
-				if (GetPropInt(player, "m_Local.m_nStepside") != scope.stepside)
-					player.EmitSound(footstepsound)
+				if ((GetPropInt(player, "m_Local.m_nStepside")) == scope.stepside) return
+				// if (GetPropFloat(player, "m_flStepSoundTime") != 400) return
 
-				scope.stepside = GetPropInt(player, "m_Local.m_nStepside")
+				printl(GetPropFloat(player, "m_flStepSoundTime"))
+
+
+				local footstepsound = format("^mvm/giant_%s/giant_%s_step_0%d.wav", cstring, cstring, RandomInt(1, 4))
+
+				if (player.GetPlayerClass() == TF_CLASS_DEMOMAN)
+					footstepsound = format("^mvm/giant_demoman/giant_demoman_step_0%d.wav", RandomInt(1, 4))
+	
+				else if (player.GetPlayerClass() == TF_CLASS_SOLDIER || player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS)
+					footstepsound = format("^mvm/giant_%s/giant_%s_step0%d.wav", cstring, cstring, RandomInt(1, 4))
+	
+				PrecacheSound(footstepsound)
+				player.EmitSound(footstepsound)
+
+				scope.stepside = (GetPropInt(player, "m_Local.m_nStepside"))
 			}
 		}
 		
