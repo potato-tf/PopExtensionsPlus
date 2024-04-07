@@ -65,7 +65,7 @@ if (!("ScriptUnloadTable" in ROOT))
 		}
 		// Hook all wave inits to reset parsing error counter.
 
-		function OnGameEvent_player_death(params) { 
+		function OnGameEvent_player_death(params) {
 
 			if (MissionAttributes.SoundsToReplace.len() != 0)
 			{
@@ -78,9 +78,9 @@ if (!("ScriptUnloadTable" in ROOT))
 					}
 			}
 
-			foreach (_, func in MissionAttributes.DeathHookTable) func(params) 
+			foreach (_, func in MissionAttributes.DeathHookTable) func(params)
 		}
-		function OnGameEvent_recalculate_holidays(params) 
+		function OnGameEvent_recalculate_holidays(params)
 		{
 
 			if (GetRoundState() != GR_STATE_PREROUND) return
@@ -91,12 +91,12 @@ if (!("ScriptUnloadTable" in ROOT))
 			MissionAttributes.Cleanup()
 		}
 
-		function OnGameEvent_mvm_wave_complete(params) 
+		function OnGameEvent_mvm_wave_complete(params)
 		{
 			MissionAttributes.Cleanup()
 		}
 
-		function OnGameEvent_mvm_mission_complete(params) 
+		function OnGameEvent_mvm_mission_complete(params)
 		{
 			foreach (_, func in ScriptUnloadTable) func()
 			MissionAttributes.ResetConvars()
@@ -146,7 +146,7 @@ function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessa
 	if (commentaryNode != null) EntFireByHandle(commentaryNode, "Kill", "", -1, null, null)
 }
 
-function MissionAttributes::ResetConvars(hideChatMessage = true) 
+function MissionAttributes::ResetConvars(hideChatMessage = true)
 {
 	local commentaryNode = FindByClassname(null, "point_commentary_node")
 	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
@@ -234,7 +234,7 @@ function MissionAttributes::MissionAttr(...) {
 		local pumpkinIndex = PrecacheModel("models/props_halloween/pumpkin_loot.mdl")
 
 		MissionAttributes.ThinkTable.NoCrumpkins <- function() {
-			switch(value) 
+			switch(value)
 			{
 			case 1:
 				for (local pumpkin; pumpkin = FindByClassname(pumpkin, "tf_ammo_pack");)
@@ -245,7 +245,7 @@ function MissionAttributes::MissionAttr(...) {
 			foreach (player in PopExtUtil.PlayerArray)
 				if (player.InCond(TF_COND_CRITBOOSTED_PUMPKIN)) //TF_COND_CRITBOOSTED_PUMPKIN
 					EntFireByHandle(player, "RunScriptCode", "self.RemoveCond(TF_COND_CRITBOOSTED_PUMPKIN)", -1, null, null)
-			
+
 		}
 
 	break
@@ -650,7 +650,7 @@ function MissionAttributes::MissionAttr(...) {
 				if (typeof value == "table")
 					foreach (k, v in value)
 						EntFire(k, "SetReturnTime", v)
-				
+
 				else if (typeof value == "integer" || typeof value == "float")
 					EntFire("item_teamflag", "SetReturnTime", value)
 			}
@@ -683,9 +683,9 @@ function MissionAttributes::MissionAttr(...) {
 					//are we using classic and is charge meter > 150?  This isn't correct but no GetAttributeValue
 					if (GetPropFloat(wep, "m_flChargedDamage") >= 150.0 && PopExtUtil.GetItemIndex(wep) == ID_CLASSIC)
 						return true
-					
+
 					//are we using the ambassador?
-					if (PopExtUtil.GetItemIndex(wep) == ID_AMBASSADOR)
+					if (PopExtUtil.GetItemIndex(wep) == ID_AMBASSADOR || PopExtUtil.GetItemIndex(wep) == ID_FESTIVE_AMBASSADOR)
 						return true
 
 					//did the victim just get explosive headshot? only checks for bleed cond + stun effect so can be edge cases where this returns false erroneously.
@@ -694,7 +694,7 @@ function MissionAttributes::MissionAttr(...) {
 				}
 				return false
 			}
-				
+
 			if (!CanHeadshot()) return
 
 			params.damage_type = params.damage_type | DMG_CRITICAL //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
@@ -1021,9 +1021,9 @@ function MissionAttributes::MissionAttr(...) {
 	// =======================================================================================================================
 	// array of arrays with xyz values to spawn path_tracks at
 	// path_track names are ordered based on where they are listed in the array
-	
-	// example: 
-	
+
+	// example:
+
 	//`ExtraTankPath`: [
 	//	[`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`], // starting node: extratankpath1_1
 	//	[`640 5404 350`, `640 4810 350`, `640 4400 550`, `1100 4100 650`, `1636 3900 770`] //starting node: extratankpath2_1
@@ -1039,7 +1039,7 @@ function MissionAttributes::MissionAttr(...) {
 		}
 		if (!("ExtraTankPathTracks" in MissionAttributes)) MissionAttributes.ExtraTankPathTracks <- []
 		foreach (path in value) {
-			
+
 			local tracks = []
 
 			MissionAttributes.PathNum++
@@ -1056,15 +1056,15 @@ function MissionAttributes::MissionAttr(...) {
 
 		local lastnode = tracks[tracks.len() - 1]
 		PopExtUtil.SetTargetname(lastnode, format("%s_lastnode", GetPropString(lastnode, "m_iName")))
-		
+
 		tracks.append(null) //dummy value to put at the end
-	
+
 		for (local i = 0; i < tracks.len() - 1; i++)
 			if (tracks[i] != null)
 				SetPropEntity(tracks[i], "m_pnext", tracks[i+1])
 		}
 	break
-			
+
 
 	// =======================================
 	// replace viewmodel arms with custom ones
@@ -1155,7 +1155,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			if (typeof value != "table") {
 				MissionAttributes.RaiseValueError("PlayerAttributes", value, "Value must be table")
 				success = false
@@ -1214,13 +1214,13 @@ function MissionAttributes::MissionAttr(...) {
 				success = false
 				return
 			}
-			
+
 			function ApplyAttributes(item, attr)
 			{
 
 				local wep = PopExtUtil.HasItemInLoadout(player, item)
 				if (wep == null) return
-				
+
 				foreach (a, b in attr)
 				{
 					if (a in CustomAttributes.Attrs)
@@ -1232,7 +1232,7 @@ function MissionAttributes::MissionAttr(...) {
 					}
 				}
 			}
-			
+
 			foreach(k, v in value)
 			{
 				local idarray = []
@@ -1241,7 +1241,7 @@ function MissionAttributes::MissionAttr(...) {
 				{
 					idarray = split(k, ",")
 
-					if (idarray.len() > 1) 
+					if (idarray.len() > 1)
 						idarray.apply(function (val) {return val.tointeger()})
 					k = idarray
 				}
@@ -1251,7 +1251,7 @@ function MissionAttributes::MissionAttr(...) {
 				else
 					ApplyAttributes(k, v)
 			}
-				
+
 		}
 
 	break
@@ -1362,11 +1362,11 @@ function MissionAttributes::MissionAttr(...) {
 		if (typeof value != "array") this.RaiseValueError("DisableSound", value, "value must be an array")
 
 		MissionAttributes.ThinkTable.DisableSounds <- function() {
-			
+
 			foreach (sound in value)
 			{
 
-				foreach (player in PopExtUtil.HumanArray) 
+				foreach (player in PopExtUtil.HumanArray)
 				{
 					StopSoundOn(sound, player)
 					player.StopSound(sound)
@@ -1417,7 +1417,7 @@ function MissionAttributes::MissionAttr(...) {
 		//sounds played on bot death (giant/buster explosions)
 		MissionAttributes.TakeDamageTable.SoundOverrides <- function(params) {
 			local victim = params.const_entity
-			
+
 			if (params.damage < victim.GetHealth()) return
 
 			foreach (sound, override in value)
@@ -1426,7 +1426,7 @@ function MissionAttributes::MissionAttr(...) {
 				{
 					StopSoundOn(sound, victim)
 					victim.StopSound(sound)
-					
+
 					if (override == null) return
 
 					EmitSoundEx({sound_name = override, entity = victim})
@@ -1437,11 +1437,11 @@ function MissionAttributes::MissionAttr(...) {
 		//catch-all for disabling non teamplay_broadcast_audio sfx
 		MissionAttributes.ThinkTable.DisableSounds <- function() {
 
-			foreach (sound, override in value) 
+			foreach (sound, override in value)
 			{
-				if (override == null && !(sound in DeathSounds) && !(sound in BroadcastAudioSounds)) 
+				if (override == null && !(sound in DeathSounds) && !(sound in BroadcastAudioSounds))
 				{
-					foreach (player in PopExtUtil.PlayerArray) 
+					foreach (player in PopExtUtil.PlayerArray)
 					{
 						StopSoundOn(sound, player)
 						player.StopSound(sound)
@@ -1522,7 +1522,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.ThinkTable.EnableRandomCritsThink <- function() {
 			if (!PopExtUtil.IsWaveStarted) return -1
 
-			foreach (player in PopExtUtil.PlayerArray) 
+			foreach (player in PopExtUtil.PlayerArray)
 			{
 				if (!( (value & 1 && player.GetTeam() == TF_TEAM_PVE_INVADERS && !player.IsBotOfType(1337)) ||
 					   (value & 2 && player.GetTeam() == TF_TEAM_PVE_INVADERS && player.IsBotOfType(1337))  ||
@@ -1534,7 +1534,7 @@ function MissionAttributes::MissionAttr(...) {
 				if (!("crit_weapon" in scope))
 					scope.crit_weapon <- null
 
-				if (!("ranged_crit_chance" in scope) || !("melee_crit_chance" in scope)) 
+				if (!("ranged_crit_chance" in scope) || !("melee_crit_chance" in scope))
 				{
 					scope.ranged_crit_chance <- base_ranged_crit_chance
 					scope.melee_crit_chance <- base_melee_crit_chance
@@ -1564,7 +1564,7 @@ function MissionAttributes::MissionAttr(...) {
 				local chance_to_use        = (crit_chance_override != null) ? crit_chance_override : scope.ranged_crit_chance
 
 				// Roll for random crits
-				if (RandomFloat(0, 1) < chance_to_use) 
+				if (RandomFloat(0, 1) < chance_to_use)
 				{
 					player.AddCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
 					scope.crit_weapon <- wep
@@ -1572,10 +1572,10 @@ function MissionAttributes::MissionAttr(...) {
 					// Detect weapon fire to remove our crits
 					wep.ValidateScriptScope()
 					wep.GetScriptScope().last_fire_time <- Time()
-					wep.GetScriptScope().Think <- function() 
+					wep.GetScriptScope().Think <- function()
 					{
 						local fire_time = NetProps.GetPropFloat(self, "m_flLastFireTime");
-						if (fire_time > last_fire_time) 
+						if (fire_time > last_fire_time)
 						{
 							local owner = self.GetOwner()
 							owner.RemoveCond(TF_COND_CRITBOOSTED_CTF_CAPTURE)
@@ -1584,12 +1584,12 @@ function MissionAttributes::MissionAttr(...) {
 							local scope = owner.GetScriptScope()
 
 							// Continuous fire weapons get 2 seconds of crits once they fire
-							if (classname in timed_crit_weapons) 
+							if (classname in timed_crit_weapons)
 							{
 								owner.AddCondEx(TF_COND_CRITBOOSTED_CTF_CAPTURE, 2, null)
 								EntFireByHandle(owner, "RunScriptCode", format("crit_weapon <- null; ranged_crit_chance <- %f", base_ranged_crit_chance), 2, null, null)
 							}
-							else 
+							else
 							{
 								scope.crit_weapon <- null
 								scope.ranged_crit_chance <- base_ranged_crit_chance
@@ -1697,7 +1697,7 @@ function MissionAttributes::MissionAttr(...) {
 			if (player.IsBotOfType(1337)) return
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-			
+
 			if ("ReverseMVMCurrencyThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.ReverseMVMCurrencyThink
 			if ("ReverseMVMPackThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMPackThink
 			if ("ReverseMVMLaserThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMLaserThink
@@ -1786,18 +1786,18 @@ function MissionAttributes::MissionAttr(...) {
 				local origin = self.GetOrigin()
 				self.GetPlayerClass() != TF_CLASS_SCOUT ? collectionradius = 72 : collectionradius = 288
 
-				for ( local moneypile; moneypile = FindByClassnameWithin(moneypile, "item_currencypack_*", origin, collectionradius); ) 
+				for ( local moneypile; moneypile = FindByClassnameWithin(moneypile, "item_currencypack_*", origin, collectionradius); )
 				{
 					// Move the money to the origin and respawn it to allow us to collect it after it touches the ground
 					for (local hurt; hurt = FindByClassname(hurt, "trigger_hurt");)
-					{	
+					{
 						// moneypile.ValidateScriptScope()
 						// moneypile.GetScriptScope().CollectThink <- function() {
 							// printl(self.GetVelocity().Length())
-							if (moneypile.GetVelocity().Length() == 0) 
+							if (moneypile.GetVelocity().Length() == 0)
 							{
 								// moneypile.SetOrigin(Vector(0, 0, FLT_MIN))
-								
+
 								moneypile.SetOrigin(hurt.GetOrigin())
 								DispatchSpawn(moneypile)
 								EmitSoundOn("MVM.MoneyPickup", player)
@@ -1808,7 +1808,7 @@ function MissionAttributes::MissionAttr(...) {
 						// EntFireByHandle(moneypile, "RunScriptCode", format(@"
 						// 		printl(self.GetVelocity())
 						// 		for (local hurt; hurt = FindByClassname(hurt, `trigger_hurt`);)
-						// 		{	
+						// 		{
 						// 			EmitSoundOn(`MVM.MoneyPickup`, self)
 						// 			self.SetOrigin(hurt.GetOrigin())
 						// 			DispatchSpawn(self)
@@ -1819,7 +1819,7 @@ function MissionAttributes::MissionAttr(...) {
 						// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_currentWaveStats.nCreditsDropped`, %d)
 						// ", money, prev_wave_money, current_wave_money), -1, null, null)
 				}
-				
+
 
 				// The money counters are fucked from what we did in the above loop, fix it here
 				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney", money)
