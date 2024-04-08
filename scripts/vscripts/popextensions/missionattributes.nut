@@ -1033,7 +1033,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "ExtraTankPath":
 		if (typeof value != "array") {
-			MissionAttributes.RaiseValueError("ItemWhitelist", value, "Value must be array")
+			MissionAttributes.RaiseValueError("ExtraTankPath", value, "Value must be array")
 			success = false
 			break
 		}
