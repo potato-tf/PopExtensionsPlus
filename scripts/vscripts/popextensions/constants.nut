@@ -242,20 +242,23 @@ CONST.MVM_CLASS_FLAG_MINIBOSS        <- 1 << 3 // Giant icon flag. Support and m
 CONST.MVM_CLASS_FLAG_ALWAYSCRIT      <- 1 << 4 // Crit icon flag. Support and mission icons do not display crit outline when set
 CONST.MVM_CLASS_FLAG_SUPPORT_LIMITED <- 1 << 5 // Support limited flag. Game uses it together with support flag
 
-//trigger entity spawnflags
-const SF_TRIGGER_ALLOW_CLIENTS            = 1
-const SF_TRIGGER_ALLOW_NPCS               = 2
-const SF_TRIGGER_ALLOW_PUSHABLES          = 4
-const SF_TRIGGER_ALLOW_PHYSICS            = 8
-const SF_TRIGGER_ONLY_PLAYER_ALLY_NPCS    = 16
-const SF_TRIGGER_ONLY_CLIENTS_IN_VEHICLES = 32
-const SF_TRIGGER_ALLOW_ALL                = 64
-const SF_TRIG_PUSH_ONCE                   = 128
+// trigger_* entity spawnflags
+const SF_TRIGGER_ALLOW_CLIENTS                = 1
+const SF_TRIGGER_ALLOW_NPCS                   = 2
+const SF_TRIGGER_ALLOW_PUSHABLES              = 4
+const SF_TRIGGER_ALLOW_PHYSICS                = 8
+const SF_TRIGGER_ONLY_PLAYER_ALLY_NPCS        = 16
+const SF_TRIGGER_ONLY_CLIENTS_IN_VEHICLES     = 32
+const SF_TRIGGER_ALLOW_ALL                    = 64
+const SF_TRIG_PUSH_ONCE                       = 128
 const SF_TRIG_PUSH_AFFECT_PLAYER_ON_LADDER    = 256
 const SF_TRIGGER_ONLY_CLIENTS_OUT_OF_VEHICLES = 512
-const SF_TRIG_TOUCH_DEBRIS                = 1024
-const SF_TRIGGER_ONLY_NPCS_IN_VEHICLES    = 2048
-const SF_TRIGGER_DISALLOW_BOTS            = 4096
+const SF_TRIG_TOUCH_DEBRIS                    = 1024
+const SF_TRIGGER_ONLY_NPCS_IN_VEHICLES        = 2048
+const SF_TRIGGER_DISALLOW_BOTS                = 4096
+
+// game_text entity spawnflags
+const SF_ENVTEXT_ALLPLAYERS = 1
 
 // Player speak concepts
 const MP_CONCEPT_FIREWEAPON           = 0
@@ -486,6 +489,22 @@ const MAXAMMO_BASE_SNIPER_BOW       = 12
 const MAXAMMO_BASE_SNIPER_SECONDARY = 75
 
 const MAXAMMO_BASE_SPY_PRIMARY = 24
+
+// Content masks
+CONST.MASK_OPAQUE      <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_OPAQUE)
+CONST.MASK_PLAYERSOLID <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
+
+// NavMesh related
+const STEP_HEIGHT = 18
+
+// Particle attachments
+const PATTACH_ABSORIGIN        = 0
+const PATTACH_ABSORIGIN_FOLLOW = 1
+const PATTACH_CUSTOMORIGIN     = 2
+const PATTACH_POINT            = 3
+const PATTACH_POINT_FOLLOW     = 4
+const PATTACH_WORLDORIGIN      = 5
+const PATTACH_ROOTBONE_FOLLOW  = 6
 
 //random useful constants
 const FLT_SMALL = 0.0000001

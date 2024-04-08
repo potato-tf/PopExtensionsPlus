@@ -58,7 +58,7 @@ class AI_Bot {
 		local trace = {
 			start  = bot.EyePosition(),
 			end    = target.EyePosition(),
-			mask   = 16513, // CONTENTS_SOLID|CONTENTS_OPAQUE|CONTENTS_MOVEABLE
+			mask   = CONST.MASK_OPAQUE,
 			ignore = bot
 		}
 		TraceLineEx(trace)

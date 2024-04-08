@@ -152,7 +152,7 @@
 
 	ClientCommand = SpawnEntityFromTable("point_clientcommand", {targetname = "_clientcommand"})
 	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "__utilroundwin", TeamNum = 3, force_map_reset = 1})
-	RespawnOverride = SpawnEntityFromTable("trigger_player_respawn_override", {spawnflags = 1})
+	RespawnOverride = SpawnEntityFromTable("trigger_player_respawn_override", {spawnflags = SF_TRIGGER_ALLOW_CLIENTS})
 
 	Events = {
 		function OnGameEvent_mvm_wave_complete(params) { PopExtUtil.IsWaveStarted = false }
@@ -533,7 +533,7 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePref
 	local rgb = PopExtUtil.HexToRgb("FFFF66")
 	local txtent = SpawnEntityFromTable("game_text", {
 		effect = 2,
-		spawnflags = 1,
+		spawnflags = SF_ENVTEXT_ALLPLAYERS,
 		color = format("%d %d %d", rgb[0], rgb[1], rgb[2]),
 		color2 = "255 254 255",
 		fxtime = 0.02,
@@ -857,7 +857,7 @@ function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speed
 	// 	move_speed_reduction = speedreduce
 	// 	trigger_delay = delay
 	// 	StartDisabled = 0
-	// 	spawnflags = 1
+	// 	spawnflags = SF_TRIGGER_ALLOW_CLIENTS
 	// })
 
 	local utilstun = CreateByClassname("trigger_stun")
@@ -867,7 +867,7 @@ function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speed
 	utilstun.KeyValueFromFloat("stun_duration", duration.tofloat())
 	utilstun.KeyValueFromFloat("move_speed_reduction", speedreduce.tofloat())
 	utilstun.KeyValueFromFloat("trigger_delay", delay.tofloat())
-	utilstun.KeyValueFromInt("spawnflags", 1)
+	utilstun.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_CLIENTS)
 
 	utilstun.DispatchSpawn()
 
@@ -883,7 +883,7 @@ function PopExtUtil::Ignite(player, duration = 10.0, damage = 1)
 			targetname = "__utilignite"
 			burn_duration = duration
 			damage = damage
-			spawnflags = 1
+			spawnflags = SF_TRIGGER_ALLOW_CLIENTS
 		})
 	}
 	EntFireByHandle(utilignite, "StartTouch", "", -1, player, player)
@@ -1340,4 +1340,75 @@ function PopExtUtil::GetWeaponMaxAmmo(player, wep) {
 	*/
 
 	return base_max
+}
+
+function PopExtUtil::TeleportNearVictim(ent, victim, attempt) {
+
+	if (victim == null)
+		return false
+
+	if (victim.GetLastKnownArea() == null)
+		return
+
+	const max_surround_travel_range = 6000.0
+
+	local surround_travel_range = 1500.0 + 500.0 * attempt
+	surround_travel_range = Max(surround_travel_range, max_surround_travel_range)
+
+	local areas = {}
+	NavMesh.GetNavAreasInRadius(victim.GetLastKnownArea().GetCenter(), surround_travel_range, areas)
+
+	local ambush_areas = []
+
+	foreach (name, area in areas) {
+		if (!area.IsValidForWanderingPopulation())
+			continue
+
+		if (area.IsPotentiallyVisibleToTeam(victim.GetTeam()))
+			continue
+
+		ambush_areas.push(area)
+	}
+
+	if (ambush_areas.len() == 0)
+		return false
+
+	local max_tries = Min(10, ambush_areas.len())
+
+	for (local retry = 0; retry < max_tries; ++retry) {
+		local which = RandomInt(0, ambush_areas.len() - 1)
+		local where = ambush_areas[which].GetCenter() + Vector(0, 0, STEP_HEIGHT)
+
+		if (IsSpaceToSpawnHere(where, ent.GetBoundingMins(), ent.GetBoundingMaxs())) {
+			ent.SetAbsOrigin(where)
+			return true
+		}
+	}
+
+	return false
+}
+
+function PopExtUtil::IsSpaceToSpawnHere(where, hullmin, hullmax) {
+
+	local trace = {
+		start = where,
+		end = where,
+		hullmin = hullmin,
+		hullmax = hullmax,
+		mask = MASK_PLAYERSOLID
+	}
+	TraceHull(trace)
+
+	return trace.fraction >= 1.0
+}
+
+
+function PopExtUtil::ClearLastKnownArea(bot) {
+
+	local trigger = SpawnEntityFromTable("trigger_remove_tf_player_condition", {
+		spawnflags = SF_TRIGGER_ALLOW_CLIENTS,
+		condition = TF_COND_TMPDAMAGEBONUS,
+	})
+	EntFireByHandle(trigger, "StartTouch", "!activator", -1, bot, bot)
+	EntFireByHandle(trigger, "Kill", "", -1, null, null)
 }
