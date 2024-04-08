@@ -1356,7 +1356,7 @@ function PopExtUtil::TeleportNearVictim(ent, victim, attempt) {
 	surround_travel_range = Max(surround_travel_range, max_surround_travel_range)
 
 	local areas = {}
-	NavMesh.GetNavAreasInRadius(victim.GetLastKnownArea().GetCenter(), surround_travel_range, areas)
+	GetNavAreasInRadius(victim.GetLastKnownArea().GetCenter(), surround_travel_range, areas)
 
 	local ambush_areas = []
 
