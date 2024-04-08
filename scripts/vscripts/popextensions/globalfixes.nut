@@ -95,7 +95,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 	DisconnectTable = {}
 
 	ThinkTable = {
-		
+
 		function DragonsFuryFix() {
 			for (local fireball; fireball = FindByClassname(fireball, "tf_projectile_balloffire");)
 				fireball.RemoveFlag(FL_GRENADE)
@@ -111,7 +111,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				local scope = projectile.GetScriptScope()
 
 				if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <- {}
-				
+
 				scope.ProjectileThink <- function () { foreach (name, func in scope.ProjectileThinkTable) { func() } return -1 }
 
 				AddThinkToEnt(projectile, "ProjectileThink")
@@ -119,7 +119,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			}
 		}
 		function SmoothSkeleton() {
-			for (local skeles; skeles = FindByClassname(skeles, "tf_zombie");) 
+			for (local skeles; skeles = FindByClassname(skeles, "tf_zombie");)
 				skeles.FlagForUpdate(true)
 		}
 		function SmoothHoresmann() {
@@ -129,7 +129,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 	}
 
 	DeathHookTable = {
-		
+
 		function NoCreditVelocity(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
@@ -157,7 +157,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				local origin = player.GetOrigin()
 				for (local money; money = FindByClassnameWithin(money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS);)
 					money.SetOrigin(origin)
-				
+
 			}
 		}
 
@@ -203,53 +203,53 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			}
 		}
 
-		function RestoreGiantFootsteps(params) {
+		// function RestoreGiantFootsteps(params) {
 
-			local player = GetPlayerFromUserID(params.userid)
+		// 	local player = GetPlayerFromUserID(params.userid)
 
-			if (!player.IsBotOfType(1337) || !player.IsMiniBoss()) return
-			player.AddCustomAttribute("override footstep sound set", 0, -1)
+		// 	if (!player.IsBotOfType(1337) || !player.IsMiniBoss()) return
+		// 	player.AddCustomAttribute("override footstep sound set", 0, -1)
 
-			local validclasses = {
-				[TF_CLASS_SCOUT] = null,
-				[TF_CLASS_SOLDIER] = null,
-				[TF_CLASS_PYRO] = null ,
-				[TF_CLASS_DEMOMAN] = null ,
-				[TF_CLASS_HEAVYWEAPONS] = null
-			}
+		// 	local validclasses = {
+		// 		[TF_CLASS_SCOUT] = null,
+		// 		[TF_CLASS_SOLDIER] = null,
+		// 		[TF_CLASS_PYRO] = null ,
+		// 		[TF_CLASS_DEMOMAN] = null ,
+		// 		[TF_CLASS_HEAVYWEAPONS] = null
+		// 	}
 
-			if (!(player.GetPlayerClass() in validclasses)) return
+		// 	if (!(player.GetPlayerClass() in validclasses)) return
 
-			local cstring = PopExtUtil.Classes[player.GetPlayerClass()]
+		// 	local cstring = PopExtUtil.Classes[player.GetPlayerClass()]
 
-			player.ValidateScriptScope()
-			local scope = player.GetScriptScope()
+		// 	player.ValidateScriptScope()
+		// 	local scope = player.GetScriptScope()
 
-			scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
-			scope.stepcount <- 0
-			scope.PlayerThinkTable.RestoreGiantFootsteps <- function() {
+		// 	scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
+		// 	scope.stepcount <- 0
+		// 	scope.PlayerThinkTable.RestoreGiantFootsteps <- function() {
 
-				if ((GetPropInt(player, "m_Local.m_nStepside")) == scope.stepside) return
-				// if (GetPropFloat(player, "m_flStepSoundTime") != 400) return
+		// 		if ((GetPropInt(player, "m_Local.m_nStepside")) == scope.stepside) return
+		// 		// if (GetPropFloat(player, "m_flStepSoundTime") != 400) return
 
-				printl(GetPropFloat(player, "m_flStepSoundTime"))
+		// 		printl(GetPropFloat(player, "m_flStepSoundTime"))
 
 
-				local footstepsound = format("^mvm/giant_%s/giant_%s_step_0%d.wav", cstring, cstring, RandomInt(1, 4))
+		// 		local footstepsound = format("^mvm/giant_%s/giant_%s_step_0%d.wav", cstring, cstring, RandomInt(1, 4))
 
-				if (player.GetPlayerClass() == TF_CLASS_DEMOMAN)
-					footstepsound = format("^mvm/giant_demoman/giant_demoman_step_0%d.wav", RandomInt(1, 4))
-	
-				else if (player.GetPlayerClass() == TF_CLASS_SOLDIER || player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS)
-					footstepsound = format("^mvm/giant_%s/giant_%s_step0%d.wav", cstring, cstring, RandomInt(1, 4))
-	
-				PrecacheSound(footstepsound)
-				player.EmitSound(footstepsound)
+		// 		if (player.GetPlayerClass() == TF_CLASS_DEMOMAN)
+		// 			footstepsound = format("^mvm/giant_demoman/giant_demoman_step_0%d.wav", RandomInt(1, 4))
 
-				scope.stepside = (GetPropInt(player, "m_Local.m_nStepside"))
-			}
-		}
-		
+		// 		else if (player.GetPlayerClass() == TF_CLASS_SOLDIER || player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS)
+		// 			footstepsound = format("^mvm/giant_%s/giant_%s_step0%d.wav", cstring, cstring, RandomInt(1, 4))
+
+		// 		PrecacheSound(footstepsound)
+		// 		player.EmitSound(footstepsound)
+
+		// 		scope.stepside = (GetPropInt(player, "m_Local.m_nStepside"))
+		// 	}
+		// }
+
 		// Doesn't fully work correctly, need to investigate
 		function EngineerBuildingPushbackFix(params) {
 			local player = GetPlayerFromUserID(params.userid)
@@ -257,49 +257,49 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
-			
+
 			// 400, 500 (range, force)
 			local epsilon = 20.0
-			
+
 			local blastjump_weapons = {
 				"tf_weapon_rocketlauncher" : null
 				"tf_weapon_rocketlauncher_directhit" : null
 				"tf_weapon_rocketlauncher_airstrike" : null
 			}
-			
+
 			scope.lastvelocity <- player.GetAbsVelocity()
 			scope.nextthink <- -1
 			scope.PlayerThinkTable.EngineerBuildingPushbackFix <- function() {
 				if (scope.nextthink > -1 && Time() < scope.nextthink) return
-				
+
 				if (!PopExtUtil.IsAlive(self)) return
-				
+
 				local velocity = self.GetAbsVelocity()
-				
+
 				local wep       = self.GetActiveWeapon()
 				local classname = (wep != null) ? wep.GetClassname() : ""
 				local lastfire  = GetPropFloat(wep, "m_flLastFireTime")
-				
+
 				// We might have been pushed by an engineer building something, lets double check
 				if( fabs((scope.lastvelocity - velocity).Length() - 700) < epsilon) {
 					// Blast jumping can generate this type of velocity change in a frame, lets check for that
 					if (self.InCond(TF_COND_BLASTJUMPING) && classname in blastjump_weapons && (Time() - lastfire < 0.1))
 						return
-					
+
 					// Even with the above check, some things still sneak through so lets continue filtering
-					
+
 					// Look around us to see if there's a building hint and bot engineer within range
 					local origin   = self.GetOrigin()
 					local engie    = null
 					local hint     = null
-					
+
 					for (local player; player = Entities.FindByClassnameWithin(player, "player", origin, 650);) {
 						if (!player.IsBotOfType(1337) || player.GetPlayerClass() != TF_CLASS_ENGINEER) continue
-						
+
 						engie = player
 						break
 					}
-					
+
 					if (engie != null)
 						hint = Entities.FindByClassnameWithin(null, "bot_hint_*", engie.GetOrigin(), 200)
 
@@ -307,18 +307,18 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 					if (hint != null && engie != null) {
 						// ClientPrint(null, 3, "COUNTERACTING VELOCITY")
 						local dir =  self.EyePosition() - hint.GetOrigin()
-						
+
 						dir.z = 0
 						dir.Norm()
 						dir.z = 1
-						
+
 						local push = dir * 500
-						self.SetAbsVelocity(velocity - push)	
+						self.SetAbsVelocity(velocity - push)
 
 						nextthink = Time() + 1
 					}
 				}
-				
+
 				lastvelocity = velocity
 			}
 		}
