@@ -608,11 +608,11 @@ local popext_funcs = {
 				// EntFireByHandle(projectile, "RunScriptCode", format("DispatchParticleEffect(`%s`, self.GetOrigin(), self.GetAngles())", args[0]), SINGLE_TICK, null, null)
 				local particle = SpawnEntityFromTable("trigger_particle", {
 					particle_name = args[0],
-					attachment_type = 1, // PATTACH_ABSORIGIN_FOLLOW,
-					spawnflags = 64 // allow everything
-				});
-				EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile);
-				EntFireByHandle(particle, "Kill", "", -1, null, null);
+					attachment_type = PATTACH_ABSORIGIN_FOLLOW,
+					spawnflags = SF_TRIGGER_ALLOW_ALL
+				})
+				EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)
+				EntFireByHandle(particle, "Kill", "", -1, null, null)
 				projectile.AddEFlags(EFL_NO_ROTORWASH_PUSH)
 			}
 		}
@@ -753,7 +753,7 @@ local popext_funcs = {
 			SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
 			SetPropInt(wearable, STRING_NETPROP_ITEMDEF, itemid)
 
-			wearable.DispatchSpawn();
+			wearable.DispatchSpawn()
 
 			local modelname = wearable.GetModelName()
 
@@ -774,6 +774,59 @@ local popext_funcs = {
 		}
 	}
 
+	popext_teleportnearvictim = function(bot, args) {
+
+		local bot_scope = bot.GetScriptScope()
+		bot_scope.TeleportAttempt <- 0
+		bot_scope.NextTeleportTime <- Time()
+		bot_scope.Teleported <- false
+
+		bot_scope.PlayerThinkTable.TeleportNearVictimThink <- function() {
+			if (!bot_scope.Teleported && bot_scope.NextTeleportTime <= Time() && !bot.HasItem()) {
+				local victim = null
+				local players = []
+
+				for (local i = 1; i <= CONST.MAX_CLIENTS; i++) {
+					local player = PlayerInstanceFromIndex(i)
+					if (player == null)
+						continue
+
+					if (player.GetTeam() == bot.GetTeam())
+						continue
+
+					if (GetPropInt(player, "m_lifeState") != LIFE_ALIVE)
+						continue
+
+					players.push(player)
+				}
+
+				local n = players.len()
+				while (n > 1) {
+					local k = RandomInt(0, n - 1)
+					n--
+
+					local tmp = players[n]
+					players[n] = players[k]
+					players[k] = tmp
+				}
+
+				for (local i = 0; i < players.len(); ++i) {
+					if (PopExtUtil.TeleportNearVictim(bot, players[i], bot_scope.TeleportAttempt)) {
+						victim = players[i]
+						break
+					}
+				}
+
+				if (victim == null) {
+					bot_scope.NextTeleportTime = Time() + 1.0
+					++bot_scope.TeleportAttempt
+					return
+				}
+
+				bot_scope.Teleported = true
+			}
+		}
+	}
 }
 ::Homing <- {
 	// Modify the AttachProjectileThinker function to accept projectile speed adjustment if needed
