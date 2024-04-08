@@ -118,13 +118,12 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				projectile.AddEFlags(EFL_USER)
 			}
 		}
-		function SmoothSkeleton() {
-			for (local skeles; skeles = FindByClassname(skeles, "tf_zombie");)
-				skeles.FlagForUpdate(true)
-		}
-		function SmoothHoresmann() {
-			for (local hatman; hatman = FindByClassname(hatman, "headless_hatman");)
-				hatman.FlagForUpdate(true)
+		function FastNPCUpdate() {
+			local validnpcs = ["headless_hatman", "eyeball_boss", "merasmus", "tf_zombie"]
+
+			foreach (npc in validnpcs)
+				for (local n; n = FindByClassname(n, npc);)
+					n.FlagForUpdate(true)
 		}
 	}
 
