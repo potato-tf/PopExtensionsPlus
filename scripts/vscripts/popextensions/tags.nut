@@ -774,6 +774,42 @@ local popext_funcs = {
 		}
 	}
 
+	popext_halloweenboss = function(bot, args) {
+
+		local boss = CreateByClassname(args[0])
+
+		args[1] == "BOTHP" ? SetPropInt(boss, "m_iHealth", bot.GetHealth()) : SetPropInt(boss, "m_iHealth", args[1].tointeger())
+		
+		local org = split(args[2], " ")
+		boss.SetOrigin(Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()))
+
+		args.len() >= 4 ? boss.SetTeam(args[4].tointeger()) : boss.SetTeam(5)
+
+		DispatchSpawn(boss)
+
+		if (args.len() >= 5)
+		{
+			if (args[0] != "headless_hatman")
+			{
+				local eventname = ""
+				args[0] = "eyeball_boss" ? eventname = "eyeball_boss_escape_imminent" : eventname = "merasmus_escape_warning"
+				SendGlobalGameEvent(eventname, {time_remaining 	= args[3].tointeger()})
+			} 
+			else 
+				EntFireByHandle(boss, "RunScriptCode", "self.TakeDamage(INT_MAX, DMG_GENERIC, self)", args[3], null, null)
+		}
+
+		bot.GetScriptScope().PlayerThinkTable.BossHealthThink <- function() {
+			printl(boss + " : " + boss.GetHealth() + " : " + args[1])
+			if (boss && boss.IsValid() && boss.GetHealth() > bot.GetHealth() && args[1] == "BOTHP")
+				bot.SetHealth(boss.GetHealth())
+				
+
+			else if (!boss || !boss.IsValid())
+				bot.TakeDamage(INT_MAX, DMG_GENERIC, bot)
+		}
+	}
+
 	popext_teleportnearvictim = function(bot, args) {
 
 		local bot_scope = bot.GetScriptScope()
