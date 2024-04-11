@@ -776,18 +776,29 @@ local popext_funcs = {
 
 	popext_halloweenboss = function(bot, args) {
 
+		if (!("bosskiller" in ROOT)) ::bosskiller <- null
+
+		local scope = bot.GetScriptScope()
+
+		if ("halloweenboss" in scope) return
+
 		local boss = CreateByClassname(args[0])
 
-		args[1] == "BOTHP" ? SetPropInt(boss, "m_iHealth", bot.GetHealth()) : SetPropInt(boss, "m_iHealth", args[1].tointeger())
+		scope.halloweenboss <- boss
 		
 		local org = split(args[2], " ")
 		boss.SetOrigin(Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()))
 
-		args.len() >= 4 ? boss.SetTeam(args[4].tointeger()) : boss.SetTeam(5)
+		args.len() > 4 ? boss.SetTeam(args[4].tointeger()) : boss.SetTeam(5)
 
 		DispatchSpawn(boss)
 
-		if (args.len() >= 5)
+		local bosshealth = 0
+		args[1] == "BOTHP" ? bosshealth = bot.GetHealth() : bosshealth = args[1].tointeger()
+
+		boss.SetHealth(bosshealth)
+
+		if (args.len() > 3)
 		{
 			if (args[0] != "headless_hatman")
 			{
@@ -796,17 +807,41 @@ local popext_funcs = {
 				SendGlobalGameEvent(eventname, {time_remaining 	= args[3].tointeger()})
 			} 
 			else 
-				EntFireByHandle(boss, "RunScriptCode", "self.TakeDamage(INT_MAX, DMG_GENERIC, self)", args[3], null, null)
+				EntFireByHandle(boss, "RunScriptCode", "self.TakeDamage(INT_MAX, DMG_GENERIC, self)", args[3].tointeger(), null, null)
 		}
 
-		bot.GetScriptScope().PlayerThinkTable.BossHealthThink <- function() {
-			printl(boss + " : " + boss.GetHealth() + " : " + args[1])
-			if (boss && boss.IsValid() && boss.GetHealth() > bot.GetHealth() && args[1] == "BOTHP")
+		PopExtUtil.MonsterResource.ValidateScriptScope()
+
+		PopExtUtil.MonsterResource.GetScriptScope().HealthBarThink <- function() {
+
+			if (!boss.IsValid())
+			{
+				delete PopExtUtil.MonsterResource.GetScriptScope().HealthBarThink
+				return
+			}
+
+			local barvalue = (boss.GetHealth().tofloat() / bosshealth.tofloat()) * 255
+
+			if (barvalue < 0) barvalue = 0
+
+			SetPropInt(PopExtUtil.MonsterResource, "m_iBossHealthPercentageByte", barvalue)
+			return -1
+		}
+		AddThinkToEnt(PopExtUtil.MonsterResource, "HealthBarThink")
+
+		scope.PlayerThinkTable.BossHealthThink <- function() {
+
+			if (scope.halloweenboss.IsValid() && boss.GetHealth() != bot.GetHealth() && args[1] == "BOTHP")
 				bot.SetHealth(boss.GetHealth())
 				
-
-			else if (!boss || !boss.IsValid())
-				bot.TakeDamage(INT_MAX, DMG_GENERIC, bot)
+			if (scope.halloweenboss.IsValid()) return
+			
+			local uberconds = [TF_COND_INVULNERABLE, TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, TF_COND_INVULNERABLE_CARD_EFFECT, TF_COND_INVULNERABLE_USER_BUFF]
+			foreach (cond in uberconds)
+				if (bot.InCond(cond))
+					bot.RemoveCondEx(cond, true)
+					
+			bot.TakeDamage(INT_MAX, DMG_GENERIC, bosskiller)
 		}
 	}
 
@@ -1039,8 +1074,8 @@ local popext_funcs = {
 	}
 	function BotThink()
 	{
-		// try bot.OnUpdate() catch(e) return
-		bot.OnUpdate()
+		try bot.OnUpdate() catch(e) if (e == "the index 'bot' does not exist") return
+		// bot.OnUpdate()
 		return -1
 	}
 
@@ -1075,6 +1110,9 @@ local popext_funcs = {
 		foreach (bot in PopExtUtil.BotArray)
 			if (bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
+	}
+	function OnGameEvent_halloween_boss_killed(params) {
+		if (!("bosskiller" in ROOT)) ::bosskiller <- GetPlayerFromUserID(params.killer)
 	}
 }
 __CollectGameEventCallbacks(PopExtTags)

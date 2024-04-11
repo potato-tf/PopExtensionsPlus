@@ -671,6 +671,8 @@ function MissionAttributes::MissionAttr(...) {
 			local scope = victim.GetScriptScope()
 			local wep = params.weapon
 
+			if (!player.IsPlayer() || victim.IsPlayer()) return
+			
 			function CanHeadshot()
 			{
 				//check for head hitgroup, or for headshot dmg type but no crit dmg type (huntsman quirk)
