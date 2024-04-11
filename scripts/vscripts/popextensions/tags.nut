@@ -348,6 +348,23 @@ local popext_funcs = {
 		}
 	}
 
+	popext_fireinput = function(bot, args)
+	{
+		local args_len = args.len()
+		
+		if (args_len == 2)
+			EntFire(args[0], args[1])
+
+		else if (args_len == 3)
+			EntFire(args[0], args[1], args[2])
+
+		else if (args_len == 4)
+			EntFire(args[0], args[1], args[2], args[3])
+
+		else if (args_len == 5)
+			EntFire(args[0], args[1], args[2], args[3], args[4])
+	}
+
 	popext_weaponresist = function(bot, args) {
 		local weapon = args[0]
 		local amount = args[1].tofloat()
