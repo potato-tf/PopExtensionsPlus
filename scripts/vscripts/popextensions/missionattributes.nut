@@ -672,7 +672,7 @@ function MissionAttributes::MissionAttr(...) {
 			local wep = params.weapon
 
 			if (!player.IsPlayer() || victim.IsPlayer()) return
-			
+
 			function CanHeadshot()
 			{
 				//check for head hitgroup, or for headshot dmg type but no crit dmg type (huntsman quirk)
@@ -1035,7 +1035,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "ExtraTankPath":
 		if (typeof value != "array") {
-			MissionAttributes.RaiseValueError("ExtraTankPath", value, "Value must be array")
+			this.RaiseValueError("ExtraTankPath", value, "Value must be array")
 			success = false
 			break
 		}
@@ -1100,7 +1100,7 @@ function MissionAttributes::MissionAttr(...) {
 				}
 				else {
 					// do we need to do anything special for thinks??
-					MissionAttributes.RaiseValueError("HandModelOverride", value, "Value must be string or array of strings")
+					this.RaiseValueError("HandModelOverride", value, "Value must be string or array of strings")
 					return
 				}
 
@@ -1159,7 +1159,7 @@ function MissionAttributes::MissionAttr(...) {
 			if (player.IsBotOfType(1337)) return
 
 			if (typeof value != "table") {
-				MissionAttributes.RaiseValueError("PlayerAttributes", value, "Value must be table")
+				this.RaiseValueError("PlayerAttributes", value, "Value must be table")
 				success = false
 				return
 			}
@@ -1187,7 +1187,7 @@ function MissionAttributes::MissionAttr(...) {
 							valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", k, v)
 
 						else if (typeof v == "string") {
-							MissionAttributes.RaiseValueError("PlayerAttributes", v, "Cannot set string attributes!")
+							this.RaiseValueError("PlayerAttributes", v, "Cannot set string attributes!")
 							success = false
 							continue
 						}
@@ -1212,7 +1212,7 @@ function MissionAttributes::MissionAttr(...) {
 			if (player.IsBotOfType(1337)) return
 
 			if (typeof value != "table") {
-				MissionAttributes.RaiseValueError("ItemAttributes", value, "Value must be table")
+				this.RaiseValueError("ItemAttributes", value, "Value must be table")
 				success = false
 				return
 			}
@@ -1263,100 +1263,124 @@ function MissionAttributes::MissionAttr(...) {
 	// ============================================================
 
 	case "LoadoutControl":
+		
 		MissionAttributes.SpawnHookTable.LoadoutControl <- function(params) {
+
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-
+			
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
-			function HasVal(arr, val) foreach (v in arr) if (v == val) return true
-			function IsInMultiList(arr, val) {
-				if (arr.len() <= 0) return false
-
-				local in_list = false
-				foreach (a in arr) {
-					if (HasVal(a, val)) {
-						in_list = true
-						break
-					}
-				}
-				return in_list
-			}
-
-			for (local i = 0; i < SLOT_COUNT; ++i) {
-				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+			foreach (item, replacement in value)
+			{
+				local wep = PopExtUtil.HasItemInLoadout(player, item)
 				if (wep == null) continue
+				
+				wep.Kill()
 
-				local tfclass = PopExtUtil.Classes[player.GetPlayerClass()]
-
-				local slot  = PopExtUtil.Slots[i]
-				local index = PopExtUtil.GetItemIndex(wep)
-				local cls	= wep.GetClassname()
-
-				local whitelists = []
-				local tables     = []
-
-				tables.insert(0, value)
-				if ("Whitelist" in value) whitelists.insert(0, value.Whitelist)
-
-				if (tfclass in value) {
-					tables.insert(0, value[tfclass])
-					if ("Whitelist" in value[tfclass])
-						whitelists.insert(0, value[tfclass].Whitelist)
-				}
-
-				if (tfclass in value && slot in value[tfclass]) {
-					tables.insert(0, value[tfclass][slot])
-					if ("Whitelist" in value[tfclass][slot])
-						whitelists.insert(0, value[tfclass][slot].Whitelist)
-				}
-
-
-				if (whitelists.len() > 0) {
-					local in_whitelist = IsInMultiList(whitelists, index) || IsInMultiList(whitelists, cls)
-
-					if (!in_whitelist) {
-						wep.Kill()
-						continue
-					}
-				}
-
-				foreach (table in tables) {
-					local identifiers = [index, cls]
-					local full_break  = false
-
-					foreach (id in identifiers) {
-						if (id in table) {
-							local value = table[id]
-
-							if (value == null) {
-								wep.Kill()
-								full_break = true
-								break
-							}
-							else if (value == "") {
-								printl("GIVE STOCK ITEM, check with IsInMultiList")
-							}
-							else if (typeof value == "string" && value.len() > 0) {
-								printl("INVALID VALUE "+value+ "FOR k: "+id)
-								continue
-							}
-							else {
-								try {
-									local value = value.tointeger()
-									printl("REPLACE ITEM WITH ITEMINDEX "+value)
-								}
-								catch (e) {}
-							}
-						}
-					}
-
-					if (full_break) break
-				}
+				if (replacement == null) continue
+				
+				try 
+					PopExtUtil.GiveWeapon(player, PopExtItems[replacement].item_class, PopExtItems[replacement].id)
+				catch(_)
+					if (typeof replacement == "table")
+						foreach (classname, itemid in replacement)
+							PopExtUtil.GiveWeapon(player, classname, itemid)
+					else
+						this.RaiseValueError("LoadoutControl", value, "Item replacement must be a table")
+				
 			}
 
-			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", SINGLE_TICK, null, null)
+			//old mince code, needlessly complicated
+			// function HasVal(arr, val) foreach (v in arr) if (v == val) return true
+			
+			// function IsInMultiList(arr, val) {
+			// 	if (arr.len() <= 0) return false
+
+			// 	local in_list = false
+			// 	foreach (a in arr) {
+			// 		if (HasVal(a, val)) {
+			// 			in_list = true
+			// 			break
+			// 		}
+			// 	}
+			// 	return in_list
+			// }
+
+			// for (local i = 0; i < SLOT_COUNT; ++i) {
+			// 	local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+			// 	if (wep == null) continue
+
+			// 	local tfclass = PopExtUtil.Classes[player.GetPlayerClass()]
+
+			// 	local slot  = PopExtUtil.Slots[i]
+			// 	local index = PopExtUtil.GetItemIndex(wep)
+			// 	local cls	= wep.GetClassname()
+
+			// 	local whitelists = []
+			// 	local tables     = []
+
+			// 	tables.insert(0, value)
+			// 	if ("Whitelist" in value) whitelists.insert(0, value.Whitelist)
+
+			// 	if (tfclass in value) {
+			// 		tables.insert(0, value[tfclass])
+			// 		if ("Whitelist" in value[tfclass])
+			// 			whitelists.insert(0, value[tfclass].Whitelist)
+			// 	}
+
+			// 	if (tfclass in value && slot in value[tfclass]) {
+			// 		tables.insert(0, value[tfclass][slot])
+			// 		if ("Whitelist" in value[tfclass][slot])
+			// 			whitelists.insert(0, value[tfclass][slot].Whitelist)
+			// 	}
+
+
+			// 	if (whitelists.len() > 0) {
+			// 		local in_whitelist = IsInMultiList(whitelists, index) || IsInMultiList(whitelists, cls)
+
+			// 		if (!in_whitelist) {
+			// 			wep.Kill()
+			// 			continue
+			// 		}
+			// 	}
+
+			// 	foreach (table in tables) {
+			// 		local identifiers = [index, cls]
+			// 		local full_break  = false
+
+			// 		foreach (id in identifiers) {
+			// 			if (id in table) {
+			// 				local value = table[id]
+
+			// 				if (value == null) {
+			// 					wep.Kill()
+			// 					full_break = true
+			// 					break
+			// 				}
+			// 				else if (value == "") {
+			// 					printl("GIVE STOCK ITEM, check with IsInMultiList")
+			// 				}
+			// 				else if (typeof value == "string" && value.len() > 0) {
+			// 					printl("INVALID VALUE "+value+ "FOR k: "+id)
+			// 					continue
+			// 				}
+			// 				else {
+			// 					try {
+			// 						local value = value.tointeger()
+			// 						printl("REPLACE ITEM WITH ITEMINDEX "+value)
+			// 					}
+			// 					catch (e) {}
+			// 				}
+			// 			}
+			// 		}
+
+			// 		if (full_break) break
+			// 	}
+			// }
+
+			// EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", SINGLE_TICK, null, null)
 		}
 	break
 
@@ -1729,7 +1753,7 @@ function MissionAttributes::MissionAttr(...) {
 
 				local wep = self.GetActiveWeapon()
 
-				if (wep.GetClassname() == "tf_weapon_laser_pointer") {
+				if (wep && wep.GetClassname() == "tf_weapon_laser_pointer") {
 					if (laser_spawntime == -1)
 						laser_spawntime = Time() + 0.55
 				}

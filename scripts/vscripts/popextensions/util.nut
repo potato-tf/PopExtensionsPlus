@@ -1029,6 +1029,32 @@ function PopExtUtil::RemovePlayerWearables(player) {
 	return
 }
 
+function PopExtUtil::GiveWeapon(player, className, itemID)
+{
+    local weapon = CreateByClassname(className)
+    SetPropInt(weapon, STRING_NETPROP_ITEMDEF, itemID)
+    SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
+    SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
+    weapon.SetTeam(player.GetTeam())
+    DispatchSpawn(weapon)
+
+    // remove existing weapon in same slot
+    for (local i = 0; i < SLOT_COUNT; i++)
+    {
+        local heldWeapon = GetPropEntityArray(player, "m_hMyWeapons", i)
+        if (heldWeapon == null || heldWeapon.GetSlot() != weapon.GetSlot())
+            continue
+        heldWeapon.Destroy()
+        SetPropEntityArray(player, "m_hMyWeapons", null, i)
+        break
+    }
+    
+    player.Weapon_Equip(weapon)
+    player.Weapon_Switch(weapon)
+
+    return weapon
+}
+
 function PopExtUtil::IsEntityClassnameInList(entity, list) {
 	local classname = entity.GetClassname()
 	local listType = typeof(list)
