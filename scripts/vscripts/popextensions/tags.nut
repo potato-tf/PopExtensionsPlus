@@ -332,8 +332,11 @@ local popext_funcs = {
 
 	popext_movetopoint = function(bot, args) {
 
+		local pos = split(args[0], " ")
+		pos.apply(function(v) { return v.tofloat()})
+		
 		bot.GetScriptScope().PlayerThinkTable.MoveToPoint <- function() {
-			UpdatePathAndMove(args[0])
+			UpdatePathAndMove(Vector(pos[0], pos[1], pos[2]))
 		}
 	}
 
@@ -787,7 +790,8 @@ local popext_funcs = {
 		scope.halloweenboss <- boss
 		
 		local org = split(args[2], " ")
-		boss.SetOrigin(Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()))
+		org.apply(function(v) { return v.tofloat()})
+		boss.SetOrigin(Vector(org[0], org[1], org[2]))
 
 		args.len() > 4 ? boss.SetTeam(args[4].tointeger()) : boss.SetTeam(5)
 
