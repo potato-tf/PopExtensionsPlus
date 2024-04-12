@@ -1263,12 +1263,12 @@ function MissionAttributes::MissionAttr(...) {
 	// ============================================================
 
 	case "LoadoutControl":
-		
+
 		MissionAttributes.SpawnHookTable.LoadoutControl <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
@@ -1276,12 +1276,12 @@ function MissionAttributes::MissionAttr(...) {
 			{
 				local wep = PopExtUtil.HasItemInLoadout(player, item)
 				if (wep == null) continue
-				
+
 				wep.Kill()
 
 				if (replacement == null) continue
-				
-				try 
+
+				try
 					PopExtUtil.GiveWeapon(player, PopExtItems[replacement].item_class, PopExtItems[replacement].id)
 				catch(_)
 					if (typeof replacement == "table")
@@ -1289,12 +1289,13 @@ function MissionAttributes::MissionAttr(...) {
 							PopExtUtil.GiveWeapon(player, classname, itemid)
 					else
 						this.RaiseValueError("LoadoutControl", value, "Item replacement must be a table")
-				
 			}
+
+			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", SINGLE_TICK, null, null)
 
 			//old mince code, needlessly complicated
 			// function HasVal(arr, val) foreach (v in arr) if (v == val) return true
-			
+
 			// function IsInMultiList(arr, val) {
 			// 	if (arr.len() <= 0) return false
 
@@ -1379,8 +1380,6 @@ function MissionAttributes::MissionAttr(...) {
 			// 		if (full_break) break
 			// 	}
 			// }
-
-			// EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", SINGLE_TICK, null, null)
 		}
 	break
 
