@@ -1,10 +1,15 @@
 ::CustomAttributes <- {
+	ROCKET_LAUNCHER_CLASSNAMES = [
+		"tf_weapon_rocketlauncher",
+		"tf_weapon_rocketlauncher_airstrike",
+		"tf_weapon_rocketlauncher_directhit",
+		"tf_weapon_particle_cannon",
+	]
 
     SpawnHookTable = {}
     TakeDamageTable = {}
     TakeDamagePostTable = {}
     PlayerTeleportTable = {}
-    PlayerSpawnTable = {}
     DeathHookTable = {}
 
     Attrs = {
@@ -115,8 +120,6 @@
             local player = GetPlayerFromUserID(params.userid)
             player.ValidateScriptScope()
             player.GetScriptScope().teleporterspeedboost <- false
-
-			foreach (_, func in CustomAttributes.PlayerSpawnTable) func(params);
 		}
 
 		function OnGameEvent_recalculate_holidays(params) {
@@ -992,10 +995,12 @@ function CustomAttributes::PassiveReload(player, item) {
 }
 
 function CustomAttributes::RocketPenetration(player, item, value) {
-	printl("here")
-
 	local wep = PopExtUtil.HasItemInLoadout(player, item)
 	if (wep == null) return
+
+	if (ROCKET_LAUNCHER_CLASSNAMES.find(wep.GetClassname()) == null)
+		return
+
 
 	local scope = player.GetScriptScope()
 
@@ -1015,180 +1020,182 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 		params.player_penetration_count = inflictorScope.penetrationCount // change killicon to penetrate after rocket has penetrated at least 1 enemy
 	}
 
-	CustomAttributes.PlayerSpawnTable.RocketPenetration <- function(params) {
-		local spawnedPlayer = GetPlayerFromUserID(params.userid)
-		if (spawnedPlayer != player)
-			return
+	wep.ValidateScriptScope()
+	local weaponScriptScope = wep.GetScriptScope()
+	weaponScriptScope.last_fire_time <- 0.0
+	weaponScriptScope.forceAttacking <- false
 
-		wep.ValidateScriptScope()
-		local weaponScriptScope = wep.GetScriptScope()
-		weaponScriptScope.last_fire_time <- 0.0
-		weaponScriptScope.forceAttacking <- false
+	weaponScriptScope.maxPenetration <- value
 
-		weaponScriptScope.maxPenetration <- value
-
-		weaponScriptScope.CheckWeaponFire <- function() {
-			local fire_time = NetProps.GetPropFloat(self, "m_flLastFireTime")
-			if (fire_time > last_fire_time && !forceAttacking) {
-				local owner = self.GetOwner()
-				if (owner) {
-					OnShot(owner)
-				}
-
-				last_fire_time = fire_time
+	weaponScriptScope.CheckWeaponFire <- function() {
+		local fire_time = NetProps.GetPropFloat(self, "m_flLastFireTime")
+		if (fire_time > last_fire_time && !forceAttacking) {
+			local owner = self.GetOwner()
+			if (owner) {
+				OnShot(owner)
 			}
-			return -1
+
+			last_fire_time = fire_time
 		}
-		weaponScriptScope.FindRocket <- function(owner) {
-			local entity = null
+		return -1
+	}
+	weaponScriptScope.FindRocket <- function(owner) {
+		local entity = null
+		for (local entity; entity = Entities.FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
+			if (entity.GetOwner() != owner) {
+				continue
+			}
+
+			return entity
+		}
+
+		return null
+	}
+	weaponScriptScope.ApplyPenetrationToRocket <- function(owner, rocket) {
+		rocket.SetSolid(Constants.ESolidType.SOLID_NONE)
+
+		rocket.ValidateScriptScope()
+		local rocketScope = rocket.GetScriptScope()
+		rocketScope.isCustomRocket <- true
+		rocketScope.lastRocketOrigin <- rocket.GetOrigin()
+		rocketScope.maxPenetration <- maxPenetration
+
+		rocketScope.collidedTargets <- []
+		rocketScope.penetrationCount <- 0
+		rocketScope.DetonateRocket <- function () {
+			local owner = self.GetOwner()
+			local launcher = NetProps.GetPropEntity(self, "m_hLauncher")
+
+			local charge = NetProps.GetPropFloat(owner, "m_Shared.m_flItemChargeMeter")
+			local nextAttack = NetProps.GetPropFloat(launcher, "m_flNextPrimaryAttack")
+			local lastFire = NetProps.GetPropFloat(launcher, "m_flLastFireTime")
+			local clip =  launcher.Clip1()
+			local energy = NetProps.GetPropFloat(launcher, "m_flEnergy")
+
+			launcher.GetScriptScope().forceAttacking = true
+
+			launcher.SetClip1(99)
+			NetProps.SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", 100.0)
+			NetProps.SetPropBool(owner, "m_bLagCompensation", false)
+			NetProps.SetPropFloat(launcher, "m_flNextPrimaryAttack", 0)
+			NetProps.SetPropFloat(launcher, "m_flEnergy", 100.0)
+
+			launcher.AddAttribute("crit mod disabled hidden", 1, -1)
+			launcher.PrimaryAttack()
+			launcher.RemoveAttribute("crit mod disabled hidden")
+
+			launcher.GetScriptScope().forceAttacking = false
+			launcher.SetClip1(clip)
+			NetProps.SetPropBool(owner, "m_bLagCompensation", true)
+			NetProps.SetPropFloat(launcher, "m_flNextPrimaryAttack", nextAttack)
+			NetProps.SetPropFloat(launcher, "m_flEnergy", energy)
+			NetProps.SetPropFloat(launcher, "m_flLastFireTime", lastFire)
+			NetProps.SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", charge)
+
 			for (local entity; entity = Entities.FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
 				if (entity.GetOwner() != owner) {
 					continue
 				}
 
-				return entity
-			}
+				if ("isCustomRocket" in entity.GetScriptScope())
+					continue
 
-			return null
+				NetProps.SetPropBool(self, "m_bCritical", NetProps.GetPropBool(self, "m_bCritical"))
+				entity.SetAbsOrigin(self.GetOrigin())
+
+				entity.ValidateScriptScope()
+				entity.GetScriptScope().isPenetrateMimicRocket <- true
+				entity.GetScriptScope().originalRocket <- self
+				entity.GetScriptScope().penetrationCount <- (self.GetScriptScope().penetrationCount - 1)
+
+				break
+			}
 		}
-		weaponScriptScope.ApplyPenetrationToRocket <- function(owner, rocket) {
-			rocket.SetSolid(Constants.ESolidType.SOLID_NONE)
+		rocketScope.RocketThink <- function() {
+			local MASK_SOLID_BRUSHONLY = 16395
 
-			rocket.ValidateScriptScope()
-			local rocketScope = rocket.GetScriptScope()
-			rocketScope.isCustomRocket <- true
-			rocketScope.lastRocketOrigin <- rocket.GetOrigin()
-			rocketScope.maxPenetration <- maxPenetration
+			local origin = self.GetOrigin()
 
-			rocketScope.collidedTargets <- []
-			rocketScope.penetrationCount <- 0
-			rocketScope.DetonateRocket <- function () {
-				local owner = self.GetOwner()
-				local launcher = NetProps.GetPropEntity(self, "m_hLauncher")
-
-				local charge = NetProps.GetPropFloat(owner, "m_Shared.m_flItemChargeMeter")
-				local nextAttack = NetProps.GetPropFloat(launcher, "m_flNextPrimaryAttack")
-				local lastFire = NetProps.GetPropFloat(launcher, "m_flLastFireTime")
-				local clip =  launcher.Clip1()
-				local energy = NetProps.GetPropFloat(launcher, "m_flEnergy")
-
-				launcher.GetScriptScope().forceAttacking = true
-
-				launcher.SetClip1(99)
-				NetProps.SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", 100.0)
-				NetProps.SetPropBool(owner, "m_bLagCompensation", false)
-				NetProps.SetPropFloat(launcher, "m_flNextPrimaryAttack", 0)
-				NetProps.SetPropFloat(launcher, "m_flEnergy", 100.0)
-
-				launcher.AddAttribute("crit mod disabled hidden", 1, -1)
-				launcher.PrimaryAttack()
-				launcher.RemoveAttribute("crit mod disabled hidden")
-
-				launcher.GetScriptScope().forceAttacking = false
-				launcher.SetClip1(clip)
-				NetProps.SetPropBool(owner, "m_bLagCompensation", true)
-				NetProps.SetPropFloat(launcher, "m_flNextPrimaryAttack", nextAttack)
-				NetProps.SetPropFloat(launcher, "m_flEnergy", energy)
-				NetProps.SetPropFloat(launcher, "m_flLastFireTime", lastFire)
-				NetProps.SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", charge)
-
-				for (local entity; entity = Entities.FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
-					if (entity.GetOwner() != owner) {
-						continue
-					}
-
-					if ("isCustomRocket" in entity.GetScriptScope())
-						continue
-
-					NetProps.SetPropBool(self, "m_bCritical", NetProps.GetPropBool(self, "m_bCritical"))
-					entity.SetAbsOrigin(self.GetOrigin())
-
-					entity.ValidateScriptScope()
-					entity.GetScriptScope().isPenetrateMimicRocket <- true
-					entity.GetScriptScope().originalRocket <- self
-					entity.GetScriptScope().penetrationCount <- (self.GetScriptScope().penetrationCount - 1)
-
-					break
-				}
+			traceTableWorldSpawn <- {
+				start = lastRocketOrigin,
+				end = origin + (self.GetForwardVector() * 50)
+				mask = MASK_SOLID_BRUSHONLY
+				ignore = self.GetOwner()
 			}
-			rocketScope.RocketThink <- function() {
-				local MASK_SOLID_BRUSHONLY = 16395
 
-				local origin = self.GetOrigin()
+			TraceLineEx(traceTableWorldSpawn)
 
-				traceTableWorldSpawn <- {
-					start = lastRocketOrigin,
-					end = origin + (self.GetForwardVector() * 50)
-					mask = MASK_SOLID_BRUSHONLY
-					ignore = self.GetOwner()
-				}
-
-				TraceLineEx(traceTableWorldSpawn)
-
-				if (traceTableWorldSpawn.hit && traceTableWorldSpawn.enthit)
-				{
-					self.SetSolid(Constants.ESolidType.SOLID_BBOX)
-					NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
-					return -1
-				}
-
-				traceTable <- {
-					start = lastRocketOrigin,
-					end = origin
-					ignore = self.GetOwner()
-				}
-
-				TraceLineEx(traceTable)
-
-				lastRocketOrigin = origin
-
-				if (!traceTable.hit)
-					return -1
-
-				if (!traceTable.enthit)
-					return -1
-
-				if (collidedTargets.find(traceTable.enthit) != null)
-					return -1
-
-				collidedTargets.append(traceTable.enthit)
-				penetrationCount++
-
-				if (penetrationCount > (maxPenetration + 1))
-				{
-					self.SetSolid(Constants.ESolidType.SOLID_BBOX)
-					NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
-					return -1
-				}
-
-				DetonateRocket()
-
+			if (traceTableWorldSpawn.hit && traceTableWorldSpawn.enthit)
+			{
+				self.SetSolid(Constants.ESolidType.SOLID_BBOX)
+				NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
 				return -1
 			}
 
-			rocketScope.ApplyThink <- function () {
-				AddThinkToEnt(rocket, "RocketThink")
+			traceTable <- {
+				start = lastRocketOrigin,
+				end = origin
+				ignore = self.GetOwner()
 			}
 
-			EntFireByHandle(rocket, "CallScriptFunction", "ApplyThink", 0.015, null, null)
-			// AddThinkToEnt(rocket, "RocketThink")
-		}
-		weaponScriptScope.OnShot <- function(owner) {
-			local rocket = FindRocket(owner)
+			TraceLineEx(traceTable)
 
-			if (!rocket) {
-				return
+			lastRocketOrigin = origin
+
+			if (!traceTable.hit)
+				return -1
+
+			if (!traceTable.enthit)
+				return -1
+
+			if (traceTable.enthit.GetTeam() == player.GetTeam())
+				return -1
+
+			if (collidedTargets.find(traceTable.enthit) != null)
+				return -1
+
+			collidedTargets.append(traceTable.enthit)
+			penetrationCount++
+
+			// arrow free penetration through allies without detonating
+			if (traceTable.enthit.GetTeam() != player.GetTeam())
+				penetrationCount++
+
+			if (penetrationCount > (maxPenetration + 1))
+			{
+				self.SetSolid(Constants.ESolidType.SOLID_BBOX)
+				NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
+				return -1
 			}
 
-			// don't apply penetration to cowmangler charge shot, unfortunately it doesn't work :(
-			if (NetProps.GetPropBool(rocket, "m_bChargedShot"))
-				return
+			if (traceTable.enthit.GetTeam() != player.GetTeam())
+				DetonateRocket()
 
-			ApplyPenetrationToRocket(owner, rocket)
+			return -1
 		}
 
-		AddThinkToEnt(wep, "CheckWeaponFire")
+		rocketScope.ApplyThink <- function () {
+			AddThinkToEnt(rocket, "RocketThink")
+		}
+
+		EntFireByHandle(rocket, "CallScriptFunction", "ApplyThink", 0.015, null, null)
+		// AddThinkToEnt(rocket, "RocketThink")
 	}
+	weaponScriptScope.OnShot <- function(owner) {
+		local rocket = FindRocket(owner)
+
+		if (!rocket) {
+			return
+		}
+
+		// don't apply penetration to cowmangler charge shot, because unfortunately it doesn't work :(
+		if (NetProps.GetPropBool(rocket, "m_bChargedShot"))
+			return
+
+		ApplyPenetrationToRocket(owner, rocket)
+	}
+
+	AddThinkToEnt(wep, "CheckWeaponFire")
 }
 
 function CustomAttributes::ReloadFullClipAtOnce(player, item) {
@@ -1609,7 +1616,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "rocket penetration":
             CustomAttributes.RocketPenetration(player, item, value)
-            scope.attribinfo[attr] <- format("rocket penetrates %d enemy players", value)
+            scope.attribinfo[attr] <- format("rocket penetrates up to %d enemy players", value)
         break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
