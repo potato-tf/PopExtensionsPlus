@@ -1028,7 +1028,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 	weaponScriptScope.maxPenetration <- value
 
 	weaponScriptScope.CheckWeaponFire <- function() {
-		local fire_time = NetProps.GetPropFloat(self, "m_flLastFireTime")
+		local fire_time = GetPropFloat(self, "m_flLastFireTime")
 		if (fire_time > last_fire_time && !forceAttacking) {
 			local owner = self.GetOwner()
 			if (owner) {
@@ -1064,21 +1064,21 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 		rocketScope.penetrationCount <- 0
 		rocketScope.DetonateRocket <- function () {
 			local owner = self.GetOwner()
-			local launcher = NetProps.GetPropEntity(self, "m_hLauncher")
+			local launcher = GetPropEntity(self, "m_hLauncher")
 
-			local charge = NetProps.GetPropFloat(owner, "m_Shared.m_flItemChargeMeter")
-			local nextAttack = NetProps.GetPropFloat(launcher, "m_flNextPrimaryAttack")
-			local lastFire = NetProps.GetPropFloat(launcher, "m_flLastFireTime")
+			local charge = GetPropFloat(owner, "m_Shared.m_flItemChargeMeter")
+			local nextAttack = GetPropFloat(launcher, "m_flNextPrimaryAttack")
+			local lastFire = GetPropFloat(launcher, "m_flLastFireTime")
 			local clip =  launcher.Clip1()
-			local energy = NetProps.GetPropFloat(launcher, "m_flEnergy")
+			local energy = GetPropFloat(launcher, "m_flEnergy")
 
 			launcher.GetScriptScope().forceAttacking = true
 
 			launcher.SetClip1(99)
-			NetProps.SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", 100.0)
-			NetProps.SetPropBool(owner, "m_bLagCompensation", false)
-			NetProps.SetPropFloat(launcher, "m_flNextPrimaryAttack", 0)
-			NetProps.SetPropFloat(launcher, "m_flEnergy", 100.0)
+			SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", 100.0)
+			SetPropBool(owner, "m_bLagCompensation", false)
+			SetPropFloat(launcher, "m_flNextPrimaryAttack", 0)
+			SetPropFloat(launcher, "m_flEnergy", 100.0)
 
 			launcher.AddAttribute("crit mod disabled hidden", 1, -1)
 			launcher.PrimaryAttack()
@@ -1086,11 +1086,11 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 
 			launcher.GetScriptScope().forceAttacking = false
 			launcher.SetClip1(clip)
-			NetProps.SetPropBool(owner, "m_bLagCompensation", true)
-			NetProps.SetPropFloat(launcher, "m_flNextPrimaryAttack", nextAttack)
-			NetProps.SetPropFloat(launcher, "m_flEnergy", energy)
-			NetProps.SetPropFloat(launcher, "m_flLastFireTime", lastFire)
-			NetProps.SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", charge)
+			SetPropBool(owner, "m_bLagCompensation", true)
+			SetPropFloat(launcher, "m_flNextPrimaryAttack", nextAttack)
+			SetPropFloat(launcher, "m_flEnergy", energy)
+			SetPropFloat(launcher, "m_flLastFireTime", lastFire)
+			SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", charge)
 
 			for (local entity; entity = Entities.FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
 				if (entity.GetOwner() != owner) {
@@ -1100,7 +1100,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 				if ("isCustomRocket" in entity.GetScriptScope())
 					continue
 
-				NetProps.SetPropBool(self, "m_bCritical", NetProps.GetPropBool(self, "m_bCritical"))
+				SetPropBool(self, "m_bCritical", GetPropBool(self, "m_bCritical"))
 				entity.SetAbsOrigin(self.GetOrigin())
 
 				entity.ValidateScriptScope()
@@ -1128,7 +1128,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 			if (traceTableWorldSpawn.hit && traceTableWorldSpawn.enthit)
 			{
 				self.SetSolid(Constants.ESolidType.SOLID_BBOX)
-				NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
+				SetPropString(self, "m_iszScriptThinkFunction", "")
 				return -1
 			}
 
@@ -1164,7 +1164,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 			if (penetrationCount > (maxPenetration + 1))
 			{
 				self.SetSolid(Constants.ESolidType.SOLID_BBOX)
-				NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
+				SetPropString(self, "m_iszScriptThinkFunction", "")
 				return -1
 			}
 
@@ -1189,7 +1189,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 		}
 
 		// don't apply penetration to cowmangler charge shot, because unfortunately it doesn't work :(
-		if (NetProps.GetPropBool(rocket, "m_bChargedShot"))
+		if (GetPropBool(rocket, "m_bChargedShot"))
 			return
 
 		ApplyPenetrationToRocket(owner, rocket)
