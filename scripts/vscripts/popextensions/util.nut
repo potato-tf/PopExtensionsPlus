@@ -4,7 +4,7 @@
 	HumanArray = []
 	BotArray = []
 	PlayerArray = []
-	Classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"] //make element 0 a dummy string instead of doing array + 1 everywhere
+	Classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer", "civilian"] //make element 0 a dummy string instead of doing array + 1 everywhere
 	Slots   = ["slot_primary", "slot_secondary", "slot_melee", "slot_utility", "slot_building", "slot_pda", "slot_pda2"]
 	IsWaveStarted = false //check a global variable instead of accessing a netprop every time to check if we are between waves.
 	AllNavAreas = {}
@@ -266,6 +266,14 @@ function PopExtUtil::ForceChangeClass(player, classindex = 1)
 	player.SetPlayerClass(classindex);
 	SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", classindex);
 	player.ForceRegenerateAndRespawn();
+}
+
+function PopExtUtil::PlayerClassCount()
+{
+	local classes = array(TF_CLASS_COUNT_ALL, 0)
+	foreach (player in PopExtUtil.HumanArray)
+		++classes[player.GetPlayerClass()]
+	return classes
 }
 
 function PopExtUtil::ChangePlayerTeamMvM(player, teamnum = 3)
@@ -1048,7 +1056,7 @@ function PopExtUtil::GiveWeapon(player, className, itemID)
         SetPropEntityArray(player, "m_hMyWeapons", null, i)
         break
     }
-    
+
     player.Weapon_Equip(weapon)
     player.Weapon_Switch(weapon)
 
@@ -1267,6 +1275,34 @@ function PopExtUtil::StringReplace(str, findwhat, replace) {
 	}
 
 	return returnstring
+}
+
+// Python's string.capwords()
+function PopExtUtil::capwords(s, sep = null) {
+    if (sep == null) sep = " ";
+    local words = [];
+    local start = 0;
+    local end = s.find(sep);
+    while (end != null) {
+        words.push(s.slice(start, end));
+        start = end + sep.len();
+        end = s.find(sep, start);
+    }
+    words.push(s.slice(start));
+
+    local result = [];
+    foreach (word in words) {
+        local firstChar = word.slice(0, 1).toupper();
+        local restOfWord = word.slice(1);
+        result.push(firstChar + restOfWord);
+    }
+
+    local finalResult = "";
+    foreach (i, word in result) {
+        if (i > 0) finalResult += sep;
+        finalResult += word;
+    }
+    return finalResult;
 }
 
 function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT) {

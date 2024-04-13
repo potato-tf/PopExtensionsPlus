@@ -19,9 +19,10 @@ if (!("ScriptUnloadTable" in ROOT))
 	TakeDamageTablePost = {}
 	SpawnHookTable  = {}
 	DeathHookTable  = {}
-	// InitWaveTable = {}
+	//InitWaveTable = {}
 	DisconnectTable = {}
 	StartWaveTable = {}
+	ChangeClassTable = {}
 
 	DebugText        = false
 	RaisedParseError = false
@@ -31,8 +32,8 @@ if (!("ScriptUnloadTable" in ROOT))
 	// function InitWave() {
 	// 	foreach (_, func in MissionAttributes.InitWaveTable) func()
 
-	// 	foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
-	// 	MissionAttributes.RaisedParseError = false
+	// 	// foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
+	// 	// MissionAttributes.RaisedParseError = false
 	// }
 
 	function Cleanup()
@@ -55,6 +56,7 @@ if (!("ScriptUnloadTable" in ROOT))
 		function OnGameEvent_player_hurt(params) { foreach (_, func in MissionAttributes.TakeDamageTablePost) func(params) }
 		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
 		function OnGameEvent_mvm_begin_wave(params) { foreach (_, func in MissionAttributes.StartWaveTable) func(params) }
+		function OnGameEvent_player_changeclass(params) { foreach (_, func in MissionAttributes.ChangeClassTable) func(params) }
 		function OnGameEvent_player_team(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
@@ -84,6 +86,7 @@ if (!("ScriptUnloadTable" in ROOT))
 		{
 
 			if (GetRoundState() != GR_STATE_PREROUND) return
+
 
             foreach (player in PopExtUtil.PlayerArray)
                 PopExtMain.PlayerCleanup(player)
@@ -1263,12 +1266,12 @@ function MissionAttributes::MissionAttr(...) {
 	// ============================================================
 
 	case "LoadoutControl":
-		
+
 		MissionAttributes.SpawnHookTable.LoadoutControl <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
@@ -1276,12 +1279,12 @@ function MissionAttributes::MissionAttr(...) {
 			{
 				local wep = PopExtUtil.HasItemInLoadout(player, item)
 				if (wep == null) continue
-				
+
 				wep.Kill()
 
 				if (replacement == null) continue
-				
-				try 
+
+				try
 					PopExtUtil.GiveWeapon(player, PopExtItems[replacement].item_class, PopExtItems[replacement].id)
 				catch(_)
 					if (typeof replacement == "table")
@@ -1289,12 +1292,13 @@ function MissionAttributes::MissionAttr(...) {
 							PopExtUtil.GiveWeapon(player, classname, itemid)
 					else
 						this.RaiseValueError("LoadoutControl", value, "Item replacement must be a table")
-				
 			}
+
+			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", SINGLE_TICK, null, null)
 
 			//old mince code, needlessly complicated
 			// function HasVal(arr, val) foreach (v in arr) if (v == val) return true
-			
+
 			// function IsInMultiList(arr, val) {
 			// 	if (arr.len() <= 0) return false
 
@@ -1379,8 +1383,6 @@ function MissionAttributes::MissionAttr(...) {
 			// 		if (full_break) break
 			// 	}
 			// }
-
-			// EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", SINGLE_TICK, null, null)
 		}
 	break
 
@@ -2193,6 +2195,67 @@ function MissionAttributes::MissionAttr(...) {
 		}
 	break
 
+	// =========================================================
+	case "ClassLimits":
+		MissionAttributes.ChangeClassTable.ClassLimits <- function(params) {
+
+			local player = GetPlayerFromUserID(params.userid)
+			if (player.IsBotOfType(1337)) return
+			// Note that player_changeclass fires before swap occurs
+			// This means that GetPlayerClass() can be used to get the previous player class,
+			//  and that PopExtUtil::PlayerClassCount() will return the current class array.
+			local classcount = PopExtUtil.PlayerClassCount()[params["class"]] + 1
+			if (params["class"] in value && classcount > value[params["class"]]) {
+				PopExtUtil.ForceChangeClass(player, player.GetPlayerClass())
+				if (value[params["class"]] == 0)
+					PopExtUtil.ShowMessage(format("%s is not allowed on this mission.", PopExtUtil.capwords(PopExtUtil.Classes[params["class"]])))
+				else
+					PopExtUtil.ShowMessage(format("%s is limited to %i for this mission.", PopExtUtil.capwords(PopExtUtil.Classes[params["class"]]), value[params["class"]]))
+				switch(params["class"]) {
+					case TF_CLASS_SCOUT: EmitSoundOn("Scout.No03", player); break
+					case TF_CLASS_SOLDIER: EmitSoundOn("Soldier.No01", player); break
+					case TF_CLASS_PYRO: EmitSoundOn("Pyro.No01", player); break
+					case TF_CLASS_DEMOMAN: EmitSoundOn("Demoman.No03", player); break
+					case TF_CLASS_HEAVYWEAPONS: EmitSoundOn("Heavy.No02", player); break
+					case TF_CLASS_ENGINEER: EmitSoundOn("Engineer.No03", player); break
+					case TF_CLASS_MEDIC: EmitSoundOn("Medic.No03", player); break
+					case TF_CLASS_SNIPER: EmitSoundOn("Sniper.No04", player); break
+					case TF_CLASS_SPY: EmitSoundOn("Spy.No02", player); break
+					case TF_CLASS_CIVILIAN: EmitSoundOn("Scout.No03", player); break
+					default: break
+				}
+			}
+		}
+
+		MissionAttributes.ClassLimits <- value
+		// Dump overflow players to free classes on wave init
+		EntFireByHandle(PopExtUtil.GameRules, "RunScriptCode", @"
+			PopExtUtil.SwitchToFirstValidWeapon(self)
+			local initcounts = PopExtUtil.PlayerClassCount()
+			local classes = array(TF_CLASS_COUNT_ALL, 0)
+			foreach (player in PopExtUtil.HumanArray) {
+				local pclass = player.GetPlayerClass()
+				++classes[pclass]
+				if (pclass in MissionAttributes.ClassLimits && classes[pclass] > MissionAttributes.ClassLimits[pclass]) {
+					local nobreak = 1
+					foreach (i, targetcount in MissionAttributes.ClassLimits) {
+						if (targetcount > initcounts[i]) {
+							++initcounts[i]
+							PopExtUtil.ForceChangeClass(player, i)
+							nobreak = 0
+							break
+						}
+					}
+					if (nobreak) {
+						PopExtUtil.ForceChangeClass(player, RandomInt(1, 9))
+						MissionAttributes.ParseError(`ClassLimits could not find a free class slot`)
+						break
+					}
+				}
+			}", SINGLE_TICK, null, null)
+
+		break
+
 	// Options to revert global fixes below:
 	// View globalfixes.nut for more info
 
@@ -2302,7 +2365,7 @@ function MissionAttributes::ParseError(ErrorMsg) {
 	foreach (player in PopExtUtil.HumanArray) {
 		if (player == null) continue
 
-		EntFireByHandle(ClientCommand, "Command", format("echo %s %s.\n", MATTR_ERROR, ErrorMsg), -1, player, player)
+		EntFireByHandle(PopExtUtil.ClientCommand, "Command", format("echo %s %s.\n", MATTR_ERROR, ErrorMsg), -1, player, player)
 	}
 	printf("%s %s.\n", MATTR_ERROR, ErrorMsg)
 }
