@@ -30,7 +30,7 @@ foreach(k, v in ::Entities.getclass())
 foreach(k, v in ::EntityOutputs.getclass())
 	if (k != "IsValid" && !(k in ROOT))
 		ROOT[k] <- ::EntityOutputs[k].bindenv(::EntityOutputs)
-	
+
 foreach(k, v in ::NavMesh.getclass())
 	if (k != "IsValid" && !(k in ROOT))
 		ROOT[k] <- ::NavMesh[k].bindenv(::NavMesh)
@@ -197,10 +197,10 @@ const DMG_DONT_COUNT_DAMAGE_TOWARDS_CRIT_RATE = 67108864 //DMG_DISSOLVE
 const DMG_IGNORE_MAXHEALTH = 2
 const DMG_IGNORE_DEBUFFS = 4
 
-//stun flags 
+//stun flags
 const TF_STUN_NONE = 0
 const TF_STUN_MOVEMENT = 1
-const TF_STUN_CONTROLS = 2 
+const TF_STUN_CONTROLS = 2
 const TF_STUN_MOVEMENT_FORWARD_ONLY = 4
 const TF_STUN_SPECIAL_SOUND = 8
 const TF_STUN_DODGE_COOLDOWN = 16
@@ -266,6 +266,9 @@ const SF_TRIGGER_ONLY_CLIENTS_OUT_OF_VEHICLES = 512
 const SF_TRIG_TOUCH_DEBRIS                = 1024
 const SF_TRIGGER_ONLY_NPCS_IN_VEHICLES    = 2048
 const SF_TRIGGER_DISALLOW_BOTS            = 4096
+
+//game_text/hudhint/etc all players flag
+const SF_ENVTEXT_ALLPLAYERS = 1
 
 // Player speak concepts
 const MP_CONCEPT_FIREWEAPON           = 0
