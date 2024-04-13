@@ -2205,7 +2205,7 @@ function MissionAttributes::MissionAttr(...) {
 			// This means that GetPlayerClass() can be used to get the previous player class,
 			//  and that PopExtUtil::PlayerClassCount() will return the current class array.
 			local classcount = PopExtUtil.PlayerClassCount()[params["class"]] + 1
-			if (classcount > value[params["class"]]) {
+			if (params["class"] in value && classcount > value[params["class"]]) {
 				PopExtUtil.ForceChangeClass(player, player.GetPlayerClass())
 				if (value[params["class"]] == 0)
 					PopExtUtil.ShowMessage(format("%s is not allowed on this mission.", PopExtUtil.capwords(PopExtUtil.Classes[params["class"]])))
@@ -2236,7 +2236,7 @@ function MissionAttributes::MissionAttr(...) {
 			foreach (player in PopExtUtil.HumanArray) {
 				local pclass = player.GetPlayerClass()
 				++classes[pclass]
-				if (classes[pclass] > MissionAttributes.ClassLimits[pclass]) {
+				if (pclass in MissionAttributes.ClassLimits && classes[pclass] > MissionAttributes.ClassLimits[pclass]) {
 					local nobreak = 1
 					foreach (i, targetcount in MissionAttributes.ClassLimits) {
 						if (targetcount > initcounts[i]) {
