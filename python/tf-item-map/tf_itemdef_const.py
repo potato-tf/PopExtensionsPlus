@@ -32,13 +32,13 @@ SQUIRREL_CONSTNAME_CHARMAP: typing.Final[tuple] = \
 )
 
 # Replacement map for substrings in schema "name" strings
-# Most entries here are for improved user experience
+# Most entries here are for improved user comprehension
 SQUIRREL_CONSTNAME_STRMAP: typing.Final[tuple] = \
 (
 	('TF_WEAPON_',''),
 	('THE ',''),
-	('UPGRADEABLE', 'UNIQUE'),
-	('PROMO', 'GENUINE')
+	('UPGRADEABLE ', 'UNIQUE '),
+	('PROMO ', 'GENUINE ')
 )
 
 # Comment name override for specific item indices for user clarity
