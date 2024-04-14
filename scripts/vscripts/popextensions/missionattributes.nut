@@ -1820,7 +1820,7 @@ function MissionAttributes::MissionAttr(...) {
 					local objectiveResource = PopExtUtil.ObjectiveResource
 					local moneyBefore = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
 
-					moneypile.SetOrigin(Vector(0, 0, FLT_MIN))
+					moneypile.SetOrigin(Vector(1e6, 1e6, 1e6))
 					moneypile.Kill()
 
 					local moneyAfter = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
