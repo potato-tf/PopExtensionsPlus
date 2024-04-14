@@ -104,6 +104,7 @@ WaveSchedule
 							`clip size bonus` : 2
 							`reloads full clip at once`: 1
 							`passive reload`: 1
+							`collect currency on kill`: 1
 						},
 						`tf_weapon_rocketlauncher` : {
 							`fire rate penalty` : 3
