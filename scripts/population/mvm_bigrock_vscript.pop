@@ -46,7 +46,6 @@ WaveSchedule
 				// IncludeScript(`tensai_pointtemplates.nut`)
 
 				MissionAttrs({
-
 					`NoReanimators`: 1
 					`ForceHoliday`: 8
 					`NoRome`: 2
@@ -55,7 +54,7 @@ WaveSchedule
 					`WaveStartCountdown`: 3
 					`PlayersAreRobots`: 1|8|16 //see missionattributes.nut for bitflag info
 					`ReverseMVM`: 1|2|8|16|32|64  //see missionattributes.nut for bitflag info
-					`SpellRateCommon`: 0.5 
+					`SpellRateCommon`: 0.5
 					`NoSkeleSplit`: 1
 					`WaveNum`: 3
 					`MaxWaveNum`: 60
@@ -191,13 +190,13 @@ WaveSchedule
 		// 		// Item "TF_WEAPON_SPELLBOOK"
 		// 		// Attributes IgnoreEnemies
 		// 		// WeaponRestrictions PrimaryOnly
-		// 		CharacterAttributes 
+		// 		CharacterAttributes
 		// 		{
 		// 			"damage bonus" -10
 		// 		}
 		// 	}
 		// }
-		WaveSpawn 
+		WaveSpawn
 		{
 
 			Name "Wave1a"
@@ -207,6 +206,7 @@ WaveSchedule
 			SpawnCount 5
 			WaitBeforeStarting 1
 			WaitBetweenSpawns 5
+			TotalCurrency 5000
 			TFBot
 			{
 				Template T_TFBot_Giant_Soldier

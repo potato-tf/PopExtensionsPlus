@@ -68,14 +68,13 @@ if (!("ScriptUnloadTable" in ROOT))
 		// Hook all wave inits to reset parsing error counter.
 
 		function OnGameEvent_player_death(params) {
-
 			if (MissionAttributes.SoundsToReplace.len() != 0)
 			{
 				foreach (sound, override in MissionAttributes.SoundsToReplace)
 					foreach (player in PopExtUtil.HumanArray)
 					{
 						StopSoundOn(sound, player)
-						if (override == null) return
+						if (override == null) continue
 						EmitSoundEx({sound_name = MissionAttributes.SoundsToReplace[override], entity = player})
 					}
 			}
@@ -1682,6 +1681,83 @@ function MissionAttributes::MissionAttr(...) {
 		}
 	break
 
+	case "ForceRedMoney":
+		local redMoneyEnabled = value
+
+		MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
+			// TODO(royal): check if killer has red money on kill attribute,
+			// only return if killer does not have the correct attribute & global red money is disabled
+			if (redMoneyEnabled < 1) return
+
+			local player = GetPlayerFromUserID(params.userid)
+
+			// bots only drop item_currencypack_custom, but all other pack classes are supported just in case
+			for (local entity; entity = Entities.FindByClassnameWithin(entity, "item_currencypack_*", player.GetOrigin(), 100);) {
+				entity.ValidateScriptScope()
+				local scriptScope = entity.GetScriptScope()
+				scriptScope.RealOrigin <- entity.GetOrigin()
+
+				scriptScope.CollectPack <- function() {
+					local pack = self
+
+					if (!pack.IsValid())
+						return
+
+					if (NetProps.GetPropBool(pack, "m_bDistributed"))
+						return
+
+					local packClassName = pack.GetClassname()
+					local origin = pack.GetScriptScope().RealOrigin
+					local owner = NetProps.GetPropEntity(pack, "m_hOwnerEntity")
+					local modelPath = pack.GetModelName()
+
+					local objectiveResource = Entities.FindByClassname(null, "tf_objective_resource")
+
+					local moneyBefore = NetProps.GetPropInt(objectiveResource, "m_nMvMWorldMoney")
+					pack.Kill()
+					local moneyAfter = NetProps.GetPropInt(objectiveResource, "m_nMvMWorldMoney")
+
+					local packPrice = moneyBefore - moneyAfter
+
+					local mvmStats = Entities.FindByClassname(null, "tf_mann_vs_machine_stats")
+
+					NetProps.SetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired", NetProps.GetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired") + packPrice)
+
+					for (local i = 1, player; i <= MaxClients(); i++)
+						if (player = PlayerInstanceFromIndex(i), player && !IsPlayerABot(player))
+							player.AddCurrency(packPrice)
+
+					// spawn a worthless currencypack which can be collected by a scout for overheal
+					local fakePack = Entities.CreateByClassname("item_currencypack_custom")
+					NetProps.SetPropBool(fakePack, "m_bDistributed", true)
+					NetProps.SetPropEntity(fakePack, "m_hOwnerEntity", owner)
+					fakePack.DispatchSpawn()
+					fakePack.SetModel(modelPath)
+
+					// position to ground, as fake pack won't have any velocity
+					traceWorld <- {
+						start = origin,
+						end = origin - Vector(0, 0, 50000)
+						mask = MASK_SOLID_BRUSHONLY
+					}
+
+					TraceLineEx(traceWorld)
+
+					if (traceWorld.hit)
+					{
+						fakePack.SetAbsOrigin(traceWorld.pos + Vector(0, 0, 5))
+					}
+					else
+						fakePack.SetAbsOrigin(origin)
+
+				}
+
+				entity.SetAbsOrigin(Vector(-1000000, -1000000, -1000000))
+				EntFireByHandle(entity, "CallScriptFunction", "CollectPack", 0, null, null)
+			}
+		}
+	break
+
 	// =======================================
 	// 1 = enables basic Reverse MvM behavior
 	// 2 = blu players cannot pick up bombs
@@ -1822,7 +1898,7 @@ function MissionAttributes::MissionAttr(...) {
 					local objectiveResource = PopExtUtil.ObjectiveResource
 					local moneyBefore = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
 
-					moneypile.SetOrigin(Vector(1e6, 1e6, 1e6))
+					moneypile.SetAbsOrigin(Vector(-1000000, -1000000, -1000000))
 					moneypile.Kill()
 
 					local moneyAfter = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
