@@ -1263,12 +1263,12 @@ function MissionAttributes::MissionAttr(...) {
 	// ============================================================
 
 	case "LoadoutControl":
-		
+
 		MissionAttributes.SpawnHookTable.LoadoutControl <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(1337)) return
-			
+
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
@@ -1276,12 +1276,12 @@ function MissionAttributes::MissionAttr(...) {
 			{
 				local wep = PopExtUtil.HasItemInLoadout(player, item)
 				if (wep == null) continue
-				
+
 				wep.Kill()
 
 				if (replacement == null) continue
-				
-				try 
+
+				try
 					PopExtUtil.GiveWeapon(player, PopExtItems[replacement].item_class, PopExtItems[replacement].id)
 				catch(_)
 					if (typeof replacement == "table")
@@ -1289,12 +1289,12 @@ function MissionAttributes::MissionAttr(...) {
 							PopExtUtil.GiveWeapon(player, classname, itemid)
 					else
 						this.RaiseValueError("LoadoutControl", value, "Item replacement must be a table")
-				
+
 			}
 
 			//old mince code, needlessly complicated
 			// function HasVal(arr, val) foreach (v in arr) if (v == val) return true
-			
+
 			// function IsInMultiList(arr, val) {
 			// 	if (arr.len() <= 0) return false
 
@@ -1804,9 +1804,9 @@ function MissionAttributes::MissionAttr(...) {
 			scope.PlayerThinkTable.ReverseMVMCurrencyThink <- function() {
 
 				// Save money netprops because we fuck it in the loop below
-				local money              = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
-				local prev_wave_money    = GetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped")
-				local current_wave_money = GetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped")
+				// local money              = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
+				// local prev_wave_money    = GetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped")
+				// local current_wave_money = GetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped")
 
 				// Find currency near us
 				local origin = self.GetOrigin()
@@ -1814,43 +1814,67 @@ function MissionAttributes::MissionAttr(...) {
 
 				for ( local moneypile; moneypile = FindByClassnameWithin(moneypile, "item_currencypack_*", origin, collectionradius); )
 				{
-					// Move the money to the origin and respawn it to allow us to collect it after it touches the ground
-					for (local hurt; hurt = FindByClassname(hurt, "trigger_hurt");)
-					{
-						// moneypile.ValidateScriptScope()
-						// moneypile.GetScriptScope().CollectThink <- function() {
-							// printl(self.GetVelocity().Length())
-							if (moneypile.GetVelocity().Length() == 0)
-							{
-								// moneypile.SetOrigin(Vector(0, 0, FLT_MIN))
+					// NEW COLLECTION METHOD (royal)
+					local moneyOwner = GetPropEntity(moneypile, "m_hOwnerEntity")
 
-								moneypile.SetOrigin(hurt.GetOrigin())
-								DispatchSpawn(moneypile)
-								EmitSoundOn("MVM.MoneyPickup", player)
-							}
-						// }
-						AddThinkToEnt(moneypile, "CollectThink")
-					}
-						// EntFireByHandle(moneypile, "RunScriptCode", format(@"
-						// 		printl(self.GetVelocity())
-						// 		for (local hurt; hurt = FindByClassname(hurt, `trigger_hurt`);)
-						// 		{
-						// 			EmitSoundOn(`MVM.MoneyPickup`, self)
-						// 			self.SetOrigin(hurt.GetOrigin())
-						// 			DispatchSpawn(self)
-						// 		}
-						// 		// The money counters are fucked from what we did in the above loop, fix it here
-						// 		SetPropInt(PopExtUtil.ObjectiveResource, `m_nMvMWorldMoney`, %d)
-						// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_previousWaveStats.nCreditsDropped`, %d)
-						// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_currentWaveStats.nCreditsDropped`, %d)
-						// ", money, prev_wave_money, current_wave_money), -1, null, null)
+					local objectiveResource = PopExtUtil.ObjectiveResource
+					local moneyBefore = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
+
+					moneypile.SetOrigin(Vector(0, 0, FLT_MIN))
+					moneypile.Kill()
+
+					local moneyAfter = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
+
+					local moneyValue = moneyBefore - moneyAfter
+
+					local CREDITS_ACQUIRED_PROP = "m_currentWaveStats.nCreditsAcquired"
+					local mvmStatsEnt = PopExtUtil.MvMStatsEnt
+					SetPropInt(mvmStatsEnt, CREDITS_ACQUIRED_PROP, GetPropInt(mvmStatsEnt, CREDITS_ACQUIRED_PROP) + moneyValue)
+
+					for (local i = 1, player; i <= MAX_CLIENTS; i++)
+						if (player = PlayerInstanceFromIndex(i), player && !IsPlayerABot(player))
+							player.AddCurrency(moneyValue)
+
+					EmitSoundOn("MVM.MoneyPickup", player)
+
+					// OLD COLLECTION METHOD
+					// // Move the money to the origin and respawn it to allow us to collect it after it touches the ground
+					// for (local hurt; hurt = FindByClassname(hurt, "trigger_hurt");)
+					// {
+					// 	// moneypile.ValidateScriptScope()
+					// 	// moneypile.GetScriptScope().CollectThink <- function() {
+					// 		// printl(self.GetVelocity().Length())
+					// 		if (moneypile.GetVelocity().Length() == 0)
+					// 		{
+					// 			// moneypile.SetOrigin(Vector(0, 0, FLT_MIN))
+
+					// 			moneypile.SetOrigin(hurt.GetOrigin())
+					// 			DispatchSpawn(moneypile)
+					// 			EmitSoundOn("MVM.MoneyPickup", player)
+					// 		}
+					// 	// }
+					// 	AddThinkToEnt(moneypile, "CollectThink")
+					// }
+					// 	// EntFireByHandle(moneypile, "RunScriptCode", format(@"
+					// 	// 		printl(self.GetVelocity())
+					// 	// 		for (local hurt; hurt = FindByClassname(hurt, `trigger_hurt`);)
+					// 	// 		{
+					// 	// 			EmitSoundOn(`MVM.MoneyPickup`, self)
+					// 	// 			self.SetOrigin(hurt.GetOrigin())
+					// 	// 			DispatchSpawn(self)
+					// 	// 		}
+					// 	// 		// The money counters are fucked from what we did in the above loop, fix it here
+					// 	// 		SetPropInt(PopExtUtil.ObjectiveResource, `m_nMvMWorldMoney`, %d)
+					// 	// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_previousWaveStats.nCreditsDropped`, %d)
+					// 	// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_currentWaveStats.nCreditsDropped`, %d)
+					// 	// ", money, prev_wave_money, current_wave_money), -1, null, null)
 				}
 
 
 				// The money counters are fucked from what we did in the above loop, fix it here
-				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney", money)
-				SetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped", prev_wave_money)
-				SetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped", current_wave_money)
+				// SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney", money)
+				// SetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped", prev_wave_money)
+				// SetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped", current_wave_money)
 			}
 
 			// Allow pack collection
