@@ -29,6 +29,8 @@ if (!("ScriptUnloadTable" in ROOT))
 
 	PathNum = 0
 
+	RedMoneyValue = 0
+
 	// function InitWave() {
 	// 	foreach (_, func in MissionAttributes.InitWaveTable) func()
 
@@ -68,14 +70,13 @@ if (!("ScriptUnloadTable" in ROOT))
 		// Hook all wave inits to reset parsing error counter.
 
 		function OnGameEvent_player_death(params) {
-
 			if (MissionAttributes.SoundsToReplace.len() != 0)
 			{
 				foreach (sound, override in MissionAttributes.SoundsToReplace)
 					foreach (player in PopExtUtil.HumanArray)
 					{
 						StopSoundOn(sound, player)
-						if (override == null) return
+						if (override == null) continue
 						EmitSoundEx({sound_name = MissionAttributes.SoundsToReplace[override], entity = player})
 					}
 			}
@@ -126,6 +127,107 @@ if (!("ScriptUnloadTable" in ROOT))
 foreach (_, func in ScriptLoadTable) func()
 
 __CollectGameEventCallbacks(MissionAttributes.Events);
+
+MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
+	local shouldCollect = false
+
+	if (MissionAttributes.RedMoneyValue > 1)
+		shouldCollect = true
+	else
+	{
+		local attacker = GetPlayerFromUserID(params.attacker)
+
+		if (attacker)
+		{
+			local weaponName = params.weapon
+			local className = format("tf_weapon_%s", weaponName)
+
+			for (local i = 0; i < SLOT_COUNT; i++)
+			{
+				local weapon = NetProps.GetPropEntityArray(attacker, "m_hMyWeapons", i)
+				if (weapon == null)
+					continue
+
+				if (weapon.GetClassname() != className)
+					continue
+
+				weapon.ValidateScriptScope()
+				if ("collectCurrencyOnKill" in weapon.GetScriptScope())
+					shouldCollect = true
+			}
+		}
+	}
+
+	if (!shouldCollect)
+		return
+
+	local player = GetPlayerFromUserID(params.userid)
+
+	// bots only drop item_currencypack_custom, but all other pack classes are supported just in case
+	for (local entity; entity = Entities.FindByClassnameWithin(entity, "item_currencypack_*", player.GetOrigin(), 100);) {
+		entity.ValidateScriptScope()
+		local scriptScope = entity.GetScriptScope()
+		scriptScope.RealOrigin <- entity.GetOrigin()
+
+		scriptScope.CollectPack <- function() {
+			local pack = self
+
+			if (!pack.IsValid())
+				return
+
+			if (NetProps.GetPropBool(pack, "m_bDistributed"))
+				return
+
+			local packClassName = pack.GetClassname()
+			local origin = pack.GetScriptScope().RealOrigin
+			local owner = NetProps.GetPropEntity(pack, "m_hOwnerEntity")
+			local modelPath = pack.GetModelName()
+
+			local objectiveResource = Entities.FindByClassname(null, "tf_objective_resource")
+
+			local moneyBefore = NetProps.GetPropInt(objectiveResource, "m_nMvMWorldMoney")
+			pack.Kill()
+			local moneyAfter = NetProps.GetPropInt(objectiveResource, "m_nMvMWorldMoney")
+
+			local packPrice = moneyBefore - moneyAfter
+
+			local mvmStats = Entities.FindByClassname(null, "tf_mann_vs_machine_stats")
+
+			NetProps.SetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired", NetProps.GetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired") + packPrice)
+
+			for (local i = 1, player; i <= MaxClients(); i++)
+				if (player = PlayerInstanceFromIndex(i), player && !IsPlayerABot(player))
+					player.AddCurrency(packPrice)
+
+			// spawn a worthless currencypack which can be collected by a scout for overheal
+			local fakePack = Entities.CreateByClassname("item_currencypack_custom")
+			NetProps.SetPropBool(fakePack, "m_bDistributed", true)
+			NetProps.SetPropEntity(fakePack, "m_hOwnerEntity", owner)
+			fakePack.DispatchSpawn()
+			fakePack.SetModel(modelPath)
+
+			// position to ground, as fake pack won't have any velocity
+			traceWorld <- {
+				start = origin,
+				end = origin - Vector(0, 0, 50000)
+				mask = MASK_SOLID_BRUSHONLY
+			}
+
+			TraceLineEx(traceWorld)
+
+			if (traceWorld.hit)
+			{
+				fakePack.SetAbsOrigin(traceWorld.pos + Vector(0, 0, 5))
+			}
+			else
+				fakePack.SetAbsOrigin(origin)
+
+		}
+
+		entity.SetAbsOrigin(Vector(-1000000, -1000000, -1000000))
+		EntFireByHandle(entity, "CallScriptFunction", "CollectPack", 0, null, null)
+	}
+}
 
 // Mission Attribute Functions
 // =========================================================
@@ -1682,6 +1784,10 @@ function MissionAttributes::MissionAttr(...) {
 		}
 	break
 
+	case "ForceRedMoney":
+		MissionAttributes.RedMoneyValue = value
+	break
+
 	// =======================================
 	// 1 = enables basic Reverse MvM behavior
 	// 2 = blu players cannot pick up bombs
@@ -1806,9 +1912,9 @@ function MissionAttributes::MissionAttr(...) {
 			scope.PlayerThinkTable.ReverseMVMCurrencyThink <- function() {
 
 				// Save money netprops because we fuck it in the loop below
-				local money              = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
-				local prev_wave_money    = GetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped")
-				local current_wave_money = GetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped")
+				// local money              = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
+				// local prev_wave_money    = GetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped")
+				// local current_wave_money = GetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped")
 
 				// Find currency near us
 				local origin = self.GetOrigin()
@@ -1816,43 +1922,67 @@ function MissionAttributes::MissionAttr(...) {
 
 				for ( local moneypile; moneypile = FindByClassnameWithin(moneypile, "item_currencypack_*", origin, collectionradius); )
 				{
-					// Move the money to the origin and respawn it to allow us to collect it after it touches the ground
-					for (local hurt; hurt = FindByClassname(hurt, "trigger_hurt");)
-					{
-						// moneypile.ValidateScriptScope()
-						// moneypile.GetScriptScope().CollectThink <- function() {
-							// printl(self.GetVelocity().Length())
-							if (moneypile.GetVelocity().Length() == 0)
-							{
-								// moneypile.SetOrigin(Vector(0, 0, FLT_MIN))
+					// NEW COLLECTION METHOD (royal)
+					local moneyOwner = GetPropEntity(moneypile, "m_hOwnerEntity")
 
-								moneypile.SetOrigin(hurt.GetOrigin())
-								DispatchSpawn(moneypile)
-								EmitSoundOn("MVM.MoneyPickup", player)
-							}
-						// }
-						AddThinkToEnt(moneypile, "CollectThink")
-					}
-						// EntFireByHandle(moneypile, "RunScriptCode", format(@"
-						// 		printl(self.GetVelocity())
-						// 		for (local hurt; hurt = FindByClassname(hurt, `trigger_hurt`);)
-						// 		{
-						// 			EmitSoundOn(`MVM.MoneyPickup`, self)
-						// 			self.SetOrigin(hurt.GetOrigin())
-						// 			DispatchSpawn(self)
-						// 		}
-						// 		// The money counters are fucked from what we did in the above loop, fix it here
-						// 		SetPropInt(PopExtUtil.ObjectiveResource, `m_nMvMWorldMoney`, %d)
-						// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_previousWaveStats.nCreditsDropped`, %d)
-						// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_currentWaveStats.nCreditsDropped`, %d)
-						// ", money, prev_wave_money, current_wave_money), -1, null, null)
+					local objectiveResource = PopExtUtil.ObjectiveResource
+					local moneyBefore = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
+
+					moneypile.SetAbsOrigin(Vector(-1000000, -1000000, -1000000))
+					moneypile.Kill()
+
+					local moneyAfter = GetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney")
+
+					local moneyValue = moneyBefore - moneyAfter
+
+					local CREDITS_ACQUIRED_PROP = "m_currentWaveStats.nCreditsAcquired"
+					local mvmStatsEnt = PopExtUtil.MvMStatsEnt
+					SetPropInt(mvmStatsEnt, CREDITS_ACQUIRED_PROP, GetPropInt(mvmStatsEnt, CREDITS_ACQUIRED_PROP) + moneyValue)
+
+					for (local i = 1, player; i <= MAX_CLIENTS; i++)
+						if (player = PlayerInstanceFromIndex(i), player && !IsPlayerABot(player))
+							player.AddCurrency(moneyValue)
+
+					EmitSoundOn("MVM.MoneyPickup", player)
+
+					// OLD COLLECTION METHOD
+					// // Move the money to the origin and respawn it to allow us to collect it after it touches the ground
+					// for (local hurt; hurt = FindByClassname(hurt, "trigger_hurt");)
+					// {
+					// 	// moneypile.ValidateScriptScope()
+					// 	// moneypile.GetScriptScope().CollectThink <- function() {
+					// 		// printl(self.GetVelocity().Length())
+					// 		if (moneypile.GetVelocity().Length() == 0)
+					// 		{
+					// 			// moneypile.SetOrigin(Vector(0, 0, FLT_MIN))
+
+					// 			moneypile.SetOrigin(hurt.GetOrigin())
+					// 			DispatchSpawn(moneypile)
+					// 			EmitSoundOn("MVM.MoneyPickup", player)
+					// 		}
+					// 	// }
+					// 	AddThinkToEnt(moneypile, "CollectThink")
+					// }
+					// 	// EntFireByHandle(moneypile, "RunScriptCode", format(@"
+					// 	// 		printl(self.GetVelocity())
+					// 	// 		for (local hurt; hurt = FindByClassname(hurt, `trigger_hurt`);)
+					// 	// 		{
+					// 	// 			EmitSoundOn(`MVM.MoneyPickup`, self)
+					// 	// 			self.SetOrigin(hurt.GetOrigin())
+					// 	// 			DispatchSpawn(self)
+					// 	// 		}
+					// 	// 		// The money counters are fucked from what we did in the above loop, fix it here
+					// 	// 		SetPropInt(PopExtUtil.ObjectiveResource, `m_nMvMWorldMoney`, %d)
+					// 	// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_previousWaveStats.nCreditsDropped`, %d)
+					// 	// 		SetPropInt(PopExtUtil.MvMStatsEnt, `m_currentWaveStats.nCreditsDropped`, %d)
+					// 	// ", money, prev_wave_money, current_wave_money), -1, null, null)
 				}
 
 
 				// The money counters are fucked from what we did in the above loop, fix it here
-				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney", money)
-				SetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped", prev_wave_money)
-				SetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped", current_wave_money)
+				// SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMWorldMoney", money)
+				// SetPropInt(PopExtUtil.MvMStatsEnt, "m_previousWaveStats.nCreditsDropped", prev_wave_money)
+				// SetPropInt(PopExtUtil.MvMStatsEnt, "m_currentWaveStats.nCreditsDropped", current_wave_money)
 			}
 
 			// Allow pack collection

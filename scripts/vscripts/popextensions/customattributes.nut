@@ -59,7 +59,6 @@
         "mult sniper charge per sec with enemy under crosshair": null
         "sniper beep with enemy under crosshair": null
         "crit when health below": null
-        "rocket penetration": null
 
         //begin non-dev fully custom attributes
         "radius sleeper": null
@@ -95,6 +94,8 @@
         "fire input on hit":  null
         "fire input on kill":  null
         "replace weapon fire sound": null
+        "rocket penetration": null
+        "collect currency on kill": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -994,6 +995,15 @@ function CustomAttributes::PassiveReload(player, item) {
     }
 }
 
+function CustomAttributes::CollectCurrencyOnKill(player, item, value) {
+	local wep = PopExtUtil.HasItemInLoadout(player, item)
+	if (wep == null) return
+
+	wep.ValidateScriptScope()
+	local scope = wep.GetScriptScope()
+	scope.collectCurrencyOnKill <- true
+}
+
 function CustomAttributes::RocketPenetration(player, item, value) {
 	local wep = PopExtUtil.HasItemInLoadout(player, item)
 	if (wep == null) return
@@ -1618,6 +1628,11 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             CustomAttributes.RocketPenetration(player, item, value)
             scope.attribinfo[attr] <- format("rocket penetrates up to %d enemy players", value)
         break
+
+		case "collect currency on kill":
+            CustomAttributes.CollectCurrencyOnKill(player, item, value)
+            scope.attribinfo[attr] <- "bots drop money when killed"
+		break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
 
