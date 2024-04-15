@@ -1,12 +1,41 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "04.10.2024.1"
+::popExtensionsVersion <- "04.14.2024.1"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
 ::__popname <- NetProps.GetPropString(o, "m_iszMvMPopfileName")
 // ::commentaryNode <- SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
 
+//overwrite AddThinkToEnt
+//certain entity types use think tables, meaning any external scripts will conflict with this and break everything
+//we could replace this behavior entirely, but this would be misleading to newer scripters
+//don't want to lead them astray by allowing adding multiple thinks with AddThinkToEnt in our library and our library only.
+
+local banned_think_classnames = {
+	player = "PlayerThinkTable" 
+	tank_boss = "TankThinkTable"
+	tf_projectile_ = "ProjectileThinkTable"
+}
+
+if (!("_AddThinkToEnt" in root))
+{
+	//rename so we can still use it elsewhere
+	::_AddThinkToEnt <- AddThinkToEnt
+	
+	::AddThinkToEnt <- function(ent, func)
+	{
+		foreach (k, v in banned_think_classnames)
+			if (startswith(ent.GetClassname(), k))
+			{
+				error(format("WARNING: Adding thinks to '%s' entities is forbidden! Add your function to the '%s' table instead\n", k, v))
+				ClientPrint(null, HUD_PRINTTALK, format("\x08FFB4B4FF**WARNING: Adding thinks to %s entities is forbidden!**\n\n Add your function to \"%s\" instead.\n\nExample: AddThinkToEnt(ent, \"MyFunction\") would become: ent.%s.MyFunction <- MyFunction", k, v, v))
+				return
+			}
+			
+		_AddThinkToEnt(ent, func)	
+	}
+}
 ::PopExtMain <- {
 
 	//save popfile name in global scope when we first initialize
@@ -31,7 +60,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 				delete scope[k]
 	}
 
-	function OnGameEvent_post_inventory_application(params) {
+	function OnGameEvent_player_spawn(params) {
 
 		this.PlayerCleanup(GetPlayerFromUserID(params.userid))
 
@@ -43,7 +72,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 
 		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
 
-		AddThinkToEnt(player, "PlayerThinks")
+		_AddThinkToEnt(player, "PlayerThinks")
 
 		if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope))
 		{
@@ -56,12 +85,12 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		{
 			scope.BotThink <- PopExtTags.BotThink
 
-			EntFireByHandle(bot, "RunScriptCode", "AddThinkToEnt(self, `BotThink`)", -1, null, null)
+			EntFireByHandle(bot, "RunScriptCode", "_AddThinkToEnt(self, `BotThink`)", -1, null, null)
 			EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 		}
 
-		foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
 		foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
+		foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
 		foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
 	}
 	function OnGameEvent_player_changeclass(params) {
@@ -88,7 +117,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 				EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 		//same pop, don't run clean-up
-		if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
+		// if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
 
 		EntFire("_popext*", "Kill")
 		EntFire("__util*", "Kill")
