@@ -342,9 +342,14 @@ function PopulatorThink() {
 						delete scope.popProperty.SoundOverrides.Start
 					}
 					if ("Deploy" in scope.popProperty.SoundOverrides) {
+						
+						//tank becomes a null reference when we start deploying
+						//store the sound in a variable to still play it, then delete the think function when this happens
+
+						local deploysound = scope.popProperty.SoundOverrides.Deploy
 
 						scope.TankThinkTable.DeploySound <- function() {
-
+							
 							if (self.GetSequence() != self.LookupSequence("deploy")) return
 
 							StopSoundOn("MVM.TankDeploy", self)
@@ -352,7 +357,14 @@ function PopulatorThink() {
 							if ("EngineLoop" in scope.popProperty.SoundOverrides)
 								EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank, flags = SND_STOP})
 
-							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Deploy, entity = tank})
+							EmitSoundEx({sound_name = deploysound, entity = tank})
+
+							if (tank == null) 
+							{
+								delete scope.TankThinkTable.DeploySound
+								return
+							}
+
 							delete scope.popProperty.SoundOverrides.Deploy
 						}
 					}
@@ -364,6 +376,7 @@ function PopulatorThink() {
 					scope.team = tank.GetTeam()
 				}
 
+				//does not work
 				if ("NoScreenShake" in scope.popProperty && scope.popProperty.NoScreenShake)
 					ScreenShake(tank.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true)
 
