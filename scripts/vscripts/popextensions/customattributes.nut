@@ -418,7 +418,7 @@ function CustomAttributes::TeleporterRechargeTime(player, item, value = 1.0) {
             }
 
             printl(GetPropFloat(teleporter, "m_flRechargeTime") + " : " + teleportscope.rechargetimestamp)
-            return -1
+            return
         }
         AddThinkToEnt(teleporter, "TeleportMultThink")
     }
@@ -1047,7 +1047,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 
 			last_fire_time = fire_time
 		}
-		return -1
+		return
 	}
 	weaponScriptScope.FindRocket <- function(owner) {
 		local entity = null
@@ -1062,7 +1062,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 		return null
 	}
 	weaponScriptScope.ApplyPenetrationToRocket <- function(owner, rocket) {
-		rocket.SetSolid(Constants.ESolidType.SOLID_NONE)
+		rocket.SetSolid(SOLID_NONE)
 
 		rocket.ValidateScriptScope()
 		local rocketScope = rocket.GetScriptScope()
@@ -1121,8 +1121,9 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 				break
 			}
 		}
+        if (!("ProjectileThinkTable" in rocketScope)) rocketScope.ProjectileThinkTable <- {}
+
 		rocketScope.ProjectileThinkTable.RocketThink <- function() {
-			local MASK_SOLID_BRUSHONLY = 16395
 
 			local origin = self.GetOrigin()
 
@@ -1152,16 +1153,16 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 			lastRocketOrigin = origin
 
 			if (!traceTable.hit)
-				return -1
+				return
 
 			if (!traceTable.enthit)
-				return -1
+				return
 
 			if (traceTable.enthit.GetTeam() == player.GetTeam())
-				return -1
+				return
 
 			if (collidedTargets.find(traceTable.enthit) != null)
-				return -1
+				return
 
 			collidedTargets.append(traceTable.enthit)
 			penetrationCount++
@@ -1172,15 +1173,15 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 
 			if (penetrationCount > (maxPenetration + 1))
 			{
-				self.SetSolid(Constants.ESolidType.SOLID_BBOX)
-				SetPropString(self, "m_iszScriptThinkFunction", "")
-				return -1
+				self.SetSolid(SOLID_BBOX)
+				if ("RocketThink" in rocketScope.ProjectileThinkTable) delete rocketScope.ProjectileThinkTable.RocketThink
+				return
 			}
 
 			if (traceTable.enthit.GetTeam() != player.GetTeam())
 				DetonateRocket()
 
-			return -1
+			return
 		}
 	}
 	weaponScriptScope.OnShot <- function(owner) {
@@ -1248,7 +1249,7 @@ function CustomAttributes::MultBuildingScale(player, item, value) {
     if (!("BuiltObjectTable") in scope) return
 
     scope.BuiltObjectTable.MultBuildingScale <- function(params) {
-        
+
         local building = EntIndexToHScript(params.index)
         if (GetPropEntity(building, "m_hBuilder") == player && "mult building scale" in scope.attribinfo)
             building.SetModelScale(value, 0.0)
