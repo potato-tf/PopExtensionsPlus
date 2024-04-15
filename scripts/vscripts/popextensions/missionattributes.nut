@@ -139,8 +139,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 
 		if (attacker)
 		{
-			local weaponName = params.weapon
-			local className = format("tf_weapon_%s", weaponName)
+			local weaponDefIndex = params.weapon_def_index
 
 			for (local i = 0; i < SLOT_COUNT; i++)
 			{
@@ -148,7 +147,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 				if (weapon == null)
 					continue
 
-				if (weapon.GetClassname() != className)
+				if (GetPropInt(weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex") != weaponDefIndex)
 					continue
 
 				weapon.ValidateScriptScope()
@@ -974,25 +973,25 @@ function MissionAttributes::MissionAttr(...) {
 					if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value > 0)
 					{
 						player.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classname))
-						if (value & 2) 
+						if (value & 2)
 						{
 							PopExtUtil.CreatePlayerWearable(player, format("models/player/items/%s/%s_zombie.mdl", classname, classname))
 							SetPropBool(player, "m_bForcedSkin", true)
 							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
 						}
 					}
-	
+
 					if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value & 4)
 					{
 
-						player.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classname))						
-						if (value & 8) 
+						player.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classname))
+						if (value & 8)
 						{
 							format(PopExtUtil.CreatePlayerWearable(player, "models/player/items/%s/%s_zombie.mdl"), classname, classname)
 							SetPropBool(player, "m_bForcedSkin", true)
 							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
 						}
-						
+
 					}
 				}
 
