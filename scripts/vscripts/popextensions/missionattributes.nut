@@ -144,7 +144,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 
 			for (local i = 0; i < SLOT_COUNT; i++)
 			{
-				local weapon = NetProps.GetPropEntityArray(attacker, "m_hMyWeapons", i)
+				local weapon = GetPropEntityArray(attacker, "m_hMyWeapons", i)
 				if (weapon == null)
 					continue
 
@@ -164,7 +164,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 	local player = GetPlayerFromUserID(params.userid)
 
 	// bots only drop item_currencypack_custom, but all other pack classes are supported just in case
-	for (local entity; entity = Entities.FindByClassnameWithin(entity, "item_currencypack_*", player.GetOrigin(), 100);) {
+	for (local entity; entity = FindByClassnameWithin(entity, "item_currencypack_*", player.GetOrigin(), 100);) {
 		entity.ValidateScriptScope()
 		local scriptScope = entity.GetScriptScope()
 		scriptScope.RealOrigin <- entity.GetOrigin()
@@ -175,34 +175,34 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 			if (!pack.IsValid())
 				return
 
-			if (NetProps.GetPropBool(pack, "m_bDistributed"))
+			if (GetPropBool(pack, "m_bDistributed"))
 				return
 
 			local packClassName = pack.GetClassname()
 			local origin = pack.GetScriptScope().RealOrigin
-			local owner = NetProps.GetPropEntity(pack, "m_hOwnerEntity")
+			local owner = GetPropEntity(pack, "m_hOwnerEntity")
 			local modelPath = pack.GetModelName()
 
-			local objectiveResource = Entities.FindByClassname(null, "tf_objective_resource")
+			local objectiveResource = FindByClassname(null, "tf_objective_resource")
 
-			local moneyBefore = NetProps.GetPropInt(objectiveResource, "m_nMvMWorldMoney")
+			local moneyBefore = GetPropInt(objectiveResource, "m_nMvMWorldMoney")
 			pack.Kill()
-			local moneyAfter = NetProps.GetPropInt(objectiveResource, "m_nMvMWorldMoney")
+			local moneyAfter = GetPropInt(objectiveResource, "m_nMvMWorldMoney")
 
 			local packPrice = moneyBefore - moneyAfter
 
-			local mvmStats = Entities.FindByClassname(null, "tf_mann_vs_machine_stats")
+			local mvmStats = FindByClassname(null, "tf_mann_vs_machine_stats")
 
-			NetProps.SetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired", NetProps.GetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired") + packPrice)
+			SetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired", GetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired") + packPrice)
 
 			for (local i = 1, player; i <= MaxClients(); i++)
 				if (player = PlayerInstanceFromIndex(i), player && !IsPlayerABot(player))
 					player.AddCurrency(packPrice)
 
 			// spawn a worthless currencypack which can be collected by a scout for overheal
-			local fakePack = Entities.CreateByClassname("item_currencypack_custom")
-			NetProps.SetPropBool(fakePack, "m_bDistributed", true)
-			NetProps.SetPropEntity(fakePack, "m_hOwnerEntity", owner)
+			local fakePack = CreateByClassname("item_currencypack_custom")
+			SetPropBool(fakePack, "m_bDistributed", true)
+			SetPropEntity(fakePack, "m_hOwnerEntity", owner)
 			fakePack.DispatchSpawn()
 			fakePack.SetModel(modelPath)
 
@@ -321,14 +321,13 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "RedBotsNoRandomCrit":
 
-		function MissionAttributes::RedBotsNoRandomCrit(params)
+		MissionAttributes.SpawnHookTable.RedBotsNoRandomCrit <- function(params)
 		{
 			local player = GetPlayerFromUserID(params.userid)
 			if (!player.IsBotOfType(1337) && player.GetTeam() != TF_TEAM_PVE_DEFENDERS) return
 
 			PopExtUtil.AddAttributeToLoadout(player, "crit mod disabled hidden", 0)
 		}
-		MissionAttributes.SpawnHookTable.RedBotsNoRandomCrit <- MissionAttributes.RedBotsNoRandomCrit
 
 	// =====================
 	// disable crit pumpkins
@@ -965,20 +964,39 @@ function MissionAttributes::MissionAttr(...) {
 
 		case "BotsAreHumans":
 			MissionAttributes.SpawnHookTable.BotsAreHumans <- function(params) {
+
 				local player = GetPlayerFromUserID(params.userid)
 				if (!player.IsBotOfType(1337)) return
 
-				if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value & 1)
+				MissionAttributes.HumanModel <- function(player)
 				{
-					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[player.GetPlayerClass()]), -1, null, null)
-					if (value & 2) activator.GenerateAndWearItem(format("Zombie %s",PopExtUtil.Classes[player.GetPlayerClass()]))
+					local classname = PopExtUtil.Classes[player.GetPlayerClass()]
+					if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value > 0)
+					{
+						player.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classname))
+						if (value & 2) 
+						{
+							PopExtUtil.CreatePlayerWearable(player, format("models/player/items/%s/%s_zombie.mdl", classname, classname))
+							SetPropBool(player, "m_bForcedSkin", true)
+							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
+						}
+					}
+	
+					if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value & 4)
+					{
+
+						player.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classname))						
+						if (value & 8) 
+						{
+							format(PopExtUtil.CreatePlayerWearable(player, "models/player/items/%s/%s_zombie.mdl"), classname, classname)
+							SetPropBool(player, "m_bForcedSkin", true)
+							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
+						}
+						
+					}
 				}
 
-				if (player.GetTeam() == TF_TEAM_PVE_DEFENDERS && value & 4)
-				{
-					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[player.GetPlayerClass()]), -1, null, null)
-					if (value & 8) activator.GenerateAndWearItem(format("Zombie %s",PopExtUtil.Classes[player.GetPlayerClass()]))
-				}
+				EntFireByHandle(player, "RunScriptCode", "try MissionAttributes.HumanModel(self) catch(_) return", 0.033, null, null)
 			}
 		break
 
@@ -1704,7 +1722,7 @@ function MissionAttributes::MissionAttr(...) {
 					wep.GetScriptScope().last_fire_time <- Time()
 					wep.GetScriptScope().Think <- function()
 					{
-						local fire_time = NetProps.GetPropFloat(self, "m_flLastFireTime");
+						local fire_time = GetPropFloat(self, "m_flLastFireTime");
 						if (fire_time > last_fire_time)
 						{
 							local owner = self.GetOwner()
@@ -1725,7 +1743,7 @@ function MissionAttributes::MissionAttr(...) {
 								scope.ranged_crit_chance <- base_ranged_crit_chance
 							}
 
-							NetProps.SetPropString(self, "m_iszScriptThinkFunction", "")
+							SetPropString(self, "m_iszScriptThinkFunction", "")
 						}
 						return -1
 					}
@@ -2077,7 +2095,7 @@ function MissionAttributes::MissionAttr(...) {
 			// Drain player ammo on weapon usage
 			scope.PlayerThinkTable.ReverseMVMDrainAmmoThink <- function() {
 				if (value & 4) return
-				local buttons = NetProps.GetPropInt(self, "m_nButtons");
+				local buttons = GetPropInt(self, "m_nButtons");
 
 				local wep = player.GetActiveWeapon()
 				if (wep == null || wep.IsMeleeWeapon()) return

@@ -193,13 +193,13 @@ PopExt <- popExtEntity.GetScriptScope()
 				PopExtHooks.FireHooksParam(attacker, scope, "OnKill", params)
 			}
 
-			if (player.GetScriptScope() != null && "popWearablesToDestroy" in player.GetScriptScope()) {
-				foreach(i, wearable in player.GetScriptScope().popWearablesToDestroy)
-					if (wearable.IsValid())
-						wearable.Kill()
+			// if (player.GetScriptScope() != null && "popWearablesToDestroy" in player.GetScriptScope()) {
+			// 	foreach(i, wearable in player.GetScriptScope().popWearablesToDestroy)
+			// 		if (wearable.IsValid())
+			// 			wearable.Kill()
 
-				delete player.GetScriptScope().popWearablesToDestroy
-			}
+			// 	delete player.GetScriptScope().popWearablesToDestroy
+			// }
 		}
 		function OnGameEvent_npc_hurt(params) {
 
@@ -496,7 +496,7 @@ function PopulatorThink() {
 
 			scope.TankThinks <- function() { foreach (name, func in scope.TankThinkTable) func(); return -1 }
 			scope.TankThinks() //run thinks for availability in OnSpawn
-			AddThinkToEnt(tank, "TankThinks")
+			_AddThinkToEnt(tank, "TankThinks")
 
 			foreach(name, table in tankNamesWildcard) {
 

@@ -1051,7 +1051,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 	}
 	weaponScriptScope.FindRocket <- function(owner) {
 		local entity = null
-		for (local entity; entity = Entities.FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
+		for (local entity; entity = FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
 			if (entity.GetOwner() != owner) {
 				continue
 			}
@@ -1102,7 +1102,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 			SetPropFloat(launcher, "m_flLastFireTime", lastFire)
 			SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", charge)
 
-			for (local entity; entity = Entities.FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
+			for (local entity; entity = FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
 				if (entity.GetOwner() != owner) {
 					continue
 				}
@@ -1121,7 +1121,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 				break
 			}
 		}
-		rocketScope.RocketThink <- function() {
+		rocketScope.ProjectileThinkTable.RocketThink <- function() {
 			local MASK_SOLID_BRUSHONLY = 16395
 
 			local origin = self.GetOrigin()
@@ -1137,9 +1137,8 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 
 			if (traceTableWorldSpawn.hit && traceTableWorldSpawn.enthit)
 			{
-				self.SetSolid(Constants.ESolidType.SOLID_BBOX)
-				SetPropString(self, "m_iszScriptThinkFunction", "")
-				return -1
+				self.SetSolid(SOLID_BBOX)
+				delete self.GetScriptScope().ProjectileThinkTable.RocketThink
 			}
 
 			traceTable <- {
@@ -1183,13 +1182,6 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 
 			return -1
 		}
-
-		rocketScope.ApplyThink <- function () {
-			AddThinkToEnt(rocket, "RocketThink")
-		}
-
-		EntFireByHandle(rocket, "CallScriptFunction", "ApplyThink", 0.015, null, null)
-		// AddThinkToEnt(rocket, "RocketThink")
 	}
 	weaponScriptScope.OnShot <- function(owner) {
 		local rocket = FindRocket(owner)
@@ -1236,7 +1228,7 @@ function CustomAttributes::MultProjectileScale(player, item, value) {
 
     local scope = player.GetScriptScope()
 
-    scope.PlayerThinkTable.CustomProjectileModel <- function() {
+    scope.PlayerThinkTable.MultProjectileScale <- function() {
 
         if (!("attribinfo" in scope) || !("mult projectile scale" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
 
@@ -1256,6 +1248,7 @@ function CustomAttributes::MultBuildingScale(player, item, value) {
     if (!("BuiltObjectTable") in scope) return
 
     scope.BuiltObjectTable.MultBuildingScale <- function(params) {
+        
         local building = EntIndexToHScript(params.index)
         if (GetPropEntity(building, "m_hBuilder") == player && "mult building scale" in scope.attribinfo)
             building.SetModelScale(value, 0.0)

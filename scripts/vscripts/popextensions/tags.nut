@@ -26,11 +26,7 @@ local popext_funcs = {
 	}
 
 	popext_reprogrammed = function(bot, args) {
-		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
-		// PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
-		// 	if (!IsPlayerABot(bot)) return
-		// 	EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
-		// }
+		EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)", -1, null, null)
 	}
 
 	// popext_reprogrammed_neutral = function(bot, args) {
@@ -70,18 +66,20 @@ local popext_funcs = {
 	}
 
 	popext_usehumanmodel = function(bot, args) {
-		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", PopExtUtil.Classes[bot.GetPlayerClass()]))
+		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
+		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string))
+		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), -1, null, null)
 	}
 
 	popext_usecustommodel = function(bot, args) {
 		if (!IsModelPrecached(args[0])) PrecacheModel(args[0])
-		bot.SetCustomModelWithClassAnimations(args[0])
+		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", args[0]), -1, null, null)
 	}
 
 	popext_usehumananims = function(bot, args) {
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
-		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string))
-		PopExtUtil.PlayerRobotModel(bot, format("models/bots/%s/bot_%s.mdl", class_string, class_string))
+		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), SINGLE_TICK, null, null)
+		EntFireByHandle(bot, "RunScriptCode", format("PopExtUtil.PlayerRobotModel(self, `models/bots/%s/bot_%s.mdl`)", class_string, class_string), SINGLE_TICK, null, null)
 	}
 
 	popext_alwaysglow = function(bot, args) {
@@ -1110,7 +1108,7 @@ local popext_funcs = {
 	function OnGameEvent_player_team(params) {
 
 		local bot = GetPlayerFromUserID(params.userid)
-		if (params.team == TEAM_SPECTATOR) AddThinkToEnt(bot, null)
+		if (params.team == TEAM_SPECTATOR) _AddThinkToEnt(bot, null)
 
 		foreach (_, func in this.TeamSwitchTable) func(params)
 	}
@@ -1124,7 +1122,7 @@ local popext_funcs = {
 		bot.ClearAllBotTags()
 		foreach (_, func in this.DeathHookTable) func(params)
 
-		AddThinkToEnt(bot, null)
+		_AddThinkToEnt(bot, null)
 	}
 	function OnGameEvent_teamplay_round_start(params) {
 

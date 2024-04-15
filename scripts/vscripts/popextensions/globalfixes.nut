@@ -114,7 +114,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 				scope.ProjectileThink <- function () { foreach (name, func in scope.ProjectileThinkTable) { func() } return -1 }
 
-				AddThinkToEnt(projectile, "ProjectileThink")
+				_AddThinkToEnt(projectile, "ProjectileThink")
 				projectile.AddEFlags(EFL_USER)
 			}
 		}

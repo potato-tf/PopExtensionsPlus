@@ -33,7 +33,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 
 	function OnGameEvent_post_inventory_application(params) {
 
-		PopExtMain.PlayerCleanup(GetPlayerFromUserID(params.userid))
+		this.PlayerCleanup(GetPlayerFromUserID(params.userid))
 
 		local player = GetPlayerFromUserID(params.userid)
 		player.ValidateScriptScope()
@@ -78,7 +78,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 		local player = GetPlayerFromUserID(params.userid)
 		if (!player.IsBotOfType(1337)) return
 
-		PopExtMain.PlayerCleanup(player)
+		this.PlayerCleanup(player)
 	}
 
 	function OnGameEvent_teamplay_round_start(params) {
@@ -100,7 +100,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 
 			if (player == null) continue
 
-			PopExtMain.PlayerCleanup(player)
+			this.PlayerCleanup(player)
 		}
 
 		try delete ::MissionAttributes catch(e) return
