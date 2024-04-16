@@ -13,7 +13,7 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 //don't want to lead them astray by allowing adding multiple thinks with AddThinkToEnt in our library and our library only.
 
 local banned_think_classnames = {
-	player = "PlayerThinkTable" 
+	player = "PlayerThinkTable"
 	tank_boss = "TankThinkTable"
 	tf_projectile_ = "ProjectileThinkTable"
 }
@@ -22,7 +22,7 @@ if (!("_AddThinkToEnt" in root))
 {
 	//rename so we can still use it elsewhere
 	::_AddThinkToEnt <- AddThinkToEnt
-	
+
 	::AddThinkToEnt <- function(ent, func)
 	{
 		foreach (k, v in banned_think_classnames)
@@ -32,8 +32,8 @@ if (!("_AddThinkToEnt" in root))
 				ClientPrint(null, HUD_PRINTTALK, format("\x08FFB4B4FF**WARNING: Adding thinks to %s entities is forbidden!**\n\n Add your function to \"%s\" instead.\n\nExample: AddThinkToEnt(ent, \"MyFunction\") would become: ent.%s.MyFunction <- MyFunction", k, v, v))
 				return
 			}
-			
-		_AddThinkToEnt(ent, func)	
+
+		_AddThinkToEnt(ent, func)
 	}
 }
 ::PopExtMain <- {
@@ -117,7 +117,7 @@ if (!("_AddThinkToEnt" in root))
 				EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 		//same pop, don't run clean-up
-		// if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
+		if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
 
 		EntFire("_popext*", "Kill")
 		EntFire("__util*", "Kill")
