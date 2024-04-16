@@ -147,7 +147,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 				if (weapon == null)
 					continue
 
-				if (GetPropInt(weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex") != weaponDefIndex)
+				if (GetPropInt(weapon, STRING_NETPROP_ITEMDEF) != weaponDefIndex)
 					continue
 
 				weapon.ValidateScriptScope()
