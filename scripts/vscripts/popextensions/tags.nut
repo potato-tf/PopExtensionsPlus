@@ -26,6 +26,7 @@ local popext_funcs = {
 	}
 
 	popext_reprogrammed = function(bot, args) {
+
 		EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)", -1, null, null)
 	}
 
@@ -34,6 +35,7 @@ local popext_funcs = {
 	// }
 
 	popext_altfire = function(bot, args) {
+
 		if (args.len() == 1)
 			bot.PressAltFireButton(INT_MAX)
 		else if (args.len() >= 2)
@@ -41,11 +43,11 @@ local popext_funcs = {
 	}
 
 	popext_deathsound = function(bot, args) {
-		
+
 		PopExtTags.DeathHookTable.DeathSound <- function(params) {
 
 			local victim = GetPlayerFromUserID(params.userid)
-			
+
 			if (victim != bot) return
 
 			EmitSoundEx({sound_name = args[0], entity = victim})
@@ -53,9 +55,9 @@ local popext_funcs = {
 	}
 
 	popext_stepsound = function(bot, args) {
-		
+
 		scope.stepside <- GetPropInt(bot, "m_Local.m_nStepside")
-		
+
 		bot.GetScriptScope().PlayerThinkTable.Stepsound <- function() {
 
 			if (GetPropInt(bot, "m_Local.m_nStepside") != stepside)
@@ -66,27 +68,32 @@ local popext_funcs = {
 	}
 
 	popext_usehumanmodel = function(bot, args) {
+
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
 		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string))
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), -1, null, null)
 	}
 
 	popext_usecustommodel = function(bot, args) {
+
 		if (!IsModelPrecached(args[0])) PrecacheModel(args[0])
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", args[0]), -1, null, null)
 	}
 
 	popext_usehumananims = function(bot, args) {
+
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), SINGLE_TICK, null, null)
 		EntFireByHandle(bot, "RunScriptCode", format("PopExtUtil.PlayerRobotModel(self, `models/bots/%s/bot_%s.mdl`)", class_string, class_string), SINGLE_TICK, null, null)
 	}
 
 	popext_alwaysglow = function(bot, args) {
+
 		SetPropBool(bot, "m_bGlowEnabled", true)
 	}
 
 	popext_stripslot = function(bot, args) {
+
 		if (args.len() == 1) args.append(-1)
 		local slot = args[1].tointeger()
 
@@ -122,6 +129,7 @@ local popext_funcs = {
 			maxrepeats++
 
 			PopExtUtil.PressButton(bot, button)
+			EntFireByHandle(bot, "RunScriptCode", "PopExtUtil.PressButton(self, 0)", duration, null, null)
 			cooldowntime = Time() + cooldown
 		}
 	}
@@ -228,6 +236,7 @@ local popext_funcs = {
 	popext_spawntemplate = function(bot, args) {
 		SpawnTemplates.SpawnTemplate(PointTemplates[args[0]], bot, bot.GetOrigin(), bot.GetLocalAngles())
 	}
+
 	popext_forceromevision = function(bot, args) {
 
 		//kill the existing romevision
@@ -257,6 +266,7 @@ local popext_funcs = {
 	}
 
 	popext_customattr = function(bot, args) {
+
 		local args_len = args.len()
 		if (args_len == 2)
 			CustomAttributes.AddAttr(bot, args[0], args[1], bot.GetActiveWeapon())
@@ -265,6 +275,7 @@ local popext_funcs = {
 	}
 
 	popext_ringoffire = function(bot, args) {
+
 		local args_len = args.len()
 		local damage = (args_len > 0) ? args[0].tofloat() : 7.5
 		local interval = (args_len > 1) ? args[1].tofloat() : 0.5
@@ -292,6 +303,7 @@ local popext_funcs = {
 		}
 	}
 	popext_meleeai = function(bot, args) {
+
 		local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- function() {
@@ -300,7 +312,7 @@ local popext_funcs = {
 
 			if (t == null || t.IsFullyInvisible() || t.IsStealthed()) return
 
-			if (threat != t) 
+			if (threat != t)
 			{
 				bot.AddBotAttribute(SUPPRESS_FIRE)
 				SetThreat(t, false)
@@ -318,7 +330,7 @@ local popext_funcs = {
 	popext_mobber = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
-			
+
 			local t = FindThreat(INT_MAX, false)
 
 			if (t == null || t.IsFullyInvisible() || t.IsStealthed()) return
@@ -332,7 +344,7 @@ local popext_funcs = {
 
 		local pos = split(args[0], " ")
 		pos.apply(function(v) { return v.tofloat()})
-		
+
 		bot.GetScriptScope().PlayerThinkTable.MoveToPoint <- function() {
 			UpdatePathAndMove(Vector(pos[0], pos[1], pos[2]))
 		}
@@ -346,10 +358,10 @@ local popext_funcs = {
 		}
 	}
 
-	popext_fireinput = function(bot, args)
-	{
+	popext_fireinput = function(bot, args) {
+
 		local args_len = args.len()
-		
+
 		if (args_len == 2)
 			EntFire(args[0], args[1])
 
@@ -364,6 +376,7 @@ local popext_funcs = {
 	}
 
 	popext_weaponresist = function(bot, args) {
+
 		local weapon = args[0]
 		local amount = args[1].tofloat()
 
@@ -402,6 +415,7 @@ local popext_funcs = {
 	}
 
 	popext_doubledonk = function(bot, args) {
+
 		bot.GetScriptScope().PlayerThinkTable.DoubleDonker <- function() {
 			local distance = GetThreatDistanceSqr()
 			printl("holdtime: " + (2 * exp(-distance / 10) + 0.5))
@@ -409,6 +423,7 @@ local popext_funcs = {
 	}
 
 	popext_dispenseroverride = function(bot, args) {
+
 		if (args.len() == 0) args.append(1) //sentry override by default
 
 		local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
@@ -590,7 +605,9 @@ local popext_funcs = {
 			}
 		}
 	}
+
 	popext_homingprojectile = function(bot, args) {
+
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
 		local args_len = args.len()
 		local turn_power = (args_len > 0) ? args[0].tofloat() : 0.75
@@ -599,6 +616,7 @@ local popext_funcs = {
 		local ignoreDisguisedSpies = (args_len > 3) ? args[3].tointeger() : 1
 
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
+
 			for (local projectile; projectile = Entities.FindByClassname(projectile, "tf_projectile_*");) {
 				if (projectile.GetOwner() != bot || !Homing.IsValidProjectile(projectile, PopExtUtil.HomingProjectiles)) continue
 				// Any other parameters needed by the projectile thinker can be set here
@@ -616,6 +634,7 @@ local popext_funcs = {
 			EntFireByHandle(params.inflictor, "Kill", null, 0.5, null, null)
 		}
 	}
+
 	popext_rocketcustomtrail = function (bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.ProjectileTrailThink <- function() {
@@ -635,20 +654,27 @@ local popext_funcs = {
 			}
 		}
 	}
+
 	popext_customweaponmodel = function(bot, args) {
 
 		bot.GetActiveWeapon().SetModelSimple(args[0])
 	}
+
 	popext_spawnhere = function(bot, args) {
 
 		local org = split(args[0], " ")
-		bot.Teleport(true, Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()), true, QAngle(), true, bot.GetAbsVelocity())
+
+		if (FindByClassname(null, args[0]) != null)
+			bot.Teleport(true, FindByClassname(null, args[0]).GetOrigin(), true, QAngle(), true, bot.GetAbsVelocity())
+		else
+			bot.Teleport(true, Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()), true, QAngle(), true, bot.GetAbsVelocity())
 
 		if (args.len() < 2) return
 
 		local spawnubertime = args[1].tofloat()
 		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, spawnubertime, null)
 	}
+
 	popext_improvedairblast = function (bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- function() {
@@ -711,6 +737,7 @@ local popext_funcs = {
 			}
 		}
 	}
+
 	popext_addcondonhit = function(bot, args) {
 		// Tag addcondonhit |cond|duration|threshold|crit
 
@@ -756,6 +783,7 @@ local popext_funcs = {
 			}
 		}
 	}
+
 	popext_dropweapon = function(bot, args) {
 
 		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- function(params) {
@@ -803,7 +831,7 @@ local popext_funcs = {
 		local boss = CreateByClassname(args[0])
 
 		scope.halloweenboss <- boss
-		
+
 		local org = split(args[2], " ")
 		org.apply(function(v) { return v.tofloat()})
 		boss.SetOrigin(Vector(org[0], org[1], org[2]))
@@ -824,8 +852,8 @@ local popext_funcs = {
 				local eventname = ""
 				args[0] = "eyeball_boss" ? eventname = "eyeball_boss_escape_imminent" : eventname = "merasmus_escape_warning"
 				SendGlobalGameEvent(eventname, {time_remaining 	= args[3].tointeger()})
-			} 
-			else 
+			}
+			else
 				EntFireByHandle(boss, "RunScriptCode", "self.TakeDamage(INT_MAX, DMG_GENERIC, self)", args[3].tointeger(), null, null)
 		}
 
@@ -852,14 +880,14 @@ local popext_funcs = {
 
 			if (scope.halloweenboss.IsValid() && boss.GetHealth() != bot.GetHealth() && args[1] == "BOTHP")
 				bot.SetHealth(boss.GetHealth())
-				
+
 			if (scope.halloweenboss.IsValid()) return
-			
+
 			local uberconds = [TF_COND_INVULNERABLE, TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, TF_COND_INVULNERABLE_CARD_EFFECT, TF_COND_INVULNERABLE_USER_BUFF]
 			foreach (cond in uberconds)
 				if (bot.InCond(cond))
 					bot.RemoveCondEx(cond, true)
-					
+
 			bot.TakeDamage(INT_MAX, DMG_GENERIC, bosskiller)
 		}
 	}
@@ -872,6 +900,7 @@ local popext_funcs = {
 		bot_scope.Teleported <- false
 
 		bot_scope.PlayerThinkTable.TeleportNearVictimThink <- function() {
+
 			if (!bot_scope.Teleported && bot_scope.NextTeleportTime <= Time() && !bot.HasItem()) {
 				local victim = null
 				local players = []
@@ -1080,9 +1109,10 @@ local popext_funcs = {
 			}
 		}
 	}
+
 	function AI_BotSpawn(bot) {
-		local scope = null 
-		
+		local scope = null
+
 		try scope = bot.GetScriptScope() catch(e) return
 
 		this.EvaluateTags(bot)
@@ -1091,9 +1121,10 @@ local popext_funcs = {
 
 		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
 	}
+
 	function BotThink()
 	{
-		try bot.OnUpdate() catch(e) if (e == "the index 'bot' does not exist") return
+		try bot.OnUpdate() catch(e) if (e == "the index 'bot' does not exist") return //spams console and buries the actual error
 		// bot.OnUpdate()
 		return -1
 	}
@@ -1131,7 +1162,7 @@ local popext_funcs = {
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
 	}
 	function OnGameEvent_halloween_boss_killed(params) {
-		if (!("bosskiller" in ROOT)) ::bosskiller <- GetPlayerFromUserID(params.killer)
+		::bosskiller <- GetPlayerFromUserID(params.killer)
 	}
 }
 __CollectGameEventCallbacks(PopExtTags)

@@ -699,15 +699,13 @@ function MissionAttributes::MissionAttr(...) {
 	case "SniperHideLasers":
 		if (value < 1) return
 
-		function MissionAttributes::SniperHideLasers() {
+		MissionAttributes.ThinkTable.SniperHideLasers <- function() {
 			for (local dot; dot = FindByClassname(dot, "env_sniperdot");)
 				if (dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS)
 					EntFireByHandle(dot, "Kill", "", -1, null, null)
 
 			return -1;
 		}
-
-		MissionAttributes.ThinkTable.SniperHideLasers <- MissionAttributes.SniperHideLasers
 	break
 
 	// ===================================
@@ -991,7 +989,6 @@ function MissionAttributes::MissionAttr(...) {
 							SetPropBool(player, "m_bForcedSkin", true)
 							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
 						}
-
 					}
 				}
 
