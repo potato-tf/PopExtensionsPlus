@@ -1056,6 +1056,12 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 				continue
 			}
 
+			entity.ValidateScriptScope()
+			if ("chosenAsPenetrationRocket" in entity.GetScriptScope())
+				continue
+
+			entity.GetScriptScope().chosenAsPenetrationRocket <- true
+
 			return entity
 		}
 
