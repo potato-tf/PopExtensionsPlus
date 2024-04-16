@@ -67,7 +67,27 @@ if (!("ScriptUnloadTable" in ROOT))
 				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", SINGLE_TICK, null, null)
 			}
 		}
-		// Hook all wave inits to reset parsing error counter.
+
+		function OnGameEvent_pumpkin_lord_summoned(params) {
+
+			if ("HalloweenBossNotSolidToPlayers" in MissionAttributes && MissionAttributes.HalloweenBossNotSolidToPlayers)
+				for (local boss; boss = FindByClassname(boss, "headless_hatman");)
+					boss.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
+		}
+
+		function OnGameEvent_eyeball_boss_summoned(params) {
+
+			if ("HalloweenBossNotSolidToPlayers" in MissionAttributes && MissionAttributes.HalloweenBossNotSolidToPlayers)
+				for (local boss; boss = FindByClassname(boss, "eyeball_boss");)
+					boss.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
+		}
+
+		function OnGameEvent_merasmus_summoned(params) {
+
+			if ("HalloweenBossNotSolidToPlayers" in MissionAttributes && MissionAttributes.HalloweenBossNotSolidToPlayers)
+				for (local boss; boss = FindByClassname(boss, "merasmus");)
+					boss.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
+		}
 
 		function OnGameEvent_player_death(params) {
 			if (MissionAttributes.SoundsToReplace.len() != 0)
@@ -674,6 +694,12 @@ function MissionAttributes::MissionAttr(...) {
 
 	// =========================================================
 
+	case "HalloweenBossNotSolidToPlayers":
+		MissionAttributes.HalloweenBossNotSolidToPlayers <- true
+	break
+
+	// =========================================================
+
 	case "SentryHintBombForwardRange":
 		SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_forward_range", value)
 	break
@@ -696,6 +722,15 @@ function MissionAttributes::MissionAttr(...) {
 		if (value != 1 || value != 0 ) RaiseIndexError(attr)
 		SetConvar("tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1)
 	break
+
+	// =========================================================
+
+	case "HalloweenBossNotSolidToPlayers":
+		for (local hatman; hatman = FindByClassname(hatman, "headless_hatman");)
+			hatman.SetCollisionGroup(COLLISION_GROUP_PUSHAWAY)
+	break
+
+	// =========================================================
 
 	// =====================
 	// Disable sniper lasers
