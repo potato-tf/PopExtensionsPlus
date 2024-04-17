@@ -60,7 +60,7 @@ if (!("_AddThinkToEnt" in root))
 				delete scope[k]
 	}
 
-	function OnGameEvent_player_spawn(params) {
+	function OnGameEvent_post_inventory_application(params) {
 
 		this.PlayerCleanup(GetPlayerFromUserID(params.userid))
 
