@@ -971,28 +971,34 @@ function MissionAttributes::MissionAttr(...) {
 			} else if ("RobotVOThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotVOThink
 
 			if (value & 16) {
+				
+				//run this with a delay for LoadoutControl
 
-				if ("HandModelOverride" in MissionAttributes.SpawnHookTable) return
+				EntFireByHandle(player, "RunScriptCode", @"
+				
+					if (`HandModelOverride` in MissionAttributes.SpawnHookTable) return
 
-				local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[player.GetPlayerClass()]
-				local playervm = GetPropEntity(player, "m_hViewModel")
-				if (playervm == null) return
-				playervm.GetOrigin()
+					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[self.GetPlayerClass()]
+					local playervm = GetPropEntity(self, `m_hViewModel`)
+					if (playervm == null) return
+					playervm.GetOrigin()
 
-				if (playervm == null) return
+					if (playervm == null) return
 
-				if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
+					if (playervm.GetModelName() != vmodel) playervm.SetModelSimple(vmodel)
 
-				for (local i = 0; i < SLOT_COUNT; i++) {
+					for (local i = 0; i < SLOT_COUNT; i++) {
 
-					local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
-					if (wep == null || wep.GetModelName() == vmodel) continue
+						local wep = GetPropEntityArray(self, `m_hMyWeapons`, i)
+						if (wep == null || wep.GetModelName() == vmodel) continue
 
-					wep.SetModelSimple(vmodel)
-					wep.SetCustomViewModel(vmodel)
-				}
+						wep.SetModelSimple(vmodel)
+						wep.SetCustomViewModel(vmodel)
+					}
 
-			} else if ("RobotArmThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotArmThink
+				", SINGLE_TICK, null, null)
+				
+			}
 		}
 	break
 
@@ -1416,11 +1422,9 @@ function MissionAttributes::MissionAttr(...) {
 
 			foreach(k, v in value)
 			{
-				local idarray = []
-
 				if (typeof k == "string" && k.find(","))
 				{
-					idarray = split(k, ",")
+					local idarray = split(k, ",")
 
 					if (idarray.len() > 1)
 						idarray.apply(function (val) {return val.tointeger()})
@@ -1451,14 +1455,21 @@ function MissionAttributes::MissionAttr(...) {
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
-			foreach (item, replacement in value)
+
+			function LoadoutControl(item, replacement)
 			{
 				local wep = PopExtUtil.HasItemInLoadout(player, item)
-				if (wep == null) continue
+				if (wep == null) return
+
+				if (GetPropEntity(wep, "m_hExtraWearable") != null) 
+				{
+					GetPropEntity(wep, "m_hExtraWearableViewModel").Kill()
+					GetPropEntity(wep, "m_hExtraWearable").Kill()
+				}
 
 				wep.Kill()
 
-				if (replacement == null) continue
+				if (replacement == null) return
 
 				try
 					PopExtUtil.GiveWeapon(player, PopExtItems[replacement].item_class, PopExtItems[replacement].id)
@@ -1468,6 +1479,23 @@ function MissionAttributes::MissionAttr(...) {
 							PopExtUtil.GiveWeapon(player, classname, itemid)
 					else
 						this.RaiseValueError("LoadoutControl", value, "Item replacement must be a table")
+			}
+
+			foreach (item, replacement in value)
+			{				
+				if (typeof item == "string" && item.find(","))
+				{
+					local idarray = split(item, ",")
+
+					if (idarray.len() > 1)
+						idarray.apply(function (val) {return val.tointeger()})
+					item = idarray
+				}
+				if (typeof item == "array")
+					foreach (i in item)
+						LoadoutControl(i, replacement)
+				else
+					LoadoutControl(item, replacement)
 			}
 
 			EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", SINGLE_TICK, null, null)

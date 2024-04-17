@@ -182,12 +182,12 @@ function CustomAttributes::AddCondOnHit(player, item, value) {
 
     CustomAttributes.TakeDamageTable.AddCondOnHit <- function(params) {
 
-        local victim = GetPlayerFromUserID(params.userid)
-        local attacker = GetPlayerFromUserID(params.attacker)
+        local victim = params.const_entity
+        local attacker = params.attacker
 
-        if (victim == null || !victim.IsPlayer() || (typeof value == "array" && victim.InCond(value[0])) || (typeof value == "integer" && victim.InCond(value))|| attacker == null || attacker != player || params.weapon != wep) return
+        if (victim == null || !victim.IsPlayer() || victim.IsInvulnerable() || (typeof value == "array" && victim.InCond(value[0])) || (typeof value == "integer" && victim.InCond(value)) || attacker == null || attacker != player || params.weapon != wep) return
 
-        typeof value == "array" ? victim.AddCondEx(v[0], v[1], attacker) : victim.AddCond(value)
+        typeof value == "array" ? victim.AddCondEx(value[0], value[1], attacker) : victim.AddCond(value)
     }
 }
 
@@ -196,9 +196,12 @@ function CustomAttributes::RemoveCondOnHit(player, item, value) {
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
-    CustomAttributes.TakeDamageTable.RemoveCondOnHit <- function(params) {
+    CustomAttributes.TakeDamagePostTable.RemoveCondOnHit <- function(params) {
 
-        if (victim == null || !victim.IsPlayer() || attacker == null || attacker != player || weapon != wep) return
+        local victim = GetPlayerFromUserID(params.userid)
+        local attacker = GetPlayerFromUserID(params.attacker)
+
+        if (victim == null || attacker == null || !victim.IsPlayer() || !victim.InCond(value) || victim.IsInvulnerable() || attacker != player || params.weapon != wep) return
 
         victim.RemoveCondEx(value, true)
     }
@@ -210,11 +213,13 @@ function CustomAttributes::SelfAddCondOnHit(player, item, value) {
     if (wep == null) return
 
     CustomAttributes.TakeDamageTable.SelfAddCondOnHit <- function(params) {
-        local victim = params.victim, attacker = params.attacker
 
-        if (attacker == null || !attacker.IsPlayer() || (typeof value == "array" && attacker.InCond(value[0])) || (typeof value == "integer" && attacker.InCond(value)))
+        local victim = params.victim
+        local attacker = params.attacker
 
-        typeof value == "array" ? attacker.AddCondEx(v[0], v[1], attacker) : attacker.AddCond(value)
+        if (attacker == null || !attacker.IsPlayer() || victim.IsInvulnerable() || (typeof value == "array" && attacker.InCond(value[0])) || (typeof value == "integer" && attacker.InCond(value))) return
+
+        typeof value == "array" ? attacker.AddCondEx(value[0], value[1], attacker) : attacker.AddCond(value)
     }
 }
 
@@ -224,12 +229,13 @@ function CustomAttributes::SelfAddCondOnKill(player, item, value) {
     if (wep == null) return
 
     CustomAttributes.DeathHookTable.SelfAddCondOnKill <- function(params) {
+
         local attacker = GetPlayerFromUserID(params.attacker)
         local victim = GetPlayerFromUserID(params.userid)
 
         if (victim == null || attacker == null || !attacker.IsPlayer()) return
 
-        typeof value == "array" ? attacker.AddCondEx(v[0], v[1], attacker) : attacker.AddCond(value)
+        typeof value == "array" ? attacker.AddCondEx(value[0], value[1], attacker) : attacker.AddCond(value)
     }
 }
 
@@ -298,7 +304,6 @@ function CustomAttributes::DmgVsSameClass(player, item, value) {
 
 function CustomAttributes::MultDmgVsAirborne(player, item, value) {
 
-
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
@@ -356,10 +361,7 @@ function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
     }
     CustomAttributes.TakeDamageTable.MeleeCleaveAttack <- function(params) {
 
-        if (scope.cleaved || !("attribinfo" in scope) || !("melee cleave attack" in scope.attribinfo)) return
-
-        local wep = PopExtUtil.HasItemInLoadout(player, item)
-        if (wep == null || player.GetActiveWeapon() != wep) return
+        if (params.weapon != wep || !("attribinfo" in scope) || !("melee cleave attack" in scope.attribinfo) || scope.cleaved) return
 
         scope.cleaved = true
         // params.early_out = true
