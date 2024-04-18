@@ -96,7 +96,7 @@ PopExt <- popExtEntity.GetScriptScope()
 			}
 
 			local attacker = params.attacker
-			if (attacker != null && attacker.IsPlayer() && attacker.IsBotOfType(1337)) {
+			if (attacker != null && attacker.IsPlayer() && attacker.IsBotOfType(TF_BOT_TYPE)) {
 				local scope = attacker.GetScriptScope()
 				PopExtHooks.FireHooksParam(attacker, scope, "OnDealDamage", params)
 			}
@@ -112,7 +112,7 @@ PopExt <- popExtEntity.GetScriptScope()
 				delete player.GetScriptScope().popWearablesToDestroy
 			}
 
-			if (player != null && player.IsBotOfType(1337)) {
+			if (player != null && player.IsBotOfType(TF_BOT_TYPE)) {
 				player.ValidateScriptScope()
 				local scope = player.GetScriptScope()
 
@@ -145,7 +145,7 @@ PopExt <- popExtEntity.GetScriptScope()
 				delete player.GetScriptScope().popWearablesToDestroy
 			}
 
-			if (player != null && player.IsBotOfType(1337)) {
+			if (player != null && player.IsBotOfType(TF_BOT_TYPE)) {
 				player.ValidateScriptScope()
 				local scope = player.GetScriptScope()
 
@@ -168,27 +168,27 @@ PopExt <- popExtEntity.GetScriptScope()
 
 		function OnGameEvent_player_hurt(params) {
 			local victim = GetPlayerFromUserID(params.userid)
-			if (victim != null && victim.IsBotOfType(1337)) {
+			if (victim != null && victim.IsBotOfType(TF_BOT_TYPE)) {
 				local scope = victim.GetScriptScope()
 				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamagePost", params)
 			}
 
 			local attacker = GetPlayerFromUserID(params.attacker)
-			if (attacker != null && attacker.IsBotOfType(1337)) {
+			if (attacker != null && attacker.IsBotOfType(TF_BOT_TYPE)) {
 				local scope = attacker.GetScriptScope()
 				PopExtHooks.FireHooksParam(attacker, scope, "OnDealDamagePost", params)
 			}
 		}
 		function OnGameEvent_player_death(params) {
 			local player = GetPlayerFromUserID(params.userid)
-			if (player != null && player.IsBotOfType(1337)) {
+			if (player != null && player.IsBotOfType(TF_BOT_TYPE)) {
 				local scope = player.GetScriptScope()
 				scope.popFiredDeathHook <- true
 				PopExtHooks.FireHooksParam(player, scope, "OnDeath", params)
 			}
 
 			local attacker = GetPlayerFromUserID(params.attacker)
-			if (attacker != null && attacker.IsBotOfType(1337)) {
+			if (attacker != null && attacker.IsBotOfType(TF_BOT_TYPE)) {
 				local scope = attacker.GetScriptScope()
 				PopExtHooks.FireHooksParam(attacker, scope, "OnKill", params)
 			}
@@ -424,7 +424,7 @@ function PopulatorThink() {
 						if (child.GetClassname() != "prop_dynamic") continue
 
 						if (child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl") {
-							SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | 32)
+							SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | EF_NODRAW)
 						}
 					}
 				}
@@ -434,7 +434,7 @@ function PopulatorThink() {
 						if (child.GetClassname() != "prop_dynamic") continue
 
 						if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl") {
-							SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | 32)
+							SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | EF_NODRAW)
 						}
 					}
 				}
@@ -487,8 +487,8 @@ function PopulatorThink() {
 
 						if (replace_model != -1) {
 							child.SetModel(replace_model_str)
-							SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 0)
-							SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, 3)
+							SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, VISION_MODE_NONE)
+							SetPropIntArray(child, "m_nModelIndexOverrides", replace_model, VISION_MODE_ROME)
 						}
 
 						if (is_track) {
@@ -553,7 +553,7 @@ function PopulatorThink() {
 		local player = PlayerInstanceFromIndex(i)
 		if (player == null) continue
 
-		if (player.IsBotOfType(1337)) {
+		if (player.IsBotOfType(TF_BOT_TYPE)) {
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 

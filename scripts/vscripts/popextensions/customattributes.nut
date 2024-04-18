@@ -1138,7 +1138,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 			traceTableWorldSpawn <- {
 				start = lastRocketOrigin,
 				end = origin + (self.GetForwardVector() * 50)
-				mask = MASK_SOLID_BRUSHONLY
+				mask = CONST.MASK_SOLID_BRUSHONLY
 				ignore = self.GetOwner()
 			}
 
@@ -1697,7 +1697,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 //     CustomAttributes.SpawnHookTable.ApplyCustomAttribs <- function(params)
 //     {
 //         local player = GetPlayerFromUserID(params.userid)
-//         if (player.IsBotOfType(1337)) return
+//         if (player.IsBotOfType(TF_BOT_TYPE)) return
 //         foreach (k, v in attrs)
 //             if (v.len() == 1)
 //                 CustomAttributes.AddAttr(player, k, v[0])

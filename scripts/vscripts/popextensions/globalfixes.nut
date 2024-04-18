@@ -13,7 +13,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			local victim   = params.const_entity
 			local attacker = params.inflictor
 
-			if ( victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB && attacker != null && !attacker.IsBotOfType(1337) ) {
+			if ( victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB && attacker != null && !attacker.IsBotOfType(TF_BOT_TYPE) ) {
 				attacker.GetScriptScope().stabvictim <- victim
 				EntFireByHandle(attacker, "RunScriptCode", "PopExtUtil.SilentDisguise(self, stabvictim)", -1, null, null)
 			}
@@ -62,7 +62,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			if (index != ID_HOLIDAY_PUNCH || !(params.damage_type & DMG_CRITICAL)) return
 
 			local victim = params.const_entity
-			if (victim != null && victim.IsBotOfType(1337)) {
+			if (victim != null && victim.IsBotOfType(TF_BOT_TYPE)) {
 				victim.Taunt(TAUNT_MISC_ITEM, MP_CONCEPT_TAUNT_LAUGH)
 
 				local tfclass      = victim.GetPlayerClass()
@@ -80,7 +80,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 						if (wearable != null) wearable.Destroy()
 
 						SetPropInt(self, "m_clrRender", 0xFFFFFF)
-						SetPropInt(self, "m_nRenderMode", 0)
+						SetPropInt(self, "m_nRenderMode", kRenderNormal)
 						self.SetCustomModelWithClassAnimations(botmodel)
 
 						SetPropString(self, "m_iszScriptThinkFunction", "")
@@ -132,7 +132,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function NoCreditVelocity(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (!player.IsBotOfType(1337)) return
+			if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
 			for (local money; money = FindByClassname(money, "item_currencypack*");)
 				money.SetAbsVelocity(Vector(1, 1, 1)) //0 velocity breaks our reverse mvm money pickup methods.  set to 1hu instead
@@ -144,7 +144,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function ScoutBetterMoneyCollection(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337) || player.GetPlayerClass() != TF_CLASS_SCOUT) return
+			if (player.IsBotOfType(TF_BOT_TYPE) || player.GetPlayerClass() != TF_CLASS_SCOUT) return
 
 			player.GetScriptScope().PlayerThinkTable.MoneyThink <- function() {
 
@@ -163,7 +163,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function RemoveYERAttribute(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			local wep   = PopExtUtil.GetItemInSlot(player, SLOT_MELEE)
 			local index = PopExtUtil.GetItemIndex(wep)
@@ -176,7 +176,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 			local player = GetPlayerFromUserID(params.userid)
 
-			if (!player.IsBotOfType(1337)) return
+			if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
 			local scope = player.GetScriptScope()
 			scope.holdingfire <- false
@@ -206,7 +206,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 		// 	local player = GetPlayerFromUserID(params.userid)
 
-		// 	if (!player.IsBotOfType(1337) || !player.IsMiniBoss()) return
+		// 	if (!player.IsBotOfType(TF_BOT_TYPE) || !player.IsMiniBoss()) return
 		// 	player.AddCustomAttribute("override footstep sound set", 0, -1)
 
 		// 	local validclasses = {
@@ -252,7 +252,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		// Doesn't fully work correctly, need to investigate
 		function EngineerBuildingPushbackFix(params) {
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -293,7 +293,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 					local hint     = null
 
 					for (local player; player = Entities.FindByClassnameWithin(player, "player", origin, 650);) {
-						if (!player.IsBotOfType(1337) || player.GetPlayerClass() != TF_CLASS_ENGINEER) continue
+						if (!player.IsBotOfType(TF_BOT_TYPE) || player.GetPlayerClass() != TF_CLASS_ENGINEER) continue
 
 						engie = player
 						break
