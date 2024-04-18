@@ -1458,7 +1458,7 @@ function PopExtUtil::IsSpaceToSpawnHere(where, hullmin, hullmax) {
 		end = where,
 		hullmin = hullmin,
 		hullmax = hullmax,
-		mask = CONST.MASK_PLAYERSOLID
+		mask = MASK_PLAYERSOLID
 	}
 	TraceHull(trace)
 

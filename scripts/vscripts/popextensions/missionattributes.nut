@@ -230,7 +230,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 			traceWorld <- {
 				start = origin,
 				end = origin - Vector(0, 0, 50000)
-				mask = CONST.MASK_SOLID_BRUSHONLY
+				mask = MASK_SOLID_BRUSHONLY
 			}
 
 			TraceLineEx(traceWorld)
@@ -971,11 +971,11 @@ function MissionAttributes::MissionAttr(...) {
 			} else if ("RobotVOThink" in scope.PlayerThinkTable) delete scope.PlayerThinkTable.RobotVOThink
 
 			if (value & 16) {
-				
+
 				//run this with a delay for LoadoutControl
 
 				EntFireByHandle(player, "RunScriptCode", @"
-				
+
 					if (`HandModelOverride` in MissionAttributes.SpawnHookTable) return
 
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[self.GetPlayerClass()]
@@ -997,7 +997,7 @@ function MissionAttributes::MissionAttr(...) {
 					}
 
 				", SINGLE_TICK, null, null)
-				
+
 			}
 		}
 	break
@@ -1461,7 +1461,7 @@ function MissionAttributes::MissionAttr(...) {
 				local wep = PopExtUtil.HasItemInLoadout(player, item)
 				if (wep == null) return
 
-				if (GetPropEntity(wep, "m_hExtraWearable") != null) 
+				if (GetPropEntity(wep, "m_hExtraWearable") != null)
 				{
 					GetPropEntity(wep, "m_hExtraWearableViewModel").Kill()
 					GetPropEntity(wep, "m_hExtraWearable").Kill()
@@ -1482,7 +1482,7 @@ function MissionAttributes::MissionAttr(...) {
 			}
 
 			foreach (item, replacement in value)
-			{				
+			{
 				if (typeof item == "string" && item.find(","))
 				{
 					local idarray = split(item, ",")

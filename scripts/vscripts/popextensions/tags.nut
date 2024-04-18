@@ -905,7 +905,7 @@ local popext_funcs = {
 				local victim = null
 				local players = []
 
-				for (local i = 1; i <= CONST.MAX_CLIENTS; i++) {
+				for (local i = 1; i <= MAX_CLIENTS; i++) {
 					local player = PlayerInstanceFromIndex(i)
 					if (player == null)
 						continue

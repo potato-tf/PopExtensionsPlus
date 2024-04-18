@@ -6,7 +6,7 @@ class AI_Bot {
 		// this.cur_ammo  = 0
 		// this.cur_melee = false
 		this.locomotion = bot.GetLocomotionInterface()
-		
+
 		this.time = Time()
 
 		this.threat 			= null
@@ -58,7 +58,7 @@ class AI_Bot {
 		local trace = {
 			start  = bot.EyePosition(),
 			end    = target.EyePosition(),
-			mask   = CONST.MASK_OPAQUE,
+			mask   = MASK_OPAQUE,
 			ignore = bot
 		}
 		TraceLineEx(trace)
@@ -238,7 +238,7 @@ class AI_Bot {
 
 		time = Time()
 
-		// foreach (k, v in bot.GetLocomotionInterface()) 
+		// foreach (k, v in bot.GetLocomotionInterface())
 		// printl(bot.GetLocomotionInterface())
 		// printl(bot.GetVisionInterface())
 		foreach (_, func in scope.PlayerThinkTable) func()
@@ -253,7 +253,7 @@ class AI_Bot {
 		if (path_recompute_time < time)
 		{
 			local threat_cur_pos = threat.GetOrigin()
-			
+
 			if ((path.len() == 0) || ((threat_pos - threat_cur_pos).LengthSqr() > 4096.0)) // 64
 			{
 				local area = GetThreatArea(threat)
@@ -261,10 +261,10 @@ class AI_Bot {
 				{
 					UpdatePathAndMove(threat_cur_pos)
 				}
-				
+
 				threat_pos = threat_cur_pos
 			}
-			
+
 			path_recompute_time = time + 0.5
 		}
 	}
@@ -285,7 +285,7 @@ class AI_Bot {
 		local pos_start = bot.GetOrigin()
 		local pos_end = target_pos
 
-		
+
 		local area_start = GetNavArea(pos_start, 128.0)
 		local area_end = GetNavArea(pos_end, 128.0)
 
@@ -298,20 +298,20 @@ class AI_Bot {
 			return false
 
 		GetNavAreasFromBuildPath(area_start, area_end, pos_end, 0.0, TEAM_ANY, false, path_areas)
-		
+
 		foreach (name, area in path_areas)
 		{
 			local navareasize = (area.GetSizeX() * area.GetSizeY())
 			local vec_max = bot.GetBoundingMaxs(), vec_min = bot.GetBoundingMins()
-			
+
 			local diff_x = vec_max.x - vec_min.x
 			local diff_y = vec_max.y - vec_min.y
 			local diff_z = vec_max.z - vec_min.z
 
 			# Calculate areas of faces
 			// local area_x = diff_y * diff_z
-			// local area_y = diff_x * diff_z 
-			// local area_z = diff_x * diff_y 
+			// local area_y = diff_x * diff_z
+			// local area_z = diff_x * diff_y
 
 			# Total surface area
 			local botareasize = diff_x * diff_y  # Two faces per axis
@@ -335,8 +335,8 @@ class AI_Bot {
 				//check all surrounding connected nav areas
 				for (local i = 0; i < NUM_DIRECTIONS; i++)
 					area.GetAdjacentAreas(i, potentialareas)
-				
-				
+
+
 				foreach (_, a in potentialareas)
 				{
 					local potentialadjacentcount = 0
@@ -345,7 +345,7 @@ class AI_Bot {
 						if (a.GetAdjacentCount(i) != 0) potentialadjacentcount++
 
 					if (potentialadjacentcount < 4 || a.GetSizeX() * a.GetSizeY() < botareasize) continue
-	
+
 					if (navdebug)
 						a.DebugDrawFilled(0, 0, 255, 255, 1.0, true, SINGLE_TICK)
 
@@ -362,10 +362,10 @@ class AI_Bot {
 		if (navdebug)
 			foreach (p in path)
 				p.DebugDrawFilled(0, 255, 0, 254, 1.0, true, SINGLE_TICK)
-			
+
 		if (path.len())
 			locomotion.Approach(path[0].FindRandomSpot(), 1.0)
-		
+
 		// if (bot.GetOrigin() - path[0].GetCenter().LengthSqr() < 50.0) path.remove(0)
 
 	}

@@ -1138,7 +1138,7 @@ function CustomAttributes::RocketPenetration(player, item, value) {
 			traceTableWorldSpawn <- {
 				start = lastRocketOrigin,
 				end = origin + (self.GetForwardVector() * 50)
-				mask = CONST.MASK_SOLID_BRUSHONLY
+				mask = MASK_SOLID_BRUSHONLY
 				ignore = self.GetOwner()
 			}
 
