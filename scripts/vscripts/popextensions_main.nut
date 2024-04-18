@@ -41,7 +41,7 @@ if (!("_AddThinkToEnt" in root))
 	//save popfile name in global scope when we first initialize
 	//if the popfile name changed, a new pop has loaded, clean everything up.
 	function PlayerCleanup(player) {
-		NetProps.SetPropInt(player, "m_nRenderMode", 0)
+		NetProps.SetPropInt(player, "m_nRenderMode", kRenderNormal)
 		NetProps.SetPropInt(player, "m_clrRender", 0xFFFFFF)
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
@@ -81,7 +81,7 @@ if (!("_AddThinkToEnt" in root))
 		}
 
 		local bot = player
-		if (bot.IsBotOfType(1337))
+		if (bot.IsBotOfType(TF_BOT_TYPE))
 		{
 			scope.BotThink <- PopExtTags.BotThink
 
@@ -105,7 +105,7 @@ if (!("_AddThinkToEnt" in root))
 	function OnGameEvent_player_death(params) {
 
 		local player = GetPlayerFromUserID(params.userid)
-		if (!player.IsBotOfType(1337)) return
+		if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
 		this.PlayerCleanup(player)
 	}

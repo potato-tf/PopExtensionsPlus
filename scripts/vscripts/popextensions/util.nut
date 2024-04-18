@@ -152,7 +152,7 @@
 	CurrentWaveNum = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
 
 	ClientCommand = SpawnEntityFromTable("point_clientcommand", {targetname = "_clientcommand"})
-	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "__utilroundwin", TeamNum = 3, force_map_reset = 1})
+	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "__utilroundwin", TeamNum = TF_TEAM_PVE_INVADERS, force_map_reset = 1})
 	RespawnOverride = SpawnEntityFromTable("trigger_player_respawn_override", {spawnflags = SF_TRIGGER_ALLOW_CLIENTS})
 
 	Events = {
@@ -168,7 +168,7 @@
 
 				// printl(player)
 
-				if (player != null && player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
+				if (player != null && player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.BotArray.find(player) == null)
 					PopExtUtil.BotArray.append(player)
 
 				else if (player != null && PopExtUtil.HumanArray.find(player) == null)
@@ -201,7 +201,7 @@
 				SetPropEntityArray(player, "m_hMyWeapons", wep, slot)
 			}
 
-			if (player.IsBotOfType(1337) && PopExtUtil.BotArray.find(player) == null)
+			if (player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.BotArray.find(player) == null)
 				PopExtUtil.BotArray.append(player)
 
 			else if (PopExtUtil.HumanArray.find(player) == null)
@@ -216,7 +216,7 @@
 
 			local player = GetPlayerFromUserID(params.userid)
 
-			if (!player.IsBotOfType(1337) && PopExtUtil.HumanArray.find(player) == null)
+			if (!player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.HumanArray.find(player) == null)
 				PopExtUtil.HumanArray.append(player)
 
 			else if (PopExtUtil.PlayerArray.find(player) == null)
@@ -277,7 +277,7 @@ function PopExtUtil::PlayerClassCount()
 	return classes
 }
 
-function PopExtUtil::ChangePlayerTeamMvM(player, teamnum = 3)
+function PopExtUtil::ChangePlayerTeamMvM(player, teamnum = TF_TEAM_PVE_INVADERS)
 {
 	if (PopExtUtil.GameRules) {
 		SetPropBool(PopExtUtil.GameRules, "m_bPlayingMannVsMachine", false);
@@ -504,7 +504,7 @@ function PopExtUtil::CreatePlayerWearable(player, model, bonemerge = true, attac
 
 	wearable.SetOwner(player)
 	Entities.DispatchSpawn(wearable)
-	SetPropInt(wearable, "m_fEffects", bonemerge ? 129 : 0)
+	SetPropInt(wearable, "m_fEffects", bonemerge ? EF_BONEMERGE|EF_BONEMERGE_FASTCULL : 0)
 	PopExtUtil.SetParentLocalOrigin(wearable, player, attachment)
 
 	player.ValidateScriptScope()
@@ -818,10 +818,10 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 	wearable.SetOwner(player)
 	wearable.DispatchSpawn()
 	EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player)
-	SetPropInt(wearable, "m_fEffects", 129)
+	SetPropInt(wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL)
 	scope.wearable <- wearable
 
-	SetPropInt(player, "m_nRenderMode", 1)
+	SetPropInt(player, "m_nRenderMode", kRenderTransColor)
 	SetPropInt(player, "m_clrRender", 0)
 
 	scope.PlayerThinkTable.BotModelThink <- function() {
@@ -952,7 +952,7 @@ function PopExtUtil::ShowModelToPlayer(player, model = ["models/player/heavy.mdl
 	proxy_entity.SetSolid(SOLID_NONE)
 
 	SetPropBool(proxy_entity, "m_bPlacing", true)
-	SetPropInt(proxy_entity, "m_fObjectFlags", 2) // sets "attachment" flag, prevents entity being snapped to player feet
+	SetPropInt(proxy_entity, "m_fObjectFlags", OF_MUST_BE_BUILT_ON_ATTACHMENT) // sets "attachment" flag, prevents entity being snapped to player feet
 
 	// m_hBuilder is the player who the entity will be networked to only
 	SetPropEntity(proxy_entity, "m_hBuilder", player)
@@ -1458,7 +1458,7 @@ function PopExtUtil::IsSpaceToSpawnHere(where, hullmin, hullmax) {
 		end = where,
 		hullmin = hullmin,
 		hullmax = hullmax,
-		mask = MASK_PLAYERSOLID
+		mask = CONST.MASK_PLAYERSOLID
 	}
 	TraceHull(trace)
 

@@ -61,7 +61,7 @@ if (!("ScriptUnloadTable" in ROOT))
 		function OnGameEvent_player_changeclass(params) { foreach (_, func in MissionAttributes.ChangeClassTable) func(params) }
 		function OnGameEvent_player_team(params) {
 			local player = GetPlayerFromUserID(params.userid)
-			if (!player.IsBotOfType(1337) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
+			if (!player.IsBotOfType(TF_BOT_TYPE) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
 			{
 				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", -1, null, null)
 				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", SINGLE_TICK, null, null)
@@ -230,7 +230,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 			traceWorld <- {
 				start = origin,
 				end = origin - Vector(0, 0, 50000)
-				mask = MASK_SOLID_BRUSHONLY
+				mask = CONST.MASK_SOLID_BRUSHONLY
 			}
 
 			TraceLineEx(traceWorld)
@@ -321,11 +321,11 @@ function MissionAttributes::MissionAttr(...) {
 			// Error Handling
 		try (value.tointeger()) catch(_) {RaiseTypeError(attr, "int"); success = false; break}
 		if (type(value) != "integer") {RaiseTypeError(attr, "int"); success = false; break}
-		if (value < 0 || value > 11) {RaiseIndexError(attr, [0, 11]); success = false; break}
+		if (value < kHoliday_None || value >= kHolidayCount) {RaiseIndexError(attr, [kHoliday_None, kHolidayCount - 1]); success = false; break}
 
 		// Set Holiday logic
 		SetConvar("tf_forced_holiday", value)
-		if (value == 0) break
+		if (value == kHoliday_None) break
 
 		local ent = FindByName(null, "MissionAttrHoliday");
 		if (ent != null) ent.Kill();
@@ -346,7 +346,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.RedBotsNoRandomCrit <- function(params)
 		{
 			local player = GetPlayerFromUserID(params.userid)
-			if (!player.IsBotOfType(1337) && player.GetTeam() != TF_TEAM_PVE_DEFENDERS) return
+			if (!player.IsBotOfType(TF_BOT_TYPE) && player.GetTeam() != TF_TEAM_PVE_DEFENDERS) return
 
 			PopExtUtil.AddAttributeToLoadout(player, "crit mod disabled hidden", 0)
 		}
@@ -400,7 +400,7 @@ function MissionAttributes::MissionAttr(...) {
 		local movekeys = IN_FORWARD | IN_BACK | IN_LEFT | IN_RIGHT
 		MissionAttributes.SpawnHookTable.StandableHeads <- function(params) {
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			player.GetScriptScope().PlayerThinkTable.StandableHeads <- function() {
 				local groundent = GetPropEntity(player, "m_hGroundEntity")
@@ -467,7 +467,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.MultiSapper <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337) || player.GetPlayerClass() < TF_CLASS_SPY) return
+			if (player.IsBotOfType(TF_BOT_TYPE) || player.GetPlayerClass() < TF_CLASS_SPY) return
 
 			player.GetScriptScope().BuiltObjectTable.MultiSapper <- function(params) {
 				if (params.object != OBJ_ATTACHMENT_SAPPER) return
@@ -872,7 +872,7 @@ function MissionAttributes::MissionAttr(...) {
 
 				EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", PopExtUtil.Classes[player.GetPlayerClass()]), -1, null, null)
 				SetPropInt(player, "m_clrRender", 0xFFFFFF)
-				SetPropInt(player, "m_nRenderMode", 0)
+				SetPropInt(player, "m_nRenderMode", kRenderNormal)
 			}
 			delete ScriptLoadTable.PlayersAreRobotsReset
 		}
@@ -880,7 +880,7 @@ function MissionAttributes::MissionAttr(...) {
 
 		MissionAttributes.SpawnHookTable.PlayersAreRobots <- function(params) {
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -936,7 +936,7 @@ function MissionAttributes::MissionAttr(...) {
 						if (ent.GetEFlags() & EFL_USER) continue
 						ent.AddEFlags(EFL_USER)
 						local owner = GetPropEntity(ent, "m_hOwner")
-						if (owner != null && !owner.IsBotOfType(1337)) {
+						if (owner != null && !owner.IsBotOfType(TF_BOT_TYPE)) {
 
 							local vcdpath = GetPropString(ent, "m_szInstanceFilename");
 							if (!vcdpath || vcdpath == "") return -1
@@ -1015,7 +1015,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.BotsAreHumans <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (!player.IsBotOfType(1337)) return
+			if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
 			MissionAttributes.HumanModel <- function(player)
 			{
@@ -1061,7 +1061,7 @@ function MissionAttributes::MissionAttr(...) {
 			local bot = GetPlayerFromUserID(params.userid)
 
 			EntFireByHandle(bot, "RunScriptCode", @"
-				if (self.IsBotOfType(1337))
+				if (self.IsBotOfType(TF_BOT_TYPE))
 					// if (!self.HasBotTag(`popext_forceromevision`)) //handle these elsewhere
 						for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
 							if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
@@ -1081,7 +1081,7 @@ function MissionAttributes::MissionAttr(...) {
 				}
 
 			}
-			SetPropIntArray(carrier, "m_nModelIndexOverrides", carrierPartsIndex, 3)
+			SetPropIntArray(carrier, "m_nModelIndexOverrides", carrierPartsIndex, VISION_MODE_ROME)
 			noromecarrier = true
 		}
 	break
@@ -1095,9 +1095,9 @@ function MissionAttributes::MissionAttr(...) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
-			if (!bot.IsBotOfType(1337) || bot.IsMiniBoss()) return
+			if (!bot.IsBotOfType(TF_BOT_TYPE) || bot.IsMiniBoss()) return
 
-			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
+			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = TF_TEAM_PVE_DEFENDERS tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
 		}
 
 	break
@@ -1111,9 +1111,9 @@ function MissionAttributes::MissionAttr(...) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
-			if (!bot.IsBotOfType(1337) || !bot.IsMiniBoss()) return
+			if (!bot.IsBotOfType(TF_BOT_TYPE) || !bot.IsMiniBoss()) return
 
-			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
+			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = TF_TEAM_PVE_DEFENDERS tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
 		}
 
 	break
@@ -1127,9 +1127,9 @@ function MissionAttributes::MissionAttr(...) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
-			if (!bot.IsBotOfType(1337) || bot.IsMiniBoss()) return
+			if (!bot.IsBotOfType(TF_BOT_TYPE) || bot.IsMiniBoss()) return
 
-			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })
+			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = TF_TEAM_PVE_DEFENDERS tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })
 		}
 
 	break
@@ -1143,9 +1143,9 @@ function MissionAttributes::MissionAttr(...) {
 			if (RandomFloat(0, 1) > value) return
 
 			local bot = GetPlayerFromUserID(params.userid)
-			if (!bot.IsBotOfType(1337) || !bot.IsMiniBoss()) return
+			if (!bot.IsBotOfType(TF_BOT_TYPE) || !bot.IsMiniBoss()) return
 
-			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = 2 tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })
+			local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = TF_TEAM_PVE_DEFENDERS tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })
 		}
 
 	break
@@ -1166,7 +1166,7 @@ function MissionAttributes::MissionAttr(...) {
 			// m_hThrower does not change when the skeletons split for spell-casted skeles, just need to kill them after spawning
 			for (local skeles; skeles = FindByClassname(skeles, "tf_zombie");  ) {
 				//kill blu split skeles
-				if (skeles.GetModelScale() == 0.5 && (skeles.GetOwner() == null || skeles.GetOwner().IsBotOfType(1337))) {
+				if (skeles.GetModelScale() == 0.5 && (skeles.GetOwner() == null || skeles.GetOwner().IsBotOfType(TF_BOT_TYPE))) {
 					EntFireByHandle(skeles, "Kill", "", -1, null, null)
 					return
 				}
@@ -1255,7 +1255,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.HandModelOverride <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -1307,7 +1307,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.AddCond <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			if (typeof value == "array") {
 
@@ -1339,7 +1339,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.PlayerAttributes <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			if (typeof value != "table") {
 				this.RaiseValueError("PlayerAttributes", value, "Value must be table")
@@ -1359,7 +1359,7 @@ function MissionAttributes::MissionAttr(...) {
 				if (!(tfclass in value)) continue
 				local table = value[tfclass]
 				foreach (k, v in table) {
-					if (k in CustomAttributes.Attrs && !player.IsBotOfType(1337))
+					if (k in CustomAttributes.Attrs && !player.IsBotOfType(TF_BOT_TYPE))
 						CustomAttributes.AddAttr(player, k, v, player.GetActiveWeapon())
 					else {
 						local valformat = ""
@@ -1394,7 +1394,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.ItemAttributes <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			if (typeof value != "table") {
 				this.RaiseValueError("ItemAttributes", value, "Value must be table")
@@ -1450,7 +1450,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.LoadoutControl <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -1765,9 +1765,9 @@ function MissionAttributes::MissionAttr(...) {
 
 			foreach (player in PopExtUtil.PlayerArray)
 			{
-				if (!( (value & 1 && player.GetTeam() == TF_TEAM_PVE_INVADERS && !player.IsBotOfType(1337)) ||
-					   (value & 2 && player.GetTeam() == TF_TEAM_PVE_INVADERS && player.IsBotOfType(1337))  ||
-					   (value & 4 && player.GetTeam() == TF_TEAM_PVE_DEFENDERS && player.IsBotOfType(1337)) ))
+				if (!( (value & 1 && player.GetTeam() == TF_TEAM_PVE_INVADERS && !player.IsBotOfType(TF_BOT_TYPE)) ||
+					   (value & 2 && player.GetTeam() == TF_TEAM_PVE_INVADERS && player.IsBotOfType(TF_BOT_TYPE))  ||
+					   (value & 4 && player.GetTeam() == TF_TEAM_PVE_DEFENDERS && player.IsBotOfType(TF_BOT_TYPE)) ))
 					continue
 
 				player.ValidateScriptScope()
@@ -1848,7 +1848,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.DeathHookTable.EnableRandomCritsKill <- function(params) {
 
 			local attacker = GetPlayerFromUserID(params.attacker)
-			if (attacker == null || !attacker.IsBotOfType(1337)) return
+			if (attacker == null || !attacker.IsBotOfType(TF_BOT_TYPE)) return
 
 			attacker.ValidateScriptScope()
 			local scope = attacker.GetScriptScope()
@@ -1869,7 +1869,7 @@ function MissionAttributes::MissionAttr(...) {
 			if (!("inflictor" in params)) return
 
 			local attacker = params.inflictor
-			if (attacker == null || !attacker.IsPlayer() || !attacker.IsBotOfType(1337)) return
+			if (attacker == null || !attacker.IsPlayer() || !attacker.IsBotOfType(TF_BOT_TYPE)) return
 
 			attacker.ValidateScriptScope()
 			local scope = attacker.GetScriptScope()
@@ -1922,7 +1922,7 @@ function MissionAttributes::MissionAttr(...) {
 			local max_team_size = 6
 			foreach (player in PopExtUtil.HumanArray) {
 
-				if (player_count + 1 > max_team_size && player.GetTeam() != TEAM_SPECTATOR && !player.IsBotOfType(1337)) {
+				if (player_count + 1 > max_team_size && player.GetTeam() != TEAM_SPECTATOR && !player.IsBotOfType(TF_BOT_TYPE)) {
 					player.ForceChangeTeam(TEAM_SPECTATOR, false)
 					continue
 				}
@@ -1941,7 +1941,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.ReverseMVMSpawn <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
@@ -2302,7 +2302,7 @@ function MissionAttributes::MissionAttr(...) {
 					else if (classname == "tf_weapon_mechanical_arm") {
 						// Reset hack
 						SetPropIntArray(self, "m_iAmmo", 0, TF_AMMO_GRENADES1)
-						SetPropInt(wep, "m_iPrimaryAmmoType", 3)
+						SetPropInt(wep, "m_iPrimaryAmmoType", TF_AMMO_METAL)
 
 						local nextattack1 = GetPropFloat(wep, "m_flNextPrimaryAttack")
 						local nextattack2 = GetPropFloat(wep, "m_flNextSecondaryAttack")
@@ -2444,7 +2444,7 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.ChangeClassTable.ClassLimits <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(1337)) return
+			if (player.IsBotOfType(TF_BOT_TYPE)) return
 			// Note that player_changeclass fires before swap occurs
 			// This means that GetPlayerClass() can be used to get the previous player class,
 			//  and that PopExtUtil::PlayerClassCount() will return the current class array.

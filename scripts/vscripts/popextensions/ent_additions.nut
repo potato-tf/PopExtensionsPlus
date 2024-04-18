@@ -12,7 +12,7 @@ function OnPostSpawn()
     if (endswith(classname, "_button"))
     {
         //https://github.com/ValveSoftware/source-sdk-2013/pull/401
-        if (GetPropInt(self, "m_spawnflags") & 2048)
+        if (GetPropInt(self, "m_spawnflags") & SF_BUTTON_LOCKED)
             SetPropBool(self, "m_bLocked", true)
 
         //add non-solid spawnflag to func_button

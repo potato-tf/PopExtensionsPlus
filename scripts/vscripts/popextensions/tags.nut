@@ -9,7 +9,7 @@ local popext_funcs = {
 
 	popext_addcond = function(bot, args) {
 		if (args.len() == 1) {
-			if (args[0].tointeger() == 43) {
+			if (args[0].tointeger() == TF_COND_REPROGRAMMED) {
 				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
 				// PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
 				// 	if (!IsPlayerABot(bot)) return
@@ -243,7 +243,7 @@ local popext_funcs = {
 		EntFireByHandle(bot, "RunScriptCode", @"
 			local killrome = []
 
-			if (self.IsBotOfType(1337))
+			if (self.IsBotOfType(TF_BOT_TYPE))
 				for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
 					if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
 						killrome.append(child)
@@ -1147,7 +1147,7 @@ local popext_funcs = {
 	function OnGameEvent_player_death(params) {
 
 		local bot = GetPlayerFromUserID(params.userid)
-		if (!bot.IsBotOfType(1337)) return
+		if (!bot.IsBotOfType(TF_BOT_TYPE)) return
 
 		local scope = bot.GetScriptScope()
 		bot.ClearAllBotTags()
