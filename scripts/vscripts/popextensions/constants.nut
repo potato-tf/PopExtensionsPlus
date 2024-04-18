@@ -1,19 +1,19 @@
-// Allow expression constants
-::CONST <- getconsttable()
-
-//my disappointment is immeasureable, and my day is ruined.
-
 //"reminder that constants are resolved at preprocessor level and not runtime"
 //"if you add them dynamically to the table they wont show up until you execute a new script as the preprocessor isnt aware yet"
 
-//the performance difference here is not worth refactoring everything around using the constant table so whatever
+//fold into both const and root table to work around this.
 
+::CONST <- getconsttable()
 ::ROOT <- getroottable()
 
 if (!("ConstantNamingConvention" in ROOT)) {
+
 	foreach(a, b in Constants)
 		foreach(k, v in b)
+		{
+			CONST[k] <- v != null ? v : 0
 			ROOT[k] <- v != null ? v : 0
+		}
 }
 
 CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
