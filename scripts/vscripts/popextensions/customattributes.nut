@@ -1646,7 +1646,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
 		case "noclip projectile":
             CustomAttributes.NoclipProjectile(player, item, value)
-            scope.attribinfo[attr] <- "projectiles penetrate walls"
+            scope.attribinfo[attr] <- "projectiles go through walls and enemies harmlessly"
 		break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
