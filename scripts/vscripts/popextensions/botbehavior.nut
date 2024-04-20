@@ -273,11 +273,6 @@ class AI_Bot {
 		path_areas.clear()
 		path.clear()
 		path_index = 0
-
-		local kill = []
-		for (local rope; rope = FindByName(rope, "__rope");) kill.append(rope)
-
-		foreach (k in kill) k.Kill()
 	}
 	function UpdatePathAndMove(target_pos)
 	{
