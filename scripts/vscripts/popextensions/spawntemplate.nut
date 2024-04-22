@@ -205,7 +205,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 							//if origin is a string, construct vectors to perform math on them if needed
 							if (typeof(keyvalues.origin) == "string") {
 								local buf = keyvalues.origin.find(",") ? split(keyvalues.origin, ",") : split(keyvalues.origin, " ")
-								keyvalues.origin = Vector(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger())
+								keyvalues.origin = Vector(buf[0].tofloat(), buf[1].tofloat(), buf[2].tofloat())
 							}
 							keyvalues.origin += origin
 						}
@@ -215,7 +215,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 							//if angles is a string, construct qangles to perform math on them if needed
 							if (typeof(keyvalues.angles) == "string") {
 								local buf = keyvalues.angles.find(",") ? split(keyvalues.angles, ",") : split(keyvalues.angles, " ")
-								keyvalues.angles = QAngle(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger())
+								keyvalues.angles = QAngle(buf[0].tofloat(), buf[1].tofloat(), buf[2].tofloat())
 							}
 							keyvalues.angles += angles
 						}
