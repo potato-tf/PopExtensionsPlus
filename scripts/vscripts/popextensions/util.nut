@@ -554,7 +554,7 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePref
 		y = 0.3
 	})
 	SetPropBool(txtent, "m_bForcePurgeFixedupStrings", true)
-	SetTargetname(txtent, format("__ExplanationText%d",txtent.entindex()))
+	SetTargetname(txtent, format("__utilExplanationText%d",txtent.entindex()))
 	local strarray = []
 
 	//avoid needing to do a ton of function calls for multiple announcements.
@@ -564,7 +564,7 @@ function PopExtUtil::Explanation(message, printColor = COLOR_YELLOW, messagePref
 		if (n.len() > 0) {
 			strarray.append(n)
 			if (!startswith(n, "PAUSE") && !syncChatWithGameText)
-				ClientPrint(null, 3, format("\x07%s %s\x07%s %s", COLOR_YELLOW, messagePrefix, TF_COLOR_DEFAULT, n))
+				ClientPrint(null, 3, format("\x07%s %s\x07%s %s", printColor, messagePrefix, TF_COLOR_DEFAULT, n))
 		}
 
 	local i = -1

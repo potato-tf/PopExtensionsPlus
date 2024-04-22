@@ -638,16 +638,19 @@ local popext_funcs = {
 	popext_rocketcustomtrail = function (bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.ProjectileTrailThink <- function() {
+
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
+
 				if (projectile.GetEFlags() & EFL_NO_ROTORWASH_PUSH || GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
 
 				if (args.len() > 1) EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
-				// EntFireByHandle(projectile, "RunScriptCode", format("DispatchParticleEffect(`%s`, self.GetOrigin(), self.GetAngles())", args[0]), SINGLE_TICK, null, null)
+				
 				local particle = SpawnEntityFromTable("trigger_particle", {
 					particle_name = args[0],
 					attachment_type = PATTACH_ABSORIGIN_FOLLOW,
 					spawnflags = SF_TRIGGER_ALLOW_ALL
 				})
+
 				EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)
 				EntFireByHandle(particle, "Kill", "", -1, null, null)
 				projectile.AddEFlags(EFL_NO_ROTORWASH_PUSH)
@@ -665,9 +668,9 @@ local popext_funcs = {
 		local org = split(args[0], " ")
 
 		if (FindByClassname(null, args[0]) != null)
-			bot.Teleport(true, FindByClassname(null, args[0]).GetOrigin(), true, QAngle(), true, bot.GetAbsVelocity())
+			bot.Teleport(true, FindByClassname(null, args[0]).GetOrigin(), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
 		else
-			bot.Teleport(true, Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()), true, QAngle(), true, bot.GetAbsVelocity())
+			bot.Teleport(true, Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
 
 		if (args.len() < 2) return
 
