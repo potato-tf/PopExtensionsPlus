@@ -433,7 +433,7 @@ def convertpointtemplates(pop, indentationnumber, depth):
 				index += 1
 			else:
 				if key.lower() == "pointtemplates":
-					print("PointTemplates <- ")
+					print("::PointTemplates <- ")
 				else:
 					print(key, end = ' =\n')
 				print('\t' * indentationnumber, end = '{\n')
@@ -518,7 +518,7 @@ def convertspawntemplates(pop):
 	funcs = []
 	for template in stemplates:
 		if len(template) < 1: continue
-		func = f'SpawnTemplates.SpawnTemplate({template["Name"]}, null'
+		func = f'SpawnTemplates.SpawnTemplate(PointTemplates[{template["Name"]}], null'
 		if 'Origin' in template:
 			func = func + f', {template["Origin"]}'
 		if 'Angles' in template:
