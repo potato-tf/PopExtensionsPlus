@@ -1,7 +1,7 @@
 popExtEntity <- FindByName(null, "_popext")
-if (popExtEntity == null) {
+if (popExtEntity == null)
 	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popext" })
-}
+
 
 popExtEntity.ValidateScriptScope()
 PopExt <- popExtEntity.GetScriptScope()
@@ -422,7 +422,7 @@ function PopulatorThink() {
 				}
 
 				if ("SpawnTemplate" in scope.popProperty) {
-					SpawnTemplates.SpawnTemplate(scope.SpawnTemplate, tank, tank.GetOrigin(), tank.GetLocalAngles())
+					SpawnTemplates.SpawnTemplate(scope.popProperty.SpawnTemplate, tank, tank.GetOrigin(), tank.GetLocalAngles())
 					delete scope.popProperty.SpawnTemplate
 				}
 				if ("DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {

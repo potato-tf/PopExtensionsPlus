@@ -97,7 +97,7 @@ if (!("ScriptUnloadTable" in ROOT))
 					{
 						StopSoundOn(sound, player)
 						if (override == null) continue
-						EmitSoundEx({sound_name = MissionAttributes.SoundsToReplace[override], entity = player})
+						EmitSoundEx({sound_name = MissionAttributes.SoundsToReplace[sound], entity = player})
 					}
 			}
 
@@ -324,7 +324,7 @@ function MissionAttributes::MissionAttr(...) {
 		if (value < kHoliday_None || value >= kHolidayCount) {RaiseIndexError(attr, [kHoliday_None, kHolidayCount - 1]); success = false; break}
 
 		// Set Holiday logic
-		SetConvar("tf_forced_holiday", value)
+		this.SetConvar("tf_forced_holiday", value)
 		if (value == kHoliday_None) break
 
 		local ent = FindByName(null, "MissionAttrHoliday");
@@ -390,6 +390,22 @@ function MissionAttributes::MissionAttr(...) {
 		}
 
 	break
+
+	
+	// ====================
+	// set all mobber cvars
+	// ====================
+
+	case "AllMobber":
+
+		if (value < 1) return
+
+		this.SetConvar("tf_bot_escort_range", INT_MAX)
+		this.SetConvar("tf_bot_flag_escort_range", INT_MAX)
+		this.SetConvar("tf_bot_flag_escort_max_count", 0)
+
+	break
+
 
 	// ===========================
 	// allow standing on bot heads
@@ -482,58 +498,58 @@ function MissionAttributes::MissionAttr(...) {
 	//all of these could just be set directly in the pop easily, however popfile's have a 4096 character limit for vscript so might as well save space
 
 	case "NoRefunds":
-		SetConvar("tf_mvm_respec_enabled", 0);
+		this.SetConvar("tf_mvm_respec_enabled", 0);
 	break
 
 	// =========================================================
 
 	case "RefundLimit":
-		SetConvar("tf_mvm_respec_enabled", 1)
-		SetConvar("tf_mvm_respec_limit", value)
+		this.SetConvar("tf_mvm_respec_enabled", 1)
+		this.SetConvar("tf_mvm_respec_limit", value)
 	break
 
 	// =========================================================
 
 	case "RefundGoal":
-		SetConvar("tf_mvm_respec_enabled", 1)
-		SetConvar("tf_mvm_respec_credit_goal", value)
+		this.SetConvar("tf_mvm_respec_enabled", 1)
+		this.SetConvar("tf_mvm_respec_credit_goal", value)
 	break
 
 	// =========================================================
 
 	case "FixedBuybacks":
-		SetConvar("tf_mvm_buybacks_method", 1)
+		this.SetConvar("tf_mvm_buybacks_method", 1)
 	break
 
 	// =========================================================
 
 	case "BuybacksPerWave":
-		SetConvar("tf_mvm_buybacks_per_wave", value)
+		this.SetConvar("tf_mvm_buybacks_per_wave", value)
 	break
 
 	// =========================================================
 
 	case "NoBuybacks":
-		SetConvar("tf_mvm_buybacks_method", value)
-		SetConvar("tf_mvm_buybacks_per_wave", 0)
+		this.SetConvar("tf_mvm_buybacks_method", value)
+		this.SetConvar("tf_mvm_buybacks_per_wave", 0)
 	break
 
 	// =========================================================
 
 	case "DeathPenalty":
-		SetConvar("tf_mvm_death_penalty", value)
+		this.SetConvar("tf_mvm_death_penalty", value)
 	break
 
 	// =========================================================
 
 	case "BonusRatioHalf":
-		SetConvar("tf_mvm_currency_bonus_ratio_min", value)
+		this.SetConvar("tf_mvm_currency_bonus_ratio_min", value)
 	break
 
 	// =========================================================
 
 	case "BonusRatioFull":
-		SetConvar("tf_mvm_currency_bonus_ratio_max", value)
+		this.SetConvar("tf_mvm_currency_bonus_ratio_max", value)
 	break
 
 	// =========================================================
@@ -545,151 +561,151 @@ function MissionAttributes::MissionAttr(...) {
 	// =========================================================
 
 	case "FlagEscortCount":
-		SetConvar("tf_bot_flag_escort_max_count", value)
+		this.SetConvar("tf_bot_flag_escort_max_count", value)
 	break
 
 	// =========================================================
 
 	case "BombMovementPenalty":
-		SetConvar("tf_mvm_bot_flag_carrier_movement_penalty", value)
+		this.SetConvar("tf_mvm_bot_flag_carrier_movement_penalty", value)
 	break
 
 	// =========================================================
 
 	case "MaxSkeletons":
-		SetConvar("tf_max_active_zombie", value)
+		this.SetConvar("tf_max_active_zombie", value)
 	break
 
 	// =========================================================
 
 	case "TurboPhysics":
-		SetConvar("sv_turbophysics", value)
+		this.SetConvar("sv_turbophysics", value)
 	break
 
 	// =========================================================
 
 	case "Accelerate":
-		SetConvar("sv_accelerate", value)
+		this.SetConvar("sv_accelerate", value)
 	break
 
 	// =========================================================
 
 	case "AirAccelerate":
-		SetConvar("sv_airaccelerate", value)
+		this.SetConvar("sv_airaccelerate", value)
 	break
 
 	// =========================================================
 
 	case "BotPushaway":
-		SetConvar("tf_avoidteammates_pushaway", value)
+		this.SetConvar("tf_avoidteammates_pushaway", value)
 	break
 
 	// =========================================================
 
 	case "TeleUberDuration":
-		SetConvar("tf_mvm_engineer_teleporter_uber_duration", value)
+		this.SetConvar("tf_mvm_engineer_teleporter_uber_duration", value)
 	break
 
 	// =========================================================
 
 	case "RedMaxPlayers":
-		SetConvar("tf_mvm_defenders_team_size", value)
+		this.SetConvar("tf_mvm_defenders_team_size", value)
 	break
 
 	// =========================================================
 
 	case "MaxVelocity":
-		SetConvar("sv_maxvelocity", value)
+		this.SetConvar("sv_maxvelocity", value)
 	break
 
 	// =========================================================
 
 	case "ConchHealthOnHitRegen":
-		SetConvar("tf_dev_health_on_damage_recover_percentage", value)
+		this.SetConvar("tf_dev_health_on_damage_recover_percentage", value)
 	break
 
 	// =========================================================
 
 	case "MarkForDeathLifetime":
-		SetConvar("tf_dev_marked_for_death_lifetime", value)
+		this.SetConvar("tf_dev_marked_for_death_lifetime", value)
 	break
 
 	// =========================================================
 
 	case "GrapplingHookEnable":
-		SetConvar("tf_grapplinghook_enable", value)
+		this.SetConvar("tf_grapplinghook_enable", value)
 	break
 
 	// =========================================================
 
 	case "GiantScale":
-		SetConvar("tf_mvm_miniboss_scale", value)
+		this.SetConvar("tf_mvm_miniboss_scale", value)
 	break
 
 	// =========================================================
 
 	case "VacNumCharges":
-		SetConvar("weapon_medigun_resist_num_chunks", value)
+		this.SetConvar("weapon_medigun_resist_num_chunks", value)
 	break
 
 	// =========================================================
 
 	case "DoubleDonkWindow":
-		SetConvar("tf_double_donk_window", value)
+		this.SetConvar("tf_double_donk_window", value)
 	break
 
 	// =========================================================
 
 	case "ConchSpeedBoost":
-		SetConvar("tf_whip_speed_increase", value)
+		this.SetConvar("tf_whip_speed_increase", value)
 	break
 
 	// =========================================================
 
 	case "StealthDmgReduction":
-		SetConvar("tf_stealth_damage_reduction", value)
+		this.SetConvar("tf_stealth_damage_reduction", value)
 	break
 
 	// =========================================================
 
 	case "FlagCarrierCanFight":
-		SetConvar("tf_mvm_bot_allow_flag_carrier_to_fight", value)
+		this.SetConvar("tf_mvm_bot_allow_flag_carrier_to_fight", value)
 	break
 
 	// =========================================================
 
 	case "HHHChaseRange":
-		SetConvar("tf_halloween_bot_chase_range", value)
+		this.SetConvar("tf_halloween_bot_chase_range", value)
 	break
 
 	// =========================================================
 
 	case "HHHAttackRange":
-		SetConvar("tf_halloween_bot_attack_range", value)
+		this.SetConvar("tf_halloween_bot_attack_range", value)
 	break
 
 	// =========================================================
 
 	case "HHHQuitRange":
-		SetConvar("tf_halloween_bot_quit_range", value)
+		this.SetConvar("tf_halloween_bot_quit_range", value)
 	break
 
 	// =========================================================
 
 	case "HHHTerrifyRange":
-		SetConvar("tf_halloween_bot_terrify_radius", value)
+		this.SetConvar("tf_halloween_bot_terrify_radius", value)
 	break
 
 	// =========================================================
 
 	case "HHHHealthBase":
-		SetConvar("tf_halloween_bot_health_base", value)
+		this.SetConvar("tf_halloween_bot_health_base", value)
 	break
 
 	// =========================================================
 
 	case "HHHHealthPerPlayer":
-		SetConvar("tf_halloween_bot_health_per_player", value)
+		this.SetConvar("tf_halloween_bot_health_per_player", value)
 	break
 
 	// =========================================================
@@ -701,26 +717,26 @@ function MissionAttributes::MissionAttr(...) {
 	// =========================================================
 
 	case "SentryHintBombForwardRange":
-		SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_forward_range", value)
+		this.SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_forward_range", value)
 	break
 
 	// =========================================================
 
 	case "SentryHintBombBackwardRange":
-		SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_backward_range", value)
+		this.SetConvar("tf_bot_engineer_mvm_sentry_hint_bomb_backward_range", value)
 	break
 
 	// =========================================================
 
 	case "SentryHintMinDistanceFromBomb":
-		SetConvar("tf_bot_engineer_mvm_hint_min_distance_from_bomb", value)
+		this.SetConvar("tf_bot_engineer_mvm_hint_min_distance_from_bomb", value)
 	break
 
 	// =========================================================
 
 	case "NoBusterFF":
 		if (value != 1 || value != 0 ) RaiseIndexError(attr)
-		SetConvar("tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1)
+		this.SetConvar("tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1)
 	break
 
 	// =========================================================
@@ -1090,7 +1106,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "SpellRateCommon":
 
-		SetConvar("tf_spells_enabled", 1)
+		this.SetConvar("tf_spells_enabled", 1)
 		MissionAttributes.DeathHookTable.SpellRateCommon <- function(params) {
 			if (RandomFloat(0, 1) > value) return
 
@@ -1106,7 +1122,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "SpellRateGiant":
 
-		SetConvar("tf_spells_enabled", 1)
+		this.SetConvar("tf_spells_enabled", 1)
 		MissionAttributes.DeathHookTable.SpellRateGiant <- function(params) {
 			if (RandomFloat(0, 1) > value) return
 
@@ -1122,7 +1138,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "RareSpellRateCommon":
 
-		SetConvar("tf_spells_enabled", 1)
+		this.SetConvar("tf_spells_enabled", 1)
 		MissionAttributes.DeathHookTable.RareSpellRateCommon <- function(params) {
 			if (RandomFloat(0, 1) > value) return
 
@@ -1138,7 +1154,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "RareSpellRateGiant":
 
-		SetConvar("tf_spells_enabled", 1)
+		this.SetConvar("tf_spells_enabled", 1)
 		MissionAttributes.DeathHookTable.RareSpellRateGiant <- function(params) {
 			if (RandomFloat(0, 1) > value) return
 
@@ -1629,40 +1645,53 @@ function MissionAttributes::MissionAttr(...) {
 			"MVM.PlayerDied": null
 		}
 
-		local BroadcastAudioSounds = {
+		// local BroadcastAudioSounds = {
 
-			"Game.YourTeamWon": null
-			"MVM.Warning": null
-			"music.mvm_end_last_wave": null
-			"music.mvm_end_tank_wave": null
-			"Announcer.MVM_Final_Wave_End": null
-			"Announcer.MVM_Get_To_Upgrade": null
-			"Announcer.MVM_Robots_Planted": null
-			"Announcer.MVM_Final_Wave_End": null
-			"Announcer.MVM_Tank_Alert_Spawn": null
-			"Announcer.MVM_Tank_Alert_Another": null
-			"Announcer.MVM_An_Engineer_Bot_Is_Dead": null
-			"Announcer.MVM_An_Engineer_Bot_Is_Dead_But_Not_Teleporter": null
-		}
+		// 	"Game.YourTeamWon": null
+		// 	"MVM.Warning": null
+		// 	"music.mvm_end_last_wave": null
+		// 	"music.mvm_end_tank_wave": null
+		// 	"Announcer.MVM_Final_Wave_End": null
+		// 	"Announcer.MVM_Get_To_Upgrade": null
+		// 	"Announcer.MVM_Robots_Planted": null
+		// 	"Announcer.MVM_Final_Wave_End": null
+		// 	"Announcer.MVM_Tank_Alert_Spawn": null
+		// 	"Announcer.MVM_Tank_Alert_Another": null
+		// 	"Announcer.MVM_An_Engineer_Bot_Is_Dead": null
+		// 	"Announcer.MVM_An_Engineer_Bot_Is_Dead_But_Not_Teleporter": null
+		// }
 
 		//teamplay_broadcast_audio overrides
 		foreach (sound, override in value)
+		{
+			PrecacheSound(sound)
+			PrecacheScriptSound(sound)
+
+			if (override != null)
+			{
+				PrecacheSound(override)
+				PrecacheScriptSound(override)
+			}
 			MissionAttributes.SoundsToReplace[sound] <- override
+		}
 
 		//sounds played on bot death (giant/buster explosions)
-		MissionAttributes.TakeDamageTable.SoundOverrides <- function(params) {
-			local victim = params.const_entity
+		MissionAttributes.TakeDamageTablePost.SoundOverrides <- function(params) {
 
-			if (params.damage < victim.GetHealth()) return
+			local victim = GetPlayerFromUserID(params.userid)
+			// local victim = params.const_entity
+
+			// if (!victim.IsPlayer() || params.damage < victim.GetHealth()) return
+			if (params.damageamount < victim.GetHealth()) return
 
 			foreach (sound, override in value)
 			{
 				if (sound in DeathSounds)
 				{
 					StopSoundOn(sound, victim)
-					victim.StopSound(sound)
+					// victim.StopSound(sound)
 
-					if (override == null) return
+					if (override == null) continue
 
 					EmitSoundEx({sound_name = override, entity = victim})
 				}

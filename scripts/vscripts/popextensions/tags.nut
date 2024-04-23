@@ -27,7 +27,8 @@ local popext_funcs = {
 
 	popext_reprogrammed = function(bot, args) {
 
-		EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)", -1, null, null)
+		// EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)", -1, null, null)
+		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
 	}
 
 	// popext_reprogrammed_neutral = function(bot, args) {
@@ -97,8 +98,8 @@ local popext_funcs = {
 		if (args.len() == 1) args.append(-1)
 		local slot = args[1].tointeger()
 
-		if (slot == -1) slot = player.GetActiveWeapon().GetSlot()
-		PopExtUtil.GetItemInSlot(player, slot).Kill()
+		if (slot == -1) slot = bot.GetActiveWeapon().GetSlot()
+		PopExtUtil.GetItemInSlot(bot, slot).Kill()
 	}
 
 	popext_fireweapon = function(bot, args) {
@@ -665,12 +666,14 @@ local popext_funcs = {
 
 	popext_spawnhere = function(bot, args) {
 
-		local org = split(args[0], " ")
-
-		if (FindByClassname(null, args[0]) != null)
-			bot.Teleport(true, FindByClassname(null, args[0]).GetOrigin(), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
+		if (FindByName(null, args[0]) != null)
+			bot.Teleport(true, FindByName(null, args[0]).GetOrigin(), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
 		else
-			bot.Teleport(true, Vector(org[0].tofloat(), org[1].tofloat(), org[2].tofloat()), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
+		{
+			local org = split(args[0], " ")
+			org.apply(function(val) { return val.tofloat()})
+			bot.Teleport(true, Vector(org[0], org[1], org[2]), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
+		}
 
 		if (args.len() < 2) return
 

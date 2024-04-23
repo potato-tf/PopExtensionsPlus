@@ -5,12 +5,12 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 ::SpawnTemplates <- {
 	//spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
-	function SpawnTemplate(pointtemplate, parent = null, origin = Vector(), angles = QAngle()) {
-		
+	function SpawnTemplate(pointtemplate, parent = null, origin = "0 0 0", angles = "0 0 0") {
 		// credit to ficool2
 		PopExt.globalTemplateSpawnCount <- PopExt.globalTemplateSpawnCount + 1
 
-		local template = SpawnEntityFromTable("point_script_template", {})
+		local template = CreateByClassname("point_script_template") 
+		DispatchSpawn(template)
 		local scope = template.GetScriptScope()
 
 		local nofixup = false
@@ -22,7 +22,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 		scope.EntityFixedUpTargetName <- []
 		scope.OnSpawnOutputArray <- []
 		scope.OnParentKilledOutputArray <- []
-		scope.SpawnedEntities <- []
+		scope.SpawnedEntities <- {}
 
 		scope.__EntityMakerResult <- {
 			entities = scope.Entities
@@ -37,11 +37,33 @@ PopExt.globalTemplateSpawnCount   <- 0
 				local responsecontext = GetPropString(entity, "m_iszResponseContext")
 				local buf = responsecontext.find(",") ? split(responsecontext, ",") : split(responsecontext, " ")
 				if (buf.len() == 6) {
-					entity.SetSize(Vector(buf[0].tointeger(), buf[1].tointeger(), buf[2].tointeger()), Vector(buf[3].tointeger(), buf[4].tointeger(), buf[5].tointeger()))
+					buf.apply( function(val) { return val.tofloat() })
+					entity.SetSize(Vector(buf[0], buf[1], buf[2]), Vector(buf[3], buf[4], buf[5]))
 					entity.SetSolid(2)
 				}
 
-				scope.SpawnedEntities.append(entity)
+				scope.SpawnedEntities[entity] <- [origin, angles]
+
+				if (origin != "0 0 0" || angles != " 0 0 0")
+				{
+					foreach(k, v in SpawnedEntities) 
+					{
+						if (origin != "0 0 0")
+						{
+							local orgbuf = v[0].find(",") ? split(v[0], ",") : split(v[0], " ")
+							orgbuf.apply(function (val) { return val.tofloat()})
+							k.SetOrigin(Vector(orgbuf[0], orgbuf[1], orgbuf[2]))
+						}
+
+						if (angles != "0 0 0")
+						{
+							local angbuf = v[1].find(",") ? split(v[1], ",") : split(v[1], " ")
+							angbuf.apply(function (val) { return val.tofloat()})
+							k.SetAbsAngles(QAngle(angbuf[0], angbuf[1], angbuf[2]))
+						}
+					}
+				}
+				
 				PopExt.wavePointTemplates.append(entity)
 
 				if (parent != null) {
@@ -205,9 +227,10 @@ PopExt.globalTemplateSpawnCount   <- 0
 							//if origin is a string, construct vectors to perform math on them if needed
 							if (typeof(keyvalues.origin) == "string") {
 								local buf = keyvalues.origin.find(",") ? split(keyvalues.origin, ",") : split(keyvalues.origin, " ")
-								keyvalues.origin = Vector(buf[0].tofloat(), buf[1].tofloat(), buf[2].tofloat())
+
+								buf.apply(function (val) { return val.tofloat()})
+								keyvalues.origin = Vector(buf[0], buf[1], buf[2])
 							}
-							keyvalues.origin += origin
 						}
 						else keyvalues.origin <- origin
 
@@ -215,7 +238,9 @@ PopExt.globalTemplateSpawnCount   <- 0
 							//if angles is a string, construct qangles to perform math on them if needed
 							if (typeof(keyvalues.angles) == "string") {
 								local buf = keyvalues.angles.find(",") ? split(keyvalues.angles, ",") : split(keyvalues.angles, " ")
-								keyvalues.angles = QAngle(buf[0].tofloat(), buf[1].tofloat(), buf[2].tofloat())
+
+								buf.apply(function (val) { return val.tofloat()})
+								keyvalues.angles = QAngle(buf[0], buf[1], buf[2])
 							}
 							keyvalues.angles += angles
 						}
