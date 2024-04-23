@@ -214,14 +214,26 @@ PopExt <- popExtEntity.GetScriptScope()
 						StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
 						EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
 					}
-					if ("NoDeathFX" in scope.popProperty && (NoDeathFX || NoDeathFX == 1))
+					if ("NoDeathFX" in scope.popProperty && scope.popProperty.NoDeathFX > 0)
+					{
 						for (local destruction; destruction = FindByClassnameWithin(destruction, "tank_destruction", victim.GetOrigin(), 16);)
 							EntFireByHandle(destruction, "Kill", "", -1, null, null)
+						
+						if (scope.popProperty.NoDeathFX > 1)
+						{
+							if ("SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides) return
+
+							StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
+						}
+					}
 				}
 
 				if (dead && !("popFiredDeathHook" in scope)) {
+
 					scope.popFiredDeathHook <- true
+
 					if ("popProperty" in scope && "Icon" in scope.popProperty) {
+						
 						local icon = scope.popProperty.Icon
 						local flags = MVM_CLASS_FLAG_NORMAL
 

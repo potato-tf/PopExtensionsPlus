@@ -1606,26 +1606,26 @@ function MissionAttributes::MissionAttr(...) {
 		}
 	break
 
-	case "DisableSound":
+	// case "DisableSound":
 
-		if (typeof value != "array") this.RaiseValueError("DisableSound", value, "value must be an array")
+	// 	if (typeof value != "array") this.RaiseValueError("DisableSound", value, "value must be an array")
 
-		MissionAttributes.ThinkTable.DisableSounds <- function() {
+	// 	MissionAttributes.ThinkTable.DisableSounds <- function() {
 
-			foreach (sound in value)
-			{
+	// 		foreach (sound in value)
+	// 		{
 
-				foreach (player in PopExtUtil.HumanArray)
-				{
-					StopSoundOn(sound, player)
-					player.StopSound(sound)
-				}
+	// 			foreach (player in PopExtUtil.HumanArray)
+	// 			{
+	// 				StopSoundOn(sound, player)
+	// 				player.StopSound(sound)
+	// 			}
 
-				StopSoundOn(sound, PopExtUtil.Worldspawn)
-				PopExtUtil.Worldspawn.StopSound(sound)
-			}
-		}
-	break
+	// 			StopSoundOn(sound, PopExtUtil.Worldspawn)
+	// 			PopExtUtil.Worldspawn.StopSound(sound)
+	// 		}
+	// 	}
+	// break
 
 	// ============================================================================
 	// very inconsistent
@@ -1675,7 +1675,7 @@ function MissionAttributes::MissionAttr(...) {
 			MissionAttributes.SoundsToReplace[sound] <- override
 		}
 
-		//sounds played on bot death (giant/buster explosions)
+		//sounds played on death (giant/buster explosions)
 		MissionAttributes.TakeDamageTablePost.SoundOverrides <- function(params) {
 
 			local victim = GetPlayerFromUserID(params.userid)
@@ -1689,7 +1689,6 @@ function MissionAttributes::MissionAttr(...) {
 				if (sound in DeathSounds)
 				{
 					StopSoundOn(sound, victim)
-					// victim.StopSound(sound)
 
 					if (override == null) continue
 
@@ -1697,7 +1696,7 @@ function MissionAttributes::MissionAttr(...) {
 				}
 			}
 		}
-
+		
 		//catch-all for disabling non teamplay_broadcast_audio sfx
 		//nukes perf, don't do this.
 
