@@ -198,7 +198,7 @@ const DMG_NOCLOSEDISTANCEMOD = 131072    // DMG_POISON
 const DMG_MELEE              = 134217728 // DMG_BLAST_SURFACE
 const DMG_DONT_COUNT_DAMAGE_TOWARDS_CRIT_RATE = 67108864 //DMG_DISSOLVE
 
-//can only be used in OnTakeDamage
+//can only be used with trigger_hurt's
 const DMG_IGNORE_MAXHEALTH = 2
 const DMG_IGNORE_DEBUFFS = 4
 
@@ -249,13 +249,13 @@ const TTYPE_ENTRANCE = 1
 const TTYPE_EXIT     = 2
 
 // Flags for wavebar functions below
-CONST.MVM_CLASS_FLAG_NONE            <- 0
-CONST.MVM_CLASS_FLAG_NORMAL          <- 1 << 0 // Non support or mission icon
-CONST.MVM_CLASS_FLAG_SUPPORT         <- 1 << 1 // Support icon flag. Mission icon does not have this flag
-CONST.MVM_CLASS_FLAG_MISSION         <- 1 << 2 // Mission icon flag. Support icon does not have this flag
-CONST.MVM_CLASS_FLAG_MINIBOSS        <- 1 << 3 // Giant icon flag. Support and mission icons do not display red background when set
-CONST.MVM_CLASS_FLAG_ALWAYSCRIT      <- 1 << 4 // Crit icon flag. Support and mission icons do not display crit outline when set
-CONST.MVM_CLASS_FLAG_SUPPORT_LIMITED <- 1 << 5 // Support limited flag. Game uses it together with support flag
+const MVM_CLASS_FLAG_NONE            = 0
+const MVM_CLASS_FLAG_NORMAL          = 1 // Non support or mission icon
+const MVM_CLASS_FLAG_SUPPORT         = 2 // Support icon flag. Mission icon does not have this flag
+const MVM_CLASS_FLAG_MISSION         = 4 // Mission icon flag. Support icon does not have this flag
+const MVM_CLASS_FLAG_MINIBOSS        = 8 // Giant icon flag. Support and mission icons do not display red background when set
+const MVM_CLASS_FLAG_ALWAYSCRIT      = 16 // Crit icon flag. Support and mission icons do not display crit outline when set
+const MVM_CLASS_FLAG_SUPPORT_LIMITED = 32 // Support limited flag. Game uses it together with support flag
 
 // trigger_* entity spawnflags
 const SF_TRIGGER_ALLOW_CLIENTS                = 1
