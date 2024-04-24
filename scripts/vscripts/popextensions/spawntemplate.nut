@@ -51,14 +51,14 @@ PopExt.globalTemplateSpawnCount   <- 0
 						if (origin != "0 0 0")
 						{
 							local orgbuf = v[0].find(",") ? split(v[0], ",") : split(v[0], " ")
-							orgbuf.apply(function (val) { return val.tofloat()})
+							orgbuf.apply(function (val) { return val.tofloat() })
 							k.SetOrigin(Vector(orgbuf[0], orgbuf[1], orgbuf[2]))
 						}
 
 						if (angles != "0 0 0")
 						{
 							local angbuf = v[1].find(",") ? split(v[1], ",") : split(v[1], " ")
-							angbuf.apply(function (val) { return val.tofloat()})
+							angbuf.apply(function (val) { return val.tofloat() })
 							k.SetAbsAngles(QAngle(angbuf[0], angbuf[1], angbuf[2]))
 						}
 					}
@@ -139,7 +139,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 					if (removeifkilled != "") {
 						if (FindByName(null, removeifkilled) == null) {
-							foreach(entity in scope.SpawnedEntities)
+							foreach(entity, _ in scope.SpawnedEntities)
 								if (entity.IsValid())
 									entity.Kill()
 
