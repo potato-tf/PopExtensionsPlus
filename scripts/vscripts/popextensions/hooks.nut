@@ -31,7 +31,7 @@ PopExt <- popExtEntity.GetScriptScope()
 				}
 				scope.popProperty[hookName] <- func
 
-				if (hookName == "TankModel") {
+				if (hookName == "TankModel" || hookName == "Model") {
 					local tankModelNames = typeof func == "string" ? {} : func
 
 					if (typeof func == "string") {
@@ -329,7 +329,11 @@ function PopulatorThink() {
 			}
 			if (tankName in tankNames)
 				PopExtHooks.AddHooksToScope(tankName, tankNames[tankName], scope)
+
 			if ("popProperty" in scope) {
+				if ("Model" in scope.popProperty)
+					scope.popProperty.TankModel <- scope.popProperty.Model
+					
 				if ("SoundOverrides" in scope.popProperty) {
 
 					foreach (k, v in scope.popProperty.SoundOverrides)
@@ -399,7 +403,7 @@ function PopulatorThink() {
 					ScreenShake(tank.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true)
 
 				if ("IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
-					//todo alias Model to TankModel, check for tank spawn sound, test turning off reset locomotion, test null model hitbox in raf and here, test rage on same team tank
+					//todo test null model hitbox in raf and here, test rage on same team tank
 					scope.popProperty.DisableTracks <- true
 					scope.popProperty.DisableBomb <- true
 					scope.popProperty.DisableSmoke <- true
@@ -408,13 +412,10 @@ function PopulatorThink() {
 					if (!("TankModel" in scope.popProperty)) {
 						local blimpModel = {
 							TankModel = {
-								Default = "models/bots/boss_bot/boss_blimp.mdl"
-								Damage1 = "models/bots/boss_bot/boss_blimp_damage1.mdl"
-								Damage2 = "models/bots/boss_bot/boss_blimp_damage2.mdl"
-								Damage3 = "models/bots/boss_bot/boss_blimp_damage3.mdl"
-								LeftTrack = "models/bots/boss_bot/tankred_track_l.mdl"
-								RightTrack = "models/bots/boss_bot/tankred_track_r.mdl"
-								Bomb = "models/bots/boss_bot/bombblue_mechanism.mdl"
+								Default = "models/bots/boss_bot/boss_blimp_main.mdl"
+								Damage1 = "models/bots/boss_bot/boss_blimp_main_damage1.mdl"
+								Damage2 = "models/bots/boss_bot/boss_blimp_main_damage2.mdl"
+								Damage3 = "models/bots/boss_bot/boss_blimp_main_damage3.mdl"
 							}
 						}
 
@@ -423,13 +424,14 @@ function PopulatorThink() {
 
 					tank.SetAbsAngles(QAngle(0, tank.GetAbsAngles().y, 0))
 					tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1") // todo callscriptfunction
-					local tankspeed = GetPropFloat(tank, "m_speed")
-					scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), speed = tankspeed, startspeed = tankspeed, target = scope.popProperty.StartTrack})
+					scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), startspeed = INT_MAX, target = scope.popProperty.StartTrack})
 
 					scope.TankThinkTable.BlimpThink <- function() {
 						if (self == null) return //this is normally not possible, however we need to do a pretty gross hack that will turn the tank into a null instance sometimes
 						self.SetAbsOrigin(blimpTrain.GetOrigin())
 						self.GetLocomotionInterface().Reset()
+						if (GetPropFloat(this.blimpTrain, "m_flSpeed") != GetPropFloat(self, "m_speed"))
+							EntFireByHandle(this.blimpTrain, "SetSpeedReal", GetPropFloat(self, "m_speed").tostring(), -1, null, null)
 					}
 				}
 
@@ -460,7 +462,7 @@ function PopulatorThink() {
 				if ("DisableSmoke" in scope.popProperty && scope.popProperty.DisableSmoke) {
 
 					scope.TankThinkTable.DisableSmoke <- function() {
-						//disables smokestack, will emit one smoke particle when spawning and when moving out from under low ceilings (solid brushes 300 units or lower)
+						//disables smokestack, still emits one smoke particle when spawning and when moving out from under low ceilings (solid brushes 300 units or lower)
 						EntFireByHandle(self, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 					}
 				}
@@ -592,7 +594,6 @@ function PopulatorThink() {
 			// Make sure that ondeath hook is fired always
 			if (!alive && "popFiredDeathHook" in scope) {
 
-				local scope = player.GetScriptScope() // TODO: we already got scope above?
 				if (!scope.popFiredDeathHook)
 					PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)
 
