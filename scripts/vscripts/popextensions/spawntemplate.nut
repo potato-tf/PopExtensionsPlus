@@ -99,7 +99,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 				if (parent.IsPlayer()) {
 					// copied from popextensions_hooks.nut
-					if (scope.OnParentKilledOutputArray.len() > 0) {
+					if (scope.OnParentKilledOutputArray.len()) {
 						local playerscope = parent.GetScriptScope()
 
 						// if (!("popHooks" in playerscope)) {
