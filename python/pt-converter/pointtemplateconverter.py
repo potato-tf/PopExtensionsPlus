@@ -518,7 +518,7 @@ def convertspawntemplates(pop):
 	funcs = []
 	for template in stemplates:
 		if len(template) < 1: continue
-		func = f'SpawnTemplates.SpawnTemplate(PointTemplates[{template["Name"]}], null'
+		func = f'SpawnTemplate({template["Name"]}, null'
 		if 'Origin' in template:
 			func = func + f', {template["Origin"]}'
 		if 'Angles' in template:
