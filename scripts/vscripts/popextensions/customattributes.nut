@@ -96,6 +96,7 @@
         "replace weapon fire sound": null
         "rocket penetration": null
         "collect currency on kill": null
+        "noclip projectile": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -1327,6 +1328,21 @@ function CustomAttributes::CustomProjectileModel(player, item, value) {
     }
 }
 
+function CustomAttributes::NoclipProjectile(player, item, value) {
+	local scope = player.GetScriptScope()
+
+	local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+	scope.PlayerThinkTable.CustomProjectileModel <- function() {
+		if (!("attribinfo" in scope) || !("noclip projectile" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+
+		for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
+			if (projectile.GetOwner() == player && projectile.GetMoveType != MOVETYPE_NOCLIP)
+				projectile.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
+	}
+}
+
 function CustomAttributes::ShahanshahAttributeBelowHP(player, item, value) {
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
@@ -1634,6 +1650,11 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 		case "collect currency on kill":
             CustomAttributes.CollectCurrencyOnKill(player, item, value)
             scope.attribinfo[attr] <- "bots drop money when killed"
+		break
+
+		case "noclip projectile":
+            CustomAttributes.NoclipProjectile(player, item, value)
+            scope.attribinfo[attr] <- "projectiles go through walls and enemies harmlessly"
 		break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
