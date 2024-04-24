@@ -139,6 +139,8 @@ if (!("_AddThinkToEnt" in root))
 		try delete ::PopExtHooks catch(e) return
 		try delete ::GlobalFixes catch(e) return
 		try delete ::SpawnTemplate catch(e) return
+		try delete ::SpawnTemplateWaveSchedule catch(e) return
+		try delete ::SpawnTemplates catch(e) return
 		try delete ::VCD_SOUNDSCRIPT_MAP catch(e) return
 		try delete ::PopExtUtil catch(e) return
 		try delete ::__popname catch(e) return
