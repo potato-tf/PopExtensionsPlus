@@ -60,7 +60,6 @@ PopExt.globalTemplateSpawnCount   <- 0
 					}
 					if (angles != "")
 					{
-						printl(typeof angles)
 						if (typeof angles == "QAngle")
 							k.SetAbsAngles(angles)
 						else 
