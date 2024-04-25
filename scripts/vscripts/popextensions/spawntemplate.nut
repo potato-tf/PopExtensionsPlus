@@ -4,11 +4,11 @@ PopExt.wavePointTemplates         <- []
 PopExt.globalTemplateSpawnCount   <- 0
 
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
-::SpawnTemplate <- function (pointtemplate, parent = null, origin = "0 0 0", angles = "0 0 0") {
+::SpawnTemplate <- function (pointtemplate, parent = null, origin = "", angles = "") {
 	// credit to ficool2
 	PopExt.globalTemplateSpawnCount <- PopExt.globalTemplateSpawnCount + 1
 
-	local template = CreateByClassname("point_script_template") 
+	local template = CreateByClassname("point_script_template")
 	DispatchSpawn(template)
 	local scope = template.GetScriptScope()
 
@@ -43,18 +43,19 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 			scope.SpawnedEntities[entity] <- [origin, angles]
 
-			if (origin != "0 0 0" || angles != " 0 0 0")
+			if (origin != "" || angles != "")
 			{
-				foreach(k, v in SpawnedEntities) 
+				foreach(k, v in SpawnedEntities)
 				{
-					if (origin != "0 0 0")
+					if (origin != "")
 					{
 						local orgbuf = v[0].find(",") ? split(v[0], ",") : split(v[0], " ")
 						orgbuf.apply(function (val) { return val.tofloat() })
 						k.SetOrigin(Vector(orgbuf[0], orgbuf[1], orgbuf[2]))
+						printl(k + " : " + v[0] + " : " + v[1])
 					}
 
-					if (angles != "0 0 0")
+					if (angles != "")
 					{
 						local angbuf = v[1].find(",") ? split(v[1], ",") : split(v[1], " ")
 						angbuf.apply(function (val) { return val.tofloat() })
@@ -62,7 +63,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 					}
 				}
 			}
-			
+
 			PopExt.wavePointTemplates.append(entity)
 
 			if (parent != null) {
@@ -111,7 +112,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 					// FireOnParentKilledOutputs()
 
 					// playerscope.popHooks["OnDeath"].append(FireOnParentKilledOutputs)
-					
+
 					FireOnParentKilledOutputs()
 					if (!("TemplatesToKill" in playerscope)) playerscope.TemplatesToKill <- []
 					playerscope.TemplatesToKill.append(FireOnParentKilledOutputs);
@@ -230,6 +231,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 							buf.apply(function (val) { return val.tofloat()})
 							keyvalues.origin = Vector(buf[0], buf[1], buf[2])
 						}
+						// keyvalues.origin += origin
 					}
 					else keyvalues.origin <- origin
 
@@ -241,7 +243,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 							buf.apply(function (val) { return val.tofloat()})
 							keyvalues.angles = QAngle(buf[0], buf[1], buf[2])
 						}
-						keyvalues.angles += angles
+						// keyvalues.angles += angles
 					}
 					else keyvalues.angles <- angles
 
@@ -282,7 +284,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 		}
 
 		function OnGameEvent_mvm_wave_failed(params) //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
-		{			
+		{
 			foreach(entity in PopExt.wavePointTemplates)
 				if (entity.IsValid())
 					entity.Kill()

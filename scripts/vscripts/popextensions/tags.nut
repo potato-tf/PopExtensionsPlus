@@ -235,7 +235,7 @@ local popext_funcs = {
 	}
 
 	popext_spawntemplate = function(bot, args) {
-		SpawnTemplates.SpawnTemplate(PointTemplates[args[0]], bot, bot.GetOrigin(), bot.GetLocalAngles())
+		SpawnTemplate(args[0], bot, bot.GetOrigin(), bot.GetLocalAngles())
 	}
 
 	popext_forceromevision = function(bot, args) {
