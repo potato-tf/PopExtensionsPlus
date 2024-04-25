@@ -49,17 +49,26 @@ PopExt.globalTemplateSpawnCount   <- 0
 				{
 					if (origin != "")
 					{
-						local orgbuf = v[0].find(",") ? split(v[0], ",") : split(v[0], " ")
-						orgbuf.apply(function (val) { return val.tofloat() })
-						k.SetOrigin(Vector(orgbuf[0], orgbuf[1], orgbuf[2]))
-						printl(k + " : " + v[0] + " : " + v[1])
+						if (typeof origin == "Vector")
+							k.SetOrigin(origin)
+						else
+						{
+							local orgbuf = v[0].find(",") ? split(v[0], ",") : split(v[0], " ")
+							orgbuf.apply(function (val) { return val.tofloat() })
+							k.SetOrigin(Vector(orgbuf[0], orgbuf[1], orgbuf[2]))
+						}
 					}
-
 					if (angles != "")
 					{
-						local angbuf = v[1].find(",") ? split(v[1], ",") : split(v[1], " ")
-						angbuf.apply(function (val) { return val.tofloat() })
-						k.SetAbsAngles(QAngle(angbuf[0], angbuf[1], angbuf[2]))
+						printl(typeof angles)
+						if (typeof angles == "QAngle")
+							k.SetAbsAngles(angles)
+						else 
+						{
+							local angbuf = v[1].find(",") ? split(v[1], ",") : split(v[1], " ")
+							angbuf.apply(function (val) { return val.tofloat() })
+							k.SetAbsAngles(QAngle(angbuf[0], angbuf[1], angbuf[2]))
+						}
 					}
 				}
 			}
