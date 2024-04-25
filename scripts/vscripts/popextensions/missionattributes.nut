@@ -223,7 +223,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 			local fakePack = CreateByClassname("item_currencypack_custom")
 			SetPropBool(fakePack, "m_bDistributed", true)
 			SetPropEntity(fakePack, "m_hOwnerEntity", owner)
-			fakePack.DispatchSpawn()
+			DispatchSpawn(fakePack)
 			fakePack.SetModel(modelPath)
 
 			// position to ground, as fake pack won't have any velocity
@@ -391,7 +391,7 @@ function MissionAttributes::MissionAttr(...) {
 
 	break
 
-	
+
 	// ====================
 	// set all mobber cvars
 	// ====================
@@ -1627,12 +1627,12 @@ function MissionAttributes::MissionAttr(...) {
 	// 	}
 	// break
 
-	// ============================================================================
-	// very inconsistent
-	// currently can only override death and teamplay_broadcast_audio sounds
-	// any other sounds played by weapons or players cannot be easily replaced here
-	// see `replace weapon fire sound` and more in customattributes.nut
-	// ============================================================================
+	// =================================================================================
+	// hardcoded to only be able to replace specific sounds
+	// spamming stopsound in a think function is very laggy, gotta be smarter than that
+	// see `replace weapon fire sound` and more in customattributes.nut for wep sounds
+	// see the tank sound overrides in hooks.nut for disabling tank explosions
+	// =================================================================================
 
 	case "SoundOverrides":
 
@@ -1676,27 +1676,30 @@ function MissionAttributes::MissionAttr(...) {
 		}
 
 		//sounds played on death (giant/buster explosions)
-		MissionAttributes.TakeDamageTablePost.SoundOverrides <- function(params) {
+		MissionAttributes.DeathHookTable.SoundOverrides <- function(params) {
 
 			local victim = GetPlayerFromUserID(params.userid)
 			// local victim = params.const_entity
 
 			// if (!victim.IsPlayer() || params.damage < victim.GetHealth()) return
-			if (params.damageamount < victim.GetHealth()) return
+			// if (params.damageamount < victim.GetHealth()) return
 
 			foreach (sound, override in value)
 			{
 				if (sound in DeathSounds)
 				{
-					StopSoundOn(sound, victim)
+					foreach (player in PopExtUtil.HumanArray)
+					{
+						StopSoundOn(sound, victim)
 
-					if (override == null) continue
+						if (override == null) continue
 
-					EmitSoundEx({sound_name = override, entity = victim})
+						EmitSoundEx({sound_name = override, entity = victim})
+					}
 				}
 			}
 		}
-		
+
 		//catch-all for disabling non teamplay_broadcast_audio sfx
 		//nukes perf, don't do this.
 

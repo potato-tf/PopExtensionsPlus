@@ -216,9 +216,23 @@ PopExt <- popExtEntity.GetScriptScope()
 					}
 					if ("NoDeathFX" in scope.popProperty && scope.popProperty.NoDeathFX > 0)
 					{
-						for (local destruction; destruction = FindByClassnameWithin(destruction, "tank_destruction", victim.GetOrigin(), 16);)
-							EntFireByHandle(destruction, "Kill", "", -1, null, null)
-						
+						victim.SetOrigin(victim.GetOrigin() - Vector(0, 0, 10000))
+						function FindTankDestructionEnt()
+						{
+							for (local destruction; destruction = FindByClassnameWithin(destruction, "tank_destruction", self.GetOrigin(), 1);)
+							{
+								EntFireByHandle(destruction, "Kill" "", -1, null, null)
+							}
+
+							return -1
+						}
+						local temp =  CreateByClassname("info_teleport_destination")
+						temp.SetOrigin(victim.GetOrigin())
+						temp.ValidateScriptScope()
+						temp.GetScriptScope().FindTankDestructionEnt <- FindTankDestructionEnt
+						AddThinkToEnt(temp, "FindTankDestructionEnt")
+						DispatchSpawn(temp)
+
 						if (scope.popProperty.NoDeathFX > 1)
 						{
 							if ("SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides) return
@@ -233,7 +247,7 @@ PopExt <- popExtEntity.GetScriptScope()
 					scope.popFiredDeathHook <- true
 
 					if ("popProperty" in scope && "Icon" in scope.popProperty) {
-						
+
 						local icon = scope.popProperty.Icon
 						local flags = MVM_CLASS_FLAG_NORMAL
 
@@ -333,7 +347,7 @@ function PopulatorThink() {
 			if ("popProperty" in scope) {
 				if ("Model" in scope.popProperty)
 					scope.popProperty.TankModel <- scope.popProperty.Model
-					
+
 				if ("SoundOverrides" in scope.popProperty) {
 
 					foreach (k, v in scope.popProperty.SoundOverrides)
@@ -412,10 +426,10 @@ function PopulatorThink() {
 					if (!("TankModel" in scope.popProperty)) {
 						local blimpModel = {
 							TankModel = {
-								Default = "models/bots/boss_bot/boss_blimp_main.mdl"
-								Damage1 = "models/bots/boss_bot/boss_blimp_main_damage1.mdl"
-								Damage2 = "models/bots/boss_bot/boss_blimp_main_damage2.mdl"
-								Damage3 = "models/bots/boss_bot/boss_blimp_main_damage3.mdl"
+								Default = "models/bots/boss_bot/boss_blimp.mdl"
+								Damage1 = "models/bots/boss_bot/boss_blimp_damage1.mdl"
+								Damage2 = "models/bots/boss_bot/boss_blimp_damage2.mdl"
+								Damage3 = "models/bots/boss_bot/boss_blimp_damage3.mdl"
 							}
 						}
 

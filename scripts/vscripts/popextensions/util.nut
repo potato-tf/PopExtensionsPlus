@@ -489,7 +489,7 @@ function PopExtUtil::CreatePlayerWearable(player, model, bonemerge = true, attac
 	if (modelIndex == -1)
 		modelIndex = PrecacheModel(model)
 
-	local wearable = Entities.CreateByClassname("tf_wearable")
+	local wearable = CreateByClassname("tf_wearable")
 	SetPropInt(wearable, "m_nModelIndex", modelIndex)
 	wearable.SetSkin(player.GetTeam())
 	wearable.SetTeam(player.GetTeam())
@@ -503,7 +503,7 @@ function PopExtUtil::CreatePlayerWearable(player, model, bonemerge = true, attac
 	SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDHigh", 0)
 
 	wearable.SetOwner(player)
-	Entities.DispatchSpawn(wearable)
+	DispatchSpawn(wearable)
 	SetPropInt(wearable, "m_fEffects", bonemerge ? EF_BONEMERGE|EF_BONEMERGE_FASTCULL : 0)
 	PopExtUtil.SetParentLocalOrigin(wearable, player, attachment)
 
@@ -816,7 +816,7 @@ function PopExtUtil::PlayerRobotModel(player, model) {
 	SetPropEntity(wearable, "m_hOwnerEntity", player)
 	wearable.SetTeam(player.GetTeam())
 	wearable.SetOwner(player)
-	wearable.DispatchSpawn()
+	DispatchSpawn(wearable)
 	EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player)
 	SetPropInt(wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL)
 	scope.wearable <- wearable
@@ -878,7 +878,7 @@ function PopExtUtil::StunPlayer(player, duration = 5, type = 1, delay = 0, speed
 	utilstun.KeyValueFromFloat("trigger_delay", delay.tofloat())
 	utilstun.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_CLIENTS)
 
-	utilstun.DispatchSpawn()
+	DispatchSpawn(utilstun)
 
 	EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
 }
