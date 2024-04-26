@@ -568,7 +568,7 @@ function PopulatorThink() {
 					health_stage = floor((scope.maxHealth - tank.GetHealth())/scope.maxHealth.tofloat() * 4)
 				}
 
-				if (scope.lastHealthStage != health_stage && "TankModel" in scope.popProperty) {
+				if (scope.lastHealthStage != health_stage && "popProperty" in scope && "TankModel" in scope.popProperty) {
 					local name = health_stage == 0 ? "Default" : "Damage" + health_stage
 
 					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
