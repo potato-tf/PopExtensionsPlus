@@ -249,13 +249,13 @@ const TTYPE_ENTRANCE = 1
 const TTYPE_EXIT     = 2
 
 // Flags for wavebar functions below
-const MVM_CLASS_FLAG_NONE            = 0
-const MVM_CLASS_FLAG_NORMAL          = 1 // Non support or mission icon
-const MVM_CLASS_FLAG_SUPPORT         = 2 // Support icon flag. Mission icon does not have this flag
-const MVM_CLASS_FLAG_MISSION         = 4 // Mission icon flag. Support icon does not have this flag
-const MVM_CLASS_FLAG_MINIBOSS        = 8 // Giant icon flag. Support and mission icons do not display red background when set
-const MVM_CLASS_FLAG_ALWAYSCRIT      = 16 // Crit icon flag. Support and mission icons do not display crit outline when set
-const MVM_CLASS_FLAG_SUPPORT_LIMITED = 32 // Support limited flag. Game uses it together with support flag
+CONST.MVM_CLASS_FLAG_NONE            <- 0
+CONST.MVM_CLASS_FLAG_NORMAL          <- 1 // Non support or mission icon
+CONST.MVM_CLASS_FLAG_SUPPORT         <- 2 // Support icon flag. Mission icon does not have this flag
+CONST.MVM_CLASS_FLAG_MISSION         <- 4 // Mission icon flag. Support icon does not have this flag
+CONST.MVM_CLASS_FLAG_MINIBOSS        <- 8 // Giant icon flag. Support and mission icons do not display red background when set
+CONST.MVM_CLASS_FLAG_ALWAYSCRIT      <- 16 // Crit icon flag. Support and mission icons do not display crit outline when set
+CONST.MVM_CLASS_FLAG_SUPPORT_LIMITED <- 32 // Support limited flag. Game uses it together with support flag
 
 // trigger_* entity spawnflags
 const SF_TRIGGER_ALLOW_CLIENTS                = 1
