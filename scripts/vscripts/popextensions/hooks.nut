@@ -583,36 +583,32 @@ function PopulatorThink() {
 		}
 	}
 
-	for (local i = 0; i < MAX_CLIENTS; i++) {
-		local player = PlayerInstanceFromIndex(i)
-		if (player == null) continue
+	foreach (player in PopExtUtil.BotArray) {
+		
+		player.ValidateScriptScope()
+		local scope = player.GetScriptScope()
 
-		if (player.IsBotOfType(TF_BOT_TYPE)) {
-			player.ValidateScriptScope()
-			local scope = player.GetScriptScope()
+		local alive = PopExtUtil.IsAlive(player)
+		if (alive && !("botCreated" in scope)) {
+			scope.botCreated <- true
 
-			local alive = PopExtUtil.IsAlive(player)
-			if (alive && !("botCreated" in scope)) {
-				scope.botCreated <- true
+			foreach(tag, table in robotTags) {
+				if (player.HasBotTag(tag)) {
+					scope.popFiredDeathHook <- false
+					PopExtHooks.AddHooksToScope(tag, table, scope)
 
-				foreach(tag, table in robotTags) {
-					if (player.HasBotTag(tag)) {
-						scope.popFiredDeathHook <- false
-						PopExtHooks.AddHooksToScope(tag, table, scope)
-
-						if ("OnSpawn" in table)
-							table.OnSpawn(player, tag)
-					}
+					if ("OnSpawn" in table)
+						table.OnSpawn(player, tag)
 				}
 			}
-			// Make sure that ondeath hook is fired always
-			if (!alive && "popFiredDeathHook" in scope) {
+		}
+		// Make sure that ondeath hook is fired always
+		if (!alive && "popFiredDeathHook" in scope) {
 
-				if (!scope.popFiredDeathHook)
-					PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)
+			if (!scope.popFiredDeathHook)
+				PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)
 
-				delete scope.popFiredDeathHook
-			}
+			delete scope.popFiredDeathHook
 		}
 	}
 
