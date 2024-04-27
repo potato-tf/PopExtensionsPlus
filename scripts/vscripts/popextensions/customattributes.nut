@@ -1609,7 +1609,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "add cond on hit":
             CustomAttributes.AddCondOnHit(player, item, value)
-            scope.attribinfo[attr] <- format("applies cond %d to victim on hit", typeof value == "array" ? value[0] : value)
+            scope.attribinfo[attr] <- format("applies cond %d to victim on hit", typeof value == "array" ? value[0].tointeger() : value)
         break
 
         case "remove cond on hit":
@@ -1619,12 +1619,12 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
         case "self add cond on hit":
             CustomAttributes.SelfAddCondOnHit(player, item, value)
-            scope.attribinfo[attr] <- format("applies cond %d to self on hit", typeof value == "array" ? value[0] : value)
+            scope.attribinfo[attr] <- format("applies cond %d to self on hit", typeof value == "array" ? value[0].tointeger() : value)
         break
 
         case "add cond on kill":
             CustomAttributes.SelfAddCondOnKill(player, item, value)
-            scope.attribinfo[attr] <- format("applies cond %d to self on kill", typeof value == "array" ? value[0] : value)
+            scope.attribinfo[attr] <- format("applies cond %d to self on kill", typeof value == "array" ? value[0].tointeger() : value)
         break
 
         case "add cond when active":

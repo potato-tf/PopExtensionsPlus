@@ -73,7 +73,7 @@ class AI_Bot {
 		return (target.GetOrigin() - bot.GetOrigin()).LengthSqr()
 	}
 
-	function FindThreat(min_dist_sqr, must_be_visible = true) {
+	function FindClosestThreat(min_dist_sqr, must_be_visible = true) {
 		local closestThreat = null
 		local closestThreatDist = min_dist_sqr
 
@@ -87,8 +87,19 @@ class AI_Bot {
 				closestThreatDist = dist
 			}
 		}
-
 		return closestThreat
+	}
+
+	function CollectThreats(maxdist = INT_MAX, disguised = false, invisible = false) {
+		
+		local threatarray = []
+		foreach (player in PopExtUtil.PlayerArray)
+		{
+			if (player == bot || player.GetTeam() == bot.GetTeam() || (player.IsFullyInvisible() && !invisible) || (player.IsStealthed() && !disguised) || GetThreatDistanceSqr(player) > maxdist) continue
+
+			threatarray.append(player)
+		}
+		return threatarray
 	}
 
 	function SetThreat(target, visible) {
@@ -371,7 +382,7 @@ class AI_Bot {
 	team  = null
 	time  = null
 
-	botLevel = null
+	botLevel   = null
 	locomotion = null
 
 	cur_pos     = null

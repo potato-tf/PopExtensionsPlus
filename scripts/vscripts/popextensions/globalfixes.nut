@@ -31,7 +31,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 		function BotGibFix(params) {
 			local victim = params.const_entity
-			if (victim.IsPlayer() && !victim.IsMiniBoss() && (params.damage_type & DMG_CRITICAL || params.damage_type & DMG_BLAST))
+			if (victim.IsPlayer() && !victim.IsMiniBoss() && victim.GetModelScale() <= 1.0 && params.damage >= victim.GetHealth() && (params.damage_type & DMG_CRITICAL || params.damage_type & DMG_BLAST))
 				victim.SetModelScale(1.0000001, 0.0)
 		}
 
@@ -62,7 +62,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			if (index != ID_HOLIDAY_PUNCH || !(params.damage_type & DMG_CRITICAL)) return
 
 			local victim = params.const_entity
-			if (victim != null && victim.IsBotOfType(TF_BOT_TYPE)) {
+			if (victim != null && victim.IsPlayer() && victim.IsBotOfType(TF_BOT_TYPE)) {
 				victim.Taunt(TAUNT_MISC_ITEM, MP_CONCEPT_TAUNT_LAUGH)
 
 				local tfclass      = victim.GetPlayerClass()

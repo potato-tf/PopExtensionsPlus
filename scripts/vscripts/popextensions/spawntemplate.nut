@@ -7,7 +7,6 @@ PopExt.globalTemplateSpawnCount   <- 0
 ::SpawnTemplate <- function (pointtemplate, parent = null, origin = "", angles = "") {
 	// credit to ficool2
 	PopExt.globalTemplateSpawnCount <- PopExt.globalTemplateSpawnCount + 1
-
 	local template = CreateByClassname("point_script_template")
 	DispatchSpawn(template)
 	local scope = template.GetScriptScope()
@@ -160,11 +159,11 @@ PopExt.globalTemplateSpawnCount   <- 0
 		}
 
 		//fire OnSpawnOutputs
-		foreach(output in OnSpawnOutputArray) {
+		foreach(output in scope.OnSpawnOutputArray) {
 			local target = output.Target
 			local action = output.Action
 			local param  = ("Param" in output) ? output.Param.tostring() : ""
-			local delay  = ("Delay" in output) ? output.Delay.tofloat() : 0
+			local delay  = ("Delay" in output) ? output.Delay.tofloat() : -1
 
 			EntFire(target, action, param, delay, null)
 		}
@@ -222,7 +221,9 @@ PopExt.globalTemplateSpawnCount   <- 0
 	//add templates to point_script_template
 	foreach(index, entity in pointtemplatecopy) {
 		if (typeof(entity) == "table") {
+
 			foreach(classname, keyvalues in entity) {
+		
 				if (classname == "OnSpawnOutput") {
 					scope.OnSpawnOutputArray.append(keyvalues)
 				}

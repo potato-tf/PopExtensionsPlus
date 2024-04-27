@@ -29,6 +29,7 @@ local popext_funcs = {
 
 		// EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)", -1, null, null)
 		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
+		bot.AddCustomAttribute("ammo regen", 999.0, -1)
 	}
 
 	// popext_reprogrammed_neutral = function(bot, args) {
@@ -309,18 +310,18 @@ local popext_funcs = {
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- function() {
 
-			local t = FindThreat(visionoverride, false)
+			local t = FindClosestThreat(visionoverride, false)
 
 			if (t == null || t.IsFullyInvisible() || t.IsStealthed()) return
 
 			if (threat != t)
 			{
-				bot.AddBotAttribute(SUPPRESS_FIRE)
+				// bot.AddBotAttribute(SUPPRESS_FIRE)
 				SetThreat(t, false)
 				LookAt(t.EyePosition(), 50, 50)
 				bot.SetAttentionFocus(t)
 			}
-			EntFireByHandle(bot, "RunScriptCode", "self.RemoveBotAttribute(SUPPRESS_FIRE)", -1, null, null)
+			// if (bot.hasbotattrEntFireByHandle(bot, "RunScriptCode", "self.RemoveBotAttribute(SUPPRESS_FIRE)", -1, null, null)
 			// bot.RemoveBotAttribute(SUPPRESS_FIRE)
 
 			if (!bot.HasBotTag("popext_mobber"))
@@ -332,9 +333,11 @@ local popext_funcs = {
 
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
 
-			local t = FindThreat(INT_MAX, false)
+			if (threat != null && threat.IsValid() && PopExtUtil.IsAlive(threat)) return
 
-			if (t == null || t.IsFullyInvisible() || t.IsStealthed()) return
+			local threats = CollectThreats()
+
+			local t = threats[RandomInt(0, threats.len() - 1)]
 
 			// Move(t)
 			UpdatePathAndMove(t.GetOrigin())
@@ -343,19 +346,22 @@ local popext_funcs = {
 
 	popext_movetopoint = function(bot, args) {
 
-		local pos = split(args[0], " ")
-		pos.apply(function(v) { return v.tofloat()})
+		local pos = Vector()
+		local point = args[0]
+
+		if (FindByName(null, point) != null)
+			pos = FindByName(null, point).GetOrigin()
+		else
+		{
+			local buf = ""
+			point.find(",") ?  buf = split(point, ",") : buf = split(point, " ")
+			buf.apply(function(v) { return v.tofloat()})
+
+			pos = Vector(buf[0], buf[1], buf[2])
+		}
 
 		bot.GetScriptScope().PlayerThinkTable.MoveToPoint <- function() {
-			UpdatePathAndMove(Vector(pos[0], pos[1], pos[2]))
-		}
-	}
-
-	popext_movetoent = function(bot, args) {
-
-		local entorigin = FindByName(null, args[0]).GetOrigin()
-		bot.GetScriptScope().PlayerThinkTable.MoveToEnt <- function() {
-			UpdatePathAndMove(entorigin)
+			UpdatePathAndMove(pos)
 		}
 	}
 
