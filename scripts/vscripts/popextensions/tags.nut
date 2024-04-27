@@ -79,7 +79,7 @@ local popext_funcs = {
 	popext_usecustommodel = function(bot, args) {
 
 		if (!IsModelPrecached(args[0])) PrecacheModel(args[0])
-		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", args[0]), -1, null, null)
+		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", args[0], -1, null, null)
 	}
 
 	popext_usehumananims = function(bot, args) {
