@@ -152,7 +152,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 
 	local shouldCollect = false
 
-	if (MissionAttributes.RedMoneyValue > 1)
+	if (MissionAttributes.RedMoneyValue >= 1)
 		shouldCollect = true
 	else
 	{
