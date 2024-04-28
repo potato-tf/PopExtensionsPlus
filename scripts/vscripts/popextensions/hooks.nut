@@ -423,7 +423,7 @@ function PopulatorThink() {
 					scope.popProperty.DisableSmoke <- true
 
 					//set default blimp model if not specified
-					if (!("TankModel" in scope.popProperty)) {
+					if (!("TankModel" in scope.popProperty) && !("Model" in scope.popProperty)) {
 						local blimpModel = {
 							TankModel = {
 								Default = "models/bots/boss_bot/boss_blimp.mdl"
@@ -584,7 +584,7 @@ function PopulatorThink() {
 	}
 
 	foreach (player in PopExtUtil.BotArray) {
-		
+
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
