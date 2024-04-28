@@ -1688,14 +1688,11 @@ function MissionAttributes::MissionAttr(...) {
 			{
 				if (sound in DeathSounds)
 				{
-					foreach (player in PopExtUtil.HumanArray)
-					{
-						StopSoundOn(sound, victim)
+					StopSoundOn(sound, victim)
 
-						if (override == null) continue
+					if (override == null) continue
 
-						EmitSoundEx({sound_name = override, entity = victim})
-					}
+					EmitSoundEx({sound_name = override, entity = victim})
 				}
 			}
 		}
@@ -1948,10 +1945,13 @@ function MissionAttributes::MissionAttr(...) {
 		// also need to reset it
 		//MissionAttributes.SetConvar("tf_mvm_defenders_team_size", 999)
 		MissionAttributes.DeployBombStart <- function(player) {
-
+			
 			//do this so we can do CancelPending
 			local deployrelay = CreateByClassname("logic_relay")
+
 			AddOutput(deployrelay, "OnTrigger", "boss_deploy_relay", "Trigger", "", 2, -1)
+			AddOutput(deployrelay, "OnTrigger", "!self", "CallScriptFunction", "PopExtUtil.EndWaveReverse", 2, -1)
+			
 			PopExtUtil.SetTargetname(deployrelay, "__bombdeploy")
 			DispatchSpawn(deployrelay)
 
@@ -1980,12 +1980,11 @@ function MissionAttributes::MissionAttr(...) {
 
 			EntFireByHandle(player, "SetForcedTauntCam", "1", -1, null, null)
 			EntFireByHandle(player, "SetHudVisibility", "0", -1, null, null)
-			EntFireByHandle(player, "DisableDamageForces", "", -1, null, null)
 			EntFire("__bombdeploy", "Trigger")
 		}
 
 		MissionAttributes.DeployBombStop <- function(player) {
-
+			
 			if (GetPropEntity(player, "m_hItem") == null) return
 
 			player.EnableDraw()
@@ -1998,11 +1997,10 @@ function MissionAttributes::MissionAttr(...) {
 
 			FindByName(null, format("__deployanim%d", player.entindex())).Kill()
 
-			player.IsMiniBoss() ? StopSoundOn("MVM.DeployBombGiant", player) : StopSoundOn("MVM.DeployBombSmall", player)
+			player.IsMiniBoss() ? StopSoundOn("MVM.DeployBombGiant", player) : StopSoundOn("MVM.DeployBombSmall", player)	
 
 			EntFireByHandle(player, "SetForcedTauntCam", "0", -1, null, null)
 			EntFireByHandle(player, "SetHudVisibility", "1", -1, null, null)
-			EntFireByHandle(player, "EnableDamageForces", "", -1, null, null)
 			EntFire("__bombdeploy", "CancelPending")
 			EntFire("__bombdeploy", "Kill")
 		}
@@ -2529,11 +2527,11 @@ function MissionAttributes::MissionAttr(...) {
 			}
 			//disable bomb deploy
 			if (!(value & 128)) {
-
+				
 				for (local roundwin; roundwin = FindByClassname(roundwin, "game_round_win");)
-					if (roundwin.GetTeam() == TF_TEAM_PVE_INVADERS)
+					if (roundwin.GetTeam() == TF_TEAM_PVE_INVADERS) 
 						EntFireByHandle(roundwin, "Kill", "", -1, null, null)
-
+				
 
 				for (local capturezone; capturezone = FindByClassname(capturezone, "func_capturezone");)
 				{

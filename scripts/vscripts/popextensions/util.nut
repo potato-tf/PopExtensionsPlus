@@ -1306,6 +1306,37 @@ function PopExtUtil::capwords(s, sep = null) {
     return finalResult;
 }
 
+function PopExtUtil::EndWaveReverse()
+{
+	local temp = CreateByClassname("info_teleport_destination")
+	
+	if (!PopExtUtil.IsWaveStarted) return
+
+	//move to red
+	foreach (player in PopExtUtil.HumanArray)
+		PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_DEFENDERS)
+	
+
+	temp.ValidateScriptScope()
+	temp.GetScriptScope().ClearWave <- function()
+	{
+		if (!PopExtUtil.IsWaveStarted) {
+
+			foreach (player in PopExtUtil.HumanArray)
+				PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_INVADERS)
+
+			SetPropString(self, "m_iszScriptThinkFunction", "")
+			EntFireByHandle(self, "Kill", "", -1, null, null)
+		}
+		//kill all bots
+		foreach (bot in PopExtUtil.BotArray)
+			if (PopExtUtil.IsAlive(bot) && bot.GetTeam() != TEAM_SPECTATOR)
+				bot.TakeDamage(INT_MAX, DMG_GENERIC, null)
+	}
+	
+	AddThinkToEnt(temp, "ClearWave")
+}
+
 function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT) {
 	if (player == null || !player.IsPlayer()) return
 
