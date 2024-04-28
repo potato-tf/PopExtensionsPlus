@@ -338,7 +338,7 @@ function PopulatorThink() {
 
 			local tankName = tank.GetName().tolower()
 			foreach(name, table in tankNamesWildcard) {
-				if (name == tankName || name == tankName.slice(0, name.len()))
+				if (name == tankName)
 					PopExtHooks.AddHooksToScope(tankName, table, scope)
 			}
 			if (tankName in tankNames)
@@ -547,7 +547,7 @@ function PopulatorThink() {
 
 			foreach(name, table in tankNamesWildcard) {
 
-				if ((name == tankName || name == tankName.slice(0, name.len())) && "OnSpawn" in table)
+				if (name == tankName && "OnSpawn" in table)
 					table.OnSpawn(tank, tankName)
 			}
 
