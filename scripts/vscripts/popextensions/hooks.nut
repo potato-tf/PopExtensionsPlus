@@ -454,22 +454,20 @@ function PopulatorThink() {
 					delete scope.popProperty.SpawnTemplate
 				}
 				if ("DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
-					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-						if (child.GetClassname() != "prop_dynamic") continue
-
-						if (child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl") {
-							SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | EF_NODRAW)
-						}
-					}
+					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer())
+						if (child.GetClassname() == "prop_dynamic")
+							if (child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl")
+								child.DisableDraw()
+						
+					
 				}
 
 				if ("DisableBomb" in scope.popProperty && scope.popProperty.DisableBomb) {
 					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-						if (child.GetClassname() != "prop_dynamic") continue
-
-						if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl") {
-							SetPropInt(child, "m_fEffects", GetPropInt(child, "m_fEffects") | EF_NODRAW)
-						}
+						if (child.GetClassname() == "prop_dynamic")
+							if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl") 
+								child.DisableDraw()
+						
 					}
 				}
 
