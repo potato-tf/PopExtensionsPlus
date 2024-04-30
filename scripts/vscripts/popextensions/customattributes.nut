@@ -251,13 +251,13 @@ function CustomAttributes::FireInputOnHit(player, item, value) {
     local param = ""
     local delay = -1
     if (args.len() > 2) param = args[2]
-    if (args.len() > 3) delay = args[3]
+    if (args.len() > 3) delay = args[3].tofloat()
 
     CustomAttributes.TakeDamageTable.FireInputOnHit <- function(params) {
 
         if (params.attacker != player || params.weapon != wep) return
 
-        targetname == "!self" ? EntFireByHandle(params.attacker, input, param, delay.tofloat(), null, null) : DoEntFire(targetname, input, param, delay.tofloat(), null, null)
+        targetname == "!self" ? EntFireByHandle(params.attacker, input, param, delay, null, null) : DoEntFire(targetname, input, param, delay, null, null)
     }
 }
 
@@ -272,7 +272,7 @@ function CustomAttributes::FireInputOnKill(player, item, value) {
     local param = ""
     local delay = -1
     if (args.len() > 2) param = args[2]
-    if (args.len() > 3) delay = args[3]
+    if (args.len() > 3) delay = args[3].tofloat()
 
     CustomAttributes.DeathHookTable.FireInputOnKill <- function(params) {
 
@@ -377,6 +377,9 @@ function CustomAttributes::MeleeCleaveAttack(player, item, value = 64) {
 }
 
 function CustomAttributes::TeleporterRechargeTime(player, item, value = 1.0) {
+
+    //not finished
+    return
 
     local scope = player.GetScriptScope()
     scope.teleporterrechargetimemult <- value

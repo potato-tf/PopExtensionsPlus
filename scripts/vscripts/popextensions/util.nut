@@ -1316,10 +1316,10 @@ function PopExtUtil::EndWaveReverse()
 	foreach (player in PopExtUtil.HumanArray)
 		PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_DEFENDERS)
 	
-
 	temp.ValidateScriptScope()
 	temp.GetScriptScope().ClearWave <- function()
 	{
+		printl("test")
 		if (!PopExtUtil.IsWaveStarted) {
 
 			foreach (player in PopExtUtil.HumanArray)
@@ -1330,7 +1330,7 @@ function PopExtUtil::EndWaveReverse()
 		}
 		//kill all bots
 		foreach (bot in PopExtUtil.BotArray)
-			if (PopExtUtil.IsAlive(bot) && bot.GetTeam() != TEAM_SPECTATOR)
+			if (PopExtUtil.IsAlive(bot) && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
 				bot.TakeDamage(INT_MAX, DMG_GENERIC, null)
 	}
 	
