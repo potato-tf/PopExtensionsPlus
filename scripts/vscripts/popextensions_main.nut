@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "04.27.2024.2"
+::popExtensionsVersion <- "04.30.2024.1"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -89,9 +89,9 @@ if (!("_AddThinkToEnt" in root))
 			EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 		}
 
-		foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
-		foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
-		foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
+		if ("MissionAttributes" in root) foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
+		if ("GlobalFixes" in root) foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
+		if ("CustomAttributes" in root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
 	}
 	function OnGameEvent_player_changeclass(params) {
 		local player = GetPlayerFromUserID(params.userid)
