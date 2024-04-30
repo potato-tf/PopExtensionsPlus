@@ -214,6 +214,9 @@ const TF_STUN_LOSER_STATE = 64
 const TF_STUN_BY_TRIGGER = 128
 const TF_STUN_BOTH = 256
 
+//powerup
+const TF_POWERUP_LIFETIME = 30
+
 // Bot behavior flags
 // only useful for bot_generator
 const TFBOT_IGNORE_ENEMY_SCOUTS      = 1
