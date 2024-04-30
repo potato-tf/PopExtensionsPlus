@@ -1945,12 +1945,12 @@ function MissionAttributes::MissionAttr(...) {
 		// also need to reset it
 		//MissionAttributes.SetConvar("tf_mvm_defenders_team_size", 999)
 		MissionAttributes.DeployBombStart <- function(player) {
-			
+
 			//do this so we can do CancelPending
 			local deployrelay = SpawnEntityFromTable("logic_relay" {
 				targetname = "__bombdeploy"
 				"OnTrigger#1": "bignet,RunScriptCode,PopExtUtil.EndWaveReverse(),2,-1"
-				"OnTrigger#1": "boss_deploy_relay,Trigger,,2,-1"
+				"OnTrigger#2": "boss_deploy_relay,Trigger,,2,-1"
 			})
 			if (GetPropEntity(player, "m_hItem") == null) return
 
@@ -1981,7 +1981,7 @@ function MissionAttributes::MissionAttr(...) {
 		}
 
 		MissionAttributes.DeployBombStop <- function(player) {
-			
+
 			if (GetPropEntity(player, "m_hItem") == null) return
 
 			player.EnableDraw()
@@ -1994,7 +1994,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			FindByName(null, format("__deployanim%d", player.entindex())).Kill()
 
-			player.IsMiniBoss() ? StopSoundOn("MVM.DeployBombGiant", player) : StopSoundOn("MVM.DeployBombSmall", player)	
+			player.IsMiniBoss() ? StopSoundOn("MVM.DeployBombGiant", player) : StopSoundOn("MVM.DeployBombSmall", player)
 
 			EntFireByHandle(player, "SetForcedTauntCam", "0", -1, null, null)
 			EntFireByHandle(player, "SetHudVisibility", "1", -1, null, null)
@@ -2523,11 +2523,11 @@ function MissionAttributes::MissionAttr(...) {
 			}
 			//disable bomb deploy
 			if (!(value & 128)) {
-				
+
 				for (local roundwin; roundwin = FindByClassname(roundwin, "game_round_win");)
-					if (roundwin.GetTeam() == TF_TEAM_PVE_INVADERS) 
+					if (roundwin.GetTeam() == TF_TEAM_PVE_INVADERS)
 						EntFireByHandle(roundwin, "Kill", "", -1, null, null)
-				
+
 				for (local capturezone; capturezone = FindByClassname(capturezone, "func_capturezone");)
 				{
 					AddOutput(capturezone, "OnStartTouch", "!activator", "RunScriptCode", "MissionAttributes.DeployBombStart(self)", -1, -1)
