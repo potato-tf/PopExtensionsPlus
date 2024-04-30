@@ -187,7 +187,7 @@ local popext_funcs = {
 		//equip a spellbook if the bot doesn't have one
 		if (spellbook == null)
 		{
-			local book = Entities.CreateByClassname("tf_weapon_spellbook")
+			local book = CreateByClassname("tf_weapon_spellbook")
 			SetPropInt(book, STRING_NETPROP_ITEMDEF, ID_BASIC_SPELLBOOK)
 			SetPropBool(book, "m_AttributeManager.m_Item.m_bInitialized", true)
 			SetPropBool(book, "m_bValidatedAttachedEntity", true)
@@ -530,12 +530,12 @@ local popext_funcs = {
 
 	popext_giveweapon = function(bot, args) {
 
-		local weapon = Entities.CreateByClassname(args[0])
+		local weapon = CreateByClassname(args[0])
 		SetPropInt(weapon, STRING_NETPROP_ITEMDEF, args[1].tointeger())
 		SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
 		SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
 		weapon.SetTeam(bot.GetTeam())
-		Entities.DispatchSpawn(weapon)
+		DispatchSpawn(weapon)
 
 		PopExtUtil.GetItemInSlot(bot, weapon.GetSlot()).Destroy()
 
@@ -544,6 +544,23 @@ local popext_funcs = {
 		return weapon
 	}
 
+	popext_meleewhenclose = function(bot, args) {
+
+		local dist = args[0].tofloat()
+
+		bot.GetScriptScope().PlayerThinkTable.MeleeWhenClose <- function() {
+
+			for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), dist);) {
+				
+				if (p.GetTeam() == bot.GetTeam()) continue
+				local melee = PopExtUtil.GetItemInSlot(bot, SLOT_MELEE)
+
+				bot.Weapon_Switch(melee)
+				melee.AddAttribute("disable weapon switch", 1, 1)
+				melee.ReapplyProvision()
+			}
+		}
+	}
 	popext_usebestweapon = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.BestWeaponThink <- function() {
@@ -557,7 +574,7 @@ local popext_funcs = {
 				if (bot.GetActiveWeapon() != PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY))
 					bot.Weapon_Switch(PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY))
 
-				for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);) {
+				for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);) {
 					if (p.GetTeam() == bot.GetTeam()) continue
 					local primary = PopExtUtil.GetItemInSlot(bot, SLOT_PRIMARY)
 
@@ -568,7 +585,7 @@ local popext_funcs = {
 			break
 
 			case 2: //TF_CLASS_SNIPER
-				for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 750);) {
+				for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), 750);) {
 					if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().GetSlot() == 2) continue //potentially not break sniper ai
 
 					local secondary = PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY)
@@ -580,7 +597,7 @@ local popext_funcs = {
 			break
 
 			case 3: //TF_CLASS_SOLDIER
-				for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);) {
+				for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);) {
 					if (p.GetTeam() == bot.GetTeam() || bot.GetActiveWeapon().Clip1() != 0) continue
 
 					local secondary = PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY)
@@ -599,7 +616,7 @@ local popext_funcs = {
 				if (bot.GetActiveWeapon() != PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY))
 					bot.Weapon_Switch(PopExtUtil.GetItemInSlot(bot, SLOT_SECONDARY))
 
-				for (local p; p = Entities.FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);) {
+				for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), 500);) {
 					if (p.GetTeam() == bot.GetTeam()) continue
 
 					local primary = PopExtUtil.GetItemInSlot(bot, SLOT_PRIMARY)
@@ -624,7 +641,7 @@ local popext_funcs = {
 
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
 
-			for (local projectile; projectile = Entities.FindByClassname(projectile, "tf_projectile_*");) {
+			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
 				if (projectile.GetOwner() != bot || !Homing.IsValidProjectile(projectile, PopExtUtil.HomingProjectiles)) continue
 				// Any other parameters needed by the projectile thinker can be set here
 				Homing.AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)

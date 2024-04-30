@@ -1947,14 +1947,11 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.DeployBombStart <- function(player) {
 			
 			//do this so we can do CancelPending
-			local deployrelay = CreateByClassname("logic_relay")
-
-			AddOutput(deployrelay, "OnTrigger", "boss_deploy_relay", "Trigger", "", 2, -1)
-			AddOutput(deployrelay, "OnTrigger", "!self", "CallScriptFunction", "PopExtUtil.EndWaveReverse", 2, -1)
-			
-			PopExtUtil.SetTargetname(deployrelay, "__bombdeploy")
-			DispatchSpawn(deployrelay)
-
+			local deployrelay = SpawnEntityFromTable("logic_relay" {
+				targetname = "__bombdeploy"
+				"OnTrigger#1": "bignet,RunScriptCode,PopExtUtil.EndWaveReverse(),2,-1"
+				"OnTrigger#1": "boss_deploy_relay,Trigger,,2,-1"
+			})
 			if (GetPropEntity(player, "m_hItem") == null) return
 
 			player.DisableDraw()
@@ -2039,7 +2036,6 @@ function MissionAttributes::MissionAttr(...) {
 			if ("ReverseMVMDrainAmmoThink" in scope.PlayerThinkTable)  delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink
 
 			// Switch to blue team
-			// TODO: Need to fix players getting stuck in spec on wave fail, mission complete, etc
 			if (player.GetTeam() != TF_TEAM_PVE_INVADERS) {
 				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM(self, TF_TEAM_PVE_INVADERS)", SINGLE_TICK, null, null)
 				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", SINGLE_TICK, null, null)
@@ -2532,7 +2528,6 @@ function MissionAttributes::MissionAttr(...) {
 					if (roundwin.GetTeam() == TF_TEAM_PVE_INVADERS) 
 						EntFireByHandle(roundwin, "Kill", "", -1, null, null)
 				
-
 				for (local capturezone; capturezone = FindByClassname(capturezone, "func_capturezone");)
 				{
 					AddOutput(capturezone, "OnStartTouch", "!activator", "RunScriptCode", "MissionAttributes.DeployBombStart(self)", -1, -1)

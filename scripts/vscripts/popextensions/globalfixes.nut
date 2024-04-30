@@ -13,7 +13,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			local victim   = params.const_entity
 			local attacker = params.inflictor
 
-			if ( victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB && attacker != null && !attacker.IsBotOfType(TF_BOT_TYPE) && (PopExtUtil.GetItemIndex(params.weapon) == ID_YOUR_ETERNAL_REWARD || PopExtUtil.GetItemIndex(params.weapon) == ID_YOUR_ETERNAL_REWARD)) {
+			if ( victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB && attacker != null && !attacker.IsBotOfType(TF_BOT_TYPE) && (PopExtUtil.GetItemIndex(params.weapon) == ID_YOUR_ETERNAL_REWARD || PopExtUtil.GetItemIndex(params.weapon) == ID_WANGA_PRICK)) {
 				attacker.GetScriptScope().stabvictim <- victim
 				EntFireByHandle(attacker, "RunScriptCode", "PopExtUtil.SilentDisguise(self, stabvictim)", -1, null, null)
 			}
