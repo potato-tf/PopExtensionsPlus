@@ -221,6 +221,17 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 			else
 				fakePack.SetAbsOrigin(origin)
 
+
+			fakePack.ValidateScriptScope()
+			fakePack.GetScriptScope().despawnTime <- Time() + TF_POWERUP_LIFETIME
+			fakePack.GetScriptScope().DespawnThink <- function () {
+				if (Time() < despawnTime)
+					return
+
+				fakePack.Kill()
+			}
+
+			AddThinkToEnt(fakePack, "DespawnThink")
 		}
 
 		entity.SetAbsOrigin(Vector(-1000000, -1000000, -1000000))
