@@ -1,7 +1,5 @@
 popExtEntity <- FindByName(null, "_popext")
-if (popExtEntity == null)
-	popExtEntity <- SpawnEntityFromTable("info_teleport_destination", { targetname = "_popext" })
-
+if (popExtEntity == null) popExtEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "_popext" })
 
 popExtEntity.ValidateScriptScope()
 PopExt <- popExtEntity.GetScriptScope()
@@ -14,39 +12,36 @@ PopExt <- popExtEntity.GetScriptScope()
 	function AddHooksToScope(name, table, scope) {
 		foreach(hookName, func in table) {
 			// Entries in hook table must begin with 'On' to be considered hooks
-			if (hookName[0] == 'O' && hookName[1] == 'n') {
-				if (!("popHooks" in scope)) {
+			if (hookName.slice(0,2) == "On") {
+				if (!("popHooks" in scope))
 					scope.popHooks <- {}
-				}
 
-				if (!(hookName in scope.popHooks)) {
+				if (!(hookName in scope.popHooks))
 					scope.popHooks[hookName] <- []
-				}
 
 				scope.popHooks[hookName].append(func)
 			}
 			else {
-				if (!("popProperty" in scope)) {
+				if (!("popProperty" in scope))
 					scope.popProperty <- {}
-				}
+
 				scope.popProperty[hookName] <- func
 
-				if (hookName == "TankModel" || hookName == "Model") {
-					local tankModelNames = typeof func == "string" ? {} : func
+				if (hookName == "Model" || hookName == "TankModel") {
+					local modelNames = typeof func == "string" ? {} : func
 
 					if (typeof func == "string") {
-						tankModelNames.Default <- func
-						tankModelNames.Damage1 <- func
-						tankModelNames.Damage2 <- func
-						tankModelNames.Damage3 <- func
+						modelNames.Default <- func
+						modelNames.Damage1 <- func
+						modelNames.Damage2 <- func
+						modelNames.Damage3 <- func
 					}
-					scope.popProperty[hookName] <- tankModelNames
-					local tankModelNamesPrecached = {}
+					scope.popProperty[hookName] <- modelNames
 
-					foreach(k, v in tankModelNames)
-					tankModelNamesPrecached[k] <- PrecacheModel(v)
-
-					scope.popProperty.TankModelPrecached <- tankModelNamesPrecached
+					local modelNamesPrecached = {}
+					foreach(k, v in modelNames)
+						modelNamesPrecached[k] <- PrecacheModel(v)
+					scope.popProperty.ModelPrecached <- modelNamesPrecached
 				}
 			}
 		}
@@ -57,12 +52,12 @@ PopExt <- popExtEntity.GetScriptScope()
 			foreach(index, func in scope.popHooks[name])
 				func(entity)
 	}
-
 	function FireHooksParam(entity, scope, name, param) {
 		if (scope != null && "popHooks" in scope && name in scope.popHooks)
 			foreach(index, func in scope.popHooks[name])
 				func(entity, param)
 	}
+
 	Events = {
 
 		function OnScriptHook_OnTakeDamage(params) {
@@ -74,20 +69,18 @@ PopExt <- popExtEntity.GetScriptScope()
 				local attackerscope = attacker.GetScriptScope()
 				if (victim.GetClassname() == "tank_boss" && "popProperty" in scope) {
 
-					if (params.damage >= victim.GetHealth()) {
-						if ("SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides)
-						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
-						victim.RemoveEFlags(EFL_KILLME)
-					}
+					if (params.damage >= victim.GetHealth())
+						if ("SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides) {
+							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
+							victim.RemoveEFlags(EFL_KILLME)
+						}
 					if ("CritImmune" in scope.popProperty && scope.popProperty.CritImmune)
 						params.damage_type = params.damage_type &~ DMG_CRITICAL
-
 
 				}
 				else if (attacker != null && attacker.GetClassname() == "tank_boss" && "popProperty" in attackerscope && victim.IsPlayer())
 					if ("CrushDamageMult" in attackerscope.popProperty)
 						params.damage *= attackerscope.popProperty.CrushDamageMult
-
 
 				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamage", params)
 			}
@@ -101,18 +94,16 @@ PopExt <- popExtEntity.GetScriptScope()
 
 		function OnGameEvent_player_spawn(params) {
 			local player = GetPlayerFromUserID(params.userid)
+			local scope = player.GetScriptScope()
 
-			if (player.GetScriptScope() != null && "popWearablesToDestroy" in player.GetScriptScope()) {
-				foreach(wearable in player.GetScriptScope().popWearablesToDestroy)
+			if (scope != null && "popWearablesToDestroy" in scope) {
+				foreach(wearable in scope.popWearablesToDestroy)
 					if (wearable.IsValid()) EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
-				delete player.GetScriptScope().popWearablesToDestroy
+				delete scope.popWearablesToDestroy
 			}
 
-			if (player != null && player.IsBotOfType(TF_BOT_TYPE)) {
-				player.ValidateScriptScope()
-				local scope = player.GetScriptScope()
-
+			if (player.IsBotOfType(TF_BOT_TYPE)) {
 				if ("popFiredDeathHook" in scope) {
 					if (!scope.popFiredDeathHook)
 						PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)
@@ -134,18 +125,16 @@ PopExt <- popExtEntity.GetScriptScope()
 			if (params.team != TEAM_SPECTATOR) return
 
 			local player = GetPlayerFromUserID(params.userid)
+			local scope = player.GetScriptScope()
 
-			if (player.GetScriptScope() != null && "popWearablesToDestroy" in player.GetScriptScope()) {
-				foreach(wearable in player.GetScriptScope().popWearablesToDestroy)
+			if (scope != null && "popWearablesToDestroy" in scope) {
+				foreach(wearable in scope.popWearablesToDestroy)
 					if (wearable.IsValid()) EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
-				delete player.GetScriptScope().popWearablesToDestroy
+				delete scope.popWearablesToDestroy
 			}
 
-			if (player != null && player.IsBotOfType(TF_BOT_TYPE)) {
-				player.ValidateScriptScope()
-				local scope = player.GetScriptScope()
-
+			if (player.IsBotOfType(TF_BOT_TYPE)) {
 				if ("popFiredDeathHook" in scope) {
 					if (!scope.popFiredDeathHook)
 						PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)
@@ -162,10 +151,9 @@ PopExt <- popExtEntity.GetScriptScope()
 
 			}
 		}
-
 		function OnGameEvent_player_hurt(params) {
 			local victim = GetPlayerFromUserID(params.userid)
-			if (victim != null && victim.IsBotOfType(TF_BOT_TYPE)) {
+			if (victim.IsBotOfType(TF_BOT_TYPE)) {
 				local scope = victim.GetScriptScope()
 				PopExtHooks.FireHooksParam(victim, scope, "OnTakeDamagePost", params)
 			}
@@ -178,7 +166,7 @@ PopExt <- popExtEntity.GetScriptScope()
 		}
 		function OnGameEvent_player_death(params) {
 			local player = GetPlayerFromUserID(params.userid)
-			if (player != null && player.IsBotOfType(TF_BOT_TYPE)) {
+			if (player.IsBotOfType(TF_BOT_TYPE)) {
 				local scope = player.GetScriptScope()
 				scope.popFiredDeathHook <- true
 				PopExtHooks.FireHooksParam(player, scope, "OnDeath", params)
@@ -201,7 +189,7 @@ PopExt <- popExtEntity.GetScriptScope()
 		function OnGameEvent_npc_hurt(params) {
 
 			local victim = EntIndexToHScript(params.entindex)
-			if (victim != null && victim.GetClassname() == "tank_boss") {
+			if (victim.GetClassname() == "tank_boss") {
 				local scope = victim.GetScriptScope()
 				local dead  = (victim.GetHealth() - params.damageamount) <= 0
 
@@ -259,7 +247,7 @@ PopExt <- popExtEntity.GetScriptScope()
 
 						// Compensate for the decreasing of normal tank icon
 						if (PopExt.GetWaveIconSpawnCount("tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL) > 0 && PopExt.GetWaveIconSpawnCount(icon.name, flags) > 0)
-						PopExt.IncrementWaveIconSpawnCount("tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1, false)
+							PopExt.IncrementWaveIconSpawnCount("tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1, false)
 
 						// Decrement custom tank icon when killed.
 						PopExt.DecrementWaveIconSpawnCount(icon.name, flags, 1, false)
@@ -337,16 +325,17 @@ function PopulatorThink() {
 			}
 
 			local tankName = tank.GetName().tolower()
-			foreach(name, table in tankNamesWildcard) {
+			foreach(name, table in tankNamesWildcard)
 				if (name == tankName)
 					PopExtHooks.AddHooksToScope(tankName, table, scope)
-			}
 			if (tankName in tankNames)
 				PopExtHooks.AddHooksToScope(tankName, tankNames[tankName], scope)
 
 			if ("popProperty" in scope) {
-				if ("Model" in scope.popProperty)
-					scope.popProperty.TankModel <- scope.popProperty.Model
+				if ("TankModel" in scope.popProperty) {
+					scope.popProperty.Model <- scope.popProperty.TankModel
+					delete scope.popProperty.TankModel
+				}
 
 				if ("SoundOverrides" in scope.popProperty) {
 
@@ -367,10 +356,9 @@ function PopulatorThink() {
 						}
 					}
 					if ("EngineLoop" in scope.popProperty.SoundOverrides && !scope.engineloopreplaced) {
-
-							StopSoundOn("MVM.TankEngineLoop", tank)
-							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank})
-							scope.engineloopreplaced = true
+						StopSoundOn("MVM.TankEngineLoop", tank)
+						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank})
+						scope.engineloopreplaced = true
 					}
 					if ("Start" in scope.popProperty.SoundOverrides) {
 						StopSoundOn("MVM.TankStart", tank)
@@ -421,11 +409,13 @@ function PopulatorThink() {
 					scope.popProperty.DisableTracks <- true
 					scope.popProperty.DisableBomb <- true
 					scope.popProperty.DisableSmoke <- true
+					if (!("Skin" in scope.popProperty))
+						scope.popProperty.Skin <- 1
 
 					//set default blimp model if not specified
-					if (!("TankModel" in scope.popProperty) && !("Model" in scope.popProperty)) {
+					if (!("Model" in scope.popProperty)) {
 						local blimpModel = {
-							TankModel = {
+							Model = {
 								Default = "models/bots/boss_bot/boss_blimp.mdl"
 								Damage1 = "models/bots/boss_bot/boss_blimp_damage1.mdl"
 								Damage2 = "models/bots/boss_bot/boss_blimp_damage2.mdl"
@@ -443,36 +433,34 @@ function PopulatorThink() {
 					scope.TankThinkTable.BlimpThink <- function() {
 						if (self == null) return //this is normally not possible, however we need to do a pretty gross hack that will turn the tank into a null instance sometimes
 						self.SetAbsOrigin(blimpTrain.GetOrigin())
-						self.GetLocomotionInterface().Reset()
+						self.GetLocomotionInterface().Reset() // what if you parent the tank to the tracktrain instead?
+						//update func_tracktrain if tank's speed is changed
 						if (GetPropFloat(this.blimpTrain, "m_flSpeed") != GetPropFloat(self, "m_speed"))
 							EntFireByHandle(this.blimpTrain, "SetSpeedReal", GetPropFloat(self, "m_speed").tostring(), -1, null, null)
 					}
 				}
+				
+				if ("Skin" in scope.popProperty)
+					SetPropInt(tank, "m_nSkin", scope.popProperty.Skin)
 
 				if ("SpawnTemplate" in scope.popProperty) {
 					SpawnTemplates.SpawnTemplate(scope.popProperty.SpawnTemplate, tank, tank.GetOrigin(), tank.GetLocalAngles())
 					delete scope.popProperty.SpawnTemplate
 				}
-				if ("DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks) {
+
+				if ("DisableTracks" in scope.popProperty && scope.popProperty.DisableTracks)
 					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer())
 						if (child.GetClassname() == "prop_dynamic")
 							if (child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl")
 								child.DisableDraw()
-						
-					
-				}
 
-				if ("DisableBomb" in scope.popProperty && scope.popProperty.DisableBomb) {
-					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+				if ("DisableBomb" in scope.popProperty && scope.popProperty.DisableBomb)
+					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer())
 						if (child.GetClassname() == "prop_dynamic")
 							if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl") 
 								child.DisableDraw()
-						
-					}
-				}
 
 				if ("DisableSmoke" in scope.popProperty && scope.popProperty.DisableSmoke) {
-
 					scope.TankThinkTable.DisableSmoke <- function() {
 						//disables smokestack, still emits one smoke particle when spawning and when moving out from under low ceilings (solid brushes 300 units or lower)
 						EntFireByHandle(self, "DispatchEffect", "ParticleEffectStop", -1, null, null)
@@ -482,15 +470,28 @@ function PopulatorThink() {
 				if ("Scale" in scope.popProperty)
 					EntFireByHandle(tank, "SetModelScale", scope.popProperty.Scale.tostring(), -1, null, null)
 
-				if ("TankModel" in scope.popProperty) {
-					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
-						tank.SetModelSimple(scope.popProperty.TankModel.Default) //changes bbox size
+				if ("Model" in scope.popProperty) {
+					if (!("ModelVisionOnly" in scope.popProperty && scope.popProperty.ModelVisionOnly))
+						tank.SetModelSimple(scope.popProperty.Model.Default) //changes bbox size
 
-					scope.curModel <- scope.popProperty.TankModelPrecached.Default
+					scope.curModel <- scope.popProperty.ModelPrecached.Default
 
-					scope.TankThinkTable.SetTankModel <- function() {
+					scope.TankThinkTable.SetModel <- function() {
 						SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_NONE)
 						SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_ROME)
+					}
+
+					if ("LeftTrack" in scope.popProperty.Model) {
+						scope.popProperty.Model.TrackL <- scope.popProperty.Model.LeftTrack
+						delete scope.popProperty.Model.LeftTrack
+						scope.popProperty.ModelPrecached.TrackL <- scope.popProperty.ModelPrecached.LeftTrack
+						delete scope.popProperty.ModelPrecached.LeftTrack
+					}
+					if ("RightTrack" in scope.popProperty.Model) {
+						scope.popProperty.Model.TrackR <- scope.popProperty.Model.RightTrack
+						delete scope.popProperty.Model.RightTrack
+						scope.popProperty.ModelPrecached.TrackR <- scope.popProperty.ModelPrecached.RightTrack
+						delete scope.popProperty.ModelPrecached.RightTrack
 					}
 
 					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
@@ -502,18 +503,18 @@ function PopulatorThink() {
 						local is_track          = false
 						local childModelName    = child.GetModelName()
 
-						if ("Bomb" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/bomb_mechanism.mdl") {
-							replace_model     = scope.popProperty.TankModelPrecached.Bomb
-							replace_model_str = scope.popProperty.TankModel.Bomb
+						if ("Bomb" in scope.popProperty.Model && childModelName == "models/bots/boss_bot/bomb_mechanism.mdl") {
+							replace_model     = scope.popProperty.ModelPrecached.Bomb
+							replace_model_str = scope.popProperty.Model.Bomb
 						}
-						else if ("LeftTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_L.mdl") {
-							replace_model     = scope.popProperty.TankModelPrecached.LeftTrack
-							replace_model_str = scope.popProperty.TankModel.LeftTrack
+						else if ("TrackL" in scope.popProperty.Model && childModelName == "models/bots/boss_bot/tank_track_L.mdl") {
+							replace_model     = scope.popProperty.ModelPrecached.TrackL
+							replace_model_str = scope.popProperty.Model.TrackL
 							is_track          = true
 						}
-						else if ("RightTrack" in scope.popProperty.TankModel && childModelName == "models/bots/boss_bot/tank_track_R.mdl") {
-							replace_model     = scope.popProperty.TankModelPrecached.RightTrack
-							replace_model_str = scope.popProperty.TankModel.RightTrack
+						else if ("TrackR" in scope.popProperty.Model && childModelName == "models/bots/boss_bot/tank_track_R.mdl") {
+							replace_model     = scope.popProperty.ModelPrecached.TrackR
+							replace_model_str = scope.popProperty.Model.TrackR
 							is_track          = true
 						}
 
@@ -524,16 +525,12 @@ function PopulatorThink() {
 						}
 
 						if (is_track) {
-							child.ValidateScriptScope()
-							child.GetScriptScope().RestartTrackAnim <- function() {
-								local animSequence = self.LookupSequence("forward")
-								if (animSequence != -1) {
-									self.SetSequence(animSequence)
-									self.SetPlaybackRate(1.0)
-									self.SetCycle(0)
-								}
+							local animSequence = child.LookupSequence("forward")
+							if (animSequence != -1) {
+								child.SetSequence(animSequence)
+								child.SetPlaybackRate(1.0)
+								child.SetCycle(0)
 							}
-							EntFireByHandle(child, "CallScriptFunction", "RestartTrackAnim", -1, null, null)
 						}
 					}
 				}
@@ -543,11 +540,9 @@ function PopulatorThink() {
 			scope.TankThinks() //run thinks for availability in OnSpawn
 			_AddThinkToEnt(tank, "TankThinks")
 
-			foreach(name, table in tankNamesWildcard) {
-
+			foreach(name, table in tankNamesWildcard)
 				if (name == tankName && "OnSpawn" in table)
 					table.OnSpawn(tank, tankName)
-			}
 
 			if (tankName in tankNames) {
 				local table = tankNames[tankName]
@@ -559,20 +554,19 @@ function PopulatorThink() {
 			//sets damaged tank models
 			if (scope.curHealth != tank.GetHealth()) {
 				local health_stage
-				if (tank.GetHealth() <= 0) {
+				if (tank.GetHealth() <= 0)
 					health_stage = 3
-				} else {
-					//determines how many quarters of maxHealth the tank has received in damage
+				else
+					// how many quarters of maxHealth has the tank received in damage
 					health_stage = floor((scope.maxHealth - tank.GetHealth())/scope.maxHealth.tofloat() * 4)
-				}
 
-				if (scope.lastHealthStage != health_stage && "popProperty" in scope && "TankModel" in scope.popProperty) {
+				if (scope.lastHealthStage != health_stage && "popProperty" in scope && "Model" in scope.popProperty) {
 					local name = health_stage == 0 ? "Default" : "Damage" + health_stage
 
-					if (!("TankModelVisionOnly" in scope.popProperty && scope.popProperty.TankModelVisionOnly))
-						tank.SetModelSimple(scope.popProperty.TankModel[name])
+					if (!("ModelVisionOnly" in scope.popProperty && scope.popProperty.ModelVisionOnly))
+						tank.SetModelSimple(scope.popProperty.Model[name])
 
-					scope.curModel <- scope.popProperty.TankModelPrecached[name]
+					scope.curModel <- scope.popProperty.ModelPrecached[name]
 				}
 
 				scope.curHealth = tank.GetHealth() //set this here instead of Updates think to prevent conflict
@@ -590,7 +584,7 @@ function PopulatorThink() {
 		if (alive && !("botCreated" in scope)) {
 			scope.botCreated <- true
 
-			foreach(tag, table in robotTags) {
+			foreach(tag, table in robotTags)
 				if (player.HasBotTag(tag)) {
 					scope.popFiredDeathHook <- false
 					PopExtHooks.AddHooksToScope(tag, table, scope)
@@ -598,11 +592,9 @@ function PopulatorThink() {
 					if ("OnSpawn" in table)
 						table.OnSpawn(player, tag)
 				}
-			}
 		}
 		// Make sure that ondeath hook is fired always
 		if (!alive && "popFiredDeathHook" in scope) {
-
 			if (!scope.popFiredDeathHook)
 				PopExtHooks.FireHooksParam(player, scope, "OnDeath", null)
 
