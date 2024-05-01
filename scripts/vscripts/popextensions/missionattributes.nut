@@ -1960,7 +1960,7 @@ function MissionAttributes::MissionAttr(...) {
 			//do this so we can do CancelPending
 			local deployrelay = SpawnEntityFromTable("logic_relay" {
 				targetname = "__bombdeploy"
-				"OnTrigger#1": "bignet,RunScriptCode,PopExtUtil.EndWaveReverse(),2,-1"
+				"OnTrigger#1": "bignetRunScriptCodePopExtUtil.EndWaveReverse()2-1"
 				"OnTrigger#2": "boss_deploy_relay,Trigger,,2,-1"
 			})
 			if (GetPropEntity(player, "m_hItem") == null) return

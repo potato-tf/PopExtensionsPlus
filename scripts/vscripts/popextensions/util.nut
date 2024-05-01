@@ -1319,7 +1319,6 @@ function PopExtUtil::EndWaveReverse()
 	temp.ValidateScriptScope()
 	temp.GetScriptScope().ClearWave <- function()
 	{
-		printl("test")
 		if (!PopExtUtil.IsWaveStarted) {
 
 			foreach (player in PopExtUtil.HumanArray)
