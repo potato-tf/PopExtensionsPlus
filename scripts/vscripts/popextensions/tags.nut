@@ -401,11 +401,11 @@ local popext_funcs = {
 		SetPropBool(bot, "m_bForcedSkin", true)
 		SetPropInt(bot, "m_nForcedSkin", args[0].tointeger())
 
-		PopExtTags.DeathHookTable.ResetSkin <- function(params) {
+		PopExtTags.TakeDamageTable.ResetSkin <- function(params) {
 
-			local b = GetPlayerFromUserID(params.userid)
+			local victim = params.const_entity
 
-			if (b == bot) {
+			if (victim == bot && params.damage > victim.GetHealth()) {
 				SetPropBool(bot, "m_bForcedSkin", true)
 				SetPropInt(bot, "m_nForcedSkin", 1)
 			}
@@ -551,7 +551,7 @@ local popext_funcs = {
 		bot.GetScriptScope().PlayerThinkTable.MeleeWhenClose <- function() {
 
 			for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), dist);) {
-				
+
 				if (p.GetTeam() == bot.GetTeam()) continue
 				local melee = PopExtUtil.GetItemInSlot(bot, SLOT_MELEE)
 
@@ -668,18 +668,18 @@ local popext_funcs = {
 				if (projectile.GetEFlags() & EFL_NO_ROTORWASH_PUSH || GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
 
 				if (args.len() > 1) EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
-				
+
 				local particle = CreateByClassname("trigger_particle")
 
 				particle.KeyValueFromString("particle_name", args[0])
 				particle.KeyValueFromInt("attachment_type", PATTACH_ABSORIGIN_FOLLOW)
 				particle.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)
-				
+
 				DispatchSpawn(particle)
 
 				EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)
 				EntFireByHandle(particle, "Kill", "", -1, null, null)
-				
+
 				projectile.AddEFlags(EFL_NO_ROTORWASH_PUSH)
 			}
 		}
