@@ -213,14 +213,14 @@ Every available MissionAttribute is documented in `missionattributes.nut.`
 # SpawnTemplates:
 A powerful entity spawning script that leverages the new point_script_template entity.
 
-Inside the python folder you will find a script to convert rafmod's PointTemplates spawner to a vscript equivalent.  Download the latest version of python if you don't have it, run the script, select your popfile, and a script file containing all the templates will be output to a new VScript alternative.  note that you will need to manually spawn these entities again using the `SpawnTemplates.SpawnTemplate("TemplateName")` function
+Inside the python folder you will find a script to convert rafmod's PointTemplates spawner to a vscript equivalent.  Download the latest version of python if you don't have it, run the script, select your popfile, and a script file containing all the templates will be output to a new VScript alternative.  Note that you will need to manually spawn these entities again using the `SpawnTemplate("TemplateName")` function, use the `popext_spawntemplate|TemplateName` tag for bots, or use the `SpawnTemplate = "TemplateName"` property for tanks.
 
 ## Writing new PointTemplates
 
 The PointTemplate spawner is structured like so:
 
 ```
-PointTemplates <- {
+::PointTemplates <- {
         TemplateName <- {
                 NoFixup = 1, //Name fix-up behaves somewhat similarly to point_template name fix-up, appending a unique number to the end of the targetname to separate identical templates.  Set NoFixup 1 to disable this behavior
                 [0] = { //first entity to spawn in the template
@@ -265,6 +265,42 @@ This allows mission makers to apply fully custom weapon attributes to both bots 
 
 ### IMPORTANT!
 Due to current limitations with VScript, you must copy/paste all of your bot tags from every bot into a script file with the same name as your mission suffixed with "_tags" (e.g. "mvm_bigrock_vscript_tags.nut").  The script will look for this file when spawning bots to check for relevant tags.  An example _tags file has been provided for bigrock
+
+# Tank Additions
+
+Pop Extentions Plus expands upon the tank additions added in the original Pop Extensions. 
+When you call PopExt.AddTankName, the second argument is a table where you set the values for the available properties below. Please see the bigrock pop and [popext bigrock pop](https://github.com/rafradek/VScript-Popfile-Extensions/blob/main/scripts/population/mvm_bigrock_vscript.pop#L136) for usage.
+
+Available Properties:
+```
+* TankModel or Model    // Use custom tank model, can be either a string or a table of string
+  * Default
+  * Damage1
+  * Damage2
+  * Damage3
+  * Bomb
+  * LeftTrack
+  * RightTrack
+* TankModelVisionOnly   // if false, changes bbox size to match the custom model; if true keeps default model bbox
+* SoundOverrides
+  * Ping
+  * EngineLoop
+  * Start
+  * Destroy
+  * Deploy 
+* Team                  // 2 - Red team, 3 - Blu team
+* NoScreenShake         // does not currently work
+* IsBlimp               // true sets the tank to be a blimp
+* SpawnTemplate         // expects a string that is the name of the template in PointTemplates table. see SpawnTemplates section
+* DisableTracks
+* DisableBomb
+* DisableSmoke
+* Scale                 // number or string
+* Icon                  // expects a table. e.g. { name = `tank_sticky_hellmet`, isCrit = true, isBoss = false}
+* CritImmune
+* CrushDamageMult
+* NoDeathFX             //1: disables visuals only, 2: disables visuals and sounds
+```
 
 # Entity Additions
 This library supports custom entity features and spawnflags to enable certain behaviors.  You can add these in the PointTemplate spawner, or in Hammer with SmartEdit disabled.  Simply add `popextensions/ent_additions` to the `vscripts` keyvalue of the entity
