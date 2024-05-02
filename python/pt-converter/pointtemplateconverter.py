@@ -528,7 +528,7 @@ def convertspawntemplates(pop):
 
 	for f in list(set(funcs)):
 		with open(pop[:-4] + "_point_templates.nut", 'a') as file:
-			file.write(f'{f}\n')
+			file.write(f'\n{f}')
 
 pop = None
 try:
