@@ -41,9 +41,7 @@ WaveSchedule
 				// EntFire(`wave_init_relay`, `Trigger`)
 
 				// Load popextensions script
-				IncludeScript(`popextensions_main.nut`, getroottable())
-
-				// IncludeScript(`tensai_pointtemplates.nut`)
+				IncludeScript(`popextensions_main`, getroottable())
 
 				MissionAttrs({
 					`NoReanimators`: 1
