@@ -444,7 +444,7 @@ function PopulatorThink() {
 					SetPropInt(tank, "m_nSkin", scope.popProperty.Skin)
 
 				if ("SpawnTemplate" in scope.popProperty) {
-					SpawnTemplates.SpawnTemplate(scope.popProperty.SpawnTemplate, tank, tank.GetOrigin(), tank.GetLocalAngles())
+					SpawnTemplate(scope.popProperty.SpawnTemplate, tank)
 					delete scope.popProperty.SpawnTemplate
 				}
 

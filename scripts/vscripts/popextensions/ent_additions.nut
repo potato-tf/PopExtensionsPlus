@@ -8,7 +8,6 @@ function Precache()
 function OnPostSpawn()
 {
     local classname = self.GetClassname()
-
     if (endswith(classname, "_button"))
     {
         //https://github.com/ValveSoftware/source-sdk-2013/pull/401
@@ -39,8 +38,7 @@ function OnPostSpawn()
         local xyz = [0.0, 0.0, 0.0]
         
         self.ValidateScriptScope()
-        self.GetScriptScope().RotateFixThink <- function()
-        {
+        self.GetScriptScope().RotateFixThink <- function() {
             for (local i = 0; i < 3; i++)
             {
                 xyz[i] = GetPropFloat(self, format("m_angRotation[%d]", i))
@@ -82,14 +80,62 @@ function OnPostSpawn()
         self.GetScriptScope().Inputkillhierarchy <- InputKillHierarchy
         InputKillHierarchy()
     }
-    ::RotateEvent <- {
-        function OnGameEvent_recalculate_holidays(_)
+    else if (classname == "tf_point_weapon_mimic")
+    {
+        local particle = CreateByClassname("trigger_particle")
+        self.ValidateScriptScope()
+        self.GetScriptScope().SetProjectileTeam <- function()
         {
-            if (GetRoundState() != GR_STATE_PREROUND) return
+            for (local projectile; projectile = FindByClassnameWithin(projectile, "tf_projectile*", self.GetOrigin(), 1);)
+            {
+                if (projectile.GetEFlags() & EFL_NO_MEGAPHYSCANNON_RAGDOLL) continue
 
-            for (local rotate; rotate = FindByClassname(rotate, "func_rotating");)
-                EntFireByHandle(rotate, "Kill", "", -1, null, null)
+                projectile.AddEFlags(EFL_NO_MEGAPHYSCANNON_RAGDOLL)
+                projectile.SetTeam(self.GetTeam())
+
+                if (startswith(projectile.GetClassname(), "tf_projectile_pipe"))
+                {
+                    projectile.SetSkin(self.GetTeam() - 2)
+                    EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
+
+                    local particlename = ""
+    
+                    projectile.GetTeam() < 3 ? particlename = "pipebombtrail_red" : particlename = "pipebombtrail_blue"
+    
+                    particle.KeyValueFromString("particle_name", particlename)
+                    particle.KeyValueFromInt("attachment_type", PATTACH_ABSORIGIN_FOLLOW)
+                    particle.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)				
+    
+                    DispatchSpawn(particle)
+    
+                    EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)
+    
+                    if (GetPropBool(self, "m_bCrits"))
+                    {
+                        local particlecrits = ""
+                        
+                        projectile.GetTeam() < 3 ? particlecrits = "critical_pipe_red" : particlecrits = "critical_pipe_blue"
+    
+                        particle.KeyValueFromString("particle_name", particlecrits)
+                        EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)
+        
+                    }
+                }
+            }
+
+            return -1
         }
+        AddThinkToEnt(self, "SetProjectileTeam")
     }
-    __CollectGameEventCallbacks(RotateEvent);
 }
+
+::RotateEvent <- {
+    function OnGameEvent_recalculate_holidays(_)
+    {
+        if (GetRoundState() != GR_STATE_PREROUND) return
+
+        for (local rotate; rotate = FindByClassname(rotate, "func_rotating");)
+            EntFireByHandle(rotate, "Kill", "", -1, null, null)
+    }
+}
+__CollectGameEventCallbacks(RotateEvent)

@@ -236,7 +236,7 @@ local popext_funcs = {
 	}
 
 	popext_spawntemplate = function(bot, args) {
-		SpawnTemplate(args[0], bot, bot.GetOrigin(), bot.GetLocalAngles())
+		SpawnTemplate(args[0], bot)
 	}
 
 	popext_forceromevision = function(bot, args) {
@@ -669,14 +669,17 @@ local popext_funcs = {
 
 				if (args.len() > 1) EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 				
-				local particle = SpawnEntityFromTable("trigger_particle", {
-					particle_name = args[0],
-					attachment_type = PATTACH_ABSORIGIN_FOLLOW,
-					spawnflags = SF_TRIGGER_ALLOW_ALL
-				})
+				local particle = CreateByClassname("trigger_particle")
+
+				particle.KeyValueFromString("particle_name", args[0])
+				particle.KeyValueFromInt("attachment_type", PATTACH_ABSORIGIN_FOLLOW)
+				particle.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)
+				
+				DispatchSpawn(particle)
 
 				EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)
 				EntFireByHandle(particle, "Kill", "", -1, null, null)
+				
 				projectile.AddEFlags(EFL_NO_ROTORWASH_PUSH)
 			}
 		}
