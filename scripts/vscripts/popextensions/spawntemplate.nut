@@ -39,7 +39,6 @@ PopExt.globalTemplateSpawnCount   <- 0
 				entity.SetSize(Vector(buf[0], buf[1], buf[2]), Vector(buf[3], buf[4], buf[5]))
 				entity.SetSolid(2)
 			}
-
 			scope.SpawnedEntities[entity] <- [origin, angles]
 
 			if (origin != "" || angles != "")
@@ -200,11 +199,17 @@ PopExt.globalTemplateSpawnCount   <- 0
 		//may have issues with targetnames that are substrings of other targetnames?
 		//this should cover targetnames, parentnames, target, and output params
 		foreach(index, entity in pointtemplatecopy) {
+
 			if (typeof(entity) == "table") {
+
 				foreach(classname, keyvalues in entity) {
+
 					foreach(key, value in keyvalues) {
+
 						if (typeof(value) == "string") {
+
 							foreach(targetname in scope.EntityFixedUpTargetName) {
+
 								if (value.find(targetname) != null && value.find("/") == null) //ignore potential file paths, also ignores targetnames with "/"
 								{
 									keyvalues[key] <- value.slice(0, targetname.len()) + PopExt.globalTemplateSpawnCount + value.slice(targetname.len())
@@ -224,12 +229,12 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 			foreach(classname, keyvalues in entity) {
 		
-				if (classname == "OnSpawnOutput") {
+				if (classname == "OnSpawnOutput") 
 					scope.OnSpawnOutputArray.append(keyvalues)
-				}
-				else if (classname == "OnParentKilledOutput") {
+					
+				else if (classname == "OnParentKilledOutput") 
 					scope.OnParentKilledOutputArray.append(keyvalues)
-				}
+				
 				else {
 					//adjust origin and angles
 					if ("origin" in keyvalues) {

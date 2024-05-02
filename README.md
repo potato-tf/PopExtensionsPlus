@@ -12,21 +12,21 @@ scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes
 The stucture of the library is as follows:
 
 - **PopExt**: This is the original popextensions library, **all functions from the original popextensions library must be prefixed with PopExt now**
-  
+
 - **PopExtHooks**: This is the original hooks.nut file for popextensions.  These functions generally don't need to be touched by the end user
-  
+
 - **PopExtUtil**:  A wide variety of utility functions.  All functions are listed in util.nut and prefixed with `PopExtUtil.`  **Some functions previously included in popextensions.nut have been moved here**
-  
+
 - **MissionAttributes**: Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  All keyvalues are documented in `missionattributes.nut`
-  
+
 - **SpawnTemplates**: drop-in replacement for rafmod's PointTemplate spawning system, a python script has been supplied to convert your old missions to this new format.
-  
+
 - **Tags**: Every bot tag and what it does is documented in the tags.nut file.  These functions generally don't need to be touched by the end user
-  
+
 - **CustomAttributes**: this works in combination with MissionAttributes and Tags to allow creating completely custom player and item attributes that can be applied to both players and bots.
-  
+
 - **Entity Additions**: This is a file that is run directly on an entity in the `vscripts` keyvalue.  **It is not used like other scripts in this library!**
-  
+
 - **Main**: This is the main cleanup and include file.  These functions generally don't need to be touched by the end user.
 
 # Backwards compatibility with popextensions
@@ -61,10 +61,10 @@ The following functions have been moved to a separate utility file and are prefi
 - DoPrintTable
 - CreatePlayerWearable
 
-Example:  
+Example:
 ```CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)```
 
-is now 
+is now
 
 ```PopExtUtil.CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)```
 
@@ -75,7 +75,7 @@ is now
 - Fixed HoldFireUntilReload on every weapon
 - Dragons Fury cannot be reflected.
 - All of these can be optionally disabled with a MissionAttributes keyvalue
-  
+
 # PopExt:
 The example below makes bots with tag abc green, spawns a barrel prop on bot's head and gives them a frying pan (thanks to this script to download from here https://tf2maps.net/downloads/vscript-give_tf_weapon.14897/):
 ```
@@ -161,7 +161,7 @@ Example below makes all tanks that begin with name abc red and spawn with a prop
         }
 ```
 
-# MissionAttributes: 
+# MissionAttributes:
 `MissionAttributes` is the equivalent of rafmod's custom WaveSchedule key-values.  This is an extremely powerful and feature-rich part of the library that includes a large portion of the functionality from rafmod.
 
 MissionAttributes are collected in a table on wave init.  The function for doing so is `MissionAttrs({})`
@@ -207,7 +207,7 @@ MissionAttributes are collected in a table on wave init.  The function for doing
                 })
             "
         }
-```  
+```
 Every available MissionAttribute is documented in `missionattributes.nut.`
 
 # SpawnTemplates:
@@ -246,7 +246,7 @@ A more advanced example of the point template spawner using Condemned - Trespass
 # Bot Tags
 There is a massive selection of bot tags to choose from that replicate many rafmod features, or add new ones entirely.  All tags are prefixed with `popext_` and can be found in tags.nut
 
-Many tags accept additional arguments.  For example: 
+Many tags accept additional arguments.  For example:
 - `popext_rocketcustomtrail|eyeboss_projectile` will apply the eyeboss_projectile particle to a rocket, giving rockets a purple monoculus trail.
 - `popext_homingprojectile|0.5|0.5` will make a bots rockets (and many other projectiles) follow their closest target with half speed and half turn power.
 - `popext_reprogrammed` will spawn the bot on RED
@@ -261,7 +261,7 @@ This allows mission makers to apply fully custom weapon attributes to both bots 
 
 ### For bots:
 - use the `popext_customattr` bot tag, with two additional arguments for the attribute and value
-- example: `popext_customattr|wet immunity|1`, bot will be immune to jar effects.  Currently, this will only apply to the bots primary active weapon.  
+- example: `popext_customattr|wet immunity|1`, bot will be immune to jar effects.  Currently, this will only apply to the bots primary active weapon.
 
 ### IMPORTANT!
 Due to current limitations with VScript, you must copy/paste all of your bot tags from every bot into a script file with the same name as your mission suffixed with "_tags" (e.g. "mvm_bigrock_vscript_tags.nut").  The script will look for this file when spawning bots to check for relevant tags.  An example _tags file has been provided for bigrock
@@ -272,6 +272,12 @@ This library supports custom entity features and spawnflags to enable certain be
 ### func_rotating
 - No longer freezes and prints the `Bad SetLocalAngles` console error when one of the rotation angles exceeds 360,000 degrees.
 - Fixes killing the entity before stopping the rotate sound causing the sound to play forever.  Fixes the sound continuing to play after it is killed on round restart as well.
+### tf_point_weapon_mimic
+- Fired projectiles can have their team assigned with `TeamNum` keyvalue (2 for RED and 3 for BLU). Normally, all fired projectiles always belong to BLU team
+- Fixed FireSound not working.  WARNING: sounds can stack for every projectile fired, not recommended for fast-refiring or multiple weapon mimics firing at the same time
+- FireSound now takes an optional volume parameter.  Example: `FireSound = "weapons/stickybomblauncher_shoot_crit.wav|0.5"`
+- ModelScale now works on rockets, arrows untested.
+
 ### obj_sentrygun
 - 64: Spawn as Mini-Sentry
 ### light_dynamic
@@ -282,7 +288,7 @@ This library supports custom entity features and spawnflags to enable certain be
 
 ## Reverse MvM
 - Native Reverse MvM support (WIP)
-- 
+-
 # IMPORTANT NOTE FOR SERVER OWNERS
 This library has a handful of features that rely on convars that are not included by default in `cfg/vscript_convar_allowlist.txt`.  You will need to modify this cfg file to add the following convars:
 

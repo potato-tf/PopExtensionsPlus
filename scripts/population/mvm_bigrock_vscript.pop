@@ -34,7 +34,7 @@ WaveSchedule
 		// Add or replace existing InitWaveOutput with code below
 		InitWaveOutput
 		{
-			Target gamerules // gamerules or tf_gamerules, depending on the map
+			Target bignet
 			Action RunScriptCode
 			Param "
 				// The original InitWaveOutput trigger, change if necessary

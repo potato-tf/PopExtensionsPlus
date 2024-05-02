@@ -84,13 +84,32 @@ function OnPostSpawn()
     {
         local particle = CreateByClassname("trigger_particle")
         self.ValidateScriptScope()
-        self.GetScriptScope().SetProjectileTeam <- function()
+        
+        local modelscale = GetPropFloat(self, "m_flModelScale")
+        local firesound = GetPropString(self, "m_pzsFireSound")
+
+        self.GetScriptScope().ProjectileFixes <- function()
         {
             for (local projectile; projectile = FindByClassnameWithin(projectile, "tf_projectile*", self.GetOrigin(), 1);)
             {
                 if (projectile.GetEFlags() & EFL_NO_MEGAPHYSCANNON_RAGDOLL) continue
 
-                projectile.AddEFlags(EFL_NO_MEGAPHYSCANNON_RAGDOLL)
+                if (modelscale != 1)
+                    projectile.SetModelScale(modelscale, 0.0)
+
+                if (firesound != "")
+                {
+                    local vol = 1.0
+                    if (firesound.find("|")) 
+                    {
+                        local split = split(firesound, "|")
+                        firesound = split[0]
+                        vol = split[1].tofloat()
+                    }
+
+                    EmitSoundEx({sound_name = firesound, entity = self, volume = vol})
+                }
+
                 projectile.SetTeam(self.GetTeam())
 
                 if (startswith(projectile.GetClassname(), "tf_projectile_pipe"))
@@ -121,11 +140,12 @@ function OnPostSpawn()
         
                     }
                 }
+                projectile.AddEFlags(EFL_NO_MEGAPHYSCANNON_RAGDOLL)
             }
 
             return -1
         }
-        AddThinkToEnt(self, "SetProjectileTeam")
+        AddThinkToEnt(self, "ProjectileFixes")
     }
 }
 
