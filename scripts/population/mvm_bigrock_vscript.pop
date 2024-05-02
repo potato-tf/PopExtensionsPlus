@@ -107,6 +107,7 @@ WaveSchedule
 							`collect currency on kill`: 1
 						},
 						`tf_weapon_rocketlauncher` : {
+							`projectile gravity`: 10
 							`fire rate penalty` : 3
 							`damage bonus` : 10
 							`custom projectile model`: `models/player/heavy.mdl`

@@ -97,6 +97,7 @@
         "rocket penetration": null
         "collect currency on kill": null
         "noclip projectile": null
+        "projectile gravity": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -1337,12 +1338,36 @@ function CustomAttributes::NoclipProjectile(player, item, value) {
 	local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
 
-	scope.PlayerThinkTable.CustomProjectileModel <- function() {
+	scope.PlayerThinkTable.NoclipProjectile <- function() {
 		if (!("attribinfo" in scope) || !("noclip projectile" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
 
 		for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
 			if (projectile.GetOwner() == player && projectile.GetMoveType != MOVETYPE_NOCLIP)
 				projectile.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
+	}
+}
+
+function CustomAttributes::ProjectileGravity(player, item, value) {
+	local scope = player.GetScriptScope()
+
+	local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+	scope.PlayerThinkTable.ProjectileGravity <- function() {
+		if (!("attribinfo" in scope) || !("projectile gravity" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+
+		for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
+			if (projectile.GetOwner() == player)
+			{
+				local currentVelocity = projectile.GetAbsVelocity()
+				currentVelocity -= Vector(0, 0, value)
+
+				projectile.SetAbsVelocity(currentVelocity)
+
+				local faceDirection = projectile.GetForwardVector()
+				self.SetLocalAngles(PopExtUtil.VectorAngles(faceDirection))
+			}
+
 	}
 }
 
@@ -1658,6 +1683,11 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 		case "noclip projectile":
             CustomAttributes.NoclipProjectile(player, item, value)
             scope.attribinfo[attr] <- "projectiles go through walls and enemies harmlessly"
+		break
+
+		case "projectile gravity":
+            CustomAttributes.ProjectileGravity(player, item, value)
+            scope.attribinfo[attr] <- format("projectile gravity %d hu/s ^ 2", value)
 		break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
