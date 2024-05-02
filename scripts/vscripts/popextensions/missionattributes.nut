@@ -1973,6 +1973,23 @@ function MissionAttributes::MissionAttr(...) {
 
 					EmitSoundOn("MVM.MoneyPickup", player)
 
+					// scout money healing
+					if (self.GetPlayerClass() == TF_CLASS_SCOUT)
+					{
+						local curHealth = self.GetHealth()
+						local maxHealth = self.GetMaxHealth()
+						local healthAddition = curHealth < maxHealth ? 50 : 25
+
+						// If we cross the border into insanity, scale the reward
+						local healthCap = maxHealth * 4
+						if ( curHealth > healthCap )
+						{
+							healthAddition = PopExtUtil.RemapValClamped( curHealth, healthCap, (healthCap * 1.5), 20, 5 )
+						}
+
+						self.SetHealth(curHealth + healthAddition)
+					}
+
 					// OLD COLLECTION METHOD
 					// // Move the money to the origin and respawn it to allow us to collect it after it touches the ground
 					// for (local hurt; hurt = FindByClassname(hurt, "trigger_hurt");)
