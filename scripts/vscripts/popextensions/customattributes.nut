@@ -1687,7 +1687,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
 
 		case "projectile gravity":
             CustomAttributes.ProjectileGravity(player, item, value)
-            scope.attribinfo[attr] <- format("projectile gravity %d hu/s ^ 2", value)
+            scope.attribinfo[attr] <- format("projectile gravity %d hu/s", value)
 		break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
