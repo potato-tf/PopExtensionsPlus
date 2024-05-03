@@ -1510,7 +1510,7 @@ function PopExtUtil::ClearLastKnownArea(bot) {
 }
 
 function PopExtUtil::KillPlayer(player) {
-	player.TakeDamage(player.GetMaxHealth(), 0, trigger_hurt);
+	player.TakeDamage(INT_MAX, 0, trigger_hurt);
 }
 
 function PopExtUtil:KillAllBots() {
