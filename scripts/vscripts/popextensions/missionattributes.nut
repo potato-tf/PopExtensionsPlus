@@ -362,6 +362,8 @@ function MissionAttributes::MissionAttr(...) {
 			PopExtUtil.AddAttributeToLoadout(player, "crit mod disabled hidden", 0)
 		}
 
+	break
+
 	// =====================
 	// disable crit pumpkins
 	// =====================

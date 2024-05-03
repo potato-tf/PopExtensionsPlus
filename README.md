@@ -281,7 +281,7 @@ Available Properties:
   * Bomb
   * TrackL or LeftTrack
   * TrackR or RightTrack
-* ModelVisionOnly       // true: keeps original tank bounding box, false (default): changes bounding box to match the custom model
+* ModelVisionOnly or TankModelVisionOnly // true: keeps original tank bounding box, false (default): changes bounding box to match the custom model
 * SoundOverrides
   * Ping
   * EngineLoop

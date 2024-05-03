@@ -337,6 +337,11 @@ function PopulatorThink() {
 					delete scope.popProperty.TankModel
 				}
 
+				if ("TankModelVisionOnly" in scope.popProperty) {
+					scope.popProperty.ModelVisionOnly <- scope.popProperty.TankModelVisionOnly
+					delete scope.popProperty.TankModelVisionOnly
+				}
+
 				if ("SoundOverrides" in scope.popProperty) {
 
 					foreach (k, v in scope.popProperty.SoundOverrides)
