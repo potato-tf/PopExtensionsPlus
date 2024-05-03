@@ -1513,7 +1513,7 @@ function PopExtUtil::KillPlayer(player) {
 	player.TakeDamage(INT_MAX, 0, trigger_hurt);
 }
 
-function PopExtUtil:KillAllBots() {
+function PopExtUtil::KillAllBots() {
 	foreach (bot in PopExtUtil.BotArray)
 		if (PopExtUtil.IsAlive(bot))
 			PopExtUtil.KillPlayer(bot)
