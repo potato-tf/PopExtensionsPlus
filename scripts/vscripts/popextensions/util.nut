@@ -148,6 +148,7 @@
 	Worldspawn = FindByClassname(null, "worldspawn")
 	StartRelay = FindByName(null, "wave_start_relay")
 	FinishedRelay = FindByName(null, "wave_finished_relay")
+	TriggerHurt = CreateByClassname("trigger_hurt")
 
 	CurrentWaveNum = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
 
@@ -236,6 +237,8 @@
 		}
 	}
 }
+
+PopExtUtil.TriggerHurt.DispatchSpawn()
 
 NavMesh.GetAllAreas(PopExtUtil.AllNavAreas)
 
@@ -1309,13 +1312,13 @@ function PopExtUtil::capwords(s, sep = null) {
 function PopExtUtil::EndWaveReverse()
 {
 	local temp = CreateByClassname("info_teleport_destination")
-	
+
 	if (!PopExtUtil.IsWaveStarted) return
 
 	//move to red
 	foreach (player in PopExtUtil.HumanArray)
 		PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_DEFENDERS)
-	
+
 	temp.ValidateScriptScope()
 	temp.GetScriptScope().ClearWave <- function()
 	{
@@ -1332,7 +1335,7 @@ function PopExtUtil::EndWaveReverse()
 			if (PopExtUtil.IsAlive(bot) && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
 				bot.TakeDamage(INT_MAX, DMG_GENERIC, null)
 	}
-	
+
 	AddThinkToEnt(temp, "ClearWave")
 }
 
@@ -1504,4 +1507,14 @@ function PopExtUtil::ClearLastKnownArea(bot) {
 	})
 	EntFireByHandle(trigger, "StartTouch", "!activator", -1, bot, bot)
 	EntFireByHandle(trigger, "Kill", "", -1, null, null)
+}
+
+function PopExtUtil::KillPlayer(player) {
+	player.TakeDamage(player.GetMaxHealth(), 0, trigger_hurt);
+}
+
+function PopExtUtil:KillAllBots() {
+	foreach (bot in PopExtUtil.BotArray) {
+		PopExtUtil.KillPlayer(bot);
+	}
 }
