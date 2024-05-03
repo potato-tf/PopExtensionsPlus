@@ -1333,7 +1333,7 @@ function PopExtUtil::EndWaveReverse()
 		//kill all bots
 		foreach (bot in PopExtUtil.BotArray)
 			if (PopExtUtil.IsAlive(bot) && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
-				bot.TakeDamage(INT_MAX, DMG_GENERIC, null)
+				PopExtUtil.KillPlayer(bot);
 	}
 
 	AddThinkToEnt(temp, "ClearWave")
@@ -1514,7 +1514,7 @@ function PopExtUtil::KillPlayer(player) {
 }
 
 function PopExtUtil:KillAllBots() {
-	foreach (bot in PopExtUtil.BotArray) {
-		PopExtUtil.KillPlayer(bot);
-	}
+	foreach (bot in PopExtUtil.BotArray)
+		if (PopExtUtil.IsAlive(bot))
+			PopExtUtil.KillPlayer(bot)
 }
