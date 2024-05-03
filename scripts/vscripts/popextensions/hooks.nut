@@ -395,6 +395,21 @@ function PopulatorThink() {
 				}
 
 				if ("Team" in scope.popProperty && !scope.teamchanged) {
+					switch(scope.popProperty.Team.tostring().toupper()) {
+						case "RED":
+							scope.popProperty.Team = TF_TEAM_PVE_DEFENDERS
+							break
+						case "BLU":
+						case "BLUE":
+							scope.popProperty.Team = TF_TEAM_PVE_INVADERS
+							break
+						case "GRY":
+						case "GRAY":
+						case "GREY":
+						case "SPEC":
+						case "SPECTATOR":
+							scope.popProperty.Team = TEAM_SPECTATOR
+					}
 					tank.SetTeam(scope.popProperty.Team)
 					scope.teamchanged = true
 					scope.team = tank.GetTeam()
@@ -405,12 +420,22 @@ function PopulatorThink() {
 					ScreenShake(tank.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true)
 
 				if ("IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
-					//todo test null model hitbox in raf and here, test rage on same team tank
+					//todo test null model hitbox in raf and here, fix rage on same team tank
 					scope.popProperty.DisableTracks <- true
 					scope.popProperty.DisableBomb <- true
 					scope.popProperty.DisableSmoke <- true
 					if (!("Skin" in scope.popProperty))
-						scope.popProperty.Skin <- 1
+						switch(scope.team) {
+							case TF_TEAM_PVE_DEFENDERS:
+							case TF_TEAM_PVE_INVADERS:
+								scope.popProperty.Skin <- scope.team - 2
+								break
+							case TEAM_SPECTATOR:
+								scope.popProperty.Skin <- 2
+								break
+							default:
+								scope.popProperty.Skin <- 1
+						}
 
 					//set default blimp model if not specified
 					if (!("Model" in scope.popProperty)) {

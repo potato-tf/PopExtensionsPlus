@@ -268,38 +268,38 @@ Due to current limitations with VScript, you must copy/paste all of your bot tag
 
 # Tank Additions
 
-Pop Extentions Plus expands upon the tank additions added in the original Pop Extensions. 
+Pop Extensions Plus expands upon the tank additions added in the original Pop Extensions. 
 When you call PopExt.AddTankName, the second argument is a table where you set the values for the available properties below. Please see the bigrock pop and [popext bigrock pop](https://github.com/rafradek/VScript-Popfile-Extensions/blob/main/scripts/population/mvm_bigrock_vscript.pop#L136) for usage.
 
 Available Properties:
 ```
-* TankModel or Model    // Use custom tank model, can be either a string or a table of string
+* Model or TankModel    // use custom tank model, can be either a string or a table of strings
   * Default
   * Damage1
   * Damage2
   * Damage3
   * Bomb
-  * LeftTrack
-  * RightTrack
-* TankModelVisionOnly   // if false, changes bbox size to match the custom model; if true keeps default model bbox
+  * TrackL or LeftTrack
+  * TrackR or RightTrack
+* ModelVisionOnly       // true: keeps original tank bounding box, false (default): changes bounding box to match the custom model
 * SoundOverrides
   * Ping
   * EngineLoop
   * Start
   * Destroy
   * Deploy 
-* Team                  // 2 - Red team, 3 - Blu team
+* Team                  // 2: Red team, 3: Blu team, also accepts strings "RED", "BLU", "GRY"
 * NoScreenShake         // does not currently work
-* IsBlimp               // true sets the tank to be a blimp
+* IsBlimp               // true: sets the tank to be a blimp
 * SpawnTemplate         // expects a string that is the name of the template in PointTemplates table. see SpawnTemplates section
 * DisableTracks
 * DisableBomb
 * DisableSmoke
 * Scale                 // number or string
-* Icon                  // expects a table. e.g. { name = `tank_sticky_hellmet`, isCrit = true, isBoss = false}
+* Icon                  // expects a table. e.g. { name = `tank_sticky_hellmet`, isCrit = true, isBoss = false }
 * CritImmune
 * CrushDamageMult
-* NoDeathFX             //1: disables visuals only, 2: disables visuals and sounds
+* NoDeathFX             // 1: disables visuals only, 2: disables visuals and sounds
 ```
 
 # Entity Additions
