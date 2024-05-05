@@ -209,7 +209,7 @@ PopExt <- popExtEntity.GetScriptScope()
 						{
 							for (local destruction; destruction = FindByClassnameWithin(destruction, "tank_destruction", self.GetOrigin(), 1);)
 							{
-								EntFireByHandle(destruction, "Kill" "", -1, null, null)
+								EntFireByHandle(destruction, "Kill", "", -1, null, null)
 							}
 
 							return -1
@@ -228,6 +228,8 @@ PopExt <- popExtEntity.GetScriptScope()
 							StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
 						}
 					}
+					if ("IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp)
+						EntFireByHandle(scope.blimpTrain, "Kill", "", -1, null, null)
 				}
 
 				if (dead && !("popFiredDeathHook" in scope)) {
@@ -425,7 +427,7 @@ function PopulatorThink() {
 					ScreenShake(tank.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true)
 
 				if ("IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
-					//todo test null model hitbox in raf and here, fix rage on same team tank
+					//todo fix rage on same team tank
 					scope.popProperty.DisableTracks <- true
 					scope.popProperty.DisableBomb <- true
 					scope.popProperty.DisableSmoke <- true
@@ -457,13 +459,12 @@ function PopulatorThink() {
 					}
 
 					tank.SetAbsAngles(QAngle(0, tank.GetAbsAngles().y, 0))
-					tank.KeyValueFromString("OnKilled", "!self, RunScriptCode, blimpTrain.Kill(), -1, -1") // todo callscriptfunction
 					scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), startspeed = INT_MAX, target = scope.popProperty.StartTrack})
 
 					scope.TankThinkTable.BlimpThink <- function() {
 						if (self == null) return //this is normally not possible, however we need to do a pretty gross hack that will turn the tank into a null instance sometimes
 						self.SetAbsOrigin(blimpTrain.GetOrigin())
-						self.GetLocomotionInterface().Reset() // what if you parent the tank to the tracktrain instead?
+						self.GetLocomotionInterface().Reset()
 						//update func_tracktrain if tank's speed is changed
 						if (GetPropFloat(this.blimpTrain, "m_flSpeed") != GetPropFloat(self, "m_speed"))
 							EntFireByHandle(this.blimpTrain, "SetSpeedReal", GetPropFloat(self, "m_speed").tostring(), -1, null, null)
