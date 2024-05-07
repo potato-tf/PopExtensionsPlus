@@ -946,7 +946,7 @@ function MissionAttributes::MissionAttr(...) {
 				function StepThink() {
 					if (self.GetPlayerClass() == TF_CLASS_MEDIC) return
 
-					if (GetPropInt(self,"m_Local.m_nStepside") != stepside)
+					if (GetPropInt(self,"m_Local.m_nStepside") != scope.stepside)
 						EmitSoundOn("MVM.BotStep", self)
 
 					scope.stepside = GetPropInt(self,"m_Local.m_nStepside")

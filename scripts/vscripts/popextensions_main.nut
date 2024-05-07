@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "05.02.2024.1"
+::popExtensionsVersion <- "05.07.2024.1"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -70,7 +70,7 @@ if (!("_AddThinkToEnt" in root))
 
 		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
-		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func(); return -1 }
+		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func.call(scope); return -1 }
 
 		_AddThinkToEnt(player, "PlayerThinks")
 
@@ -83,9 +83,8 @@ if (!("_AddThinkToEnt" in root))
 		local bot = player
 		if (bot.IsBotOfType(TF_BOT_TYPE))
 		{
-			scope.BotThink <- PopExtTags.BotThink
+			scope.PlayerThinkTable.BotThink <- PopExtTags.BotThink
 
-			EntFireByHandle(bot, "RunScriptCode", "_AddThinkToEnt(self, `BotThink`)", -1, null, null)
 			EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 		}
 
