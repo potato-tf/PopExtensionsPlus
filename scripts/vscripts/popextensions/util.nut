@@ -743,6 +743,9 @@ function PopExtUtil::InButton(player, button) {
 function PopExtUtil::PressButton(player, button) {
 	SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") | button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") | button)
 }
+function PopExtUtil::ReleaseButton(player, button) {
+	SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") & ~button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") & ~button)
+}
 
 function PopExtUtil::IsPointInRespawnRoom(point)
 {

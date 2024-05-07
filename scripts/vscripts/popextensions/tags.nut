@@ -131,7 +131,7 @@ local popext_funcs = {
 			maxrepeats++
 
 			PopExtUtil.PressButton(bot, button)
-			EntFireByHandle(bot, "RunScriptCode", "PopExtUtil.PressButton(self, 0)", duration, null, null)
+			EntFireByHandle(bot, "RunScriptCode", format("PopExtUtil.ReleaseButton(self, %d)", button), duration, null, null)
 			cooldowntime = Time() + cooldown
 		}
 	}
