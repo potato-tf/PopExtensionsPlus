@@ -98,6 +98,7 @@
         "collect currency on kill": null
         "noclip projectile": null
         "projectile gravity": null
+        "cannot ignite or cause bleeding to the wielder": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -1381,6 +1382,22 @@ function CustomAttributes::ProjectileGravity(player, item, value) {
 	}
 }
 
+function CustomAttributes::WielderIgniteBleedImmunity(player, item) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    local igniteOrBleed = [TF_COND_BURNING, TF_COND_BLEEDING]
+
+    player.GetScriptScope().PlayerThinkTable.WielderIgniteBleedImmunity <- function() {
+
+        foreach (cond in igniteOrBleed) {
+            if (player.InCond(cond))
+                player.RemoveCondEx(cond, true)
+        }
+    }
+}
+
 function CustomAttributes::ShahanshahAttributeBelowHP(player, item, value) {
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
@@ -1699,6 +1716,11 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             CustomAttributes.ProjectileGravity(player, item, value)
             scope.attribinfo[attr] <- format("projectile gravity %d hu/s", value)
 		break
+
+        case "cannot ignite or cause bleeding to the wielder":
+            CustomAttributes.WielderIgniteBleedImmunity(player, item)
+            scope.attribinfo[attr] <- format("wielder is immune to afterburn or bleeding effects")
+        break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
 
