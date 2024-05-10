@@ -557,17 +557,27 @@ function CustomAttributes::LastShotCrits(player, item, value = -1) {
 
         if (!("attribinfo" in scope) || !("last shot crits" in scope.attribinfo)) return
 
-        if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || player.GetActiveWeapon() != wep) return
+        if(player.GetActiveWeapon() != wep)
+        {
+            player.RemoveCondEx(COND_CRITBOOST, true)
+            return
+        }
+
+        if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
 
         scope.lastshotcritsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
 
-            if (wep.Clip1() != 1 && !player.IsCritBoosted())
+            if (wep.Clip1() == 1)
             {
+                player.AddCondEx(COND_CRITBOOST, value, null)
+            }
+            else
+            {
+                // Removing COND_CRITBOOST won't interfere with other crit sources because the cond is an intel cap crit
                 player.RemoveCondEx(COND_CRITBOOST, true)
-                return
             }
 
-            if (!player.IsCritBoosted()) player.AddCondEx(COND_CRITBOOST, value, null)
+        return
     }
 }
 
