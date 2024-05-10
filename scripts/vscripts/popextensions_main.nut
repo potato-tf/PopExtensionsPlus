@@ -83,7 +83,8 @@ if (!("_AddThinkToEnt" in root))
 		local bot = player
 		if (bot.IsBotOfType(TF_BOT_TYPE))
 		{
-			scope.PlayerThinkTable.BotThink <- PopExtTags.BotThink
+			scope.BotThink <- PopExtTags.BotThink
+			EntFireByHandle(bot, "RunScriptCode", "_AddThinkToEnt(self, `BotThink`)", -1, null, null)
 
 			EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 		}
