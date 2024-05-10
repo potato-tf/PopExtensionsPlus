@@ -70,6 +70,18 @@ if (!("_AddThinkToEnt" in root))
 
 		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
+		if (player.IsBotOfType(TF_BOT_TYPE))
+		{
+			EntFireByHandle(player, "RunScriptCode", @"
+				PopExtTags.EvaluateTags(self)
+				aibot <- AI_Bot(self)
+
+				PlayerThinkTable.BotThink <- function() {
+					try aibot.OnUpdate() catch(e) if (e == ""the index 'bot' does not exist"") return //spams console and buries the actual error
+				}
+			", -1, player, player);
+		}
+
 		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func.call(scope); return -1 }
 
 		_AddThinkToEnt(player, "PlayerThinks")
@@ -78,15 +90,6 @@ if (!("_AddThinkToEnt" in root))
 		{
 			scope.BuiltObjectTable <- {}
 			scope.buildings <- []
-		}
-
-		local bot = player
-		if (bot.IsBotOfType(TF_BOT_TYPE))
-		{
-			scope.BotThink <- PopExtTags.BotThink
-			EntFireByHandle(bot, "RunScriptCode", "_AddThinkToEnt(self, `BotThink`)", -1, null, null)
-
-			EntFireByHandle(bot, "RunScriptCode", "PopExtTags.AI_BotSpawn(self)", -1, null, null)
 		}
 
 		if ("MissionAttributes" in root) foreach (_, func in MissionAttributes.SpawnHookTable) func(params)

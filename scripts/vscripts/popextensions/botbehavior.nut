@@ -249,11 +249,6 @@ class AI_Bot {
 
 		time = Time()
 
-		// foreach (k, v in bot.GetLocomotionInterface())
-		// printl(bot.GetLocomotionInterface())
-		// printl(bot.GetVisionInterface())
-		foreach (_, func in scope.PlayerThinkTable) func()
-
 		//SwitchToBestWeapon()
 		//DrawDebugInfo()
 
