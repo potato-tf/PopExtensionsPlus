@@ -774,48 +774,24 @@ local popext_funcs = {
 	}
 
 	popext_addcondonhit = function(bot, args) {
-		// Tag addcondonhit |cond|duration|threshold|crit
 
-		// Leave Duration blank for infinite duration
-		// Leave Threshold blank to apply effect on any hit
-
+		// Tag popext_addcondonhit|cond|duration|threshold
 		local args_len = args.len()
 
 		local cond = args[0].tointeger()
-		local duration = (args_len >= 2) ? args[1].tofloat() : -1.0
-		local dmgthreshold = (args_len >= 3) ? args[2].tofloat() : 0.0
-		local critOnly = (args_len >= 4) ? args[3].tointeger() : 0
-
-		// Add the new variables to the bot's scope
-		local bot_scope = bot.GetScriptScope()
-		bot_scope.CondOnHit = true
-		bot_scope.CondOnHitVal = cond
-		bot_scope.CondOnHitDur = duration
-		bot_scope.CondOnHitDmgThres = dmgthreshold
-		bot_scope.CondOnHitCritOnly	   = critOnly
+		local duration = (args_len >= 1) ? args[1].tofloat() : -1.0
+		local dmgthreshold = (args_len >= 2) ? args[2].tofloat() : 0.0
 
 		PopExtTags.TakeDamageTable.AddCondOnHitTakeDamage <- function(params) {
+
 			if (!params.const_entity.IsPlayer()) return
 
 			local victim = params.const_entity
 			local attacker = params.attacker
+			local damage = params.damage
 
-			if (attacker != null && victim != attacker) {
-				local attacker_scope = attacker.GetScriptScope()
-
-				if (!attacker_scope.CondOnHit) return
-
-				local hurt_damage = params.damage
-				local victim_health = victim.GetHealth() - hurt_damage
-				local isCrit = params.crit
-
-				if (victim_health <= 0) return
-
-				if (attacker_scope.CondOnHitCritOnly == 1 && !isCrit) return
-
-				if ((attacker_scope.CondOnHitCritOnly == 1 && isCrit) || (attacker_scope.CondOnHitDmgThres == 0.0 || hurt_damage >= attacker_scope.CondOnHitDmgThres))
-					victim.AddCondEx(attacker_scope.CondOnHitVal, attacker_scope.CondOnHitDur, null)
-			}
+			if (attacker != null && victim != attacker && victim.GetHealth() - damage > 0 && damage >= dmgthreshold)
+				victim.AddCondEx(cond, duration, null)
 		}
 	}
 
