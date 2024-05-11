@@ -840,12 +840,11 @@ function MissionAttributes::MissionAttr(...) {
 		if (value < 1) return
 
 		MissionAttributes.TakeDamageTable.BotHeadshots <- function(params) {
+
 			local player = params.attacker, victim = params.const_entity
-			victim.ValidateScriptScope()
-			local scope = victim.GetScriptScope()
 			local wep = params.weapon
 
-			if (!player.IsPlayer() || victim.IsPlayer()) return
+			if (!player.IsPlayer() || !victim.IsPlayer()) return
 
 			function CanHeadshot()
 			{
