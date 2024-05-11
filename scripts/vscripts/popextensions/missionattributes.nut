@@ -831,9 +831,9 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.FlagResetTime()
 	break
 
-	// ===========================
-	// enable bot headshots (jank)
-	// ===========================
+	// =============================
+	// enable bot/blu team headshots
+	// =============================
 
 	case "BotHeadshots":
 
