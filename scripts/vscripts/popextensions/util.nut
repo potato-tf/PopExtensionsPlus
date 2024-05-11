@@ -1046,6 +1046,11 @@ function PopExtUtil::RemovePlayerWearables(player) {
 
 function PopExtUtil::GiveWeapon(player, className, itemID)
 {
+	if (typeof itemID == "string" && className == "tf_wearable")
+	{
+		CTFBot.GenerateAndWearItem.call(player, itemID)
+		return
+	}
     local weapon = CreateByClassname(className)
     SetPropInt(weapon, STRING_NETPROP_ITEMDEF, itemID)
     SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
@@ -1501,7 +1506,6 @@ function PopExtUtil::IsSpaceToSpawnHere(where, hullmin, hullmax) {
 	return trace.fraction >= 1.0
 }
 
-
 function PopExtUtil::ClearLastKnownArea(bot) {
 
 	local trigger = SpawnEntityFromTable("trigger_remove_tf_player_condition", {
@@ -1513,11 +1517,39 @@ function PopExtUtil::ClearLastKnownArea(bot) {
 }
 
 function PopExtUtil::KillPlayer(player) {
-	player.TakeDamage(INT_MAX, 0, trigger_hurt);
+	player.TakeDamage(INT_MAX, 0, PopExtUtil.TriggerHurt);
 }
 
 function PopExtUtil::KillAllBots() {
 	foreach (bot in PopExtUtil.BotArray)
 		if (PopExtUtil.IsAlive(bot))
 			PopExtUtil.KillPlayer(bot)
+}
+
+function PopExtUtil::SetDestroyCallback(entity, callback)
+{
+	entity.ValidateScriptScope();
+	local scope = entity.GetScriptScope();
+	scope.setdelegate({}.setdelegate({
+			parent   = scope.getdelegate()
+			id       = entity.GetScriptId()
+			index    = entity.entindex()
+			callback = callback
+			_get = function(k)
+			{
+				return parent[k];
+			}
+			_delslot = function(k)
+			{
+				if (k == id)
+				{
+					entity = EntIndexToHScript(index);
+					local scope = entity.GetScriptScope();
+					scope.self <- entity;			
+					callback.pcall(scope);
+				}
+				delete parent[k];
+			}
+		})
+	);
 }
