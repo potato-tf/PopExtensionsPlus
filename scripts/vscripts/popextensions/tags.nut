@@ -779,8 +779,8 @@ local popext_funcs = {
 		local args_len = args.len()
 
 		local cond = args[0].tointeger()
-		local duration = (args_len >= 1) ? args[1].tofloat() : -1.0
-		local dmgthreshold = (args_len >= 2) ? args[2].tofloat() : 0.0
+		local duration = (args_len > 1) ? args[1].tofloat() : -1.0
+		local dmgthreshold = (args_len > 2) ? args[2].tofloat() : 0.0
 
 		PopExtTags.TakeDamageTable.AddCondOnHitTakeDamage <- function(params) {
 
