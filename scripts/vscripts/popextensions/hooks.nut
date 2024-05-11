@@ -67,13 +67,8 @@ PopExt <- popExtEntity.GetScriptScope()
 
 				local scope = victim.GetScriptScope()
 				local attackerscope = attacker.GetScriptScope()
-				if (victim.GetClassname() == "tank_boss" && "popProperty" in scope) {
-
-					if (params.damage >= victim.GetHealth())
-						if ("SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides) {
-							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
-							victim.RemoveEFlags(EFL_KILLME)
-						}
+				
+				if (victim.GetClassname() == "tank_boss" && "popProperty" in scope) 
 					if ("CritImmune" in scope.popProperty && scope.popProperty.CritImmune)
 						params.damage_type = params.damage_type &~ DMG_CRITICAL
 
@@ -201,6 +196,13 @@ PopExt <- popExtEntity.GetScriptScope()
 					{
 						StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
 						EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
+						}
+
+						if ("Destroy" in scope.popProperty.SoundOverrides)
+						{
+							StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
+							EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
+						}
 					}
 					if ("NoDeathFX" in scope.popProperty && scope.popProperty.NoDeathFX > 0)
 					{
