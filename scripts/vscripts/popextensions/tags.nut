@@ -547,6 +547,7 @@ local popext_funcs = {
 	popext_meleewhenclose = function(bot, args) {
 
 		local dist = args[0].tofloat()
+		local previouswep = bot.GetActiveWeapon().entindex()
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeWhenClose <- function() {
 
@@ -558,9 +559,11 @@ local popext_funcs = {
 				bot.Weapon_Switch(melee)
 				melee.AddAttribute("disable weapon switch", 1, 1)
 				melee.ReapplyProvision()
+				EntFireByHandle(melee, "RunScriptCode", "self.RemoveAttribute(`disable weapon switch`); self.ReapplyProvision()", 1.1, null, null)
 			}
 		}
 	}
+
 	popext_usebestweapon = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.BestWeaponThink <- function() {
