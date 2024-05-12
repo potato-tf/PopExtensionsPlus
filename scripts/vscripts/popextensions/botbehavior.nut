@@ -1,10 +1,23 @@
+class PathPoint {
+	constructor(area, pos, how) {
+		this.area = area
+		this.pos  = pos
+		this.how  = how
+	}
+
+	area = null
+	pos  = null
+	how  = null
+}
+
 class AI_Bot {
 	function constructor(bot) {
 		this.bot       = bot
 		this.scope     = bot.GetScriptScope()
 		this.team      = bot.GetTeam()
-		// this.cur_ammo  = 0
-		// this.cur_melee = false
+		this.cur_eye_ang = bot.EyeAngles()
+		this.cur_eye_pos = bot.EyePosition()
+		this.cur_eye_fwd = bot.EyeAngles().Forward()
 		this.locomotion = bot.GetLocomotionInterface()
 
 		this.time = Time()
@@ -19,9 +32,10 @@ class AI_Bot {
 		this.aim_time           = FLT_MAX
 		this.random_aim_time    = 0.0
 
-		this.path = []
+		this.path_points = []
 		this.path_index = 0
 		this.path_areas = {}
+		this.path_goalpoint = null
 		this.path_recompute_time = 0.0
 
 		this.botLevel = bot.GetDifficulty()
@@ -260,7 +274,7 @@ class AI_Bot {
 		{
 			local threat_cur_pos = threat.GetOrigin()
 
-			if ((path.len() == 0) || ((threat_pos - threat_cur_pos).LengthSqr() > 4096.0)) // 64
+			if ((path_points.len() == 0) || ((threat_pos - threat_cur_pos).LengthSqr() > 4096.0)) // 64
 			{
 				local area = GetThreatArea(threat)
 				if (area != null)
@@ -277,98 +291,153 @@ class AI_Bot {
 	function ResetPath()
 	{
 		path_areas.clear()
-		path.clear()
-		path_index = 0
+		path_points.clear()
+		path_index = null
+		path_recompute_time = 0
 	}
 	function UpdatePathAndMove(target_pos)
 	{
-		ResetPath()
-		local pos_start = bot.GetOrigin()
-		local pos_end = target_pos
+		local dist_to_target = (target_pos - bot.GetOrigin()).Length()
 
+		if (path_recompute_time < time) {
+			ResetPath()
 
-		local area_start = GetNavArea(pos_start, 128.0)
-		local area_end = GetNavArea(pos_end, 128.0)
+			local pos_start = bot.GetOrigin()
+			local pos_end   = target_pos
 
-		if (area_start == null)
-			area_start = GetNearestNavArea(pos_start, 128.0, false, true)
-		if (area_end == null)
-			area_end = GetNearestNavArea(pos_end, 128.0, false, true)
+			local area_start = GetNavArea(pos_start, 128.0)
+			local area_end   = GetNavArea(pos_end, 128.0)
 
-		if (area_start == null || area_end == null)
-			return false
+			if (!area_start)
+				area_start = GetNearestNavArea(pos_start, 128.0, false, true)
+			if (!area_end)
+				area_end   = GetNearestNavArea(pos_end, 128.0, false, true)
 
-		GetNavAreasFromBuildPath(area_start, area_end, pos_end, 0.0, TEAM_ANY, false, path_areas)
+			if (!area_start || !area_end)
+				return false
+			if (!GetNavAreasFromBuildPath(area_start, area_end, pos_end, 0.0, Constants.ETFTeam.TEAM_ANY, true, path_areas))
+				return false
+			if (area_start != area_end && !path_areas.len())
+				return false
 
-		foreach (name, area in path_areas)
-		{
-			local navareasize = (area.GetSizeX() * area.GetSizeY())
-			local vec_max = bot.GetBoundingMaxs(), vec_min = bot.GetBoundingMins()
+			// Construct path_points
+			else {
+				path_areas["area"+path_areas.len()] <- area_start
+				local area = path_areas["area0"]
+				local area_count = path_areas.len()
 
-			local diff_x = vec_max.x - vec_min.x
-			local diff_y = vec_max.y - vec_min.y
-			local diff_z = vec_max.z - vec_min.z
+				// Initial run grabbing area center
+				for (local i = 0; i < area_count && area; ++i) {
+					// Don't add a point for the end area
+					if (i > 0)
+						path_points.append(PathPoint(area, area.GetCenter(), area.GetParentHow()))
 
-			# Calculate areas of faces
-			// local area_x = diff_y * diff_z
-			// local area_y = diff_x * diff_z
-			// local area_z = diff_x * diff_y
-
-			# Total surface area
-			local botareasize = diff_x * diff_y  # Two faces per axis
-			// printl(navareasize + " : " + botareasize)
-
-			local adjacentcount = 0
-			for (local i = 0; i < NUM_DIRECTIONS; i++)
-				if (area.GetAdjacentCount(i) != 0) adjacentcount++
-
-			// likely a corner nav square we'll get stuck on
-			if (navareasize < botareasize && adjacentcount < 4)
-			{
-				if (navdebug)
-				{
-					area.DebugDrawFilled(255, 0, 0, 255, 1.0, true, SINGLE_TICK)
-					DebugDrawText(area.GetCenter()+ Vector(0, 0, 10), "TOO SMALL!", false, SINGLE_TICK)
+					area = area.GetParent()
 				}
 
-				local potentialareas = {}
+				path_points.reverse()
+				path_points.append(PathPoint(area_end, pos_end, 9)) // NUM_TRAVERSE_TYPES
 
-				//check all surrounding connected nav areas
-				for (local i = 0; i < NUM_DIRECTIONS; i++)
-					area.GetAdjacentAreas(i, potentialareas)
+				// Go through again and replace center with border point of next area
+				local path_count = path_points.len()
+				for (local i = 0; i < path_count; ++i) {
+					local path_from = path_points[i]
+					local path_to = (i < path_count - 1) ? path_points[i + 1] : null
 
+					if (path_to) {
+						local dir_to_from = path_to.area.ComputeDirection(path_from.area.GetCenter())
+						local dir_from_to = path_from.area.ComputeDirection(path_to.area.GetCenter())
 
-				foreach (_, a in potentialareas)
-				{
-					local potentialadjacentcount = 0
+						local to_c1 = path_to.area.GetCorner(dir_to_from)
+						local to_c2 = path_to.area.GetCorner(dir_to_from + 1)
+						local fr_c1 = path_from.area.GetCorner(dir_from_to)
+						local fr_c2 = path_from.area.GetCorner(dir_from_to + 1)
 
-					for (local i = 0; i < NUM_DIRECTIONS; i++)
-						if (a.GetAdjacentCount(i) != 0) potentialadjacentcount++
+						local minarea = {}
+						local maxarea = {}
+						if ( (to_c1 - to_c2).Length() < (fr_c1 - fr_c2).Length() ) {
+							minarea.area <- path_to.area
+							minarea.c1 <- to_c1
+							minarea.c2 <- to_c2
 
-					if (potentialadjacentcount < 4 || a.GetSizeX() * a.GetSizeY() < botareasize) continue
+							maxarea.area <- path_from.area
+							maxarea.c1 <- fr_c1
+							maxarea.c2 <- fr_c2
+						}
+						else {
+							minarea.area <- path_from.area
+							minarea.c1 <- fr_c1
+							minarea.c2 <- fr_c2
 
-					if (navdebug)
-						a.DebugDrawFilled(0, 0, 255, 255, 1.0, true, SINGLE_TICK)
+							maxarea.area <- path_to.area
+							maxarea.c1 <- to_c1
+							maxarea.c2 <- to_c2
+						}
 
-					// area = a
-					break
+						// Get center of smaller area's edge between the two
+						local vec = minarea.area.GetCenter()
+						if (dir_to_from == 0 || dir_to_from == 2) { // GO_NORTH, GO_SOUTH
+							vec.y = minarea.c1.y
+							vec.z = minarea.c1.z
+						}
+						else if (dir_to_from == 1 || dir_to_from == 3) { // GO_EAST, GO_WEST
+							vec.x = minarea.c1.x
+							vec.z = minarea.c1.z
+						}
+
+						path_from.pos = vec;
+					}
 				}
 			}
 
-			path.append(area)
-			if (navdebug)
-				DebugDrawText(area.GetCenter(), name, false, SINGLE_TICK)
+			// Base recompute off distance to target
+			// Every 500hu away increase our recompute time by 0.1s
+			local mod = 0.1 * ceil(dist_to_target / 500.0)
+			if (mod > 1) mod = 1
+
+			path_recompute_time = time + mod
 		}
 
-		if (navdebug)
-			foreach (p in path)
-				p.DebugDrawFilled(0, 255, 0, 254, 1.0, true, SINGLE_TICK)
+		if (navdebug) {
+			for (local i = 0; i < path_points.len(); ++i) {
+				DebugDrawLine(path_points[i].pos, path_points[i].pos + Vector(0, 0, 32), 0, 0, 255, false, 0.075)
+			}
+			local area = path_areas["area0"]
+			local area_count = path_areas.len()
 
-		if (path.len())
-			locomotion.Approach(path[0].FindRandomSpot(), 1.0)
+			for (local i = 0; i < area_count && area; ++i) {
+				local x = ((area_count - i - 0.0) / area_count) * 255.0
+				area.DebugDrawFilled(0, x, 0, 50, 0.075, true, 0.0)
 
-		// if (bot.GetOrigin() - path[0].GetCenter().LengthSqr() < 50.0) path.remove(0)
+				area = area.GetParent()
+			}
+		}
 
+		if (path_index == null)
+			path_index = 0
+
+		if ((path_points[path_index].pos - bot.GetOrigin()).Length() < 64.0) {
+			++path_index
+			if (path_index >= path_points.len()) {
+				ResetPath()
+				return
+			}
+		}
+
+		local point = path_points[path_index].pos;
+		locomotion.Approach(point, 999)
+
+		local look_pos = Vector(point.x, point.y, cur_eye_pos.z);
+		if (threat != null)
+			LookAt(look_pos, 600.0, 1500.0);
+		else
+			LookAt(look_pos, 350.0, 600.0);
+
+		// calc lookahead point
+
+		// set eyeang based on lookahead
+		// set loco on lookahead if no obstacles found
+		// if found obstacle, modify loco
 	}
 
 
@@ -398,9 +467,10 @@ class AI_Bot {
 	threat_visible     = null
 	threat_pos         = null
 
-	path				= null
+	path_points		    = null
 	path_index			= null
 	path_areas			= null
+	path_goalpoint      = null
 	path_recompute_time	= null
 
 	fire_next_time  = null
