@@ -1388,6 +1388,7 @@ function CustomAttributes::CondImmunity(player, item, value) {
     if (wep == null) return
 
     player.GetScriptScope().PlayerThinkTable.CondImmunity <- function() {
+        if (player.InCond(value))
             player.RemoveCondEx(value, true)
     }
 }
