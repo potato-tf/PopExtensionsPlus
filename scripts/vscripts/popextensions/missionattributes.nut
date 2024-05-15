@@ -1378,7 +1378,7 @@ function MissionAttributes::MissionAttr(...) {
 			local tfclass = player.GetPlayerClass()
 			foreach (k, v in value)
 			{
-				if (typeof k == "string" && (typeof v == "integer" || typeof v == "float"))
+				if (typeof k == "string" && (typeof v == "integer" || typeof v == "float" || typeof v == "array" ))
 					if (k in CustomAttributes.Attrs)
 						CustomAttributes.AddAttr(player, k, v, player.GetActiveWeapon())
 					else
