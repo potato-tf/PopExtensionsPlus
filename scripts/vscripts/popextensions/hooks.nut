@@ -85,7 +85,6 @@ PopExt <- popExtEntity.GetScriptScope()
 				PopExtHooks.FireHooksParam(attacker, scope, "OnDealDamage", params)
 			}
 		}
-
 		function OnGameEvent_player_spawn(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			local scope = player.GetScriptScope()
@@ -216,7 +215,7 @@ PopExt <- popExtEntity.GetScriptScope()
 
 							return -1
 						}
-						local temp =  CreateByClassname("info_teleport_destination")
+						local temp = CreateByClassname("info_teleport_destination")
 						temp.SetOrigin(victim.GetOrigin())
 						temp.ValidateScriptScope()
 						temp.GetScriptScope().FindTankDestructionEnt <- FindTankDestructionEnt
@@ -305,6 +304,7 @@ PopExt <- popExtEntity.GetScriptScope()
 	}
 }
 __CollectGameEventCallbacks(PopExtHooks.Events)
+
 function PopulatorThink() {
 
 	for (local tank; tank = FindByClassname(tank, "tank_boss");) {
@@ -316,16 +316,16 @@ function PopulatorThink() {
 			scope.TankThinkTable  <- {}
 			scope.maxHealth       <- tank.GetMaxHealth()
 			scope.team            <- tank.GetTeam()
-			scope.teamchanged <- false
+			scope.teamchanged     <- false
 			scope.engineloopreplaced <- false
 
 			scope.curHealth       <- tank.GetHealth()
 			scope.lastHealthStage <- 0
 			scope.TankThinkTable.Updates <- function() {
-				this.curPos       <- self.GetOrigin()
-				this.curVel       <- self.GetAbsVelocity()
-				this.curSpeed     <- curVel.Length()
-				this.lastHealthPercentage <- GetPropFloat(self, "m_lastHealthPercentage")
+				curPos            <- self.GetOrigin()
+				curVel            <- self.GetAbsVelocity()
+				curSpeed          <- curVel.Length()
+				lastHealthPercentage <- GetPropFloat(self, "m_lastHealthPercentage")
 			}
 
 			local tankName = tank.GetName().tolower()
@@ -430,9 +430,32 @@ function PopulatorThink() {
 
 				if ("IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
 					//todo fix rage on same team tank
-					scope.popProperty.DisableTracks <- true
-					scope.popProperty.DisableBomb <- true
-					scope.popProperty.DisableSmoke <- true
+					if (!("DisableTracks" in scope.popProperty))
+						scope.popProperty.DisableTracks <- true
+					if (!("DisableBomb" in scope.popProperty))
+						scope.popProperty.DisableBomb <- true
+					if (!("DisableSmoke" in scope.popProperty))
+						scope.popProperty.DisableSmoke <- true
+
+					//set default blimp model if not specified
+					if (!("Model" in scope.popProperty)) {
+						local blimpModel = {
+							Model = {
+								//version of blimp where model is in the lower half of the bounding box
+								Default = "models/bots/boss_bot/boss_blimp_main.mdl" // MD5: 59242bf074a617a95701b34f93b37549
+								Damage1 = "models/bots/boss_bot/boss_blimp_main_damage1.mdl"
+								Damage2 = "models/bots/boss_bot/boss_blimp_main_damage2.mdl"
+								Damage3 = "models/bots/boss_bot/boss_blimp_main_damage3.mdl"
+							}
+						}
+
+						PopExtHooks.AddHooksToScope(tank, blimpModel, scope)
+
+						//ModelVisionOnly true is best for this blimp model
+						if (!("ModelVisionOnly" in scope.popProperty))
+							scope.popProperty.ModelVisionOnly <- true
+					}
+
 					if (!("Skin" in scope.popProperty))
 						switch(scope.team) {
 							case TF_TEAM_PVE_DEFENDERS:
@@ -446,20 +469,6 @@ function PopulatorThink() {
 								scope.popProperty.Skin <- 1
 						}
 
-					//set default blimp model if not specified
-					if (!("Model" in scope.popProperty)) {
-						local blimpModel = {
-							Model = {
-								Default = "models/bots/boss_bot/boss_blimp.mdl"
-								Damage1 = "models/bots/boss_bot/boss_blimp_damage1.mdl"
-								Damage2 = "models/bots/boss_bot/boss_blimp_damage2.mdl"
-								Damage3 = "models/bots/boss_bot/boss_blimp_damage3.mdl"
-							}
-						}
-
-						PopExtHooks.AddHooksToScope(tank, blimpModel, scope)
-					}
-
 					tank.SetAbsAngles(QAngle(0, tank.GetAbsAngles().y, 0))
 					scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), startspeed = INT_MAX, target = scope.popProperty.StartTrack})
 
@@ -468,8 +477,8 @@ function PopulatorThink() {
 						self.SetAbsOrigin(blimpTrain.GetOrigin())
 						self.GetLocomotionInterface().Reset()
 						//update func_tracktrain if tank's speed is changed
-						if (GetPropFloat(this.blimpTrain, "m_flSpeed") != GetPropFloat(self, "m_speed"))
-							EntFireByHandle(this.blimpTrain, "SetSpeedReal", GetPropFloat(self, "m_speed").tostring(), -1, null, null)
+						if (GetPropFloat(blimpTrain, "m_flSpeed") != GetPropFloat(self, "m_speed"))
+							EntFireByHandle(blimpTrain, "SetSpeedReal", GetPropFloat(self, "m_speed").tostring(), -1, null, null)
 					}
 				}
 				
@@ -509,6 +518,7 @@ function PopulatorThink() {
 
 					scope.curModel <- scope.popProperty.ModelPrecached.Default
 
+					//using a think prevents tank from briefly becoming invisible when changing damage models
 					scope.TankThinkTable.SetModel <- function() {
 						SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_NONE)
 						SetPropIntArray(self, "m_nModelIndexOverrides", curModel, VISION_MODE_ROME)
@@ -569,7 +579,7 @@ function PopulatorThink() {
 				}
 			}
 
-			scope.TankThinks <- function() { foreach (name, func in scope.TankThinkTable) func(); return -1 }
+			scope.TankThinks <- function() { foreach (name, func in scope.TankThinkTable) func.call(scope); return -1 }
 			scope.TankThinks() //run thinks for availability in OnSpawn
 			_AddThinkToEnt(tank, "TankThinks")
 
