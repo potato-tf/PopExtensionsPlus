@@ -41,7 +41,6 @@ if (!("_AddThinkToEnt" in root))
 	//save popfile name in global scope when we first initialize
 	//if the popfile name changed, a new pop has loaded, clean everything up.
 	function PlayerCleanup(player) {
-
 		NetProps.SetPropInt(player, "m_nRenderMode", kRenderNormal)
 		NetProps.SetPropInt(player, "m_clrRender", 0xFFFFFF)
 		player.ValidateScriptScope()
@@ -63,13 +62,9 @@ if (!("_AddThinkToEnt" in root))
 
 	function OnGameEvent_post_inventory_application(params) {
 
+		this.PlayerCleanup(GetPlayerFromUserID(params.userid))
+
 		local player = GetPlayerFromUserID(params.userid)
-
-		//this event fires multiple times on the same bot on spawn
-		if (player.IsEFlagSet(EFL_NO_PHYSCANNON_INTERACTION)) return
-
-		this.PlayerCleanup(player)
-
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
@@ -100,8 +95,6 @@ if (!("_AddThinkToEnt" in root))
 		if ("MissionAttributes" in root) foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 		if ("GlobalFixes" in root) foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
 		if ("CustomAttributes" in root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
-
-		player.AddEFlags(EFL_NO_PHYSCANNON_INTERACTION)
 	}
 	function OnGameEvent_player_changeclass(params) {
 		local player = GetPlayerFromUserID(params.userid)
@@ -115,11 +108,7 @@ if (!("_AddThinkToEnt" in root))
 	function OnGameEvent_player_death(params) {
 
 		local player = GetPlayerFromUserID(params.userid)
-
 		if (!player.IsBotOfType(TF_BOT_TYPE)) return
-
-		if (player.IsEFlagSet(EFL_NO_PHYSCANNON_INTERACTION))
-			player.RemoveEFlags(EFL_NO_PHYSCANNON_INTERACTION)
 
 		this.PlayerCleanup(player)
 	}

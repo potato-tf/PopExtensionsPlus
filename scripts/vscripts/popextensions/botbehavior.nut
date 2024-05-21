@@ -105,7 +105,7 @@ class AI_Bot {
 	}
 
 	function CollectThreats(maxdist = INT_MAX, disguised = false, invisible = false) {
-
+		
 		local threatarray = []
 		foreach (player in PopExtUtil.PlayerArray)
 		{
