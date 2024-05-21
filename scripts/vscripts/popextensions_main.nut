@@ -82,7 +82,10 @@ if (!("_AddThinkToEnt" in root))
 				aibot <- AI_Bot(self)
 
 				PlayerThinkTable.BotThink <- function() {
-					try aibot.OnUpdate() catch(e) if (e == ""the index 'bot' does not exist"") return //spams console and buries the actual error
+					try
+						aibot.OnUpdate()
+					catch(e)
+						if (e == `the index 'bot' does not exist`) return
 				}
 			", -1, player, player);
 		}
@@ -177,7 +180,8 @@ function Include(path) {
 Include("constants") //constants must include first
 Include("itemdef_constants") //constants must include first
 Include("item_map") //must include second
-Include("util") //must include third
+Include("attribute_map") //must include third (after item_map)
+Include("util") //must include fourth
 
 Include("hooks") //must include before popextensions
 Include("popextensions")

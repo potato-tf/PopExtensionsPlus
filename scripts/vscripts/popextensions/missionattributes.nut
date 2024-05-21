@@ -1378,11 +1378,15 @@ function MissionAttributes::MissionAttr(...) {
 			local tfclass = player.GetPlayerClass()
 			foreach (k, v in value)
 			{
-				if (typeof k == "string" && (typeof v == "integer" || typeof v == "float" || typeof v == "array" ))
-					if (k in CustomAttributes.Attrs)
-						CustomAttributes.AddAttr(player, k, v, player.GetActiveWeapon())
-					else
-						EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", k, v.tofloat()), -1, null, null)
+				//do the customattributes check first, since we replace some vanilla attributes
+				if (k in CustomAttributes.Attrs)
+					CustomAttributes.AddAttr(player, k, v, player.GetActiveWeapon())
+
+				else if (k in PopExtItems.Attributes && !("attribute_type" in PopExtItems.Attributes && PopExtItems.Attributes["attribute_type"] == "string"))
+					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", k, v.tofloat()), -1, null, null)
+
+				else
+					this.RaiseValueError("PlayerAttributes", value, "Cannot set string attributes!")
 
 				if (!(tfclass in value)) continue
 				local table = value[tfclass]
