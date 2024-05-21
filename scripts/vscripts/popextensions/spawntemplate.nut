@@ -4,7 +4,12 @@ PopExt.wavePointTemplates         <- []
 PopExt.globalTemplateSpawnCount   <- 0
 
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
-::SpawnTemplate <- function (pointtemplate, parent = null, origin = "", angles = "") {
+::SpawnTemplate <- function (pointtemplate, parent = null, origin = "", angles = "", forceparent = false) {
+	
+	if (forceparent && parent.IsEFlagSet(EFL_USER3)) parent.RemoveEFlags(EFL_USER3) //forceparent is set, delete the EFlag to parent another template
+
+	if (parent != null && parent.IsEFlagSet(EFL_USER3)) return //we already have a template
+	
 	// credit to ficool2
 	PopExt.globalTemplateSpawnCount <- PopExt.globalTemplateSpawnCount + 1
 	local template = CreateByClassname("point_script_template")
@@ -73,11 +78,16 @@ PopExt.globalTemplateSpawnCount   <- 0
 			PopExt.wavePointTemplates.append(entity)
 
 			if (parent != null) {
+
+				if (typeof parent == "string") parent = FindByName(null, parent)
 				//this function is defined in popextensions.nut
 				PopExtUtil.SetParentLocalOrigin(entity, parent)
 
 				//entities parented to players do not kill itself when the player dies as the player entity is not considered killed
 				if (parent.IsPlayer()) {
+					
+					parent.AddEFlags(EFL_USER3)
+
 					if (keepalive == false) {
 						parent.ValidateScriptScope()
 						local scope = parent.GetScriptScope()
