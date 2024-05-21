@@ -118,12 +118,12 @@
 		function OnGameEvent_player_death(params) { foreach (_, func in CustomAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_teleported(params) { foreach (_, func in CustomAttributes.PlayerTeleportTable) func(params) }
 
-		function OnGameEvent_post_inventory_application(params) {
+		// function OnGameEvent_post_inventory_application(params) {
 
-            local player = GetPlayerFromUserID(params.userid)
-            player.ValidateScriptScope()
-            player.GetScriptScope().teleporterspeedboost <- false
-		}
+        //     local player = GetPlayerFromUserID(params.userid)
+        //     player.ValidateScriptScope()
+        //     player.GetScriptScope().teleporterspeedboost <- false
+		// }
 
 		function OnGameEvent_recalculate_holidays(params) {
 

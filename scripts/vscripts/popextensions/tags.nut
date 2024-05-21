@@ -773,28 +773,6 @@ local popext_funcs = {
 		}
 	}
 
-	popext_addcondonhit = function(bot, args) {
-
-		// Tag popext_addcondonhit|cond|duration|threshold
-		local args_len = args.len()
-
-		local cond = args[0].tointeger()
-		local duration = (args_len > 1) ? args[1].tofloat() : -1.0
-		local dmgthreshold = (args_len > 2) ? args[2].tofloat() : 0.0
-
-		PopExtTags.TakeDamageTable.AddCondOnHitTakeDamage <- function(params) {
-
-			if (!params.const_entity.IsPlayer()) return
-
-			local victim = params.const_entity
-			local attacker = params.attacker
-			local damage = params.damage
-
-			if (attacker != null && victim != attacker && victim.GetHealth() - damage > 0 && damage >= dmgthreshold)
-				victim.AddCondEx(cond, duration, null)
-		}
-	}
-
 	popext_dropweapon = function(bot, args) {
 
 		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- function(params) {
