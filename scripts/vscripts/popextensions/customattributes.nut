@@ -29,8 +29,8 @@
         "ability master sniper": null
         "keep disguise on attack": null
         "add give health to teammate on hit": null
-        "mult dispenser rate": null
-        "mvm sentry ammo": null
+        // "mult dispenser rate": null
+        // "mvm sentry ammo": null
         "build small sentries": null
         "kill combo fire rate boost": null
         "disguise as dispenser on crouch": null
@@ -1776,7 +1776,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
     local i = 0
     scope.PlayerThinkTable.ShowAttribInfo <- function() {
 
-        if (!player.IsInspecting() || Time() < cooldowntime) return
+        if (!formattedtable.len() || !player.IsInspecting() || Time() < cooldowntime) return
 
         if (i+1 < formattedtable.len())
             PopExtUtil.ShowHudHint(format("%s %s", formattedtable[i], formattedtable[i+1]), player, 3.0 - SINGLE_TICK)

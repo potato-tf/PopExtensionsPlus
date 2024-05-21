@@ -550,7 +550,7 @@ local popext_funcs = {
 		local previouswep = bot.GetActiveWeapon().entindex()
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeWhenClose <- function() {
-
+			if (bot.IsEFlagSet(EFL_BOT)) return
 			for (local p; p = FindByClassnameWithin(p, "player", bot.GetOrigin(), dist);) {
 
 				if (p.GetTeam() == bot.GetTeam()) continue
@@ -559,7 +559,8 @@ local popext_funcs = {
 				bot.Weapon_Switch(melee)
 				melee.AddAttribute("disable weapon switch", 1, 1)
 				melee.ReapplyProvision()
-				EntFireByHandle(melee, "RunScriptCode", "self.RemoveAttribute(`disable weapon switch`); self.ReapplyProvision()", 1.1, null, null)
+				bot.AddEFlags(EFL_BOT)
+				EntFireByHandle(melee, "RunScriptCode", "self.RemoveAttribute(`disable weapon switch`); self.ReapplyProvision(); self.GetOwner().RemoveEFlags(EFL_BOT)", 1.1, null, null)
 			}
 		}
 	}
@@ -668,7 +669,7 @@ local popext_funcs = {
 
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
 
-				if (projectile.GetEFlags() & EFL_NO_ROTORWASH_PUSH || GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
+				if (projectile.IsEFlagSet(EFL_PROJECTILE) || GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
 
 				if (args.len() > 1) EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 
@@ -683,7 +684,7 @@ local popext_funcs = {
 				EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)
 				EntFireByHandle(particle, "Kill", "", -1, null, null)
 
-				projectile.AddEFlags(EFL_NO_ROTORWASH_PUSH)
+				projectile.AddEFlags(EFL_PROJECTILE)
 			}
 		}
 	}

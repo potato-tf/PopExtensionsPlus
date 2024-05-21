@@ -961,7 +961,7 @@ function MissionAttributes::MissionAttr(...) {
 				MissionAttributes.ThinkTable.RobotVOThink <- function() {
 
 					for (local ent; ent = FindByClassname(ent, "instanced_scripted_scene"); ) {
-						if (ent.GetEFlags() & EFL_USER) continue
+						if (ent.IsEFlagSet(EFL_USER)) continue
 						ent.AddEFlags(EFL_USER)
 						local owner = GetPropEntity(ent, "m_hOwner")
 						if (owner != null && !owner.IsBotOfType(TF_BOT_TYPE)) {
@@ -1364,11 +1364,31 @@ function MissionAttributes::MissionAttr(...) {
 			"hidden maxhealth non buffed": null,
 		}
 
+		MissionAttributes.SetPlayerAttributes <- function(player, a, b)
+		{
+
+			//do the customattributes check first, since we replace some vanilla attributes
+			if (a in CustomAttributes.Attrs)
+				CustomAttributes.AddAttr(player, a, b, player.GetActiveWeapon())
+
+			else if (a in PopExtItems.Attributes)
+			{
+				if ("attribute_type" in PopExtItems.Attributes[a] && PopExtItems.Attributes[a]["attribute_type"] == "string")
+					MissionAttributes.RaiseValueError("PlayerAttributes", a, "Cannot set string attributes!")
+				else
+				{
+					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", a, b.tofloat()), -1, null, null)
+					if (a in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
+				}
+			}
+			else
+				MissionAttributes.RaiseValueError("PlayerAttributes", a, "Invalid attribute!")
+		}
+
 		MissionAttributes.SpawnHookTable.PlayerAttributes <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(TF_BOT_TYPE)) return
-
 			if (typeof value != "table") {
 				this.RaiseValueError("PlayerAttributes", value, "Value must be table")
 				success = false
@@ -1378,39 +1398,13 @@ function MissionAttributes::MissionAttr(...) {
 			local tfclass = player.GetPlayerClass()
 			foreach (k, v in value)
 			{
-				//do the customattributes check first, since we replace some vanilla attributes
-				if (k in CustomAttributes.Attrs)
-					CustomAttributes.AddAttr(player, k, v, player.GetActiveWeapon())
-
-				else if (k in PopExtItems.Attributes && !("attribute_type" in PopExtItems.Attributes && PopExtItems.Attributes["attribute_type"] == "string"))
-					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", k, v.tofloat()), -1, null, null)
-
-				else
-					this.RaiseValueError("PlayerAttributes", value, "Cannot set string attributes!")
-
-				if (!(tfclass in value)) continue
-				local table = value[tfclass]
-				foreach (k, v in table) {
-					if (k in CustomAttributes.Attrs && !player.IsBotOfType(TF_BOT_TYPE))
-						CustomAttributes.AddAttr(player, k, v, player.GetActiveWeapon())
-					else {
-						local valformat = ""
-						if (typeof v == "integer")
-							valformat = format("self.AddCustomAttribute(`%s`, %d, -1)", k, v)
-
-						else if (typeof v == "float")
-							valformat = format("self.AddCustomAttribute(`%s`, %f, -1)", k, v)
-
-						else if (typeof v == "string") {
-							this.RaiseValueError("PlayerAttributes", v, "Cannot set string attributes!")
-							success = false
-							continue
-						}
-
-
-						EntFireByHandle(player, "RunScriptCode", valformat, -1, null, null)
-						if (k in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
-
+				if (typeof v != "table")
+				MissionAttributes.SetPlayerAttributes(player, k, v)
+				else if (tfclass in value) 
+				{
+					local table = value[tfclass]
+					foreach (k, v in table) {
+						MissionAttributes.SetPlayerAttributes(player, k, v)
 					}
 				}
 			}
@@ -1688,27 +1682,33 @@ function MissionAttributes::MissionAttr(...) {
 				PrecacheSound(override)
 				PrecacheScriptSound(override)
 			}
+			
+			if (sound in DeathSounds)
+			{
+				DeathSounds[sound] <- []
+				if (override != null) DeathSounds[sound].append(override)
+			}
+			
 			MissionAttributes.SoundsToReplace[sound] <- override
 		}
 
 		//sounds played on death (giant/buster explosions)
-		MissionAttributes.DeathHookTable.SoundOverrides <- function(params) {
+		// MissionAttributes.DeathHookTable.SoundOverrides <- function(params) {
+		MissionAttributes.TakeDamageTablePost.SoundOverrides <- function(params) {
 
 			local victim = GetPlayerFromUserID(params.userid)
 			// local victim = params.const_entity
 
 			// if (!victim.IsPlayer() || params.damage < victim.GetHealth()) return
-			// if (params.damageamount < victim.GetHealth()) return
+			if (params.damageamount < victim.GetHealth()) return
 
-			foreach (sound, override in value)
+			foreach (sound, override in DeathSounds)
 			{
-				if (sound in DeathSounds)
+				if (override != null) 
 				{
 					StopSoundOn(sound, victim)
-
-					if (override == null) continue
-
-					EmitSoundEx({sound_name = override, entity = victim})
+					
+					if (override.len()) EmitSoundEx({sound_name = override[0], entity = victim})
 				}
 			}
 		}
@@ -2219,7 +2219,7 @@ function MissionAttributes::MissionAttr(...) {
 			scope.PlayerThinkTable.ReverseMVMPackThink <- function() {
 				local origin = self.GetOrigin()
 				for ( local ent; ent = FindByClassnameWithin(ent, "item_*", origin, 40); ) {
-					if (ent.GetEFlags() & EFL_USER) continue
+					if (ent.IsEFlagSet(EFL_USER)) continue
 					if (GetPropInt(ent, "m_fEffects") & EF_NODRAW) continue
 
 					local classname = ent.GetClassname()

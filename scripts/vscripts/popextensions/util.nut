@@ -172,7 +172,7 @@
 				if (player != null && player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.BotArray.find(player) == null)
 					PopExtUtil.BotArray.append(player)
 
-				else if (player != null && PopExtUtil.HumanArray.find(player) == null)
+				else if (player != null && !player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.HumanArray.find(player) == null)
 					PopExtUtil.HumanArray.append(player)
 
 				if (player != null && PopExtUtil.PlayerArray.find(player) == null)
@@ -205,7 +205,7 @@
 			if (player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.BotArray.find(player) == null)
 				PopExtUtil.BotArray.append(player)
 
-			else if (PopExtUtil.HumanArray.find(player) == null)
+			else if (!player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.HumanArray.find(player) == null)
 				PopExtUtil.HumanArray.append(player)
 
 			if (PopExtUtil.PlayerArray.find(player) == null)
