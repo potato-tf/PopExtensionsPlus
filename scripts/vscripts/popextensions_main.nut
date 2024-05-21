@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "05.21.2024.1"
+::popExtensionsVersion <- "05.21.2024.2"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -88,7 +88,7 @@ if (!("_AddThinkToEnt" in root))
 						if (e == `the index 'bot' does not exist`) return
 				}
 			", -1, player, player);
-			
+
 			// player.AddEFlags(EFL_NO_PHYSCANNON_INTERACTION)
 		// EntFireByHandle(player, "RunScriptCode", "self.AddEFlags(EFL_NO_PHYSCANNON_INTERACTION)", -1, null, null)
 		}

@@ -324,6 +324,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 			if ("TemplatesToKill" in scope)
 				foreach (func in scope.TemplatesToKill)
 					func()
+			player.RemoveEFlags(EFL_USER3)
 		}
 	}
 }
