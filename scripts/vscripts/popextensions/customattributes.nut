@@ -98,6 +98,7 @@
         "collect currency on kill": null
         "noclip projectile": null
         "projectile gravity": null
+        "immune to cond": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -1381,6 +1382,22 @@ function CustomAttributes::ProjectileGravity(player, item, value) {
 	}
 }
 
+function CustomAttributes::CondImmunity(player, item, value) {
+
+    local wep = PopExtUtil.HasItemInLoadout(player, item)
+    if (wep == null) return
+
+    player.GetScriptScope().PlayerThinkTable.CondImmunity <- function() {
+        if (typeof value == "array") {
+            foreach (cond in value) {
+                player.RemoveCondEx(cond, true)
+            }
+            return
+        }
+        player.RemoveCondEx(value, true)
+    }
+}
+
 function CustomAttributes::ShahanshahAttributeBelowHP(player, item, value) {
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
@@ -1699,6 +1716,22 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             CustomAttributes.ProjectileGravity(player, item, value)
             scope.attribinfo[attr] <- format("projectile gravity %d hu/s", value)
 		break
+
+        case "immune to cond":
+            if (typeof value == "integer") {
+                CustomAttributes.CondImmunity(player, item, value)
+                scope.attribinfo[attr] <- format("wielder is immune to cond %d", value)
+            } else {
+                CustomAttributes.CondImmunity(player, item, value)
+                local outputString = ""
+                foreach (item in value) {
+                    outputString += (item.tostring() + ", ")
+                }
+                local finalCommaAndSpace = 2
+                outputString = outputString.slice(0, outputString.len() - finalCommaAndSpace)
+                scope.attribinfo[attr] <- format("wielder is immune to cond %s", outputString)
+            }
+        break
 
         //VANILLA ATTRIBUTE REIMPLEMENTATIONS
 
