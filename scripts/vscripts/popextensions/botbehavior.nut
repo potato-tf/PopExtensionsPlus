@@ -105,7 +105,7 @@ class AI_Bot {
 	}
 
 	function CollectThreats(maxdist = INT_MAX, disguised = false, invisible = false) {
-		
+
 		local threatarray = []
 		foreach (player in PopExtUtil.PlayerArray)
 		{
@@ -262,11 +262,6 @@ class AI_Bot {
 		cur_eye_fwd = cur_eye_ang.Forward()
 
 		time = Time()
-
-		// foreach (k, v in bot.GetLocomotionInterface())
-		// printl(bot.GetLocomotionInterface())
-		// printl(bot.GetVisionInterface())
-		foreach (_, func in scope.PlayerThinkTable) func()
 
 		//SwitchToBestWeapon()
 		//DrawDebugInfo()

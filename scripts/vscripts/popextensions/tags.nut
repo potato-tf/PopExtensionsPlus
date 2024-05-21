@@ -310,37 +310,37 @@ local popext_funcs = {
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- function() {
 
-			local t = FindClosestThreat(visionoverride, false)
+			local t = aibot.FindClosestThreat(visionoverride, false)
 
 			if (t == null || t.IsFullyInvisible() || t.IsStealthed()) return
 
-			if (threat != t)
+			if (aibot.threat != t)
 			{
 				// bot.AddBotAttribute(SUPPRESS_FIRE)
-				SetThreat(t, false)
-				LookAt(t.EyePosition(), 50, 50)
+				aibot.SetThreat(t, false)
+				aibot.LookAt(t.EyePosition(), 50, 50)
 				bot.SetAttentionFocus(t)
 			}
 			// if (bot.hasbotattrEntFireByHandle(bot, "RunScriptCode", "self.RemoveBotAttribute(SUPPRESS_FIRE)", -1, null, null)
 			// bot.RemoveBotAttribute(SUPPRESS_FIRE)
 
 			if (!bot.HasBotTag("popext_mobber"))
-				UpdatePathAndMove(t.GetOrigin())
+				aibot.UpdatePathAndMove(t.GetOrigin())
 		}
 	}
 
 	popext_mobber = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
-
+			local threat = aibot.threat;
 			if (threat != null && threat.IsValid() && PopExtUtil.IsAlive(threat)) return
 
-			local threats = CollectThreats()
+			local threats = aibot.CollectThreats()
 
 			local t = threats[RandomInt(0, threats.len() - 1)]
 
 			// Move(t)
-			UpdatePathAndMove(t.GetOrigin())
+			aibot.UpdatePathAndMove(t.GetOrigin())
 		}
 	}
 
@@ -361,7 +361,7 @@ local popext_funcs = {
 		}
 
 		bot.GetScriptScope().PlayerThinkTable.MoveToPoint <- function() {
-			UpdatePathAndMove(pos)
+			aibot.UpdatePathAndMove(pos)
 		}
 	}
 
@@ -547,6 +547,7 @@ local popext_funcs = {
 	popext_meleewhenclose = function(bot, args) {
 
 		local dist = args[0].tofloat()
+		local previouswep = bot.GetActiveWeapon().entindex()
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeWhenClose <- function() {
 
@@ -558,9 +559,11 @@ local popext_funcs = {
 				bot.Weapon_Switch(melee)
 				melee.AddAttribute("disable weapon switch", 1, 1)
 				melee.ReapplyProvision()
+				EntFireByHandle(melee, "RunScriptCode", "self.RemoveAttribute(`disable weapon switch`); self.ReapplyProvision()", 1.1, null, null)
 			}
 		}
 	}
+
 	popext_usebestweapon = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.BestWeaponThink <- function() {
@@ -714,23 +717,23 @@ local popext_funcs = {
 				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
-				if (GetThreatDistanceSqr(projectile) <= 67000 && IsVisible(projectile)) {
+				if (aibot.GetThreatDistanceSqr(projectile) <= 67000 && aibot.IsVisible(projectile)) {
 					switch (botLevel) {
 						case 1: // Basic Airblast, only deflect if in FOV
 
-							if (!IsInFieldOfView(projectile))
+							if (!aibot.IsInFieldOfView(projectile))
 								return
 							break
 						case 2: // Advanced Airblast, deflect regardless of FOV
 
-						LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
+						aibot.LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
 							break
 						case 3: // Expert Airblast, deflect regardless of FOV back to Sender
 
 							local owner = projectile.GetOwner()
 							if (owner != null) {
 								local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
-								LookAt(owner_head, INT_MAX, INT_MAX)
+								aibot.LookAt(owner_head, INT_MAX, INT_MAX)
 							}
 							break
 					}
@@ -761,34 +764,12 @@ local popext_funcs = {
 		{
 			foreach (player in PopExtUtil.HumanArray)
 			{
-				if (bot.IsInFieldOfView(player))
+				if (aibot.IsInFieldOfView(player))
 				{
-					LookAt(player.GetAttachmentOrigin(player.LookupAttachment(args[0])))
+					aibot.LookAt(player.GetAttachmentOrigin(player.LookupAttachment(args[0])))
 					break
 				}
 			}
-		}
-	}
-
-	popext_addcondonhit = function(bot, args) {
-
-		// Tag popext_addcondonhit|cond|duration|threshold
-		local args_len = args.len()
-
-		local cond = args[0].tointeger()
-		local duration = (args_len > 1) ? args[1].tofloat() : -1.0
-		local dmgthreshold = (args_len > 2) ? args[2].tofloat() : 0.0
-
-		PopExtTags.TakeDamageTable.AddCondOnHitTakeDamage <- function(params) {
-
-			if (!params.const_entity.IsPlayer()) return
-
-			local victim = params.const_entity
-			local attacker = params.attacker
-			local damage = params.damage
-
-			if (attacker != null && victim != attacker && victim.GetHealth() - damage > 0 && damage >= dmgthreshold)
-				victim.AddCondEx(cond, duration, null)
 		}
 	}
 
@@ -1107,7 +1088,6 @@ local popext_funcs = {
 	TeamSwitchTable = {}
 
 	function EvaluateTags(bot) {
-
 		foreach(tag in __tagarray) {
 			if (bot.HasBotTag(tag)) {
 				local args = split(tag, "|")
@@ -1116,25 +1096,6 @@ local popext_funcs = {
 					popext_funcs[func](bot, args)
 			}
 		}
-	}
-
-	function AI_BotSpawn(bot) {
-		local scope = null
-
-		try scope = bot.GetScriptScope() catch(e) return
-
-		this.EvaluateTags(bot)
-
-		scope.bot <- AI_Bot(bot)
-
-		//bot.AddBotAttribute(1024) // IGNORE_ENEMIES
-	}
-
-	function BotThink()
-	{
-		try bot.OnUpdate() catch(e) if (e == "the index 'bot' does not exist") return //spams console and buries the actual error
-		// bot.OnUpdate()
-		return -1
 	}
 
 	function OnScriptHook_OnTakeDamage(params) {
