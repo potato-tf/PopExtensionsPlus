@@ -105,6 +105,7 @@ if (!("_AddThinkToEnt" in root))
 		if ("CustomAttributes" in root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
 
 		player.AddEFlags(EFL_NO_PHYSCANNON_INTERACTION)
+		EntFireByHandle(player, "RunScriptCode", "self.RemoveEFlags(EFL_NO_PHYSCANNON_INTERACTION)", 2, null, null)
 	}
 	function OnGameEvent_player_changeclass(params) {
 		local player = GetPlayerFromUserID(params.userid)
