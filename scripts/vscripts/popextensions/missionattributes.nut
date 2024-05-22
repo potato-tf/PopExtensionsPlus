@@ -1356,35 +1356,6 @@ function MissionAttributes::MissionAttr(...) {
 
 	case "PlayerAttributes":
 
-		//setting maxhealth attribs doesn't update current HP
-		local healthattribs = {
-			"max health additive bonus" : null,
-			"max health additive penalty": null,
-			"SET BONUS: max health additive bonus": null,
-			"hidden maxhealth non buffed": null,
-		}
-
-		MissionAttributes.SetPlayerAttributes <- function(player, a, b)
-		{
-
-			//do the customattributes check first, since we replace some vanilla attributes
-			if (a in CustomAttributes.Attrs)
-				CustomAttributes.AddAttr(player, a, b, player.GetActiveWeapon())
-
-			else if (a in PopExtItems.Attributes)
-			{
-				if ("attribute_type" in PopExtItems.Attributes[a] && PopExtItems.Attributes[a]["attribute_type"] == "string")
-					MissionAttributes.RaiseValueError("PlayerAttributes", a, "Cannot set string attributes!")
-				else
-				{
-					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", a, b.tofloat()), -1, null, null)
-					if (a in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
-				}
-			}
-			else
-				MissionAttributes.RaiseValueError("PlayerAttributes", a, "Invalid attribute!")
-		}
-
 		MissionAttributes.SpawnHookTable.PlayerAttributes <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
@@ -1436,13 +1407,7 @@ function MissionAttributes::MissionAttr(...) {
 
 				foreach (a, b in attr)
 				{
-					if (a in CustomAttributes.Attrs)
-						CustomAttributes.AddAttr(player, a, b, wep)
-					else
-					{
-						wep.AddAttribute(a, b, -1)
-						wep.ReapplyProvision()
-					}
+					MissionAttributes.SetPlayerAttributes(player, a, b, item)
 				}
 			}
 
@@ -1655,6 +1620,18 @@ function MissionAttributes::MissionAttr(...) {
 			"MVM.PlayerDied": null
 		}
 
+		local TankSounds = {
+
+			"MVM.TankStart" : null
+			// "MVM.TankEnd" : null
+			"MVM.TankPing" : null
+			"MVM.TankEngineLoop" : null
+			// "MVM.TankSmash" : null
+			"MVM.TankDeploy" : null
+			"MVM.TankExplodes" : null
+		}
+		local names = []
+
 		// local BroadcastAudioSounds = {
 
 		// 	"Game.YourTeamWon": null
@@ -1688,29 +1665,51 @@ function MissionAttributes::MissionAttr(...) {
 				DeathSounds[sound] <- []
 				if (override != null) DeathSounds[sound].append(override)
 			}
+			// sound.split(sound, "k")[1]
+			if (sound in TankSounds)
+			{
+				TankSounds[sound] <- []
+				if (override != null) TankSounds[sound].append(override)
+			}
 			
+			{
+				MissionAttributes.ThinkTable.SetTankSounds <- function()
+				{
+					for (local tank; tank = FindByClassname(tank, "tank_boss");)
+					{
+						local scope = tank.GetScriptScope()
+	
+						if (!("popProperty" in scope)) scope.popProperty <- {}
+						if (!("SoundOverrides" in scope)) scope.popProperty.SoundOverrides <- {}
+						foreach (tanksound, tankoverride in TankSounds) if (!(split(tanksound, "k")[1] in scope.popProperty.SoundOverrides)) scope.popProperty.SoundOverrides[split(tanksound, "k")[1]] <- tankoverride
+						if ("created" in scope) delete scope.created 
+					}
+				}
+
+			}
+
 			MissionAttributes.SoundsToReplace[sound] <- override
 		}
 
 		//sounds played on death (giant/buster explosions)
-		// MissionAttributes.DeathHookTable.SoundOverrides <- function(params) {
-		MissionAttributes.TakeDamageTablePost.SoundOverrides <- function(params) {
+		MissionAttributes.DeathHookTable.SoundOverrides <- function(params) {
 
 			local victim = GetPlayerFromUserID(params.userid)
-			// local victim = params.const_entity
-
-			// if (!victim.IsPlayer() || params.damage < victim.GetHealth()) return
-			if (params.damageamount < victim.GetHealth()) return
 
 			foreach (sound, override in DeathSounds)
 			{
 				if (override != null) 
 				{
-					StopSoundOn(sound, victim)
-					
-					if (override.len()) EmitSoundEx({sound_name = override[0], entity = victim})
+					// StopSoundOn(sound, victim)
+					MissionAttributes.EmitSoundFunc <- function() { if (override.len()) EmitSoundEx({sound_name = override[0], entity = victim}) }
+					EntFireByHandle(victim, "RunScriptCode", format("StopSoundOn(`%s`, self)", sound), -1, null, null)
+					EntFireByHandle(victim, "RunScriptCode", "MissionAttributes.EmitSoundFunc()", -1, null, null)
 				}
 			}
+		}
+
+		MissionAttributes.TakeDamageTablePost.SoundOverrides <- function(params) {
+
 		}
 
 		//catch-all for disabling non teamplay_broadcast_audio sfx
@@ -2632,6 +2631,12 @@ function MissionAttributes::MissionAttr(...) {
 
 		break
 
+	// =========================================================
+	
+	case "ShowHiddenAttributes":
+		MissionAttributes.CurAttrs[value] <- true
+	break
+
 	// Options to revert global fixes below:
 	// View globalfixes.nut for more info
 
@@ -2705,6 +2710,44 @@ function MAtr(...) {
 	MissionAttr.acall(vargv.insert(0, MissionAttributes))
 }
 
+function MissionAttributes::SetPlayerAttributes(player, a, b, item = null)
+{
+	//setting maxhealth attribs doesn't update current HP
+	local healthattribs = {
+		"max health additive bonus" : null,
+		"max health additive penalty": null,
+		"SET BONUS: max health additive bonus": null,
+		"hidden maxhealth non buffed": null,
+	}
+	local wep
+	if (item != null) wep = PopExtUtil.HasItemInLoadout(player, item)
+
+	//do the customattributes check first, since we replace some vanilla attributes
+	if (a in CustomAttributes.Attrs)
+		CustomAttributes.AddAttr(player, a, b, wep)
+
+	else if (a in PopExtItems.Attributes)
+	{
+		if ("attribute_type" in PopExtItems.Attributes[a] && PopExtItems.Attributes[a]["attribute_type"] == "string")
+			MissionAttributes.RaiseValueError("PlayerAttributes", a, "Cannot set string attributes!")
+		else
+		{
+			wep == null ? EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", a, b.tofloat()), -1, null, null) : EntFireByHandle(wep, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", a, b.tofloat()), -1, null, null)
+			if (a in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
+		}
+		//add hidden attributes to our custom attribute display
+		if ("hidden" in PopExtItems.Attributes[a] && PopExtItems.Attributes[a]["hidden"] == "1" && "ShowHiddenAttributes" in MissionAttributes.CurAttrs && MissionAttributes.CurAttrs.ShowHiddenAttributes)
+		{
+			local scope = player.GetScriptScope()
+			if (!("attribinfo" in scope)) scope.attribinfo <- {}
+
+			scope.attribinfo[a] <- format("%s: %s" a, b.tostring())
+			CustomAttributes.RefreshDescs(player)
+		}
+	}
+	else
+		MissionAttributes.RaiseValueError("PlayerAttributes", a, "Invalid attribute!")
+}
 // Logging Functions
 // =========================================================
 // Generic debug message that is visible if PrintDebugText is true.

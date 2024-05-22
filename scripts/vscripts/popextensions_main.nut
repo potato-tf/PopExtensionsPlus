@@ -1,6 +1,6 @@
 //date = last major version push (new features)
 //suffix = patch
-::popExtensionsVersion <- "05.21.2024.2"
+::popExtensionsVersion <- "05.22.2024.1"
 local root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -65,9 +65,6 @@ if (!("_AddThinkToEnt" in root))
 
 		local player = GetPlayerFromUserID(params.userid)
 
-		//this event fires multiple times on the same bot on spawn
-		// if (player.IsEFlagSet(EFL_NO_PHYSCANNON_INTERACTION)) return
-
 		this.PlayerCleanup(player)
 
 		player.ValidateScriptScope()
@@ -89,8 +86,6 @@ if (!("_AddThinkToEnt" in root))
 				}
 			", -1, player, player);
 
-			// player.AddEFlags(EFL_NO_PHYSCANNON_INTERACTION)
-		// EntFireByHandle(player, "RunScriptCode", "self.AddEFlags(EFL_NO_PHYSCANNON_INTERACTION)", -1, null, null)
 		}
 
 		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func.call(scope); return -1 }
@@ -121,8 +116,6 @@ if (!("_AddThinkToEnt" in root))
 		local player = GetPlayerFromUserID(params.userid)
 
 		if (!player.IsBotOfType(TF_BOT_TYPE)) return
-
-		player.RemoveEFlags(EFL_NO_PHYSCANNON_INTERACTION)
 
 		this.PlayerCleanup(player)
 	}

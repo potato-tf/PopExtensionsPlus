@@ -400,8 +400,8 @@ function PopExtUtil::SetParentLocalOriginDo(child, parent, attachment = null) {
 	child.SetLocalAngles(origAngles)
 
 	local origVel = child.GetVelocity()
-	child.SetVelocity(origVel + Vector(0, 0, 1))
-	child.SetVelocity(origVel)
+	child.SetAbsVelocity(origVel + Vector(0, 0, 1))
+	child.SetAbsVelocity(origVel)
 
 	EntFireByHandle(child, "SetParent", "!activator", 0, parent, parent)
 	if (attachment != null) {
@@ -415,9 +415,9 @@ function PopExtUtil::SetParentLocalOriginDo(child, parent, attachment = null) {
 function PopExtUtil::SetParentLocalOrigin(child, parent, attachment = null) {
 	if (typeof child == "array")
 		foreach(i, childIn in child)
-			SetParentLocalOriginDo(childIn, parent, attachment)
+			PopExtUtil.SetParentLocalOriginDo(childIn, parent, attachment)
 	else
-		SetParentLocalOriginDo(child, parent, attachment)
+		PopExtUtil.SetParentLocalOriginDo(child, parent, attachment)
 }
 
 // Setup collision bounds of a trigger entity
@@ -439,7 +439,7 @@ function PopExtUtil::SetupTriggerBounds(trigger, mins = null, maxs = null) {
 function PopExtUtil::PrintTable(table) {
 	if (table == null) return;
 
-	DoPrintTable(table, 0)
+	PopExtUtil.DoPrintTable(table, 0)
 }
 
 function PopExtUtil::DoPrintTable(table, indent) {
@@ -462,7 +462,7 @@ function PopExtUtil::DoPrintTable(table, indent) {
 
 		if (typeof v == "table" || typeof v == "array") {
 			ClientPrint(null, 2, line)
-			DoPrintTable(v, indent)
+			PopExtUtil.DoPrintTable(v, indent)
 		}
 		else {
 			try {

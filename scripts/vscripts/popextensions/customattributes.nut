@@ -1427,6 +1427,8 @@ function CustomAttributes::ShahanshahAttributeAboveHP(player, item, value) {
 }
 
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
+    
+    if (item == null) item = player.GetActiveWeapon()
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
     if (wep == null) return
@@ -1757,9 +1759,13 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
             CustomAttributes.ShahanshahAttributeAboveHP(player, item, value)
             scope.attribinfo[attr] <- format("damage penalty while above 50% health", value)
         break
-
     }
 
+    CustomAttributes.RefreshDescs(player)
+}
+
+function CustomAttributes::RefreshDescs(player)
+{
     local cooldowntime = 3.0
 
     local scope = player.GetScriptScope()

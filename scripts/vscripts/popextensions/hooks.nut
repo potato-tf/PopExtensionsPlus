@@ -197,10 +197,10 @@ PopExt <- popExtEntity.GetScriptScope()
 							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = victim, flags = SND_STOP})
 						}
 
-						if ("Destroy" in scope.popProperty.SoundOverrides)
+						if ("Explodes" in scope.popProperty.SoundOverrides)
 						{
 							StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
-							EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Destroy)
+							EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Explodes)
 						}
 					}
 					if ("NoDeathFX" in scope.popProperty && scope.popProperty.NoDeathFX > 0)
@@ -224,7 +224,7 @@ PopExt <- popExtEntity.GetScriptScope()
 
 						if (scope.popProperty.NoDeathFX > 1)
 						{
-							if ("SoundOverrides" in scope.popProperty && "Destroy" in scope.popProperty.SoundOverrides) return
+							if ("SoundOverrides" in scope.popProperty && "Explodes" in scope.popProperty.SoundOverrides) return
 
 							StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
 						}

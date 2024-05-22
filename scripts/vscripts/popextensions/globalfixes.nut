@@ -252,7 +252,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		// Doesn't fully work correctly, need to investigate
 		function EngineerBuildingPushbackFix(params) {
 			local player = GetPlayerFromUserID(params.userid)
-			if (player.IsBotOfType(TF_BOT_TYPE)) return
+			// if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
