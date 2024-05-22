@@ -7924,7 +7924,7 @@ local FromItemsGame = {
 	StringToFile("test.nut", format("::PopExtAttribs <- {\n%s\n}", filetable))
 }
 
-GenerateItemAttributeTable()
+// GenerateItemAttributeTable()
 
 PopExtItems.Attributes <- {
 
