@@ -822,10 +822,10 @@ function MissionAttributes::MissionAttr(...) {
 			{
 				if (typeof value == "table")
 					foreach (k, v in value)
-						EntFire(k, "SetReturnTime", v)
+						EntFire(k, "SetReturnTime", v.tostring())
 
 				else if (typeof value == "integer" || typeof value == "float")
-					EntFire("item_teamflag", "SetReturnTime", value)
+					EntFire("item_teamflag", "SetReturnTime", value.tostring())
 			}
 		}
 		MissionAttributes.FlagResetTime()
