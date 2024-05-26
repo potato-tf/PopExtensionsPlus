@@ -1483,7 +1483,7 @@ function PopExtUtil::TeleportNearVictim(ent, victim, attempt) {
 		local which = RandomInt(0, ambush_areas.len() - 1)
 		local where = ambush_areas[which].GetCenter() + Vector(0, 0, STEP_HEIGHT)
 
-		if (IsSpaceToSpawnHere(where, ent.GetBoundingMins(), ent.GetBoundingMaxs())) {
+		if (PopExtUtil.IsSpaceToSpawnHere(where, ent.GetBoundingMins(), ent.GetBoundingMaxs())) {
 			ent.SetAbsOrigin(where)
 			return true
 		}
