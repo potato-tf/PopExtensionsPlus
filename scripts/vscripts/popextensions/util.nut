@@ -1317,23 +1317,25 @@ function PopExtUtil::capwords(s, sep = null) {
     return finalResult;
 }
 
-function PopExtUtil::EndWaveReverse()
+function PopExtUtil::EndWaveReverse(doteamswitch = true)
 {
 	local temp = CreateByClassname("info_teleport_destination")
 
 	if (!PopExtUtil.IsWaveStarted) return
 
 	//move to red
-	foreach (player in PopExtUtil.HumanArray)
-		PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_DEFENDERS)
+	if (doteamswitch)
+		foreach (player in PopExtUtil.HumanArray)
+			PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_DEFENDERS)
 
 	temp.ValidateScriptScope()
 	temp.GetScriptScope().ClearWave <- function()
 	{
 		if (!PopExtUtil.IsWaveStarted) {
 
-			foreach (player in PopExtUtil.HumanArray)
-				PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_INVADERS)
+			if (doteamswitch)
+				foreach (player in PopExtUtil.HumanArray)
+					PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_INVADERS)
 
 			SetPropString(self, "m_iszScriptThinkFunction", "")
 			EntFireByHandle(self, "Kill", "", -1, null, null)
