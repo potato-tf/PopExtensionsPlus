@@ -1,3 +1,4 @@
+local _root = getroottable()
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 ::PopExtUtil <- {
 
@@ -190,10 +191,29 @@
 			//sort weapons by slot
 			local myweapons = {}
 			for (local i = 0; i < SLOT_COUNT; i++) {
+
 				local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 				if (wep == null) continue
 
 				myweapons[wep.GetSlot()] <- wep
+
+				//add weapon think table while we're here
+
+				wep.ValidateScriptScope()
+				local scope = wep.GetScriptScope()
+
+				scope.ItemThinkTable <- {}
+
+				scope.ItemThinks <- function() { foreach (name, func in scope.ItemThinkTable) func.call(scope); return -1 }
+
+				_AddThinkToEnt(wep, "ItemThinks")
+			}
+
+			for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer())
+			{
+				child.ValidateScriptScope()
+				local scope = child.GetScriptScope()
+				if (!("ItemThinkTable" in scope)) scope.ItemThinkTable <- {}
 			}
 			foreach(slot, wep in myweapons)
 			{
@@ -1349,6 +1369,45 @@ function PopExtUtil::EndWaveReverse(doteamswitch = true)
 	AddThinkToEnt(temp, "ClearWave")
 }
 
+function PopExtUtil::AddThinkToEnt(ent, func)
+{
+	local scope = ent.GetScriptScope()
+	local thinktable = ""
+
+	if (ent.IsPlayer())
+		thinktable = "PlayerThinkTable"
+
+	else if ((ent.GetClassname() == "tank_boss"))
+		thinktable = "TankThinkTable"
+
+	else if (startswith(ent.GetClassname(), "tf_projectile"))
+		thinktable = "ProjectileThinkTable"
+
+	else if (HasProp(ent, "m_bValidatedAttachedEntity"))
+		thinktable = "ItemThinkTable"
+	else
+		_AddThinkToEnt(ent, func)
+
+	if (thinktable == "") return
+
+	if (!(thinktable in scope)) scope[thinktable] <- {}
+
+	if (func == null)
+		scope[thinktable].clear()
+	else
+		if (func in _root)
+			scope[format("%s", thinktable)][func] <- _root[func]
+		else if (func.find("."))
+		{
+			local spl = func.split(".")
+			local str = format("scope[%s][%s] <- _root", thinktable, spl[spl.len() - 1])
+
+			foreach (s in spl)
+				str += format("[%s]", s)
+		}
+}
+
+
 function PopExtUtil::SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT) {
 	if (player == null || !player.IsPlayer()) return
 
@@ -1547,7 +1606,7 @@ function PopExtUtil::SetDestroyCallback(entity, callback)
 				{
 					entity = EntIndexToHScript(index);
 					local scope = entity.GetScriptScope();
-					scope.self <- entity;			
+					scope.self <- entity;
 					callback.pcall(scope);
 				}
 				delete parent[k];

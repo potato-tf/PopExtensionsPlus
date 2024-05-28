@@ -1,7 +1,7 @@
 //date = last major version push (new features)
 //suffix = patch
 ::popExtensionsVersion <- "05.22.2024.1"
-local root = getroottable()
+local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
 ::__popname <- NetProps.GetPropString(o, "m_iszMvMPopfileName")
@@ -18,7 +18,7 @@ local banned_think_classnames = {
 	tf_projectile_ = "ProjectileThinkTable"
 }
 
-if (!("_AddThinkToEnt" in root))
+if (!("_AddThinkToEnt" in _root))
 {
 	//rename so we can still use it elsewhere
 	::_AddThinkToEnt <- AddThinkToEnt
@@ -98,9 +98,9 @@ if (!("_AddThinkToEnt" in root))
 			scope.buildings <- []
 		}
 
-		if ("MissionAttributes" in root) foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
-		if ("GlobalFixes" in root) foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
-		if ("CustomAttributes" in root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
+		if ("MissionAttributes" in _root) foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
+		if ("GlobalFixes" in _root) foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
+		if ("CustomAttributes" in _root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
 	}
 	function OnGameEvent_player_changeclass(params) {
 		local player = GetPlayerFromUserID(params.userid)
@@ -167,7 +167,7 @@ for (local i = 1; i <= MaxClients().tointeger(); i++)
 		EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", 0.015, null, null)
 
 function Include(path) {
-	try IncludeScript(format("popextensions/%s", path), root) catch(e) printl(e)
+	try IncludeScript(format("popextensions/%s", path), _root) catch(e) printl(e)
 }
 
 Include("constants") //constants must include first

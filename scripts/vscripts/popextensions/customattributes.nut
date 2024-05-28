@@ -119,30 +119,13 @@
 		function OnGameEvent_player_death(params) { foreach (_, func in CustomAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_teleported(params) { foreach (_, func in CustomAttributes.PlayerTeleportTable) func(params) }
 
-		// function OnGameEvent_post_inventory_application(params) {
+		// function OnGameEvent_recalculate_holidays(params) {
 
-        //     local player = GetPlayerFromUserID(params.userid)
-        //     player.ValidateScriptScope()
-        //     player.GetScriptScope().teleporterspeedboost <- false
+		// 	if (GetRoundState() != GR_STATE_PREROUND) return
+
+        //     foreach (player in PopExtUtil.HumanArray)
+        //         PopExtMain.PlayerCleanup(player)
 		// }
-
-		function OnGameEvent_recalculate_holidays(params) {
-
-			if (GetRoundState() != GR_STATE_PREROUND) return
-
-            foreach (player in PopExtUtil.HumanArray)
-                PopExtMain.PlayerCleanup(player)
-		}
-
-		// function OnGameEvent_mvm_wave_complete(params) {
-
-		// 	CustomAttributes.Cleanup()
-		// }
-
-		function OnGameEvent_mvm_mission_complete(params) {
-
-			delete ::CustomAttributes
-		}
 	}
 }
 __CollectGameEventCallbacks(CustomAttributes.Events)
@@ -1427,7 +1410,7 @@ function CustomAttributes::ShahanshahAttributeAboveHP(player, item, value) {
 }
 
 function CustomAttributes::AddAttr(player, attr = "", value = 0, item = null) {
-    
+
     if (item == null) item = player.GetActiveWeapon()
 
     local wep = PopExtUtil.HasItemInLoadout(player, item)
