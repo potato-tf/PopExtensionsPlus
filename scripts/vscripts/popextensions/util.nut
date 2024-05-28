@@ -1383,7 +1383,7 @@ function PopExtUtil::AddThinkToEnt(ent, func)
 	else if (startswith(ent.GetClassname(), "tf_projectile"))
 		thinktable = "ProjectileThinkTable"
 
-	else if (HasProp(ent, "m_bValidatedAttachedEntity"))
+	else if (ent instanceof "CEconEntity")
 		thinktable = "ItemThinkTable"
 	else
 		_AddThinkToEnt(ent, func)
@@ -1397,6 +1397,8 @@ function PopExtUtil::AddThinkToEnt(ent, func)
 	else
 		if (func in _root)
 			scope[format("%s", thinktable)][func] <- _root[func]
+		else if (func in this)
+			scope[format("%s", thinktable)][func] <- this[func]
 		else if (func.find("."))
 		{
 			local spl = func.split(".")
