@@ -31,7 +31,8 @@ convertedkeys = [
 	'$weaponswitchslot',
 	'$changeattributes',
 	'$setowner',
-	'$weaponstripslot'
+	'$weaponstripslot',
+	'$takedamage'
 ]
 
 textcolors = {
@@ -186,6 +187,8 @@ def convert_raf_keyvalues(value):
 	global giveitem, switchslot, changeattribs, stripweps, customweapons
 	if 'addoutput' in value.lower() and ':' in value.lower():
 		splitval = value.split(':')
+	elif len(value.split('')) > 1:
+		splitval = value.split('')
 	else:
 		splitval = value.split(',')
 
@@ -195,11 +198,11 @@ def convert_raf_keyvalues(value):
 		print(e, splitval)
 		return
 
-	# convert global $PlaySoundToSelf inputs to tf_gamerules PlayVORed
+	# convert global $PlaySoundToSelf inputs to tf_gamerules PlayVO
 	if 'player' in splitval[0].lower() and '$playsoundtoself' in entinput:
-		# log.append(f'SUCCESS: converted {splitval[1]} input to PlayVORed')
+		# log.append(f'SUCCESS: converted {splitval[1]} input to PlayVO')
 		splitval[0] = 'tf_gamerules'
-		splitval[1] = 'PlayVORed'
+		splitval[1] = 'PlayVO'
 		splitval[2] = splitval[2].replace('\\', '/')
 		if '|' in splitval[2]:
 			splitval[2] = splitval[2].split('|')[1]
@@ -288,6 +291,10 @@ def convert_raf_keyvalues(value):
 		# log.append(f'SUCCESS: converted {splitval[1]} to SetCustomModelWithClassAnimations', COLOR['ENDC'])
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'PopExtUtil.RemoveOutputAll(self, `{splitval[2]}`)'
+
+	elif '$takedamage' in entinput:
+		splitval[1] = 'RunScriptCode'
+		splitval[2] = f'self.TakeDamage({splitval[2]}, 0, null)'
 
 	elif '$giveitem' in entinput or '$awardandgiveextraitem' in entinput:
 		giveitem = True
@@ -384,11 +391,10 @@ def convert_raf_keyvalues(value):
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'PopExtUtil.StripWeapon(self, {splitval[2]})'
 
-	if splitval[0].startswith('@p@') and 'self' in splitval[2]:
+	if '@p@' in splitval[0] and 'self' in splitval[2]:
 		splitval[2] = splitval[2].replace('self', 'self.GetMoveParent()')
-		splitval[0] = splitval[0].removeprefix('@p@')
+		splitval[0] = splitval[0].replace('"@p@', '"')
 
-	# print(splitval)
 	# input('')
 	lower = [v.lower() for v in splitval]
 	if 'addoutput' in lower[0]:
@@ -462,7 +468,7 @@ def convertpointtemplates(pop, indentationnumber, depth):
 				if newvalue[0] == '"' and newvalue[-1] == '"':
 					newvalue = newvalue[1:-1]
 				newoutput = newvalue.split(',')
-				if len(newoutput) == 3:
+				if len(newoutput) == 3 and len(newoutput[0].split('')) < 2:
 					newoutput.append("0")
 					newoutput.append("-1")
 				if len(newoutput) == 4:
