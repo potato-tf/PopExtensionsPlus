@@ -1383,7 +1383,7 @@ function PopExtUtil::AddThinkToEnt(ent, func)
 	else if (startswith(ent.GetClassname(), "tf_projectile"))
 		thinktable = "ProjectileThinkTable"
 
-	else if (ent instanceof "CEconEntity")
+	else if (ent instanceof CEconEntity)
 		thinktable = "ItemThinkTable"
 	else
 		_AddThinkToEnt(ent, func)
