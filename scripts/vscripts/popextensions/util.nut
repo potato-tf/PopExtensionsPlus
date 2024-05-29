@@ -1396,9 +1396,9 @@ function PopExtUtil::AddThinkToEnt(ent, func)
 		scope[thinktable].clear()
 	else
 		if (func in _root)
-			scope[format("%s", thinktable)][func] <- _root[func]
+			scope[thinktable][func] <- _root[func]
 		else if (func in this)
-			scope[format("%s", thinktable)][func] <- this[func]
+			scope[thinktable][func] <- this[func]
 		else if (func.find("."))
 		{
 			local spl = func.split(".")
