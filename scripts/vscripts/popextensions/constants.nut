@@ -296,7 +296,15 @@ const SF_TRIGGER_DISALLOW_BOTS                = 4096
 const SF_ENVTEXT_ALLPLAYERS = 1
 
 // Button spawnflags
-const SF_BUTTON_LOCKED = 2048
+const SF_BUTTON_DONTMOVE 				= 1
+const SF_ROTBUTTON_NOTSOLID				= 1
+const SF_BUTTON_TOGGLE 					= 32		// button stays pushed until reactivated
+const SF_BUTTON_TOUCH_ACTIVATES			= 256		// Button fires when touched.
+const SF_BUTTON_DAMAGE_ACTIVATES		= 512		// Button fires when damaged.
+const SF_BUTTON_USE_ACTIVATES			= 1024	// Button fires when used.
+const SF_BUTTON_LOCKED					= 2048	// Whether the button is initially locked.
+const SF_BUTTON_SPARK_IF_OFF			= 4096	// button sparks in OFF state
+const SF_BUTTON_JIGGLE_ON_USE_LOCKED	= 8192	// whether to jiggle if someone uses us when we're locked
 
 // Player speak concepts
 const MP_CONCEPT_FIREWEAPON           = 0

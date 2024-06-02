@@ -1,10 +1,10 @@
 PrecacheSound("replay/enterperformancemode.wav");
 PrecacheSound("replay/exitperformancemode.wav");
 
-::PLAYING_VIEWCONTROL <- false
-
 ::PopExtTutorial <- {
-	
+
+	IsPlayingViewcontrol = false
+
 	function round(num, decimals)
 	{
 		if (decimals <= 0)
@@ -50,9 +50,9 @@ PrecacheSound("replay/exitperformancemode.wav");
 	// - convert to quaternions instead of QAngles for better rotation
 	// - look into visibility issues, camera is able to view culled geometry that the player cannot see
 	// - robot models do not show while in viewcontrol
-	function AnimatedViewControlAll(args = {track = [], speed_mult = 1})
+	function AnimatedViewControlAll(args = {track = [], speed_mult = 1, fadeargs = {}})
 	{
-		if (PLAYING_VIEWCONTROL) return
+		if (PopExtTutorial.IsPlayingViewcontrol) return
 		local keyframes = []
 		
 		if ("track" in args) keyframes = args.track
@@ -61,19 +61,17 @@ PrecacheSound("replay/exitperformancemode.wav");
 		// Quick format check
 		if (!keyframes || keyframes.len() <= 1 || keyframes[0].len() < 3) return
 
-		local camera = SpawnEntityFromTable("point_viewcontrol", {spawnflags = 8})
+		local camera = SpawnEntityFromTable("point_viewcontrol", { spawnflags = 8 })
 		camera.ValidateScriptScope()
 		AddThinkToEnt(camera, null)
 
-		local TF_GAMERULES = Entities.FindByClassname(null, "tf_gamerules")
-
 		// Hack to make it so taunting doesn't fuck up the camera
-		SetPropBool(TF_GAMERULES, "m_bShowMatchSummary", true)
+		SetPropBool(PopExtUtil.GameRules, "m_bShowMatchSummary", true)
 
 		// Put everything back to normal
 		camera.GetScriptScope().CleanupCamera <- function()
 		{
-			SetPropBool(TF_GAMERULES, "m_bShowMatchSummary", false)
+			SetPropBool(PopExtUtil.GameRules, "m_bShowMatchSummary", false)
 
 			// Loop through our human players
 			foreach (player in PopExtUtil.HumanArray)
@@ -87,7 +85,11 @@ PrecacheSound("replay/exitperformancemode.wav");
 
 				// Cleanup player
 				EntFireByHandle(player, "RunScriptCode", "self.SetForceLocalDraw(false);", -1, null, null)
-				ScreenFade(player, 20, 20, 20, 255, 0.5, 0.5, 1)
+				local fadeparams = { target = player, r = 20, g = 20, b = 20, a = 255, fadeTime = 0.5, fadeHold = 0.5, flags = 1 }
+				
+				if (fadeargs.len()) fadeparams = fadeargs
+
+				ScreenFade(player, fadeparams.r, fadeparams.g, fadeparams.b, fadeparams.a, fadeparams.fadeTime, fadeparams.fadeHold, fadeparams.flags)
 				EmitSoundEx({
 					sound_name = "replay/exitperformancemode.wav",
 					entity	   = player,
@@ -99,7 +101,7 @@ PrecacheSound("replay/exitperformancemode.wav");
 			if (camera && camera.IsValid())
 				EntFireByHandle(camera, "Kill", "", -1, null, null)
 
-			PLAYING_VIEWCONTROL = false
+			PopExtTutorial.IsPlayingViewcontrol = false
 		}
 
 		// Loop through our human players
@@ -132,7 +134,7 @@ PrecacheSound("replay/exitperformancemode.wav");
 		camera.SetAbsOrigin(prev_origin)
 		camera.SetAbsAngles(prev_angles)
 
-		PLAYING_VIEWCONTROL = true
+		PopExtTutorial.IsPlayingViewcontrol = true
 
 		// Update camera origin and angles every frame linearly towards keyframe values
 		camera.GetScriptScope().CameraThink <- function()
