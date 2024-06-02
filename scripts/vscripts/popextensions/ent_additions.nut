@@ -16,9 +16,11 @@ function OnPostSpawn()
 
         //add non-solid spawnflag to func_button
         if (GetPropInt(self, "m_spawnflags") & 16384)
-            self.SetSolid(0)
+        {
+            self.AddEFlags(EFL_USE_PARTITION_WHEN_NOT_SOLID)
+            self.AddSolidFlags(FSOLID_NOT_SOLID)
+        }
     }
-    
     //add start disabled spawnflag
     else if (classname == "light_dynamic" && GetPropInt(self, "m_spawnflags") & 16)
         EntFireByHandle(self, "TurnOff", "", -1, null, null)
@@ -36,7 +38,7 @@ function OnPostSpawn()
         local thinkinterval = 1
         local maxangle = 180000.0 //max angle is actually 360,000.0 not 180,000.0.  Reset it early because whatever
         local xyz = [0.0, 0.0, 0.0]
-        
+
         self.ValidateScriptScope()
         self.GetScriptScope().RotateFixThink <- function() {
             for (local i = 0; i < 3; i++)
@@ -84,7 +86,7 @@ function OnPostSpawn()
     {
         local particle = CreateByClassname("trigger_particle")
         self.ValidateScriptScope()
-        
+
         local modelscale = GetPropFloat(self, "m_flModelScale")
         local firesound = GetPropString(self, "m_pzsFireSound")
 
@@ -100,7 +102,7 @@ function OnPostSpawn()
                 if (firesound != "")
                 {
                     local vol = 1.0
-                    if (firesound.find("|")) 
+                    if (firesound.find("|"))
                     {
                         local split = split(firesound, "|")
                         firesound = split[0]
@@ -118,26 +120,26 @@ function OnPostSpawn()
                     EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 
                     local particlename = ""
-    
+
                     projectile.GetTeam() < 3 ? particlename = "pipebombtrail_red" : particlename = "pipebombtrail_blue"
-    
+
                     particle.KeyValueFromString("particle_name", particlename)
                     particle.KeyValueFromInt("attachment_type", PATTACH_ABSORIGIN_FOLLOW)
-                    particle.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)				
-    
+                    particle.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)
+
                     DispatchSpawn(particle)
-    
+
                     EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)
-    
+
                     if (GetPropBool(self, "m_bCrits"))
                     {
                         local particlecrits = ""
-                        
+
                         projectile.GetTeam() < 3 ? particlecrits = "critical_pipe_red" : particlecrits = "critical_pipe_blue"
-    
+
                         particle.KeyValueFromString("particle_name", particlecrits)
                         EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)
-        
+
                     }
                 }
                 projectile.AddEFlags(EFL_NO_MEGAPHYSCANNON_RAGDOLL)
