@@ -1,4 +1,3 @@
-local _root = getroottable()
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 ::PopExtUtil <- {
 
@@ -712,19 +711,19 @@ function PopExtUtil::_SetOwner(ent, owner) {
 	SetPropEntity(ent, "m_hOwnerEntity", owner)
 }
 
-function PopExtUtil::ShowAnnotation(text = "This is an annotation", lifetime = 10, pos = Vector(), id = 0, distance = true, sound = "misc/null.wav", entindex = 0, visbit = 0, effect = true) {
+function PopExtUtil::ShowAnnotation(args = {text = "This is an annotation", lifetime = 10, pos = Vector(), id = 0, distance = true, sound = "misc/null.wav", entindex = 0, visbit = 0, effect = true}) {
 	SendGlobalGameEvent("show_annotation", {
-		text = text
-		lifetime = lifetime
-		worldPosX = pos.x
-		worldPosY = pos.y
-		worldPosZ = pos.z
-		id = id
-		play_sound = sound
-		show_distance = distance
-		show_effect = effect
-		follow_entindex = entindex
-		visibilityBitfield = visbit
+		text = args.text
+		lifetime = args.lifetime
+		worldPosX = args.pos.x
+		worldPosY = args.pos.y
+		worldPosZ = args.pos.z
+		id = args.id
+		play_sound = args.sound
+		show_distance = args.distance
+		show_effect = args.effect
+		follow_entindex = args.entindex
+		visibilityBitfield = args.visbit
 	})
 }
 
@@ -1383,7 +1382,7 @@ function PopExtUtil::AddThinkToEnt(ent, func)
 	else if (startswith(ent.GetClassname(), "tf_projectile"))
 		thinktable = "ProjectileThinkTable"
 
-	else if (ent instanceof CEconEntity)
+	else if (HasProp(ent, "m_bValidatedAttachedEntity"))
 		thinktable = "ItemThinkTable"
 	else
 		_AddThinkToEnt(ent, func)
@@ -1392,21 +1391,7 @@ function PopExtUtil::AddThinkToEnt(ent, func)
 
 	if (!(thinktable in scope)) scope[thinktable] <- {}
 
-	if (func == null)
-		scope[thinktable].clear()
-	else
-		if (func in _root)
-			scope[thinktable][func] <- _root[func]
-		else if (func in this)
-			scope[thinktable][func] <- this[func]
-		else if (func.find("."))
-		{
-			local spl = func.split(".")
-			local str = format("scope[%s][%s] <- _root", thinktable, spl[spl.len() - 1])
-
-			foreach (s in spl)
-				str += format("[%s]", s)
-		}
+	func == null ? scope[thinktable].clear() : scope[format("%s", thinktable)][func] <- func
 }
 
 

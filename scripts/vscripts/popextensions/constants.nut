@@ -206,7 +206,7 @@ const DMG_NOCLOSEDISTANCEMOD = 131072    // DMG_POISON
 const DMG_MELEE              = 134217728 // DMG_BLAST_SURFACE
 const DMG_DONT_COUNT_DAMAGE_TOWARDS_CRIT_RATE = 67108864 //DMG_DISSOLVE
 
-//can only be used with trigger_hurt's
+//can only be used with trigger_hurts
 const DMG_IGNORE_MAXHEALTH = 2
 const DMG_IGNORE_DEBUFFS = 4
 

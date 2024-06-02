@@ -307,8 +307,8 @@ PopExt.globalTemplateSpawnCount   <- 0
 			PopExt.wavePointTemplates.clear()
 		}
 
-		function OnGameEvent_mvm_wave_failed(params) //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
-		{
+		function OnGameEvent_mvm_wave_failed(params) { //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
+
 			foreach(entity in PopExt.wavePointTemplates)
 				if (entity.IsValid())
 					entity.Kill()
@@ -326,6 +326,10 @@ PopExt.globalTemplateSpawnCount   <- 0
 					func()
 			player.RemoveEFlags(EFL_SPAWNTEMPLATE)
 		}
+	}
+
+	function DoSpawnTemplate(args = {pointtemplate = null, parent = null, origin = "", angles = "", forceparent = false}) {
+		SpawnTemplate(args.pointtemplate, args.parent, args.origin, args.angles, args.forceparent)
 	}
 }
 __CollectGameEventCallbacks(SpawnTemplates.Events)
