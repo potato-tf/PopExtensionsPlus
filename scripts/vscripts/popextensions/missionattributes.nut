@@ -1371,7 +1371,7 @@ function MissionAttributes::MissionAttr(...) {
 			{
 				if (typeof v != "table")
 				MissionAttributes.SetPlayerAttributes(player, k, v)
-				else if (tfclass in value) 
+				else if (tfclass in value)
 				{
 					local table = value[tfclass]
 					foreach (k, v in table) {
@@ -1405,9 +1405,9 @@ function MissionAttributes::MissionAttr(...) {
 				local wep = PopExtUtil.HasItemInLoadout(player, item)
 				if (wep == null) return
 
-				foreach (a, b in attr)
+				foreach (attrib, value in attr)
 				{
-					MissionAttributes.SetPlayerAttributes(player, a, b, item)
+					MissionAttributes.SetPlayerAttributes(player, attrib, value, item)
 				}
 			}
 
@@ -1659,7 +1659,7 @@ function MissionAttributes::MissionAttr(...) {
 				PrecacheSound(override)
 				PrecacheScriptSound(override)
 			}
-			
+
 			if (sound in DeathSounds)
 			{
 				DeathSounds[sound] <- []
@@ -1671,18 +1671,18 @@ function MissionAttributes::MissionAttr(...) {
 				TankSounds[sound] <- []
 				if (override != null) TankSounds[sound].append(override)
 			}
-			
+
 			{
 				MissionAttributes.ThinkTable.SetTankSounds <- function()
 				{
 					for (local tank; tank = FindByClassname(tank, "tank_boss");)
 					{
 						local scope = tank.GetScriptScope()
-	
+
 						if (!("popProperty" in scope)) scope.popProperty <- {}
 						if (!("SoundOverrides" in scope)) scope.popProperty.SoundOverrides <- {}
 						foreach (tanksound, tankoverride in TankSounds) if (!(split(tanksound, "k")[1] in scope.popProperty.SoundOverrides)) scope.popProperty.SoundOverrides[split(tanksound, "k")[1]] <- tankoverride
-						if ("created" in scope) delete scope.created 
+						if ("created" in scope) delete scope.created
 					}
 				}
 
@@ -1698,7 +1698,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			foreach (sound, override in DeathSounds)
 			{
-				if (override != null) 
+				if (override != null)
 				{
 					// StopSoundOn(sound, victim)
 					MissionAttributes.EmitSoundFunc <- function() { if (override.len()) EmitSoundEx({sound_name = override[0], entity = victim}) }
@@ -2376,7 +2376,7 @@ function MissionAttributes::MissionAttr(...) {
 						}
 						else if (buttons & IN_ATTACK2) {
 							local cost = 20
-							if (itemid == ID_BACKBURNER || itemid == ID_FESTIVE_BACKBURNER) // Backburner
+							if (itemid == ID_BACKBURNER || itemid == ID_FESTIVE_BACKBURNER_2014) // Backburner
 								cost = 50
 							else if (itemid == ID_DEGREASER) // Degreaser
 								cost = 25
@@ -2632,7 +2632,7 @@ function MissionAttributes::MissionAttr(...) {
 		break
 
 	// =========================================================
-	
+
 	case "ShowHiddenAttributes":
 		MissionAttributes.CurAttrs[value] <- true
 	break
@@ -2710,8 +2710,9 @@ function MAtr(...) {
 	MissionAttr.acall(vargv.insert(0, MissionAttributes))
 }
 
-function MissionAttributes::SetPlayerAttributes(player, a, b, item = null)
+function MissionAttributes::SetPlayerAttributes(player, attrib, value, item = null)
 {
+	local items = {}
 	//setting maxhealth attribs doesn't update current HP
 	local healthattribs = {
 		"max health additive bonus" : null,
@@ -2719,34 +2720,39 @@ function MissionAttributes::SetPlayerAttributes(player, a, b, item = null)
 		"SET BONUS: max health additive bonus": null,
 		"hidden maxhealth non buffed": null,
 	}
-	local wep
-	if (item != null) wep = PopExtUtil.HasItemInLoadout(player, item)
-
+	if (item)
+		items[PopExtUtil.HasItemInLoadout(player, item)] <- [attrib, value]
+	else
+		for (local i = 0; i < GetPropArraySize(player, "m_hMyWeapons"); i++)
+			if (GetPropEntityArray(player, "m_hMyWeapons", i))
+				items[GetPropEntityArray(player, "m_hMyWeapons", i)] <- [attrib, value]
 	//do the customattributes check first, since we replace some vanilla attributes
-	if (a in CustomAttributes.Attrs)
-		CustomAttributes.AddAttr(player, a, b, wep)
 
-	else if (a in PopExtItems.Attributes)
+	if (attrib in CustomAttributes.Attrs)
+		CustomAttributes.AddAttr(player, attrib, value, items)
+
+	else if (attrib in PopExtItems.Attributes)
 	{
-		if ("attribute_type" in PopExtItems.Attributes[a] && PopExtItems.Attributes[a]["attribute_type"] == "string")
-			MissionAttributes.RaiseValueError("PlayerAttributes", a, "Cannot set string attributes!")
+		if ("attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string")
+			MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
 		else
 		{
-			wep == null ? EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", a, b.tofloat()), -1, null, null) : EntFireByHandle(wep, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", a, b.tofloat()), -1, null, null)
-			if (a in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
+			item == null ? EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", attrib, value.tofloat()), -1, null, null) : EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
+			if (attrib in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
 		}
 		//add hidden attributes to our custom attribute display
-		if ("hidden" in PopExtItems.Attributes[a] && PopExtItems.Attributes[a]["hidden"] == "1" && "ShowHiddenAttributes" in MissionAttributes.CurAttrs && MissionAttributes.CurAttrs.ShowHiddenAttributes)
+		if ("hidden" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["hidden"] == "1" && "ShowHiddenAttributes" in MissionAttributes.CurAttrs && MissionAttributes.CurAttrs.ShowHiddenAttributes)
 		{
 			local scope = player.GetScriptScope()
 			if (!("attribinfo" in scope)) scope.attribinfo <- {}
 
-			scope.attribinfo[a] <- format("%s: %s" a, b.tostring())
+			scope.attribinfo[attrib] <- format("%s: %s" attrib, value.tostring())
 			CustomAttributes.RefreshDescs(player)
 		}
 	}
-	else
-		MissionAttributes.RaiseValueError("PlayerAttributes", a, "Invalid attribute!")
+	else return
+		// printl((attrib in CustomAttributes.Attrs) + " : " + (attrib in PopExtItems.Attributes) + " : " + attrib);
+		// MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Invalid attribute!")
 }
 // Logging Functions
 // =========================================================
