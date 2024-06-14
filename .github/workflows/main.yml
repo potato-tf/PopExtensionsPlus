@@ -53,7 +53,7 @@ jobs:
         env:
             SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          cd tf/download
+        
           for i in "22 pterodactyl@us.potato.tf" "22 pterodactyl@sgp.potato.tf" "27035 pterodactyl@eu.potato.tf" "22 pterodactyl@aus.potato.tf"; do a=( $i );
           {
             ssh -o StrictHostKeyChecking=no -p ${a[0]} ${a[1]} "touch /var/tf2server/tf/occupiedservers/wake; exit 0"
