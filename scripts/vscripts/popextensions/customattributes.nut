@@ -304,20 +304,6 @@ function CustomAttributes::MultDmgVsSameClass(player, items, value) {
     }
 }
 
-function CustomAttributes::CleanupFunctionTable(player, table, attrib) {
-    local str = ""
-
-    //.apply my beloved
-    split(attrib, " ").apply(function(s) { s.slice(0, 1).toupper(); str += s })
-
-    if (attrib == "alt-fire disabled") str = "AltFireDisabled"
-
-    foreach(name, v in table)
-        if (name && startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
-            delete table[format("%s", name)]
-
-}
-
 function CustomAttributes::MultDmgVsAirborne(player, items, value) {
 
     foreach(item, attrs in items)
@@ -580,7 +566,7 @@ function CustomAttributes::MultSwimSpeed(player, items, value = 1.25) {
     }
 }
 
-function CustomAttributes::LastShotCrits(player, items, value = -1) {
+function CustomAttributes::LastShotCrits(player, items, value = 0.033) {
 
     local scope = player.GetScriptScope()
     scope.lastshotcritsnextattack <- 0.0
@@ -588,31 +574,18 @@ function CustomAttributes::LastShotCrits(player, items, value = -1) {
     foreach(item, attrs in items)
     {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
-        if (wep == null) return
+        if (wep == null) continue
 
         scope.PlayerThinkTable[format("LastShotCrits_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (!("attribinfo" in scope) || !("last shot crits" in scope.attribinfo)) return
 
-            if (player.GetActiveWeapon() != wep)
-            {
-                player.RemoveCondEx(COND_CRITBOOST, true)
-                return
-            }
-
             if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
 
             scope.lastshotcritsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
 
-                if (wep.Clip1() == 1)
-                {
-                    player.AddCondEx(COND_CRITBOOST, value, null)
-                }
-                else
-                {
-                    // Removing COND_CRITBOOST won't interfere with other crit sources because the cond is an intel cap crit
-                    player.RemoveCondEx(COND_CRITBOOST, true)
-                }
+            if (wep.IsValid() && wep.Clip1() == 1 && player.GetActiveWeapon() == wep)
+                player.AddCondEx(COND_CRITBOOST, value, null)
 
             return
         }
@@ -626,7 +599,7 @@ function CustomAttributes::CritWhenHealthBelow(player, items, value = -1) {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null) return
 
-        player.GetScriptScope().PlayerThinkTable.CritWhenHealthBelow <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("CritWhenHealthBelow_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (player.GetHealth() < value)
             {
@@ -646,7 +619,7 @@ function CustomAttributes::WetImmunity(player, items) {
 
         local wetconds = [TF_COND_MAD_MILK, TF_COND_URINE, TF_COND_GAS]
 
-        player.GetScriptScope().PlayerThinkTable.WetImmunity <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("WetImmunity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             foreach (cond in wetconds)
                 if (player.InCond(cond))
@@ -655,12 +628,12 @@ function CustomAttributes::WetImmunity(player, items) {
     }
 }
 
-function CustomAttributes::BuildSmallSentry(player, items) {
+function CustomAttributes::BuildSmallSentries(player, items) {
     local scope = player.GetScriptScope()
 
     if (!("BuiltObjectTable") in scope) return
 
-    scope.BuiltObjectTable.BuildSmallSentry <- function(params) {
+    scope.BuiltObjectTable.BuildSmallSentries <- function(params) {
 
         foreach(item, attrs in items)
         {
@@ -809,14 +782,14 @@ function CustomAttributes::StunOnHit(player, items, value) {
     }
 }
 
-function CustomAttributes::IsMiniBoss(player, items) {
+function CustomAttributes::IsMiniboss(player, items) {
 
     foreach(item, attrs in items)
     {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null) return
 
-        player.GetScriptScope().PlayerThinkTable.IsMiniBoss <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (player.GetActiveWeapon() == wep && !player.IsMiniBoss() && player.GetModelScale() == 1.0) {
 
@@ -832,7 +805,7 @@ function CustomAttributes::IsMiniBoss(player, items) {
     }
 }
 
-function CustomAttributes::ReplaceFireSound(player, items, value) {
+function CustomAttributes::ReplaceWeaponFireSound(player, items, value) {
 
     foreach(item, attrs in items)
     {
@@ -868,7 +841,7 @@ function CustomAttributes::IsInvisible(player, items) {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null) return
 
-        player.GetScriptScope().PlayerThinkTable.IsInvisible <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("IsInvisible_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (player.GetActiveWeapon() != wep || PopExtUtil.HasEffect(EF_NODRAW)) return
             wep.DisableDraw()
@@ -886,7 +859,7 @@ function CustomAttributes::CannotUpgrade(player, items) {
 
         local index = PopExtUtil.GetItemIndex(wep)
         local classname = GetPropString(wep, "m_iClassname")
-        player.GetScriptScope().PlayerThinkTable.CannotUpgrade <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("CannotUpgrade_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (GetPropBool(player, "m_Shared.m_bInUpgradeZone") && PopExtUtil.GetItemIndex(wep) != -1) {
                 DoEntFire("func_upgradestation", "EndTouch", "", -1, player, player)
@@ -912,7 +885,7 @@ function CustomAttributes::AlwaysCrit(player, items) {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null) return
 
-        player.GetScriptScope().PlayerThinkTable.AlwaysCrit <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("AlwaysCrit_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (player.GetActiveWeapon() == wep)
                 player.AddCondEx(COND_CRITBOOST, 0.033, player)
@@ -927,7 +900,7 @@ function CustomAttributes::AddCondWhenActive(player, items, value) {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null) return
 
-        player.GetScriptScope().PlayerThinkTable.AddCondWhenActive <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("AddCondWhenActive_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (player.GetActiveWeapon() == wep)
                 player.AddCondEx(value, 0.033, player)
@@ -936,7 +909,7 @@ function CustomAttributes::AddCondWhenActive(player, items, value) {
 }
 
 
-function CustomAttributes::DmgNoCritRate(player, items) {
+function CustomAttributes::DontCountDamageTowardsCritRate(player, items) {
 
     foreach(item, attrs in items)
     {
@@ -1019,14 +992,14 @@ function CustomAttributes::CannotBeHeadshot(player, items) {
     }
 }
 
-function CustomAttributes::ProjectileLifeTime(player, items, value) {
+function CustomAttributes::ProjectileLifetime(player, items, value) {
 
     foreach(item, attrs in items)
     {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null) return
 
-        player.GetScriptScope().PlayerThinkTable.ProjectileLifeTime <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("ProjectileLifeTime_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
             for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");) {
                 if (projectile.GetOwner() == player || (HasProp(projectile, "m_hThrower") && GetPropEntity(projectile, "m_hThrower") == player && GetPropEntity(projectile, "m_hLauncher") == wep))
                     EntFireByHandle(projectile, "Kill", "", value, null, null)
@@ -1417,7 +1390,7 @@ function CustomAttributes::IgniteArrow(player, items) {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null) return
 
-        player.GetScriptScope().PlayerThinkTable.IgniteArrow <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("IgniteArrow_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (HasProp(wep, "m_bArrowAlight") && !GetPropBool(wep, "m_bArrowAlight"))
                 SetPropBool(wep, "m_bArrowAlight", true)
@@ -1519,7 +1492,7 @@ function CustomAttributes::CondImmunity(player, items, value) {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null) return
 
-        player.GetScriptScope().PlayerThinkTable.CondImmunity <- function() {
+        player.GetScriptScope().PlayerThinkTable[format("CondImmunity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
             if (typeof value == "array") {
                 foreach (cond in value) {
                     player.RemoveCondEx(cond, true)
@@ -1568,13 +1541,15 @@ function CustomAttributes::DmgBonusWhileHalfAlive(player, items, value) {
 function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
     if (!items.len()) items[player.GetActiveWeapon()] <- [attr,  value]
-    local t = ["TakeDamageTable", "TakeDamageTablePost", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable"]
-    foreach (table in t)
-        if (table in CustomAttributes)
-            foreach(name, func in CustomAttributes[table])
-                if (endswith(name, "Table"))
-                    CustomAttributes.CleanupFunctionTable(player, name, attr)
 
+    player.GetScriptScope().CustomAttrItems <- items
+    local t = ["TakeDamageTable", "TakeDamageTablePost", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable"]
+    foreach (tablename in t)
+        if (tablename in CustomAttributes)
+            foreach(name, func in CustomAttributes[tablename])
+                CustomAttributes.CleanupFunctionTable(player, name, attr)
+
+    CustomAttributes.CleanupFunctionTable(player, player.GetScriptScope().PlayerThinkTable, attr)
 
 
     foreach(item, attrs in items)
@@ -1623,7 +1598,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
             break
 
             case "last shot crits":
-                CustomAttributes.LastShotCrits(player, items)
+                CustomAttributes.LastShotCrits(player, items, value)
                 scope.attribinfo[attr] <- "Crit boost on last shot"
             break
 
@@ -1941,6 +1916,19 @@ function CustomAttributes::RefreshDescs(player)
         if (i >= formattedtable.len()) i = 0
         cooldowntime = Time() + 3.0
     }
+}
+function CustomAttributes::CleanupFunctionTable(player, table, attrib) {
+    local str = ""
+
+    //.apply my beloved
+    split(attrib, " ").apply(function(s) {s.slice(0, 1).toupper(); str += s })
+    StringToFile("test.txt", str)
+
+    if (attrib == "alt-fire disabled") str = "AltFireDisabled"
+    foreach(name, v in table)
+        if (name && typeof name == "string" && startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
+            // delete table[format("%s", name)]
+            printl(name)
 }
 //obsolete, implemented into item/playerattribs/bot tags
 // function CustomAttrs(attrs = {}) {
