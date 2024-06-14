@@ -70,6 +70,8 @@ if (!("_AddThinkToEnt" in _root))
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
+		scope.userid <- params.userid
+
 		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
 
 		if (player.IsBotOfType(TF_BOT_TYPE))
