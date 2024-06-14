@@ -34,19 +34,33 @@ jobs:
             
     # "2244 pterodactyl@eu9.potato.tf:/"
     # Runs a set of commands using the runners shell
+      # - name: Sync with game servers
+      #   env:
+      #       SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      #   run: |
+        
+      #       for i in "22 pterodactyl@us.potato.tf:/" "22 pterodactyl@sgp.potato.tf:/" "27035 pterodactyl@eu.potato.tf:/" "22 pterodactyl@aus.potato.tf:/"; do a=( $i ); 
+      #       {
+      #           echo cmd is rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" --delete ./tf/scripts/vscripts/popextensions/ ${a[1]}var/www/html/tf/scripts/vscripts/popextensions/
+      #           rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" --delete ./tf/scripts/vscripts/popextensions/ ${a[1]}var/www/html/tf/scripts/vscripts/popextensions/
+      #           echo cmd is rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" --delete ./tf/scripts/population/ ${a[1]}var/www/html/tf/scripts/population/
+      #           rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" --delete ./tf/scripts/population/ ${a[1]}var/www/html/tf/scripts/population/
+      #       } &
+      #       done
+      #       wait
+
       - name: Sync with game servers
         env:
             SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-        
-            for i in "22 pterodactyl@us.potato.tf:/" "22 pterodactyl@sgp.potato.tf:/" "27035 pterodactyl@eu.potato.tf:/" "22 pterodactyl@aus.potato.tf:/"; do a=( $i ); 
-            {
-                echo cmd is rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" --delete ./tf/scripts/vscripts/popextensions/ ${a[1]}var/www/html/tf/scripts/vscripts/popextensions/
-                rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" --delete ./tf/scripts/vscripts/popextensions/ ${a[1]}var/www/html/tf/scripts/vscripts/popextensions/
-                echo cmd is rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" --delete ./tf/scripts/population/ ${a[1]}var/www/html/tf/scripts/population/
-                rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" --delete ./tf/scripts/population/ ${a[1]}var/www/html/tf/scripts/population/
-            } &
-            done
-            wait
+          cd tf/download
+          for i in "22 pterodactyl@us.potato.tf" "22 pterodactyl@sgp.potato.tf" "27035 pterodactyl@eu.potato.tf" "22 pterodactyl@aus.potato.tf"; do a=( $i );
+          {
+            ssh -o StrictHostKeyChecking=no -p ${a[0]} ${a[1]} "touch /var/tf2server/tf/occupiedservers/wake; exit 0"
+            rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" --delete --update . ${a[1]}:/var/www/html/tf/scripts/vscripts/popextensions/
+          
+          } &
+          done
+          wait
 
 
