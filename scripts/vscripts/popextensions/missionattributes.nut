@@ -852,7 +852,7 @@ function MissionAttributes::MissionAttr(...) {
 				if (GetPropInt(victim, "m_LastHitGroup") == HITGROUP_HEAD || (params.damage_stats == TF_DMG_CUSTOM_HEADSHOT && !(params.damage_type & DMG_CRITICAL)))
 				{
 					//are we sniper and do we have a non-sleeper primary?
-					if (player.GetPlayerClass() == TF_CLASS_SNIPER && wep.GetSlot() != SLOT_SECONDARY && PopExtUtil.GetItemIndex(wep) != ID_SYDNEY_SLEEPER)
+					if (player.GetPlayerClass() == TF_CLASS_SNIPER && wep && wep.GetSlot() != SLOT_SECONDARY && PopExtUtil.GetItemIndex(wep) != ID_SYDNEY_SLEEPER)
 						return true
 
 					//are we using classic and is charge meter > 150?  This isn't correct but no GetAttributeValue

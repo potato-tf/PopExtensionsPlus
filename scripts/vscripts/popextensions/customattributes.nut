@@ -1093,215 +1093,222 @@ function CustomAttributes::PassiveReload(player, items) {
 }
 
 function CustomAttributes::CollectCurrencyOnKill(player, items, value) {
-	local wep = PopExtUtil.HasItemInLoadout(player, item)
-	if (wep == null) return
+    foreach(item, attrs in items)
+    {
+        local wep = PopExtUtil.HasItemInLoadout(player, item)
+        if (wep == null) return
 
-	wep.ValidateScriptScope()
-	local scope = wep.GetScriptScope()
-	scope.collectCurrencyOnKill <- true
+        wep.ValidateScriptScope()
+        local scope = wep.GetScriptScope()
+        scope.collectCurrencyOnKill <- true
+    }
 }
 
 function CustomAttributes::RocketPenetration(player, items, value) {
-	local wep = PopExtUtil.HasItemInLoadout(player, item)
-	if (wep == null) return
 
-	if (ROCKET_LAUNCHER_CLASSNAMES.find(wep.GetClassname()) == null)
-		return
+    foreach(item, attrs in items)
+    {
+        local wep = PopExtUtil.HasItemInLoadout(player, item)
+        if (wep == null) return
+
+        if (ROCKET_LAUNCHER_CLASSNAMES.find(wep.GetClassname()) == null)
+            return
 
 
-	local scope = player.GetScriptScope()
+        local scope = player.GetScriptScope()
 
-	CustomAttributes.TakeDamageTable[format("RocketPenetration_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
-		local entity = params.const_entity
-		if (!entity.IsPlayer())
-			return
+        CustomAttributes.TakeDamageTable[format("RocketPenetration_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
+            local entity = params.const_entity
+            if (!entity.IsPlayer())
+                return
 
-		local inflictor = params.inflictor
+            local inflictor = params.inflictor
 
-		inflictor.ValidateScriptScope()
-		local inflictorScope = inflictor.GetScriptScope()
+            inflictor.ValidateScriptScope()
+            local inflictorScope = inflictor.GetScriptScope()
 
-		if (!("isPenetrateMimicRocket" in inflictorScope))
-			return
+            if (!("isPenetrateMimicRocket" in inflictorScope))
+                return
 
-		params.player_penetration_count = inflictorScope.penetrationCount // change killicon to penetrate after rocket has penetrated at least 1 enemy
-	}
+            params.player_penetration_count = inflictorScope.penetrationCount // change killicon to penetrate after rocket has penetrated at least 1 enemy
+        }
 
-	wep.ValidateScriptScope()
-	local weaponScriptScope = wep.GetScriptScope()
-	weaponScriptScope.last_fire_time <- 0.0
-	weaponScriptScope.forceAttacking <- false
+        wep.ValidateScriptScope()
+        local weaponScriptScope = wep.GetScriptScope()
+        weaponScriptScope.last_fire_time <- 0.0
+        weaponScriptScope.forceAttacking <- false
 
-	weaponScriptScope.maxPenetration <- value
+        weaponScriptScope.maxPenetration <- value
 
-	weaponScriptScope.CheckWeaponFire <- function() {
-		local fire_time = GetPropFloat(self, "m_flLastFireTime")
-		if (fire_time > last_fire_time && !forceAttacking) {
-			local owner = self.GetOwner()
-			if (owner) {
-				OnShot(owner)
-			}
+        weaponScriptScope.CheckWeaponFire <- function() {
+            local fire_time = GetPropFloat(self, "m_flLastFireTime")
+            if (fire_time > last_fire_time && !forceAttacking) {
+                local owner = self.GetOwner()
+                if (owner) {
+                    OnShot(owner)
+                }
 
-			last_fire_time = fire_time
-		}
-		return
-	}
-	weaponScriptScope.FindRocket <- function(owner) {
-		local entity = null
-		for (local entity; entity = FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
-			if (entity.GetOwner() != owner) {
-				continue
-			}
+                last_fire_time = fire_time
+            }
+            return
+        }
+        weaponScriptScope.FindRocket <- function(owner) {
+            local entity = null
+            for (local entity; entity = FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
+                if (entity.GetOwner() != owner) {
+                    continue
+                }
 
-			entity.ValidateScriptScope()
-			if ("chosenAsPenetrationRocket" in entity.GetScriptScope())
-				continue
+                entity.ValidateScriptScope()
+                if ("chosenAsPenetrationRocket" in entity.GetScriptScope())
+                    continue
 
-			entity.GetScriptScope().chosenAsPenetrationRocket <- true
+                entity.GetScriptScope().chosenAsPenetrationRocket <- true
 
-			return entity
-		}
+                return entity
+            }
 
-		return null
-	}
-	weaponScriptScope.ApplyPenetrationToRocket <- function(owner, rocket) {
-		rocket.SetSolid(SOLID_NONE)
+            return null
+        }
+        weaponScriptScope.ApplyPenetrationToRocket <- function(owner, rocket) {
+            rocket.SetSolid(SOLID_NONE)
 
-		rocket.ValidateScriptScope()
-		local rocketScope = rocket.GetScriptScope()
-		rocketScope.isCustomRocket <- true
-		rocketScope.lastRocketOrigin <- rocket.GetOrigin()
-		rocketScope.maxPenetration <- maxPenetration
+            rocket.ValidateScriptScope()
+            local rocketScope = rocket.GetScriptScope()
+            rocketScope.isCustomRocket <- true
+            rocketScope.lastRocketOrigin <- rocket.GetOrigin()
+            rocketScope.maxPenetration <- maxPenetration
 
-		rocketScope.collidedTargets <- []
-		rocketScope.penetrationCount <- 0
-		rocketScope.DetonateRocket <- function () {
-			local owner = self.GetOwner()
-			local launcher = GetPropEntity(self, "m_hLauncher")
+            rocketScope.collidedTargets <- []
+            rocketScope.penetrationCount <- 0
+            rocketScope.DetonateRocket <- function () {
+                local owner = self.GetOwner()
+                local launcher = GetPropEntity(self, "m_hLauncher")
 
-			local charge = GetPropFloat(owner, "m_Shared.m_flItemChargeMeter")
-			local nextAttack = GetPropFloat(launcher, "m_flNextPrimaryAttack")
-			local lastFire = GetPropFloat(launcher, "m_flLastFireTime")
-			local clip =  launcher.Clip1()
-			local energy = GetPropFloat(launcher, "m_flEnergy")
+                local charge = GetPropFloat(owner, "m_Shared.m_flItemChargeMeter")
+                local nextAttack = GetPropFloat(launcher, "m_flNextPrimaryAttack")
+                local lastFire = GetPropFloat(launcher, "m_flLastFireTime")
+                local clip =  launcher.Clip1()
+                local energy = GetPropFloat(launcher, "m_flEnergy")
 
-			launcher.GetScriptScope().forceAttacking = true
+                launcher.GetScriptScope().forceAttacking = true
 
-			launcher.SetClip1(99)
-			SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", 100.0)
-			SetPropBool(owner, "m_bLagCompensation", false)
-			SetPropFloat(launcher, "m_flNextPrimaryAttack", 0)
-			SetPropFloat(launcher, "m_flEnergy", 100.0)
+                launcher.SetClip1(99)
+                SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", 100.0)
+                SetPropBool(owner, "m_bLagCompensation", false)
+                SetPropFloat(launcher, "m_flNextPrimaryAttack", 0)
+                SetPropFloat(launcher, "m_flEnergy", 100.0)
 
-			launcher.AddAttribute("crit mod disabled hidden", 1, -1)
-			launcher.PrimaryAttack()
-			launcher.RemoveAttribute("crit mod disabled hidden")
+                launcher.AddAttribute("crit mod disabled hidden", 1, -1)
+                launcher.PrimaryAttack()
+                launcher.RemoveAttribute("crit mod disabled hidden")
 
-			launcher.GetScriptScope().forceAttacking = false
-			launcher.SetClip1(clip)
-			SetPropBool(owner, "m_bLagCompensation", true)
-			SetPropFloat(launcher, "m_flNextPrimaryAttack", nextAttack)
-			SetPropFloat(launcher, "m_flEnergy", energy)
-			SetPropFloat(launcher, "m_flLastFireTime", lastFire)
-			SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", charge)
+                launcher.GetScriptScope().forceAttacking = false
+                launcher.SetClip1(clip)
+                SetPropBool(owner, "m_bLagCompensation", true)
+                SetPropFloat(launcher, "m_flNextPrimaryAttack", nextAttack)
+                SetPropFloat(launcher, "m_flEnergy", energy)
+                SetPropFloat(launcher, "m_flLastFireTime", lastFire)
+                SetPropFloat(owner, "m_Shared.m_flItemChargeMeter", charge)
 
-			for (local entity; entity = FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
-				if (entity.GetOwner() != owner) {
-					continue
-				}
+                for (local entity; entity = FindByClassnameWithin(entity, "tf_projectile_*", owner.GetOrigin(), 100);) {
+                    if (entity.GetOwner() != owner) {
+                        continue
+                    }
 
-				if ("isCustomRocket" in entity.GetScriptScope())
-					continue
+                    if ("isCustomRocket" in entity.GetScriptScope())
+                        continue
 
-				SetPropBool(self, "m_bCritical", GetPropBool(self, "m_bCritical"))
-				entity.SetAbsOrigin(self.GetOrigin())
+                    SetPropBool(self, "m_bCritical", GetPropBool(self, "m_bCritical"))
+                    entity.SetAbsOrigin(self.GetOrigin())
 
-				entity.ValidateScriptScope()
-				entity.GetScriptScope().isPenetrateMimicRocket <- true
-				entity.GetScriptScope().originalRocket <- self
-				entity.GetScriptScope().penetrationCount <- (self.GetScriptScope().penetrationCount - 1)
+                    entity.ValidateScriptScope()
+                    entity.GetScriptScope().isPenetrateMimicRocket <- true
+                    entity.GetScriptScope().originalRocket <- self
+                    entity.GetScriptScope().penetrationCount <- (self.GetScriptScope().penetrationCount - 1)
 
-				break
-			}
-		}
-        if (!("ProjectileThinkTable" in rocketScope)) rocketScope.ProjectileThinkTable <- {}
+                    break
+                }
+            }
+            if (!("ProjectileThinkTable" in rocketScope)) rocketScope.ProjectileThinkTable <- {}
 
-		rocketScope.ProjectileThinkTable.RocketThink <- function() {
+            rocketScope.ProjectileThinkTable.RocketThink <- function() {
 
-			local origin = self.GetOrigin()
+                local origin = self.GetOrigin()
 
-			traceTableWorldSpawn <- {
-				start = lastRocketOrigin,
-				end = origin + (self.GetForwardVector() * 50)
-				mask = MASK_SOLID_BRUSHONLY
-				ignore = self.GetOwner()
-			}
+                traceTableWorldSpawn <- {
+                    start = lastRocketOrigin,
+                    end = origin + (self.GetForwardVector() * 50)
+                    mask = MASK_SOLID_BRUSHONLY
+                    ignore = self.GetOwner()
+                }
 
-			TraceLineEx(traceTableWorldSpawn)
+                TraceLineEx(traceTableWorldSpawn)
 
-			if (traceTableWorldSpawn.hit && traceTableWorldSpawn.enthit)
-			{
-				self.SetSolid(SOLID_BBOX)
-				delete self.GetScriptScope().ProjectileThinkTable.RocketThink
-			}
+                if (traceTableWorldSpawn.hit && traceTableWorldSpawn.enthit)
+                {
+                    self.SetSolid(SOLID_BBOX)
+                    delete self.GetScriptScope().ProjectileThinkTable.RocketThink
+                }
 
-			traceTable <- {
-				start = lastRocketOrigin,
-				end = origin
-				ignore = self.GetOwner()
-			}
+                traceTable <- {
+                    start = lastRocketOrigin,
+                    end = origin
+                    ignore = self.GetOwner()
+                }
 
-			TraceLineEx(traceTable)
+                TraceLineEx(traceTable)
 
-			lastRocketOrigin = origin
+                lastRocketOrigin = origin
 
-			if (!traceTable.hit)
-				return
+                if (!traceTable.hit)
+                    return
 
-			if (!traceTable.enthit)
-				return
+                if (!traceTable.enthit)
+                    return
 
-			if (traceTable.enthit.GetTeam() == player.GetTeam())
-				return
+                if (traceTable.enthit.GetTeam() == player.GetTeam())
+                    return
 
-			if (collidedTargets.find(traceTable.enthit) != null)
-				return
+                if (collidedTargets.find(traceTable.enthit) != null)
+                    return
 
-			collidedTargets.append(traceTable.enthit)
-			penetrationCount++
+                collidedTargets.append(traceTable.enthit)
+                penetrationCount++
 
-			// arrow free penetration through allies without detonating
-			if (traceTable.enthit.GetTeam() != player.GetTeam())
-				penetrationCount++
+                // arrow free penetration through allies without detonating
+                if (traceTable.enthit.GetTeam() != player.GetTeam())
+                    penetrationCount++
 
-			if (penetrationCount > (maxPenetration + 1))
-			{
-				self.SetSolid(SOLID_BBOX)
-				if ("RocketThink" in rocketScope.ProjectileThinkTable) delete rocketScope.ProjectileThinkTable.RocketThink
-				return
-			}
+                if (penetrationCount > (maxPenetration + 1))
+                {
+                    self.SetSolid(SOLID_BBOX)
+                    if ("RocketThink" in rocketScope.ProjectileThinkTable) delete rocketScope.ProjectileThinkTable.RocketThink
+                    return
+                }
 
-			if (traceTable.enthit.GetTeam() != player.GetTeam())
-				DetonateRocket()
+                if (traceTable.enthit.GetTeam() != player.GetTeam())
+                    DetonateRocket()
 
-			return
-		}
-	}
-	weaponScriptScope.OnShot <- function(owner) {
-		local rocket = FindRocket(owner)
+                return
+            }
+        }
+        weaponScriptScope.OnShot <- function(owner) {
+            local rocket = FindRocket(owner)
 
-		if (!rocket) {
-			return
-		}
+            if (!rocket) {
+                return
+            }
 
-		// don't apply penetration to cowmangler charge shot, because unfortunately it doesn't work :(
-		if (GetPropBool(rocket, "m_bChargedShot"))
-			return
+            // don't apply penetration to cowmangler charge shot, because unfortunately it doesn't work :(
+            if (GetPropBool(rocket, "m_bChargedShot"))
+                return
 
-		ApplyPenetrationToRocket(owner, rocket)
-	}
+            ApplyPenetrationToRocket(owner, rocket)
+        }
 
-	AddThinkToEnt(wep, "CheckWeaponFire")
+        AddThinkToEnt(wep, "CheckWeaponFire")
+    }
 }
 
 function CustomAttributes::ReloadFullClipAtOnce(player, items) {
@@ -1449,40 +1456,47 @@ function CustomAttributes::CustomProjectileModel(player, items, value) {
 function CustomAttributes::NoclipProjectile(player, items, value) {
 	local scope = player.GetScriptScope()
 
-	local wep = PopExtUtil.HasItemInLoadout(player, item)
-    if (wep == null) return
+    foreach(item, attrs in items)
+    {
+        local wep = PopExtUtil.HasItemInLoadout(player, item)
+        if (wep == null) return
 
-	scope.PlayerThinkTable[format("NoclipProjectile_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
-		if (!("attribinfo" in scope) || !("noclip projectile" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+        scope.PlayerThinkTable[format("NoclipProjectile_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-		for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
-			if (projectile.GetOwner() == player && projectile.GetMoveType != MOVETYPE_NOCLIP)
-				projectile.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
-	}
+            if (!("attribinfo" in scope) || !("noclip projectile" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+
+            for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
+                if (projectile.GetOwner() == player && projectile.GetMoveType != MOVETYPE_NOCLIP)
+                    projectile.SetMoveType(MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT)
+        }
+    }
 }
 
 function CustomAttributes::ProjectileGravity(player, items, value) {
 	local scope = player.GetScriptScope()
 
-	local wep = PopExtUtil.HasItemInLoadout(player, item)
-    if (wep == null) return
+    foreach(item, attrs in items)
+    {
+	    local wep = PopExtUtil.HasItemInLoadout(player, item)
+        if (wep == null) return
 
-	scope.PlayerThinkTable[format("ProjectileGravity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
-		if (!("attribinfo" in scope) || !("projectile gravity" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+        scope.PlayerThinkTable[format("ProjectileGravity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+            if (!("attribinfo" in scope) || !("projectile gravity" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
 
-		for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
-			if (projectile.GetOwner() == player)
-			{
-				local currentVelocity = projectile.GetAbsVelocity()
-				currentVelocity -= Vector(0, 0, value)
+            for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
+                if (projectile.GetOwner() == player)
+                {
+                    local currentVelocity = projectile.GetAbsVelocity()
+                    currentVelocity -= Vector(0, 0, value)
 
-				projectile.SetAbsVelocity(currentVelocity)
+                    projectile.SetAbsVelocity(currentVelocity)
 
-				local faceDirection = projectile.GetForwardVector()
-				self.SetLocalAngles(PopExtUtil.VectorAngles(faceDirection))
-			}
+                    local faceDirection = projectile.GetForwardVector()
+                    self.SetLocalAngles(PopExtUtil.VectorAngles(faceDirection))
+                }
 
-	}
+        }
+    }
 }
 
 function CustomAttributes::CondImmunity(player, items, value) {
@@ -1579,7 +1593,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "mod teleporter speed boost":
                 CustomAttributes.ModTeleporterSpeedBoost(player, items)
-                scope.attribinfo[attr] <- format("Teleporters grant a speed boost for %f seconds", value)
+                scope.attribinfo[attr] <- format("Teleporters grant a speed boost for %.2f seconds", value)
             break
 
             case "set turn to ice":
@@ -1589,7 +1603,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "mult teleporter recharge rate":
                 CustomAttributes.MultTeleporterRechargeTime(player, items, value)
-                scope.attribinfo[attr] <- format("Teleporter recharge rate multiplied by %f", value)
+                scope.attribinfo[attr] <- format("Teleporter recharge rate multiplied by %.2f", value)
             break
 
             case "melee cleave attack":
@@ -1599,7 +1613,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "last shot crits":
                 CustomAttributes.LastShotCrits(player, items, value)
-                scope.attribinfo[attr] <- "Crit boost on last shot"
+                scope.attribinfo[attr] <- format("Crit boost on last shot.  Crit boost will stay active for %.2f seconds after holster", value)
             break
 
             case "wet immunity":
@@ -1614,7 +1628,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "mult swim speed":
                 CustomAttributes.MultSwimSpeed(player, items, value)
-                scope.attribinfo[attr] <- format("Swimming speed multiplied by %f", value.tofloat())
+                scope.attribinfo[attr] <- format("Swimming speed multiplied by %.2f", value.tofloat())
             break
 
             case "teleport instead of die":
@@ -1624,7 +1638,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "mult dmg vs same class":
                 CustomAttributes.MultDmgVsSameClass(player, items, value)
-                scope.attribinfo[attr] <- format("Damage versus %s multiplied by %f", PopExtUtil.Classes[player.GetPlayerClass()], value.tofloat())
+                scope.attribinfo[attr] <- format("Damage versus %s multiplied by %.2f", PopExtUtil.Classes[player.GetPlayerClass()], value.tofloat())
             break
 
             case "uber on damage taken":
@@ -1644,7 +1658,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "mvm sentry ammo":
                 CustomAttributes.MvmSentryAmmo(player, items, value)
-                scope.attribinfo[attr] <- format("Sentry ammo multiplied by %f", value.tofloat())
+                scope.attribinfo[attr] <- format("Sentry ammo multiplied by %.2f", value.tofloat())
             break
 
             //FULLY CUSTOM ATTRIBUTES BELOW
@@ -1667,7 +1681,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "stun on hit":
                 CustomAttributes.StunOnHit(player, items, value)
-                scope.attribinfo[attr] <- format("Stuns victim for %f seconds on hit", value["duration"].tofloat())
+                scope.attribinfo[attr] <- format("Stuns victim for %.2f seconds on hit", value["duration"].tofloat())
             break
 
             case "is miniboss":
@@ -1722,22 +1736,22 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "projectile lifetime":
                 CustomAttributes.ProjectileLifetime(player, items, value)
-                scope.attribinfo[attr] <- format("projectile disappears after %f seconds", value.tofloat())
+                scope.attribinfo[attr] <- format("projectile disappears after %.2f seconds", value.tofloat())
             break
 
             case "mult dmg vs tanks":
                 CustomAttributes.MultDmgVsTanks(player, items, value)
-                scope.attribinfo[attr] <- format("Damage vs tanks multiplied by %f", value.tofloat())
+                scope.attribinfo[attr] <- format("Damage vs tanks multiplied by %.2f", value.tofloat())
             break
 
             case "mult dmg vs giants":
                 CustomAttributes.MultDmgVsGiants(player, items, value)
-                scope.attribinfo[attr] <- format("Damage vs giants multiplied by %f", value.tofloat())
+                scope.attribinfo[attr] <- format("Damage vs giants multiplied by %.2f", value.tofloat())
             break
 
             case "mult dmg vs airborne":
                 CustomAttributes.MultDmgVsAirborne(player, items, value)
-                scope.attribinfo[attr] <- format("damage multiplied by %f against airborne targets", value.tofloat())
+                scope.attribinfo[attr] <- format("damage multiplied by %.2f against airborne targets", value.tofloat())
             break
 
             case "set damage type":
@@ -1767,17 +1781,17 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "mult projectile scale":
                 CustomAttributes.MultProjectileScale(player, items, value)
-                scope.attribinfo[attr] <- format("projectile scale multiplied by %f", value.tofloat())
+                scope.attribinfo[attr] <- format("projectile scale multiplied by %.2f", value.tofloat())
             break
 
             case "mult building scale":
                 CustomAttributes.MultBuildingScale(player, items, value)
-                scope.attribinfo[attr] <- format("building scale multiplied by %f", value.tofloat())
+                scope.attribinfo[attr] <- format("building scale multiplied by %.2f", value.tofloat())
             break
 
             case "mult crit dmg":
                 CustomAttributes.MultCritDmg(player, items, value)
-                scope.attribinfo[attr] <- format("crit damage multiplied by %f", value.tofloat())
+                scope.attribinfo[attr] <- format("crit damage multiplied by %.2f", value.tofloat())
             break
 
             case "arrow ignite":
@@ -1921,12 +1935,13 @@ function CustomAttributes::CleanupFunctionTable(player, table, attrib) {
     local str = ""
 
     //.apply my beloved
-    split(attrib, " ").apply(function(s) {s.slice(0, 1).toupper(); str += s })
-    StringToFile("test.txt", str)
-
+    split(attrib, " ").apply(function(s) { str += format("%s%s", s.slice(0, 1).toupper(), s.slice(1, s.len())) })
+    // printf("%s_%d\n", str, player.GetScriptScope().userid)
     if (attrib == "alt-fire disabled") str = "AltFireDisabled"
+
+    foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
     foreach(name, v in table)
-        if (name && typeof name == "string" && startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
+        if (typeof v == "function" && startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
             // delete table[format("%s", name)]
             printl(name)
 }
