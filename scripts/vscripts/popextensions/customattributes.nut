@@ -1311,7 +1311,7 @@ function CustomAttributes::RocketPenetration(player, items, value) {
     }
 }
 
-function CustomAttributes::ReloadFullClipAtOnce(player, items) {
+function CustomAttributes::ReloadsFullClipAtOnce(player, items) {
 
     foreach(item, attrs in items)
     {
@@ -1939,11 +1939,10 @@ function CustomAttributes::CleanupFunctionTable(player, table, attrib) {
     // printf("%s_%d\n", str, player.GetScriptScope().userid)
     if (attrib == "alt-fire disabled") str = "AltFireDisabled"
 
-    foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
+    // foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
     foreach(name, v in table)
         if (typeof v == "function" && startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
-            // delete table[format("%s", name)]
-            printl(name)
+            delete table[format("%s", name)]
 }
 //obsolete, implemented into item/playerattribs/bot tags
 // function CustomAttrs(attrs = {}) {

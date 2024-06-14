@@ -1418,7 +1418,7 @@ function MissionAttributes::MissionAttr(...) {
 					local idarray = split(k, ",")
 
 					if (idarray.len() > 1)
-						idarray.apply(function (val) {return val.tointeger()})
+						idarray.apply(function (val) {return val.tofloat()})
 					k = idarray
 				}
 				if (typeof k == "array")
@@ -2726,8 +2726,8 @@ function MissionAttributes::SetPlayerAttributes(player, attrib, value, item = nu
 		for (local i = 0; i < GetPropArraySize(player, "m_hMyWeapons"); i++)
 			if (GetPropEntityArray(player, "m_hMyWeapons", i))
 				items[GetPropEntityArray(player, "m_hMyWeapons", i)] <- [attrib, value]
+	// printl(PopExtUtil.HasItemInLoadout(player, item))
 	//do the customattributes check first, since we replace some vanilla attributes
-
 	if (attrib in CustomAttributes.Attrs)
 		CustomAttributes.AddAttr(player, attrib, value, items)
 
@@ -2750,9 +2750,9 @@ function MissionAttributes::SetPlayerAttributes(player, attrib, value, item = nu
 			CustomAttributes.RefreshDescs(player)
 		}
 	}
-	else return
+	else
 		// printl((attrib in CustomAttributes.Attrs) + " : " + (attrib in PopExtItems.Attributes) + " : " + attrib);
-		// MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Invalid attribute!")
+		MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Invalid attribute!")
 }
 // Logging Functions
 // =========================================================
