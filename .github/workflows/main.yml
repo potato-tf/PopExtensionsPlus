@@ -31,10 +31,7 @@ jobs:
         run: |
             ssh-agent -a $SSH_AUTH_SOCK > /dev/null
             ssh-add - <<< "${{ secrets.DEPLOY_KEY }}"
-
-      # Runs a single command using the runners shell
-      - name: Make scripts executable
-        run: chmod u+x ./*.sh
+            
     # "2244 pterodactyl@eu9.potato.tf:/"
     # Runs a set of commands using the runners shell
       - name: Sync with game servers
