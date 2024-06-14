@@ -40,7 +40,7 @@ jobs:
         run: |
           for i in "22 pterodactyl@us.potato.tf:/" "22 pterodactyl@sgp.potato.tf:/" "27035 pterodactyl@eu.potato.tf:/" "22 pterodactyl@aus.potato.tf:/"; do a=( $i ); 
           {
-              rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/vscripts/popextensions ${a[1]}var/www/html/tf/scripts/vscripts
+              rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/vscripts/ ${a[1]}var/www/html/tf/scripts/vscripts/popextensions
           } &
           done
           wait
