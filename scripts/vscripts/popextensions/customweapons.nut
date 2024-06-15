@@ -1,5 +1,5 @@
 //credit to ficool2, Yaki and LizardofOz
-IncludeScript("tf_item_map.nut")
+IncludeScript("item_map.nut")
 IncludeScript("popextensions.nut")
 
 ExtraItems <-
