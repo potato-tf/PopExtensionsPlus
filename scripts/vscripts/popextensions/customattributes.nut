@@ -791,9 +791,9 @@ function CustomAttributes::IsMiniboss(player, items) {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
         if (wep == null) return
 
-        player.GetScriptScope().PlayerThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+		local i = 1
 
-			local i = 1
+        player.GetScriptScope().PlayerThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (player.GetActiveWeapon() == wep && !player.IsMiniBoss() && player.GetModelScale() == 1.0) {
 
