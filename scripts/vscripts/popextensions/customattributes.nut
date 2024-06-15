@@ -793,15 +793,21 @@ function CustomAttributes::IsMiniboss(player, items) {
 
         player.GetScriptScope().PlayerThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
+			local i = 1
+
             if (player.GetActiveWeapon() == wep && !player.IsMiniBoss() && player.GetModelScale() == 1.0) {
 
                 player.SetIsMiniBoss(true)
                 player.SetModelScale(1.75, -1)
-				//shithack, fix later
-                EntFireByHandle(player, "SetModelScale", "1.0", 1, null, null)
-                EntFireByHandle(player, "RunScriptCode", "self.SetIsMiniBoss(false)", 1, null, null)
-                return
             }
+
+			if (!i)
+			{
+                player.SetIsMiniBoss(false)
+                player.SetModelScale(1.0, -1)
+			}
+
+			i++
         }
     }
 }

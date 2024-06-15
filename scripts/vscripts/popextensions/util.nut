@@ -22,7 +22,20 @@
 		"models/weapons/c_models/c_engineer_bot_arms.mdl",
 		"", // Civilian
 	]
-
+	HUMAN_ARM_PATHS =
+	[
+		"models/weapons/c_models/c_medic_arms.mdl", //dummy
+		"models/weapons/c_models/c_scout_arms.mdl",
+		"models/weapons/c_models/c_sniper_arms.mdl",
+		"models/weapons/c_models/c_soldier_arms.mdl",
+		"models/weapons/c_models/c_demo_arms.mdl",
+		"models/weapons/c_models/c_medic_arms.mdl",
+		"models/weapons/c_models/c_heavy_arms.mdl",
+		"models/weapons/c_models/c_pyro_arms.mdl",
+		"models/weapons/c_models/c_spy_arms.mdl",
+		"models/weapons/c_models/c_engineer_arms.mdl",
+		"models/weapons/c_models/c_engineer_gunslinger.mdl",	//CIVILIAN/Gunslinger
+	]
 	MaxAmmoTable = {
 		[TF_CLASS_SCOUT] = {
 			["tf_weapon_scattergun"]            = 32,
