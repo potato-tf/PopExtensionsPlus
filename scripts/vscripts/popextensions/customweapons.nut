@@ -1,7 +1,4 @@
 //credit to ficool2, Yaki and LizardofOz
-IncludeScript("item_map.nut")
-IncludeScript("popextensions.nut")
-
 ExtraItems <-
 {
 	"Wasp Launcher" :
@@ -83,6 +80,18 @@ ExtraItems <-
     {
         id = PopExtItems[itemname].id
         item_class = PopExtItems[itemname].item_class
+
+		if (item_class == "tf_weapon_shotgun")
+		{
+			local shotguns = {
+				"soldier" : "tf_weapon_shotgun_soldier"
+				"pyro" : "tf_weapon_shotgun_pyro"
+				"heavy" : "tf_weapon_shotgun_hwg"
+				"engineer" : "tf_weapon_shotgun_primary"
+			}
+
+			item_class = shotguns[playerclass]
+		}
 
         //multiclass items will not spawn unless they are specified for a certain class
         //this includes multiclass shotguns, pistols, melees, base jumper, pain train (but not half zatoichi)
