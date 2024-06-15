@@ -56,8 +56,7 @@ ExtraItems <-
 //itemname accepts strings
 ::GiveItem <- function(itemname, player)
 {
-    if (!player) return
-	printl(player.GetPlayerClass())
+    if (!player || player.GetPlayerClass() < 1) return
     local playerclass = PopExtUtil.Classes[player.GetPlayerClass()]
 
     local extraitem = null
