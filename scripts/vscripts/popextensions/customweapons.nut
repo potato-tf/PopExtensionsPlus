@@ -79,10 +79,10 @@ ExtraItems <-
     local id = null
     local item_class = null
 
-    if (itemname in TFItemMap)
+    if (itemname in PopExtItems)
     {
-        id = TFItemMap[itemname].id
-        item_class = TFItemMap[itemname].item_class
+        id = PopExtItems[itemname].id
+        item_class = PopExtItems[itemname].item_class
 
         //multiclass items will not spawn unless they are specified for a certain class
         //this includes multiclass shotguns, pistols, melees, base jumper, pain train (but not half zatoichi)
