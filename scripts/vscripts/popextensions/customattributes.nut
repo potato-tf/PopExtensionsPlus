@@ -59,6 +59,7 @@
         "mult sniper charge per sec with enemy under crosshair": null
         "sniper beep with enemy under crosshair": null
         "crit when health below": null
+        "mult swim speed": null
 
         //begin non-dev fully custom attributes
         "radius sleeper": null

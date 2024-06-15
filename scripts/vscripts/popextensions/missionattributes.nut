@@ -2750,9 +2750,6 @@ function MissionAttributes::SetPlayerAttributes(player, attrib, value, item = nu
 			CustomAttributes.RefreshDescs(player)
 		}
 	}
-	else
-		// printl((attrib in CustomAttributes.Attrs) + " : " + (attrib in PopExtItems.Attributes) + " : " + attrib);
-		MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Invalid attribute!")
 }
 // Logging Functions
 // =========================================================
