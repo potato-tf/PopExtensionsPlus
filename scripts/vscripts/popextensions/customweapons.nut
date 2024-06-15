@@ -134,7 +134,10 @@ ExtraItems <-
 
 			local armmodel = ""
 
-			animset ? armmodel = animset : armmodel = format("models/weapons/c_models/c_%s_arms.mdl", playerclass)
+			animset ? armmodel = animset : armmodel = item.GetModelName()
+
+			printl(armmodel)
+
 			item.SetModelSimple(armmodel)
 			item.SetCustomViewModel(armmodel)
 			item.SetCustomViewModelModelIndex(GetModelIndex(armmodel))

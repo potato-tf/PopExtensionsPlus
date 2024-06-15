@@ -808,6 +808,7 @@ function CustomAttributes::IsMiniboss(player, items) {
 			}
 
 			i++
+			if (i > 10) i = 0
         }
     }
 }
