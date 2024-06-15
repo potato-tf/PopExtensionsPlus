@@ -105,20 +105,27 @@ ExtraItems <-
     else return
 
     //create item entity
-    local item = CreateByClassname(item_class);
-    SetPropInt(item, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", id);
-    SetPropBool(item, "m_AttributeManager.m_Item.m_bInitialized", true);
-    SetPropBool(item, "m_bValidatedAttachedEntity", true);
-    item.SetTeam(player.GetTeam());
-    DispatchSpawn(item);
-
+    local item = CreateByClassname(item_class)
+    SetPropInt(item, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", id)
+    SetPropBool(item, "m_AttributeManager.m_Item.m_bInitialized", true)
+    SetPropBool(item, "m_bValidatedAttachedEntity", true)
+    item.SetTeam(player.GetTeam())
+    DispatchSpawn(item)
+	local reservedKeywords = {
+		"OriginalItemName" : null
+		"ItemClassOverride" : null
+		"Name" : null
+		"Model" : null
+		"AnimSet" : null
+	}
     foreach (attribute, value in extraitem)
-    {
-        if (!(attribute == "OriginalItemName" || attribute == "Name" || attribute == "Model" || attribute == "AnimSet"))
-        {
-            item.AddAttribute(attribute, value, -1.0);
-        }
-    }
+        if (!(attribute in reservedKeywords))
+			if (attribute in CustomAttributes.Attrs)
+				CustomAttributes.AddAttr(player, attribute, value, {item = [attribute, value]})
+			else
+				item.AddAttribute(attribute, value, -1.0)
+
+
 
     //find the slot of the weapon then iterate through all entities parented to the player
     //and kill the entity that occupies the required slot
