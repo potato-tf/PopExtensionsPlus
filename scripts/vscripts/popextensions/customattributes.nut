@@ -457,7 +457,7 @@ function CustomAttributes::UberOnDamageTaken(player, items, value) {
     }
 }
 
-function CustomAttributes::TurnToIce(player, items) {
+function CustomAttributes::SetTurnToIce(player, items) {
 
     foreach(item, attrs in items)
     {
@@ -1954,7 +1954,7 @@ function CustomAttributes::CleanupFunctionTable(player, table, attrib) {
 
     //.apply my beloved
     split(attrib, " ").apply(function(s) { str += format("%s%s", s.slice(0, 1).toupper(), s.slice(1, s.len())) })
-    // printf("%s_%d\n", str, player.GetScriptScope().userid)
+
     if (attrib == "alt-fire disabled") str = "AltFireDisabled"
 
     // foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
@@ -1962,16 +1962,3 @@ function CustomAttributes::CleanupFunctionTable(player, table, attrib) {
         if (typeof v == "function" && startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
             delete table[format("%s", name)]
 }
-//obsolete, implemented into item/playerattribs/bot tags
-// function CustomAttrs(attrs = {}) {
-//     CustomAttributes.SpawnHookTable[format("ApplyCustomAttribs_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params)
-//     {
-//         local player = GetPlayerFromUserID(params.userid)
-//         if (player.IsBotOfType(TF_BOT_TYPE)) return
-//         foreach (k, v in attrs)
-//             if (v.len() == 1)
-//                 CustomAttributes.AddAttr(player, k, v[0])
-//             else
-//                 CustomAttributes.AddAttr(player, k, v[0], v[1])
-//     }
-// }
