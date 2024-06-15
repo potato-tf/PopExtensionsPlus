@@ -59,7 +59,6 @@
         "mult sniper charge per sec with enemy under crosshair": null
         "sniper beep with enemy under crosshair": null
         "crit when health below": null
-        "mult swim speed": null
 
         //begin non-dev fully custom attributes
         "radius sleeper": null
@@ -796,11 +795,10 @@ function CustomAttributes::IsMiniboss(player, items) {
 
                 player.SetIsMiniBoss(true)
                 player.SetModelScale(1.75, -1)
-            }
-            else if (player.GetActiveWeapon() != wep && player.IsMiniBoss() && player.GetModelScale() == 1.75) {
-
-                player.SetIsMiniBoss(false)
-                player.SetModelScale(1.0, -1)
+				//shithack, fix later
+                EntFireByHandle(player, "SetModelScale", "1.0", 1, null, null)
+                EntFireByHandle(player, "RunScriptCode", "self.SetIsMiniBoss(false)", 1, null, null)
+                return
             }
         }
     }
@@ -1940,7 +1938,7 @@ function CustomAttributes::CleanupFunctionTable(player, table, attrib) {
     // printf("%s_%d\n", str, player.GetScriptScope().userid)
     if (attrib == "alt-fire disabled") str = "AltFireDisabled"
 
-    // foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
+    foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
     foreach(name, v in table)
         if (typeof v == "function" && startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
             delete table[format("%s", name)]
