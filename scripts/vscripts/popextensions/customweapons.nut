@@ -134,7 +134,7 @@ ExtraItems <-
 
 			local armmodel = ""
 
-			animset ? armmodel = animset : armmodel = item.GetModelName()
+			animset ? armmodel = animset : armmodel = main_viewmodel.GetModelName()
 
 			printl(armmodel)
 
