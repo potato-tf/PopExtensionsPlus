@@ -14,6 +14,7 @@ ExtraItems <-
         OriginalItemName = "Upgradeable TF_WEAPON_SHOTGUN_PRIMARY"
         Model = "models/weapons/c_models/c_rapidfire/c_rapidfire_1.mdl"
         AnimSet = "engineer"
+		ItemClassOverride = "tf_weapon_shotgun_priamry"
         "damage bonus" : 2.3
         "clip size bonus" : 1.25
         "weapon spread bonus" : 0.85
@@ -56,7 +57,7 @@ ExtraItems <-
 ::GiveItem <- function(itemname, player)
 {
     if (!player) return
-
+	printl(player.GetPlayerClass())
     local playerclass = PopExtUtil.Classes[player.GetPlayerClass()]
 
     local extraitem = null
@@ -78,6 +79,11 @@ ExtraItems <-
 
     if (itemname in PopExtItems)
     {
+		if ("ItemClassOverride" in PopExtItems[itemname])
+		{
+			item_class = PopExtItems[itemname].ItemClassOverride
+			return
+		}
         id = PopExtItems[itemname].id
         item_class = PopExtItems[itemname].item_class
 
