@@ -184,6 +184,7 @@ Include("popextensions")
 Include("robotvoicelines") //must include before missionattributes
 Include("customattributes") //must include before missionattributes
 Include("missionattributes")
+Include("customweapons")
 
 Include("botbehavior") //must include before tags
 Include("tags")
