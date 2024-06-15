@@ -1938,7 +1938,7 @@ function CustomAttributes::CleanupFunctionTable(player, table, attrib) {
     // printf("%s_%d\n", str, player.GetScriptScope().userid)
     if (attrib == "alt-fire disabled") str = "AltFireDisabled"
 
-    foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
+    // foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
     foreach(name, v in table)
         if (typeof v == "function" && startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
             delete table[format("%s", name)]
