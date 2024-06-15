@@ -58,17 +58,9 @@ ExtraItems <-
 //itemname accepts strings
 ::GiveItem <- function(itemname, player)
 {
-    // todo: replace with classes table from util
-    local playerclass = player.GetPlayerClass()
-    if (playerclass == 1) playerclass = "scout"
-    else if (playerclass == 2) playerclass = "sniper"
-    else if (playerclass == 3) playerclass = "soldier"
-    else if (playerclass == 4) playerclass = "demo"
-    else if (playerclass == 5) playerclass = "medic"
-    else if (playerclass == 6) playerclass = "heavy"
-    else if (playerclass == 7) playerclass = "pyro"
-    else if (playerclass == 8) playerclass = "spy"
-    else if (playerclass == 9) playerclass = "engineer"
+    if (!player) return
+
+    local playerclass = PopExtUtil.Classes[player.GetPlayerClass()]
 
     local extraitem = null
     local model = null
@@ -155,7 +147,7 @@ ExtraItems <-
         NetProps.SetPropInt(item, "m_clrRender", 1);
 
         local hands = SpawnEntityFromTable("tf_wearable_vm", {
-            modelindex = PrecacheModel("models/weapons/c_models/c_" + playerclass + "_arms.mdl")
+            modelindex = PrecacheModel(format("models/weapons/c_models/c_%s_arms.mdl", playerclass))
         })
         NetProps.SetPropBool(hands, "m_bForcePurgeFixedupStrings", true);
         player.EquipWearableViewModel(hands);
@@ -211,3 +203,4 @@ ExtraItems <-
 
 GiveItem("Wasp Launcher", GetListenServerHost())
 PrintTable(ExtraItems["Wasp Launcher"])
+
