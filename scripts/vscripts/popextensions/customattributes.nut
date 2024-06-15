@@ -525,12 +525,12 @@ function CustomAttributes::CanBreatheUnderWater(player, items) {
     foreach(item, attrs in items)
     {
         local wep = PopExtUtil.HasItemInLoadout(player, item)
-    if (wep == null) return
+        if (wep == null) return
 
-    local scope = player.GetScriptScope()
-    scope.PlayerThinkTable[format("CanBreatheUnderwater_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+        local scope = player.GetScriptScope()
+        scope.PlayerThinkTable[format("CanBreatheUnderwater_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-            if (!("attribinfo" in scope) || !("can breathe underwater" in scope.attribinfo)) return
+            if (!("attribinfo" in scope) || !("can breathe underwater" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
 
             if (player.GetWaterLevel() == 3)
             {
@@ -554,7 +554,7 @@ function CustomAttributes::MultSwimSpeed(player, items, value = 1.25) {
         local scope = player.GetScriptScope()
         scope.PlayerThinkTable[format("MultSwimSpeed_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-            if (!("attribinfo" in scope) || !("mult swim speed" in scope.attribinfo)) return
+            if (!("attribinfo" in scope) || !("mult swim speed" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
 
             if (player.GetWaterLevel() == 3)
             {
@@ -578,13 +578,13 @@ function CustomAttributes::LastShotCrits(player, items, value = 0.033) {
 
         scope.PlayerThinkTable[format("LastShotCrits_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-            if (!("attribinfo" in scope) || !("last shot crits" in scope.attribinfo)) return
+            if (!("attribinfo" in scope) || !("last shot crits" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
 
             if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
 
             scope.lastshotcritsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
 
-            if (wep.IsValid() && wep.Clip1() == 1 && player.GetActiveWeapon() == wep)
+            if (wep.IsValid() && wep.Clip1() == 1)
                 player.AddCondEx(COND_CRITBOOST, value, null)
 
             return
@@ -601,7 +601,7 @@ function CustomAttributes::CritWhenHealthBelow(player, items, value = -1) {
 
         player.GetScriptScope().PlayerThinkTable[format("CritWhenHealthBelow_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-            if (player.GetHealth() < value)
+            if (player.GetHealth() < value && player.GetActiveWeapon() == wep)
             {
                 player.AddCondEx(COND_CRITBOOST, 0.033, player)
                 return
@@ -620,6 +620,8 @@ function CustomAttributes::WetImmunity(player, items) {
         local wetconds = [TF_COND_MAD_MILK, TF_COND_URINE, TF_COND_GAS]
 
         player.GetScriptScope().PlayerThinkTable[format("WetImmunity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+
+            if (player.GetActiveWeapon() != wep) return
 
             foreach (cond in wetconds)
                 if (player.InCond(cond))
@@ -819,6 +821,8 @@ function CustomAttributes::ReplaceWeaponFireSound(player, items, value) {
 
         scope.PlayerThinkTable[format("ReplaceFireSound_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
+            if (player.GetActiveWeapon() != wep) return
+
             StopSoundOn(value[0], player)
             player.StopSound(value[0])
 
@@ -843,6 +847,7 @@ function CustomAttributes::IsInvisible(player, items) {
         player.GetScriptScope().PlayerThinkTable[format("IsInvisible_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (player.GetActiveWeapon() != wep || PopExtUtil.HasEffect(EF_NODRAW)) return
+
             wep.DisableDraw()
         }
     }
@@ -858,7 +863,10 @@ function CustomAttributes::CannotUpgrade(player, items) {
 
         local index = PopExtUtil.GetItemIndex(wep)
         local classname = GetPropString(wep, "m_iClassname")
+
         player.GetScriptScope().PlayerThinkTable[format("CannotUpgrade_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+
+            if (player.GetActiveWeapon() != wep) return
 
             if (GetPropBool(player, "m_Shared.m_bInUpgradeZone") && PopExtUtil.GetItemIndex(wep) != -1) {
                 DoEntFire("func_upgradestation", "EndTouch", "", -1, player, player)
@@ -999,6 +1007,9 @@ function CustomAttributes::ProjectileLifetime(player, items, value) {
         if (wep == null) return
 
         player.GetScriptScope().PlayerThinkTable[format("ProjectileLifeTime_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+
+            if (player.GetActiveWeapon() != wep) return
+
             for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");) {
                 if (projectile.GetOwner() == player || (HasProp(projectile, "m_hThrower") && GetPropEntity(projectile, "m_hThrower") == player && GetPropEntity(projectile, "m_hLauncher") == wep))
                     EntFireByHandle(projectile, "Kill", "", value, null, null)
@@ -1077,7 +1088,8 @@ function CustomAttributes::PassiveReload(player, items) {
         local scope = player.GetScriptScope()
         scope.PlayerThinkTable[format("PassiveReload_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-            if (!wep.IsValid()) return
+            if (player.GetActiveWeapon() != wep) return
+
             local ammo = GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1)
 
             if (player.GetActiveWeapon() != wep && wep.Clip1() != wep.GetMaxClip1())
@@ -1321,11 +1333,13 @@ function CustomAttributes::ReloadsFullClipAtOnce(player, items) {
 
         scope.PlayerThinkTable[format("ReloadFullClipAtOnce_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-            if (player.GetActiveWeapon() == wep && wep.Clip1() == 0)
+            if (player.GetActiveWeapon() != wep) return
+
+            if (wep.Clip1() == 0)
                 scope.isreloading <- true
 
 
-            if (player.GetActiveWeapon() == wep && ("isreloading" in scope) && scope.isreloading && wep.Clip1() != 0) {
+            if (("isreloading" in scope) && scope.isreloading && wep.Clip1() != 0) {
 
                 wep.SetClip1(wep.GetMaxClip1())
                 scope.isreloading = false
@@ -1397,6 +1411,8 @@ function CustomAttributes::IgniteArrow(player, items) {
         if (wep == null) return
 
         player.GetScriptScope().PlayerThinkTable[format("IgniteArrow_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+
+            if (player.GetActiveWeapon() != wep) return
 
             if (HasProp(wep, "m_bArrowAlight") && !GetPropBool(wep, "m_bArrowAlight"))
                 SetPropBool(wep, "m_bArrowAlight", true)
@@ -1506,6 +1522,9 @@ function CustomAttributes::CondImmunity(player, items, value) {
         if (wep == null) return
 
         player.GetScriptScope().PlayerThinkTable[format("CondImmunity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+
+            if (player.GetActiveWeapon() != wep) return
+
             if (typeof value == "array") {
                 foreach (cond in value) {
                     player.RemoveCondEx(cond, true)
