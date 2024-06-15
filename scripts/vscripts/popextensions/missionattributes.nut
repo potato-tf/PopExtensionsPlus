@@ -2731,7 +2731,7 @@ function MissionAttributes::SetPlayerAttributes(player, attrib, value, item = nu
 	if (attrib in CustomAttributes.Attrs)
 		CustomAttributes.AddAttr(player, attrib, value, items)
 
-	else if (attrib in PopExtItems.Attributes)
+	else if ("Attributes" in PopExtItems && attrib in PopExtItems.Attributes)
 	{
 		if ("attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string")
 			MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")

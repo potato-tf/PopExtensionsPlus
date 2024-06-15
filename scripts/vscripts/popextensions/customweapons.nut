@@ -90,12 +90,12 @@ ExtraItems <-
     else return
 
     //create item entity
-    local item = Entities.CreateByClassname(item_class);
-    NetProps.SetPropInt(item, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", id);
-    NetProps.SetPropBool(item, "m_AttributeManager.m_Item.m_bInitialized", true);
-    NetProps.SetPropBool(item, "m_bValidatedAttachedEntity", true);
+    local item = CreateByClassname(item_class);
+    SetPropInt(item, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", id);
+    SetPropBool(item, "m_AttributeManager.m_Item.m_bInitialized", true);
+    SetPropBool(item, "m_bValidatedAttachedEntity", true);
     item.SetTeam(player.GetTeam());
-    Entities.DispatchSpawn(item);
+    DispatchSpawn(item);
 
     foreach (attribute, value in extraitem)
     {
@@ -124,42 +124,42 @@ ExtraItems <-
 
         // copied from ficool2 mw2_highrise
         // viewmodel
-        local main_viewmodel = NetProps.GetPropEntity(player, "m_hViewModel");
+        local main_viewmodel = GetPropEntity(player, "m_hViewModel");
         item.SetModelSimple("models/weapons/c_models/c_" + animset + "_arms.mdl");
         item.SetCustomViewModel("models/weapons/c_models/c_" + animset + "_arms.mdl");
         item.SetCustomViewModelModelIndex(GetModelIndex("models/weapons/c_models/c_" + animset + "_arms.mdl"));
-        NetProps.SetPropInt(item, "m_iViewModelIndex", GetModelIndex("models/weapons/c_models/c_" + animset + "_arms.mdl"));
+        SetPropInt(item, "m_iViewModelIndex", GetModelIndex("models/weapons/c_models/c_" + animset + "_arms.mdl"));
 
         // worldmodel
-        local tpWearable = Entities.CreateByClassname("tf_wearable");
-        NetProps.SetPropInt(tpWearable, "m_nModelIndex", modelindex);
-        NetProps.SetPropBool(tpWearable, "m_bValidatedAttachedEntity", true);
-        NetProps.SetPropBool(tpWearable, "m_AttributeManager.m_Item.m_bInitialized", true);
-        NetProps.SetPropEntity(tpWearable, "m_hOwnerEntity", player);
+        local tpWearable = CreateByClassname("tf_wearable");
+        SetPropInt(tpWearable, "m_nModelIndex", modelindex);
+        SetPropBool(tpWearable, "m_bValidatedAttachedEntity", true);
+        SetPropBool(tpWearable, "m_AttributeManager.m_Item.m_bInitialized", true);
+        SetPropEntity(tpWearable, "m_hOwnerEntity", player);
         tpWearable.SetOwner(player);
         tpWearable.DispatchSpawn();
         EntFireByHandle(tpWearable, "SetParent", "!activator", 0.0, player, player);
-        NetProps.SetPropInt(tpWearable, "m_fEffects", 129); // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
+        SetPropInt(tpWearable, "m_fEffects", 129); // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
 
         // copied from LizardOfOz open fortress dm_crossfire
         // viewmodel arms
-        NetProps.SetPropInt(item, "m_nRenderMode", 1);
-        NetProps.SetPropInt(item, "m_clrRender", 1);
+        SetPropInt(item, "m_nRenderMode", 1);
+        SetPropInt(item, "m_clrRender", 1);
 
         local hands = SpawnEntityFromTable("tf_wearable_vm", {
             modelindex = PrecacheModel(format("models/weapons/c_models/c_%s_arms.mdl", playerclass))
         })
-        NetProps.SetPropBool(hands, "m_bForcePurgeFixedupStrings", true);
+        SetPropBool(hands, "m_bForcePurgeFixedupStrings", true);
         player.EquipWearableViewModel(hands);
 
         local hands2 = SpawnEntityFromTable("tf_wearable_vm", {
             modelindex = PrecacheModel(model)
         })
-        NetProps.SetPropBool(hands2, "m_bForcePurgeFixedupStrings", true);
+        SetPropBool(hands2, "m_bForcePurgeFixedupStrings", true);
         player.EquipWearableViewModel(hands2);
 
-        NetProps.SetPropEntity(hands2, "m_hWeaponAssociatedWith", item);
-        NetProps.SetPropEntity(item, "m_hExtraWearableViewModel", hands2);
+        SetPropEntity(hands2, "m_hWeaponAssociatedWith", item);
+        SetPropEntity(item, "m_hExtraWearableViewModel", hands2);
 
         player.Weapon_Switch(item);
         player.ValidateScriptScope()
@@ -178,7 +178,7 @@ ExtraItems <-
     else
     {
         //base jumper and invis watches are not included as they have classnames starting with "tf_weapon_"
-        local id = NetProps.GetPropInt(item, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
+        local id = GetPropInt(item, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
 
         //Ali Baba's Wee Booties and Bootlegger
         if ([405, 608].find(id) != null) return 0
