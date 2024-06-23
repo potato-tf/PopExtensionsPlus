@@ -215,6 +215,4 @@ ExtraItems <-
 	}
 }
 
-CustomWeapons.GiveItem("Wasp Launcher", GetListenServerHost())
-PopExtUtil.PrintTable(ExtraItems["Wasp Launcher"])
 

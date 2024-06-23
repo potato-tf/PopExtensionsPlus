@@ -105,7 +105,7 @@ class AI_Bot {
 	}
 
 	function CollectThreats(maxdist = INT_MAX, disguised = false, invisible = false) {
-		
+
 		local threatarray = []
 		foreach (player in PopExtUtil.PlayerArray)
 		{
@@ -315,7 +315,7 @@ class AI_Bot {
 
 			if (!area_start || !area_end)
 				return false
-			if (!GetNavAreasFromBuildPath(area_start, area_end, pos_end, 0.0, Constants.ETFTeam.TEAM_ANY, true, path_areas))
+			if (!GetNavAreasFromBuildPath(area_start, area_end, pos_end, 0.0, team, false, path_areas))
 				return false
 			if (area_start != area_end && !path_areas.len())
 				return false
