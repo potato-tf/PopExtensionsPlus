@@ -1407,7 +1407,7 @@ function MissionAttributes::MissionAttr(...) {
 
 				foreach (attrib, value in attr)
 				{
-					MissionAttributes.SetPlayerAttributes(player, attrib, value, item)
+					MissionAttributes.SetPlayerAttributes(player, attrib, value, wep)
 				}
 			}
 
@@ -2680,6 +2680,7 @@ function MissionAttributes::MissionAttr(...) {
 }
 
 function MissionAttrThink() {
+	if (!MissionAttrEntity) return -1; // Prevent error on mission complete about MissionAttributes not existing
 	foreach (_, func in MissionAttributes.ThinkTable) func()
 	return -1
 }
@@ -2710,6 +2711,7 @@ function MAtr(...) {
 	MissionAttr.acall(vargv.insert(0, MissionAttributes))
 }
 
+// TODO: rework this boosted ass shit
 function MissionAttributes::SetPlayerAttributes(player, attrib, value, item = null)
 {
 	local items = {}
