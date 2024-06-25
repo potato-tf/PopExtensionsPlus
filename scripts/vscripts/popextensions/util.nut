@@ -1401,15 +1401,18 @@ function PopExtUtil::AddThinkToEnt(ent, func)
 		_AddThinkToEnt(ent, func)
 
 	if (thinktable == "") return
-
-	if (!(thinktable in scope)) scope[thinktable] <- {}
-
+		
 	local thinkfunc
-	if(func in scope)
-		thinkfunc = scope[func]
-	else if(func in ROOT)
-		thinkfunc = ROOT[func]
-	else return
+	if(func != null)
+	{
+		if(func in scope)
+			thinkfunc = scope[func]
+		else if(func in ROOT)
+			thinkfunc = ROOT[func]
+		else return
+	}
+	
+	if (!(thinktable in scope)) scope[thinktable] <- {}
 
 	func == null ? scope[thinktable].clear() : scope[format("%s", thinktable)][func] <- thinkfunc
 }
