@@ -330,7 +330,7 @@ function PopulatorThink() {
 
 			local tankName = tank.GetName().tolower()
 			foreach(name, table in tankNamesWildcard)
-				if (name == tankName)
+				if (startswith(tankName, name))
 					PopExtHooks.AddHooksToScope(tankName, table, scope)
 			if (tankName in tankNames)
 				PopExtHooks.AddHooksToScope(tankName, tankNames[tankName], scope)
@@ -584,7 +584,7 @@ function PopulatorThink() {
 			_AddThinkToEnt(tank, "TankThinks")
 
 			foreach(name, table in tankNamesWildcard)
-				if (name == tankName && "OnSpawn" in table)
+				if (startswith(tankName, name) && "OnSpawn" in table)
 					table.OnSpawn(tank, tankName)
 
 			if (tankName in tankNames) {
