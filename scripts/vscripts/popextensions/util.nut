@@ -226,6 +226,10 @@
 				child.ValidateScriptScope()
 				local scope = child.GetScriptScope()
 				if (!("ItemThinkTable" in scope)) scope.ItemThinkTable <- {}
+
+				scope.ItemThinks <- function() { foreach (name, func in scope.ItemThinkTable) func.call(scope); return -1 }
+
+				_AddThinkToEnt(child, "ItemThinks")
 			}
 			foreach(slot, wep in myweapons)
 			{
