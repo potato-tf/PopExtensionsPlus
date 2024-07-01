@@ -99,6 +99,7 @@
         "noclip projectile": null
         "projectile gravity": null
         "immune to cond": null
+        "mult max health": null
 
         //begin vanilla rewrite attributes
         "alt-fire disabled": null
@@ -773,7 +774,7 @@ function CustomAttributes::StunOnHit(player, items, value) {
         if ("speedmult" in value) speedmult = value.speedmult
         if ("stungiants" in value) stungiants = value.stungiants
 
-        // `stun on hit`: { duration = 4 type = 2 speedmult = 0.2 stungiants = false] //in order: stun duration in seconds, stun type, stun movespeed multiplier, can stun giants true/false
+        // `stun on hit`: { duration = 4 type = 2 speedmult = 0.2 stungiants = false } //in order: stun duration in seconds, stun type, stun movespeed multiplier, can stun giants true/false
 
         CustomAttributes.TakeDamageTable[format("StunOnHit_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1543,6 +1544,21 @@ function CustomAttributes::CondImmunity(player, items, value) {
     }
 }
 
+function CustomAttributes::MultMaxHealth(player, items, value) {
+
+    local scope = player.GetScriptScope()
+
+    foreach(item, attrs in items)
+    {
+        local wep = PopExtUtil.HasItemInLoadout(player, item)
+        if (wep == null) return
+
+        wep.RemoveAttribute("max health additive bonus")
+        local addHPAmount = player.GetMaxHealth() * (value - 1)
+        wep.AddAttribute("max health additive bonus", addHPAmount, -1)
+    }
+}
+
 function CustomAttributes::DmgBonusWhileHalfDead(player, items, value) {
 
     foreach(item, attrs in items)
@@ -1898,6 +1914,11 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
                     outputString = outputString.slice(0, outputString.len() - finalCommaAndSpace)
                     scope.attribinfo[attr] <- format("wielder is immune to cond %s", outputString)
                 }
+            break
+
+            case "mult max health":
+                CustomAttributes.MultMaxHealth(player, items, value)
+                scope.attribinfo[attr] <- format("Player max health is multiplied by %.2f", value.tofloat())
             break
 
             //VANILLA ATTRIBUTE REIMPLEMENTATIONS
