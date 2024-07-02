@@ -1342,11 +1342,12 @@ function CustomAttributes::ReloadsFullClipAtOnce(player, items) {
 
             if (player.GetActiveWeapon() != wep) return
 
-            if (wep.Clip1() == 0)
+            local oldClip1 = wep.Clip1()
+            if (wep.Clip1() != wep.GetMaxClip1()) {
                 scope.isreloading <- true
+            }
 
-
-            if (("isreloading" in scope) && scope.isreloading && wep.Clip1() != 0) {
+            if (("isreloading" in scope) && scope.isreloading && wep.Clip1() != oldClip1) {
 
                 wep.SetClip1(wep.GetMaxClip1())
                 scope.isreloading = false
