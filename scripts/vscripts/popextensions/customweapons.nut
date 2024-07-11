@@ -5,7 +5,6 @@ ExtraItems <-
 	{
         OriginalItemName = "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
         Model = "models/weapons/c_models/c_wasp_launcher/c_wasp_launcher.mdl"
-        AnimSet = "soldier"
         "blast radius increased" : 1.5
         "max health additive bonus" : 100
 	}
