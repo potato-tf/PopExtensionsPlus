@@ -13,6 +13,8 @@ ExtraItems <-
 	{
         OriginalItemName = "Upgradeable TF_WEAPON_SHOTGUN_PRIMARY"
         Model = "models/weapons/c_models/c_rapidfire/c_rapidfire_1.mdl"
+		//defaults to engineer's primary shotgun, need to specify
+		//ItemClass and Animset to use secondary shotgun on non shotgun wielding classes
 		ItemClass = "tf_weapon_shotgun_soldier"
         AnimSet = "soldier"
         "damage bonus" : 2.3
@@ -92,9 +94,12 @@ ExtraItems <-
 		else return
 
 		//replace overrides if they exist in extraitems
-		if (ItemClass in extraitem) item_class = extraitem.ItemClass
-		if (Model in extraitem) model = extraitem.Model; modelindex = GetModelIndex(model)
-		if (AnimSet in extraitem) animset = extraitem.AnimSet
+		if (extraitem != null)
+		{
+			if (ItemClass in extraitem) item_class = extraitem.ItemClass
+			if (Model in extraitem) model = extraitem.Model; modelindex = GetModelIndex(model)
+			if (AnimSet in extraitem) animset = extraitem.AnimSet
+		}
 
 		//create item entity
 		local item = CreateByClassname(item_class)
