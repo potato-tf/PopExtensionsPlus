@@ -13,8 +13,8 @@ ExtraItems <-
 	{
         OriginalItemName = "Upgradeable TF_WEAPON_SHOTGUN_PRIMARY"
         Model = "models/weapons/c_models/c_rapidfire/c_rapidfire_1.mdl"
-        AnimSet = "engineer"
-		ItemClassOverride = "tf_weapon_shotgun_priamry"
+		ItemClass = "tf_weapon_shotgun_soldier"
+        AnimSet = "soldier"
         "damage bonus" : 2.3
         "clip size bonus" : 1.25
         "weapon spread bonus" : 0.85
@@ -29,7 +29,6 @@ ExtraItems <-
 	{
         OriginalItemName = "Necro Smasher"
         Model = "models/weapons/c_models/c_cratesmasher/c_cratesmasher_1.mdl"
-        AnimSet = "scout"
 		"deploy time decreased" : 0.75
 		"fire rate bonus" : 0.30
 		"damage penalty" : 0.54
@@ -48,45 +47,54 @@ ExtraItems <-
 		local model = null
 		local modelindex = null
 		local animset = null
+		local id = null
+		local item_class = null
+
 		//if item is a custom item, overwrite itemname with OriginalItemName
 		if (itemname in ExtraItems)
 		{
 			extraitem = ExtraItems[itemname]
-			model = ExtraItems[itemname].Model
-			modelindex = GetModelIndex(model)
-			animset = ExtraItems[itemname].AnimSet
 			itemname = ExtraItems[itemname].OriginalItemName
 		}
 
-		local id = null
-		local item_class = null
-
 		if (itemname in PopExtItems)
 		{
-			if ("ItemClassOverride" in PopExtItems[itemname])
-			{
-				item_class = PopExtItems[itemname].ItemClassOverride
-				return
-			}
 			id = PopExtItems[itemname].id
-			item_class = PopExtItems[itemname].item_class
+			model = PopExtItems[itemname].model_player
+			modelindex = GetModelIndex(model)
 
-			if (item_class == "tf_weapon_shotgun")
+			if (typeof(PopExtItems[itemname].animset) == "array")
 			{
-				local shotguns = {
-					"soldier" : "tf_weapon_shotgun_soldier"
-					"pyro" : "tf_weapon_shotgun_pyro"
-					"heavy" : "tf_weapon_shotgun_hwg"
-					"engineer" : "tf_weapon_shotgun_primary"
+				if (PopExtItems[itemname].animset.find(playerclass) == null) 
+				{
+					animset = PopExtItems[itemname].animset[0]
+					item_class = PopExtItems[itemname].item_class[0]
 				}
-
-				item_class = shotguns[playerclass]
+				else 
+				{
+					animset = PopExtItems[itemname].animset[PopExtItems[itemname].animset.find(playerclass)]
+					item_class = PopExtItems[itemname].item_class[PopExtItems[itemname].animset.find(playerclass)]
+				}
+			}
+			else
+			{
+				animset = PopExtItems[itemname].animset
+				item_class = PopExtItems[itemname].item_class
 			}
 
 			//multiclass items will not spawn unless they are specified for a certain class
-			//this includes multiclass shotguns, pistols, melees, base jumper, pain train (but not half zatoichi)
+			//this includes multiclass shotguns, melees, base jumper, pain train (but not half zatoichi)
+			//the stock pistol, tf_weapon_pistol is a valid classname and will spawn however tf_weapon_pistol_scout is also supported
+
+			//animset can be a array or a string, arrays exist for weapons that are multi class (shotgun pistol and all class melees)
+			//if the current player's class is not one of the classes listed in the table, it will fall back to the first index
 		}
 		else return
+
+		//replace overrides if they exist in extraitems
+		if (ItemClass in extraitem) item_class = extraitem.ItemClass
+		if (Model in extraitem) model = extraitem.Model; modelindex = GetModelIndex(model)
+		if (AnimSet in extraitem) animset = extraitem.AnimSet
 
 		//create item entity
 		local item = CreateByClassname(item_class)
@@ -97,7 +105,7 @@ ExtraItems <-
 		DispatchSpawn(item)
 		local reservedKeywords = {
 			"OriginalItemName" : null
-			"ItemClassOverride" : null
+			"ItemClass" : null
 			"Name" : null
 			"Model" : null
 			"AnimSet" : null
