@@ -74,12 +74,14 @@ local popext_funcs = {
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
 		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string))
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), -1, null, null)
+		bot.GetScriptScope().usingcustommodel <- true
 	}
 
 	popext_usecustommodel = function(bot, args) {
 
 		if (!IsModelPrecached(args[0])) PrecacheModel(args[0])
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", args[0], -1, null, null)
+		bot.GetScriptScope().usingcustommodel <- true
 	}
 
 	popext_usehumananims = function(bot, args) {
@@ -87,6 +89,7 @@ local popext_funcs = {
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), SINGLE_TICK, null, null)
 		EntFireByHandle(bot, "RunScriptCode", format("PopExtUtil.PlayerRobotModel(self, `models/bots/%s/bot_%s.mdl`)", class_string, class_string), SINGLE_TICK, null, null)
+		bot.GetScriptScope().usingcustommodel <- true
 	}
 
 	popext_alwaysglow = function(bot, args) {

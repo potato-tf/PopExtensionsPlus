@@ -7902,7 +7902,7 @@ local FromItemsGame = {
 	},
 }
 
-::GenerateItemAttributeTable <- function()
+PopExtItems.GenerateItemAttributeTable <- function()
 {
 	local x = {}
 	foreach (k, v in FromItemsGame)
@@ -7924,7 +7924,7 @@ local FromItemsGame = {
 	StringToFile("test.nut", format("::PopExtAttribs <- {\n%s\n}", filetable))
 }
 
-// GenerateItemAttributeTable()
+// PopExtItems.GenerateItemAttributeTable()
 
 PopExtItems.Attributes <- {
 

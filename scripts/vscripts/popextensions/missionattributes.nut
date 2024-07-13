@@ -1032,10 +1032,11 @@ function MissionAttributes::MissionAttr(...) {
 
 	// =======================================================
 	// Uses bitflags to change behavior:
-	// 1 = Blu bots use human models.
-	// 2 = Blu bots use zombie models. Overrides human models.
-	// 4 = Red bots use human models.
-	// 4 = Red bots use zombie models. Overrides human models.
+	// 1   =	 Blu bots use human models.
+	// 2   = 	 Blu bots use zombie models. Overrides human models.
+	// 4   =	 Red bots use human models.
+	// 4   =	 Red bots use zombie models. Overrides human models.
+	// 128 = 	 Include buster
 	// =======================================================
 
 	case "BotsAreHumans":
@@ -1043,7 +1044,8 @@ function MissionAttributes::MissionAttr(...) {
 		MissionAttributes.SpawnHookTable.BotsAreHumans <- function(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
-			if (!player.IsBotOfType(TF_BOT_TYPE)) return
+
+			if (!player.IsBotOfType(TF_BOT_TYPE) || player.GetScriptScope().usingcustommodel || ( !(value & 128) && player.GetPlayerClass() == TF_CLASS_DEMOMAN && player.IsMiniBoss() && PopExtUtil.GetItemIndex(player.GetActiveWeapon()) == ID_ULLAPOOL_CABER)) return
 
 			MissionAttributes.HumanModel <- function(player)
 			{
