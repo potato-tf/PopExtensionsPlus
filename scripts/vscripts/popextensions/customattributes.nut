@@ -1338,20 +1338,23 @@ function CustomAttributes::ReloadsFullClipAtOnce(player, items) {
         if (wep == null) return
 
         local scope = player.GetScriptScope()
+        scope.lastClip <- wep.Clip1() // thanks to seelpit for detectreload logic
 
         scope.PlayerThinkTable[format("ReloadFullClipAtOnce_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
             if (player.GetActiveWeapon() != wep) return
 
-            if (wep.Clip1() == 0)
-                scope.isreloading <- true
+            local currentClip = wep.Clip1()
+            local wepSlot = wep.GetSlot() + 1
 
-
-            if (("isreloading" in scope) && scope.isreloading && wep.Clip1() != 0) {
-
+            if (currentClip > lastClip) {
                 wep.SetClip1(wep.GetMaxClip1())
-                scope.isreloading = false
+                local ammoDeducted = (wep.GetMaxClip1() - currentClip)
+                local currentAmmo = GetPropIntArray(player, "m_iAmmo", wepSlot)
+                SetPropIntArray(player, "m_iAmmo", currentAmmo - ammoDeducted, wepSlot)
+                currentClip = wep.Clip1()
             }
+            lastClip = currentClip
         }
     }
 }
@@ -1807,7 +1810,7 @@ function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
             case "reloads full clip at once":
                 CustomAttributes.ReloadsFullClipAtOnce(player, items)
-                scope.attribinfo[attr] <- "weapon reloads entire clip at once"
+                scope.attribinfo[attr] <- "This weapon reloads its entire clip at once."
             break
 
             case "fire full clip at once":
