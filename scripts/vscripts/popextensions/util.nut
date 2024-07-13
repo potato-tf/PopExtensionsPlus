@@ -424,6 +424,26 @@ function PopExtUtil::CountAlivePlayers(printout = false)
 
     return playersalive
 }
+function PopExtUtil::CountAliveBots(printout = false)
+{
+    if (!PopExtUtil.IsWaveStarted) return
+
+    local botsalive = 0
+
+    foreach (bot in PopExtUtil.BotArray)
+	{
+        if (PopExtUtil.IsAlive(bot))
+            botsalive++
+	}
+
+    if (printout)
+    {
+        ClientPrint(null, HUD_PRINTTALK, format("Bots Alive: %d", botsalive))
+        printf("Bots Alive: %d\n", botsalive)
+    }
+
+    return botsalive
+}
 function PopExtUtil::SetParentLocalOriginDo(child, parent, attachment = null) {
 	SetPropEntity(child, "m_hMovePeer", parent.FirstMoveChild())
 	SetPropEntity(parent, "m_hMoveChild", child)
