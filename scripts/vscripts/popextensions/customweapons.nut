@@ -16,6 +16,7 @@ ExtraItems <-
 		//ItemClass and Animset to use secondary shotgun on non shotgun wielding classes
 		ItemClass = "tf_weapon_shotgun_soldier"
         AnimSet = "soldier"
+		Slot = "secondary"
         "damage bonus" : 2.3
         "clip size bonus" : 1.25
         "weapon spread bonus" : 0.85
@@ -36,9 +37,39 @@ ExtraItems <-
 	}
 }
 
+//arrays copied from Yaki's gtfw
+//Order based on internal constants of ETFClass
+// Use: TF_AMMO_PER_CLASS_PRIMARY[hPlayer.GetPlayerClass()]
+::TF_AMMO_PER_CLASS_PRIMARY <- {
+	"scout" : 32,	//Scout
+	"sniper" : 25,	//Sniper
+	"soldier" : 20	//Soldier
+	"demo" : 16,	//Demo
+	"medic" : 150	//Medic
+	"heavy" : 200,	//Heavy
+	"pyro" : 200,	//Pyro
+	"spy" : 20,	//Spy
+	"engineer" : 32,	//Engineer
+}
+
+//Order based on internal constants of ETFClass
+// Use: TF_AMMO_PER_CLASS_SECONDARY[hPlayer.GetPlayerClass()]
+::TF_AMMO_PER_CLASS_SECONDARY <- {
+	"scout" : 36,	//Scout
+	"sniper" : 75,	//Sniper
+	"soldier" : 32	//Soldier
+	"demo" : 24,	//Demo
+	"medic" : 150	//Medic
+	"heavy" : 32,	//Heavy
+	"pyro" : 32,	//Pyro
+	"spy" : 24,	//Spy
+	"engineer" : 200,	//Engineer
+}
+
 ::CustomWeapons <- {
 	//give item to specified player
 	//itemname accepts strings
+	//player accepts player entities
 	function GiveItem(itemname, player)
 	{
 		if (!player || player.GetPlayerClass() < 1) return
@@ -50,6 +81,7 @@ ExtraItems <-
 		local animset = null
 		local id = null
 		local item_class = null
+		local item_slot = null
 
 		//if item is a custom item, overwrite itemname with OriginalItemName
 		if (itemname in ExtraItems)
@@ -63,6 +95,9 @@ ExtraItems <-
 			id = PopExtItems[itemname].id
 			model = PopExtItems[itemname].model_player
 			modelindex = GetModelIndex(model)
+			animset = PopExtItems[itemname].animset
+			item_class = PopExtItems[itemname].item_class
+			item_slot = PopExtItems[itemname].item_slot
 
 			if (typeof(PopExtItems[itemname].animset) == "array")
 			{
@@ -70,17 +105,14 @@ ExtraItems <-
 				{
 					animset = PopExtItems[itemname].animset[0]
 					item_class = PopExtItems[itemname].item_class[0]
+					item_slot = PopExtItems[itemname].item_slot[0]
 				}
 				else 
 				{
 					animset = PopExtItems[itemname].animset[PopExtItems[itemname].animset.find(playerclass)]
 					item_class = PopExtItems[itemname].item_class[PopExtItems[itemname].animset.find(playerclass)]
+					item_slot = PopExtItems[itemname].item_slot[PopExtItems[itemname].animset.find(playerclass)]
 				}
-			}
-			else
-			{
-				animset = PopExtItems[itemname].animset
-				item_class = PopExtItems[itemname].item_class
 			}
 
 			//multiclass items will not spawn unless they are specified for a certain class
@@ -95,9 +127,10 @@ ExtraItems <-
 		//replace overrides if they exist in extraitems
 		if (extraitem != null)
 		{
-			if (ItemClass in extraitem) item_class = extraitem.ItemClass
-			if (Model in extraitem) model = extraitem.Model; modelindex = GetModelIndex(model)
-			if (AnimSet in extraitem) animset = extraitem.AnimSet
+			if ("ItemClass" in extraitem) item_class = extraitem.ItemClass
+			if ("Model" in extraitem) model = extraitem.Model; modelindex = GetModelIndex(model)
+			if ("AnimSet" in extraitem) animset = extraitem.AnimSet
+			if ("Slot" in extraitem) item_slot = extraitem.Slot
 		}
 
 		//create item entity
@@ -113,14 +146,56 @@ ExtraItems <-
 			"Name" : null
 			"Model" : null
 			"AnimSet" : null
+			"Slot" : null
 		}
-		foreach (attribute, value in extraitem)
-			if (!(attribute in reservedKeywords))
-				if (attribute in CustomAttributes.Attrs)
-					CustomAttributes.AddAttr(player, attribute, value, {item = [attribute, value]})
-				else
-					item.AddAttribute(attribute, value, -1.0)
+		if (extraitem != null)
+			foreach (attribute, value in extraitem)
+				if (!(attribute in reservedKeywords))
+					if (attribute in CustomAttributes.Attrs)
+						CustomAttributes.AddAttr(player, attribute, value, {item = [attribute, value]})
+					else
+						item.AddAttribute(attribute, value, -1.0)
 
+		//if max ammo needs to be changed, create a tf_wearable and assign attributes to it
+		if (item_slot == "primary")
+		{
+			if (TF_AMMO_PER_CLASS_PRIMARY[playerclass] != TF_AMMO_PER_CLASS_PRIMARY[animset]) 
+			{
+				player.ValidateScriptScope()
+				if (!("ammofix" in player.GetScriptScope()))
+				{
+					local ammofix = CreateByClassname("tf_wearable")
+					SetPropBool(ammofix, "m_bValidatedAttachedEntity", true)
+					SetPropBool(ammofix, "m_AttributeManager.m_Item.m_bInitialized", true)
+					SetPropEntity(ammofix, "m_hOwnerEntity", player)
+					ammofix.SetOwner(player)
+					ammofix.DispatchSpawn()
+					player.GetScriptScope().ammofix <- ammofix
+				}
+				player.GetScriptScope().ammofix.AddAttribute("hidden primary max ammo bonus", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0)
+				player.GetScriptScope().ammofix.ReapplyProvision()
+			}
+		}
+
+		if (item_slot == "secondary")
+		{
+			if (TF_AMMO_PER_CLASS_SECONDARY[playerclass] != TF_AMMO_PER_CLASS_SECONDARY[animset]) 
+			{
+				player.ValidateScriptScope()
+				if (!("ammofix" in player.GetScriptScope()))
+				{
+					local ammofix = CreateByClassname("tf_wearable")
+					SetPropBool(ammofix, "m_bValidatedAttachedEntity", true)
+					SetPropBool(ammofix, "m_AttributeManager.m_Item.m_bInitialized", true)
+					SetPropEntity(ammofix, "m_hOwnerEntity", player)
+					ammofix.SetOwner(player)
+					ammofix.DispatchSpawn()
+					player.GetScriptScope().ammofix <- ammofix
+				}
+				player.GetScriptScope().ammofix.AddAttribute("hidden secondary max ammo penalty", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0)
+				player.GetScriptScope().ammofix.ReapplyProvision()
+			}
+		}
 
 
 		//find the slot of the weapon then iterate through all entities parented to the player
@@ -144,11 +219,9 @@ ExtraItems <-
 			// viewmodel
 			local main_viewmodel = GetPropEntity(player, "m_hViewModel")
 
-			local armmodel = ""
+			local armmodel = "models/weapons/c_models/c_" + animset + "_arms.mdl"
 
-			animset ? armmodel = animset : armmodel = main_viewmodel.GetModelName()
-
-			printl(armmodel)
+			//animset ? armmodel = animset : armmodel = main_viewmodel.GetModelName()
 
 			item.SetModelSimple(armmodel)
 			item.SetCustomViewModel(armmodel)
@@ -194,8 +267,7 @@ ExtraItems <-
 
 	//returns the slot number of entities with classname tf_weapon_
 	//also includes exceptions for passive weapons such as demo shields, soldier/demo boots and sniper backpacks
-	//action slot items return 6 so as to not conflict with engineer's toolbox (tf_weapon_builder)
-	//action items includes canteen, spellbook, grappling hook, contracker
+	//action items includes canteen, contracker
 	//return null if the entity is not a weapon or passive weapon
 	function FindSlot(item)
 	{
@@ -214,17 +286,59 @@ ExtraItems <-
 			//All demo shields
 			else if (item.GetClassname() == "tf_wearable_demoshield") return 1
 
-			//Action items
-			else if ((item.GetClassname() == "tf_powerup_bottle"
-			|| item.GetClassname() == "tf_wearable_campaign_item")
-			&& (item.GetClassname() == "tf_weapon_grapplinghook"
-			|| item.GetClassname() == "tf_weapon_spellbook"))
-			{
-				return 6
-			}
+			//Action items, Canteens and Contracker
+			else if ((item.GetClassname() == "tf_powerup_bottle"|| item.GetClassname() == "tf_wearable_campaign_item")) return 5
 		}
 		return null
+	}
+
+	//equip item in player's loadout, does not give item
+	//itemname accepts strings
+	//player accepts player entities
+	//playerclass accepts integers, will default to player's current class if null, optional
+	function EquipItem(itemname, player, playerclass = null)
+	{
+		if (playerclass == null) playerclass = player.GetPlayerClass()
+		player.ValidateScriptScope()
+		if (!("ExtraLoadout" in player.GetScriptScope()))
+		{
+			local ExtraLoadout = array(10)
+			player.GetScriptScope().ExtraLoadout <- ExtraLoadout
+		}
+		if (player.GetScriptScope().ExtraLoadout[playerclass] == null)
+			player.GetScriptScope().ExtraLoadout[playerclass] = []
+			
+		if (player.GetScriptScope().ExtraLoadout[playerclass].find(itemname) == null)
+			player.GetScriptScope().ExtraLoadout[playerclass].append(itemname)
+	}
+
+	//unequip item in player's loadout
+	//itemname accepts strings
+	//player accepts player entities
+	//playerclass accepts integers, will default to player's current class if null, optional
+	function UnequipItem(itemname, player, playerclass = null)
+	{
+		if (playerclass == null) playerclass = player.GetPlayerClass()
+		player.ValidateScriptScope()
+		if ("ExtraLoadout" in player.GetScriptScope())
+			if (ExtraLoadout[playerclass] != null)
+				if (player.GetScriptScope().ExtraLoadout[playerclass].find(itemname) != null)
+					player.GetScriptScope().ExtraLoadout[playerclass].remove(player.GetScriptScope().ExtraLoadout[playerclass].find(itemname))
+
 	}
 }
 
 
+/* function OnGameEvent_post_inventory_application(params)
+{
+	printl(params.userid)
+	ClientPrint(null, 3, "post_inventory_application")
+	ClientPrint(null, 3, params.userid)
+
+	local player = GetPlayerFromUserID(params.userid)
+	local playerclass = player.GetPlayerClass()
+	if ("ExtraLoadout" in player.GetScriptScope())
+		if (player.GetScriptScope().ExtraLoadout[playerclass] != null)
+			for (local i = 0; i < player.GetScriptScope().ExtraLoadout[playerclass].len(); i++)
+				CustomWeapons.GiveItem(player.GetScriptScope().ExtraLoadout[playerclass][i], player)
+} */

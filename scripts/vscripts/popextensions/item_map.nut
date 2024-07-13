@@ -80,7 +80,7 @@
     },
     "TF_WEAPON_SHOTGUN_PRIMARY" : {
         id = 9,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -88,7 +88,7 @@
     },
     "TF_WEAPON_SHOTGUN_SOLDIER" : {
         id = 10,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -96,7 +96,7 @@
     },
     "TF_WEAPON_SHOTGUN_HWG" : {
         id = 11,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -104,7 +104,7 @@
     },
     "TF_WEAPON_SHOTGUN_PYRO" : {
         id = 12,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -184,19 +184,19 @@
     },
     "TF_WEAPON_PISTOL" : {
         id = 22,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "TF_WEAPON_PISTOL_SCOUT" : {
         id = 23,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "TF_WEAPON_REVOLVER" : {
         id = 24,
@@ -1130,7 +1130,7 @@
     },
     "Upgradeable TF_WEAPON_SHOTGUN_PRIMARY" : {
         id = 199,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -1210,11 +1210,11 @@
     },
     "Upgradeable TF_WEAPON_PISTOL" : {
         id = 209,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "Upgradeable TF_WEAPON_REVOLVER" : {
         id = 210,
@@ -1556,7 +1556,7 @@
         id = 264,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/weapons/c_models/c_frying_pan/c_frying_pan.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Frying Pan"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -2484,7 +2484,7 @@
         id = 423,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/weapons/c_models/c_saxxy/c_saxxy.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Saxxy"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -2802,7 +2802,7 @@
         id = 474,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/workshop/weapons/c_models/c_picket/c_picket.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Conscientious Objector"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -5411,7 +5411,7 @@
         id = 880,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/workshop_partner/weapons/c_models/c_tw_eagle/c_tw_eagle.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Freedom Staff"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -5927,7 +5927,7 @@
         id = 939,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/workshop/weapons/c_models/c_skullbat/c_skullbat.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Bat Outta Hell"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -6029,7 +6029,7 @@
         id = 954,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/weapons/c_models/c_8mm_camera/c_8mm_camera.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Memory Maker"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -6504,7 +6504,7 @@
         id = 1013,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/workshop/weapons/c_models/c_ham/c_ham.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Ham Shank"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -6781,7 +6781,7 @@
         id = 1071,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/weapons/c_models/c_frying_pan/c_frying_pan.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Golden Frying Pan"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -7148,7 +7148,7 @@
         id = 1123,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/weapons/c_models/c_carnival_mallet/c_carnival_mallet.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Necro Smasher"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -7170,7 +7170,7 @@
         id = 1127,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/workshop/weapons/c_models/c_crossing_guard/c_crossing_guard.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Crossing Guard"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
@@ -7223,7 +7223,7 @@
     },
     "Festive Shotgun 2014" : {
         id = 1141,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Festive Shotgun"
@@ -7301,7 +7301,7 @@
     },
     "Panic Attack Shotgun" : {
         id = 1153,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/workshop/weapons/c_models/c_trenchgun/c_trenchgun.mdl",
         item_slot = "primary",
         item_name_english = "Panic Attack"
@@ -47244,7 +47244,7 @@
     },
     "concealedkiller_shotgun_backwoodsboomstick" : {
         id = 15003,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -47324,11 +47324,11 @@
     },
     "concealedkiller_pistol_redrockroscoe" : {
         id = 15013,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "concealedkiller_rocketlauncher_sandcannon" : {
         id = 15014,
@@ -47348,7 +47348,7 @@
     },
     "craftsmann_shotgun_rusticruiner" : {
         id = 15016,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -47364,11 +47364,11 @@
     },
     "craftsmann_pistol_homemadeheater" : {
         id = 15018,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "craftsmann_sniperrifle_lumberfromdownunder" : {
         id = 15019,
@@ -47500,11 +47500,11 @@
     },
     "teufort_pistol_hickoryholepuncher" : {
         id = 15035,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "teufort_scattergun_sprucedeuce" : {
         id = 15036,
@@ -47548,11 +47548,11 @@
     },
     "teufort_pistol_localhero" : {
         id = 15041,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "teufort_revolver_mayor" : {
         id = 15042,
@@ -47572,7 +47572,7 @@
     },
     "teufort_shotgun_civicduty" : {
         id = 15044,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -47588,15 +47588,15 @@
     },
     "powerhouse_pistol_blackdahlia" : {
         id = 15046,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "powerhouse_shotgun_lightningrod" : {
         id = 15047,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -47668,11 +47668,11 @@
     },
     "powerhouse_pistol_sandstonespecial" : {
         id = 15056,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "powerhouse_rocketlauncher_aquamarine" : {
         id = 15057,
@@ -47700,19 +47700,19 @@
     },
     "harvest_pistol_macabreweb" : {
         id = 15060,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "harvest_pistol_nutcracker" : {
         id = 15061,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "harvest_revolver_boneyard" : {
         id = 15062,
@@ -47900,7 +47900,7 @@
     },
     "harvest_shotgun_autumn" : {
         id = 15085,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -48012,27 +48012,27 @@
     },
     "pyroland_pistol_bluemew" : {
         id = 15100,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "pyroland_pistol_braincandy" : {
         id = 15101,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "pyroland_pistol_shottohell" : {
         id = 15102,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "pyroland_revolver_flowerpower" : {
         id = 15103,
@@ -48084,7 +48084,7 @@
     },
     "pyroland_shotgun_flowerpower" : {
         id = 15109,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -48220,11 +48220,11 @@
     },
     "gentlemanne_pistol_dressedtokill" : {
         id = 15126,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "gentlemanne_revolver_coffinnail" : {
         id = 15127,
@@ -48268,7 +48268,7 @@
     },
     "gentlemanne_shotgun_coffinnail" : {
         id = 15132,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -48276,7 +48276,7 @@
     },
     "gentlemanne_shotgun_dressedtokill" : {
         id = 15133,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -48396,11 +48396,11 @@
     },
     "warbird_pistol_blitzkrieg" : {
         id = 15148,
-        item_class = ["tf_weapon_pistol", "tf_weapon_pistol_scout"]
+        item_class = ["tf_weapon_pistol_scout", "tf_weapon_pistol"]
         model_player = "models/weapons/c_models/c_pistol/c_pistol.mdl",
         item_slot = "secondary",
         item_name_english = "Pistol"
-        animset = ["engineer", "scout"]
+        animset = ["scout", "engineer"]
     },
     "warbird_revolver_blitzkrieg" : {
         id = 15149,
@@ -48428,7 +48428,7 @@
     },
     "warbird_shotgun_redbear" : {
         id = 15152,
-        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwm", "tf_weapon_shotgun_pyro"]
+        item_class = ["tf_weapon_shotgun_primary", "tf_weapon_shotgun_soldier", "tf_weapon_shotgun_hwg", "tf_weapon_shotgun_pyro"]
         model_player = "models/weapons/c_models/c_shotgun/c_shotgun.mdl",
         item_slot = ["primary", "secondary", "secondary", "secondary"]
         item_name_english = "Shotgun"
@@ -53984,7 +53984,7 @@
         id = 30758,
         item_class = ["tf_weapon_bat", "tf_weapon_club", "tf_weapon_shovel", "tf_weapon_bottle", "tf_weapon_bonesaw", "tf_weapon_fireaxe", "tf_weapon_fireaxe", "tf_weapon_knife", "tf_weapon_wrench"],
         model_player = "models/workshop_partner/weapons/c_models/c_prinny_knife/c_prinny_knife.mdl",
-        item_slot = "melee",
+        item_slot = ["melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee", "melee"],
         item_name_english = "Prinny Machete"
         animset = ["scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer"]
     },
