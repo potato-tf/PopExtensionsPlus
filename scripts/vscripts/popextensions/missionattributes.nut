@@ -1045,7 +1045,7 @@ function MissionAttributes::MissionAttr(...) {
 
 			local player = GetPlayerFromUserID(params.userid)
 
-			if (!player.IsBotOfType(TF_BOT_TYPE) || player.GetScriptScope().usingcustommodel || ( !(value & 128) && player.GetPlayerClass() == TF_CLASS_DEMOMAN && player.IsMiniBoss() && PopExtUtil.GetItemIndex(player.GetActiveWeapon()) == ID_ULLAPOOL_CABER)) return
+			if (!player.IsBotOfType(TF_BOT_TYPE) || "usingcustommodel" in player.GetScriptScope() || ( !(value & 128) && player.GetPlayerClass() == TF_CLASS_DEMOMAN && player.IsMiniBoss() && PopExtUtil.GetItemIndex(player.GetActiveWeapon()) == ID_ULLAPOOL_CABER)) return
 
 			MissionAttributes.HumanModel <- function(player)
 			{
