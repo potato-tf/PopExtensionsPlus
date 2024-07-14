@@ -1598,6 +1598,16 @@ function CustomAttributes::DmgBonusWhileHalfAlive(player, items, value) {
 
 function CustomAttributes::AddAttr(player, attr = "", value = 0, items = {}) {
 
+	if (typeof items == "instance") items = {items = [attr, value]}
+
+	//allow passing an array of multiple weapons
+	if (typeof items == "array")
+	{
+		local temp = {}
+		foreach (item in items) temp[item] <- [attr, value]
+		items = temp
+	}
+
     if (!items.len()) items[player.GetActiveWeapon()] <- [attr,  value]
 
     player.GetScriptScope().CustomAttrItems <- items
