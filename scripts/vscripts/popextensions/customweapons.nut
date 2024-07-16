@@ -67,11 +67,29 @@ ExtraItems <-
 }
 
 ::CustomWeapons <- {
+
+	//regenerating players by default will clear custom weapons
+	//give all weapons in the player's class's extraloadout and set hp
+	SpawnHookTable = {
+		function RegenerateCustomWeapons(params) {
+			local player = GetPlayerFromUserID(params.userid)
+			if (("ExtraLoadout" in player.GetScriptScope())) {
+				local playerclass = player.GetPlayerClass()
+				if (player.GetScriptScope().ExtraLoadout[playerclass] != null)
+					for (local i = 0; i < player.GetScriptScope().ExtraLoadout[playerclass].len(); i++)
+						CustomWeapons.GiveItem(player.GetScriptScope().ExtraLoadout[playerclass][i], player)
+					player.SetHealth(player.GetMaxHealth())
+			}
+		}
+	}
+
 	//give item to specified player
 	//itemname accepts strings
 	//player accepts player entities
 	function GiveItem(itemname, player)
 	{
+		player.ValidateScriptScope()
+
 		if (!player || player.GetPlayerClass() < 1) return
 		local playerclass = PopExtUtil.Classes[player.GetPlayerClass()]
 
@@ -155,13 +173,15 @@ ExtraItems <-
 						CustomAttributes.AddAttr(player, attribute, value, {item = [attribute, value]})
 					else
 						item.AddAttribute(attribute, value, -1.0)
-
+		if (!("CustomWeapons" in player.GetScriptScope()))
+			player.GetScriptScope().CustomWeapons <- {}
+		player.GetScriptScope().CustomWeapons[item] <- modelindex
+						
 		//if max ammo needs to be changed, create a tf_wearable and assign attributes to it
 		if (item_slot == "primary")
 		{
 			if (TF_AMMO_PER_CLASS_PRIMARY[playerclass] != TF_AMMO_PER_CLASS_PRIMARY[animset]) 
 			{
-				player.ValidateScriptScope()
 				if (!("ammofix" in player.GetScriptScope()))
 				{
 					local ammofix = CreateByClassname("tf_wearable")
@@ -174,6 +194,7 @@ ExtraItems <-
 				}
 				player.GetScriptScope().ammofix.AddAttribute("hidden primary max ammo bonus", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0)
 				player.GetScriptScope().ammofix.ReapplyProvision()
+				SetPropIntArray(player, "m_iAmmo", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat(), 1)
 			}
 		}
 
@@ -181,7 +202,6 @@ ExtraItems <-
 		{
 			if (TF_AMMO_PER_CLASS_SECONDARY[playerclass] != TF_AMMO_PER_CLASS_SECONDARY[animset]) 
 			{
-				player.ValidateScriptScope()
 				if (!("ammofix" in player.GetScriptScope()))
 				{
 					local ammofix = CreateByClassname("tf_wearable")
@@ -194,9 +214,12 @@ ExtraItems <-
 				}
 				player.GetScriptScope().ammofix.AddAttribute("hidden secondary max ammo penalty", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0)
 				player.GetScriptScope().ammofix.ReapplyProvision()
+				SetPropIntArray(player, "m_iAmmo", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat(), 2)
 			}
 		}
 
+		//adjust clip size
+		item.SetClip1(item.GetMaxClip1())
 
 		//find the slot of the weapon then iterate through all entities parented to the player
 		//and kill the entity that occupies the required slot
@@ -229,15 +252,20 @@ ExtraItems <-
 			SetPropInt(item, "m_iViewModelIndex", GetModelIndex(armmodel))
 
 			// worldmodel
-			local tpWearable = CreateByClassname("tf_wearable")
-			SetPropInt(tpWearable, "m_nModelIndex", modelindex)
-			SetPropBool(tpWearable, "m_bValidatedAttachedEntity", true)
-			SetPropBool(tpWearable, "m_AttributeManager.m_Item.m_bInitialized", true)
-			SetPropEntity(tpWearable, "m_hOwnerEntity", player)
-			tpWearable.SetOwner(player)
-			tpWearable.DispatchSpawn()
-			EntFireByHandle(tpWearable, "SetParent", "!activator", 0.0, player, player)
-			SetPropInt(tpWearable, "m_fEffects", 129) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
+			player.GetScriptScope().PlayerThinkTable.CustomWeaponWorldmodel <- UpdateWorldmodel
+			if (!("cwviewmodel" in player.GetScriptScope()))
+			{
+				local tpWearable = CreateByClassname("tf_wearable")
+				SetPropInt(tpWearable, "m_nModelIndex", modelindex)
+				SetPropBool(tpWearable, "m_bValidatedAttachedEntity", true)
+				SetPropBool(tpWearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+				SetPropEntity(tpWearable, "m_hOwnerEntity", player)
+				tpWearable.SetOwner(player)
+				tpWearable.DispatchSpawn()
+				EntFireByHandle(tpWearable, "SetParent", "!activator", 0.0, player, player)
+				SetPropInt(tpWearable, "m_fEffects", 129) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
+				player.GetScriptScope().cwviewmodel <- tpWearable
+			}
 
 			// copied from LizardOfOz open fortress dm_crossfire
 			// viewmodel arms
@@ -260,7 +288,6 @@ ExtraItems <-
 			SetPropEntity(item, "m_hExtraWearableViewModel", hands2)
 
 			player.Weapon_Switch(item)
-			player.ValidateScriptScope()
 		}
 		return item;
 	}
@@ -310,6 +337,8 @@ ExtraItems <-
 			
 		if (player.GetScriptScope().ExtraLoadout[playerclass].find(itemname) == null)
 			player.GetScriptScope().ExtraLoadout[playerclass].append(itemname)
+
+		CustomWeapons.SpawnHookTable
 	}
 
 	//unequip item in player's loadout
@@ -326,19 +355,43 @@ ExtraItems <-
 					player.GetScriptScope().ExtraLoadout[playerclass].remove(player.GetScriptScope().ExtraLoadout[playerclass].find(itemname))
 
 	}
+
+	//think function that runs on players to update viewmodels
+	//runs every tick
+	function UpdateWorldmodel()
+	{
+		self.ValidateScriptScope()
+		if ("CustomWeapons" in self.GetScriptScope())
+			{
+				local activeweapon = self.GetActiveWeapon()
+				if (activeweapon in self.GetScriptScope().CustomWeapons)
+				{
+					if (("cwviewmodel" in self.GetScriptScope()) && (GetPropInt(self.GetScriptScope().cwviewmodel, "m_nModelIndex") != self.GetScriptScope().CustomWeapons[activeweapon]))
+					{
+						if (self.GetScriptScope().cwviewmodel.IsValid()) self.GetScriptScope().cwviewmodel.Kill()
+						local modelindex = self.GetScriptScope().CustomWeapons[activeweapon]
+						local tpWearable = CreateByClassname("tf_wearable")
+						SetPropInt(tpWearable, "m_iTeamNum", self.GetTeam())
+						SetPropInt(tpWearable, "m_nModelIndex", modelindex)
+						SetPropBool(tpWearable, "m_bValidatedAttachedEntity", true)
+						SetPropBool(tpWearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+						SetPropEntity(tpWearable, "m_hOwnerEntity", self)
+						tpWearable.SetOwner(self)
+						tpWearable.SetSkin(self.GetTeam()-2)
+						tpWearable.DispatchSpawn()
+						EntFireByHandle(tpWearable, "SetParent", "!activator", 0.0, self, self)
+						SetPropInt(tpWearable, "m_fEffects", 129) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
+						self.GetScriptScope().cwviewmodel <- tpWearable
+					}
+				}
+				else
+				{
+					if (("cwviewmodel" in self.GetScriptScope()) && (self.GetScriptScope().cwviewmodel.IsValid()))
+					{
+						self.GetScriptScope().cwviewmodel.Kill()
+					}
+				}
+			}
+		return -1
+	}
 }
-
-
-/* function OnGameEvent_post_inventory_application(params)
-{
-	printl(params.userid)
-	ClientPrint(null, 3, "post_inventory_application")
-	ClientPrint(null, 3, params.userid)
-
-	local player = GetPlayerFromUserID(params.userid)
-	local playerclass = player.GetPlayerClass()
-	if ("ExtraLoadout" in player.GetScriptScope())
-		if (player.GetScriptScope().ExtraLoadout[playerclass] != null)
-			for (local i = 0; i < player.GetScriptScope().ExtraLoadout[playerclass].len(); i++)
-				CustomWeapons.GiveItem(player.GetScriptScope().ExtraLoadout[playerclass][i], player)
-} */
