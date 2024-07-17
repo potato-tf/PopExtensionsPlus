@@ -103,6 +103,7 @@ if (!("_AddThinkToEnt" in _root))
 		if ("MissionAttributes" in _root) foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
 		if ("GlobalFixes" in _root) foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
 		if ("CustomAttributes" in _root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
+		if ("PopExtPopulator" in _root) foreach (_, func in PopExtPopulator.SpawnHookTable) func(params)
 	}
 	function OnGameEvent_player_changeclass(params) {
 		local player = GetPlayerFromUserID(params.userid)
@@ -192,3 +193,4 @@ Include("tags")
 Include("globalfixes")
 Include("spawntemplate")
 Include("tutorialtools")
+// Include("populator")

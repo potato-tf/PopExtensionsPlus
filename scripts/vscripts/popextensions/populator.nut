@@ -1,19 +1,41 @@
+//HOW IT WORKS:
+
+//PopExtPopulator.InitializeWave() is fired on wave init, this is the main function that parses the WaveSchedule table.
+
+//InitializeWave does the following:
+// - Spawns bot generators at the location provided in the "Where" keyvalue and sets the appropriate keyvalues
+// - attaches a think function to the generators that handles the WaitForAllSpawned, WaitForAllDead etc keyvalues
+// - Adds the icons to the wavebar
+// - fills out the WaveArray, each element in WaveArray in another array that contains the WaveSpawn information, each element in this nested array is the keyvalue table for the wavespawn.
+
+//Major syntax differences compared to standard popfiles:
+// - Does not support unordered WaveSpawns, there is a fixed order of execution.  If you wanna rearrange your wavespawns you can't just change the names/waits around
+// - CASE SENSITIVE! may change this in the future but it makes table look-ups easier for now.
+// - Tags and Items are applied to bots in a single array value
+
+//TODO:
+// - Tank, Halloween NPC, and SentryGun spawners
+// - RandomChoice and Squad spawners
+
 const EFL_SPAWNER_PENDING = 1048576 // EFL_IS_BEING_LIFTED_BY_BARNACLE
 const EFL_SPAWNER_ACTIVE = 1073741824 //EFL_NO_PHYSCANNON_INTERACTION
 const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
+
+local PopulatorEnt = CreateByClassname("info_teleport_destination")
 
 ::PopExtPopulator <- {
 
 	WaveArray = []
 
 	SpawnHookTable = {
+
 		function SetSpawner(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
 
 			if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
-			local spawner = FindByClassnameNearest("bot_generator", self.GetOrigin(), 32)
+			local spawner = FindByClassnameNearest("bot_generator", player.GetOrigin(), 256)
 
 			player.GetScriptScope().spawner <- GetPropString(spawner, "m_iName")
 		}
@@ -30,7 +52,7 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 				local spawner = FindByName(null, self.GetScriptScope().spawner)
 
 				if (`WaitBetweenSpawnsAfterDeath` in spawner.GetScriptScope().WaveSpawn)
-					EntFireByHandle(spawner, `Disable`, ``, -1, null, null)
+					EntFire(self.GetScriptScope().spawner.tostring(), `Disable`)
 
 			", SINGLE_TICK, null, null)
 		}
@@ -45,6 +67,7 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 			if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
 			local scope = player.GetScriptScope()
+			PopExtUtil.PrintTable(scope)
 			local spawner = FindByName(null, scope.spawner)
 
 			PopExt.DecrementWaveIconSpawnCount(spawner.GetScriptScope().WaveSpawn.TFBot.ClassIcon, 0, 1)
@@ -65,15 +88,9 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 			}
 		}
 	}
+
 	Events = {
 
-		function OnGameEvent_post_inventory_application(params) {
-
-			local player = GetPlayerFromUserID(params.userid)
-			local scope = player.GetScriptScope()
-
-			foreach (name, func in PopExtPopulator.SpawnHookTable) func(params)
-		}
 		function OnGameEvent_player_death(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
@@ -84,60 +101,28 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 
 		function OnGameEvent_teamplay_round_start(params) {
 
-			if ("InitWaveOutput" in WaveSchedule[PopExtUtil.CurrentWaveNum]) {
+			PopExtPopulator.InitializeWave()
 
-				local Target = WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput.Target
-				local Action = WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput.Action
+			PopExtPopulator.DoEntityIO("InitWaveOutput")
 
-				local Param, Delay, Activator
-				"Param" in WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput ? Param = WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput.Param : ""
-				"Delay" in WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput ? Delay = WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput.Delay : -1
-				"Activator" in WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput ? Activator = WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput.Activator : null
-				"Caller" in WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput ? Caller = WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput.Caller : null
-
-				typeof WaveSchedule[PopExtUtil.CurrentWaveNum].InitWaveOutput.Target == "string" ? DoEntFire(Target, Action, Param, Delay, Activator, Caller) : EntFireByHandle(Target, Action, Param, Delay, Activator, Caller)
-			}
 		}
 
 		function OnGameEvent_mvm_begin_wave(params) {
 
-			if ("AutoRelay" in WaveSchedule[PopExtUtil.CurrentWaveNum]) EntFire("wave_start_relay", "Trigger")
+			//grab the first spawner and enable it on wave start
+			local firstspawner = PopExtPopulator.WaveArray[PopExtUtil.CurrentWaveNum][0].keys()[0]
+			EntFireByHandle(firstspawner, "Enable", "", -1, null, null)
 
-			if ("StartWaveOutput" in WaveSchedule[PopExtUtil.CurrentWaveNum]) {
+			PopExtPopulator.DoEntityIO("StartWaveOutput")
 
-				local Target = WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput.Target
-				local Action = WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput.Action
-
-				local Param, Delay, Activator
-				"Param" in WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput ? Param = WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput.Param : ""
-				"Delay" in WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput ? Delay = WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput.Delay : -1
-				"Activator" in WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput ? Activator = WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput.Activator : null
-				"Caller" in WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput ? Caller = WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput.Caller : null
-
-				typeof WaveSchedule[PopExtUtil.CurrentWaveNum].StartWaveOutput.Target == "string" ? DoEntFire(Target, Action, Param, Delay, Activator, Caller) : EntFireByHandle(Target, Action, Param, Delay, Activator, Caller)
-			}
 		}
 
 		function OnGameEvent_mvm_wave_complete(params) {
 
-			if ("AutoRelay" in WaveSchedule[PopExtUtil.CurrentWaveNum]) EntFire("wave_finished_relay", "Trigger")
+			PopExtPopulator.DoEntityIO("DoneOutput")
 
-			if ("DoneOutput" in WaveSchedule[PopExtUtil.CurrentWaveNum]) {
-
-				local Target = WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput.Target
-				local Action = WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput.Action
-
-				local Param, Delay, Activator
-				"Param" in WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput ? Param = WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput.Param : ""
-				"Delay" in WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput ? Delay = WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput.Delay : -1
-				"Activator" in WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput ? Activator = WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput.Activator : null
-				"Caller" in WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput ? Caller = WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput.Caller : null
-
-				typeof WaveSchedule[PopExtUtil.CurrentWaveNum].DoneOutput.Target == "string" ? DoEntFire(Target, Action, Param, Delay, Activator, Caller) : EntFireByHandle(Target, Action, Param, Delay, Activator, Caller)
-			}
 		}
 	}
-
 
 	PopulatorFunctions = {
 
@@ -146,19 +131,40 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 		}
 	}
 
+	function DoEntityIO(type) {
+
+		if (!(type in WaveSchedule[PopExtUtil.CurrentWaveNum])) return
+
+		local target =  WaveSchedule[PopExtUtil.CurrentWaveNum][type].Target
+
+		local action = "", param = "", delay = -1, activator = null, caller = null
+
+		if ("Param" in WaveSchedule[PopExtUtil.CurrentWaveNum][type]) param = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Param
+		if ("Delay" in WaveSchedule[PopExtUtil.CurrentWaveNum][type]) delay = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Delay
+		if ("Activator" in WaveSchedule[PopExtUtil.CurrentWaveNum][type]) activator = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Activator
+		if("Caller" in WaveSchedule[PopExtUtil.CurrentWaveNum][type]) caller = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Caller
+
+		typeof target == "instance" ? EntFireByHandle(target, action, param, delay, activator, caller) : DoEntFire(target, action, param, delay, activator, caller)
+	}
+
 	function InitializeWave() {
 
-		if (!("WaveSchedule" in getroottable())) return
-
-		local WaveArray = this.WaveArray
+		//PopulatorEnt is a null instance when this is initially called, it is valid by the time another teamplay_round_start event fires, so this works reliably
+		if (!("WaveSchedule" in getroottable()) || PopulatorEnt.IsValid()) return
 
 		("CustomWaveOrder" in WaveSchedule) ? WaveArray = WaveSchedule.CustomWaveOrder : WaveArray = array(WaveSchedule.len())
 
 		foreach(wave, wavespawns in WaveSchedule) {
 
+			printl("Wave: " + wave)
+
 			if (!("CustomWaveOrder" in WaveSchedule) && typeof wave == "integer") WaveArray[wave] = array(wavespawns.len())
 
-			if (wave == "MissionAttrs") MissionAttributes.MissionAttrs(wavespawns)
+			if (wave == "MissionAttrs")
+			{
+				MissionAttrs(wavespawns)
+				continue
+			}
 
 			//special support populators fire an additional function of the same name
 			if (wave in PopExtPopulator.PopulatorFunctions)
@@ -166,13 +172,17 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 
 			foreach (wavespawn, keyvalues in wavespawns) {
 
-				foreach(k, v in keyvalues) {
+				printl("\tWaveSpawn: " + wavespawn)
 
+				foreach(k, v in keyvalues) {
+					printl("\t\t" + k + " : " + v)
 					if (k.tolower() == "tfbot") {
+
+						foreach(a, b in v) printl("\t\t\t" + a + " : " + b)
 						local icon = ""
 						local playerclass = ""
 
-						"Class" in keyvalues ? playerclass = (typeof keyvalues.Class != "integer" ? keyvalues.Class : PopExtUtil.Classes[keyvalues.Class]) : playerclass = PopExtUtil.Classes[RandomInt(1, 9)] // don't use bot_generators "auto" here, grab a random player class string instead so we can use playerclass for icon fallback
+						"Class" in v ? playerclass = (typeof v.Class != "integer" ? v.Class : PopExtUtil.Classes[v.Class]) : playerclass = PopExtUtil.Classes[RandomInt(1, 9)] // don't use bot_generators "auto" here, grab a random player class string instead so we can use playerclass for icon fallback
 
 						"ClassIcon" in v ? icon = v.ClassIcon : icon = playerclass
 
@@ -186,10 +196,14 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 						)
 
 						local generator = CreateByClassname("bot_generator")
-						WaveArray[wave][wavespawn] = { generator = keyvalues }
+						// foreach (w in WaveArray[wave]) printl(w)
+						WaveArray[wave][wavespawn] = {}
+						WaveArray[wave][wavespawn][generator] <- keyvalues
 
-						generator.KeyValueFromInt("spawnOnlyWhenTriggered", "WaitBetweenSpawnsAfterDeath" in keyvalues || ("SpawnCount" in keyvalues && keyvalues.SpawnCount > 1) ? 1 : 0)
-						generator.KeyValueFromFloat("interval", "WaitBetweenSpawns" in keyvalues ? keyvalues.WaitBetweenSpawns.tofloat() : SINGLE_TICK)
+						// generator.KeyValueFromInt("spawnOnlyWhenTriggered", "WaitBetweenSpawnsAfterDeath" in keyvalues || ("SpawnCount" in keyvalues && keyvalues.SpawnCount > 1) ? 1 : 0) //we need manual control always for the spawn interval
+						generator.KeyValueFromInt("spawnOnlyWhenTriggered", 1)
+						// generator.KeyValueFromFloat("interval", "WaitBetweenSpawns" in keyvalues ? keyvalues.WaitBetweenSpawns.tofloat() : SINGLE_TICK)
+						generator.KeyValueFromFloat("interval", SINGLE_TICK) //this keyvalue is weird, just control the interval in the think function manually
 						generator.KeyValueFromInt("useTeamSpawnPoint", 0)
 						generator.KeyValueFromInt("maxActive", keyvalues.MaxActive.tointeger())
 						generator.KeyValueFromInt("count", keyvalues.TotalCount.tointeger())
@@ -224,29 +238,55 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 						AddOutput(generator, "OnExpended", "!self", "RunScriptCode", "self.AddEFlags(EFL_SPAWNER_EXPENDED)", -1, -1)
 
 						generator.AddEFlags(EFL_SPAWNER_PENDING)
+						// generator.AddEFlags(EFL_SPAWNER_PENDING)
 
 						DispatchSpawn(generator)
 
-						if ("WaitForAllDead" in keyvalues || "WaitForAllSpawned" in keyvalues || "WaitBetweenSpawnsAfterDeath") EntFireByHandle(generator, "Disable", "", -1, null, null)
+						EntFireByHandle(generator, "Disable", "", -1, null, null)
 
 						generator.ValidateScriptScope()
+
+						local genscope = generator.GetScriptScope()
+
+						if ("WaveSpawn" in genscope && "WaitBetweenSpawns" in genscope.WaveSpawn) genscope.spawninterval <- genscope.WaveSpawn.WaitBetweenSpawns.tofloat()
+
 						generator.GetScriptScope().GeneratorThink <- function() {
 
+							if (self.IsEFlagSet(EFL_SPAWNER_ACTIVE)) {
+
+								local scope = self.GetScriptScope()
+
+								if (!("spawninterval" in scope)) scope.spawninterval <- 0.0
+								if (!("nextspawn" in scope)) scope.nextspawn <- 0.0
+
+								if (Time() < scope.nextspawn) return
+
+								//spawn 1 bot
+
+								EntFireByHandle(self, "SpawnBot", "", -1, null, null)
+
+								//spawncount is > 1, spawn the SpawnCount number of bots - 1 since we already did 1 above
+
+								if ("SpawnCount" in genscope.WaveSpawn && genscope.WaveSpawn.SpawnCount > 1) for (local i = 0; i < genscope.WaveSpawn.SpawnCount - 1; i ++) EntFireByHandle(self, "SpawnBot", "", -1, null, null)
+
+								scope.nextspawn <- Time() + scope.spawninterval
+
+							}
+
 							//we've finished spawning, look for other WaveSpawns that wait for this one and change their flag from PENDING to ACTIVE
-							if (self.IsEFlagSet(EFL_SPAWNER_EXPENDED)) {
+							else if (self.IsEFlagSet(EFL_SPAWNER_EXPENDED)) {
 
 								for (local g; g = FindByClassname(g, "bot_generator");) {
 
-									if ("WaitForAllSpawned" in g.GetScriptScope().WaveSpawn) {
+									if (!g.IsEFlagSet(EFL_SPAWNER_ACTIVE) && "WaveSpawn" in g.GetScriptScope() && "WaitForAllSpawned" in g.GetScriptScope().WaveSpawn && GetPropString(self, "m_iName") == g.GetScriptScope().WaveSpawn.WaitForAllSpawned) {
 
+										EntFireByHandle(self, "Disable", "", -1, null, null)
 										g.AddEFlags(EFL_SPAWNER_ACTIVE)
 										g.RemoveEFlags(EFL_SPAWNER_PENDING)
+										EntFireByHandle(g, "Enable", "", -1, null, null)
 
 									}
 								}
-							}
-							else if (generator.IsEFlagSet(EFL_SPAWNER_ACTIVE)) {
-
 							}
 
 							return -1
@@ -258,13 +298,6 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 				}
 			}
 		}
-		// foreach(wave, wavespawn in WaveSchedule) {
-		// 	PopulatorArray.append(wavespawn)
-		// }
-	}
-
-	function AddBotToWave(args = {}) {
-
 	}
 }
 
@@ -273,7 +306,7 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 	// CustomWaveOrder = [1,5,2,6,3]
 
 	MissionAttrs = {
-		WaveStartCountdown = 3
+		WaveStartCountdown = 1
 	}
 
 	Mission = {
@@ -303,11 +336,10 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 		// },
 		[1] = { //wavespawn
 			Name = "wave1a"
-			Where = "500, 200, 300" //accepts KVString
-			TotalCount = 5
+			Where = "-198.163635 4760.567871 291.313049" //accepts KVString
+			TotalCount = 15
 			MaxActive = 5
-			SpawnCount = 1
-			WaitBetweenSpawns = 2
+			WaitBetweenSpawns = 3
 			Team = 3
 			TFBot = {
 				Class = TF_CLASS_SCOUT
@@ -315,18 +347,18 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 				ClassIcon = "scout_bat"
 				Name = "Scout"
 				Items = ["The Shortstop", "Bonk! Atomic Punch"]
-				Tags = ["popext_usehumananimations", "popext_addcond|11"]
+				Tags = ["popext_addcond|11"]
 			}
 		},
 		[2] = { //wavespawn
 
 			Name = "wave1b"
-			Where = Vector(1000, 1000, 1000) //accepts vector
+			Where = Vector(-1071.587646, 4216.348633, 200.016907) //accepts vector
 			TotalCount = 10
 			MaxActive = 10
 			SpawnCount = 2
 			Team = 3
-			WaitForAllDead = "wave1a"
+			WaitForAllSpawned = "wave1a"
 			ActionPoint = "action_point_test"
 			RetainBuildings = true
 
@@ -359,3 +391,5 @@ const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 		}
 	}
 }
+__CollectGameEventCallbacks(PopExtPopulator.Events)
+PopExtPopulator.InitializeWave()
