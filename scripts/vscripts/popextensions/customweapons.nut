@@ -1,4 +1,6 @@
+//By washy
 //credit to ficool2, Yaki and LizardofOz
+//special thanks to fellen for help on tf_item_map.nut
 ExtraItems <-
 {
 	"Wasp Launcher" :
@@ -14,6 +16,7 @@ ExtraItems <-
         Model = "models/weapons/c_models/c_rapidfire/c_rapidfire_1.mdl"
 		//defaults to engineer's primary shotgun, need to specify
 		//ItemClass and Animset to use secondary shotgun on non shotgun wielding classes
+		//specify Slot to make sure the reserve ammo fix is applied properly
 		ItemClass = "tf_weapon_shotgun_soldier"
         AnimSet = "soldier"
 		Slot = "secondary"
@@ -39,7 +42,6 @@ ExtraItems <-
 
 //arrays copied from Yaki's gtfw
 //Order based on internal constants of ETFClass
-// Use: TF_AMMO_PER_CLASS_PRIMARY[hPlayer.GetPlayerClass()]
 ::TF_AMMO_PER_CLASS_PRIMARY <- {
 	"scout" : 32,	//Scout
 	"sniper" : 25,	//Sniper
@@ -53,7 +55,6 @@ ExtraItems <-
 }
 
 //Order based on internal constants of ETFClass
-// Use: TF_AMMO_PER_CLASS_SECONDARY[hPlayer.GetPlayerClass()]
 ::TF_AMMO_PER_CLASS_SECONDARY <- {
 	"scout" : 36,	//Scout
 	"sniper" : 75,	//Sniper
@@ -287,6 +288,12 @@ ExtraItems <-
 				EntFireByHandle(tpWearable, "SetParent", "!activator", 0.0, player, player)
 				SetPropInt(tpWearable, "m_fEffects", 129) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
 				player.GetScriptScope().CustomWeapons.worldmodel <- tpWearable
+				if (!("ExtraLoadout" in player.GetScriptScope()))
+				{
+					local ExtraLoadout = array(10)
+					player.GetScriptScope().ExtraLoadout <- ExtraLoadout
+				}
+				player.GetScriptScope().ExtraLoadout.append(tpWearable) //for clean up
 			}
 
 			// copied from LizardOfOz open fortress dm_crossfire
