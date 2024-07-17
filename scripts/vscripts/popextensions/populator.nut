@@ -1,19 +1,23 @@
-//HOW IT WORKS:
+// HOW IT WORKS:
 
-//PopExtPopulator.InitializeWave() is fired on wave init, this is the main function that parses the WaveSchedule table.
+// PopExtPopulator.InitializeWave() is fired on wave init, this is the main function that parses the WaveSchedule table.
 
-//InitializeWave does the following:
+// InitializeWave does the following:
 // - Spawns bot generators at the location provided in the "Where" keyvalue and sets the appropriate keyvalues
-// - attaches a think function to the generators that handles the WaitForAllSpawned, WaitForAllDead etc keyvalues
-// - Adds the icons to the wavebar
-// - fills out the WaveArray, each element in WaveArray in another array that contains the WaveSpawn information, each element in this nested array is the keyvalue table for the wavespawn.
+// - attaches a think function to the generators that handles most of the spawning logic
+// - Adds icons to the wavebar
+// - fills out the WaveArray
 
-//Major syntax differences compared to standard popfiles:
+// Each element in WaveArray in another array that contains the WaveSpawn information
+// Each element in this nested array is a table where the key is the bot_generator, and the value is the keyvalue table for the wavespawn.
+// To access the bot_generator and the keyvalues from waves and individual wavespawns, use the PopExtPopulator.GetWavespawnInfo() function.
+
+// Major syntax differences compared to standard popfiles:
 // - Does not support unordered WaveSpawns, there is a fixed order of execution.  If you wanna rearrange your wavespawns you can't just change the names/waits around
 // - CASE SENSITIVE! may change this in the future but it makes table look-ups easier for now.
 // - Tags and Items are applied to bots in a single array value
 
-//TODO:
+// TODO:
 // - Tank, Halloween NPC, and SentryGun spawners
 // - RandomChoice and Squad spawners
 
@@ -297,6 +301,52 @@ local PopulatorEnt = CreateByClassname("info_teleport_destination")
 					}
 				}
 			}
+		}
+	}
+	function GetWavespawnInfo(wavenum = 0, wavespawn = 0) {
+
+		// this function expects the actual wave number, not the array index (wavenum 1 would get the array index 0)
+		wavespawn -= 1;
+		wavenum -= 1
+
+		//specific wave number passed, look at wavespawns at the wavenum index
+		if (wavenum > -1)
+		{
+			//valid wavespawn index passed, return only information about this wavespawn
+			if (wavespawn > -1)	{
+
+				return PopExtPopulator.WaveArray[wavenum][wavespawn]
+			}
+			//wave number passed, but no wavespawn, return every wavespawn in an array
+			else {
+				local allwavespawns = array(PopExtPopulator.WaveArray[wavenum].len())
+
+				foreach(i, wavespawn in allwavespawns) wavespawn = PopExtPopulator.WaveArray[wavenum][i]
+
+				return allwavespawns
+			}
+		}
+
+		//no wave number passed, put every wave in an array and put every wavespawn in another array at each wave
+		else {
+
+			// Create an array with each element being another 128-length array.
+			// If your mission has >128 wavespawns on a single wave may god help you
+
+			local allwaves = array(GetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount"), array(128,0))
+
+			foreach(i, wave in allwaves)
+			{
+				//valid wavespawn index passed, just get this wavespawn index at every wave
+				if (wavespawn > -1) wave = PopExtPopulator.WaveArray[i]
+
+				//no wavespawn index passed, get everything
+				else {
+					local allwavespawns = array(PopExtPopulator.WaveArray[wavenum].len(), [])
+					foreach(j, _ in PopExtPopulator.WaveArray[i]) wave[i] = PopExtPopulator.WaveArray[i][j]
+				}
+			}
+			return allwaves
 		}
 	}
 }
