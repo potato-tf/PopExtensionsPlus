@@ -55,6 +55,7 @@ if (!("_AddThinkToEnt" in _root))
 			"__vrefs"   : null
 			"Preserved" : null
 			"popWearablesToDestroy" : null
+			"ExtraLoadout" : null
 		}
 		foreach (k, v in scope)
 			if (!(k in ignore_table))
@@ -104,6 +105,7 @@ if (!("_AddThinkToEnt" in _root))
 		if ("GlobalFixes" in _root) foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
 		if ("CustomAttributes" in _root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
 		if ("PopExtPopulator" in _root) foreach (_, func in PopExtPopulator.SpawnHookTable) func(params)
+		if ("CustomWeapons" in _root) foreach (_, func in CustomWeapons.SpawnHookTable) func(params)
 	}
 	function OnGameEvent_player_changeclass(params) {
 		local player = GetPlayerFromUserID(params.userid)
@@ -160,6 +162,7 @@ if (!("_AddThinkToEnt" in _root))
 		try delete ::__tagarray catch(e) return
 		try delete ::PopExtMain catch(e) return
 		try delete ::PointTemplates catch(e) return
+		try delete ::CustomWeapons catch(e) return
 	}
 }
 __CollectGameEventCallbacks(PopExtMain)

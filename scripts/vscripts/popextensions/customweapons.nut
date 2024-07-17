@@ -74,10 +74,20 @@ ExtraItems <-
 		function RegenerateCustomWeapons(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (("ExtraLoadout" in player.GetScriptScope())) {
+
+				if (player.GetScriptScope().ExtraLoadout.len() > 10)
+				{
+					foreach (entity in player.GetScriptScope().ExtraLoadout)
+					{
+						if ((typeof(entity) == "instance") && entity.IsValid())
+						entity.Kill()
+					}
+					player.GetScriptScope().ExtraLoadout.resize(10)
+				}
 				local playerclass = player.GetPlayerClass()
 				if (player.GetScriptScope().ExtraLoadout[playerclass] != null)
-					for (local i = 0; i < player.GetScriptScope().ExtraLoadout[playerclass].len(); i++)
-						CustomWeapons.GiveItem(player.GetScriptScope().ExtraLoadout[playerclass][i], player)
+					foreach (item in player.GetScriptScope().ExtraLoadout[playerclass])
+						CustomWeapons.GiveItem(item, player)
 					player.SetHealth(player.GetMaxHealth())
 			}
 		}
@@ -112,7 +122,7 @@ ExtraItems <-
 		{
 			id = PopExtItems[itemname].id
 			model = PopExtItems[itemname].model_player
-			modelindex = GetModelIndex(model)
+			modelindex = PrecacheModel(model)
 			animset = PopExtItems[itemname].animset
 			item_class = PopExtItems[itemname].item_class
 			item_slot = PopExtItems[itemname].item_slot
@@ -146,7 +156,7 @@ ExtraItems <-
 		if (extraitem != null)
 		{
 			if ("ItemClass" in extraitem) item_class = extraitem.ItemClass
-			if ("Model" in extraitem) model = extraitem.Model; modelindex = GetModelIndex(model)
+			if ("Model" in extraitem) model = extraitem.Model; modelindex = PrecacheModel(model)
 			if ("AnimSet" in extraitem) animset = extraitem.AnimSet
 			if ("Slot" in extraitem) item_slot = extraitem.Slot
 		}
@@ -182,7 +192,7 @@ ExtraItems <-
 		{
 			if (TF_AMMO_PER_CLASS_PRIMARY[playerclass] != TF_AMMO_PER_CLASS_PRIMARY[animset]) 
 			{
-				if (!("ammofix" in player.GetScriptScope()))
+				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
 					local ammofix = CreateByClassname("tf_wearable")
 					SetPropBool(ammofix, "m_bValidatedAttachedEntity", true)
@@ -190,10 +200,16 @@ ExtraItems <-
 					SetPropEntity(ammofix, "m_hOwnerEntity", player)
 					ammofix.SetOwner(player)
 					ammofix.DispatchSpawn()
-					player.GetScriptScope().ammofix <- ammofix
+					player.GetScriptScope().CustomWeapons.ammofix <- ammofix
+					if (!("ExtraLoadout" in player.GetScriptScope()))
+					{
+						local ExtraLoadout = array(10)
+						player.GetScriptScope().ExtraLoadout <- ExtraLoadout
+					}
+					player.GetScriptScope().ExtraLoadout.append(ammofix) //for clean up
 				}
-				player.GetScriptScope().ammofix.AddAttribute("hidden primary max ammo bonus", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0)
-				player.GetScriptScope().ammofix.ReapplyProvision()
+				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden primary max ammo bonus", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0)
+				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
 				SetPropIntArray(player, "m_iAmmo", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat(), 1)
 			}
 		}
@@ -202,7 +218,7 @@ ExtraItems <-
 		{
 			if (TF_AMMO_PER_CLASS_SECONDARY[playerclass] != TF_AMMO_PER_CLASS_SECONDARY[animset]) 
 			{
-				if (!("ammofix" in player.GetScriptScope()))
+				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
 					local ammofix = CreateByClassname("tf_wearable")
 					SetPropBool(ammofix, "m_bValidatedAttachedEntity", true)
@@ -210,10 +226,16 @@ ExtraItems <-
 					SetPropEntity(ammofix, "m_hOwnerEntity", player)
 					ammofix.SetOwner(player)
 					ammofix.DispatchSpawn()
-					player.GetScriptScope().ammofix <- ammofix
+					player.GetScriptScope().CustomWeapons.ammofix <- ammofix
+					if (!("ExtraLoadout" in player.GetScriptScope()))
+					{
+						local ExtraLoadout = array(10)
+						player.GetScriptScope().ExtraLoadout <- ExtraLoadout
+					}
+					player.GetScriptScope().ExtraLoadout.append(ammofix) //for clean up
 				}
-				player.GetScriptScope().ammofix.AddAttribute("hidden secondary max ammo penalty", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0)
-				player.GetScriptScope().ammofix.ReapplyProvision()
+				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden secondary max ammo penalty", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0)
+				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
 				SetPropIntArray(player, "m_iAmmo", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat(), 2)
 			}
 		}
@@ -248,12 +270,12 @@ ExtraItems <-
 
 			item.SetModelSimple(armmodel)
 			item.SetCustomViewModel(armmodel)
-			item.SetCustomViewModelModelIndex(GetModelIndex(armmodel))
-			SetPropInt(item, "m_iViewModelIndex", GetModelIndex(armmodel))
+			item.SetCustomViewModelModelIndex(PrecacheModel(armmodel))
+			SetPropInt(item, "m_iViewModelIndex", PrecacheModel(armmodel))
 
 			// worldmodel
 			player.GetScriptScope().PlayerThinkTable.CustomWeaponWorldmodel <- UpdateWorldmodel
-			if (!("cwviewmodel" in player.GetScriptScope()))
+			if (!("worldmodel" in player.GetScriptScope().CustomWeapons))
 			{
 				local tpWearable = CreateByClassname("tf_wearable")
 				SetPropInt(tpWearable, "m_nModelIndex", modelindex)
@@ -264,7 +286,7 @@ ExtraItems <-
 				tpWearable.DispatchSpawn()
 				EntFireByHandle(tpWearable, "SetParent", "!activator", 0.0, player, player)
 				SetPropInt(tpWearable, "m_fEffects", 129) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
-				player.GetScriptScope().cwviewmodel <- tpWearable
+				player.GetScriptScope().CustomWeapons.worldmodel <- tpWearable
 			}
 
 			// copied from LizardOfOz open fortress dm_crossfire
@@ -337,8 +359,6 @@ ExtraItems <-
 			
 		if (player.GetScriptScope().ExtraLoadout[playerclass].find(itemname) == null)
 			player.GetScriptScope().ExtraLoadout[playerclass].append(itemname)
-
-		CustomWeapons.SpawnHookTable
 	}
 
 	//unequip item in player's loadout
@@ -350,7 +370,7 @@ ExtraItems <-
 		if (playerclass == null) playerclass = player.GetPlayerClass()
 		player.ValidateScriptScope()
 		if ("ExtraLoadout" in player.GetScriptScope())
-			if (ExtraLoadout[playerclass] != null)
+			if (player.GetScriptScope().ExtraLoadout[playerclass] != null)
 				if (player.GetScriptScope().ExtraLoadout[playerclass].find(itemname) != null)
 					player.GetScriptScope().ExtraLoadout[playerclass].remove(player.GetScriptScope().ExtraLoadout[playerclass].find(itemname))
 
@@ -366,9 +386,10 @@ ExtraItems <-
 				local activeweapon = self.GetActiveWeapon()
 				if (activeweapon in self.GetScriptScope().CustomWeapons)
 				{
-					if (("cwviewmodel" in self.GetScriptScope()) && (GetPropInt(self.GetScriptScope().cwviewmodel, "m_nModelIndex") != self.GetScriptScope().CustomWeapons[activeweapon]))
+					if (("worldmodel" in self.GetScriptScope().CustomWeapons) && (GetPropInt(self.GetScriptScope().CustomWeapons.worldmodel, "m_nModelIndex") != self.GetScriptScope().CustomWeapons[activeweapon]))
 					{
-						if (self.GetScriptScope().cwviewmodel.IsValid()) self.GetScriptScope().cwviewmodel.Kill()
+						if (self.GetScriptScope().CustomWeapons.worldmodel.IsValid()) self.GetScriptScope().CustomWeapons.worldmodel.Kill()
+
 						local modelindex = self.GetScriptScope().CustomWeapons[activeweapon]
 						local tpWearable = CreateByClassname("tf_wearable")
 						SetPropInt(tpWearable, "m_iTeamNum", self.GetTeam())
@@ -381,14 +402,20 @@ ExtraItems <-
 						tpWearable.DispatchSpawn()
 						EntFireByHandle(tpWearable, "SetParent", "!activator", 0.0, self, self)
 						SetPropInt(tpWearable, "m_fEffects", 129) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
-						self.GetScriptScope().cwviewmodel <- tpWearable
+						self.GetScriptScope().CustomWeapons.worldmodel <- tpWearable
+						if (!("ExtraLoadout" in self.GetScriptScope()))
+						{
+							local ExtraLoadout = array(10)
+							self.GetScriptScope().ExtraLoadout <- ExtraLoadout
+						}
+						self.GetScriptScope().ExtraLoadout.append(tpWearable) //for clean up
 					}
 				}
 				else
 				{
-					if (("cwviewmodel" in self.GetScriptScope()) && (self.GetScriptScope().cwviewmodel.IsValid()))
+					if (("worldmodel" in self.GetScriptScope().CustomWeapons) && (self.GetScriptScope().CustomWeapons.worldmodel.IsValid()))
 					{
-						self.GetScriptScope().cwviewmodel.Kill()
+						self.GetScriptScope().CustomWeapons.worldmodel.Kill()
 					}
 				}
 			}
