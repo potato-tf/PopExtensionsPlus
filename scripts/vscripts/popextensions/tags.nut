@@ -1056,32 +1056,6 @@ local popext_funcs = {
 	}
 
 }
-// ::GetBotBehaviorFromTags <- function(bot)
-// {
-//	   local tags = {}
-//	   local scope = bot.GetScriptScope()
-//	   bot.GetAllBotTags(tags)
-
-//	   if (tags.len() == 0) return
-
-//	   foreach (tag in tags)
-//	   {
-//		   local args = split(tag, "|")
-//		   if (args.len() == 0) continue
-//		   local func = args.remove(0)
-//		   if (func in popext_funcs)
-//			   popext_funcs[func](bot, args)
-//	   }
-	// function PopExt_BotThinks()
-	// {
-	//	   local scope = self.GetScriptScope()
-	//	   if (scope.PlayerThinkTable.len() < 1) return
-
-	//	   foreach (_, func in scope.PlayerThinkTable)
-	//		  func(self)
-	// }
-//	   AddThinkToEnt(bot, "PopExt_BotThinks")
-// }
 
 ::PopExtTags <- {
 
@@ -1094,6 +1068,9 @@ local popext_funcs = {
 		local bottags = {}
 
 		bot.GetAllBotTags(bottags)
+
+		//bot has no tags
+		if (!bottags.len()) return
 
 		foreach(i, tag in bottags) {
 
