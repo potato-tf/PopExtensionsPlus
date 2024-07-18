@@ -1,8 +1,6 @@
 //behavior tags
 IncludeScript("popextensions/botbehavior", getroottable())
 
-try IncludeScript(format("%s_tags.nut", split(split(__popname, "/")[2], ".")[0]), getroottable()) catch(e) ::__tagarray <- []
-
 PopExtUtil.PlayerManager.ValidateScriptScope()
 
 local popext_funcs = {
@@ -1092,13 +1090,19 @@ local popext_funcs = {
 	TeamSwitchTable = {}
 
 	function EvaluateTags(bot) {
-		foreach(tag in __tagarray) {
-			if (bot.HasBotTag(tag)) {
-				local args = split(tag, "|")
-				local func = args.remove(0)
-				if (func in popext_funcs)
-					popext_funcs[func](bot, args)
-			}
+
+		local bottags = {}
+
+		bot.GetAllBotTags(bottags)
+
+		foreach(i, tag in bottags) {
+
+			local args = split(tag, "|")
+			local func = args.remove(0)
+
+			if (func in popext_funcs)
+				popext_funcs[func](bot, args)
+
 		}
 	}
 

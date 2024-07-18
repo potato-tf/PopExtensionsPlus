@@ -263,12 +263,9 @@ This allows mission makers to apply fully custom weapon attributes to both bots 
 - use the `popext_customattr` bot tag, with two additional arguments for the attribute and value
 - example: `popext_customattr|wet immunity|1`, bot will be immune to jar effects.  Currently, this will only apply to the bots primary active weapon.
 
-### IMPORTANT!
-Due to current limitations with VScript, you must copy/paste all of your bot tags from every bot into a script file with the same name as your mission suffixed with "_tags" (e.g. "mvm_bigrock_vscript_tags.nut").  The script will look for this file when spawning bots to check for relevant tags.  An example _tags file has been provided for bigrock
-
 # Tank Additions
 
-Pop Extensions Plus expands upon the tank additions added in the original Pop Extensions. 
+Pop Extensions Plus expands upon the tank additions added in the original Pop Extensions.
 When you call PopExt.AddTankName, the second argument is a table where you set the values for the available properties below. Please see the bigrock pop and [popext bigrock pop](https://github.com/rafradek/VScript-Popfile-Extensions/blob/main/scripts/population/mvm_bigrock_vscript.pop#L136) for usage.
 
 Available Properties:
@@ -287,7 +284,7 @@ Available Properties:
   * EngineLoop
   * Start
   * Destroy
-  * Deploy 
+  * Deploy
 * Team                  // 2: Red team, 3: Blu team, also accepts strings "RED", "BLU", "GRY"
 * NoScreenShake         // does not currently work
 * IsBlimp               // true: sets the tank to be a blimp
