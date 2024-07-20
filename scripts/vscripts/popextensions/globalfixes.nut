@@ -19,15 +19,16 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			}
 		}
 
-		/*
+
 		function LooseCannonFix(params) {
-			local wep   = params.weapon
-			local index = PopExtUtil.GetItemIndex(wep)
-			if (index != 996 || params.damage_custom != TF_DMG_CUSTOM_CANNONBALL_PUSH) return
+
+			local wep = params.weapon
+
+			if (PopExtUtil.GetItemIndex(wep) != ID_LOOSE_CANNON || params.damage_custom != TF_DMG_CUSTOM_CANNONBALL_PUSH) return
 
 			params.damage *= wep.GetAttribute("damage bonus", 1.0)
 		}
-		*/
+
 
 		function BotGibFix(params) {
 			local victim = params.const_entity
@@ -36,25 +37,23 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		}
 
 		// Quick hacky non-GetAttribute version
-		function HuntsmanDamageBonusFix(params) {
-			local wep       = params.weapon
-			local classname = GetPropString(wep, "m_iClassname")
-			if (classname != "tf_weapon_compound_bow") return
+		// function HuntsmanDamageBonusFix(params) {
+		// 	local wep       = params.weapon
+		// 	local classname = GetPropString(wep, "m_iClassname")
+		// 	if (classname != "tf_weapon_compound_bow") return
 
-			if ((params.damage_custom == TF_DMG_CUSTOM_HEADSHOT && params.damage > 360.0) || params.damage > 120.0)
-				params.damage *= HUNTSMAN_DAMAGE_FIX_MOD
-		}
-		/*
-		function HuntsmanDamageBonusFix(params) {
-			local wep       = params.weapon
-			local classname = GetPropString(wep, "m_iClassname")
-			if (classname != "tf_weapon_compound_bow") return
+		// 	if ((params.damage_custom == TF_DMG_CUSTOM_HEADSHOT && params.damage > 360.0) || params.damage > 120.0)
+		// 		params.damage *= HUNTSMAN_DAMAGE_FIX_MOD
+		// }
 
-			local mod = wep.GetAttribute("damage bonus", 1.0)
-			if (mod != 1.0)
-				params.damage *= HUNTSMAN_DAMAGE_FIX_MOD
+		function HuntsmanDamageBonusFix(params) {
+			local wep = params.weapon
+
+			if (GetPropString(wep, "m_iClassname") != "tf_weapon_compound_bow") return
+
+			if (wep.GetAttribute("damage bonus", 1.0) != 1.0) params.damage *= HUNTSMAN_DAMAGE_FIX_MOD
 		}
-		*/
+
 
 		function HolidayPunchFix(params) {
 			local wep   = params.weapon
