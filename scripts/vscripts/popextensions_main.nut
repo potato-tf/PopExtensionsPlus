@@ -14,11 +14,15 @@ local banned_think_classnames = {
 	player = "PlayerThinkTable"
 	tank_boss = "TankThinkTable"
 	tf_projectile_ = "ProjectileThinkTable"
+	tf_weapon_ = "ItemThinkTable"
+	tf_wearable = "ItemThinkTable"
 }
 
 if (!("_AddThinkToEnt" in _root))
 {
 	//rename so we can still use it elsewhere
+	//this also allows people to override the think restriction by using _AddThinkToEnt(ent, "FuncNameHere") instead
+	//I'm not including this in the warning, only the people that know what they're doing already and can find it here should know about it.
 	::_AddThinkToEnt <- AddThinkToEnt
 
 	::AddThinkToEnt <- function(ent, func)
@@ -26,8 +30,8 @@ if (!("_AddThinkToEnt" in _root))
 		foreach (k, v in banned_think_classnames)
 			if (startswith(ent.GetClassname(), k))
 			{
-				error(format("WARNING: Adding thinks to '%s' entities is forbidden! Add your function to the '%s' table instead\n", k, v))
-				ClientPrint(null, HUD_PRINTTALK, format("\x08FFB4B4FF**WARNING: Adding thinks to %s entities is forbidden!**\n\n Add your function to \"%s\" instead.\n\nExample: AddThinkToEnt(ent, \"MyFunction\") would become: ent.%s.MyFunction <- MyFunction", k, v, v))
+				error(format("WARNING: Adding thinks to '%s' entities is forbidden! Use PopExtUtil.AddThinkToEnt instead\n", k))
+				ClientPrint(null, HUD_PRINTTALK, format("\x08FFB4B4FF**WARNING: Adding thinks to %s entities is forbidden!**\n\n Use PopExtUtil.AddThinkToEnt instead.\n\nExample: AddThinkToEnt(ent, \"%s\") -> PopExtUtil.AddThinkToEnt(ent, \"%s\")", k, func, func))
 				return
 			}
 
