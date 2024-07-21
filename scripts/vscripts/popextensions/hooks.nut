@@ -67,8 +67,8 @@ PopExt <- popExtEntity.GetScriptScope()
 
 				local scope = victim.GetScriptScope()
 				local attackerscope = attacker.GetScriptScope()
-				
-				if (victim.GetClassname() == "tank_boss" && "popProperty" in scope) 
+
+				if (victim.GetClassname() == "tank_boss" && "popProperty" in scope)
 					if ("CritImmune" in scope.popProperty && scope.popProperty.CritImmune)
 						params.damage_type = params.damage_type &~ DMG_CRITICAL
 
@@ -233,7 +233,7 @@ PopExt <- popExtEntity.GetScriptScope()
 						EntFireByHandle(scope.blimpTrain, "Kill", "", -1, null, null)
 				}
 
-				if (dead && !("popFiredDeathHook" in scope)) {
+				if (dead && scope && !("popFiredDeathHook" in scope)) {
 
 					scope.popFiredDeathHook <- true
 
@@ -481,7 +481,7 @@ function PopulatorThink() {
 							EntFireByHandle(blimpTrain, "SetSpeedReal", GetPropFloat(self, "m_speed").tostring(), -1, null, null)
 					}
 				}
-				
+
 				if ("Skin" in scope.popProperty)
 					SetPropInt(tank, "m_nSkin", scope.popProperty.Skin)
 
@@ -499,7 +499,7 @@ function PopulatorThink() {
 				if ("DisableBomb" in scope.popProperty && scope.popProperty.DisableBomb)
 					for (local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer())
 						if (child.GetClassname() == "prop_dynamic")
-							if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl") 
+							if (child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl")
 								child.DisableDraw()
 
 				if ("DisableSmoke" in scope.popProperty && scope.popProperty.DisableSmoke) {
