@@ -169,7 +169,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		// =========================================================
 
 		NegativeDmgHeals = function(value) {
-			// function MissionAttributes::NegativeDmgHeals(params) {
+			// function NegativeDmgHeals(params) {
 			// 	local player = params.const_entity
 
 			// 	local damage = params.damage
@@ -2402,6 +2402,155 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 		MissionAttributes.DebugLog(format("Cleaned up mission attributes"))
 	}
+
+	// Mission Attribute Functions
+	// =========================================================
+	// Function is called in popfile by mission maker to modify mission attributes.
+
+	function SetConvar(convar, value, duration = 0, hideChatMessage = true) {
+
+		local commentaryNode = FindByClassname(null, "point_commentary_node")
+		if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
+
+		//save original values to restore later
+		if (!(convar in MissionAttributes.ConVars)) MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
+
+		if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value)
+
+		if (duration > 0) EntFire("tf_gamerules", "RunScriptCode", "MissionAttributes.SetConvar("+convar+","+MissionAttributes.ConVars[convar]+")", duration)
+
+		if (commentaryNode != null) EntFireByHandle(commentaryNode, "Kill", "", -1, null, null)
+	}
+
+	function ResetConvars(hideChatMessage = true)
+	{
+		local commentaryNode = FindByClassname(null, "point_commentary_node")
+		if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
+
+		foreach (convar, value in MissionAttributes.ConVars) Convars.SetValue(convar, value)
+		MissionAttributes.ConVars.clear()
+
+		if (commentaryNode != null) EntFireByHandle(commentaryNode, "Kill", "", -1, null, null)
+	}
+
+	function MissionAttr(...) {
+
+		local args = vargv
+		local attr
+		local value
+
+		if (args.len() == 0)
+			return
+		else if (args.len() == 1) {
+			attr  = args[0]
+			value = null
+		}
+		else {
+			attr  = args[0]
+			value = args[1]
+		}
+
+		local success = true
+
+		if (attr in this.Attrs)
+		{
+			this.Attrs[attr](value) //ugly ass
+			this.DebugLog(format("Added mission attribute %s", attr))
+			this.CurAttrs[attr] <- value
+		}
+		else {
+
+			ParseError(format("Could not find mission attribute '%s'", attr))
+			success = false
+		}
+	}
+	// TODO: rework this boosted ass shit
+	function SetPlayerAttributes(player, attrib, value, item = null)
+	{
+		local items = {}
+		//setting maxhealth attribs doesn't update current HP
+		local healthattribs = {
+			"max health additive bonus" : null,
+			"max health additive penalty": null,
+			"SET BONUS: max health additive bonus": null,
+			"hidden maxhealth non buffed": null,
+		}
+		if (item)
+			items[PopExtUtil.HasItemInLoadout(player, item)] <- [attrib, value]
+		else
+			for (local i = 0; i < GetPropArraySize(player, "m_hMyWeapons"); i++)
+				if (GetPropEntityArray(player, "m_hMyWeapons", i))
+					items[GetPropEntityArray(player, "m_hMyWeapons", i)] <- [attrib, value]
+		// printl(PopExtUtil.HasItemInLoadout(player, item))
+		//do the customattributes check first, since we replace some vanilla attributes
+		if (attrib in CustomAttributes.Attrs)
+			CustomAttributes.AddAttr(player, attrib, value, items)
+
+		else if ("Attributes" in PopExtItems && attrib in PopExtItems.Attributes)
+		{
+			if ("attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string")
+				MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
+			else
+			{
+				item == null ? EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", attrib, value.tofloat()), -1, null, null) : EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
+				if (attrib in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
+			}
+			//add hidden attributes to our custom attribute display
+			if ("hidden" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["hidden"] == "1" && "ShowHiddenAttributes" in MissionAttributes.CurAttrs && MissionAttributes.CurAttrs.ShowHiddenAttributes)
+			{
+				local scope = player.GetScriptScope()
+				if (!("attribinfo" in scope)) scope.attribinfo <- {}
+
+				scope.attribinfo[attrib] <- format("%s: %s" attrib, value.tostring())
+				CustomAttributes.RefreshDescs(player)
+			}
+		}
+	}
+	// Logging Functions
+	// =========================================================
+	// Generic debug message that is visible if PrintDebugText is true.
+	// Example: Print a message that the script is working as expected.
+	function DebugLog(LogMsg) {
+		if (MissionAttributes.DebugText) {
+			ClientPrint(null, HUD_PRINTCONSOLE, format("MissionAttr: %s.", LogMsg))
+		}
+	}
+
+	// TODO: implement a try catch raise system instead of this
+
+	// Raises an error if the user passes an index that is out of range.
+	// Example: Allowed values are 1-2, but user passed 3.
+	function RaiseIndexError(attr, max = [0, 1]) ParseError(format("Index out of range for %s, value range: %d - %d", attr, max[0], max[1]))
+
+	// Raises an error if the user passes an argument of the wrong type.
+	// Example: Allowed values are strings, but user passed a float.
+	function RaiseTypeError(attr, type) ParseError(format("Bad type for %s (should be %s)", attr, type))
+
+	// Raises an error if the user passes an invalid argument
+	// Example: Attribute expects a bitwise operator but value cannot be evenly split into a power of 2
+	function RaiseValueError(attr, value, extra = "") ParseError(format("Bad value	%s	passed to %s. %s", value.tostring(), attr, extra))
+
+	// Raises a template parsing error, if nothing else fits.
+	function ParseError(ErrorMsg) {
+		if (!MissionAttributes.RaisedParseError) {
+			MissionAttributes.RaisedParseError = true
+			ClientPrint(null, HUD_PRINTTALK, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details.")
+		}
+		ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s.\n", MATTR_ERROR, ErrorMsg))
+
+		foreach (player in PopExtUtil.HumanArray) {
+			if (player == null) continue
+
+			EntFireByHandle(PopExtUtil.ClientCommand, "Command", format("echo %s %s.\n", MATTR_ERROR, ErrorMsg), -1, player, player)
+		}
+		printf("%s %s.\n", MATTR_ERROR, ErrorMsg)
+	}
+
+	// Raises an exception.
+	// Example: Script modification has not been performed correctly. User should never see one of these.
+	function RaiseException(ExceptionMsg) {
+		Assert(false, format("MissionAttr EXCEPTION: %s.", ExceptionMsg))
+	}
 	Events = {
 
 		function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
@@ -2610,70 +2759,8 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 	}
 }
 
-// Mission Attribute Functions
-// =========================================================
-// Function is called in popfile by mission maker to modify mission attributes.
-
 local MissionAttrEntity = FindByName(null, "_popext_missionattr_ent")
 if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "_popext_missionattr_ent"});
-
-function MissionAttributes::SetConvar(convar, value, duration = 0, hideChatMessage = true) {
-
-	local commentaryNode = FindByClassname(null, "point_commentary_node")
-	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
-
-	//save original values to restore later
-	if (!(convar in MissionAttributes.ConVars)) MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
-
-	if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value)
-
-	if (duration > 0) EntFire("tf_gamerules", "RunScriptCode", "MissionAttributes.SetConvar("+convar+","+MissionAttributes.ConVars[convar]+")", duration)
-
-	if (commentaryNode != null) EntFireByHandle(commentaryNode, "Kill", "", -1, null, null)
-}
-
-function MissionAttributes::ResetConvars(hideChatMessage = true)
-{
-	local commentaryNode = FindByClassname(null, "point_commentary_node")
-	if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
-
-	foreach (convar, value in MissionAttributes.ConVars) Convars.SetValue(convar, value)
-	MissionAttributes.ConVars.clear()
-
-	if (commentaryNode != null) EntFireByHandle(commentaryNode, "Kill", "", -1, null, null)
-}
-
-function MissionAttributes::MissionAttr(...) {
-
-	local args = vargv
-	local attr
-	local value
-
-	if (args.len() == 0)
-		return
-	else if (args.len() == 1) {
-		attr  = args[0]
-		value = null
-	}
-	else {
-		attr  = args[0]
-		value = args[1]
-	}
-
-	local success = true
-
-	if (attr in this.Attrs)
-	{
-		this.Attrs[attr](value) //ugly ass
-		this.DebugLog(format("Added mission attribute %s", attr))
-		this.CurAttrs[attr] <- value
-	}
-	 else {
-
-		ParseError(format("Could not find mission attribute '%s'", attr))
-		success = false
-	}
-}
 
 function MissionAttrThink() {
 	if (!MissionAttrEntity) return -1; // Prevent error on mission complete
@@ -2697,7 +2784,7 @@ function MAtrs(attrs = {}) {
 		MissionAttributes.MissionAttr(attr, value)
 }
 
-// Allow calling MissionAttributes::MissionAttr() directly with MissionAttr().
+// Allow calling MissionAttr() directly with MissionAttr().
 function MissionAttr(...) {
 	MissionAttr.acall(vargv.insert(0, MissionAttributes))
 }
@@ -2705,92 +2792,4 @@ function MissionAttr(...) {
 //super truncated version incase the pop character limit becomes an issue.
 function MAtr(...) {
 	MissionAttr.acall(vargv.insert(0, MissionAttributes))
-}
-
-// TODO: rework this boosted ass shit
-function MissionAttributes::SetPlayerAttributes(player, attrib, value, item = null)
-{
-	local items = {}
-	//setting maxhealth attribs doesn't update current HP
-	local healthattribs = {
-		"max health additive bonus" : null,
-		"max health additive penalty": null,
-		"SET BONUS: max health additive bonus": null,
-		"hidden maxhealth non buffed": null,
-	}
-	if (item)
-		items[PopExtUtil.HasItemInLoadout(player, item)] <- [attrib, value]
-	else
-		for (local i = 0; i < GetPropArraySize(player, "m_hMyWeapons"); i++)
-			if (GetPropEntityArray(player, "m_hMyWeapons", i))
-				items[GetPropEntityArray(player, "m_hMyWeapons", i)] <- [attrib, value]
-	// printl(PopExtUtil.HasItemInLoadout(player, item))
-	//do the customattributes check first, since we replace some vanilla attributes
-	if (attrib in CustomAttributes.Attrs)
-		CustomAttributes.AddAttr(player, attrib, value, items)
-
-	else if ("Attributes" in PopExtItems && attrib in PopExtItems.Attributes)
-	{
-		if ("attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string")
-			MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
-		else
-		{
-			item == null ? EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", attrib, value.tofloat()), -1, null, null) : EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
-			if (attrib in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
-		}
-		//add hidden attributes to our custom attribute display
-		if ("hidden" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["hidden"] == "1" && "ShowHiddenAttributes" in MissionAttributes.CurAttrs && MissionAttributes.CurAttrs.ShowHiddenAttributes)
-		{
-			local scope = player.GetScriptScope()
-			if (!("attribinfo" in scope)) scope.attribinfo <- {}
-
-			scope.attribinfo[attrib] <- format("%s: %s" attrib, value.tostring())
-			CustomAttributes.RefreshDescs(player)
-		}
-	}
-}
-// Logging Functions
-// =========================================================
-// Generic debug message that is visible if PrintDebugText is true.
-// Example: Print a message that the script is working as expected.
-function MissionAttributes::DebugLog(LogMsg) {
-	if (MissionAttributes.DebugText) {
-		ClientPrint(null, HUD_PRINTCONSOLE, format("MissionAttr: %s.", LogMsg))
-	}
-}
-
-// TODO: implement a try catch raise system instead of this
-
-// Raises an error if the user passes an index that is out of range.
-// Example: Allowed values are 1-2, but user passed 3.
-function MissionAttributes::RaiseIndexError(attr, max = [0, 1]) ParseError(format("Index out of range for %s, value range: %d - %d", attr, max[0], max[1]))
-
-// Raises an error if the user passes an argument of the wrong type.
-// Example: Allowed values are strings, but user passed a float.
-function MissionAttributes::RaiseTypeError(attr, type) ParseError(format("Bad type for %s (should be %s)", attr, type))
-
-// Raises an error if the user passes an invalid argument
-// Example: Attribute expects a bitwise operator but value cannot be evenly split into a power of 2
-function MissionAttributes::RaiseValueError(attr, value, extra = "") ParseError(format("Bad value	%s	passed to %s. %s", value.tostring(), attr, extra))
-
-// Raises a template parsing error, if nothing else fits.
-function MissionAttributes::ParseError(ErrorMsg) {
-	if (!MissionAttributes.RaisedParseError) {
-		MissionAttributes.RaisedParseError = true
-		ClientPrint(null, HUD_PRINTTALK, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details.")
-	}
-	ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s.\n", MATTR_ERROR, ErrorMsg))
-
-	foreach (player in PopExtUtil.HumanArray) {
-		if (player == null) continue
-
-		EntFireByHandle(PopExtUtil.ClientCommand, "Command", format("echo %s %s.\n", MATTR_ERROR, ErrorMsg), -1, player, player)
-	}
-	printf("%s %s.\n", MATTR_ERROR, ErrorMsg)
-}
-
-// Raises an exception.
-// Example: Script modification has not been performed correctly. User should never see one of these.
-function MissionAttributes::RaiseException(ExceptionMsg) {
-	Assert(false, format("MissionAttr EXCEPTION: %s.", ExceptionMsg))
 }
