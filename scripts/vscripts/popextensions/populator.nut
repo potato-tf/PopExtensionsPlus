@@ -20,6 +20,7 @@
 // TODO:
 // - Tank, Halloween NPC, and SentryGun spawners
 // - RandomChoice and Squad spawners
+// - reliable icon decrementing
 
 const EFL_SPAWNER_PENDING = 1048576 // EFL_IS_BEING_LIFTED_BY_BARNACLE
 const EFL_SPAWNER_ACTIVE = 1073741824 //EFL_NO_PHYSCANNON_INTERACTION

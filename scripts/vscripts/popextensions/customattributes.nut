@@ -1880,13 +1880,12 @@
 		}
 	}
 	function GetAttributeFunctionFromStringName(attr) {
-		//.apply my beloved
-		return split(attrib, " ").apply(function(s) { str += format("%s%s", s.slice(0, 1).toupper(), s.slice(1, s.len())) })
+
+		local str = ""
+		return split(attr, " ").apply(function(s) { str += format("%s%s", s.slice(0, 1).toupper(), s.slice(1, s.len())) })
 	}
 	function CleanupFunctionTable(player, table, attr) {
-		local str = ""
 
-		//.apply my beloved
 		this.GetAttributeFunctionFromStringName(attr)
 
 		if (attr == "alt-fire disabled") str = "AltFireDisabled"
