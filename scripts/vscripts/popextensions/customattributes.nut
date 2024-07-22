@@ -13,283 +13,285 @@
     DeathHookTable = {}
 
     Attrs = {
-		"fires milk bolt": function(player, items, value) {
+
+		"fires milk bolt": function(player, items, attr, value) {
 			CustomAttributes.FiresMilkBolt(player, items, value)
-			scope.attribinfo[attr] <- format("Secondary attack: fires a bolt that applies milk for %d seconds.", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Secondary attack: fires a bolt that applies milk for %d seconds.", value)
 		}
 
-		"mod teleporter speed boost": function(player, items, value) {
+		"mod teleporter speed boost": function(player, items, attr, value) {
 			CustomAttributes.ModTeleporterSpeedBoost(player, items)
-			scope.attribinfo[attr] <- format("Teleporters grant a speed boost for %.2f seconds", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Teleporters grant a speed boost for %.2f seconds", value)
 		}
 
-		"set turn to ice": function(player, items, value) {
+		"set turn to ice": function(player, items, attr, value) {
 			CustomAttributes.SetTurnToIce(player, items)
-			scope.attribinfo[attr] <- format("On Kill: Turn victim to ice.", value)
+			player.GetScriptScope().attribinfo[attr] <- format("On Kill: Turn victim to ice.", value)
 		}
 
-		"mult teleporter recharge rate": function(player, items, value) {
+		"mult teleporter recharge rate": function(player, items, attr, value) {
 			CustomAttributes.MultTeleporterRechargeTime(player, items, value)
-			scope.attribinfo[attr] <- format("Teleporter recharge rate multiplied by %.2f", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Teleporter recharge rate multiplied by %.2f", value)
 		}
 
-		"melee cleave attack": function(player, items, value) {
+		"melee cleave attack": function(player, items, attr, value) {
 			CustomAttributes.MeleeCleaveAttack(player, items, value)
-			scope.attribinfo[attr] <- "On Swing: Weapon hits multiple targets"
+			player.GetScriptScope().attribinfo[attr] <- "On Swing: Weapon hits multiple targets"
 		}
 
-		"last shot crits": function(player, items, value) {
+		"last shot crits": function(player, items, attr, value) {
 			CustomAttributes.LastShotCrits(player, items, value)
-			scope.attribinfo[attr] <- format("Crit boost on last shot.  Crit boost will stay active for %.2f seconds after holster", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Crit boost on last shot.  Crit boost will stay active for %.2f seconds after holster", value)
 		}
 
-		"wet immunity": function(player, items, value) {
+		"wet immunity": function(player, items, attr, value) {
 			CustomAttributes.WetImmunity(player, items)
-			scope.attribinfo[attr] <- "Immune to jar effects"
+			player.GetScriptScope().attribinfo[attr] <- "Immune to jar effects"
 		}
 
-		"can breathe under water": function(player, items, value) {
+		"can breathe under water": function(player, items, attr, value) {
 			CustomAttributes.CanBreatheUnderWater(player, items)
-			scope.attribinfo[attr] <- "Player can breathe underwater"
+			player.GetScriptScope().attribinfo[attr] <- "Player can breathe underwater"
 		}
 
-		"mult swim speed": function(player, items, value) {
+		"mult swim speed": function(player, items, attr, value) {
 			CustomAttributes.MultSwimSpeed(player, items, value)
-			scope.attribinfo[attr] <- format("Swimming speed multiplied by %.2f", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("Swimming speed multiplied by %.2f", value.tofloat())
 		}
 
-		"teleport instead of die": function(player, items, value) {
+		"teleport instead of die": function(player, items, attr, value) {
 			CustomAttributes.TeleportInsteadOfDie(player, items, value)
-			scope.attribinfo[attr] <- format("%d⁒ chance of teleporting to spawn with 1 health instead of dying", valuepercent)
+			player.GetScriptScope().attribinfo[attr] <- format("%d⁒ chance of teleporting to spawn with 1 health instead of dying", (value.tofloat() * 100).tointeger())
 		}
 
-		"mult dmg vs same class": function(player, items, value) {
+		"mult dmg vs same class": function(player, items, attr, value) {
 			CustomAttributes.MultDmgVsSameClass(player, items, value)
-			scope.attribinfo[attr] <- format("Damage versus %s multiplied by %.2f", PopExtUtil.Classes[player.GetPlayerClass()], value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("Damage versus %s multiplied by %.2f", PopExtUtil.Classes[player.GetPlayerClass()], value.tofloat())
 		}
 
-		"uber on damage taken": function(player, items, value) {
+		"uber on damage taken": function(player, items, attr, value) {
 			CustomAttributes.UberOnDamageTaken(player, items, value)
-			scope.attribinfo[attr] <- format("On take damage: %d⁒ chance of gaining invicibility for 3 seconds", valuepercent)
+			player.GetScriptScope().attribinfo[attr] <- format("On take damage: %d⁒ chance of gaining invicibility for 3 seconds", (value.tofloat() * 100).tointeger())
 		}
 
-		"build small sentries": function(player, items, value) {
+		"build small sentries": function(player, items, attr, value) {
 			CustomAttributes.BuildSmallSentries(player, items)
-			scope.attribinfo[attr] <- "Sentries are 20⁒ smaller. have 33⁒ less health, take 25⁒ less metal to upgrade"
+			player.GetScriptScope().attribinfo[attr] <- "Sentries are 20⁒ smaller. have 33⁒ less health, take 25⁒ less metal to upgrade"
 		}
 
-		"crit when health below": function(player, items, value) {
+		"crit when health below": function(player, items, attr, value) {
 			CustomAttributes.CritWhenHealthBelow(player, items, value)
-			scope.attribinfo[attr] <- format("Player is crit boosted when below %d health", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Player is crit boosted when below %d health", value)
 		}
 
-		"mvm sentry ammo": function(player, items, value) {
+		"mvm sentry ammo": function(player, items, attr, value) {
 			CustomAttributes.MvmSentryAmmo(player, items, value)
-			scope.attribinfo[attr] <- format("Sentry ammo multiplied by %.2f", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("Sentry ammo multiplied by %.2f", value.tofloat())
 		}
 
 		//FULLY CUSTOM ATTRIBUTES BELOW
 		//no hidden dev alternative
 
-		"radius sleeper": function(player, items, value) {
+		"radius sleeper": function(player, items, attr, value) {
 			CustomAttributes.RadiusSleeper(player, items)
-			scope.attribinfo[attr] <- "On full charge headshot: create jarate explosion on victim"
+			player.GetScriptScope().attribinfo[attr] <- "On full charge headshot: create jarate explosion on victim"
 		}
 
-		"explosive bullets": function(player, items, value) {
+		"explosive bullets": function(player, items, attr, value) {
 			CustomAttributes.ExplosiveBullets(player, items, value)
-			scope.attribinfo[attr] <- format("Fires explosive rounds that deal %d damage", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Fires explosive rounds that deal %d damage", value)
 		}
 
-		"old sandman stun": function(player, items, value) {
+		"old sandman stun": function(player, items, attr, value) {
 			CustomAttributes.OldSandmanStun(player, items)
-			scope.attribinfo[attr] <- "Uses pre-JI stun mechanics"
+			player.GetScriptScope().attribinfo[attr] <- "Uses pre-JI stun mechanics"
 		}
 
-		"stun on hit": function(player, items, value) {
+		"stun on hit": function(player, items, attr, value) {
 			CustomAttributes.StunOnHit(player, items, value)
-			scope.attribinfo[attr] <- format("Stuns victim for %.2f seconds on hit", value["duration"].tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("Stuns victim for %.2f seconds on hit", value["duration"].tofloat())
 		}
 
-		"is miniboss": function(player, items, value) {
+		"is miniboss": function(player, items, attr, value) {
 			CustomAttributes.IsMiniboss(player, items)
-			scope.attribinfo[attr] <- "When weapon is active: player becomes giant"
+			player.GetScriptScope().attribinfo[attr] <- "When weapon is active: player becomes giant"
 		}
 
-		"replace weapon fire sound": function(player, items, value) {
+		"replace weapon fire sound": function(player, items, attr, value) {
 			CustomAttributes.ReplaceWeaponFireSound(player, items, value)
-			scope.attribinfo[attr] <- format("Weapon fire sound replaced with %s", value[1])
+			player.GetScriptScope().attribinfo[attr] <- format("Weapon fire sound replaced with %s", value[1])
 		}
 
-		"is invisible": function(player, items, value) {
+		"is invisible": function(player, items, attr, value) {
 			CustomAttributes.IsInvisible(player, items)
-			scope.attribinfo[attr] <- "Weapon is invisible"
+			player.GetScriptScope().attribinfo[attr] <- "Weapon is invisible"
 		}
 
-		"cannot upgrade": function(player, items, value) {
+		"cannot upgrade": function(player, items, attr, value) {
 			CustomAttributes.CannotUpgrade(player, items)
-			scope.attribinfo[attr] <- "Weapon cannot be upgraded"
+			player.GetScriptScope().attribinfo[attr] <- "Weapon cannot be upgraded"
 		}
 
-		"always crit": function(player, items, value) {
+		"always crit": function(player, items, attr, value) {
 			CustomAttributes.AlwaysCrit(player, items)
-			scope.attribinfo[attr] <- "Weapon always crits"
+			player.GetScriptScope().attribinfo[attr] <- "Weapon always crits"
 		}
 
-		"dont count damage towards crit rate": function(player, items, value) {
+		"dont count damage towards crit rate": function(player, items, attr, value) {
 			CustomAttributes.DontCountDamageTowardsCritRate(player, items)
-			scope.attribinfo[attr] <- "Damage doesn't count towards crit rate"
+			player.GetScriptScope().attribinfo[attr] <- "Damage doesn't count towards crit rate"
 		}
 
-		"no damage falloff": function(player, items, value) {
+		"no damage falloff": function(player, items, attr, value) {
 			CustomAttributes.NoDamageFalloff(player, items)
-			scope.attribinfo[attr] <- "Weapon has no damage fall-off or ramp-up"
+			player.GetScriptScope().attribinfo[attr] <- "Weapon has no damage fall-off or ramp-up"
 		}
 
-		"can headshot": function(player, items, value) {
+		"can headshot": function(player, items, attr, value) {
 			CustomAttributes.CanHeadshot(player, items)
-			scope.attribinfo[attr] <- "Crits on headshot"
+			player.GetScriptScope().attribinfo[attr] <- "Crits on headshot"
 		}
 
-		"cannot headshot": function(player, items, value) {
+		"cannot headshot": function(player, items, attr, value) {
 			CustomAttributes.CannotHeadshot(player, items)
-			scope.attribinfo[attr] <- "weapon cannot headshot"
+			player.GetScriptScope().attribinfo[attr] <- "weapon cannot headshot"
 		}
 
-		"cannot be headshot": function(player, items, value) {
+		"cannot be headshot": function(player, items, attr, value) {
 			CustomAttributes.CannotBeHeadshot(player, items)
-			scope.attribinfo[attr] <- "Immune to headshots"
+			player.GetScriptScope().attribinfo[attr] <- "Immune to headshots"
 		}
 
-		"projectile lifetime": function(player, items, value) {
+		"projectile lifetime": function(player, items, attr, value) {
 			CustomAttributes.ProjectileLifetime(player, items, value)
-			scope.attribinfo[attr] <- format("projectile disappears after %.2f seconds", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("projectile disappears after %.2f seconds", value.tofloat())
 		}
 
-		"mult dmg vs tanks": function(player, items, value) {
+		"mult dmg vs tanks": function(player, items, attr, value) {
 			CustomAttributes.MultDmgVsTanks(player, items, value)
-			scope.attribinfo[attr] <- format("Damage vs tanks multiplied by %.2f", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("Damage vs tanks multiplied by %.2f", value.tofloat())
 		}
 
-		"mult dmg vs giants": function(player, items, value) {
+		"mult dmg vs giants": function(player, items, attr, value) {
 			CustomAttributes.MultDmgVsGiants(player, items, value)
-			scope.attribinfo[attr] <- format("Damage vs giants multiplied by %.2f", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("Damage vs giants multiplied by %.2f", value.tofloat())
 		}
 
-		"mult dmg vs airborne": function(player, items, value) {
+		"mult dmg vs airborne": function(player, items, attr, value) {
 			CustomAttributes.MultDmgVsAirborne(player, items, value)
-			scope.attribinfo[attr] <- format("damage multiplied by %.2f against airborne targets", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("damage multiplied by %.2f against airborne targets", value.tofloat())
 		}
 
-		"set damage type": function(player, items, value) {
+		"set damage type": function(player, items, attr, value) {
 			CustomAttributes.SetDamageType(player, items, value)
-			scope.attribinfo[attr] <- format("Damage type set to %d", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Damage type set to %d", value)
 		}
 
-		"set damage type custom": function(player, items, value) {
+		"set damage type custom": function(player, items, attr, value) {
 			CustomAttributes.SetDamageTypeCustom(player, items, value)
-			scope.attribinfo[attr] <- format("Custom damage type set to %d", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Custom damage type set to %d", value)
 		}
 
-		"reloads full clip at once": function(player, items, value) {
+		"reloads full clip at once": function(player, items, attr, value) {
+			foreach(k, v in this) printl(k + " :" + v)
 			CustomAttributes.ReloadsFullClipAtOnce(player, items)
-			scope.attribinfo[attr] <- "This weapon reloads its entire clip at once."
+			player.GetScriptScope().attribinfo[attr] <- "This weapon reloads its entire clip at once."
 		}
 
-		"fire full clip at once": function(player, items, value) {
+		"fire full clip at once": function(player, items, attr, value) {
 			CustomAttributes.FireFullClipAtOnce(player, items)
-			scope.attribinfo[attr] <- "weapon fires full clip at once"
+			player.GetScriptScope().attribinfo[attr] <- "weapon fires full clip at once"
 		}
 
-		"passive reload": function(player, items, value) {
+		"passive reload": function(player, items, attr, value) {
 			CustomAttributes.PassiveReload(player, items)
-			scope.attribinfo[attr] <- "weapon reloads when holstered"
+			player.GetScriptScope().attribinfo[attr] <- "weapon reloads when holstered"
 		}
 
-		"mult projectile scale": function(player, items, value) {
+		"mult projectile scale": function(player, items, attr, value) {
 			CustomAttributes.MultProjectileScale(player, items, value)
-			scope.attribinfo[attr] <- format("projectile scale multiplied by %.2f", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("projectile scale multiplied by %.2f", value.tofloat())
 		}
 
-		"mult building scale": function(player, items, value) {
+		"mult building scale": function(player, items, attr, value) {
 			CustomAttributes.MultBuildingScale(player, items, value)
-			scope.attribinfo[attr] <- format("building scale multiplied by %.2f", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("building scale multiplied by %.2f", value.tofloat())
 		}
 
-		"mult crit dmg": function(player, items, value) {
+		"mult crit dmg": function(player, items, attr, value) {
 			CustomAttributes.MultCritDmg(player, items, value)
-			scope.attribinfo[attr] <- format("crit damage multiplied by %.2f", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("crit damage multiplied by %.2f", value.tofloat())
 		}
 
-		"arrow ignite": function(player, items, value) {
+		"arrow ignite": function(player, items, attr, value) {
 			CustomAttributes.ArrowIgnite(player, items)
-			scope.attribinfo[attr] <- "arrows are always ignited"
+			player.GetScriptScope().attribinfo[attr] <- "arrows are always ignited"
 		}
 
-		"cannot upgrade": function(player, items, value) {
+		"cannot upgrade": function(player, items, attr, value) {
 			CustomAttributes.CannotUpgrade(player, items)
-			scope.attribinfo[attr] <- "weapon cannot be upgraded"
+			player.GetScriptScope().attribinfo[attr] <- "weapon cannot be upgraded"
 		}
 
-		"add cond on hit": function(player, items, value) {
+		"add cond on hit": function(player, items, attr, value) {
 			CustomAttributes.AddCondOnHit(player, items, value)
-			scope.attribinfo[attr] <- format("applies cond %d to victim on hit", typeof value == "array" ? value[0].tointeger() : value)
+			player.GetScriptScope().attribinfo[attr] <- format("applies cond %d to victim on hit", typeof value == "array" ? value[0].tointeger() : value)
 		}
 
-		"remove cond on hit": function(player, items, value) {
+		"remove cond on hit": function(player, items, attr, value) {
 			CustomAttributes.RemoveCondOnHit(player, items, value)
-			scope.attribinfo[attr] <- format("Remove cond %d on hit", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Remove cond %d on hit", value)
 		}
 
-		"self add cond on hit": function(player, items, value) {
+		"self add cond on hit": function(player, items, attr, value) {
 			CustomAttributes.SelfAddCondOnHit(player, items, value)
-			scope.attribinfo[attr] <- format("applies cond %d to self on hit", typeof value == "array" ? value[0].tointeger() : value)
+			player.GetScriptScope().attribinfo[attr] <- format("applies cond %d to self on hit", typeof value == "array" ? value[0].tointeger() : value)
 		}
 
-		"add cond on kill": function(player, items, value) {
+		"add cond on kill": function(player, items, attr, value) {
 			CustomAttributes.SelfAddCondOnKill(player, items, value)
-			scope.attribinfo[attr] <- format("applies cond %d to self on kill", typeof value == "array" ? value[0].tointeger() : value)
+			player.GetScriptScope().attribinfo[attr] <- format("applies cond %d to self on kill", typeof value == "array" ? value[0].tointeger() : value)
 		}
 
-		"add cond when active": function(player, items, value) {
+		"add cond when active": function(player, items, attr, value) {
 			CustomAttributes.AddCondWhenActive(player, items, value)
-			scope.attribinfo[attr] <- format("when active: player receives cond %d", value)
+			player.GetScriptScope().attribinfo[attr] <- format("when active: player receives cond %d", value)
 		}
 
-		"fire input on hit": function(player, items, value) {
+		"fire input on hit": function(player, items, attr, value) {
 			CustomAttributes.FireInputOnHit(player, items, value)
-			scope.attribinfo[attr] <- format("fires custom entity input on hit: %s", value)
+			player.GetScriptScope().attribinfo[attr] <- format("fires custom entity input on hit: %s", value)
 		}
 
-		"fire input on kill": function(player, items, value) {
+		"fire input on kill": function(player, items, attr, value) {
 			CustomAttributes.FireInputOnKill(player, items, value)
-			scope.attribinfo[attr] <- format("fires custom entity input on kill: %s", value)
+			player.GetScriptScope().attribinfo[attr] <- format("fires custom entity input on kill: %s", value)
 		}
 
-		"rocket penetration": function(player, items, value) {
+		"rocket penetration": function(player, items, attr, value) {
 			CustomAttributes.RocketPenetration(player, items, value)
-			scope.attribinfo[attr] <- format("rocket penetrates up to %d enemy players", value)
+			player.GetScriptScope().attribinfo[attr] <- format("rocket penetrates up to %d enemy players", value)
 		}
 
-		"collect currency on kill": function(player, items, value) {
+		"collect currency on kill": function(player, items, attr, value) {
 			CustomAttributes.CollectCurrencyOnKill(player, items, value)
-			scope.attribinfo[attr] <- "bots drop money when killed"
+			player.GetScriptScope().attribinfo[attr] <- "bots drop money when killed"
 		}
 
-		"noclip projectile": function(player, items, value) {
+		"noclip projectile": function(player, items, attr, value) {
 			CustomAttributes.NoclipProjectile(player, items, value)
-			scope.attribinfo[attr] <- "projectiles go through walls and enemies harmlessly"
+			player.GetScriptScope().attribinfo[attr] <- "projectiles go through walls and enemies harmlessly"
 		}
 
-		"projectile gravity": function(player, items, value) {
+		"projectile gravity": function(player, items, attr, value) {
 			CustomAttributes.ProjectileGravity(player, items, value)
-			scope.attribinfo[attr] <- format("projectile gravity %d hu/s", value)
+			player.GetScriptScope().attribinfo[attr] <- format("projectile gravity %d hu/s", value)
 		}
 
-		"immune to cond": function(player, items, value) {
+		"immune to cond": function(player, items, attr, value) {
 			if (typeof value == "integer") {
 				CustomAttributes.CondImmunity(player, items, value)
-				scope.attribinfo[attr] <- format("wielder is immune to cond %d", value)
+				player.GetScriptScope().attribinfo[attr] <- format("wielder is immune to cond %d", value)
 			} else {
 				CustomAttributes.CondImmunity(player, items, value)
 				local outputString = ""
@@ -298,35 +300,35 @@
 				}
 				local finalCommaAndSpace = 2
 				outputString = outputString.slice(0, outputString.len() - finalCommaAndSpace)
-				scope.attribinfo[attr] <- format("wielder is immune to cond %s", outputString)
+				player.GetScriptScope().attribinfo[attr] <- format("wielder is immune to cond %s", outputString)
 			}
 		}
 
-		"mult max health": function(player, items, value) {
+		"mult max health": function(player, items, attr, value) {
 			CustomAttributes.MultMaxHealth(player, items, value)
-			scope.attribinfo[attr] <- format("Player max health is multiplied by %.2f", value.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("Player max health is multiplied by %.2f", value.tofloat())
 		}
 
 		//VANILLA ATTRIBUTE REIMPLEMENTATIONS
 
-		"alt-fire disabled": function(player, items, value) {
+		"alt-fire disabled": function(player, items, attr, value) {
 			CustomAttributes.AltFireDisabled(player, items)
-			scope.attribinfo[attr] <- "Secondary fire disabled"
+			player.GetScriptScope().attribinfo[attr] <- "Secondary fire disabled"
 		}
 
-		"custom projectile model": function(player, items, value) {
+		"custom projectile model": function(player, items, attr, value) {
 			CustomAttributes.CustomProjectileModel(player, items, value)
-			scope.attribinfo[attr] <- format("Fires custom projectile model: %s", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Fires custom projectile model: %s", value)
 		}
 
-		"dmg bonus while half dead": function(player, items, value) {
+		"dmg bonus while half dead": function(player, items, attr, value) {
 			CustomAttributes.DmgBonusWhileHalfDead(player, items, value)
-			scope.attribinfo[attr] <- format("damage bonus while under 50% health", value)
+			player.GetScriptScope().attribinfo[attr] <- format("damage bonus while under 50% health", value)
 		}
 
-		"dmg penalty while half alive": function(player, items, value) {
+		"dmg penalty while half alive": function(player, items, attr, value) {
 			CustomAttributes.DmgPenaltyWhileHalfAlive(player, items, value)
-			scope.attribinfo[attr] <- format("damage penalty while above 50% health", value)
+			player.GetScriptScope().attribinfo[attr] <- format("damage penalty while above 50% health", value)
 		}
     }
 	function FiresMilkBolt(player, items, value = 5.0) {
@@ -506,7 +508,7 @@
 				local scope = attacker.GetScriptScope()
 				if (
 					!attacker.IsPlayer() || !victim.IsPlayer() ||
-					!("attribinfo" in scope) || !("mult dmg vs same class" in scope.attribinfo) ||
+					!("attribinfo" in scope) || !("mult dmg vs same class" in player.GetScriptScope().attribinfo) ||
 					attacker.GetPlayerClass() != victim.GetPlayerClass() ||
 					player.GetActiveWeapon() != wep
 				) return
@@ -548,7 +550,7 @@
 				local scope = player.GetScriptScope()
 				if (
 					!player.IsPlayer() || player.GetHealth() > params.damage ||
-					!("attribinfo" in scope) || !("teleport instead of die" in scope.attribinfo) ||
+					!("attribinfo" in scope) || !("teleport instead of die" in player.GetScriptScope().attribinfo) ||
 					player.IsInvulnerable() || PopExtUtil.IsPointInRespawnRoom(player.EyePosition())
 				) return
 
@@ -575,7 +577,7 @@
 
 			scope.PlayerThinkTable[format("MeleeCleaveAttack_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0 || player.GetActiveWeapon() != wep || !("attribinfo" in scope) || !("melee cleave attack" in scope.attribinfo)) return
+				if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0 || player.GetActiveWeapon() != wep || !("attribinfo" in scope) || !("melee cleave attack" in player.GetScriptScope().attribinfo)) return
 
 				scope.cleaved = false
 
@@ -583,7 +585,7 @@
 			}
 			CustomAttributes.TakeDamageTable[format("MeleeCleaveAttack_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				if (params.weapon != wep || !("attribinfo" in scope) || !("melee cleave attack" in scope.attribinfo) || scope.cleaved) return
+				if (params.weapon != wep || !("attribinfo" in scope) || !("melee cleave attack" in player.GetScriptScope().attribinfo) || scope.cleaved) return
 
 				scope.cleaved = true
 				// params.early_out = true
@@ -660,7 +662,7 @@
 
 			if (
 				damagedplayer != player || RandomInt(0, 1) > value ||
-				!("attribinfo" in scope) || !("uber on damage taken" in scope.attribinfo) ||
+				!("attribinfo" in scope) || !("uber on damage taken" in player.GetScriptScope().attribinfo) ||
 				damagedplayer.IsInvulnerable() || player.GetActiveWeapon() != wep
 			) return
 
@@ -725,7 +727,7 @@
 				if (params.builderid != player.GetScriptScope().userid) return
 				local teleportedplayer = GetPlayerFromUserID(params.userid)
 
-				if (!("attribinfo" in scope) || !("mod teleporter speed boost" in scope.attribinfo)) teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
+				if (!("attribinfo" in scope) || !("mod teleporter speed boost" in player.GetScriptScope().attribinfo)) teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
 			}
 		}
 	}
@@ -742,7 +744,7 @@
 			local scope = player.GetScriptScope()
 			scope.PlayerThinkTable[format("CanBreatheUnderwater_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("can breathe underwater" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("attribinfo" in scope) || !("can breathe underwater" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				if (player.GetWaterLevel() == 3)
 				{
@@ -766,7 +768,7 @@
 			local scope = player.GetScriptScope()
 			scope.PlayerThinkTable[format("MultSwimSpeed_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("mult swim speed" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("attribinfo" in scope) || !("mult swim speed" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				if (player.GetWaterLevel() == 3)
 				{
@@ -790,7 +792,7 @@
 
 			scope.PlayerThinkTable[format("LastShotCrits_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("last shot crits" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("attribinfo" in scope) || !("last shot crits" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
 
@@ -878,7 +880,7 @@
 
 			local scope = attacker.GetScriptScope()
 
-			if (!("attribinfo" in scope) || !("radius sleeper" in scope.attribinfo)) return
+			if (!("attribinfo" in scope) || !("radius sleeper" in player.GetScriptScope().attribinfo)) return
 
 			if (victim == null || attacker == null || attacker != player || GetPropFloat(attacker.GetActiveWeapon(), "m_flChargedDamage") < 150.0) return
 
@@ -917,7 +919,7 @@
 
 			scope.PlayerThinkTable[format("ExplosiveBullets_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("explosive bullets" in scope.attribinfo) || player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flLastFireTime") || ("curclip" in scope && scope.curclip != wep.Clip1())) return
+				if (!("attribinfo" in scope) || !("explosive bullets" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flLastFireTime") || ("curclip" in scope && scope.curclip != wep.Clip1())) return
 
 				local grenade = CreateByClassname("tf_projectile_pipe")
 				SetPropEntity(grenade, "m_hOwnerEntity", launcher)
@@ -1210,7 +1212,7 @@
 
 				local scope = params.const_entity.GetScriptScope()
 
-				if (!params.const_entity.IsPlayer() || !("attribinfo" in scope) || !("cannot be headshot" in scope.attribinfo)) return
+				if (!params.const_entity.IsPlayer() || !("attribinfo" in scope) || !("cannot be headshot" in player.GetScriptScope().attribinfo)) return
 
 				params.damage_type = params.damage_type &~ DMG_CRITICAL
 				params.damage_stats = TF_DMG_CUSTOM_NONE
@@ -1537,7 +1539,7 @@
 				ApplyPenetrationToRocket(owner, rocket)
 			}
 
-			AddThinkToEnt(wep, "CheckWeaponFire")
+			PopExtUtil.AddThinkToEnt(wep, "CheckWeaponFire")
 		}
 	}
 
@@ -1581,7 +1583,7 @@
 
 			scope.PlayerThinkTable[format("MultProjectileScale_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("mult projectile scale" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("attribinfo" in scope) || !("mult projectile scale" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
 					if (projectile.GetOwner() == player && projectile.GetModelScale() != value)
@@ -1604,7 +1606,7 @@
 			scope.BuiltObjectTable.MultBuildingScale <- function(params) {
 
 				local building = EntIndexToHScript(params.index)
-				if (GetPropEntity(building, "m_hBuilder") == player && "mult building scale" in scope.attribinfo)
+				if (GetPropEntity(building, "m_hBuilder") == player && "mult building scale" in player.GetScriptScope().attribinfo)
 					building.SetModelScale(value, 0.0)
 
 			}
@@ -1655,7 +1657,7 @@
 
 			scope.PlayerThinkTable[format("AltFireDisabled_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if ("attribinfo" in scope && "alt-fire disabled" in scope.attribinfo && player.GetActiveWeapon() == wep)
+				if ("attribinfo" in scope && "alt-fire disabled" in player.GetScriptScope().attribinfo && player.GetActiveWeapon() == wep)
 				{
 					SetPropInt(player, "m_afButtonDisabled", IN_ATTACK2)
 					SetPropFloat(wep, "m_flNextSecondaryAttack", INT_MAX)
@@ -1681,7 +1683,7 @@
 
 			scope.PlayerThinkTable[format("CustomProjectileModel_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("custom projectile model" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("attribinfo" in scope) || !("custom projectile model" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
 					if (projectile.GetOwner() == player && GetPropInt(projectile, "m_nModelIndex") != projmodel)
@@ -1700,7 +1702,7 @@
 
 			scope.PlayerThinkTable[format("NoclipProjectile_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("noclip projectile" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("attribinfo" in scope) || !("noclip projectile" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
 					if (projectile.GetOwner() == player && projectile.GetMoveType != MOVETYPE_NOCLIP)
@@ -1718,7 +1720,7 @@
 			if (wep == null) return
 
 			scope.PlayerThinkTable[format("ProjectileGravity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
-				if (!("attribinfo" in scope) || !("projectile gravity" in scope.attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("attribinfo" in scope) || !("projectile gravity" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
 					if (projectile.GetOwner() == player)
@@ -1782,7 +1784,7 @@
 
 			CustomAttributes.TakeDamageTable[format("ShahanshahAttributeBelowHP_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				if (!("attribinfo" in scope) || !("dmg bonus while half dead" in scope.attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
+				if (!("attribinfo" in scope) || !("dmg bonus while half dead" in player.GetScriptScope().attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
 
 				if (player.GetHealth() < player.GetMaxHealth() / 2)
 					params.damage *= value
@@ -1799,7 +1801,7 @@
 
 			CustomAttributes.TakeDamageTable[format("ShahanshahAttributeAboveHP_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				if (!("attribinfo" in scope) || !("dmg penalty while half alive" in scope.attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
+				if (!("attribinfo" in scope) || !("dmg penalty while half alive" in player.GetScriptScope().attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
 
 				if (player.GetHealth() > player.GetMaxHealth() / 2)
 					params.damage *= value
@@ -1808,8 +1810,9 @@
 	}
 
 	function AddAttr(player, attr = "", value = 0, items = {}) {
-
 		if (typeof items == "instance") items = {items = [attr, value]}
+
+		// foreach (k, v in items) printl(k + " : " + v[0] + " : " + v[1])
 
 		//allow passing an array of multiple weapons
 		if (typeof items == "array")
@@ -1833,18 +1836,15 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null || !(attrs in CustomAttributes.Attrs)) return
+			if (wep == null || !(attr in CustomAttributes.Attrs)) return
 
 			local scope = player.GetScriptScope()
 
-			local valuepercent = 0
-			if (typeof value == "float" || typeof value == "integer")
-				valuepercent = (value.tofloat() * 100).tointeger()
+			if (!("attribinfo" in scope)) player.GetScriptScope().attribinfo <- {}
 
-			if (!("attribinfo" in scope)) scope.attribinfo <- {}
-			local funcname = ""
+			CustomAttributes.Attrs[attr](player, items, attr, value)
 
-			CustomAttributes.Attrs[attr](player, attr, value)
+			// printl(CustomAttributes.Attrs[attr])
 
 			CustomAttributes.RefreshDescs(player)
 		}
@@ -1858,7 +1858,7 @@
 
 		// local formatted = ""
 
-		foreach (desc, attr in scope.attribinfo)
+		foreach (desc, attr in player.GetScriptScope().attribinfo)
 		{
 			if (!formattedtable.find(attr))
 				formattedtable.append(format("%s:\n\n%s\n\n\n", desc, attr))
@@ -1882,11 +1882,14 @@
 	function GetAttributeFunctionFromStringName(attr) {
 
 		local str = ""
-		return split(attr, " ").apply(function(s) { str += format("%s%s", s.slice(0, 1).toupper(), s.slice(1, s.len())) })
+		split(attr, " ").apply(function(s) {
+		    str += format("%s%s", s.slice(0, 1).toupper(), s.slice(1, s.len()))
+		})
+		return str
 	}
 	function CleanupFunctionTable(player, table, attr) {
 
-		this.GetAttributeFunctionFromStringName(attr)
+		local str = this.GetAttributeFunctionFromStringName(attr)
 
 		if (attr == "alt-fire disabled") str = "AltFireDisabled"
 
