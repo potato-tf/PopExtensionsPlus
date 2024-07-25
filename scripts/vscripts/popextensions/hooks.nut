@@ -118,6 +118,9 @@ PopExt <- popExtEntity.GetScriptScope()
 			if (params.team != TEAM_SPECTATOR) return
 
 			local player = GetPlayerFromUserID(params.userid)
+
+			if (!player) return //can sometimes be null when the server empties out?
+
 			local scope = player.GetScriptScope()
 
 			if (scope != null && "popWearablesToDestroy" in scope) {
