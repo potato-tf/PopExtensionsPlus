@@ -91,6 +91,11 @@ ExtraItems <-
 						CustomWeapons.GiveItem(item, player)
 					player.SetHealth(player.GetMaxHealth())
 			}
+
+			SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 1), 1)
+			SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 2), 2)
+			SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 3), 3)
+			SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 4), 4)
 		}
 	}
 
@@ -211,7 +216,7 @@ ExtraItems <-
 				}
 				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden primary max ammo bonus", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0)
 				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
-				SetPropIntArray(player, "m_iAmmo", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat(), 1)
+				SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 1), 1)
 			}
 		}
 
@@ -237,7 +242,7 @@ ExtraItems <-
 				}
 				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden secondary max ammo penalty", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0)
 				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
-				SetPropIntArray(player, "m_iAmmo", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat(), 2)
+				SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 2), 2)
 			}
 		}
 
@@ -427,5 +432,61 @@ ExtraItems <-
 				}
 			}
 		return -1
+	}
+
+	//returns max ammo of player by slot after attributes
+	//player accepts player entities
+	//slot accepts integers 1 to 4
+	function GetMaxAmmo(player, slot)
+	{
+		local multiplier = 1
+		local attributearray = []
+		local slottable = null
+		switch(slot) {
+			case 1: //primary ammo
+				attributearray = ["hidden primary max ammo bonus", "maxammo primary increased", "maxammo primary reduced"]
+				slottable = TF_AMMO_PER_CLASS_PRIMARY
+				break
+			case 2: //secondary ammo
+				attributearray = ["hidden secondary max ammo penalty", "maxammo secondary increased", "maxammo secondary reduced"]
+				slottable = TF_AMMO_PER_CLASS_SECONDARY
+				break
+			case 3: //metal
+				attributearray = ["maxammo metal increased", "maxammo metal reduced"]
+				break
+			case 4: //grenades1 ammo (sandman, wrap assassin, jarate, heavy lunchbox)
+				attributearray = ["maxammo grenades1 increased"]
+				break
+			case 5: //grenades2 ammo (mad milk, bonk)
+				return
+			case 6: //grenades3 ammo (spellbook)
+				return
+			default:
+				return
+		}
+	
+		foreach (attribute in attributearray)
+		{
+			multiplier = multiplier * player.GetCustomAttribute(attribute, 1)
+		}
+	
+		local item = player.FirstMoveChild()
+		while (item && item.GetClassname() != "tf_viewmodel")
+		{
+			foreach (attribute in attributearray)
+			{
+				multiplier = multiplier * item.GetAttribute(attribute, 1)
+			}
+			item = item.NextMovePeer()
+		}
+		
+		if (slot == 3)
+		{
+			player.GetPlayerClass() == 9 ? slottable = 200 : slottable = 100
+			return multiplier * slottable
+		}
+		if (slot == 4) return multiplier * 1
+
+		return multiplier * slottable[PopExtUtil.Classes[player.GetPlayerClass()]]
 	}
 }
