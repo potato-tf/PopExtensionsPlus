@@ -92,10 +92,10 @@ ExtraItems <-
 					player.SetHealth(player.GetMaxHealth())
 			}
 
-			SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 1), 1)
-			SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 2), 2)
-			SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 3), 3)
-			SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 4), 4)
+/* 			SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 1), 1)
+			SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 2), 2)
+			SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 3), 3)
+			SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 4), 4) */
 		}
 	}
 
