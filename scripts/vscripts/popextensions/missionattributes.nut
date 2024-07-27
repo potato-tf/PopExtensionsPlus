@@ -2335,6 +2335,39 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			MissionAttributes.CurAttrs[value] <- true
 		}
 
+		// =========================================================
+		// Hides the "Respawn in: # seconds" text
+		// 0 = Default behaviour (countdown)
+		// 1 = Hide completely
+		// 2 = Show only 'Prepare to Respawn'
+		// =========================================================
+
+		HideRespawnText = function(value) {
+			local rtime = 0.0
+			switch (value) {
+				case 1: break
+				case 2: rtime = 1.0; break
+				default:
+					if ("RespawnTextThink" in PopExtUtil.PlayerManager.GetScriptScope()) {
+						AddThinkToEnt(PopExtUtil.PlayerManager, null)
+						delete PopExtUtil.PlayerManager.GetScriptScope().RespawnTextThink
+					}
+					return
+			}
+
+			PopExtUtil.PlayerManager.ValidateScriptScope()
+			PopExtUtil.PlayerManager.GetScriptScope().RespawnTextThink <- function() {
+				foreach (player in PopExtUtil.HumanArray) {
+					if (player.IsAlive() == true) continue
+					SetPropFloatArray(PopExtUtil.PlayerManager, "m_flNextRespawnTime", rtime, player.entindex())
+				}
+				return -1
+			}
+			AddThinkToEnt(PopExtUtil.PlayerManager, "RespawnTextThink")
+		}
+
+		// =========================================================
+
 		// Options to revert global fixes below:
 		// View globalfixes.nut for more info
 
