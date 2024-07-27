@@ -2796,7 +2796,7 @@ local MissionAttrEntity = FindByName(null, "_popext_missionattr_ent")
 if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "_popext_missionattr_ent"});
 
 function MissionAttrThink() {
-	if (!MissionAttrEntity) return -1; // Prevent error on mission complete
+	if (!MissionAttrEntity || !("MissionAttributes" in ROOT)) return -1; // Prevent error on mission complete
 	foreach (_, func in MissionAttributes.ThinkTable) func()
 	return -1
 }
