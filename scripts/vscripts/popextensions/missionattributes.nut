@@ -2656,7 +2656,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		{
 			foreach (_, func in ScriptUnloadTable) func()
 			MissionAttributes.ResetConvars()
-			EntFire("_popext_missionattr_ent", "Kill")
+			MissionAttrEntity.Kill()
 			delete ::MissionAttributes
 		}
 		function OnGameEvent_teamplay_broadcast_audio(params)
