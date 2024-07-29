@@ -90,12 +90,12 @@ ExtraItems <-
 					foreach (item in player.GetScriptScope().ExtraLoadout[playerclass])
 						CustomWeapons.GiveItem(item, player)
 					player.SetHealth(player.GetMaxHealth())
-			}
 
-/* 			SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 1), 1)
-			SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 2), 2)
-			SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 3), 3)
-			SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 4), 4) */
+				SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 1), 1)
+				SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 2), 2)
+				SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 3), 3)
+				SetPropIntArray(player, "m_iAmmo", CustomWeapons.GetMaxAmmo(player, 4), 4)
+			}
 		}
 	}
 
@@ -206,6 +206,7 @@ ExtraItems <-
 					SetPropEntity(ammofix, "m_hOwnerEntity", player)
 					ammofix.SetOwner(player)
 					ammofix.DispatchSpawn()
+					ammofix.AcceptInput("SetParent", "!activator", player, player)
 					player.GetScriptScope().CustomWeapons.ammofix <- ammofix
 					if (!("ExtraLoadout" in player.GetScriptScope()))
 					{
@@ -232,6 +233,7 @@ ExtraItems <-
 					SetPropEntity(ammofix, "m_hOwnerEntity", player)
 					ammofix.SetOwner(player)
 					ammofix.DispatchSpawn()
+					ammofix.AcceptInput("SetParent", "!activator", player, player)
 					player.GetScriptScope().CustomWeapons.ammofix <- ammofix
 					if (!("ExtraLoadout" in player.GetScriptScope()))
 					{
@@ -265,6 +267,7 @@ ExtraItems <-
 				itemreplace = itemreplace.NextMovePeer()
 			}
 			player.Weapon_Equip(item)
+			item.AcceptInput("SetParent", "!activator", player, player)
 
 			// copied from ficool2 mw2_highrise
 			// viewmodel
@@ -290,7 +293,7 @@ ExtraItems <-
 				SetPropEntity(tpWearable, "m_hOwnerEntity", player)
 				tpWearable.SetOwner(player)
 				tpWearable.DispatchSpawn()
-				EntFireByHandle(tpWearable, "SetParent", "!activator", 0.0, player, player)
+				tpWearable.AcceptInput("SetParent", "!activator", player, player)
 				SetPropInt(tpWearable, "m_fEffects", 129) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
 				player.GetScriptScope().CustomWeapons.worldmodel <- tpWearable
 				if (!("ExtraLoadout" in player.GetScriptScope()))
@@ -412,7 +415,7 @@ ExtraItems <-
 						tpWearable.SetOwner(self)
 						tpWearable.SetSkin(self.GetTeam()-2)
 						tpWearable.DispatchSpawn()
-						EntFireByHandle(tpWearable, "SetParent", "!activator", 0.0, self, self)
+						tpWearable.AcceptInput("SetParent", "!activator", self, self)
 						SetPropInt(tpWearable, "m_fEffects", 129) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
 						self.GetScriptScope().CustomWeapons.worldmodel <- tpWearable
 						if (!("ExtraLoadout" in self.GetScriptScope()))
