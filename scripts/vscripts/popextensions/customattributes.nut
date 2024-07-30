@@ -228,11 +228,6 @@
 			player.GetScriptScope().attribinfo[attr] <- "arrows are always ignited"
 		}
 
-		"cannot upgrade": function(player, items, attr, value) {
-			CustomAttributes.CannotUpgrade(player, items)
-			player.GetScriptScope().attribinfo[attr] <- "weapon cannot be upgraded"
-		}
-
 		"add cond on hit": function(player, items, attr, value) {
 			CustomAttributes.AddCondOnHit(player, items, value)
 			player.GetScriptScope().attribinfo[attr] <- format("applies cond %d to victim on hit", typeof value == "array" ? value[0].tointeger() : value)
@@ -680,7 +675,7 @@
 
 			//cleanup before spawning a new one
 			for (local knife; knife = FindByClassname(knife, "tf_weapon_knife");)
-				if (PopExtUtil.GetItemIndex(knife) == ID_SPY_CICLE && knife.GetEFlags() & EFL_USER)
+				if (PopExtUtil.GetItemIndex(knife) == ID_SPY_CICLE && knife.IsEFlagSet(EFL_USER))
 					EntFireByHandle(knife, "Kill", "", -1, null, null)
 
 
@@ -898,7 +893,7 @@
 
 			//cleanup before spawning a new one
 			for (local launcher; launcher = FindByClassname(launcher, "tf_weapon_grenadelauncher");)
-				if (launcher.GetEFlags() & EFL_USER)
+				if (launcher.IsEFlagSet(EFL_USER))
 					EntFireByHandle(launcher, "Kill", "", -1, null, null)
 
 
