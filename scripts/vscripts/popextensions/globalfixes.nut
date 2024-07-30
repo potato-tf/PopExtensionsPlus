@@ -330,7 +330,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		// Hook all wave inits to reset parsing error counter.
 
 		function OnGameEvent_recalculate_holidays(params) {
-			if (GetRoundState() != 3) return
+			if (GetRoundState() != GR_STATE_PREROUND) return
 
 			foreach(_, func in GlobalFixes.InitWaveTable) func(params)
 		}
