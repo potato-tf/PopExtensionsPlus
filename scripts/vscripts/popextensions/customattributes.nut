@@ -193,7 +193,6 @@
 		}
 
 		"reloads full clip at once": function(player, items, attr, value) {
-			foreach(k, v in this) printl(k + " :" + v)
 			CustomAttributes.ReloadsFullClipAtOnce(player, items)
 			player.GetScriptScope().attribinfo[attr] <- "This weapon reloads its entire clip at once."
 		}
