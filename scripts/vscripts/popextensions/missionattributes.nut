@@ -741,13 +741,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				local player = GetPlayerFromUserID(params.userid)
 
-				if (!player.IsBotOfType(TF_BOT_TYPE) ||
-				"usingcustommodel" in player.GetScriptScope() ||
-				(!(value & 128) && endswith(player.GetModelName(), "/bots/demo/bot_sentry_buster.mdl"))
-				) return
+				if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
 				MissionAttributes.HumanModel <- function(player)
 				{
+
+					if ("usingcustommodel" in player.GetScriptScope() || (!(value & 128) && player.GetModelName() ==  "models/bots/demo/bot_sentry_buster.mdl")) return
+
 					local classname = PopExtUtil.Classes[player.GetPlayerClass()]
 					if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value > 0)
 					{
