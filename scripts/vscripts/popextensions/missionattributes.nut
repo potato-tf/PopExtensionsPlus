@@ -754,9 +754,12 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						player.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classname))
 						if (value & 2)
 						{
+							// CTFBot.GenerateAndWearItem() works here, but causes a big perf warning spike on bot spawn
+							// faking it doesn't do this
 							PopExtUtil.CreatePlayerWearable(player, format("models/player/items/%s/%s_zombie.mdl", classname, classname))
 							SetPropBool(player, "m_bForcedSkin", true)
 							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
+							SetPropInt(player, "m_iPlayerSkinOverride", 1)
 						}
 					}
 
@@ -769,6 +772,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 							format(PopExtUtil.CreatePlayerWearable(player, "models/player/items/%s/%s_zombie.mdl"), classname, classname)
 							SetPropBool(player, "m_bForcedSkin", true)
 							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
+							SetPropInt(player, "m_iPlayerSkinOverride", 1)
 						}
 					}
 				}
