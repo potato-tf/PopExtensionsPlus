@@ -135,13 +135,13 @@ ExtraItems <-
 
 			if (typeof(PopExtItems[itemname].animset) == "array")
 			{
-				if (PopExtItems[itemname].animset.find(playerclass) == null) 
+				if (PopExtItems[itemname].animset.find(playerclass) == null)
 				{
 					animset = PopExtItems[itemname].animset[0]
 					item_class = PopExtItems[itemname].item_class[0]
 					item_slot = PopExtItems[itemname].item_slot[0]
 				}
-				else 
+				else
 				{
 					animset = PopExtItems[itemname].animset[PopExtItems[itemname].animset.find(playerclass)]
 					item_class = PopExtItems[itemname].item_class[PopExtItems[itemname].animset.find(playerclass)]
@@ -185,18 +185,16 @@ ExtraItems <-
 		if (extraitem != null)
 			foreach (attribute, value in extraitem)
 				if (!(attribute in reservedKeywords))
-					if (attribute in CustomAttributes.Attrs)
-						CustomAttributes.AddAttr(player, attribute, value, {item = [attribute, value]})
-					else
-						item.AddAttribute(attribute, value, -1.0)
+					MissionAttributes.SetPlayerAttributes(player, attribute, value, item)
+
 		if (!("CustomWeapons" in player.GetScriptScope()))
 			player.GetScriptScope().CustomWeapons <- {}
 		player.GetScriptScope().CustomWeapons[item] <- modelindex
-						
+
 		//if max ammo needs to be changed, create a tf_wearable and assign attributes to it
 		if (item_slot == "primary")
 		{
-			if (TF_AMMO_PER_CLASS_PRIMARY[playerclass] != TF_AMMO_PER_CLASS_PRIMARY[animset]) 
+			if (TF_AMMO_PER_CLASS_PRIMARY[playerclass] != TF_AMMO_PER_CLASS_PRIMARY[animset])
 			{
 				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
@@ -223,7 +221,7 @@ ExtraItems <-
 
 		if (item_slot == "secondary")
 		{
-			if (TF_AMMO_PER_CLASS_SECONDARY[playerclass] != TF_AMMO_PER_CLASS_SECONDARY[animset]) 
+			if (TF_AMMO_PER_CLASS_SECONDARY[playerclass] != TF_AMMO_PER_CLASS_SECONDARY[animset])
 			{
 				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
@@ -371,7 +369,7 @@ ExtraItems <-
 		}
 		if (player.GetScriptScope().ExtraLoadout[playerclass] == null)
 			player.GetScriptScope().ExtraLoadout[playerclass] = []
-			
+
 		if (player.GetScriptScope().ExtraLoadout[playerclass].find(itemname) == null)
 			player.GetScriptScope().ExtraLoadout[playerclass].append(itemname)
 	}
@@ -467,12 +465,12 @@ ExtraItems <-
 			default:
 				return
 		}
-	
+
 		foreach (attribute in attributearray)
 		{
 			multiplier = multiplier * player.GetCustomAttribute(attribute, 1)
 		}
-	
+
 		local item = player.FirstMoveChild()
 		while (item && item.GetClassname() != "tf_viewmodel")
 		{
@@ -482,7 +480,7 @@ ExtraItems <-
 			}
 			item = item.NextMovePeer()
 		}
-		
+
 		if (slot == 3)
 		{
 			player.GetPlayerClass() == 9 ? slottable = 200 : slottable = 100
