@@ -1063,6 +1063,89 @@ local popext_funcs = {
 	DeathHookTable = {}
 	TeamSwitchTable = {}
 
+	function ParseTagArguments(tag) {
+
+		if (!tag.find("{") || !tag.find("|")) return
+
+		local separator = ""
+
+		//table of all possible keyvalues for all tags
+		//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
+		//any newly added tags should similarly ensure any required keyvalues do not silently fail.
+
+		local tagtable = {
+			type = null
+			button = null
+			slot = null
+			health = 0.0
+			delay = 0.0
+			duration = 1.0
+			cooldown = 3.0
+			delay = 0.0
+			repeats = INT_MAX
+			ifhealthbelow = INT_MAX
+			charges = 1
+			ifseetarget = 1
+			damage = 7.5
+			radius = 135.0
+			weapon = ""
+			amount = 0.0
+			interval = 0.5
+		}
+
+		//these ones aren't as re-usable as other kv's
+		if (startswith(tag, "popext_homing"))
+		{
+			tagtable.ignoreDisguisedSpies <- true
+			tagtable.ignoreStealthedSpies <- true
+			tagtable.speed_mult <- true
+			tagtable.turn_power <- true
+		}
+
+		tag.find("{") ? separator = "{" : separator = "|"
+
+
+		local splittag = tag.split(separator)
+
+		if (separator ==  "|")
+		{
+			MissionAttributes.ParseError("Pipe syntax is deprecated! Newer tags will not use this syntax")
+			local args = splittag
+			local func = args.remove(0)
+
+			local args_len = args.len()
+
+			tagtable.type = args[0]
+			tagtable.button = args[0].tointeger()
+
+			if (args_len > 1) tagtable.cooldown = args[1].tofloat()
+			if (args_len > 1 && func == "popext_halloweenboss") tagtable.boss_health = args[1].tointeger()
+			if (args_len > 2) tagtable.duration = args[2].tofloat()
+			if (args_len > 3) tagtable.delay = func == "popext_spell" ? args[2].tofloat() : args[3].tofloat() //popext_spell is stupid and backwards, too late to change now
+			if (args_len > 4) tagtable.repeats = func == "popext_spell" ? args[3].tointeger() : args[4].tointeger()
+			if (args_len > 5) tagtable.ifhealthbelow = "popext_spell" ? args[4].tointeger() : args[5].tointeger()
+			if (args_len > 5 && func == "popext_spell") tagtable.charges = args[5].tointeger()
+			if (args_len > 6) tagtable.ifseetarget = args[6]
+
+			if (func == "popext_ringoffire")
+			{
+				tagtable.damage = args[0].tofloat()
+				if (args_len > 1) tagtable.interval = args[1].tofloat()
+				if (args_len > 2) tagtable.radius = args[2].tofloat()
+			}
+
+		} else if (separator == "{") {
+
+			compilestring(format("::__popexttagstemp <- { %s", splittag[1]))()
+			tagtable = ::__popexttagstemp
+			delete ::__popexttagstemp
+		}
+		if (!splittag.len()) return
+
+		foreach(k, v in tagtable) printl(k + " : " + v)
+
+		return tagtable
+	}
 	function EvaluateTags(bot) {
 
 		local bottags = {}
@@ -1075,6 +1158,7 @@ local popext_funcs = {
 		foreach(i, tag in bottags) {
 
 			local args = split(tag, "|")
+			// local args = PopExtTags.ParseTagArguments(tag)
 			local func = args.remove(0)
 
 			if (func in popext_funcs)
