@@ -44,33 +44,33 @@ WaveSchedule
 				IncludeScript(`popextensions_main`, getroottable())
 
 				MissionAttrs({
-					`NoReanimators`: 1
-					`ForceHoliday`: 8
-					`NoRome`: 2
-					`BotHeadshots`: 1
-					`NoCrumpkins`: 1
-					`WaveStartCountdown`: 3
-					`PlayersAreRobots`: 1|8|16 //see missionattributes.nut for bitflag info
-					`ReverseMVM`: 1|2|8|16|32|64  //see missionattributes.nut for bitflag info
-					`SpellRateCommon`: 0.5
-					`NoSkeleSplit`: 1
-					`WaveNum`: 3
-					`MaxWaveNum`: 60
-					`StandableHeads`: 1
-					`MultiSapper`: 1
-					`TeamWipeWaveLoss`: 1
-					`GiantSentryKillCountOffset`: -4
+					NoReanimators = 1
+					ForceHoliday = 8
+					NoRome = 2
+					BotHeadshots = 1
+					NoCrumpkins = 1
+					WaveStartCountdown = 3
+					PlayersAreRobots = 1|8|16 //see missionattributes.nut for bitflag info
+					ReverseMVM = 1|2|8|16|32|64  //see missionattributes.nut for bitflag info
+					SpellRateCommon = 0.5
+					NoSkeleSplit = 1
+					WaveNum = 3
+					MaxWaveNum = 60
+					StandableHeads = 1
+					MultiSapper = 1
+					TeamWipeWaveLoss = 1
+					GiantSentryKillCountOffset = -4
 
-					`SoundOverrides` : { //overrides teamplay_broadcast_audio sounds
+					SoundOverrides = { //overrides teamplay_broadcast_audio sounds
 						`Announcer.MVM_Get_To_Upgrade`: null
 						`music.mvm_end_last_wave`: null
 						`Game.YourTeamWon`: null
 						`MVM.PlayerDied`: null
 					}
 
-					`AddCond`: [32, 10] //speed boost for 10s
+					AddCond = [32, 10] //speed boost for 10s
 
-					`PlayerAttributes`: {
+					PlayerAttributes = {
 
 						`damage bonus`: 10,
 						`can breathe under water`: 1,
@@ -95,8 +95,8 @@ WaveSchedule
 							`fire rate bonus` : 0.5,
 						}
 					},
-					`ItemAttributes`: {
-						`tf_weapon_scattergun` : {
+					ItemAttributes = {
+						tf_weapon_scattergun = {
 							`max health additive bonus` : 100
 							`fire rate bonus` : 0.5
 							`Reload time decreased` : 0.5
@@ -105,7 +105,7 @@ WaveSchedule
 							`passive reload`: 1
 							`collect currency on kill`: 1
 						},
-						`tf_weapon_rocketlauncher` : {
+						tf_weapon_rocketlauncher =  { //string with no spaces (like item classnames) can use this syntax
 							`projectile gravity`: 10
 							`fire rate penalty` : 3
 							`damage bonus` : 10
@@ -113,13 +113,13 @@ WaveSchedule
 							`add cond when active`: 91
 							// `self add cond on hit`: [91, 1]
 						},
-						`tf_weapon_pistol` : {
+						tf_weapon_pistol = {
 							`passive reload`: 1
 						},
-						`tf_weapon_shotgun`: {
+						tf_weapon_shotgun = {
 							`reloads full clip at once`: 1
 						}
-						`tf_weapon_crossbow` : {
+						tf_weapon_crossbow = {
 							`fires milk bolt`: 1
 							`set turn to ice`: 1
 							`radius sleeper`: 1
@@ -128,7 +128,7 @@ WaveSchedule
 							`melee cleave attack`: 32
 							`stun on hit`: { duration = 4 type = 2 speedmult = 0.2 stungiants = true }
 						},
-						`tf_weapon_wrench`: {
+						tf_weapon_wrench = {
 							// `mult teleporter recharge rate` : 2
 							`build small sentries`: 1
 						},
@@ -136,7 +136,7 @@ WaveSchedule
 							`radius sleeper`: 1
 							`explosive bullets`: 30
 						}
-						`The Sandman` : {
+						`The Sandman` : { //strings with spaces require this syntax.
 							`old sandman stun`: 1
 						}
 						`Iron Curtain` : {
