@@ -638,11 +638,6 @@ local popext_funcs = {
 	popext_homingprojectile = function(bot, args) {
 
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
-		local args_len = args.len()
-		local turn_power = (args_len > 0) ? args[0].tofloat() : 0.75
-		local speed_mult = (args_len > 1) ? args[1].tofloat() : 1.0
-		local ignoreStealthedSpies = (args_len > 2) ? args[2].tointeger() : 1
-		local ignoreDisguisedSpies = (args_len > 3) ? args[3].tointeger() : 1
 
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
 
@@ -696,19 +691,18 @@ local popext_funcs = {
 	}
 
 	popext_spawnhere = function(bot, args) {
-
-		if (FindByName(null, args[0]) != null)
-			bot.Teleport(true, FindByName(null, args[0]).GetOrigin(), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
+		if (FindByName(null, args.where) != null)
+			bot.Teleport(true, FindByName(null, args.where).GetOrigin(), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
 		else
 		{
-			local org = split(args[0], " ")
-			org.apply(function(val) { return val.tofloat()})
+			local org = split(args.where, " ")
+			org.apply(function(val) { return val.tofloat() })
 			bot.Teleport(true, Vector(org[0], org[1], org[2]), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
 		}
 
 		if (args.len() < 2) return
 
-		local spawnubertime = args[1].tofloat()
+		local spawnubertime = args.spawnuber.tofloat()
 		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, spawnubertime, null)
 	}
 
@@ -819,34 +813,31 @@ local popext_funcs = {
 
 		if ("halloweenboss" in scope) return
 
-		local boss = CreateByClassname(args[0])
+		local boss = CreateByClassname(args.type)
 
 		scope.halloweenboss <- boss
 
-		local org = split(args[2], " ")
+		local org = split(args.where, " ")
 		org.apply(function(v) { return v.tofloat()})
 		boss.SetOrigin(Vector(org[0], org[1], org[2]))
 
-		args.len() > 4 ? boss.SetTeam(args[4].tointeger()) : boss.SetTeam(5)
+		boss.SetTeam(args.boss_team)
 
 		DispatchSpawn(boss)
 
 		local bosshealth = 0
-		args[1] == "BOTHP" ? bosshealth = bot.GetHealth() : bosshealth = args[1].tointeger()
+		args.health == "BOTHP" ? bosshealth = bot.GetHealth() : bosshealth = args.health.tointeger()
 
 		boss.SetHealth(bosshealth)
 
-		if (args.len() > 3)
+		if (args.type != "headless_hatman")
 		{
-			if (args[0] != "headless_hatman")
-			{
-				local eventname = ""
-				args[0] = "eyeball_boss" ? eventname = "eyeball_boss_escape_imminent" : eventname = "merasmus_escape_warning"
-				SendGlobalGameEvent(eventname, {time_remaining 	= args[3].tointeger()})
-			}
-			else
-				EntFireByHandle(boss, "RunScriptCode", "self.TakeDamage(INT_MAX, DMG_GENERIC, self)", args[3].tointeger(), null, null)
+			local eventname = ""
+			args.type = "eyeball_boss" ? eventname = "eyeball_boss_escape_imminent" : eventname = "merasmus_escape_warning"
+			SendGlobalGameEvent(eventname, {time_remaining 	= args.duration.tointeger()})
 		}
+		else
+			EntFireByHandle(boss, "RunScriptCode", "self.TakeDamage(INT_MAX, DMG_GENERIC, self)", args.duration.tointeger(), null, null)
 
 		PopExtUtil.MonsterResource.ValidateScriptScope()
 
@@ -1065,18 +1056,19 @@ local popext_funcs = {
 
 	function ParseTagArguments(tag) {
 
-		if (!tag.find("{") || !tag.find("|")) return
+		if (!tag.find("{") && !tag.find("|")) return {}
 
-		local separator = ""
-
-		//table of all possible keyvalues for all tags
-		//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
-		//any newly added tags should similarly ensure any required keyvalues do not silently fail.
 
 		local tagtable = {
+
+			//required tags
 			type = null
 			button = null
 			slot = null
+			weapon = null
+			where = null
+
+			//default values
 			health = 0.0
 			delay = 0.0
 			duration = 1.0
@@ -1088,10 +1080,16 @@ local popext_funcs = {
 			ifseetarget = 1
 			damage = 7.5
 			radius = 135.0
-			weapon = ""
 			amount = 0.0
 			interval = 0.5
+			uber = 0.0
 		}
+
+		local separator = ""
+
+		//table of all possible keyvalues for all tags
+		//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
+		//any newly added tags should similarly ensure any required keyvalues do not silently fail.
 
 		//these ones aren't as re-usable as other kv's
 		if (startswith(tag, "popext_homing"))
@@ -1105,11 +1103,11 @@ local popext_funcs = {
 		tag.find("{") ? separator = "{" : separator = "|"
 
 
-		local splittag = tag.split(separator)
+		local splittag = split(tag, separator)
 
 		if (separator ==  "|")
 		{
-			MissionAttributes.ParseError("Pipe syntax is deprecated! Newer tags will not use this syntax")
+			// MissionAttributes.ParseError("Pipe syntax is deprecated! Newer tags will not use this syntax")
 			local args = splittag
 			local func = args.remove(0)
 
@@ -1132,17 +1130,27 @@ local popext_funcs = {
 				tagtable.damage = args[0].tofloat()
 				if (args_len > 1) tagtable.interval = args[1].tofloat()
 				if (args_len > 2) tagtable.radius = args[2].tofloat()
+
+			} else if (func == "popext_spawnhere") {
+
+				tagtable.where = args[0]
+				if (args.len() > 1) tagtable.spawn_uber_duration <- args[1].tofloat()
+
+			} else if (func == "popext_halloweenboss") {
+
+				if (args_len > 3) tagtable.boss_duration <- args[3].tofloat()
+				if (args_len > 4) tagtable.boss_team <- args[4].tointeger()
 			}
 
 		} else if (separator == "{") {
 
 			compilestring(format("::__popexttagstemp <- { %s", splittag[1]))()
-			tagtable = ::__popexttagstemp
+
+			foreach(k, v in ::__popexttagstemp) tagtable[k] = v
+
 			delete ::__popexttagstemp
 		}
-		if (!splittag.len()) return
-
-		foreach(k, v in tagtable) printl(k + " : " + v)
+		if (!splittag.len()) return tagtable
 
 		return tagtable
 	}
@@ -1158,11 +1166,13 @@ local popext_funcs = {
 		foreach(i, tag in bottags) {
 
 			local args = split(tag, "|")
-			// local args = PopExtTags.ParseTagArguments(tag)
 			local func = args.remove(0)
+			// local func = ""
+			// tag.find("|") ? func = split(tag, "|")[0] : func = split(tag, "{")[0]
 
-			if (func in popext_funcs)
-				popext_funcs[func](bot, args)
+			// local args = PopExtTags.ParseTagArguments(tag)
+
+			if (func in popext_funcs) popext_funcs[func](bot, args)
 
 		}
 	}
