@@ -635,7 +635,7 @@ local popext_funcs = {
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
 		local turn_power = "turn_power" in args ? args.turn_power : args.type
 		local speed_mult = "speed_mult" in args ? args.speed_mult : args.cooldown
-		local ignoreStealthedSpies = "ignoreStealted" in args ? args.ignoreSealthed : args.duration
+		local ignoreStealthedSpies = "ignoreStealted" in args ? args.ignoreStealthed : args.duration
 		local ignoreDisguisedSpies = "ignoreDisguise" in args ? args.ignoreDisguise : args.delay
 
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
