@@ -6,21 +6,21 @@ PopExtUtil.PlayerManager.ValidateScriptScope()
 local popext_funcs = {
 
 	popext_addcond = function(bot, args) {
+		local cond = "cond" in args ? args.cond.tointeger() : args.type.tointeger()
 		if (args.len() == 1) {
-			if (args[0].tointeger() == TF_COND_REPROGRAMMED) {
+			if (cond == TF_COND_REPROGRAMMED) {
 				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
 				// PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
 				// 	if (!IsPlayerABot(bot)) return
 				// 	EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
 				// }
-
 			}
 			else
-				bot.AddCond(args[0].tointeger())
+				bot.AddCond(cond)
 		}
 
 		else if (args.len() >= 2)
-			bot.AddCondEx(args[0].tointeger(), args[1].tointeger(), null)
+			bot.AddCondEx(cond, cond, null)
 	}
 
 	popext_reprogrammed = function(bot, args) {
@@ -39,7 +39,7 @@ local popext_funcs = {
 		if (args.len() == 1)
 			bot.PressAltFireButton(INT_MAX)
 		else if (args.len() >= 2)
-			bot.PressAltFireButton(args[1].tointeger())
+			bot.PressAltFireButton(args.duration.tointeger())
 	}
 
 	popext_deathsound = function(bot, args) {
@@ -50,7 +50,7 @@ local popext_funcs = {
 
 			if (victim != bot) return
 
-			EmitSoundEx({sound_name = args[0], entity = victim})
+			EmitSoundEx({sound_name = "sound" in args ? args.sound : args.type, entity = victim})
 		}
 	}
 
@@ -61,7 +61,7 @@ local popext_funcs = {
 		bot.GetScriptScope().PlayerThinkTable.Stepsound <- function() {
 
 			if (GetPropInt(bot, "m_Local.m_nStepside") != stepside)
-				EmitSoundEx({sound_name = args[0], entity = bot})
+				EmitSoundEx({sound_name = "sound" in args ? args.sound : args.type, entity = bot})
 
 			scope.stepside = GetPropInt(bot, "m_Local.m_nStepside")
 		}
@@ -76,9 +76,9 @@ local popext_funcs = {
 	}
 
 	popext_usecustommodel = function(bot, args) {
-
-		if (!IsModelPrecached(args[0])) PrecacheModel(args[0])
-		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", args[0], -1, null, null)
+		local model = "model" in args ? args.model : args.type
+		if (!IsModelPrecached(model)) PrecacheModel(model)
+		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", model, -1, null, null)
 		bot.GetScriptScope().usingcustommodel <- true
 	}
 
@@ -107,13 +107,13 @@ local popext_funcs = {
 	popext_fireweapon = function(bot, args) {
 
 		local args_len = args.len()
-		local button = args[0].tointeger()
-		local cooldown = (args_len > 1) ? args[1].tointeger() : 3
-		local duration = (args_len > 2) ? args[2].tointeger() : 1.0
-		local delay = (args_len > 3) ? args[3].tointeger() : 0
-		local repeats = (args_len > 4) ? args[4].tointeger() : INT_MAX
-		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : INT_MAX
-		local ifseetarget = (args_len > 6) ? args[6].tointeger() : 1
+		local button = "button" in args ? args.button.tointeger() : args.type.tointeger()
+		local cooldown = args.cooldown.tointeger()
+		local duration = args.duration.tointeger()
+		local delay = args.delay.tointeger()
+		local repeats = args.repeats.tointeger()
+		local ifhealthbelow = args.ifhealthbelow.tointeger()
+		local ifseetarget = args.ifseetarget.tointeger()
 
 		local maxrepeats = 0
 		local cooldowntime = Time() + cooldown
@@ -140,13 +140,13 @@ local popext_funcs = {
 	popext_weaponswitch = function(bot, args) {
 
 		local args_len = args.len()
-		local slot = args[0].tointeger()
-		local cooldown = (args_len > 1) ? args[1].tointeger() : 3
-		local duration = (args_len > 2) ? args[2].tointeger() : 5
-		local delay = (args_len > 3) ? args[3].tointeger() : 3
-		local repeats = (args_len > 4) ? args[4].tointeger() : INT_MAX
-		local ifhealthbelow = (args_len > 5) ? args[5].tointeger() : INT_MAX
-		local ifseetarget = (args_len > 6) ? args[6].tointeger() : 1
+		local slot = "slot" in args ? args.slot.tointeger() : args.type.tointeger()
+		local cooldown = args.cooldown.tointeger()
+		local duration = args.duration.tointeger()
+		local delay = args.delay.tointeger()
+		local repeats = args.repeats.tointeger()
+		local ifhealthbelow = args.ifhealthbelow.tointeger()
+		local ifseetarget = args.ifseetarget.tointeger()
 
 		local maxrepeats = 0
 		local cooldowntime = Time() + cooldown
@@ -175,13 +175,14 @@ local popext_funcs = {
 	popext_spell = function(bot, args) {
 
 		local args_len = args.len()
-		local type = args[0].tointeger()
-		local cooldown = args[1].tointeger()
-		local delay = (args_len > 2) ? args[2].tointeger() : 3
-		local repeats = (args_len > 3) ? args[3].tointeger() : INT_MAX
-		local ifhealthbelow = (args_len > 4) ? args[4].tointeger() : INT_MAX
-		local charges = (args_len > 5) ? args[5].tointeger() : 1
-		local ifseetarget = (args_len > 6) ? args[6].tointeger() : 1
+		local type = args.type.tointeger()
+		local cooldown = args.cooldown.tointeger()
+		local duration = args.duration.tointeger()
+		local delay = args.delay.tointeger()
+		local repeats = args.repeats.tointeger()
+		local ifhealthbelow = args.ifhealthbelow.tointeger()
+		local ifseetarget = args.ifseetarget.tointeger()
+
 
 		local spellbook = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
 
@@ -237,7 +238,7 @@ local popext_funcs = {
 	}
 
 	popext_spawntemplate = function(bot, args) {
-		SpawnTemplate(args[0], bot)
+		SpawnTemplate("template" in args ? args.template : args.type, bot)
 	}
 
 	popext_forceromevision = function(bot, args) {
@@ -272,17 +273,17 @@ local popext_funcs = {
 
 		local args_len = args.len()
 		if (args_len == 2)
-			CustomAttributes.AddAttr(bot, args[0], args[1], bot.GetActiveWeapon())
+			CustomAttributes.AddAttr(bot, args.attribute, args.value, bot.GetActiveWeapon())
 		else if (args_len == 3)
-			CustomAttributes.AddAttr(bot, args[0], args[1], args[2])
+			CustomAttributes.AddAttr(bot, args.attribute, args.value, args.weapon)
 	}
 
 	popext_ringoffire = function(bot, args) {
 
 		local args_len = args.len()
-		local damage = (args_len > 0) ? args[0].tofloat() : 7.5
-		local interval = (args_len > 1) ? args[1].tofloat() : 0.5
-		local radius = (args_len > 2) ? args[2].tofloat() : 135.0
+		local damage = args.damage.tointeger()
+		local interval = args.interval.tointeger()
+		local radius = args.radius.tointeger()
 
 		local cooldown = Time() + interval
 
@@ -348,7 +349,7 @@ local popext_funcs = {
 	popext_movetopoint = function(bot, args) {
 
 		local pos = Vector()
-		local point = args[0]
+		local point = "target" in args ? args.target : args.type
 
 		if (FindByName(null, point) != null)
 			pos = FindByName(null, point).GetOrigin()
@@ -369,24 +370,18 @@ local popext_funcs = {
 	popext_fireinput = function(bot, args) {
 
 		local args_len = args.len()
+		local target = "target" in args ? args.target : args.type
+		local action = "action" in args ? args.action : args.cooldown
+		local param = "param" in args ? args.param : args.duration
+		local delay = args.delay
 
-		if (args_len == 2)
-			EntFire(args[0], args[1])
-
-		else if (args_len == 3)
-			EntFire(args[0], args[1], args[2])
-
-		else if (args_len == 4)
-			EntFire(args[0], args[1], args[2], args[3])
-
-		else if (args_len == 5)
-			EntFire(args[0], args[1], args[2], args[3], args[4])
+		EntFire(target, action, param, delay)
 	}
 
 	popext_weaponresist = function(bot, args) {
 
-		local weapon = args[0]
-		local amount = args[1].tofloat()
+		local weapon = ("weapon" in args) ? args.weapon : args.type
+		local amount = ("amount" in args) ? args.amount.tofloat() : args.cooldown.tofloat()
 
 		PopExtTags.TakeDamageTable.WeaponResistTakeDamage <- function(params)
 		{
@@ -400,7 +395,7 @@ local popext_funcs = {
 	popext_setskin = function(bot, args) {
 
 		SetPropBool(bot, "m_bForcedSkin", true)
-		SetPropInt(bot, "m_nForcedSkin", args[0].tointeger())
+		SetPropInt(bot, "m_nForcedSkin", ("skin" in args) ? args.skin.tointeger() : args.type.tointeger() )
 
 		PopExtTags.TakeDamageTable.ResetSkin <- function(params) {
 
@@ -432,12 +427,12 @@ local popext_funcs = {
 
 	popext_dispenseroverride = function(bot, args) {
 
-		if (args.len() == 0) args.append(1) //sentry override by default
+		// if (args.len() == 0) args.append(1) //sentry override by default
 
 		local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
 
 		//force deploy dispenser when leaving spawn and kill it immediately
-		if (!alwaysfire && args[0].tointeger() == 1) bot.PressFireButton(INT_MAX)
+		if (!alwaysfire && args.type.tointeger() == 1) bot.PressFireButton(INT_MAX)
 
 		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- function() {
 
@@ -453,7 +448,7 @@ local popext_funcs = {
 			//dispenser built, stop force firing
 			if (!alwaysfire) bot.PressFireButton(0.0)
 
-			if ((args[0].tointeger() == 1 && obj == OBJ_SENTRYGUN) || (args[0].tointeger() == 2 && obj == OBJ_TELEPORTER)) {
+			if ((args.type.tointeger() == 1 && obj == OBJ_SENTRYGUN) || (args.type.tointeger() == 2 && obj == OBJ_TELEPORTER)) {
 				if (obj == OBJ_SENTRYGUN) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
 
 				bot.AddCustomAttribute("upgrade rate decrease", 8, -1)
@@ -531,8 +526,8 @@ local popext_funcs = {
 
 	popext_giveweapon = function(bot, args) {
 
-		local weapon = CreateByClassname(args[0])
-		SetPropInt(weapon, STRING_NETPROP_ITEMDEF, args[1].tointeger())
+		local weapon = CreateByClassname("weapon" in args ? args.weapon : args.type)
+		SetPropInt(weapon, STRING_NETPROP_ITEMDEF, "id" in args ? args.id.tointeger() : args.cooldown.tointeger())
 		SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
 		SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
 		weapon.SetTeam(bot.GetTeam())
@@ -547,7 +542,7 @@ local popext_funcs = {
 
 	popext_meleewhenclose = function(bot, args) {
 
-		local dist = args[0].tofloat()
+		local dist = "distance" in args ? args.distance.tofloat() : args.type.tofloat()
 		local previouswep = bot.GetActiveWeapon().entindex()
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeWhenClose <- function() {
@@ -638,6 +633,10 @@ local popext_funcs = {
 	popext_homingprojectile = function(bot, args) {
 
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
+		local turn_power = "turn_power" in args ? args.turn_power : args.type
+		local speed_mult = "speed_mult" in args ? args.speed_mult : args.cooldown
+		local ignoreStealthedSpies = "ignoreStealted" in args ? args.ignoreSealthed : args.duration
+		local ignoreDisguisedSpies = "ignoreDisguise" in args ? args.ignoreDisguise : args.delay
 
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
 
@@ -671,7 +670,7 @@ local popext_funcs = {
 
 				local particle = CreateByClassname("trigger_particle")
 
-				particle.KeyValueFromString("particle_name", args[0])
+				particle.KeyValueFromString("particle_name", "name" in args ? args.name : args.type)
 				particle.KeyValueFromInt("attachment_type", PATTACH_ABSORIGIN_FOLLOW)
 				particle.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_ALL)
 
@@ -687,7 +686,7 @@ local popext_funcs = {
 
 	popext_customweaponmodel = function(bot, args) {
 
-		bot.GetActiveWeapon().SetModelSimple(args[0])
+		bot.GetActiveWeapon().SetModelSimple("model" in args ? args.model : args.type)
 	}
 
 	popext_spawnhere = function(bot, args) {
@@ -702,8 +701,7 @@ local popext_funcs = {
 
 		if (args.len() < 2) return
 
-		local spawnubertime = args.spawnuber.tofloat()
-		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, spawnubertime, null)
+		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, args.spawn_uber_duration.tofloat(), null)
 	}
 
 	popext_improvedairblast = function (bot, args) {
@@ -762,7 +760,7 @@ local popext_funcs = {
 			{
 				if (aibot.IsInFieldOfView(player))
 				{
-					aibot.LookAt(player.GetAttachmentOrigin(player.LookupAttachment(args[0])))
+					aibot.LookAt(player.GetAttachmentOrigin(player.LookupAttachment("target" in args ? args.target : args.type)))
 					break
 				}
 			}
@@ -774,7 +772,7 @@ local popext_funcs = {
 		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- function(params) {
 
 			printl("dropping weapon")
-			local slot = (args.len() > 0) ? args[0].tointeger() : -1
+			local slot = (args.len() > 0) ? args.type.tointeger() : -1
 			local wep  = (slot == -1) ? bot.GetActiveWeapon() : PopExtUtil.GetItemInSlot(bot, slot)
 			if (wep == null) return
 
@@ -860,7 +858,7 @@ local popext_funcs = {
 
 		scope.PlayerThinkTable.BossHealthThink <- function() {
 
-			if (scope.halloweenboss.IsValid() && boss.GetHealth() != bot.GetHealth() && args[1] == "BOTHP")
+			if (scope.halloweenboss.IsValid() && boss.GetHealth() != bot.GetHealth() && args.health == "BOTHP")
 				bot.SetHealth(boss.GetHealth())
 
 			if (scope.halloweenboss.IsValid()) return
@@ -1054,7 +1052,7 @@ local popext_funcs = {
 	DeathHookTable = {}
 	TeamSwitchTable = {}
 
-	function ParseTagArguments(tag) {
+	function ParseTagArguments(bot, tag) {
 
 		if (!tag.find("{") && !tag.find("|")) return {}
 
@@ -1113,8 +1111,7 @@ local popext_funcs = {
 
 			local args_len = args.len()
 
-			tagtable.type = args[0]
-			tagtable.button = args[0].tointeger()
+			tagtable.type = args[0] //type will always be a generic reference to the first element, so we don't need to make a zillion one-off references for single-arg tags
 
 			if (args_len > 1) tagtable.cooldown = args[1].tofloat()
 			if (args_len > 1 && func == "popext_halloweenboss") tagtable.boss_health = args[1].tointeger()
@@ -1140,13 +1137,18 @@ local popext_funcs = {
 
 				if (args_len > 3) tagtable.boss_duration <- args[3].tofloat()
 				if (args_len > 4) tagtable.boss_team <- args[4].tointeger()
+
+			} else if (func == "popext_customattr") {
+				tagtable.attribute <- null
+				tagtable.value <- null
+				args_len > 3 ? tagtable.weapon <- args[3] : tagtable.weapon <- bot.GetActiveWeapon()
 			}
 
 		} else if (separator == "{") {
 
 			compilestring(format("::__popexttagstemp <- { %s", splittag[1]))()
 
-			foreach(k, v in ::__popexttagstemp) tagtable[k] = v
+			foreach(k, v in ::__popexttagstemp) tagtable[k] <- v
 
 			delete ::__popexttagstemp
 		}
@@ -1165,12 +1167,11 @@ local popext_funcs = {
 
 		foreach(i, tag in bottags) {
 
-			local args = split(tag, "|")
-			local func = args.remove(0)
-			// local func = ""
-			// tag.find("|") ? func = split(tag, "|")[0] : func = split(tag, "{")[0]
+			// local args = split(tag, "|")
+			// local func = args.remove(0)
 
-			// local args = PopExtTags.ParseTagArguments(tag)
+			local func = ""; tag.find("|") ? func = split(tag, "|")[0] : func = split(tag, "{")[0]
+			local args = PopExtTags.ParseTagArguments(bot, tag)
 
 			if (func in popext_funcs) popext_funcs[func](bot, args)
 
