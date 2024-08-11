@@ -6,21 +6,12 @@ PopExtUtil.PlayerManager.ValidateScriptScope()
 local popext_funcs = {
 
 	popext_addcond = function(bot, args) {
-		local cond = "cond" in args ? args.cond.tointeger() : args.type.tointeger()
-		if (args.len() == 1) {
-			if (cond == TF_COND_REPROGRAMMED) {
-				bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
-				// PopExtTags.DeathHookTable.MoveToSpec <- function (params) {
-				// 	if (!IsPlayerABot(bot)) return
-				// 	EntFirebyHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", 3, null, null)
-				// }
-			}
-			else
-				bot.AddCond(cond)
-		}
 
-		else if (args.len() >= 2)
-			bot.AddCondEx(cond, cond, null)
+		local cond = "cond" in args ? args.cond.tointeger() : args.type.tointeger()
+		if (cond == TF_COND_REPROGRAMMED)
+			bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
+		else
+			bot.AddCondEx(cond, args.duration.tointeger(), null)
 	}
 
 	popext_reprogrammed = function(bot, args) {
@@ -36,10 +27,7 @@ local popext_funcs = {
 
 	popext_altfire = function(bot, args) {
 
-		if (args.len() == 1)
-			bot.PressAltFireButton(INT_MAX)
-		else if (args.len() >= 2)
-			bot.PressAltFireButton(args.duration.tointeger())
+		bot.PressAltFireButton(args.duration.tointeger())
 	}
 
 	popext_deathsound = function(bot, args) {
@@ -97,8 +85,7 @@ local popext_funcs = {
 
 	popext_stripslot = function(bot, args) {
 
-		if (args.len() == 1) args.append(-1)
-		local slot = args[1].tointeger()
+		local slot = "slot" in args ? args.slot.tointeger() : args.type.tointeger()
 
 		if (slot == -1) slot = bot.GetActiveWeapon().GetSlot()
 		PopExtUtil.GetItemInSlot(bot, slot).Kill()
@@ -106,7 +93,6 @@ local popext_funcs = {
 
 	popext_fireweapon = function(bot, args) {
 
-		local args_len = args.len()
 		local button = "button" in args ? args.button.tointeger() : args.type.tointeger()
 		local cooldown = args.cooldown.tointeger()
 		local duration = args.duration.tointeger()
@@ -139,7 +125,6 @@ local popext_funcs = {
 
 	popext_weaponswitch = function(bot, args) {
 
-		local args_len = args.len()
 		local slot = "slot" in args ? args.slot.tointeger() : args.type.tointeger()
 		local cooldown = args.cooldown.tointeger()
 		local duration = args.duration.tointeger()
@@ -174,7 +159,6 @@ local popext_funcs = {
 
 	popext_spell = function(bot, args) {
 
-		local args_len = args.len()
 		local type = args.type.tointeger()
 		local cooldown = args.cooldown.tointeger()
 		local duration = args.duration.tointeger()
@@ -271,16 +255,12 @@ local popext_funcs = {
 
 	popext_customattr = function(bot, args) {
 
-		local args_len = args.len()
-		if (args_len == 2)
-			CustomAttributes.AddAttr(bot, args.attribute, args.value, bot.GetActiveWeapon())
-		else if (args_len == 3)
-			CustomAttributes.AddAttr(bot, args.attribute, args.value, args.weapon)
+		local weapon = "weapon" in args ? args.weapon : bot.GetActiveWeapon()
+		CustomAttributes.AddAttr(bot, args.attribute, args.value, weapon)
 	}
 
 	popext_ringoffire = function(bot, args) {
 
-		local args_len = args.len()
 		local damage = args.damage.tointeger()
 		local interval = args.interval.tointeger()
 		local radius = args.radius.tointeger()
@@ -369,7 +349,6 @@ local popext_funcs = {
 
 	popext_fireinput = function(bot, args) {
 
-		local args_len = args.len()
 		local target = "target" in args ? args.target : args.type
 		local action = "action" in args ? args.action : args.cooldown
 		local param = "param" in args ? args.param : args.duration
@@ -426,8 +405,6 @@ local popext_funcs = {
 	}
 
 	popext_dispenseroverride = function(bot, args) {
-
-		// if (args.len() == 0) args.append(1) //sentry override by default
 
 		local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
 
@@ -666,7 +643,7 @@ local popext_funcs = {
 
 				if (projectile.IsEFlagSet(EFL_PROJECTILE) || GetPropEntity(projectile, "m_hOwnerEntity") != bot) continue
 
-				if (args.len() > 1) EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
+				EntFireByHandle(projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null)
 
 				local particle = CreateByClassname("trigger_particle")
 
@@ -699,9 +676,7 @@ local popext_funcs = {
 			bot.Teleport(true, Vector(org[0], org[1], org[2]), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
 		}
 
-		if (args.len() < 2) return
-
-		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, args.spawn_uber_duration.tofloat(), null)
+		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, "spawn_uber_duration" in args ? args.spawn_uber_duration.tofloat() : args.cooldown.tofloat(), null)
 	}
 
 	popext_improvedairblast = function (bot, args) {
@@ -772,7 +747,7 @@ local popext_funcs = {
 		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- function(params) {
 
 			printl("dropping weapon")
-			local slot = (args.len() > 0) ? args.type.tointeger() : -1
+			local slot = args.type ? args.type.tointeger() : -1
 			local wep  = (slot == -1) ? bot.GetActiveWeapon() : PopExtUtil.GetItemInSlot(bot, slot)
 			if (wep == null) return
 
@@ -1069,7 +1044,7 @@ local popext_funcs = {
 			//default values
 			health = 0.0
 			delay = 0.0
-			duration = 1.0
+			duration = INT_MAX
 			cooldown = 3.0
 			delay = 0.0
 			repeats = INT_MAX
@@ -1131,7 +1106,7 @@ local popext_funcs = {
 			} else if (func == "popext_spawnhere") {
 
 				tagtable.where = args[0]
-				if (args.len() > 1) tagtable.spawn_uber_duration <- args[1].tofloat()
+				if (args_len > 1) tagtable.spawn_uber_duration <- args[1].tofloat()
 
 			} else if (func == "popext_halloweenboss") {
 
