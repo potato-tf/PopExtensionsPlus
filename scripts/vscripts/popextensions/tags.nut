@@ -166,6 +166,7 @@ local popext_funcs = {
 		local repeats = args.repeats.tointeger()
 		local ifhealthbelow = args.ifhealthbelow.tointeger()
 		local ifseetarget = args.ifseetarget.tointeger()
+		local charges = "charges" in args ? args.charges.tointeger() : INT_MAX
 
 
 		local spellbook = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
