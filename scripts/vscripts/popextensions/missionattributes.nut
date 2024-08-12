@@ -1075,12 +1075,12 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				foreach (k, v in value)
 				{
 					if (typeof v != "table")
-					MissionAttributes.SetPlayerAttributes(player, k, v)
+					PopExtUtil.SetPlayerAttributes(player, k, v)
 					else if (tfclass in value)
 					{
 						local table = value[tfclass]
 						foreach (k, v in table) {
-							MissionAttributes.SetPlayerAttributes(player, k, v)
+							PopExtUtil.SetPlayerAttributes(player, k, v)
 						}
 					}
 				}
@@ -1112,7 +1112,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 					foreach (attrib, value in attr)
 					{
-						MissionAttributes.SetPlayerAttributes(player, attrib, value, wep)
+						PopExtUtil.SetPlayerAttributes(player, attrib, value, wep)
 					}
 				}
 
@@ -2502,48 +2502,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 			ParseError(format("Could not find mission attribute '%s'", attr))
 			success = false
-		}
-	}
-	// TODO: rework this boosted ass shit
-	function SetPlayerAttributes(player, attrib, value, item = null)
-	{
-		local items = {}
-		//setting maxhealth attribs doesn't update current HP
-		local healthattribs = {
-			"max health additive bonus" : null,
-			"max health additive penalty": null,
-			"SET BONUS: max health additive bonus": null,
-			"hidden maxhealth non buffed": null,
-		}
-		if (item)
-			items[PopExtUtil.HasItemInLoadout(player, item)] <- [attrib, value]
-		else
-			for (local i = 0; i < GetPropArraySize(player, "m_hMyWeapons"); i++)
-				if (GetPropEntityArray(player, "m_hMyWeapons", i))
-					items[GetPropEntityArray(player, "m_hMyWeapons", i)] <- [attrib, value]
-		// printl(PopExtUtil.HasItemInLoadout(player, item))
-		//do the customattributes check first, since we replace some vanilla attributes
-		if (attrib in CustomAttributes.Attrs)
-			CustomAttributes.AddAttr(player, attrib, value, items)
-
-		else if ("Attributes" in PopExtItems && attrib in PopExtItems.Attributes)
-		{
-			if ("attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string")
-				MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
-			else
-			{
-				item == null ? EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", attrib, value.tofloat()), -1, null, null) : EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
-				if (attrib in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
-			}
-			//add hidden attributes to our custom attribute display
-			if ("hidden" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["hidden"] == "1" && "ShowHiddenAttributes" in MissionAttributes.CurAttrs && MissionAttributes.CurAttrs.ShowHiddenAttributes)
-			{
-				local scope = player.GetScriptScope()
-				if (!("attribinfo" in scope)) scope.attribinfo <- {}
-
-				scope.attribinfo[attrib] <- format("%s: %s" attrib, value.tostring())
-				CustomAttributes.RefreshDescs(player)
-			}
 		}
 	}
 	// Logging Functions

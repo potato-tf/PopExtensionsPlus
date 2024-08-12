@@ -185,7 +185,7 @@ ExtraItems <-
 		if (extraitem != null)
 			foreach (attribute, value in extraitem)
 				if (!(attribute in reservedKeywords))
-					MissionAttributes.SetPlayerAttributes(player, attribute, value, item)
+					PopExtUtil.SetPlayerAttributes(player, attribute, value, item)
 
 		if (!("CustomWeapons" in player.GetScriptScope()))
 			player.GetScriptScope().CustomWeapons <- {}
