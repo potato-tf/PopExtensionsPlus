@@ -1070,8 +1070,8 @@ local popext_funcs = {
 		{
 			tagtable.ignoreDisguisedSpies <- true
 			tagtable.ignoreStealthedSpies <- true
-			tagtable.speed_mult <- true
-			tagtable.turn_power <- true
+			tagtable.speed_mult <- 1.0
+			tagtable.turn_power <- 1.0
 		}
 
 		tag.find("{") ? separator = "{" : separator = "|"
