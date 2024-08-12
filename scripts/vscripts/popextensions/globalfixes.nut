@@ -1,5 +1,4 @@
 const SCOUT_MONEY_COLLECTION_RADIUS = 288
-const HUNTSMAN_DAMAGE_FIX_MOD       = 1.263157
 const EFL_USER = 1048576
 
 local GlobalFixesEntity = FindByName(null, "_popext_globalfixes")
@@ -45,15 +44,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		// 	if ((params.damage_custom == TF_DMG_CUSTOM_HEADSHOT && params.damage > 360.0) || params.damage > 120.0)
 		// 		params.damage *= HUNTSMAN_DAMAGE_FIX_MOD
 		// }
-
-		function HuntsmanDamageBonusFix(params) {
-			local wep = params.weapon
-
-			if (GetPropString(wep, "m_iClassname") != "tf_weapon_compound_bow") return
-
-			if (wep.GetAttribute("damage bonus", 1.0) != 1.0) params.damage *= HUNTSMAN_DAMAGE_FIX_MOD
-		}
-
 
 		function HolidayPunchFix(params) {
 			local wep   = params.weapon

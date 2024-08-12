@@ -1,4 +1,5 @@
 //behavior tags
+//why does this need to be included here when it's already included in the _main file?
 IncludeScript("popextensions/botbehavior", getroottable())
 
 PopExtUtil.PlayerManager.ValidateScriptScope()
@@ -256,7 +257,7 @@ local popext_funcs = {
 
 	popext_customattr = function(bot, args) {
 
-		local weapon = "weapon" in args ? args.weapon : bot.GetActiveWeapon()
+		local weapon = args.weapon ? args.weapon : bot.GetActiveWeapon()
 		CustomAttributes.AddAttr(bot, args.attribute, args.value, weapon)
 	}
 
@@ -360,7 +361,7 @@ local popext_funcs = {
 
 	popext_weaponresist = function(bot, args) {
 
-		local weapon = ("weapon" in args) ? args.weapon : args.type
+		local weapon = args.weapon ? args.weapon : args.type
 		local amount = ("amount" in args) ? args.amount.tofloat() : args.cooldown.tofloat()
 
 		PopExtTags.TakeDamageTable.WeaponResistTakeDamage <- function(params)
@@ -504,7 +505,7 @@ local popext_funcs = {
 
 	popext_giveweapon = function(bot, args) {
 
-		local weapon = CreateByClassname("weapon" in args ? args.weapon : args.type)
+		local weapon = CreateByClassname(args.weapon ? args.weapon : args.type)
 		SetPropInt(weapon, STRING_NETPROP_ITEMDEF, "id" in args ? args.id.tointeger() : args.cooldown.tointeger())
 		SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
 		SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
@@ -1114,10 +1115,10 @@ local popext_funcs = {
 				if (args_len > 3) tagtable.boss_duration <- args[3].tofloat()
 				if (args_len > 4) tagtable.boss_team <- args[4].tointeger()
 
-			} else if (func == "popext_customattr") {
+			} else if (func == "popext_customattr" || func == "popext_giveweapon") {
 				tagtable.attribute <- null
 				tagtable.value <- null
-				args_len > 3 ? tagtable.weapon <- args[3] : tagtable.weapon <- bot.GetActiveWeapon()
+				tagtable.weapon <- func == "popext_giveweapon" ? args[0] : args_len > 3 ? args[3] : tagtable.weapon <- bot.GetActiveWeapon()
 			}
 
 		} else if (separator == "{") {

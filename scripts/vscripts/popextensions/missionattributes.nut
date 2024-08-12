@@ -2,7 +2,9 @@ IncludeScript("popextensions/customattributes")
 
 PrecacheScriptSound("Announcer.MVM_Get_To_Upgrade")
 
-const EFL_USER = 1048576
+const EFL_USER 					= 1048576
+const HUNTSMAN_DAMAGE_FIX_MOD 	= 1.263157
+
 if (!("ScriptLoadTable" in ROOT)) ::ScriptLoadTable   <- {}
 if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
@@ -162,6 +164,21 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		MaxWaveNum = function(value) {
 			MissionAttributes.StartWaveTable.SetMaxWaveNum <- function(params) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value) }
 			MissionAttributes.StartWaveTable.SetMaxWaveNum(null)
+		}
+
+		// =============================================================================
+		// Enable this to fix huntsman damage bonus not scaling correctly
+		// WARNING: Rafmod already does this, enabling this on potato servers will stack
+		// =============================================================================
+
+		HuntsmanDamageFix = function(value) {
+			MissionAttributes.TakeDamageTable.HuntsmanDamageFix <- function(params) {
+				local wep = params.weapon
+
+				if (GetPropString(wep, "m_iClassname") != "tf_weapon_compound_bow") return
+
+				if (wep.GetAttribute("damage bonus", 1.0) != 1.0) params.damage *= HUNTSMAN_DAMAGE_FIX_MOD
+			}
 		}
 
 		// =========================================================
