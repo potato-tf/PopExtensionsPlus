@@ -620,9 +620,9 @@ local popext_funcs = {
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
 
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
-				if (projectile.GetOwner() != bot || !Homing.IsValidProjectile(projectile, PopExtUtil.HomingProjectiles)) continue
+				if (projectile.GetOwner() != bot || !this.IsValidProjectile(projectile, PopExtUtil.HomingProjectiles)) continue
 				// Any other parameters needed by the projectile thinker can be set here
-				Homing.AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
+				this.AttachProjectileThinker(projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies)
 			}
 		}
 
@@ -685,7 +685,7 @@ local popext_funcs = {
 
 		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- function() {
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
-				if (projectile.GetTeam() == bot.GetTeam() || !Homing.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
+				if (projectile.GetTeam() == bot.GetTeam() || !this.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
 				if (aibot.GetThreatDistanceSqr(projectile) <= 67000 && aibot.IsVisible(projectile)) {
@@ -928,13 +928,13 @@ local popext_funcs = {
 		//this should be added in globalfixes.nut but sometimes this code tries to run before the table is created
 		if (!("ProjectileThinkTable" in projectile_scope)) projectile_scope.ProjectileThinkTable <- {}
 
-		projectile_scope.ProjectileThinkTable.HomingProjectileThink <- Homing.HomingProjectileThink
+		projectile_scope.ProjectileThinkTable.HomingProjectileThink <- this.HomingProjectileThink
 	}
 
 	function HomingProjectileThink() {
-		local new_target = Homing.SelectVictim(self)
-		if (new_target != null && Homing.IsLookingAt(self, new_target))
-			Homing.FaceTowards(new_target, self, projectile_speed)
+		local new_target = this.SelectVictim(self)
+		if (new_target != null && this.IsLookingAt(self, new_target))
+			this.FaceTowards(new_target, self, projectile_speed)
 	}
 
 	function SelectVictim(projectile) {
