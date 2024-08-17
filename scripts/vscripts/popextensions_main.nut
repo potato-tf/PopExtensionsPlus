@@ -134,7 +134,7 @@ if (!("_AddThinkToEnt" in _root))
 				EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 		//same pop, don't run clean-up
-		if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
+		if ("__popname" in _root && __popname == GetPropString(o, "m_iszMvMPopfileName")) return
 
 		EntFire("_popext*", "Kill")
 		EntFire("__util*", "Kill")
@@ -160,11 +160,11 @@ if (!("_AddThinkToEnt" in _root))
 		try delete ::SpawnTemplates catch(e) return
 		try delete ::VCD_SOUNDSCRIPT_MAP catch(e) return
 		try delete ::PopExtUtil catch(e) return
-		try delete ::__popname catch(e) return
 		try delete ::__tagarray catch(e) return
 		try delete ::PointTemplates catch(e) return
 		try delete ::CustomWeapons catch(e) return
 		try delete ::PopExtMain catch(e) return
+		try delete ::__popname catch(e) return
 	}
 }
 __CollectGameEventCallbacks(PopExtMain)
