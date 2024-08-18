@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "07.21.2024.1"
+::popExtensionsVersion <- "08.18.2024.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -134,7 +134,7 @@ if (!("_AddThinkToEnt" in _root))
 				EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 		//same pop, don't run clean-up
-		if ("__popname" in _root && __popname == GetPropString(o, "m_iszMvMPopfileName")) return
+		if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
 
 		EntFire("_popext*", "Kill")
 		EntFire("__util*", "Kill")
