@@ -163,8 +163,8 @@ if (!("_AddThinkToEnt" in _root))
 		try delete ::__tagarray catch(e) return
 		try delete ::PointTemplates catch(e) return
 		try delete ::CustomWeapons catch(e) return
-		try delete ::PopExtMain catch(e) return
 		try delete ::__popname catch(e) return
+		try delete ::PopExtMain catch(e) return
 	}
 }
 __CollectGameEventCallbacks(PopExtMain)
