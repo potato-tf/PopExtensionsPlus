@@ -1033,7 +1033,9 @@ local popext_funcs = {
 
 		if (!tag.find("{") && !tag.find("|")) return {}
 
-
+		//table of all possible keyvalues for all tags
+		//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
+		//any newly added tags should similarly ensure any required keyvalues do not silently fail.
 		local tagtable = {
 
 			//required tags
@@ -1062,10 +1064,6 @@ local popext_funcs = {
 
 		local separator = ""
 
-		//table of all possible keyvalues for all tags
-		//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
-		//any newly added tags should similarly ensure any required keyvalues do not silently fail.
-
 		//these ones aren't as re-usable as other kv's
 		if (startswith(tag, "popext_homing"))
 		{
@@ -1077,12 +1075,11 @@ local popext_funcs = {
 
 		tag.find("{") ? separator = "{" : separator = "|"
 
-
 		local splittag = split(tag, separator)
 
 		if (separator ==  "|")
 		{
-			// MissionAttributes.ParseError("Pipe syntax is deprecated! Newer tags will not use this syntax")
+			ClientPrint(null, 2, "Pipe syntax is deprecated! Newer tags will not use this syntax")
 			local args = splittag
 			local func = args.remove(0)
 
@@ -1133,6 +1130,7 @@ local popext_funcs = {
 
 		return tagtable
 	}
+
 	function EvaluateTags(bot) {
 
 		local bottags = {}
