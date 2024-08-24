@@ -294,7 +294,8 @@ PopExt <- popExtEntity.GetScriptScope()
 
 				local scope = tank.GetScriptScope()
 
-				EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank, flags = SND_STOP})
+				if ("popProperty" in scope && "SoundOverrides" in scope.popProperty && "EngineLoop" in scope.popProperty.SoundOverrides)
+					EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank, flags = SND_STOP})
 
 				tank.RemoveEFlags(EFL_KILLME)
 				tankstokill.append(tank)
