@@ -162,7 +162,6 @@ if (!("_AddThinkToEnt" in _root))
 			try delete ::SpawnTemplates catch(e) return -1
 			try delete ::VCD_SOUNDSCRIPT_MAP catch(e) return -1
 			try delete ::PopExtUtil catch(e) return -1
-			try delete ::__tagarray catch(e) return -1
 			try delete ::PointTemplates catch(e) return -1
 			try delete ::CustomWeapons catch(e) return -1
 			try delete ::__popname catch(e) return -1
