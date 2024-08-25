@@ -1303,7 +1303,7 @@
 			local scope = player.GetScriptScope()
 			scope.PlayerThinkTable[format("PassiveReload_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (player.GetActiveWeapon() != wep) return
+				if (player.GetActiveWeapon() == wep) return
 
 				local ammo = GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1)
 
