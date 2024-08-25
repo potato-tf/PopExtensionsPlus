@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "08.18.2024.1"
+::popExtensionsVersion <- "08.25.2024.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -145,31 +145,23 @@ if (!("_AddThinkToEnt" in _root))
 			this.PlayerCleanup(player)
 		}
 
-		local __temp = CreateByClassname("info_teleport_destination")
-		SetPropString(__temp, "m_iName", "_popext_cleanup")
-		DispatchSpawn(__temp)
-		__temp.ValidateScriptScope()
-		__temp.GetScriptScope().Temp <- function() {
+		try delete ::MissionAttributes catch(e) return
+		try delete ::CustomAttributes catch(e) return
+		try delete ::PopExt catch(e) return
+		try delete ::PopExtTags catch(e) return
+		try delete ::PopExtHooks catch(e) return
+		try delete ::GlobalFixes catch(e) return
+		try delete ::SpawnTemplate catch(e) return
+		try delete ::SpawnTemplateWaveSchedule catch(e) return
+		try delete ::SpawnTemplates catch(e) return
+		try delete ::VCD_SOUNDSCRIPT_MAP catch(e) return
+		try delete ::PopExtUtil catch(e) return
+		try delete ::PointTemplates catch(e) return
+		try delete ::CustomWeapons catch(e) return
+		try delete ::__popname catch(e) return
+		try delete ::PopExtMain catch(e) return
 
-			try delete ::MissionAttributes catch(e) return -1
-			try delete ::CustomAttributes catch(e) return -1
-			try delete ::PopExt catch(e) return -1
-			try delete ::PopExtTags catch(e) return -1
-			try delete ::PopExtHooks catch(e) return -1
-			try delete ::GlobalFixes catch(e) return -1
-			try delete ::SpawnTemplate catch(e) return -1
-			try delete ::SpawnTemplateWaveSchedule catch(e) return -1
-			try delete ::SpawnTemplates catch(e) return -1
-			try delete ::VCD_SOUNDSCRIPT_MAP catch(e) return -1
-			try delete ::PopExtUtil catch(e) return -1
-			try delete ::PointTemplates catch(e) return -1
-			try delete ::CustomWeapons catch(e) return -1
-			try delete ::__popname catch(e) return -1
-			try delete ::PopExtMain catch(e) return -1
-		}
-		AddThinkToEnt(__temp, "Temp")
-
-		EntFire("_popext*", "Kill", 1)
+		EntFire("_popext*", "Kill")
 		EntFire("__util*", "Kill")
 		EntFire("__bot*", "Kill")
 	}
