@@ -766,7 +766,6 @@ local popext_funcs = {
 	 * TFBot
 	 * {
 	 *     Class Soldier
-	 *     Attributes IgnoreFlag
 	 *     Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
 	 *     Tag "popext_warpaint{ idx = 303, slot = 0, wear = 1.0, seed = `8873643875`}"
 	 * }
