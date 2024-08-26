@@ -2550,6 +2550,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 	}
 
 	// TODO: implement a try catch raise system instead of this
+	// TODO: We should move this to popextensions_main.nut so we can have better error logging through the whole library.
 
 	// Raises an error if the user passes an index that is out of range.
 	// Example: Allowed values are 1-2, but user passed 3.

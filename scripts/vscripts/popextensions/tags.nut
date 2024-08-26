@@ -790,7 +790,13 @@ local popext_funcs = {
 				break
 			}
 			if (weapon == null || nobreak == true) {
-				ParseError("Bot with popext_warpaint tag did not have a valid weapon in slot '%i'.")
+				local e = format("popext_warpaint: Bot '%%s' does not have a weapon in slot %i.", slot)
+				// We must delay the error by 1 tick in order to get the proper bot name.
+				EntFireByHandle(bot, "RunScriptCode",
+					format(@"local e = format(`%s`, GetPropString(self, `m_szNetname`))
+					ClientPrint(null, HUD_PRINTCONSOLE, e)
+					if (!GetListenServerHost()) printl(e)", e)
+				, SINGLE_TICK, null, null)
 				return
 			}
 		}
@@ -804,7 +810,7 @@ local popext_funcs = {
 		local wear = "wear" in args ? args.wear.tofloat() : weapon.GetAttribute("set_item_texture_wear", 0.0)
 		weapon.AddAttribute("set_item_texture_wear", wear, -1)
 
-		if (_intsize_ >= 8 && "seed" in args) {
+		if ("seed" in args) {
 			local seed = args.seed.tostring()
 
 			// Simple operation if we are on 64-bit.
