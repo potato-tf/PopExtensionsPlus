@@ -744,6 +744,111 @@ local popext_funcs = {
 		}
 	}
 
+	/**
+	 * Applies a warpaint to give a bot a decorated weapon.
+	 *
+	 * @param idx int		Warpaint index to apply to the weapon.
+	 * @param slot int?		Slot to apply to paintkit to (Default: Bot's active weapon on spawn).
+	 * @param wear flt?		Texture wear to apply to the warpaint (Default: Refers to "set_item_texture_wear", 0.0 if not set).
+	 * @param seed int?		Warpaint seed to use (Default: Refers to "custom_paintkit_seed_lo" and "custom_paintkit_seed_hi", none if not set).
+	 *
+	 *  Texture wear reference values:
+	 *   0.2 = Factory New
+	 *   0.4 = Minimal Wear
+	 *   0.6 = Field-Tested
+	 *   0.8 = Well-Worn
+	 *   1.0 = Battle Scarred
+	 *
+	 * The following popfile example with all optional parameters provided would apply a
+	 * Battle Scarred Macaw Masked warpaint to a bot soldier's rocket launcher, with the
+	 * "White Gem" seed set.
+	 *
+	 * TFBot
+	 * {
+	 *     Class Soldier
+	 *     Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+	 *     Tag "popext_warpaint{ idx = 303, slot = 0, wear = 1.0, seed = `8873643875`}"
+	 * }
+	 *
+	 * Implementation note: seeds can be passed as strings or integers on 64-bit servers
+	 * (integers are preferable), but they *must* be passed as strings on 32-bit servers.
+	 **/
+	popext_warpaint = function(bot, args) {
+		local weapon = null
+		local idx = args.idx.tointeger()
+
+		// Get the weapon in the slot provided.
+		if ("slot" in args && args.slot != null) {
+			local slot = args.slot.tointeger()
+
+			local nobreak = true
+			for (local i = 0; i < SLOT_COUNT; ++i) {
+				weapon = GetPropEntityArray(bot, "m_hMyWeapons", i)
+				if (weapon == null || weapon.GetSlot() != slot) continue
+				nobreak = false
+				break
+			}
+			if (weapon == null || nobreak == true) {
+				local e = format("popext_warpaint: Bot '%%s' does not have a weapon in slot %i.", slot)
+				// We must delay the error by 1 tick in order to get the proper bot name.
+				EntFireByHandle(bot, "RunScriptCode",
+					format(@"local e = format(`%s`, GetPropString(self, `m_szNetname`))
+					ClientPrint(null, HUD_PRINTCONSOLE, e)
+					if (!GetListenServerHost()) printl(e)", e)
+				, SINGLE_TICK, null, null)
+				return
+			}
+		}
+		// If no slot index is provided, use the bot's active weapon.
+		else weapon = bot.GetActiveWeapon()
+
+		// Set paintkit_proto_def_index as a float value (it is set incorrectly by the game).
+		weapon.AddAttribute("paintkit_proto_def_index", casti2f(idx), -1)
+
+		// Set item texture wear.
+		local wear = "wear" in args ? args.wear.tofloat() : weapon.GetAttribute("set_item_texture_wear", 0.0)
+		weapon.AddAttribute("set_item_texture_wear", wear, -1)
+
+		if ("seed" in args) {
+			local seed = args.seed.tostring()
+
+			// Simple operation if we are on 64-bit.
+			if (_intsize_ == 8) {
+				// This will overflow a Squirrel UInt, but we don't care since we only want the bits, the value is irrelevant.
+				seed = seed.tointeger()
+				weapon.AddAttribute("custom_paintkit_seed_lo", casti2f(seed & 0xFFFFFFFF), -1)
+				weapon.AddAttribute("custom_paintkit_seed_hi", casti2f(seed >> 32), -1)
+			}
+			// More involved if we are on 32-bit.
+			// DEPRECATED: This will be removed once 32-bit TF2 support is dropped.
+			else {
+				// Decompose a 64-bit decimal seed string in to four 16-bit integers,
+				//  and then compile the resulting integers to two 32 bit integers.
+				seed = seed.tostring()
+				local strlen = seed.len()
+				local digitstore = array(strlen, 0)
+
+				for (local i = 0; i < strlen; ++i) {
+					local carry = seed[i] - 48
+					local tmp = 0
+
+					for (local i = (strlen - 1); (i >= 0); --i) {
+						tmp = (digitstore[i] * 10) + carry
+						digitstore[i] = tmp & 0xFFFF
+						carry = tmp >> 16
+					}
+				}
+
+				weapon.AddAttribute("custom_paintkit_seed_lo", casti2f(
+					digitstore[strlen - 2] << 16 | digitstore[strlen - 1]
+				), -1)
+				weapon.AddAttribute("custom_paintkit_seed_hi", casti2f(
+					digitstore[strlen - 4] << 16 | digitstore[strlen - 3]
+				), -1)
+			}
+		}
+	}
+
 	popext_dropweapon = function(bot, args) {
 
 		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- function(params) {
@@ -1119,8 +1224,22 @@ local popext_funcs = {
 			}
 
 		} else if (separator == "{") {
-
-			compilestring(format("::__popexttagstemp <- { %s", splittag[1]))()
+			// Allow inputting strings in new-style tags using backticks.
+			local arr = split(splittag[1], "`")
+			local end = arr.len() - 1
+			if (end > 1) {
+				local str = ""
+				foreach (i, sub in arr) {
+					if (i == end) {
+						str += sub
+						break
+					}
+					str += sub + "\""
+				}
+				compilestring(format("::__popexttagstemp <- { %s", str))()
+			} else {
+				compilestring(format("::__popexttagstemp <- { %s", splittag[1]))()
+			}
 
 			foreach(k, v in ::__popexttagstemp) tagtable[k] <- v
 
