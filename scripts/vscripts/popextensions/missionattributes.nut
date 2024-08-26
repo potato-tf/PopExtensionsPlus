@@ -2298,16 +2298,16 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				local player = GetPlayerFromUserID(params.userid)
 				if (player.IsBotOfType(TF_BOT_TYPE)) return
-				// Note that player_changeclass fires before swap occurs
-				// This means that GetPlayerClass() can be used to get the previous player class,
+				// Note that player_changeclass fires before a class swap actually occurs.
+				// This means that player.GetPlayerClass() can be used to get the previous class,
 				//  and that PopExtUtil::PlayerClassCount() will return the current class array.
 				local classcount = PopExtUtil.PlayerClassCount()[params["class"]] + 1
 				if (params["class"] in value && classcount > value[params["class"]]) {
 					PopExtUtil.ForceChangeClass(player, player.GetPlayerClass())
 					if (value[params["class"]] == 0)
-						PopExtUtil.ShowMessage(format("%s is not allowed on this mission.", PopExtUtil.capwords(PopExtUtil.Classes[params["class"]])))
+						PopExtUtil.ShowMessage(format("%s is not allowed on this mission.", PopExtUtil.ClassesCaps[params["class"]]))
 					else
-						PopExtUtil.ShowMessage(format("%s is limited to %i for this mission.", PopExtUtil.capwords(PopExtUtil.Classes[params["class"]]), value[params["class"]]))
+						PopExtUtil.ShowMessage(format("%s is limited to %i for this mission.", PopExtUtil.ClassesCaps[params["class"]], value[params["class"]]))
 					switch(params["class"]) {
 						case TF_CLASS_SCOUT: EmitSoundOn("Scout.No03", player); break
 						case TF_CLASS_SOLDIER: EmitSoundOn("Soldier.No01", player); break
@@ -2319,15 +2319,33 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						case TF_CLASS_SNIPER: EmitSoundOn("Sniper.No04", player); break
 						case TF_CLASS_SPY: EmitSoundOn("Spy.No02", player); break
 						case TF_CLASS_CIVILIAN: EmitSoundOn("Scout.No03", player); break
-						default: break
 					}
 				}
 			}
 
+			// Accept string identifiers for classes to limit.
+			foreach (k, v in value) {
+				if (typeof k != "string") continue
+				printl(k + " " + v)
+				switch (k.tolower()) {
+					case "scout": value[TF_CLASS_SCOUT] <- v; delete value[k]; break
+					case "soldier": value[TF_CLASS_SOLDIER] <- v; delete value[k]; break
+					case "pyro": value[TF_CLASS_PYRO] <- v; delete value[k]; break
+					case "demo": value[TF_CLASS_DEMOMAN] <- v; delete value[k]; break
+					case "demoman": value[TF_CLASS_DEMOMAN] <- v; delete value[k]; break
+					case "heavy": value[TF_CLASS_HEAVYWEAPONS] <- v; delete value[k]; break
+					case "heavyweapons": value[TF_CLASS_HEAVYWEAPONS] <- v; delete value[k]; break
+					case "engineer": value[TF_CLASS_ENGINEER] <- v; delete value[k]; break
+					case "medic": value[TF_CLASS_MEDIC] <- v; delete value[k]; break
+					case "sniper": value[TF_CLASS_SNIPER] <- v; delete value[k]; break
+					case "spy": value[TF_CLASS_SPY] <- v; delete value[k]; break
+					case "civilian": value[TF_CLASS_CIVILIAN] <- v; delete value[k]; break
+				}
+			}
+
 			MissionAttributes.ClassLimits <- value
-			// Dump overflow players to free classes on wave init
+			// Dump overflow players to free classes on wave init.
 			EntFireByHandle(PopExtUtil.GameRules, "RunScriptCode", @"
-				PopExtUtil.SwitchToFirstValidWeapon(self)
 				local initcounts = PopExtUtil.PlayerClassCount()
 				local classes = array(TF_CLASS_COUNT_ALL, 0)
 				foreach (player in PopExtUtil.HumanArray) {
@@ -2345,7 +2363,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						}
 						if (nobreak) {
 							PopExtUtil.ForceChangeClass(player, RandomInt(1, 9))
-							MissionAttributes.ParseError(`ClassLimits could not find a free class slot`)
+							MissionAttributes.ParseError(`ClassLimits could not find a free class slot.`)
 							break
 						}
 					}

@@ -5,7 +5,7 @@
 	BotArray = []
 	PlayerArray = []
 	Classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer", "civilian"] //make element 0 a dummy string instead of doing array + 1 everywhere
-	ClassesCaps = ["", "Scout", "Sniper", "Soldier", "Demo", "Medic", "Heavy", "Pyro", "Spy", "Engineer", "Civilian"] //make element 0 a dummy string instead of doing array + 1 everywhere
+	ClassesCaps = ["", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer", "Civilian"] //make element 0 a dummy string instead of doing array + 1 everywhere
 	Slots   = ["slot_primary", "slot_secondary", "slot_melee", "slot_utility", "slot_building", "slot_pda", "slot_pda2"]
 	IsWaveStarted = false //check a global variable instead of accessing a netprop every time to check if we are between waves.
 	AllNavAreas = {}
