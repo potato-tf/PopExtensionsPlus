@@ -759,15 +759,16 @@ local popext_funcs = {
 	 *   0.8 = Well-Worn
 	 *   1.0 = Battle Scarred
 	 *
-	 * The following popfile example would apply a Battle Scarred Macaw Masked warpaint to
-	 * a bot soldier's rocket launcher, with a "White Gem" seed.
+	 * The following popfile example with all optional parameters provided would apply a
+	 * Battle Scarred Macaw Masked warpaint to a bot soldier's rocket launcher, with the
+	 * "White Gem" seed set.
 	 *
 	 * TFBot
 	 * {
 	 *     Class Soldier
 	 *     Attributes IgnoreFlag
 	 *     Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
-	 *     Tag "popext_warpaint{ slot = 0, idx = 303, wear = 1.0, seed = `8873643875`}"
+	 *     Tag "popext_warpaint{ idx = 303, slot = 0, wear = 1.0, seed = `8873643875`}"
 	 * }
 	 *
 	 * Implementation note: seeds can be passed as strings or integers on 64-bit servers
