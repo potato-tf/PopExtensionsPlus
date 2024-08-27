@@ -238,7 +238,7 @@ if (!("_AddThinkToEnt" in _root))
 				"ScriptUnloadTable"
 			]
 
-			foreach(c in cleanup) if (c in _root) delete ::c
+			foreach(c in cleanup) if (c in _root) delete _root[c]
 
 			EntFire("_popext*", "Kill")
 			EntFire("__util*", "Kill")
