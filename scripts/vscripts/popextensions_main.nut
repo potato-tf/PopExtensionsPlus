@@ -119,7 +119,7 @@ if (!("_AddThinkToEnt" in _root))
 
 			local player = GetPlayerFromUserID(params.userid)
 
-			this.PlayerCleanup(player)
+			PopExtMain.PlayerCleanup(player)
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -175,7 +175,7 @@ if (!("_AddThinkToEnt" in _root))
 
 			if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
-			this.PlayerCleanup(player)
+			PopExtMain.PlayerCleanup(player)
 		}
 
 		function OnGameEvent_teamplay_round_start(params) {
@@ -193,7 +193,7 @@ if (!("_AddThinkToEnt" in _root))
 
 				if (player == null) continue
 
-				this.PlayerCleanup(player)
+				PopExtMain.PlayerCleanup(player)
 			}
 
 			local cleanup = [
