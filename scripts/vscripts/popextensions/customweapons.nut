@@ -40,34 +40,34 @@ ExtraItems <-
 	}
 }
 
-//arrays copied from Yaki's gtfw
-//Order based on internal constants of ETFClass
-::TF_AMMO_PER_CLASS_PRIMARY <- {
-	"scout" : 32,	//Scout
-	"sniper" : 25,	//Sniper
-	"soldier" : 20	//Soldier
-	"demo" : 16,	//Demo
-	"medic" : 150	//Medic
-	"heavy" : 200,	//Heavy
-	"pyro" : 200,	//Pyro
-	"spy" : 20,	//Spy
-	"engineer" : 32,	//Engineer
-}
-
-//Order based on internal constants of ETFClass
-::TF_AMMO_PER_CLASS_SECONDARY <- {
-	"scout" : 36,	//Scout
-	"sniper" : 75,	//Sniper
-	"soldier" : 32	//Soldier
-	"demo" : 24,	//Demo
-	"medic" : 150	//Medic
-	"heavy" : 32,	//Heavy
-	"pyro" : 32,	//Pyro
-	"spy" : 24,	//Spy
-	"engineer" : 200,	//Engineer
-}
-
 ::CustomWeapons <- {
+
+	//arrays copied from Yaki's gtfw
+	//Order based on internal constants of ETFClass
+	TF_AMMO_PER_CLASS_PRIMARY = {
+		"scout" : 32,	//Scout
+		"sniper" : 25,	//Sniper
+		"soldier" : 20	//Soldier
+		"demo" : 16,	//Demo
+		"medic" : 150	//Medic
+		"heavy" : 200,	//Heavy
+		"pyro" : 200,	//Pyro
+		"spy" : 20,	//Spy
+		"engineer" : 32,	//Engineer
+	}
+
+	//Order based on internal constants of ETFClass
+	TF_AMMO_PER_CLASS_SECONDARY = {
+		"scout" : 36,	//Scout
+		"sniper" : 75,	//Sniper
+		"soldier" : 32	//Soldier
+		"demo" : 24,	//Demo
+		"medic" : 150	//Medic
+		"heavy" : 32,	//Heavy
+		"pyro" : 32,	//Pyro
+		"spy" : 24,	//Spy
+		"engineer" : 200,	//Engineer
+	}
 
 	//regenerating players by default will clear custom weapons
 	//give all weapons in the player's class's extraloadout and set hp
@@ -194,7 +194,7 @@ ExtraItems <-
 		//if max ammo needs to be changed, create a tf_wearable and assign attributes to it
 		if (item_slot == "primary")
 		{
-			if (TF_AMMO_PER_CLASS_PRIMARY[playerclass] != TF_AMMO_PER_CLASS_PRIMARY[animset])
+			if (this.TF_AMMO_PER_CLASS_PRIMARY[playerclass] != this.TF_AMMO_PER_CLASS_PRIMARY[animset])
 			{
 				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
@@ -213,7 +213,7 @@ ExtraItems <-
 					}
 					player.GetScriptScope().ExtraLoadout.append(ammofix) //for clean up
 				}
-				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden primary max ammo bonus", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0)
+				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden primary max ammo bonus", this.TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / this.TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0)
 				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
 				SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 1), 1)
 			}
@@ -221,7 +221,7 @@ ExtraItems <-
 
 		if (item_slot == "secondary")
 		{
-			if (TF_AMMO_PER_CLASS_SECONDARY[playerclass] != TF_AMMO_PER_CLASS_SECONDARY[animset])
+			if (this.TF_AMMO_PER_CLASS_SECONDARY[playerclass] != this.TF_AMMO_PER_CLASS_SECONDARY[animset])
 			{
 				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
@@ -240,7 +240,7 @@ ExtraItems <-
 					}
 					player.GetScriptScope().ExtraLoadout.append(ammofix) //for clean up
 				}
-				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden secondary max ammo penalty", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0)
+				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden secondary max ammo penalty", this.TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / this.TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0)
 				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
 				SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 2), 2)
 			}
@@ -446,11 +446,11 @@ ExtraItems <-
 		switch(slot) {
 			case 1: //primary ammo
 				attributearray = ["hidden primary max ammo bonus", "maxammo primary increased", "maxammo primary reduced"]
-				slottable = TF_AMMO_PER_CLASS_PRIMARY
+				slottable = this.TF_AMMO_PER_CLASS_PRIMARY
 				break
 			case 2: //secondary ammo
 				attributearray = ["hidden secondary max ammo penalty", "maxammo secondary increased", "maxammo secondary reduced"]
-				slottable = TF_AMMO_PER_CLASS_SECONDARY
+				slottable = this.TF_AMMO_PER_CLASS_SECONDARY
 				break
 			case 3: //metal
 				attributearray = ["maxammo metal increased", "maxammo metal reduced"]

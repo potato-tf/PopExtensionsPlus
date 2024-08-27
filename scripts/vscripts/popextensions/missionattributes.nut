@@ -963,7 +963,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		ExtraTankPath = function(value) {
 
 			if (typeof value != "array") {
-				MissionAttributes.RaiseValueError("ExtraTankPath", value, "Value must be array")
+				PopExtMain.Error.RaiseValueError("ExtraTankPath", value, "Value must be array")
 				success = false
 				return
 			}
@@ -1029,7 +1029,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					}
 					else {
 						// do we need to do anything special for thinks??
-						MissionAttributes.RaiseValueError("HandModelOverride", value, "Value must be string or array of strings")
+						PopExtMain.Error.RaiseValueError("HandModelOverride", value, "Value must be string or array of strings")
 						return
 					}
 
@@ -1083,7 +1083,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				local player = GetPlayerFromUserID(params.userid)
 				if (player.IsBotOfType(TF_BOT_TYPE)) return
 				if (typeof value != "table") {
-					MissionAttributes.RaiseValueError("PlayerAttributes", value, "Value must be table")
+					PopExtMain.Error.RaiseValueError("PlayerAttributes", value, "Value must be table")
 					success = false
 					return
 				}
@@ -1116,7 +1116,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				if (player.IsBotOfType(TF_BOT_TYPE)) return
 
 				if (typeof value != "table") {
-					MissionAttributes.RaiseValueError("ItemAttributes", value, "Value must be table")
+					PopExtMain.Error.RaiseValueError("ItemAttributes", value, "Value must be table")
 					success = false
 					return
 				}
@@ -1191,7 +1191,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 							foreach (classname, itemid in replacement)
 								PopExtUtil.GiveWeapon(player, classname, itemid)
 						else
-							MissionAttributes.RaiseValueError("LoadoutControl", value, "Item replacement must be a table")
+							PopExtMain.Error.RaiseValueError("LoadoutControl", value, "Item replacement must be a table")
 				}
 
 				foreach (item, replacement in value)
@@ -1305,7 +1305,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 		// DisableSound = function(value) {
 
-		// 	if (typeof value != "array") MissionAttributes.RaiseValueError("DisableSound", value, "value must be an array")
+		// 	if (typeof value != "array") PopExtMain.Error.RaiseValueError("DisableSound", value, "value must be an array")
 
 		// 	MissionAttributes.ThinkTable.DisableSounds <- function() {
 
@@ -1333,7 +1333,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 		SoundOverrides = function(value) {
 
-			if (typeof value != "table") MissionAttributes.RaiseValueError("SoundOverrides", value, "value must be a table")
+			if (typeof value != "table") PopExtMain.Error.RaiseValueError("SoundOverrides", value, "value must be a table")
 
 			local DeathSounds = {
 
@@ -2450,7 +2450,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 	ChangeClassTable = {}
 
 	DebugText        = false
-	RaisedParseError = false
 
 	PathNum = 0
 
@@ -2460,7 +2459,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 	// 	foreach (_, func in MissionAttributes.InitWaveTable) func()
 
 	// 	// foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
-	// 	// MissionAttributes.RaisedParseError = false
+	// 	// PopExtMain.Error.RaisedParseError = false
 	// }
 
 	function Cleanup()
@@ -2543,48 +2542,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 	// =========================================================
 	// Generic debug message that is visible if PrintDebugText is true.
 	// Example: Print a message that the script is working as expected.
-	function DebugLog(LogMsg) {
-		if (MissionAttributes.DebugText) {
-			ClientPrint(null, HUD_PRINTCONSOLE, format("MissionAttr: %s.", LogMsg))
-		}
-	}
-
-	// TODO: implement a try catch raise system instead of this
-	// TODO: We should move this to popextensions_main.nut so we can have better error logging through the whole library.
-
-	// Raises an error if the user passes an index that is out of range.
-	// Example: Allowed values are 1-2, but user passed 3.
-	function RaiseIndexError(attr, max = [0, 1]) ParseError(format("Index out of range for %s, value range: %d - %d", attr, max[0], max[1]))
-
-	// Raises an error if the user passes an argument of the wrong type.
-	// Example: Allowed values are strings, but user passed a float.
-	function RaiseTypeError(attr, type) ParseError(format("Bad type for %s (should be %s)", attr, type))
-
-	// Raises an error if the user passes an invalid argument
-	// Example: Attribute expects a bitwise operator but value cannot be evenly split into a power of 2
-	function RaiseValueError(attr, value, extra = "") ParseError(format("Bad value	%s	passed to %s. %s", value.tostring(), attr, extra))
-
-	// Raises a template parsing error, if nothing else fits.
-	function ParseError(ErrorMsg) {
-		if (!MissionAttributes.RaisedParseError) {
-			MissionAttributes.RaisedParseError = true
-			ClientPrint(null, HUD_PRINTTALK, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details.")
-		}
-		ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s.\n", MATTR_ERROR, ErrorMsg))
-
-		foreach (player in PopExtUtil.HumanArray) {
-			if (player == null) continue
-
-			EntFireByHandle(PopExtUtil.ClientCommand, "Command", format("echo %s %s.\n", MATTR_ERROR, ErrorMsg), -1, player, player)
-		}
-		printf("%s %s.\n", MATTR_ERROR, ErrorMsg)
-	}
-
-	// Raises an exception.
-	// Example: Script modification has not been performed correctly. User should never see one of these.
-	function RaiseException(ExceptionMsg) {
-		Assert(false, format("MissionAttr EXCEPTION: %s.", ExceptionMsg))
-	}
 	Events = {
 
 		function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
@@ -2662,7 +2619,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		}
 		function OnGameEvent_teamplay_broadcast_audio(params)
 		{
-			if (MissionAttributes.SoundsToReplace.len() == 0) return
+			if (!MissionAttributes.SoundsToReplace.len()) return
 
 			if (params.sound in MissionAttributes.SoundsToReplace)
 			{

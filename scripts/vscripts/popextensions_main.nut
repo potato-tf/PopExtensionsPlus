@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "08.25.2024.1"
+::popExtensionsVersion <- "08.27.2024.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -63,110 +63,190 @@ if (!("_AddThinkToEnt" in _root))
 			if (!(k in ignore_table))
 				delete scope[k]
 	}
+	Error = {
 
-	function OnGameEvent_post_inventory_application(params) {
+		RaisedParseError = false
 
-		local player = GetPlayerFromUserID(params.userid)
+		function DebugLog(LogMsg) {
+			if (MissionAttributes.DebugText) {
+				ClientPrint(null, HUD_PRINTCONSOLE, format("MissionAttr: %s.", LogMsg))
+			}
+		}
+		// TODO: implement a try catch raise system instead of this
 
-		this.PlayerCleanup(player)
+		// Raises an error if the user passes an index that is out of range.
+		// Example: Allowed values are 1-2, but user passed 3.
+		function RaiseIndexError(attr, max = [0, 1])
+			ParseError(format("Index out of range for %s, value range: %d - %d", attr, max[0], max[1]))
 
-		player.ValidateScriptScope()
-		local scope = player.GetScriptScope()
+		// Raises an error if the user passes an argument of the wrong type.
+		// Example: Allowed values are strings, but user passed a float.
+		function RaiseTypeError(attr, type)
+			ParseError(format("Bad type for %s (should be %s)", attr, type))
 
-		scope.userid <- params.userid
+		// Raises an error if the user passes an invalid argument
+		// Example: Attribute expects a bitwise operator but value cannot be evenly split into a power of 2
+		function RaiseValueError(attr, value, extra = "")
+			ParseError(format("Bad value %s	passed to %s. %s", value.tostring(), attr, extra))
 
-		if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+		// Raises a template parsing error, if nothing else fits.
+		function ParseError(ErrorMsg) {
 
-		if (player.IsBotOfType(TF_BOT_TYPE))
-		{
-			EntFireByHandle(player, "RunScriptCode", @"
-				PopExtTags.EvaluateTags(self)
-				aibot <- AI_Bot(self)
+			if (!this.RaisedParseError) {
 
-				PlayerThinkTable.BotThink <- function() {
-					try
-						aibot.OnUpdate()
-					catch(e)
-						if (e == `the index 'bot' does not exist`) return
-				}
-			", -1, player, player);
+				this.RaisedParseError = true
+				ClientPrint(null, HUD_PRINTTALK, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details.")
+			}
+			ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s.\n", POPEXT_ERROR, ErrorMsg))
 
+			foreach (player in PopExtUtil.HumanArray) {
+
+				if (player == null) continue
+
+				EntFireByHandle(PopExtUtil.ClientCommand, "Command", format("echo %s %s.\n", POPEXT_ERROR, ErrorMsg), -1, player, player)
+			}
+			printf("%s %s.\n", POPEXT_ERROR, ErrorMsg)
 		}
 
-		scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func.call(scope); return -1 }
+		// Raises an exception.
+		// Example: Script modification has not been performed correctly. User should never see one of these.
+		function RaiseException(ExceptionMsg) {
+			Assert(false, format("POPEXT EXCEPTION: %s.", ExceptionMsg))
+		}
+	}
+	Events = {
+		function OnGameEvent_post_inventory_application(params) {
 
-		_AddThinkToEnt(player, "PlayerThinks")
+			local player = GetPlayerFromUserID(params.userid)
 
-		if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope))
-		{
-			scope.BuiltObjectTable <- {}
-			scope.buildings <- []
+			this.PlayerCleanup(player)
+
+			player.ValidateScriptScope()
+			local scope = player.GetScriptScope()
+
+			scope.userid <- params.userid
+
+			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+
+			if (player.IsBotOfType(TF_BOT_TYPE))
+			{
+				EntFireByHandle(player, "RunScriptCode", @"
+					PopExtTags.EvaluateTags(self)
+					aibot <- AI_Bot(self)
+
+					PlayerThinkTable.BotThink <- function() {
+						try
+							aibot.OnUpdate()
+						catch(e)
+							if (e == `the index 'bot' does not exist`) return
+					}
+				", -1, player, player);
+
+			}
+
+			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func.call(scope); return -1 }
+
+			_AddThinkToEnt(player, "PlayerThinks")
+
+			if (player.GetPlayerClass() > TF_CLASS_PYRO && !("BuiltObjectTable" in scope))
+			{
+				scope.BuiltObjectTable <- {}
+				scope.buildings <- []
+			}
+
+			if ("MissionAttributes" in _root) foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
+			if ("GlobalFixes" in _root) foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
+			if ("CustomAttributes" in _root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
+			if ("PopExtPopulator" in _root) foreach (_, func in PopExtPopulator.SpawnHookTable) func(params)
+			if ("CustomWeapons" in _root) foreach (_, func in CustomWeapons.SpawnHookTable) func(params)
+		}
+		function OnGameEvent_player_changeclass(params) {
+			local player = GetPlayerFromUserID(params.userid)
+
+			for (local model; model = FindByName(model, "__bot_bonemerge_model");)
+				if (model.GetMoveParent() == player)
+					EntFireByHandle(model, "Kill", "", -1, null, null)
 		}
 
-		if ("MissionAttributes" in _root) foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
-		if ("GlobalFixes" in _root) foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
-		if ("CustomAttributes" in _root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
-		if ("PopExtPopulator" in _root) foreach (_, func in PopExtPopulator.SpawnHookTable) func(params)
-		if ("CustomWeapons" in _root) foreach (_, func in CustomWeapons.SpawnHookTable) func(params)
-	}
-	function OnGameEvent_player_changeclass(params) {
-		local player = GetPlayerFromUserID(params.userid)
+		//clean up bot scope on death
+		function OnGameEvent_player_death(params) {
 
-		for (local model; model = FindByName(model, "__bot_bonemerge_model");)
-			if (model.GetMoveParent() == player)
-				EntFireByHandle(model, "Kill", "", -1, null, null)
-	}
+			local player = GetPlayerFromUserID(params.userid)
 
-	//clean up bot scope on death
-	function OnGameEvent_player_death(params) {
-
-		local player = GetPlayerFromUserID(params.userid)
-
-		if (!player.IsBotOfType(TF_BOT_TYPE)) return
-
-		this.PlayerCleanup(player)
-	}
-
-	function OnGameEvent_teamplay_round_start(params) {
-
-		for (local wearable; wearable = FindByClassname(wearable, "tf_wearable*");)
-			if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
-				EntFireByHandle(wearable, "Kill", "", -1, null, null)
-
-		//same pop, don't run clean-up
-		if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
-
-		for (local i = 1; i <= MaxClients().tointeger(); i++) {
-
-			local player = PlayerInstanceFromIndex(i)
-
-			if (player == null) continue
+			if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
 			this.PlayerCleanup(player)
 		}
 
-		try delete ::MissionAttributes catch(e) return
-		try delete ::CustomAttributes catch(e) return
-		try delete ::PopExt catch(e) return
-		try delete ::PopExtTags catch(e) return
-		try delete ::PopExtHooks catch(e) return
-		try delete ::GlobalFixes catch(e) return
-		try delete ::SpawnTemplate catch(e) return
-		try delete ::SpawnTemplateWaveSchedule catch(e) return
-		try delete ::SpawnTemplates catch(e) return
-		try delete ::VCD_SOUNDSCRIPT_MAP catch(e) return
-		try delete ::PopExtUtil catch(e) return
-		try delete ::PointTemplates catch(e) return
-		try delete ::CustomWeapons catch(e) return
-		try delete ::__popname catch(e) return
-		try delete ::PopExtMain catch(e) return
+		function OnGameEvent_teamplay_round_start(params) {
 
-		EntFire("_popext*", "Kill")
-		EntFire("__util*", "Kill")
-		EntFire("__bot*", "Kill")
+			for (local wearable; wearable = FindByClassname(wearable, "tf_wearable*");)
+				if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
+					EntFireByHandle(wearable, "Kill", "", -1, null, null)
+
+			//same pop, don't run clean-up
+			if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
+
+			for (local i = 1; i <= MaxClients().tointeger(); i++) {
+
+				local player = PlayerInstanceFromIndex(i)
+
+				if (player == null) continue
+
+				this.PlayerCleanup(player)
+			}
+
+			local cleanup = [
+
+				"MissionAttributes"
+				"CustomAttributes"
+				"PopExt"
+				"PopExtTags"
+				"PopExtHooks"
+				"GlobalFixes"
+				"SpawnTemplate"
+				"SpawnTemplateWaveSchedule"
+				"SpawnTemplates"
+				"VCD_SOUNDSCRIPT_MAP"
+				"PopExtUtil"
+				"PointTemplates"
+				"CustomWeapons"
+				"__popname"
+				"PopExtMain"
+				"AddThinkToEnt"
+				"AI_Bot"
+				"CustomWeapons"
+				"ExtraItems"
+				"Homing"
+				"Include"
+				"MAtr"
+				"MAtrs"
+				"MissionAttr"
+				"MissionAttrs"
+				"MissionAttrThink"
+				"PathPoint"
+				"popExtensionsVersion"
+				"popExtEntity"
+				"PopExtItems"
+				"PopExtMain"
+				"popExtThinkFuncSet"
+				"PopExtTutorial"
+				"PopulatorThink"
+				"RespawnEndTouch"
+				"RespawnStartTouch"
+				"ScriptLoadTable"
+				"ScriptUnloadTable"
+			]
+
+			foreach(c in cleanup) if (c in _root) delete ::c
+
+			EntFire("_popext*", "Kill")
+			EntFire("__util*", "Kill")
+			EntFire("__bot*", "Kill")
+		}
 	}
 }
-__CollectGameEventCallbacks(PopExtMain)
+__CollectGameEventCallbacks(PopExtMain.Events)
 
 //HACK: forces post_inventory_application to fire on pop load
 for (local i = 1; i <= MaxClients().tointeger(); i++)
@@ -196,5 +276,5 @@ Include("tags")
 
 Include("globalfixes")
 Include("spawntemplate")
-Include("tutorialtools")
+// Include("tutorialtools")
 // Include("populator")

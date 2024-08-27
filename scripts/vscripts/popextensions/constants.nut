@@ -35,9 +35,8 @@ foreach(k, v in ::NavMesh.getclass())
 	if (k != "IsValid" && !(k in ROOT))
 		ROOT[k] <- ::NavMesh[k].bindenv(::NavMesh)
 
-const MATTR_ERROR = "MissionAttr ERROR: "
+const POPEXT_ERROR = "POPEXTENSIONS ERROR: "
 const STRING_NETPROP_ITEMDEF = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
-const TEST = "m_AttributeManager.m_Item.m_AttributeList.m_Attributes"
 const SINGLE_TICK = 0.015
 
 // Clientprint chat colors
@@ -55,7 +54,7 @@ const INT_COLOR_WHITE = 16777215
 const COND_CRITBOOST = 39 //TF_COND_CRITBOOSTED_CTF_CAPTURE
 const COND_UBERCHARGE = 57 //TF_COND_INVULNERABLE_CARD_EFFECT
 
-//redefine EFlags 
+//redefine EFlags
 const EFL_USER = 1048576 // EFL_IS_BEING_LIFTED_BY_BARNACLE
 const EFL_USER2 = 1073741824 //EFL_NO_PHYSCANNON_INTERACTION
 const EFL_SPAWNTEMPLATE = 33554432 //EFL_DONTBLOCKLOS

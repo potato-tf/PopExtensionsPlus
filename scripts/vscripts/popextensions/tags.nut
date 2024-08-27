@@ -348,6 +348,53 @@ local popext_funcs = {
 			aibot.UpdatePathAndMove(pos)
 		}
 	}
+	popext_actionpoint = function(bot, args) {
+
+		local pos = Vector()
+		local point = "target" in args ? args.target : args.type
+		local next_action_point = "next_action_point" in args ? args.next_action_point : args.cooldown
+		local desired_distance = "desired_distance" in args ? args.desired_distance : args.duration
+		local stay_time = "stay_time" in args ? args.stay_time : args.repeats
+		local command = "command" in args ? args.command : args.ifhealthbelow
+
+		local action_point = FindByName(null, point)
+
+		if (action_point) return
+
+		if (pos == Vector())
+		{
+			local buf = ""
+			point.find(",") ?  buf = split(point, ",") : buf = split(point, " ")
+			buf.apply(function(v) { return v.tofloat()})
+
+			pos = Vector(buf[0], buf[1], buf[2])
+		}
+
+		action_point = CreateByClassname("bot_action_point")
+
+		action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
+		action_point.KeyValueFromString("next_action_point", next_action_point)
+		action_point.KeyValueFromString("command", command)
+
+		action_point.KeyValueFromInt("desired_distance", desired_distance)
+		action_point.KeyValueFromInt("stay_time", stay_time)
+
+		action_point.SetOrigin(pos)
+
+		if ("output" in args)
+		{
+			local target = args.output.target
+			local action =  args.output.action
+			local param = "param" in args.output ? args.output.param : ""
+			local delay = "delay" in args.output ? args.output.delay : -1
+			local repeats = "repeats" in args.output ? args.output.repeats : -1
+
+			action_point.AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
+		}
+
+		DispatchSpawn(action_point)
+		bot.SetActionPoint(action_point)
+	}
 
 	popext_fireinput = function(bot, args) {
 
@@ -1221,6 +1268,11 @@ local popext_funcs = {
 				tagtable.attribute <- null
 				tagtable.value <- null
 				tagtable.weapon <- func == "popext_giveweapon" ? args[0] : args_len > 3 ? args[3] : tagtable.weapon <- bot.GetActiveWeapon()
+			} else if (func ==  "popext_actionpoint") {
+				tagtable.next_action_point <- ""
+				tagtable. desired_distance <- 10
+				tagtable.stay_time <- 3
+				tagtable.command <- ""
 			}
 
 		} else if (separator == "{") {
