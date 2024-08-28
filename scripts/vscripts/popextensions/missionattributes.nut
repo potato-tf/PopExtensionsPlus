@@ -2474,7 +2474,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
 				EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
-		PopExtMain.DebugLog(format("Cleaned up mission attributes"))
+		PopExtMain.Error.DebugLog(format("Cleaned up mission attributes"))
 	}
 
 	// Mission Attribute Functions
@@ -2529,7 +2529,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		if (attr in this.Attrs)
 		{
 			this.Attrs[attr](value) //ugly ass
-			PopExtMain.DebugLog(format("Added mission attribute %s", attr))
+			PopExtMain.Error.DebugLog(format("Added mission attribute %s", attr))
 			this.CurAttrs[attr] <- value
 		}
 		else {
