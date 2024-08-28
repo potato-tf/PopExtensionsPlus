@@ -605,7 +605,7 @@ local popext_funcs = {
 
 		local pos = Vector()
 		local point = "target" in args ? args.target : args.type
-		local next_action_point = "next_action_point" in args ? args.next_action_point : args.cooldown
+		local next_action_point = "next_action_point" in args ? args.next_action_point : ""
 		local desired_distance = "desired_distance" in args ? args.desired_distance : args.duration
 		local stay_time = "stay_time" in args ? args.stay_time : args.repeats
 		local command = "command" in args ? args.command : args.ifhealthbelow
