@@ -846,7 +846,6 @@
 			t = wep
 			break
 		}
-		if (t) printl(this.GetItemIndex(t))
 		return t
 	}
 
