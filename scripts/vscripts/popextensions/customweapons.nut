@@ -182,10 +182,6 @@ ExtraItems <-
 			"AnimSet" : null
 			"Slot" : null
 		}
-		if (extraitem != null)
-			foreach (attribute, value in extraitem)
-				if (!(attribute in reservedKeywords))
-					PopExtUtil.SetPlayerAttributes(player, attribute, value, item)
 
 		if (!("CustomWeapons" in player.GetScriptScope()))
 			player.GetScriptScope().CustomWeapons <- {}
@@ -266,6 +262,15 @@ ExtraItems <-
 			}
 			player.Weapon_Equip(item)
 			item.AcceptInput("SetParent", "!activator", player, player)
+
+			// Apply attributes
+			// THIS MUST BE DONE AFTER WEAPON_EQUIP!!!
+			// Normal attributes can work for owner-less items, custom attributes cannot.
+
+			if (extraitem != null)
+			foreach (attribute, value in extraitem)
+				if (!(attribute in reservedKeywords))
+					PopExtUtil.SetPlayerAttributes(player, attribute, value, item)
 
 			// copied from ficool2 mw2_highrise
 			// viewmodel
