@@ -212,7 +212,6 @@ if (!("_AddThinkToEnt" in _root))
 				"PointTemplates"
 				"CustomWeapons"
 				"__popname"
-				"PopExtMain"
 				"AddThinkToEnt"
 				"AI_Bot"
 				"CustomWeapons"
