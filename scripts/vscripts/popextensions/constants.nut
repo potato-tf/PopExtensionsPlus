@@ -137,6 +137,7 @@ const TTYPE_NONE     = 0
 const TTYPE_ENTRANCE = 1
 const TTYPE_EXIT     = 2
 
+// env_shake/ScreenShake function
 const SHAKE_START = 0
 const SHAKE_STOP = 1
 

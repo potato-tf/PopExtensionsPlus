@@ -6,6 +6,16 @@ PopExtUtil.PlayerManager.ValidateScriptScope()
 
 local popext_funcs = {
 
+    /**************************************************************************************************************************
+     * ADD CONDITION                                                                                                          *
+     *                                                                                                                        *
+     * TF_COND_REPROGRAMMED will do the same thing as popext_reprogrammed, but does not automatically apply ammo regen 		  *
+     *                                                                                                                        *
+     * Duration is optional                                                                                                   *
+     *                                                                                                                        *
+     * Example: popext_addcond{ cond = TF_COND_SPEED_BOOST, duration = 15}                                                    *
+     **************************************************************************************************************************/
+
 	popext_addcond = function(bot, args) {
 
 		local cond = "cond" in args ? args.cond.tointeger() : args.type.tointeger()
@@ -14,6 +24,13 @@ local popext_funcs = {
 		else
 			bot.AddCondEx(cond, args.duration.tointeger(), null)
 	}
+
+
+    /**********************************************************
+     * REPROGRAMMED                                           *
+     *                                                        *
+     * No parameters required, only tag presence is necessary *
+     **********************************************************/
 
 	popext_reprogrammed = function(bot, args) {
 
@@ -26,12 +43,46 @@ local popext_funcs = {
 		// bot.ForceChangeTeam(TEAM_UNASSIGNED, true)
 	// }
 
+    /*********************************************************************************
+     * PRESS SECONDARY FIRE                                                          *
+     *                                                                               *
+     * Example: popext_altfire{ duration = 30 } //hold for 30 seconds after spawning *
+     *                                                                               *
+     * Arguments are optional                                                        *
+     *                                                                               *
+     * Example: popext_altfire                                                       *
+     *********************************************************************************/
+
 	popext_altfire = function(bot, args) {
 
 		bot.PressAltFireButton(args.duration.tointeger())
 	}
 
+    /*******************************************************************************************************
+     * CUSTOM DEATH SOUND                                                                                  *
+     *                                                                                                     *
+     * See the EmitSoundEx page for valid arguments                                                        *
+     * https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/EmitSoundEx     *
+     *                                                                                                     *
+     * Example: popext_deathsound{sound = `ui/chime_rd_2base_neg.wav`}                                                               *
+     *******************************************************************************************************/
+
 	popext_deathsound = function(bot, args) {
+
+		local sound = "sound" in args ? args.sound : args.type
+		local volume = "volume" in args ? args.volume : 1
+		local channel = "channel" in args ? args.channel : CHAN_AUTO
+		local sound_level = "sound_level" in args ? args.sound_level : 0
+		local flags = "flags" in args ? args.flags : SND_NOFLAGS
+		local pitch = "pitch" in args ? args.pitch : 100
+		local special_dsp = "special_dsp" in args ? args.special_dsp : 0
+		local origin = "origin" in args ? args.origin : bot.GetOrigin()
+		local delay = "delay" in args ? args.delay : 1 //does nothing with any positive value
+		local sound_time = "sound_time" in args ? args.sound_time : 0.0 //maybe this should be Time()?
+		local entity = "entity" in args ? args.entity : bot
+		local speaker_entity = "speaker_entity" in args ? args.speaker_entity : null
+		local filter_type = "filter_type" in args ? args.filter_type : 0
+		local filter_param = "filter_param" in args ? args.filter_param : -1
 
 		PopExtTags.DeathHookTable.DeathSound <- function(params) {
 
@@ -39,22 +90,92 @@ local popext_funcs = {
 
 			if (victim != bot) return
 
-			EmitSoundEx({sound_name = "sound" in args ? args.sound : args.type, entity = victim})
+			EmitSoundEx({
+
+				sound_name = sound
+				volume = volume
+				channel = channel
+				sound_level = sound_level
+				flags = flags
+				pitch = pitch
+				special_dsp = special_dsp
+				origin = origin
+				delay = delay
+				sound_time = sound_time
+				entity = entity
+				speaker_entity = speaker_entity
+				filter_type = filter_type
+				filter_param = filter_param
+
+			})
+
+			// EmitSoundEx({sound_name = "sound" in args ? args.sound : args.type, entity = victim})
 		}
 	}
 
+    /*******************************************************************************************************
+     * CUSTOM STEP SOUND                                                                                   *
+     *                                                                                                     *
+     * !!!WARNING!!! Does not sync correctly with giant step sounds, or anything with reduced movespeed!   *
+     * m_Local.m_nStepside seemingly does not take movespeed into account                                  *
+     *                                                                                                     *
+     * See the EmitSoundEx page for valid arguments                                                        *
+     * https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/EmitSoundEx     *
+     *                                                                                                     *
+     * Example: popext_stepsound{sound = `ui/chime_rd_2base_pos.wav`}                                                               *
+     *******************************************************************************************************/
+
 	popext_stepsound = function(bot, args) {
+
+		local sound = "sound" in args ? args.sound : args.type
+		local volume = "volume" in args ? args.volume : 1
+		local channel = "channel" in args ? args.channel : CHAN_AUTO
+		local sound_level = "sound_level" in args ? args.sound_level : 0
+		local flags = "flags" in args ? args.flags : SND_NOFLAGS
+		local pitch = "pitch" in args ? args.pitch : 100
+		local special_dsp = "special_dsp" in args ? args.special_dsp : 0
+		local origin = "origin" in args ? args.origin : bot.GetOrigin()
+		local delay = "delay" in args ? args.delay : 1 //does nothing with any positive value
+		local sound_time = "sound_time" in args ? args.sound_time : 0.0 //maybe this should be Time()?
+		local entity = "entity" in args ? args.entity : bot
+		local speaker_entity = "speaker_entity" in args ? args.speaker_entity : null
+		local filter_type = "filter_type" in args ? args.filter_type : 0
+		local filter_param = "filter_param" in args ? args.filter_param : -1
 
 		scope.stepside <- GetPropInt(bot, "m_Local.m_nStepside")
 
 		bot.GetScriptScope().PlayerThinkTable.Stepsound <- function() {
 
 			if (GetPropInt(bot, "m_Local.m_nStepside") != stepside)
-				EmitSoundEx({sound_name = "sound" in args ? args.sound : args.type, entity = bot})
+
+				EmitSoundEx({
+
+					sound_name = sound
+					volume = volume
+					channel = channel
+					sound_level = sound_level
+					flags = flags
+					pitch = pitch
+					special_dsp = special_dsp
+					origin = origin
+					delay = delay
+					sound_time = sound_time
+					entity = entity
+					speaker_entity = speaker_entity
+					filter_type = filter_type
+					filter_param = filter_param
+
+				})
 
 			scope.stepside = GetPropInt(bot, "m_Local.m_nStepside")
 		}
 	}
+
+    /**********************************************************
+     * USE HUMAN MODEL	                                      *
+     *                                                        *
+     * No parameters required, only tag presence is necessary *
+     **********************************************************/
 
 	popext_usehumanmodel = function(bot, args) {
 
@@ -64,12 +185,30 @@ local popext_funcs = {
 		bot.GetScriptScope().usingcustommodel <- true
 	}
 
+    /*********************************************************************
+     * USE CUSTOM MODEL                                                  *
+     *                                                                   *
+     * Example: popext_usecustommodel{model = `models/player/heavy.mdl`} *
+     *********************************************************************/
+
 	popext_usecustommodel = function(bot, args) {
 		local model = "model" in args ? args.model : args.type
 		if (!IsModelPrecached(model)) PrecacheModel(model)
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", model, -1, null, null)
 		bot.GetScriptScope().usingcustommodel <- true
 	}
+
+    /**************************************************************************************************************************
+     * USE HUMAN ANIMATIONS                                                                                                   *
+     *                                                                                                                        *
+     * !!!WARNING!!! This tag is incompatible with UseCustomModel!!!                                                          *
+     *                                                                                                                        *
+     * Works by setting the bot model to a human model, then bonemerging a tf_wearable using the bot model to the human model *
+     * Haven't actually checked if this messes up cosmetics lol                                                               *
+     * Maybe a popext_customwearable tag would work alongside this to generate an additional wearable alongside the bot one?  *
+	 * 																														  *
+     * No parameters required, only tag presence is necessary 																  *
+     **************************************************************************************************************************/
 
 	popext_usehumananims = function(bot, args) {
 
@@ -79,10 +218,21 @@ local popext_funcs = {
 		bot.GetScriptScope().usingcustommodel <- true
 	}
 
+    /**********************************************************
+     * ALWAYS GLOW	                                          *
+     *                                                        *
+     * No parameters required, only tag presence is necessary *
+     **********************************************************/
 	popext_alwaysglow = function(bot, args) {
 
 		SetPropBool(bot, "m_bGlowEnabled", true)
 	}
+
+    /**************************************************
+     * STRIP SLOT:                                    *
+     *                                                *
+     * Example: popext_stripslot{ slot = SLOT_MELEE } *
+     **************************************************/
 
 	popext_stripslot = function(bot, args) {
 
@@ -92,6 +242,16 @@ local popext_funcs = {
 		PopExtUtil.GetItemInSlot(bot, slot).Kill()
 	}
 
+    /*****************************************************************************************************************************
+     * PRESS BUTTON                                                                                                              *
+     * 				                                                                                                             *
+     * !!!IFSEETARGET HAS NOT BEEN IMPLEMENTED YET!!!                                                                            *
+     *                                                                                                                           *
+     * All keyvalues besides "button" are optional, default values can be found in this file by searching for "local tagtable =" *
+     * 																															 *
+	 * Press the reload key for 2 seconds every 10 seconds 5 times if we're below 100 HP                                         *
+     * Example: popext_fireweapon{ button = IN_RELOAD cooldown = 3 delay = 10 repeats = 5 ifhealthbelow = 100 duration = 2 }     *
+     *****************************************************************************************************************************/
 	popext_fireweapon = function(bot, args) {
 
 		local button = "button" in args ? args.button.tointeger() : args.type.tointeger()
@@ -123,6 +283,17 @@ local popext_funcs = {
 			cooldowntime = Time() + cooldown
 		}
 	}
+
+
+    /***************************************************************************************************************************
+     * WEAPON SWITCHING                                                                                                        *
+     * 				                                                                                                           *
+     * !!!IFSEETARGET HAS NOT BEEN IMPLEMENTED YET!!!                                                                          *
+     *                                                                                                                         *
+     * All keyvalues besides "slot" are optional, default values can be found in this file by searching for "local tagtable =" *
+     *                                                                                                                         *
+     * Example: popext_weaponswitch{ slot = SLOT_SECONDARY cooldown = 3 delay = 10 repeats = 5 ifhealthbelow = 100 } 	       *
+     ***************************************************************************************************************************/
 
 	popext_weaponswitch = function(bot, args) {
 
@@ -158,6 +329,17 @@ local popext_funcs = {
 		}
 	}
 
+    /***************************************************************************************************************************
+     * SPELL CASTING                                                                                                           *
+     * 				                                                                                                           *
+     * !!!IFSEETARGET HAS NOT BEEN IMPLEMENTED YET!!!                                                                          *
+     * see constants.nut for spell type values                                                                                 *
+     *                                                                                                                         *
+     * All keyvalues besides "type" are optional, default values can be found in this file by searching for "local tagtable =" *
+     *                                                                                                                         *
+     * Example: popext_spell{ type = SPELL_SKELETON cooldown = 3 delay = 10 repeats = 5 ifhealthbelow = 100 charges = 5 }      *
+     ***************************************************************************************************************************/
+
 	popext_spell = function(bot, args) {
 
 		local type = args.type.tointeger()
@@ -167,7 +349,7 @@ local popext_funcs = {
 		local repeats = args.repeats.tointeger()
 		local ifhealthbelow = args.ifhealthbelow.tointeger()
 		local ifseetarget = args.ifseetarget.tointeger()
-		local charges = "charges" in args ? args.charges.tointeger() : INT_MAX
+		local charges = args.charges.tointeger()
 
 
 		local spellbook = PopExtUtil.GetItemInSlot(bot, SLOT_PDA)
@@ -223,9 +405,24 @@ local popext_funcs = {
 		}
 	}
 
+    /******************************************************************************************
+     * SPAWN TEMPLATE                                                                         *
+     *                                                                                        *
+     * Spawns a point template from the global PointTemplates table parented to the bot       *
+     * See the PointTemplates examples for more information on how the template spawner works *
+     *                                                                                        *
+     * Example: popext_spawntemplate{template = `MyTemplateName`}                             *
+     ******************************************************************************************/
+
 	popext_spawntemplate = function(bot, args) {
 		SpawnTemplate("template" in args ? args.template : args.type, bot)
 	}
+
+    /**********************************************************
+     * FORCE ROMEVISION                                       *
+     *                                                        *
+     * No parameters required, only tag presence is necessary *
+     **********************************************************/
 
 	popext_forceromevision = function(bot, args) {
 
@@ -255,17 +452,46 @@ local popext_funcs = {
 		", -1, null, null)
 	}
 
+    /**********************************************************************************************************************************************************************
+     * CUSTOM ATTRIBUTES                                                                                                                                                  *
+     * See customattributes.nut for a list of valid custom attributes and what they do                                                                                    *
+     *                                                                                                                                                                    *
+     * Example: popext_customattr{attribute = `wet immunity` value = 1}                                                                                                   *
+     *                                                                                                                                                                    *
+     * If no "weapon" keyvalue is supplied, attributes will be applied to the bots current active weapon only                                                             *
+     * You can pass a weapon classname, item index, weapon handle, or english name to the weapon parameter and PopExtUtil.HasItemInLoadout will try to find it on the bot *
+     * If it can't find any weapon, it it'll default back to the current active weapon                                                                                    *
+     *                                                                                                                                                                    *
+     * Example: popext_customattr{weapon = `tf_weapon_scattergun`, attribute = `last shot crits`, value = 1}                                                              *
+     **********************************************************************************************************************************************************************/
+
 	popext_customattr = function(bot, args) {
 
-		local weapon = args.weapon ? args.weapon : bot.GetActiveWeapon()
+		local wep
+
+		if ("weapon" in args) wep = PopExtUtil.HasItemInLoadout(bot, args.weapon)
+
+		local weapon = wep ? wep : bot.GetActiveWeapon()
+
 		CustomAttributes.AddAttr(bot, args.attribute, args.value, weapon)
 	}
+
+    /**********************************************************************************************************************************************
+     * RING OF FIRE                                                                                                                               *
+     *                                                                                                                                            *
+     * Example: popext_ringoffire{damage = 20 interval = 3 radius = 150}                                                                          *
+     *                                                                                                                                            *
+     * NOTE: the huo-long particle effect is does not scale with radius! If you intend to use a custom effect, set "hide_particle_effect" to true *
+	 * 																																			  *
+     * Example: popext_ringoffire{damage = 20 interval = 3 radius = 150, hide_particle_effect = 1}                                                *
+     **********************************************************************************************************************************************/
 
 	popext_ringoffire = function(bot, args) {
 
 		local damage = args.damage.tointeger()
 		local interval = args.interval.tointeger()
 		local radius = args.radius.tointeger()
+		local hide_particle_effect = "hide_particle_effect" in args ? args.hide_particle_effect.tointeger() : false
 
 		local cooldown = Time() + interval
 
@@ -274,9 +500,9 @@ local popext_funcs = {
 			if (Time() < cooldown) return
 
 			local origin = bot.GetOrigin()
-			local angles = bot.GetAngles()
 
-			DispatchParticleEffect("heavy_ring_of_fire", origin, angles)
+			if (!hide_particle_effect) DispatchParticleEffect("heavy_ring_of_fire", origin, bot.GetAngles())
+
 
 			for (local player; player = FindByClassnameWithin(player, "player", origin, radius);)
 			{
@@ -288,6 +514,9 @@ local popext_funcs = {
 			cooldown = Time() + interval
 		}
 	}
+
+	//FIX THIS
+
 	popext_meleeai = function(bot, args) {
 
 		local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
@@ -313,6 +542,8 @@ local popext_funcs = {
 		}
 	}
 
+	//FIX THIS
+
 	popext_mobber = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
@@ -327,6 +558,17 @@ local popext_funcs = {
 			aibot.UpdatePathAndMove(t.GetOrigin())
 		}
 	}
+
+    /***************************************************************************************************
+     * !!!OBSOLETE!!! USE popext_actionpoint INSTEAD!!!                                                *
+     * MOVE TO POINT                                                                                   *
+     *                                                                                                 *
+     * Example: "popext_movetopoint{target = `entity_to_move_to`}"                                     *
+     *                                                                                                 *
+     * You can also pass xyz parameters instead of a target entity                                     *
+     *                                                                                                 *
+     * Example: "popext_movetopoint{target = `500 500 500`}" - move to xyz coordinates (500, 500, 500) *
+     ***************************************************************************************************/
 
 	popext_movetopoint = function(bot, args) {
 
@@ -348,6 +590,17 @@ local popext_funcs = {
 			aibot.UpdatePathAndMove(pos)
 		}
 	}
+
+	/************************************************************************************************************************************************************************************************************
+	 * ACTION POINT                                                                                                                                                                                             *
+	 * 				                                                                                                                                                                                            *
+	 * Example: "popext_actionpoint{target = `action_point_targetname`}"                                                                                                                                        *
+	 *                                                                                                                                                                                                          *
+	 * You can also create entirely new action points by passing x y z coordinates where you want it to be spawned                                                                                              *
+	 *                                                                                                                                                                                                          *
+	 * Example: "popext_actionpoint{target = `500 500 500`, next_action_point = `optional_next_action_point_targetname`, desired_distance = 50, stay_time = 5, command = `attack sentry at next action point`}" *
+	 ************************************************************************************************************************************************************************************************************/
+
 	popext_actionpoint = function(bot, args) {
 
 		local pos = Vector()
@@ -389,22 +642,47 @@ local popext_funcs = {
 			local delay = "delay" in args.output ? args.output.delay : -1
 			local repeats = "repeats" in args.output ? args.output.repeats : -1
 
-			action_point.AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
+			AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
 		}
 
 		DispatchSpawn(action_point)
 		bot.SetActionPoint(action_point)
 	}
 
+    /*******************************************************************************************************************************************************************************************************************************
+     * FIRE ENTITY INPUT                                                                                                                                                                                                           *
+     *                                                                                                                                                                                                                             *
+     * Fires an entity input as soon as the bot spawns                                                                                                                                                                             *
+     *                                                                                                                                                                                                                             *
+     * !!!WARNING!!! Passing a null activator/caller to certain entities will crash the server!                                                                                                                                    *
+     * trigger_stun and trigger_player_respawn_override are two notable examples                                                                                                                                                   *
+     *                                                                                                                                                                                                                             *
+     * param, delay, activator, and caller are all optional                                                                                                                                                                        *
+     *                                                                                                                                                                                                                             *
+     * Example: popext_fireinput{target = `bignet`, action = `RunScriptCode`, param = `ClientPrint(null, 3, `I spawned one second ago!`)`, delay = 1, activator = `activator_targetname_here`, caller = `caller_targetname_here` } *
+     *******************************************************************************************************************************************************************************************************************************/
+
 	popext_fireinput = function(bot, args) {
 
-		local target = "target" in args ? args.target : args.type
-		local action = "action" in args ? args.action : args.cooldown
-		local param = "param" in args ? args.param : args.duration
-		local delay = args.delay
-
-		EntFire(target, action, param, delay)
+		DoEntFire(
+			"target" in args ? args.target : args.type,
+			"action" in args ? args.action : args.cooldown,
+			"param" in args ? args.param : "",
+			"delay" in args ? args.delay : -1,
+			"activator" in args ? FindByName(null, args.activator) : null,
+			"caller" in args ? FindByName(null, args.caller) : null
+		 )
 	}
+
+    /*****************************************************************************
+     * WEAPON RESIST                                                             *
+     *                                                                           *
+     * Accepts item index, item classname, and string name found in item_map.nut *
+     *                                                                           *
+     * 50% damage resistance to miniguns                                         *
+     *                                                                           *
+     * Example: popext_weaponresist{weapon = `tf_weapon_minigun`, amount = 0.5 } *
+     *****************************************************************************/
 
 	popext_weaponresist = function(bot, args) {
 
@@ -419,6 +697,14 @@ local popext_funcs = {
 			if (params.damage * amount < player.GetHealth()) params.damage *= amount
 		}
 	}
+    /****************************************
+     *                                      *
+     * SET CUSTOM SKIN INDEX                *
+     *                                      *
+     * use the red team skin no matter what *
+     *                                      *
+     * Example: popext_setskin{ skin = 2 }  *
+     ****************************************/
 
 	popext_setskin = function(bot, args) {
 
@@ -432,6 +718,7 @@ local popext_funcs = {
 			if (victim == bot && params.damage > victim.GetHealth()) {
 				SetPropBool(bot, "m_bForcedSkin", true)
 				SetPropInt(bot, "m_nForcedSkin", 1)
+				SetPropInt(player, "m_iPlayerSkinOverride", 1)
 			}
 		}
 		PopExtTags.TeamSwitchTable.ResetSkin <- function(params) {
@@ -441,10 +728,12 @@ local popext_funcs = {
 			if (b == bot && params.team == TEAM_SPECTATOR) {
 				SetPropBool(bot, "m_bForcedSkin", true)
 				SetPropInt(bot, "m_nForcedSkin", 1)
+				SetPropInt(player, "m_iPlayerSkinOverride", 1)
 			}
 		}
 	}
 
+	//UNFINIHSED
 	popext_doubledonk = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.DoubleDonker <- function() {
@@ -452,6 +741,16 @@ local popext_funcs = {
 			printl("holdtime: " + (2 * exp(-distance / 10) + 0.5))
 		}
 	}
+
+    /******************************************************************
+     * DISPENSER OVERRIDE                                             *
+     *                                                                *
+     * When an engi-bot builds something, replace it with a dispenser *
+     *                                                                *
+     * replace sentry gun with a dispenser                            *
+	 * 																  *
+     * Example: popext_dispenseroverride{ type = OBJ_SENTRYGUN }      *
+     ******************************************************************/
 
 	popext_dispenseroverride = function(bot, args) {
 
@@ -550,6 +849,19 @@ local popext_funcs = {
 		}
 	}
 
+    /*****************************************************************************************************************************
+     * SIMPLE GIVEWEAPON                                                                                                         *
+     *                                                                                                                           *
+     * THIS DOES NOT WORK WITH CUSTOM WEAPONS!!!                                                                                 *
+     *                                                                                                                           *
+     * You can technically give bots cosmetics using this function as well, but it's not recommended and the syntax is different *
+     * Use PopExtUtil.CreatePlayerWearable instead                                                                               *
+     *                                                                                                                           *
+     * Add this to a pyro bot to give them a family business                                                                     *
+     *                                                                                                                           *
+     * Example: popext_giveweapon{ weapon = `tf_weapon_shotgun_pyro` id = 425 }                                                  *
+     *****************************************************************************************************************************/
+
 	popext_giveweapon = function(bot, args) {
 
 		local weapon = CreateByClassname(args.weapon ? args.weapon : args.type)
@@ -565,6 +877,14 @@ local popext_funcs = {
 
 		return weapon
 	}
+
+    /**************************************************************************
+     * MELEE WHEN CLOSE                                                       *
+     *                                                                        *
+     * Distance is radius in Hammer Units                                     *
+     *                                                                        *
+     * Example: popext_meleewhenclose{ distance = 250 }                       *
+     **************************************************************************/
 
 	popext_meleewhenclose = function(bot, args) {
 
@@ -586,6 +906,16 @@ local popext_funcs = {
 			}
 		}
 	}
+
+    /********************************************************************************************************
+     * USE BEST WEAPON                                                                                      *
+	 * 																										*
+     * A simple hardcoded set of weapon switching rules										 				*
+     * Replicates the rafmod UseBestWeapon 1 keyvalue                                                       *
+     * UseBestWeapon 1 simply enables the CTFBot::EquipBestWeaponForThreat code found in non-MvM bots       *
+     *                                                                                                      *
+     * No parameters required, only tag presence is necessary                                               *
+     ********************************************************************************************************/
 
 	popext_usebestweapon = function(bot, args) {
 
@@ -656,6 +986,16 @@ local popext_funcs = {
 		}
 	}
 
+    /***********************************************************************************************************************************
+     * HOMING PROJECTILE                                                                                                               *
+     *                                                                                                                                 *
+     * See "HomingProjectiles" in util.nut for which projectiles will work with this tag                                               *
+     *                                                                                                                                 *
+     * no turn power or speed multipliers, don't ignore disguised spies                                                                *
+     * Example: popext_homingprojectile{turn_power = 1.0, speed_mult = 1.0, ignoreStealthedSpies = true, ignoreDisguisedSpies = false} *
+     *                                                                                                                                 *
+     ***********************************************************************************************************************************/
+
 	popext_homingprojectile = function(bot, args) {
 
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
@@ -684,6 +1024,14 @@ local popext_funcs = {
 		}
 	}
 
+    /*******************************************************************
+     * CUSTOM ROCKET TRAIL                                   		   *
+     *                                                                 *
+     * purple monoculus trail (recommended for homing projectiles)     *
+     *                                                                 *
+     * Example: popext_rocketcustomtrail{name = `eyeboss_projectile` } *
+     *******************************************************************/
+
 	popext_rocketcustomtrail = function (bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.ProjectileTrailThink <- function() {
@@ -709,11 +1057,32 @@ local popext_funcs = {
 			}
 		}
 	}
+    /*************************************************************************************************
+     * CUSTOM WEAPON MODEL                                                                           *
+     *                                                                                               *
+     * If no slot argument is supplied, this will be applied to the bots current active weapon       *
+     *                                                                                               *
+     * Example: popext_customweaponmodel{ model = `models/player/heavy.mdl`, slot = SLOT_SECONDARY } *
+     *************************************************************************************************/
 
 	popext_customweaponmodel = function(bot, args) {
 
-		bot.GetActiveWeapon().SetModelSimple("model" in args ? args.model : args.type)
+		local wep = "slot" in args ? PopExtUtil.GetItemInSlot(bot, slot.tointeger()) : bot.GetActiveWeapon()
+
+		wep.SetModelSimple("model" in args ? args.model : args.type)
 	}
+
+    /************************************************************************************
+     * CUSTOM SPAWN POINT                                                               *
+     *                                                                                  *
+     * uber duration is optional                                                        *
+     *                                                                                  *
+     * Example: popext_spawnhere{where = `ent_to_spawn_at`, spawn_uber_duration = 5.0 } *
+     *                                                                                  *
+     * You can also supply an xyz coordinate string instead of an entity targetname     *
+     *                                                                                  *
+     * Example: popext_spawnhere{where = `500 500 500`}                                 *
+     ************************************************************************************/
 
 	popext_spawnhere = function(bot, args) {
 		if (FindByName(null, args.where) != null)
@@ -728,15 +1097,37 @@ local popext_funcs = {
 		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, "spawn_uber_duration" in args ? args.spawn_uber_duration.tofloat() : args.cooldown.tofloat(), null)
 	}
 
+    /******************************************************************************************************************
+     * IMPROVED AIRBLAST                                                                                              *
+     *                                                                                                                *
+     * Bots with this tag will have significantly improved airblast behavior based on difficulty                      *
+     *                                                                                                                *
+     * Normal: deflect all deflectable projectiles in FOV, not just rockets/short circuit orbs/dragons fury fireballs *
+     * Advanced: Snap eye angles to the projectile and deflect it away, regardless of FOV                             *
+     * Expert: Always deflect projectile back to sender, regardless of FOV                                            *
+     *                                                                                                                *
+     * This behavior can be manually controlled with the "level" keyvalue.                                            *
+     * If no parameters are passed and just the tag itself is present, it will default to bot difficulty              *
+     *                                                                                                                *
+     * Example: popext_improvedairblast{ level = 3 }                                                                  *
+     * Example: popext_improvedairblast <- behavior based on bot difficulty                                           *
+     ******************************************************************************************************************/
+
 	popext_improvedairblast = function (bot, args) {
 
+		local airblast_level = "level" in args ? args.level.tointeger() : bot.GetDifficulty()
+
 		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- function() {
+
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
+
 				if (projectile.GetTeam() == bot.GetTeam() || !this.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
 				if (aibot.GetThreatDistanceSqr(projectile) <= 67000 && aibot.IsVisible(projectile)) {
-					switch (botLevel) {
+
+					switch (airblast_level) {
+
 						case 1: // Basic Airblast, only deflect if in FOV
 
 							if (!aibot.IsInFieldOfView(projectile))
@@ -746,13 +1137,16 @@ local popext_funcs = {
 
 						aibot.LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
 							break
+
 						case 3: // Expert Airblast, deflect regardless of FOV back to Sender
 
 							local owner = projectile.GetOwner()
 							if (owner != null) {
+
 								local owner_head = owner.GetAttachmentOrigin(owner.LookupAttachment("head"))
 								aibot.LookAt(owner_head, INT_MAX, INT_MAX)
 							}
+
 							break
 					}
 					bot.PressAltFireButton(0.0)
@@ -760,23 +1154,34 @@ local popext_funcs = {
 			}
 		}
 	}
-	/* valid attachment points for most playermodels:
-		- head
-		- eyes
-		- righteye/lefteye
-		- foot_L/_R
-		- back_upper/lower
-		- hand_L/R
-		- partyhat
-		- doublejumpfx (scout)
-		- eyeglow_L/R
-		- weapon_bone
-		- weapon_bone_2/3/4
-		- effect_hand_R
-		- flag
-		- prop_bone
-		- prop_bone_1/2/3/4/5/6
-	*/
+
+    /************************************************************
+     * AIM AT                                                   *
+     *                                                          *
+     * Aim at a specific attachment point on the current target *
+	 *
+     *  valid attachment points for most playermodels:          *
+     *     - head                                               *
+     *     - eyes                                               *
+     *     - righteye/lefteye                                   *
+     *     - foot_L/_R                                          *
+     *     - back_upper/lower                                   *
+     *     - hand_L/R                                           *
+     *     - partyhat                                           *
+     *     - doublejumpfx (scout)                               *
+     *     - eyeglow_L/R                                        *
+     *     - weapon_bone                                        *
+     *     - weapon_bone_2/3/4                                  *
+     *     - effect_hand_R                                      *
+     *     - flag                                               *
+     *     - prop_bone                                          *
+     *     - prop_bone_1/2/3/4/5/6                              *
+     *                                                          *
+     * dance for me cowboy                                      *
+     *                                                          *
+     * Example: popext_aimat{ target = `foot_L` }               *
+     ************************************************************/
+
 	popext_aimat = function(bot, args) {
 		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- function()
 		{
@@ -791,35 +1196,37 @@ local popext_funcs = {
 		}
 	}
 
-	/**
-	 * Applies a warpaint to give a bot a decorated weapon.
-	 *
-	 * @param idx int		Warpaint index to apply to the weapon.
-	 * @param slot int?		Slot to apply to paintkit to (Default: Bot's active weapon on spawn).
-	 * @param wear flt?		Texture wear to apply to the warpaint (Default: Refers to "set_item_texture_wear", 0.0 if not set).
-	 * @param seed int?		Warpaint seed to use (Default: Refers to "custom_paintkit_seed_lo" and "custom_paintkit_seed_hi", none if not set).
-	 *
-	 *  Texture wear reference values:
-	 *   0.2 = Factory New
-	 *   0.4 = Minimal Wear
-	 *   0.6 = Field-Tested
-	 *   0.8 = Well-Worn
-	 *   1.0 = Battle Scarred
-	 *
-	 * The following popfile example with all optional parameters provided would apply a
-	 * Battle Scarred Macaw Masked warpaint to a bot soldier's rocket launcher, with the
-	 * "White Gem" seed set.
-	 *
-	 * TFBot
-	 * {
-	 *     Class Soldier
-	 *     Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
-	 *     Tag "popext_warpaint{ idx = 303, slot = 0, wear = 1.0, seed = `8873643875`}"
-	 * }
-	 *
-	 * Implementation note: seeds can be passed as strings or integers on 64-bit servers
-	 * (integers are preferable), but they *must* be passed as strings on 32-bit servers.
-	 **/
+
+	/*********************************************************************************************************************************************
+	 * WARPAINTS:                                                                                                                                *
+	 * Applies a warpaint to give a bot a decorated weapon.                                                                                      *
+	 *                                                                                                                                           *
+	 * @param idx int        Warpaint index to apply to the weapon.                                                                              *
+	 * @param slot int?      Slot to apply to paintkit to (Default: Bot's active weapon on spawn).                                               *
+	 * @param wear flt?      Texture wear to apply to the warpaint (Default: Refers to "set_item_texture_wear", 0.0 if not set).                 *
+	 * @param seed int?      Warpaint seed to use (Default: Refers to "custom_paintkit_seed_lo" and "custom_paintkit_seed_hi", none if not set). *
+	 *                                                                                                                                           *
+	 *  Texture wear reference values:                                                                                                           *
+	 *   0.2 = Factory New                                                                                                                       *
+	 *   0.4 = Minimal Wear                                                                                                                      *
+	 *   0.6 = Field-Tested                                                                                                                      *
+	 *   0.8 = Well-Worn                                                                                                                         *
+	 *   1.0 = Battle Scarred                                                                                                                    *
+	 *                                                                                                                                           *
+	 * The following popfile example with all optional parameters provided would apply a                                                         *
+	 * Battle Scarred Macaw Masked warpaint to a bot soldier's rocket launcher, with the                                                         *
+	 * "White Gem" seed set.                                                                                                                     *
+	 *                                                                                                                                           *
+	 * TFBot                                                                                                                                     *
+	 * {                                                                                                                                         *
+	 *     Class Soldier                                                                                                                         *
+	 *     Item "Upgradeable TF_WEAPON_ROCKETLAUNCHER"                                                                                           *
+	 *     Tag "popext_warpaint{ idx = 303, slot = 0, wear = 1.0, seed = `8873643875`}"                                                          *
+	 * }                                                                                                                                         *
+	 *                                                                                                                                           *
+	 * Implementation note: seeds can be passed as strings or integers on 64-bit servers                                                         *
+	 *********************************************************************************************************************************************/
+
 	popext_warpaint = function(bot, args) {
 		local weapon = null
 		local idx = args.idx.tointeger()
@@ -896,6 +1303,11 @@ local popext_funcs = {
 		}
 	}
 
+	// UNFINISHED
+	// no way to get a table of all attributes on a given player/weapon in VScript
+	// this can still be worked around by having the mission maker fill out the attributes they want manually re-applied to the weapon when it's picked up
+	// too much work for such a niche feature for now
+
 	popext_dropweapon = function(bot, args) {
 
 		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- function(params) {
@@ -932,6 +1344,20 @@ local popext_funcs = {
 		}
 	}
 
+    /*****************************************************************************************************************************************************************
+     * HALLOWEEN BOSS SPAWNER                                                                                                                                        *
+     *                                                                                                                                                               *
+     * Associate a halloween boss with this bot spawn.  Accepts halloween boss entity names				                                                             *
+     *                                                                                                                                                               *
+     * "Where" can be xyz coordinates or an entity targetname.  Duration is optional and is how long you want the boss to exist before escaping/dying on its own     *
+     *                                                                                                                                                               *
+     * Example: popext_halloweenboss{type = `headless_hatman`, where = `halloween_boss_spawnpoint`, health = 5000, duration = 100, boss_team = TF_TEAM_PVE_INVADERS} *
+     *                                                                                                                                                               *
+     * "Health" can also be set to "BOTHP" if you wish to use the spawned TFBots health value instead of a different one                                             *
+     *                                                                                                                                                               *
+     * Example: popext_halloweenboss{type = `merasmus`, where = `500 500 500`, health = `BOTHP`, duration = 60, boss_team = 5}                                       *
+     *****************************************************************************************************************************************************************/
+
 	popext_halloweenboss = function(bot, args) {
 
 		if (!("bosskiller" in ROOT)) ::bosskiller <- null
@@ -945,7 +1371,15 @@ local popext_funcs = {
 		scope.halloweenboss <- boss
 
 		local org = split(args.where, " ")
-		org.apply(function(v) { return v.tofloat()})
+
+		if (org.len() > 1)
+			org.apply(function(v) { return v.tofloat()})
+		else
+		{
+			local entorg = FindByName(null, org[0]).GetOrigin()
+			org = [entorg.x, entorg.y, entorg.z]
+		}
+
 		boss.SetOrigin(Vector(org[0], org[1], org[2]))
 
 		boss.SetTeam(args.boss_team)
@@ -992,14 +1426,21 @@ local popext_funcs = {
 
 			if (scope.halloweenboss.IsValid()) return
 
-			local uberconds = [TF_COND_INVULNERABLE, TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, TF_COND_INVULNERABLE_CARD_EFFECT, TF_COND_INVULNERABLE_USER_BUFF]
+			local uberconds = [TF_COND_INVULNERABLE, TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, TF_COND_INVULNERABLE_CARD_EFFECT, TF_COND_INVULNERABLE_USER_BUFF, TF_COND_PHASE]
 			foreach (cond in uberconds)
-				if (bot.InCond(cond))
 					bot.RemoveCondEx(cond, true)
 
 			bot.TakeDamage(INT_MAX, DMG_GENERIC, bosskiller)
 		}
 	}
+
+    /**********************************************************
+     * TELEPORT NEAR VICTIM                                   *
+     *                                                        *
+     * Similar to spy teleportation behavior                  *
+     *                                                        *
+     * No parameters required, only tag presence is necessary *
+     **********************************************************/
 
 	popext_teleportnearvictim = function(bot, args) {
 
@@ -1014,19 +1455,10 @@ local popext_funcs = {
 				local victim = null
 				local players = []
 
-				for (local i = 1; i <= MAX_CLIENTS; i++) {
-					local player = PlayerInstanceFromIndex(i)
-					if (player == null)
-						continue
+				foreach (player in PopExtUtil.HumanArray)
+					if (PopExtUtil.IsAlive(player))
+						players.push(player)
 
-					if (player.GetTeam() == bot.GetTeam())
-						continue
-
-					if (GetPropInt(player, "m_lifeState") != LIFE_ALIVE)
-						continue
-
-					players.push(player)
-				}
 
 				local n = players.len()
 				while (n > 1) {
@@ -1038,9 +1470,9 @@ local popext_funcs = {
 					players[k] = tmp
 				}
 
-				for (local i = 0; i < players.len(); ++i) {
-					if (PopExtUtil.TeleportNearVictim(bot, players[i], bot_scope.TeleportAttempt)) {
-						victim = players[i]
+				foreach (player in players) {
+					if (PopExtUtil.TeleportNearVictim(bot, player, bot_scope.TeleportAttempt)) {
+						victim = player
 						break
 					}
 				}
@@ -1205,7 +1637,7 @@ local popext_funcs = {
 			delay = 0.0
 			repeats = INT_MAX
 			ifhealthbelow = INT_MAX
-			charges = 1
+			charges = INT_MAX
 			ifseetarget = 1
 			damage = 7.5
 			radius = 135.0
