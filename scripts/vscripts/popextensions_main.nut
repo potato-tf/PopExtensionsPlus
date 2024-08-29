@@ -27,6 +27,13 @@ if (!("_AddThinkToEnt" in _root))
 
 	::AddThinkToEnt <- function(ent, func)
 	{
+		//mission unloaded, revert back to vanilla AddThinkToEnt
+		if (!("__popname" in _root))
+		{
+			AddThinkToEnt <- _AddThinkToEnt
+			return
+		}
+
 		foreach (k, v in banned_think_classnames)
 			if (startswith(ent.GetClassname(), k))
 			{
@@ -46,6 +53,7 @@ if (!("_AddThinkToEnt" in _root))
 
 		NetProps.SetPropInt(player, "m_nRenderMode", kRenderNormal)
 		NetProps.SetPropInt(player, "m_clrRender", 0xFFFFFF)
+
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
