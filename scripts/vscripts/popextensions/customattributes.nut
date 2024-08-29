@@ -303,7 +303,7 @@
 			player.GetScriptScope().attribinfo[attr] <- format("Player max health is multiplied by %.2f", value.tofloat())
 		}
 
-		//add custom item description during inspection; text won't wrap
+		//add custom item description during inspection; wrap text with \n in value
 		"special item description": function(player, items, attr, value) {
 			player.GetScriptScope().attribinfo[attr] <- format("%s", value)
 		}
