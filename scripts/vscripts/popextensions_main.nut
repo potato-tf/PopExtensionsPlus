@@ -30,6 +30,7 @@ if (!("_AddThinkToEnt" in _root))
 		//mission unloaded, revert back to vanilla AddThinkToEnt
 		if (!("__popname" in _root))
 		{
+			_AddThinkToEnt(ent, func)
 			AddThinkToEnt <- _AddThinkToEnt
 			return
 		}
