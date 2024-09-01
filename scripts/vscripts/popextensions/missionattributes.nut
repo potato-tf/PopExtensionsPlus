@@ -1420,10 +1420,10 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				foreach (sound, override in DeathSounds)
 				{
-					if (override != null)
+					if (override)
 					{
 						// StopSoundOn(sound, victim)
-						MissionAttributes.EmitSoundFunc <- function() { if (override.len()) EmitSoundEx({sound_name = override[0], entity = victim}) }
+						MissionAttributes.EmitSoundFunc <- function() { if (override && override.len()) EmitSoundEx({sound_name = override[0], entity = victim}) }
 						EntFireByHandle(victim, "RunScriptCode", format("StopSoundOn(`%s`, self)", sound), -1, null, null)
 						EntFireByHandle(victim, "RunScriptCode", "MissionAttributes.EmitSoundFunc()", -1, null, null)
 					}
@@ -2614,7 +2614,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		{
 			foreach (_, func in ScriptUnloadTable) func()
 			MissionAttributes.ResetConvars()
-			MissionAttrEntity.Kill()
+			if ("MissionAttrEntity" in ROOT) MissionAttrEntity.Kill()
 			delete ::MissionAttributes
 		}
 		function OnGameEvent_teamplay_broadcast_audio(params)
