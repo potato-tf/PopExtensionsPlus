@@ -2326,7 +2326,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			// Accept string identifiers for classes to limit.
 			foreach (k, v in value) {
 				if (typeof k != "string") continue
-				printl(k + " " + v)
 				switch (k.tolower()) {
 					case "scout": value[TF_CLASS_SCOUT] <- v; delete value[k]; break
 					case "soldier": value[TF_CLASS_SOLDIER] <- v; delete value[k]; break

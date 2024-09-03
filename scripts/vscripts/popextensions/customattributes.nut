@@ -332,14 +332,18 @@
     }
 	function FiresMilkBolt(player, items, value = 5.0) {
 
-		local scope = player.GetScriptScope()
-		scope.milkboltfired <- false
+		foreach(item, attrs in items)
+		{
 
-		scope.PlayerThinkTable[format("FiresMilkBolt_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			local wep = PopExtUtil.HasItemInLoadout(player, item)
+			if (wep == null) continue
 
-			foreach(item, attrs in items)
-			{
-				local wep = PopExtUtil.HasItemInLoadout(player, item)
+			local scope = wep.GetScriptScope()
+
+			scope.milkboltfired <- false
+
+			scope.ItemThinkTable[format("FiresMilkBolt_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+
 				if (wep == null || player.GetActiveWeapon() != wep) return
 
 				if (PopExtUtil.InButton(player, IN_ATTACK2))
@@ -350,15 +354,27 @@
 				} else if (PopExtUtil.InButton(player, IN_ATTACK))
 					scope.milkboltfired = false
 			}
-			CustomAttributes.TakeDamagePostTable[format("FireMilkBolt_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				local victim = GetPlayerFromUserID(params.userid)
-				local attacker = GetPlayerFromUserID(params.attacker)
+			CustomAttributes.TakeDamageTable[format("FireMilkBolt_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				if (victim == null || attacker == null || attacker != player || !scope.milkboltfired) return
+
+				// local victim = GetPlayerFromUserID(params.userid)
+				// local attacker = GetPlayerFromUserID(params.attacker)
+				local victim = params.const_entity
+				local attacker = params.attacker
+
+				if (!attacker || !victim.IsPlayer()) return
+
+				local wep =  PopExtUtil.HasItemInLoadout(player, params.weapon)
+
+				printl(EntIndexToHScript(params.weaponid))
+
+				local scope = wep ? scope = wep.GetScriptScope() : false
+
+				if (!scope || !victim || !attacker || attacker != player || !("milkboltfired" in scope) || !scope.milkboltfired) return
 
 				victim.AddCondEx(TF_COND_MAD_MILK, value, attacker)
-				scope.milkboltfired = false
+				wep.GetScriptScope().milkboltfired = false
 
 			}
 		}
@@ -369,7 +385,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("AddCondOnHit_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -388,7 +404,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamagePostTable[format("RemoveCondOnHit_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -407,7 +423,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("SelfAddCondOnHit_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -426,7 +442,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.DeathHookTable[format("SelfAddCondOnKill_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -445,7 +461,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			local args = split(value, "^")
 			local targetname = args[0]
@@ -470,7 +486,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			local args = split(value, "^")
 			local targetname = args[0]
@@ -498,7 +514,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("DmgVsSameClass_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <-  function(params) {
 				local victim = params.const_entity
@@ -507,7 +523,7 @@
 				local scope = attacker.GetScriptScope()
 				if (
 					!attacker.IsPlayer() || !victim.IsPlayer() ||
-					!("attribinfo" in scope) || !("mult dmg vs same class" in player.GetScriptScope().attribinfo) ||
+					!("mult dmg vs same class" in player.GetScriptScope().attribinfo) ||
 					attacker.GetPlayerClass() != victim.GetPlayerClass() ||
 					player.GetActiveWeapon() != wep
 				) return
@@ -522,7 +538,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("MultDmgVsAirborne_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -539,7 +555,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("TeleportInsteadOfDie_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -547,9 +563,12 @@
 
 				local player = params.const_entity
 				local scope = player.GetScriptScope()
+
+				if (!("attribinfo" in scope)) return
+
 				if (
 					!player.IsPlayer() || player.GetHealth() > params.damage ||
-					!("attribinfo" in scope) || !("teleport instead of die" in player.GetScriptScope().attribinfo) ||
+					!("teleport instead of die" in scope.attribinfo) ||
 					player.IsInvulnerable() || PopExtUtil.IsPointInRespawnRoom(player.EyePosition())
 				) return
 
@@ -567,16 +586,16 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 
 			scope.cleavenextattack <- 0.0
 			scope.cleaved <- false
 
-			scope.PlayerThinkTable[format("MeleeCleaveAttack_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			scope.ItemThinkTable[format("MeleeCleaveAttack_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0 || player.GetActiveWeapon() != wep || !("attribinfo" in scope) || !("melee cleave attack" in player.GetScriptScope().attribinfo)) return
+				if (scope.cleavenextattack == GetPropFloat(wep, "m_flNextPrimaryAttack") || GetPropFloat(wep, "m_fFireDuration") == 0.0 || player.GetActiveWeapon() != wep || !("melee cleave attack" in player.GetScriptScope().attribinfo)) return
 
 				scope.cleaved = false
 
@@ -584,7 +603,7 @@
 			}
 			CustomAttributes.TakeDamageTable[format("MeleeCleaveAttack_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				if (params.weapon != wep || !("attribinfo" in scope) || !("melee cleave attack" in player.GetScriptScope().attribinfo) || scope.cleaved) return
+				if (params.weapon != wep || !("melee cleave attack" in player.GetScriptScope().attribinfo) || scope.cleaved) return
 
 				scope.cleaved = true
 				// params.early_out = true
@@ -604,7 +623,7 @@
 		//not finished
 		return
 		ClientPrint(player, HUD_PRINTTALK, "DONT USE ME! Teleporter recharge time is not finished!")
-		local scope = player.GetScriptScope()
+		local scope = wep.GetScriptScope()
 		scope.teleporterrechargetimemult <- value
 
 		// CustomAttributes.PlayerTeleportTable[format("TeleporterRechargeTime_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
@@ -615,7 +634,7 @@
 		//     local chargetime = GetPropFloat(teleporter, "m_flCurrentRechargeDuration")
 		// }
 
-		scope.PlayerThinkTable[format("TeleporterRechargeTime_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+		scope.ItemThinkTable[format("TeleporterRechargeTime_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 			local mult = scope.teleporterrechargetimemult
 			local teleporter = FindByClassnameNearest("obj_teleporter", player.GetOrigin(), 16)
@@ -661,7 +680,7 @@
 
 			if (
 				damagedplayer != player || RandomInt(0, 1) > value ||
-				!("attribinfo" in scope) || !("uber on damage taken" in player.GetScriptScope().attribinfo) ||
+				!("uber on damage taken" in player.GetScriptScope().attribinfo) ||
 				damagedplayer.IsInvulnerable() || player.GetActiveWeapon() != wep
 			) return
 
@@ -675,7 +694,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			//cleanup before spawning a new one
 			for (local knife; knife = FindByClassname(knife, "tf_weapon_knife");)
@@ -714,19 +733,18 @@
 
 	function TeleporterSpeedBoost(player, items, value = null) { //dummy third value to avoid wrong number of parameters errors
 
-		local scope = player.GetScriptScope()
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
-
+			if (wep == null) continue
+			local scope = wep.GetScriptScope()
 			CustomAttributes.PlayerTeleportTable[format("TeleporterSpeedBoost_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
 				if (params.builderid != player.GetScriptScope().userid) return
 				local teleportedplayer = GetPlayerFromUserID(params.userid)
 
-				if (!("attribinfo" in scope) || !("mod teleporter speed boost" in player.GetScriptScope().attribinfo)) teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
+				if (!("mod teleporter speed boost" in player.GetScriptScope().attribinfo)) teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
 			}
 		}
 	}
@@ -738,12 +756,12 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
-			scope.PlayerThinkTable[format("CanBreatheUnderwater_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			local scope = wep.GetScriptScope()
+			scope.ItemThinkTable[format("CanBreatheUnderwater_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("can breathe underwater" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("can breathe underwater" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				if (player.GetWaterLevel() == 3)
 				{
@@ -759,15 +777,15 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			//local speedmult = 1.254901961
 			local maxspeed = GetPropFloat(player, "m_flMaxspeed")
 
-			local scope = player.GetScriptScope()
-			scope.PlayerThinkTable[format("MultSwimSpeed_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			local scope = wep.GetScriptScope()
+			scope.ItemThinkTable[format("MultSwimSpeed_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("mult swim speed" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("mult swim speed" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				if (player.GetWaterLevel() == 3)
 				{
@@ -781,19 +799,19 @@
 
 	function LastShotCrits(player, items, value = 0.033) {
 
-		local scope = player.GetScriptScope()
-		scope.lastshotcritsnextattack <- 0.0
-
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 			if (wep == null) continue
 
-			scope.PlayerThinkTable[format("LastShotCrits_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			local scope = wep.GetScriptScope()
+			scope.lastshotcritsnextattack <- 0.0
 
-				if (!("attribinfo" in scope) || !("last shot crits" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
+			scope.ItemThinkTable[format("LastShotCrits_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (wep == null || scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
+				if (!wep || !("last shot crits" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
+
+				if (scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
 
 				scope.lastshotcritsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
 
@@ -810,9 +828,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			player.GetScriptScope().PlayerThinkTable[format("CritWhenHealthBelow_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("CritWhenHealthBelow_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetHealth() < value && player.GetActiveWeapon() == wep)
 				{
@@ -828,11 +846,11 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			local wetconds = [TF_COND_MAD_MILK, TF_COND_URINE, TF_COND_GAS]
 
-			player.GetScriptScope().PlayerThinkTable[format("WetImmunity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("WetImmunity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() != wep) return
 
@@ -844,6 +862,7 @@
 	}
 
 	function BuildSmallSentries(player, items, value = null) { //dummy third value to avoid wrong number of parameters errors
+
 		local scope = player.GetScriptScope()
 
 		if (!("BuiltObjectTable") in scope) return
@@ -853,7 +872,7 @@
 			foreach(item, attrs in items)
 			{
 				local wep = PopExtUtil.HasItemInLoadout(player, item)
-				if (wep == null) return
+				if (wep == null) continue
 
 				if (params.object != OBJ_SENTRYGUN) return
 
@@ -879,7 +898,7 @@
 
 			local scope = attacker.GetScriptScope()
 
-			if (!("attribinfo" in scope) || !("radius sleeper" in player.GetScriptScope().attribinfo)) return
+			if (!("radius sleeper" in player.GetScriptScope().attribinfo)) return
 
 			if (victim == null || attacker == null || attacker != player || GetPropFloat(attacker.GetActiveWeapon(), "m_flChargedDamage") < 150.0) return
 
@@ -888,13 +907,12 @@
 	}
 
 	function ExplosiveBullets(player, items, value) {
-		local scope = player.GetScriptScope()
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
-
+			if (wep == null) continue
+			local scope = wep.GetScriptScope()
 			//cleanup before spawning a new one
 			for (local launcher; launcher = FindByClassname(launcher, "tf_weapon_grenadelauncher");)
 				if (launcher.IsEFlagSet(EFL_USER))
@@ -916,9 +934,9 @@
 			scope.curammo <- GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1)
 			if (wep.Clip1() != -1) scope.curclip <- wep.Clip1()
 
-			scope.PlayerThinkTable[format("ExplosiveBullets_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			scope.ItemThinkTable[format("ExplosiveBullets_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("explosive bullets" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flLastFireTime") || ("curclip" in scope && scope.curclip != wep.Clip1())) return
+				if (!("explosive bullets" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flLastFireTime") || ("curclip" in scope && scope.curclip != wep.Clip1())) return
 
 				local grenade = CreateByClassname("tf_projectile_pipe")
 				SetPropEntity(grenade, "m_hOwnerEntity", launcher)
@@ -956,9 +974,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 
 			CustomAttributes.TakeDamageTable[format("OldSandmanStun_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 				local attacker = params.attacker
@@ -975,9 +993,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 
 			local duration = 5, type = 2, speedmult = 0.2, stungiants = true
 
@@ -1002,11 +1020,11 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			local i = 1
 
-			player.GetScriptScope().PlayerThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() == wep && !player.IsMiniBoss() && player.GetModelScale() == 1.0) {
 
@@ -1031,15 +1049,15 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			PrecacheSound(value[1])
 			PrecacheScriptSound(value[1])
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 			scope.attacksound <- 0.0
 
-			scope.PlayerThinkTable[format("ReplaceFireSound_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			scope.ItemThinkTable[format("ReplaceFireSound_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() != wep) return
 
@@ -1062,9 +1080,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			player.GetScriptScope().PlayerThinkTable[format("IsInvisible_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("IsInvisible_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() != wep || PopExtUtil.HasEffect(EF_NODRAW)) return
 
@@ -1079,12 +1097,12 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			local index = PopExtUtil.GetItemIndex(wep)
 			local classname = GetPropString(wep, "m_iClassname")
 
-			player.GetScriptScope().PlayerThinkTable[format("CannotUpgrade_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("CannotUpgrade_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() != wep) return
 
@@ -1110,9 +1128,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			player.GetScriptScope().PlayerThinkTable[format("AlwaysCrit_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("AlwaysCrit_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() == wep)
 					player.AddCondEx(COND_CRITBOOST, 0.033, player)
@@ -1125,9 +1143,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			player.GetScriptScope().PlayerThinkTable[format("AddCondWhenActive_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("AddCondWhenActive_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() == wep)
 					player.AddCondEx(value, 0.033, player)
@@ -1141,7 +1159,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("DmgNoCritRate_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1156,7 +1174,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("NoDamageFalloff_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1171,7 +1189,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("CanHeadshot_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1188,7 +1206,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("CannotHeadshot_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1205,13 +1223,13 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("CannotBeHeadshot_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
 				local scope = params.const_entity.GetScriptScope()
 
-				if (!params.const_entity.IsPlayer() || !("attribinfo" in scope) || !("cannot be headshot" in player.GetScriptScope().attribinfo)) return
+				if (!params.const_entity.IsPlayer() || !("cannot be headshot" in player.GetScriptScope().attribinfo)) return
 
 				params.damage_type = params.damage_type &~ DMG_CRITICAL
 				params.damage_stats = TF_DMG_CUSTOM_NONE
@@ -1224,9 +1242,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			player.GetScriptScope().PlayerThinkTable[format("ProjectileLifeTime_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("ProjectileLifeTime_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() != wep) return
 
@@ -1243,7 +1261,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("MultDmgVsGiants_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1259,7 +1277,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("MultDmgVsTanks_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1275,7 +1293,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("SetDamageType_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1289,7 +1307,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("SetDamageType_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1303,10 +1321,18 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
-			scope.PlayerThinkTable[format("PassiveReload_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			local scope = wep.GetScriptScope()
+
+			scope.ItemThinkTable[format("PassiveReload_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+
+				//weapon ent has been destroyed, reference is still valid but the entity isn't
+				if (wep && !wep.IsValid())
+				{
+					delete scope.ItemThinkTable[format("PassiveReload_%d_%d", player.GetScriptScope().userid,  wep.entindex())]
+					return
+				}
 
 				if (player.GetActiveWeapon() == wep) return
 
@@ -1314,7 +1340,7 @@
 
 				if (player.GetActiveWeapon() != wep && wep.Clip1() != wep.GetMaxClip1())
 				{
-					if (!("ReverseMVMDrainAmmoThink" in scope.PlayerThinkTable)) //already takes care of this
+					if (!("ReverseMVMDrainAmmoThink" in scope.ItemThinkTable)) //already takes care of this
 						SetPropIntArray(player, "m_iAmmo", ammo - (wep.GetMaxClip1() - wep.Clip1()), wep.GetSlot() + 1)
 
 					wep.SetClip1(wep.GetMaxClip1())
@@ -1327,7 +1353,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			wep.ValidateScriptScope()
 			local scope = wep.GetScriptScope()
@@ -1340,13 +1366,13 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			if (ROCKET_LAUNCHER_CLASSNAMES.find(wep.GetClassname()) == null)
 				return
 
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 
 			CustomAttributes.TakeDamageTable[format("RocketPenetration_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 				local entity = params.const_entity
@@ -1547,12 +1573,12 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 			scope.lastClip <- wep.Clip1() // thanks to seelpit for detectreload logic
 
-			scope.PlayerThinkTable[format("ReloadFullClipAtOnce_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			scope.ItemThinkTable[format("ReloadFullClipAtOnce_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() != wep) return
 
@@ -1576,13 +1602,13 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 
-			scope.PlayerThinkTable[format("MultProjectileScale_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			scope.ItemThinkTable[format("MultProjectileScale_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("mult projectile scale" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("mult projectile scale" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
 					if (projectile.GetOwner() == player && projectile.GetModelScale() != value)
@@ -1596,9 +1622,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 
 			if (!("BuiltObjectTable") in scope) return
 
@@ -1617,7 +1643,7 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("MultCritDmg_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
@@ -1631,9 +1657,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			player.GetScriptScope().PlayerThinkTable[format("ArrowIgnite_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("ArrowIgnite_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() != wep) return
 
@@ -1650,13 +1676,13 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 
-			scope.PlayerThinkTable[format("AltFireDisabled_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			scope.ItemThinkTable[format("AltFireDisabled_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if ("attribinfo" in scope && "alt-fire disabled" in player.GetScriptScope().attribinfo && player.GetActiveWeapon() == wep)
+				if ("alt-fire disabled" in player.GetScriptScope().attribinfo && player.GetActiveWeapon() == wep)
 				{
 					SetPropInt(player, "m_afButtonDisabled", IN_ATTACK2)
 					SetPropFloat(wep, "m_flNextSecondaryAttack", INT_MAX)
@@ -1676,13 +1702,13 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			local scope = player.GetScriptScope()
+			local scope = wep.GetScriptScope()
 
-			scope.PlayerThinkTable[format("CustomProjectileModel_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			scope.ItemThinkTable[format("CustomProjectileModel_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (!("attribinfo" in scope) || !("custom projectile model" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("custom projectile model" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
 					if (projectile.GetOwner() == player && GetPropInt(projectile, "m_nModelIndex") != projmodel)
@@ -1692,16 +1718,15 @@
 	}
 
 	function NoclipProjectile(player, items, value) {
-		local scope = player.GetScriptScope()
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
+			local scope = wep.GetScriptScope()
+			scope.ItemThinkTable[format("NoclipProjectile_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-			scope.PlayerThinkTable[format("NoclipProjectile_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
-
-				if (!("attribinfo" in scope) || !("noclip projectile" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
+				if (!("noclip projectile" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
 					if (projectile.GetOwner() == player && projectile.GetMoveType != MOVETYPE_NOCLIP)
@@ -1711,15 +1736,14 @@
 	}
 
 	function ProjectileGravity(player, items, value) {
-		local scope = player.GetScriptScope()
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
-
-			scope.PlayerThinkTable[format("ProjectileGravity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
-				if (!("attribinfo" in scope) || !("projectile gravity" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
+			if (wep == null) continue
+			local scope = wep.GetScriptScope()
+			scope.ItemThinkTable[format("ProjectileGravity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+				if (!("projectile gravity" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
 				for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");)
 					if (projectile.GetOwner() == player)
@@ -1742,9 +1766,9 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
-			player.GetScriptScope().PlayerThinkTable[format("CondImmunity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("CondImmunity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() != wep) return
 
@@ -1761,13 +1785,12 @@
 
 	function MultMaxHealth(player, items, value) {
 
-		local scope = player.GetScriptScope()
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
-
+			if (wep == null) continue
+			local scope = wep.GetScriptScope()
 			wep.RemoveAttribute("max health additive bonus")
 			local addHPAmount = player.GetMaxHealth() * (value - 1)
 			wep.AddAttribute("max health additive bonus", addHPAmount, -1)
@@ -1779,11 +1802,11 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("ShahanshahAttributeBelowHP_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				if (!("attribinfo" in scope) || !("dmg bonus while half dead" in player.GetScriptScope().attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
+				if (!("dmg bonus while half dead" in player.GetScriptScope().attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
 
 				if (player.GetHealth() < player.GetMaxHealth() / 2)
 					params.damage *= value
@@ -1796,11 +1819,11 @@
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
-			if (wep == null) return
+			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("ShahanshahAttributeAboveHP_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				if (!("attribinfo" in scope) || !("dmg penalty while half alive" in player.GetScriptScope().attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
+				if (!("dmg penalty while half alive" in player.GetScriptScope().attribinfo) || params.weapon != wep || player.GetActiveWeapon() != wep) return
 
 				if (player.GetHealth() > player.GetMaxHealth() / 2)
 					params.damage *= value
@@ -1827,19 +1850,20 @@
 		local t = ["TakeDamageTable", "TakeDamageTablePost", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable"]
 		foreach (tablename in t)
 			if (tablename in CustomAttributes)
-				foreach(name, func in CustomAttributes[tablename])
-					CustomAttributes.CleanupFunctionTable(player, name, attr)
+				foreach(table, func in CustomAttributes[tablename])
+				{
+					CustomAttributes.CleanupFunctionTable(player, table, attr)
 
-		CustomAttributes.CleanupFunctionTable(player, player.GetScriptScope().PlayerThinkTable, attr)
+					foreach(item, _ in items) CustomAttributes.CleanupFunctionTable(item, table, attr)
+				}
+
+		local scope = player.GetScriptScope()
+		if (!("attribinfo" in scope)) scope.attribinfo <- {}
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 			if (wep == null || !(attr in CustomAttributes.Attrs)) return
-
-			local scope = player.GetScriptScope()
-
-			if (!("attribinfo" in scope)) player.GetScriptScope().attribinfo <- {}
 
 			CustomAttributes.Attrs[attr](player, items, attr, value)
 
@@ -1857,7 +1881,7 @@
 
 		// local formatted = ""
 
-		foreach (desc, attr in player.GetScriptScope().attribinfo)
+		foreach (desc, attr in scope.attribinfo)
 		{
 			if (!formattedtable.find(attr))
 				formattedtable.append(format("%s:\n\n%s\n\n\n", desc, attr))

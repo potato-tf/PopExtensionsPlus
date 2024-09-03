@@ -250,9 +250,9 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 			local epsilon = 20.0
 
 			local blastjump_weapons = {
-				"tf_weapon_rocketlauncher" : null
-				"tf_weapon_rocketlauncher_directhit" : null
-				"tf_weapon_rocketlauncher_airstrike" : null
+				tf_weapon_rocketlauncher = null
+				tf_weapon_rocketlauncher_directhit = null
+				tf_weapon_rocketlauncher_airstrike = null
 			}
 
 			scope.lastvelocity <- player.GetAbsVelocity()

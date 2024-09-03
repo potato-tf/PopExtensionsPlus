@@ -510,11 +510,15 @@
 			{
 
 				if (!item)
-					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %1.8e, -1)", attrib, value.tofloat()), -1, null, null)
-				else if ("CustomWeapons" in player.GetScriptScope() && item in player.GetScriptScope().CustomWeapons)
-					EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1);", attrib, value.tofloat()), -1, null, null)
+					player.AddCustomAttribute(attrib, value.tofloat(), -1)
+				// else if ("CustomWeapons" in player.GetScriptScope() && item in player.GetScriptScope().CustomWeapons)
 				else
-					EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
+				{
+					item.AddAttribute(attrib, value.tofloat(), -1)
+					item.ReapplyProvision()
+				}
+				// else
+					// EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
 
 				if (attrib in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
 			}
@@ -841,7 +845,6 @@
 			}
 		}
 
-		if (t) printl(this.GetItemIndex(t))
 		if (t != null) return t
 
 		//didn't find weapon in children, go through m_hMyWeapons instead
