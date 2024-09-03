@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "08.28.2024.1"
+::popExtensionsVersion <- "09.03.2024.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -136,6 +136,7 @@ if (!("_AddThinkToEnt" in _root))
 			scope.userid <- params.userid
 
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
+			if (!("Preserved" in scope)) scope.Preserved <- {}
 
 			if (player.IsBotOfType(TF_BOT_TYPE))
 			{
