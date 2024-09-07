@@ -456,13 +456,17 @@ local popext_funcs = {
      * CUSTOM ATTRIBUTES                                                                                                                                                  *
      * See customattributes.nut for a list of valid custom attributes and what they do                                                                                    *
      *                                                                                                                                                                    *
-     * Example: popext_customattr{attribute = `wet immunity` value = 1}                                                                                                   *
+     * Example: popext_customattr{attribute = `wet immunity`, value = 1}                                                                                                  *
      *                                                                                                                                                                    *
      * If no "weapon" keyvalue is supplied, attributes will be applied to the bots current active weapon only                                                             *
      * You can pass a weapon classname, item index, weapon handle, or english name to the weapon parameter and PopExtUtil.HasItemInLoadout will try to find it on the bot *
      * If it can't find any weapon, it it'll default back to the current active weapon                                                                                    *
      *                                                                                                                                                                    *
      * Example: popext_customattr{weapon = `tf_weapon_scattergun`, attribute = `last shot crits`, value = 1}                                                              *
+	 *                                                                                                                                                                    *
+	 * Inputting either "attribute" or "attr" into the tag is fine, since customattributes.nut refers to the attribute string as "attr"                                   *
+	 *                                                                                                                                                                    *
+	 * Example: popext_customattr{attr = `wet immunity`, value = 1}                                                                                                       *
      **********************************************************************************************************************************************************************/
 
 	popext_customattr = function(bot, args) {
@@ -473,7 +477,10 @@ local popext_funcs = {
 
 		local weapon = wep ? wep : bot.GetActiveWeapon()
 
-		CustomAttributes.AddAttr(bot, args.attribute, args.value, weapon)
+		if ("attr" in args)
+			CustomAttributes.AddAttr(bot, args.attr, args.value, weapon)
+		else
+			CustomAttributes.AddAttr(bot, args.attribute, args.value, weapon)
 	}
 
     /**********************************************************************************************************************************************
