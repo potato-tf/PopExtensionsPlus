@@ -1831,41 +1831,59 @@
 		}
 	}
 
-	function AddAttr(player, attr = "", value = 0, items = {}) {
-		if (typeof items == "instance") items = {items = [attr, value]}
+	function AddAttr(player, attr, value = 0, item = null) {
 
-		// foreach (k, v in items) printl(k + " : " + v[0] + " : " + v[1])
+		local item_table = {}
 
-		//allow passing an array of multiple weapons
-		if (typeof items == "array")
+		// no item, just apply to the active weapon
+		if (item == null)
+			item_table[player.GetActiveWeapon()] = [attr,  value]
+
+		//entity handle passed
+		else if (typeof item == "instance")
+			item_table[item] = [attr, value]
+
+		//table of entity handles passed
+		else if (typeof item == "table")
+			item_table = item
+
+		//array of entity handles passed
+		if (typeof item == "array")
 		{
 			local temp = {}
-			foreach (item in items) temp[item] <- [attr, value]
-			items = temp
+
+			foreach (item in item_table) temp[item] <- [attr, value]
+
+			item_table = temp
 		}
 
-		if (!items.len()) items[player.GetActiveWeapon()] <- [attr,  value]
+		//easy access table in player scope for our items and their attributes
+		player.GetScriptScope().CustomAttrItems <- item_table
 
-		player.GetScriptScope().CustomAttrItems <- items
-		local t = ["TakeDamageTable", "TakeDamageTablePost", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable"]
+		//cleanup any previous attribute functions from these CustomAttributes event hooks and item thinks
+		local t = ["TakeDamageTable", "TakeDamageTablePost", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable",  "ItemThinkTable"]
+
 		foreach (tablename in t)
-			if (tablename in CustomAttributes)
+			if (tablename in CustomAttributes || tablename in item.GetScriptScope())
 				foreach(table, func in CustomAttributes[tablename])
 				{
-					CustomAttributes.CleanupFunctionTable(player, table, attr)
+					//remove the attribute for the player from the global CustomAttributes event table
+					if (tablename in CustomAttributes) CustomAttributes.CleanupFunctionTable(player, table, attr)
 
-					foreach(item, _ in items) CustomAttributes.CleanupFunctionTable(item, table, attr)
+					//same thing for each individual item
+					foreach(item, _ in item_table) CustomAttributes.CleanupFunctionTable(item, table, attr)
 				}
 
 		local scope = player.GetScriptScope()
 		if (!("attribinfo" in scope)) scope.attribinfo <- {}
 
-		foreach(item, attrs in items)
+		foreach(item, attrs in item_table)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
+
 			if (wep == null || !(attr in CustomAttributes.Attrs)) return
 
-			CustomAttributes.Attrs[attr](player, items, attr, value)
+			CustomAttributes.Attrs[attr](player, item_table, attr, value)
 
 			// printl(CustomAttributes.Attrs[attr])
 
@@ -1910,7 +1928,7 @@
 		})
 		return str
 	}
-	function CleanupFunctionTable(player, table, attr) {
+	function CleanupFunctionTable(handle, table, attr) {
 
 		local str = this.GetAttributeFunctionFromStringName(attr)
 
@@ -1918,7 +1936,7 @@
 
 		// foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
 		foreach(name, v in table)
-			if (typeof v == "function" && startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
+			if (typeof v == "function" && startswith(name, format("%s_%d", str, handle.GetScriptScope().userid)))
 				delete table[format("%s", name)]
 	}
     Events = {
