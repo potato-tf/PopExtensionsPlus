@@ -1591,6 +1591,27 @@
 		);
 	}
 
+	function OnWeaponFire(wep, func) {
+
+		if (wep == null) return
+
+		wep.ValidateScriptScope()
+		local scope = wep.GetScriptScope()
+
+		scope.last_fire_time <- 0.0
+
+		scope.CheckWeaponFire <- function() {
+			local fire_time = GetPropFloat(self, "m_flLastFireTime")
+			if (fire_time > last_fire_time) {
+				func()
+				last_fire_time = fire_time
+			}
+			return
+		}
+
+		AddThinkToEnt(wep, "CheckWeaponFire")
+	}
+
 	Events = {
 
 		function OnGameEvent_mvm_wave_complete(params) { PopExtUtil.IsWaveStarted = false }
