@@ -1,7 +1,7 @@
 //By washy
 //credit to ficool2, Yaki and LizardofOz
 //special thanks to fellen for help on tf_item_map.nut
-ExtraItems <-
+ExtraItems <-	// example on how weapons are listed, use ::CustomItems instead of ExtraItems
 {
 	"Wasp Launcher" :
 	{
@@ -118,10 +118,10 @@ ExtraItems <-
 		local item_slot = null
 
 		//if item is a custom item, overwrite itemname with OriginalItemName
-		if (itemname in ExtraItems)
+		if (itemname in CustomItems)
 		{
-			extraitem = ExtraItems[itemname]
-			itemname = ExtraItems[itemname].OriginalItemName
+			extraitem = CustomItems[itemname]
+			itemname = CustomItems[itemname].OriginalItemName
 		}
 
 		if (itemname in PopExtItems)
