@@ -1848,7 +1848,7 @@
 			item_table = item
 
 		//array of entity handles passed
-		if (typeof item == "array")
+		else if (typeof item == "array")
 		{
 			local temp = {}
 
@@ -1860,19 +1860,16 @@
 		//easy access table in player scope for our items and their attributes
 		player.GetScriptScope().CustomAttrItems <- item_table
 
-		//cleanup any previous attribute functions from these CustomAttributes event hooks and item thinks
-		local t = ["TakeDamageTable", "TakeDamageTablePost", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable",  "ItemThinkTable"]
-
+		//cleanup any previous attribute functions from these CustomAttributes event hooks
+		local t = ["TakeDamageTable", "TakeDamageTablePost", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable"]
 		foreach (tablename in t)
-			if (tablename in CustomAttributes || tablename in item.GetScriptScope())
-				foreach(table, func in CustomAttributes[tablename])
-				{
-					//remove the attribute for the player from the global CustomAttributes event table
-					if (tablename in CustomAttributes) CustomAttributes.CleanupFunctionTable(player, table, attr)
+			foreach(table, func in CustomAttributes[tablename])
+				//remove the attribute for the player from the global CustomAttributes event table
+				if (tablename in CustomAttributes) CustomAttributes.CleanupFunctionTable(player, table, attr)
 
-					//same thing for each individual item
-					foreach(item, _ in item_table) CustomAttributes.CleanupFunctionTable(item, table, attr)
-				}
+		//cleanup item thinks
+		foreach(item, _ in item_table)
+			CustomAttributes.CleanupFunctionTable(item, "ItemThinkTable", attr)
 
 		local scope = player.GetScriptScope()
 		if (!("attribinfo" in scope)) scope.attribinfo <- {}
