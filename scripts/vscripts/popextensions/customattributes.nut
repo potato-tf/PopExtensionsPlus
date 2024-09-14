@@ -1861,7 +1861,7 @@
 		player.GetScriptScope().CustomAttrItems <- item_table
 
 		//cleanup any previous attribute functions from these CustomAttributes event hooks
-		local t = ["TakeDamageTable", "TakeDamageTablePost", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable"]
+		local t = ["TakeDamageTable", "TakeDamagePostTable", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable"]
 		foreach (tablename in t)
 			foreach(table, func in CustomAttributes[tablename])
 				//remove the attribute for the player from the global CustomAttributes event table
