@@ -1209,7 +1209,7 @@ local popext_funcs = {
 	 * Applies a warpaint to give a bot a decorated weapon.                                                                                      *
 	 *                                                                                                                                           *
 	 * @param idx int        Warpaint index to apply to the weapon.                                                                              *
-	 * @param slot int?      Slot to apply to paintkit to (Default: Bot's active weapon on spawn).                                               *
+	 * @param slot int?      Slot to apply to paintkit to (Default: Slot 0).                                                                     *
 	 * @param wear flt?      Texture wear to apply to the warpaint (Default: Refers to "set_item_texture_wear", 0.0 if not set).                 *
 	 * @param seed int?      Warpaint seed to use (Default: Refers to "custom_paintkit_seed_lo" and "custom_paintkit_seed_hi", none if not set). *
 	 *                                                                                                                                           *
@@ -1232,60 +1232,76 @@ local popext_funcs = {
 	 * }                                                                                                                                         *
 	 *                                                                                                                                           *
 	 * Implementation note: seeds can be passed as strings or integers on 64-bit servers                                                         *
+	 * (integers would be preferable), but they MUST be passed as strings on 32-bit servers.                                                     *
+	 * Pass seeds as strings if you are uncertain of what version of TF2 you are targeting.                                                      *
 	 *********************************************************************************************************************************************/
 
 	popext_warpaint = function(bot, args) {
-		local weapon = null
-		local idx = args.idx.tointeger()
+
+		local slot = 0
+		// Check if the mission maker specified a slot.
+		if ("slot" in args && args.slot != null)
+			slot = args.slot.tointeger()
+		// If no slot index is provided, use slot 0 as a default.
+		//  We can't use bot.GetActiveWeapon() to guess the slot to apply to, as the bot
+		//   will always have its first slot active pre-spawn if it has any weapons.
 
 		// Get the weapon in the slot provided.
-		if ("slot" in args && args.slot != null) {
-			local slot = args.slot.tointeger()
-
-			local nobreak = true
-			for (local i = 0; i < SLOT_COUNT; ++i) {
-				weapon = GetPropEntityArray(bot, "m_hMyWeapons", i)
-				if (weapon == null || weapon.GetSlot() != slot) continue
-				nobreak = false
-				break
-			}
-			if (weapon == null || nobreak == true) {
-				local e = format("popext_warpaint: Bot '%%s' does not have a weapon in slot %i.", slot)
-				// We must delay the error by 1 tick in order to get the proper bot name.
-				EntFireByHandle(bot, "RunScriptCode",
-					format(@"local e = format(`%s`, GetPropString(self, `m_szNetname`))
-					ClientPrint(null, HUD_PRINTCONSOLE, e)
-					if (!GetListenServerHost()) printl(e)", e)
-				, SINGLE_TICK, null, null)
-				return
-			}
+		local weapon = null
+		local notfound = true
+		for (local i = 0; i < SLOT_COUNT; ++i) {
+			weapon = GetPropEntityArray(bot, "m_hMyWeapons", i)
+			if (weapon == null || weapon.GetSlot() != slot) continue
+			notfound = false
+			break
 		}
-		// If no slot index is provided, use the bot's active weapon.
-		else weapon = bot.GetActiveWeapon()
+		// Throw an error and early return if the weapon in the specified slot could not be
+		//  found.
+		if (notfound) {
+			local e = format("popext_warpaint: Bot '%%s' does not have a weapon in slot %i.", slot)
+			// We must delay the error message by 1 tick in order to get the proper bot name.
+			EntFireByHandle(bot, "RunScriptCode",
+				format(@"local e = format(`%s`, GetPropString(self, `m_szNetname`))
+				ClientPrint(null, HUD_PRINTCONSOLE, e)
+				if (!GetListenServerHost()) printl(e)", e)
+			, SINGLE_TICK, null, null)
+			return
+		}
 
-		// Set paintkit_proto_def_index as a float value (it is set incorrectly by the game).
-		weapon.AddAttribute("paintkit_proto_def_index", casti2f(idx), -1)
+		// Set "paintkit_proto_def_index" by interpreting the index as a float value, as the
+		//  attribute type is set incorrectly by the game.
+		weapon.AddAttribute("paintkit_proto_def_index", casti2f(args.idx.tointeger()), -1)
 
 		// Set item texture wear.
+		//  This must be present or the warpaint will not render, so we set to 0.0 if a
+		//   value is not provided nor already present on the weapon.
 		local wear = "wear" in args ? args.wear.tofloat() : weapon.GetAttribute("set_item_texture_wear", 0.0)
 		weapon.AddAttribute("set_item_texture_wear", wear, -1)
 
+		// Warpaint seeds are controlled by a single 64-bit integer, which is set through two
+		//  32-bit integers interpreted as a float value (for the same reason as the
+		//   warpaint index), which are:
+		//    "custom_paintkit_seed_lo" (the lower bits),
+		//    "custom_paintkit_seed_hi" (the higher bits).
+		// A seed does not need to be provided in order for the warpaint to render.
 		if ("seed" in args) {
-			local seed = args.seed.tostring()
 
 			// Simple operation if we are on 64-bit.
+			//  Split the 64-bit seed provided to two int32 values.
 			if (_intsize_ == 8) {
-				// This will overflow a Squirrel UInt, but we don't care since we only want the bits, the value is irrelevant.
-				seed = seed.tointeger()
+				// This will overflow a Squirrel int as they're signed, but we don't care
+				//  since we only want the bits; the value is irrelevant.
+				local seed = args.seed.tointeger()
 				weapon.AddAttribute("custom_paintkit_seed_lo", casti2f(seed & 0xFFFFFFFF), -1)
 				weapon.AddAttribute("custom_paintkit_seed_hi", casti2f(seed >> 32), -1)
 			}
+
 			// More involved if we are on 32-bit.
 			// DEPRECATED: This will be removed once 32-bit TF2 support is dropped.
 			else {
 				// Decompose a 64-bit decimal seed string in to four 16-bit integers,
 				//  and then compile the resulting integers to two 32 bit integers.
-				seed = seed.tostring()
+				local seed = args.seed.tostring()
 				local strlen = seed.len()
 				local digitstore = array(strlen, 0)
 
