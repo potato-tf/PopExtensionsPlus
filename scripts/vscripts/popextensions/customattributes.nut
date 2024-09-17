@@ -16,7 +16,7 @@
 
 		"fires milk bolt": function(player, items, attr, value) {
 			CustomAttributes.FiresMilkBolt(player, items, value)
-			player.GetScriptScope().attribinfo[attr] <- format("Secondary attack: fires a bolt that applies milk for %d seconds.", value)
+			player.GetScriptScope().attribinfo[attr] <- format("Secondary attack: fires a bolt that applies milk for %.2f seconds. Regenerates every %.2f seconds.", value.duration.tofloat(), value.recharge.tofloat())
 		}
 
 		"mod teleporter speed boost": function(player, items, attr, value) {
@@ -330,7 +330,8 @@
 			player.GetScriptScope().attribinfo[attr] <- format("damage penalty while above 50% health", value)
 		}
     }
-	function FiresMilkBolt(player, items, value = 5.0) {
+
+	function FiresMilkBolt(player, items, value) {
 
 		foreach(item, attrs in items)
 		{
@@ -339,20 +340,33 @@
 			if (wep == null) continue
 
 			local scope = wep.GetScriptScope()
+			local playerScope = player.GetScriptScope()
 
-			scope.milkboltfired <- false
+			// mad milk default params
+			local duration = 10.0, recharge = 20.0
 
-			scope.ItemThinkTable[format("FiresMilkBolt_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			if ("duration" in value) duration = value.duration
+			if ("recharge" in value) recharge = value.recharge
+
+			scope.milkBoltLastFireTime <- 0.0
+			scope.milkBoltRequest <- false
+
+			playerScope.PlayerThinkTable[format("FiresMilkBolt_%d_%d", player.GetScriptScope().userid, wep.entindex())] <- function() {
 
 				if (wep == null || player.GetActiveWeapon() != wep) return
 
-				if (PopExtUtil.InButton(player, IN_ATTACK2))
-				{
+				if (PopExtUtil.InButton(player, IN_ATTACK2) && Time() - scope.milkBoltLastFireTime > recharge) {
+					// these 3 following lines must be in this order, otherwise it will break
+					scope.milkBoltRequest = true
 					wep.PrimaryAttack()
-					scope.milkboltfired = true
-
-				} else if (PopExtUtil.InButton(player, IN_ATTACK))
-					scope.milkboltfired = false
+					scope.milkBoltLastFireTime = Time()
+				}
+				if (PopExtUtil.InButton(player, IN_ATTACK2) && Time() - scope.milkBoltLastFireTime < recharge) {
+					ClientPrint(player, HUD_PRINTCENTER, format("Milk bolt is recharging! It will be available in %.1f seconds.", scope.milkBoltLastFireTime - Time() + recharge))
+				}
+				if (PopExtUtil.InButton(player, IN_ATTACK) || PopExtUtil.InButton(player, IN_ATTACK3) || player.GetActiveWeapon() != wep) {
+					scope.milkBoltRequest = false
+				}
 			}
 
 			CustomAttributes.TakeDamageTable[format("FireMilkBolt_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
@@ -365,16 +379,16 @@
 
 				if (!attacker || !victim.IsPlayer()) return
 
-				local wep =  PopExtUtil.HasItemInLoadout(player, params.weapon)
+				local wep = PopExtUtil.HasItemInLoadout(player, params.weapon)
 
-				printl(EntIndexToHScript(params.weaponid))
+				// printl(EntIndexToHScript(params.weaponid))
 
 				local scope = wep ? scope = wep.GetScriptScope() : false
 
-				if (!scope || !victim || !attacker || attacker != player || !("milkboltfired" in scope) || !scope.milkboltfired) return
+				if (!scope || !victim || !attacker || attacker != player || !("milkBoltRequest" in scope) || !scope.milkBoltRequest || Time() - scope.milkBoltLastFireTime < recharge) return
 
-				victim.AddCondEx(TF_COND_MAD_MILK, value, attacker)
-				wep.GetScriptScope().milkboltfired = false
+				victim.AddCondEx(TF_COND_MAD_MILK, duration, attacker)
+				scope.milkBoltRequest = false
 
 			}
 		}
