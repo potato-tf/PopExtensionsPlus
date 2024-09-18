@@ -1,44 +1,44 @@
 //By washy
 //credit to ficool2, Yaki and LizardofOz
 //special thanks to fellen for help on tf_item_map.nut
-ExtraItems <-
-{
-	"Wasp Launcher" :
-	{
-        OriginalItemName = "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
-        Model = "models/weapons/c_models/c_wasp_launcher/c_wasp_launcher.mdl"
-        "blast radius increased" : 1.5
-        "max health additive bonus" : 100
-	}
-	"Thumper" :
-	{
-        OriginalItemName = "Upgradeable TF_WEAPON_SHOTGUN_PRIMARY"
-        Model = "models/weapons/c_models/c_rapidfire/c_rapidfire_1.mdl"
-		//defaults to engineer's primary shotgun, need to specify
-		//ItemClass and Animset to use secondary shotgun on non shotgun wielding classes
-		//specify Slot to make sure the reserve ammo fix is applied properly
-		ItemClass = "tf_weapon_shotgun_soldier"
-        AnimSet = "soldier"
-		Slot = "secondary"
-        "damage bonus" : 2.3
-        "clip size bonus" : 1.25
-        "weapon spread bonus" : 0.85
-        "maxammo secondary increased" : 1.5
-        "fire rate penalty" : 1.2
-        "bullets per shot bonus" : 0.5
-        "Reload time increased" : 1.13
-        "single wep deploy time increased" : 1.15
-        "minicritboost on kill" : 5
-	}
-	"Crowbar" :
-	{
-        OriginalItemName = "Necro Smasher"
-        Model = "models/weapons/c_models/c_cratesmasher/c_cratesmasher_1.mdl"
-		"deploy time decreased" : 0.75
-		"fire rate bonus" : 0.30
-		"damage penalty" : 0.54
-	}
-}
+//ExtraItems <-	// Example, make your own script and use ::ExtraItems to set up custom weapon list
+//{
+//	"Wasp Launcher" :
+//	{
+//        OriginalItemName = "Upgradeable TF_WEAPON_ROCKETLAUNCHER"
+//        Model = "models/weapons/c_models/c_wasp_launcher/c_wasp_launcher.mdl"
+//        "blast radius increased" : 1.5
+//        "max health additive bonus" : 100
+//	}
+//	"Thumper" :
+//	{
+//        OriginalItemName = "Upgradeable TF_WEAPON_SHOTGUN_PRIMARY"
+//        Model = "models/weapons/c_models/c_rapidfire/c_rapidfire_1.mdl"
+//		//defaults to engineer's primary shotgun, need to specify
+//		//ItemClass and Animset to use secondary shotgun on non shotgun wielding classes
+//		//specify Slot to make sure the reserve ammo fix is applied properly
+//		ItemClass = "tf_weapon_shotgun_soldier"
+//        AnimSet = "soldier"
+//		Slot = "secondary"
+//        "damage bonus" : 2.3
+//        "clip size bonus" : 1.25
+//        "weapon spread bonus" : 0.85
+//        "maxammo secondary increased" : 1.5
+//        "fire rate penalty" : 1.2
+//        "bullets per shot bonus" : 0.5
+//        "Reload time increased" : 1.13
+//        "single wep deploy time increased" : 1.15
+//        "minicritboost on kill" : 5
+//	}
+//	"Crowbar" :
+//	{
+//        OriginalItemName = "Necro Smasher"
+//        Model = "models/weapons/c_models/c_cratesmasher/c_cratesmasher_1.mdl"
+//		"deploy time decreased" : 0.75
+//		"fire rate bonus" : 0.30
+//		"damage penalty" : 0.54
+//	}
+//}
 
 ::CustomWeapons <- {
 
@@ -186,6 +186,11 @@ ExtraItems <-
 		if (!("CustomWeapons" in player.GetScriptScope()))
 			player.GetScriptScope().CustomWeapons <- {}
 		player.GetScriptScope().CustomWeapons[item] <- modelindex
+		item.ValidateScriptScope()
+		local scope = item.GetScriptScope()
+		scope.ItemThinkTable <- {}
+		scope.ItemThinks <- function() { foreach (name, func in scope.ItemThinkTable) func.call(scope); return -1 }
+		_AddThinkToEnt(item, "ItemThinks")
 
 		//if max ammo needs to be changed, create a tf_wearable and assign attributes to it
 		if (item_slot == "primary")
