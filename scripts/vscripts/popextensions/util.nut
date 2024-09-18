@@ -1603,7 +1603,7 @@
 		scope.ItemThinkTable[format("OnWeaponFire_%d_%d", wep.GetOwner().GetScriptScope().userid, wep.entindex())] <- function() {
 			local fire_time = GetPropFloat(self, "m_flLastFireTime")
 			if (fire_time > last_fire_time) {
-				func()
+				func.call(scope)
 				last_fire_time = fire_time
 			}
 			return
