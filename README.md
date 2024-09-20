@@ -7,6 +7,8 @@ put scripts directory inside tf directory, merge if necessary
 
 scripts/population/mvm_bigrock_vscript.pop is a demonstrative popfile that makes use of all available hooks
 
+The [wiki](https://github.com/potato-tf/PopExtensionsPlus/wiki) in this repo hosts documentation for various structures of the library and is slowly being updated. Check it out!
+
 # How To Use:
 
 The stucture of the library is as follows:
