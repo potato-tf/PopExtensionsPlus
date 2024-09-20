@@ -19,7 +19,7 @@
 			local duration = 10.0, recharge = 20.0
 			if ("duration" in value) duration = value.duration
 			if ("recharge" in value) recharge = value.recharge
-			player.GetScriptScope().attribinfo[attr] <- format("Secondary attack: fires a bolt that applies milk for %.1f seconds. Regenerates every %.1f seconds.", duration.tofloat(), recharge.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("Secondary attack: fires a bolt that applies milk for %.2f seconds. Regenerates every %.2f seconds.", duration.tofloat(), recharge.tofloat())
 		}
 
 		"mod teleporter speed boost": function(player, items, attr, value) {
