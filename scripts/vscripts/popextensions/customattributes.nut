@@ -691,18 +691,24 @@
 
 	function UberOnDamageTaken(player, items, value) {
 
-		CustomAttributes.TakeDamageTable[format("UberOnDamageTaken_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
+		foreach(item, attrs in items)
+		{
+			local wep = PopExtUtil.HasItemInLoadout(player, item)
+			if (wep == null) continue
 
-			local damagedplayer = params.const_entity
+			CustomAttributes.TakeDamageTable[format("UberOnDamageTaken_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-			if (
-				damagedplayer != player || RandomInt(0, 1) > value ||
-				!("uber on damage taken" in player.GetScriptScope().attribinfo) ||
-				damagedplayer.IsInvulnerable() || player.GetActiveWeapon() != wep
-			) return
+				local damagedplayer = params.const_entity
 
-			damagedplayer.AddCondEx(COND_UBERCHARGE, 3.0, player)
-			params.early_out = true
+				if (
+					damagedplayer != player || RandomInt(0, 1) > value ||
+					!("uber on damage taken" in player.GetScriptScope().attribinfo) ||
+					damagedplayer.IsInvulnerable() || player.GetActiveWeapon() != wep
+				) return
+
+				damagedplayer.AddCondEx(COND_UBERCHARGE, 3.0, player)
+				params.early_out = true
+			}
 		}
 	}
 
