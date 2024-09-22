@@ -23,8 +23,8 @@
 		}
 
 		"mod teleporter speed boost": function(player, items, attr, value) {
-			CustomAttributes.ModTeleporterSpeedBoost(player, items)
-			player.GetScriptScope().attribinfo[attr] <- format("Teleporters grant a speed boost for %.2f seconds", value)
+			CustomAttributes.ModTeleporterSpeedBoost(player, items, value)
+			player.GetScriptScope().attribinfo[attr] <- format("Teleporters grant a speed boost for %.2f seconds upon exiting", value)
 		}
 
 		"set turn to ice": function(player, items, attr, value) {
@@ -748,7 +748,7 @@
 		}
 	}
 
-	function TeleporterSpeedBoost(player, items, value = null) { //dummy third value to avoid wrong number of parameters errors
+	function ModTeleporterSpeedBoost(player, items, value) { //dummy third value to avoid wrong number of parameters errors
 
 
 		foreach(item, attrs in items)
@@ -756,12 +756,12 @@
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 			if (wep == null) continue
 			local scope = wep.GetScriptScope()
-			CustomAttributes.PlayerTeleportTable[format("TeleporterSpeedBoost_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
+			CustomAttributes.PlayerTeleportTable[format("ModTeleporterSpeedBoost_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				if (params.builderid != player.GetScriptScope().userid) return
+				if (!("mod teleporter speed boost" in player.GetScriptScope().attribinfo) || params.builderid != player.GetScriptScope().userid) return
+
 				local teleportedplayer = GetPlayerFromUserID(params.userid)
-
-				if (!("mod teleporter speed boost" in player.GetScriptScope().attribinfo)) teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
+				teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
 			}
 		}
 	}
