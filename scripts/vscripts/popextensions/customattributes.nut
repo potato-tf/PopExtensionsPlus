@@ -1808,15 +1808,14 @@
 
 	function MultMaxHealth(player, items, value) {
 
-
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 			if (wep == null) continue
-			local scope = wep.GetScriptScope()
-			wep.RemoveAttribute("max health additive bonus")
+
+			wep.RemoveAttribute("SET BONUS: max health additive bonus")
 			local addHPAmount = player.GetMaxHealth() * (value - 1)
-			wep.AddAttribute("max health additive bonus", addHPAmount, -1)
+			wep.AddAttribute("SET BONUS: max health additive bonus", addHPAmount, -1)
 		}
 	}
 
