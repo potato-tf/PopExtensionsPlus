@@ -245,7 +245,7 @@
 			player.GetScriptScope().attribinfo[attr] <- format("applies cond %d to self on hit", typeof value == "array" ? value[0].tointeger() : value)
 		}
 
-		"add cond on kill": function(player, items, attr, value) {
+		"self add cond on kill": function(player, items, attr, value) {
 			CustomAttributes.SelfAddCondOnKill(player, items, value)
 			player.GetScriptScope().attribinfo[attr] <- format("applies cond %d to self on kill", typeof value == "array" ? value[0].tointeger() : value)
 		}
@@ -287,10 +287,10 @@
 
 		"immune to cond": function(player, items, attr, value) {
 			if (typeof value == "integer") {
-				CustomAttributes.CondImmunity(player, items, value)
+				CustomAttributes.ImmuneToCond(player, items, value)
 				player.GetScriptScope().attribinfo[attr] <- format("wielder is immune to cond %d", value)
 			} else {
-				CustomAttributes.CondImmunity(player, items, value)
+				CustomAttributes.ImmuneToCond(player, items, value)
 				local outputString = ""
 				foreach (item in value) {
 					outputString += (item.tostring() + ", ")
@@ -1784,14 +1784,14 @@
 		}
 	}
 
-	function CondImmunity(player, items, value) {
+	function ImmuneToCond(player, items, value) {
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 			if (wep == null) continue
 
-			wep.GetScriptScope().ItemThinkTable[format("CondImmunity_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			wep.GetScriptScope().ItemThinkTable[format("ImmuneToCond_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (player.GetActiveWeapon() != wep) return
 
@@ -1930,7 +1930,7 @@
 			if (!formattedtable.len() || !player.IsInspecting() || Time() < cooldowntime) return
 
 			if (i+1 < formattedtable.len())
-				PopExtUtil.ShowHudHint(format("%s %s", formattedtable[i], formattedtable[i+1]), player, 3.0 - SINGLE_TICK)
+				PopExtUtil.ShowHudHint(format("%s%s", formattedtable[i], formattedtable[i+1]), player, 3.0 - SINGLE_TICK)
 			else
 				PopExtUtil.ShowHudHint(formattedtable[i], player, 3.0 - SINGLE_TICK)
 
