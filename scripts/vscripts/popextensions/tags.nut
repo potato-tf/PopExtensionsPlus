@@ -615,7 +615,7 @@ local popext_funcs = {
 		local next_action_point = "next_action_point" in args ? args.next_action_point : ""
 		local desired_distance = "desired_distance" in args ? args.desired_distance : args.duration
 		local stay_time = "stay_time" in args ? args.stay_time : args.repeats
-		local command = "command" in args ? args.command : args.ifhealthbelow
+		local command = "command" in args ? args.command : "attack sentry at next action point"
 
 		local action_point = FindByName(null, point)
 
