@@ -246,8 +246,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				if ( wep == null || attacker == null || attacker == victim
 					|| wep.GetClassname() in ignitingWeaponsClassname
-					|| wep.GetName() == "The Huo Long Heatmaker"
-					|| wep.GetName() == "Sharpened Volcano Fragment"
+					|| PopExtUtil.GetItemIndex(wep) == 811 // heater
+					|| PopExtUtil.GetItemIndex(wep) == 348 // fragment
 					|| wep.GetAttribute("Set DamageType Ignite", 10) == 10
 				) return
 
