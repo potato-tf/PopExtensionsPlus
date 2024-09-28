@@ -2434,23 +2434,22 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		// 		bot.AddCustomAttribute("override footstep sound set", 2.0, -1)
 		// 	}
 	}
-	CurAttrs = {} // Array storing currently modified attributes.
-	ConVars  = {} //table storing original convar values
-	SoundsToReplace = {}
+	CurAttrs			= {} // Array storing currently modified attributes.
+	ConVars  			= {} //table storing original convar values
+	SoundsToReplace 	= {}
 
-	ThinkTable      = {}
-	TakeDamageTable = {}
+	ThinkTable     		= {}
+	TakeDamageTable 	= {}
 	TakeDamageTablePost = {}
-	SpawnHookTable  = {}
-	DeathHookTable  = {}
-	//InitWaveTable = {}
-	DisconnectTable = {}
-	StartWaveTable = {}
-	ChangeClassTable = {}
+	SpawnHookTable   	= {}
+	DeathHookTable  	= {}
+	//InitWaveTable 	= {}
+	DisconnectTable 	= {}
+	StartWaveTable  	= {}
+	ChangeClassTable 	= {}
+	DebugText        	= false
 
-	DebugText        = false
-
-	PathNum = 0
+	PathNum 			= 0
 
 	RedMoneyValue = 0
 
