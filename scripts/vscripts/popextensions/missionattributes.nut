@@ -219,6 +219,42 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
+		// =======================================================================================
+		// Fix "Set DamageType Ignite" not actually making most weapons ignite on hit
+		// WARNING: Rafmod already does this, enabling this on potato servers will ALWAYS stack,
+		// 			since there does not seem to be a way to turn off the rafmod fix
+		// =======================================================================================
+
+		SetDamageTypeIgniteFix = function(value) {
+
+			// Afterburn damage and duration varies from weapon to weapon, we don't want to override those
+			// This list leaves out only the volcano fragment and the heater
+			local ignitingWeaponsClassname = [
+				"tf_weapon_raygun",
+				"tf_weapon_flamethrower",
+				"tf_weapon_rocketlauncher_fireball",
+				"tf_weapon_flaregun",
+				"tf_weapon_flaregun_revenge",
+				"tf_weapon_compound_bow"
+			]
+
+			MissionAttributes.TakeDamageTable.SetDamageTypeIgniteFix <- function(params) {
+
+				local wep = params.weapon
+				local victim = params.const_entity
+				local attacker = params.inflictor
+
+				if ( wep == null || attacker == null || attacker == victim
+					|| wep.GetClassname() in ignitingWeaponsClassname
+					|| PopExtUtil.GetItemIndex(wep) == ID_HUO_LONG_HEATMAKER
+					|| PopExtUtil.GetItemIndex(wep) == ID_SHARPENED_VOLCANO_FRAGMENT
+					|| wep.GetAttribute("Set DamageType Ignite", 10) == 10
+				) return
+
+				PopExtUtil.Ignite(victim)
+			}
+		}
+
 		// =========================================================
 
 		//all of these could just be set directly in the pop easily, however popfile's have a 4096 character limit for vscript so might as well save space
