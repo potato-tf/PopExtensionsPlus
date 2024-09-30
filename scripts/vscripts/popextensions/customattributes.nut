@@ -444,7 +444,7 @@
 
 			CustomAttributes.TakeDamageTable[format("SelfAddCondOnHit_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				local victim = params.victim
+				local victim = params.const_entity
 				local attacker = params.attacker
 
 				if (attacker == null || !attacker.IsPlayer() || victim.IsInvulnerable() || (typeof value == "array" && attacker.InCond(value[0])) || (typeof value == "integer" && attacker.InCond(value))) return
@@ -620,7 +620,7 @@
 			}
 			CustomAttributes.TakeDamageTable[format("MeleeCleaveAttack_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-				if (params.weapon != wep || !("melee cleave attack" in player.GetScriptScope().attribinfo) || scope.cleaved) return
+				if (scope.cleaved || params.weapon != wep || !("melee cleave attack" in player.GetScriptScope().attribinfo)) return
 
 				scope.cleaved = true
 				// params.early_out = true
@@ -628,9 +628,8 @@
 				local swingpos = player.EyePosition() + (player.EyeAngles().Forward() * 30) - Vector(0, 0, value)
 
 				for (local p; p = FindByClassnameWithin(p, "player", swingpos, value);)
-					if (p.GetTeam() != player.GetTeam() && p.GetTeam() != TEAM_SPECTATOR)
+					if (p.GetTeam() != player.GetTeam() && p.GetTeam() != TEAM_SPECTATOR && p != params.const_entity)
 						p.TakeDamageCustom(params.inflictor, params.attacker, params.weapon, params.damage_force, params.damage_position, params.damage, params.damage_type, params.damage_custom)
-
 			}
 		}
 	}
@@ -1853,12 +1852,12 @@
 		local item_table = {}
 
 		// no item, just apply to the active weapon
-		if (item == null)
-			item_table[player.GetActiveWeapon()] = [attr,  value]
+		if (item == null) item = player.GetActiveWeapon()
 
 		//entity handle passed
-		else if (typeof item == "instance")
-			item_table[item] = [attr, value]
+		if (typeof item == "instance")
+			item_table[item] <- [attr, value]
+
 
 		//table of entity handles passed
 		else if (typeof item == "table")
