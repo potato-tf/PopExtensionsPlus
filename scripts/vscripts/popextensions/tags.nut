@@ -725,7 +725,7 @@ local popext_funcs = {
 			if (victim == bot && params.damage > victim.GetHealth()) {
 				SetPropBool(bot, "m_bForcedSkin", true)
 				SetPropInt(bot, "m_nForcedSkin", 1)
-				SetPropInt(player, "m_iPlayerSkinOverride", 1)
+				SetPropInt(bot, "m_iPlayerSkinOverride", 1)
 			}
 		}
 		PopExtTags.TeamSwitchTable.ResetSkin <- function(params) {
@@ -735,7 +735,7 @@ local popext_funcs = {
 			if (b == bot && params.team == TEAM_SPECTATOR) {
 				SetPropBool(bot, "m_bForcedSkin", true)
 				SetPropInt(bot, "m_nForcedSkin", 1)
-				SetPropInt(player, "m_iPlayerSkinOverride", 1)
+				SetPropInt(bot, "m_iPlayerSkinOverride", 1)
 			}
 		}
 	}
