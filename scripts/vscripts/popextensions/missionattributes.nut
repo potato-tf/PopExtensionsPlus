@@ -230,7 +230,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			// Afterburn damage and duration varies from weapon to weapon, we don't want to override those
 			// This list leaves out only the volcano fragment and the heater
 			local ignitingWeaponsClassname = [
-				"tf_weapon_raygun",
+				"tf_weapon_particle_cannon",
 				"tf_weapon_flamethrower",
 				"tf_weapon_rocketlauncher_fireball",
 				"tf_weapon_flaregun",
