@@ -48,6 +48,10 @@ if (!("_AddThinkToEnt" in _root))
 }
 ::PopExtMain <- {
 
+	//manual cleanup flag, set to true for missions that are created for a specific map.
+	//automated unloading is meant for multiple missions on one map, purpose-built map/mission combos (like zm_redridge) don't need this.
+	ManualCleanup = false
+
 	//save popfile name in global scope when we first initialize
 	//if the popfile name changed, a new pop has loaded, clean everything up.
 	function PlayerCleanup(player) {
@@ -60,6 +64,7 @@ if (!("_AddThinkToEnt" in _root))
 
 		if (scope.len() <= 5) return
 
+		//ignore these variables when cleaning up
 		local ignore_table = {
 			"self"      : null
 			"__vname"   : null
@@ -190,13 +195,15 @@ if (!("_AddThinkToEnt" in _root))
 
 		function OnGameEvent_teamplay_round_start(params) {
 
+			//clean up all wearables that are not owned by a player or a bot
 			for (local wearable; wearable = FindByClassname(wearable, "tf_wearable*");)
 				if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
 					EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
-			//same pop, don't run clean-up
-			if (__popname == GetPropString(o, "m_iszMvMPopfileName")) return
+			//same pop or manual cleanup flag set, don't run
+			if (__popname == GetPropString(o, "m_iszMvMPopfileName") || PopExtMain.ManualCleanup) return
 
+			//clean up all players
 			for (local i = 1; i <= MaxClients().tointeger(); i++) {
 
 				local player = PlayerInstanceFromIndex(i)
@@ -206,6 +213,10 @@ if (!("_AddThinkToEnt" in _root))
 				PopExtMain.PlayerCleanup(player)
 			}
 
+			//clean up missionattributes
+			MissionAttributes.Cleanup()
+
+			//nuke it all
 			local cleanup = [
 
 				"MissionAttributes"

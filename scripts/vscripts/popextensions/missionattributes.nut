@@ -2647,9 +2647,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		function OnGameEvent_mvm_mission_complete(params)
 		{
 			foreach (_, func in ScriptUnloadTable) func()
-			MissionAttributes.ResetConvars()
-			if ("MissionAttrEntity" in ROOT) MissionAttrEntity.Kill()
-			delete ::MissionAttributes
 		}
 		function OnGameEvent_teamplay_broadcast_audio(params)
 		{
