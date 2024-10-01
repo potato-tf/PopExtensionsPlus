@@ -44,7 +44,9 @@
 
 		"last shot crits": function(player, items, attr, value) {
 			CustomAttributes.LastShotCrits(player, items, value)
-			player.GetScriptScope().attribinfo[attr] <- format("Crit boost on last shot.  Crit boost will stay active for %.2f seconds after holster", value)
+			local duration = 0.033
+			if ("duration" in value) duration = value.duration
+			player.GetScriptScope().attribinfo[attr] <- format("Crit boost on last shot. Crit boost will stay active for %.2f seconds after holster", duration.tofloat())
 		}
 
 		"wet immunity": function(player, items, attr, value) {
@@ -820,26 +822,29 @@
 		}
 	}
 
-	function LastShotCrits(player, items, value = 0.033) {
+	function LastShotCrits(player, items, value) {
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 			if (wep == null) continue
 
+			local duration = 0.033
+			if ("duration" in value) duration = value.duration
+
 			local scope = wep.GetScriptScope()
-			scope.lastshotcritsnextattack <- 0.0
+			// scope.lastshotcritsnextattack <- 0.0
 
 			scope.ItemThinkTable[format("LastShotCrits_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
 				if (!wep || !("last shot crits" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep) return
 
-				if (scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
+				// if (scope.lastshotcritsnextattack == GetPropFloat(wep, "m_flNextPrimaryAttack")) return
 
-				scope.lastshotcritsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
+				// scope.lastshotcritsnextattack = GetPropFloat(wep, "m_flNextPrimaryAttack")
 
 				if (wep.IsValid() && wep.Clip1() == 1)
-					player.AddCondEx(COND_CRITBOOST, value, null)
+					player.AddCondEx(COND_CRITBOOST, duration, null)
 
 				return
 			}
