@@ -482,7 +482,7 @@
 		}
 
 		local item = player.FirstMoveChild()
-		while (item && item.GetClassname() != "tf_viewmodel")
+		while (item && item instanceof CEconEntity)
 		{
 			foreach (attribute in attributearray)
 			{
