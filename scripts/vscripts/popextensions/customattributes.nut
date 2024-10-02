@@ -61,9 +61,7 @@
 
 		"mult swim speed": function(player, items, attr, value) {
 			CustomAttributes.MultSwimSpeed(player, items, value)
-			local speedmult = 1.25
-			if ("mult" in value) speedmult = value.mult
-			player.GetScriptScope().attribinfo[attr] <- format("Swimming speed multiplied by %.2f", speedmult.tofloat())
+			player.GetScriptScope().attribinfo[attr] <- format("Swimming speed multiplied by %.2f", value.tofloat())
 		}
 
 		"teleport instead of die": function(player, items, attr, value) {
@@ -799,16 +797,14 @@
 			}
 		}
 	}
-	function MultSwimSpeed(player, items, value) {
+	function MultSwimSpeed(player, items, value = 1.25) {
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 			if (wep == null) continue
 
-			local speedmult = 1.25
-			if ("mult" in value) speedmult = value.mult
-
+			//local speedmult = 1.254901961
 			local maxspeed = GetPropFloat(player, "m_flMaxspeed")
 
 			local scope = wep.GetScriptScope()
@@ -818,7 +814,7 @@
 
 				if (player.GetWaterLevel() == 3)
 				{
-					SetPropFloat(player, "m_flMaxspeed", maxspeed * speedmult)
+					SetPropFloat(player, "m_flMaxspeed", maxspeed * value)
 					return
 				}
 				SetPropFloat(player, "m_flMaxspeed", maxspeed)
