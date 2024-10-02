@@ -51,7 +51,7 @@
 
 		"wet immunity": function(player, items, attr, value) {
 			CustomAttributes.WetImmunity(player, items)
-			player.GetScriptScope().attribinfo[attr] <- "Immune to jar effects"
+			player.GetScriptScope().attribinfo[attr] <- "Immune to jar effects when active"
 		}
 
 		"can breathe under water": function(player, items, attr, value) {
@@ -883,8 +883,7 @@
 				if (player.GetActiveWeapon() != wep) return
 
 				foreach (cond in wetconds)
-					if (player.InCond(cond))
-						player.RemoveCondEx(cond, true)
+					player.RemoveCondEx(cond, true)
 			}
 		}
 	}
