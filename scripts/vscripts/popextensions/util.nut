@@ -508,17 +508,11 @@
 				MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
 			else
 			{
-
 				if (!item)
-					player.AddCustomAttribute(attrib, value.tofloat(), -1)
-				// else if ("CustomWeapons" in player.GetScriptScope() && item in player.GetScriptScope().CustomWeapons)
+					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %.2f, -1)", attrib, value.tofloat()), -1, null, null)
 				else
-				{
-					item.AddAttribute(attrib, value.tofloat(), -1)
-					item.ReapplyProvision()
-				}
-				// else
-					// EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
+					EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %.2f, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
+
 
 				if (attrib in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
 			}
