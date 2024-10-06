@@ -511,6 +511,12 @@
 				if (!item)
 					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %.2f, -1)", attrib, value.tofloat()), -1, null, null)
 				else
+				if ("CustomWeapons" in player.GetScriptScope())
+				{
+					item.AddAttribute(attrib, value.tofloat(), -1)
+					item.ReapplyProvision()
+				}
+				else
 					EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %.2f, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
 
 
