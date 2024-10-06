@@ -1781,8 +1781,6 @@ local popext_funcs = {
 
 	function OnScriptHook_OnTakeDamage(params) {
 
-		local scope = params.attacker.GetScriptScope()
-
 		foreach (_, func in this.TakeDamageTable) { func(params) }
 	}
 
