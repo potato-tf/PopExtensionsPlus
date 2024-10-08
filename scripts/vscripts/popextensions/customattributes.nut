@@ -13,6 +13,7 @@
     DeathHookTable = {}
 	BuiltObjectTable = {}
 	UpgradedObjectTable = {}
+	QuickSentryUpgradeTable = {}
 
     Attrs = {
 
@@ -83,7 +84,7 @@
 
 		"build small sentries": function(player, items, attr, value) {
 			CustomAttributes.BuildSmallSentries(player, items)
-			player.GetScriptScope().attribinfo[attr] <- "Sentries are 20⁒ smaller. have 33⁒ less health, take 25⁒ less metal to upgrade"
+			player.GetScriptScope().attribinfo[attr] <- "Sentries are 20⁒ smaller, have 33⁒ less health, take 25⁒ less metal to upgrade"
 		}
 
 		"crit when health below": function(player, items, attr, value) {
@@ -892,26 +893,70 @@
 
 	function BuildSmallSentries(player, items, value = null) { //dummy third value to avoid wrong number of parameters errors
 
-		local scope = player.GetScriptScope()
+		foreach(item, attrs in items)
+		{
+			local wep = PopExtUtil.HasItemInLoadout(player, item)
+			if (wep == null) continue
 
-		if (!("BuiltObjectTable") in scope) return
+			local scope = player.GetScriptScope()
+			scope.previousBuiltSentry <- null
 
-		scope.BuiltObjectTable.BuildSmallSentries <- function(params) {
+			CustomAttributes.BuiltObjectTable[format("BuildSmallSentries_%d_%d", scope.userid, wep.entindex())] <- function(params) {
 
-			foreach(item, attrs in items)
-			{
-				local wep = PopExtUtil.HasItemInLoadout(player, item)
-				if (wep == null) continue
+				local builder = GetPlayerFromUserID(params.userid)
 
-				if (params.object != OBJ_SENTRYGUN) return
+				if (builder != player || params.object != OBJ_SENTRYGUN) return
 
 				local sentry = EntIndexToHScript(params.index)
-				local maxhealth = sentry.GetMaxHealth() * 0.66
 
-				sentry.SetModelScale(0.8, -1)
-				sentry.SetMaxHealth(maxhealth)
-				if (sentry.GetHealth() > sentry.GetMaxHealth()) sentry.SetHealth(maxhealth)
-				SetPropInt(sentry, "m_iUpgradeMetalRequired", 150)
+				if (sentry == scope.previousBuiltSentry) {
+					SetPropInt(sentry, "m_iUpgradeMetalRequired", 150)
+					return
+				}
+
+				scope.previousBuiltSentry = sentry
+				EntFireByHandle(sentry, "RunScriptCode", @"
+					local maxhealth = self.GetMaxHealth() * 0.66
+					self.SetMaxHealth(maxhealth)
+					if (self.GetHealth() > self.GetMaxHealth())
+					self.SetHealth(maxhealth)
+
+					self.SetModelScale(0.8, -1)
+
+					SetPropInt(self, `m_iUpgradeMetalRequired`, 150)
+				", SINGLE_TICK, null, null);
+			}
+
+			CustomAttributes.UpgradedObjectTable[format("BuildSmallSentries_%d_%d", scope.userid, wep.entindex())] <- function(params) {
+
+				local upgrader = GetPlayerFromUserID(params.userid)
+
+				if (upgrader != player || params.object != OBJ_SENTRYGUN) return
+
+				local sentry = EntIndexToHScript(params.index)
+
+				EntFireByHandle(sentry, "RunScriptCode", @"
+					local maxhealth = self.GetMaxHealth() * 0.66
+					self.SetMaxHealth(maxhealth)
+					if (self.GetHealth() > self.GetMaxHealth())
+					self.SetHealth(maxhealth)
+
+					SetPropInt(self, `m_iUpgradeMetalRequired`, 150)
+				", SINGLE_TICK, null, null);
+			}
+
+			CustomAttributes.QuickSentryUpgradeTable[format("BuildSmallSentries_%d_%d", scope.userid, wep.entindex())] <- function(params) {
+
+				for (local sentry; sentry = FindByClassname(sentry, "obj_sentrygun");) {
+					if (GetPropEntity(sentry, "m_hBuilder") == player) {
+						EntFireByHandle(sentry, "RunScriptCode", @"
+							local maxhealth = self.GetMaxHealth() * 0.66
+							self.SetMaxHealth(maxhealth)
+							if (self.GetHealth() > self.GetMaxHealth())
+							self.SetHealth(maxhealth)
+						", SINGLE_TICK, null, null);
+					}
+				}
 			}
 		}
 	}
@@ -1972,6 +2017,7 @@
 		function OnGameEvent_player_teleported(params) { foreach (_, func in CustomAttributes.PlayerTeleportTable) func(params) }
 		function OnGameEvent_player_builtobject(params){ foreach (_, func in CustomAttributes.BuiltObjectTable) func(params) }
 		function OnGameEvent_player_upgradedobject(params){ foreach (_, func in CustomAttributes.UpgradedObjectTable) func(params) }
+		function OnGameEvent_mvm_quick_sentry_upgrade(params){ foreach (_, func in CustomAttributes.QuickSentryUpgradeTable) func(params) }
 	}
 }
 __CollectGameEventCallbacks(CustomAttributes.Events)
