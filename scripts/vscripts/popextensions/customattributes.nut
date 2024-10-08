@@ -11,6 +11,8 @@
     TakeDamagePostTable = {}
     PlayerTeleportTable = {}
     DeathHookTable = {}
+	BuiltObjectTable = {}
+	UpgradedObjectTable = {}
 
     Attrs = {
 
@@ -1968,6 +1970,8 @@
 		function OnGameEvent_player_hurt(params) { foreach (_, func in CustomAttributes.TakeDamagePostTable) func(params) }
 		function OnGameEvent_player_death(params) { foreach (_, func in CustomAttributes.DeathHookTable) func(params) }
 		function OnGameEvent_player_teleported(params) { foreach (_, func in CustomAttributes.PlayerTeleportTable) func(params) }
+		function OnGameEvent_player_builtobject(params){ foreach (_, func in CustomAttributes.BuiltObjectTable) func(params) }
+		function OnGameEvent_player_upgradedobject(params){ foreach (_, func in CustomAttributes.UpgradedObjectTable) func(params) }
 	}
 }
 __CollectGameEventCallbacks(CustomAttributes.Events)
