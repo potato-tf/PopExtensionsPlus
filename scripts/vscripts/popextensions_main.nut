@@ -170,12 +170,6 @@ if (!("_AddThinkToEnt" in _root))
 			if ("PopExtPopulator" in _root) foreach (_, func in PopExtPopulator.SpawnHookTable) func(params)
 			if ("CustomWeapons" in _root) foreach (_, func in CustomWeapons.SpawnHookTable) func(params)
 		}
-
-		function OnGameEvent_player_builtobject(params) {
-			local scope = GetPlayerFromUserID(params.userid).GetScriptScope()
-			if ("BuiltObjectTable" in scope) foreach (_, func in scope.BuiltObjectTable) func(params)
-		}
-
 		function OnGameEvent_player_changeclass(params) {
 			local player = GetPlayerFromUserID(params.userid)
 
