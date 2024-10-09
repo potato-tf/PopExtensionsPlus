@@ -21,7 +21,7 @@ As updates to PopExt are made consistently, this documentation will inevitably f
 ⠀⠀⠀└─ globalfixes  
 ⠀⠀⠀└─ hooks  
 ⠀⠀⠀└─ [missionattributes](#missionattributes)  
-⠀⠀⠀└─ popextensions  
+⠀⠀⠀└─ [popextensions](#popextensions)  
 ⠀⠀⠀└─ populator  
 ⠀⠀⠀└─ spawntemplate  
 ⠀⠀⠀└─ [tags](#tags)  
