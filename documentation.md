@@ -6,7 +6,7 @@ A work-in-progress documentation for [PopExt](https://github.com/potato-tf/PopEx
 
 As updates to PopExt are made consistently, this documentation will inevitably fall slightly behind. Please also feel free to make pull requests to fill in new missing parts.
 
-For bug reports, please make a post in our [Discord](https://discord.gg/potatomvm) under "archive_restoration/PopExtensions Meta" or submit a pull request!
+For bug reports, please make a post in our [Discord](https://discord.gg/M8YbW3k) under "archive_restoration/PopExtensions Meta" or submit a pull request!
 
 ## Table of Contents
 
@@ -728,11 +728,8 @@ insert table here
 // hud hint text on inspection
 "fires custom entity input on hit: %s"
 
-// wrong popfile usage
-`fire input on hit`: `bignet^RunScriptCode^printl(`Someone got hit 2 seconds ago!`)^2` // this breaks
-
-// correct nutfile usage
-"fire input on hit": "bignet^RunScriptCode^printl(`Someone got hit 2 seconds ago!`)^2" // this works
+// example popfile usage
+`fire input on hit`: `bignet^RunScriptCode^printl(\`Someone got hit 2 seconds ago!\`)^2`
 
 // parameters default to:
 // value = ""
@@ -743,7 +740,7 @@ insert table here
 > Arguments are separated by the circumflex symbol (^). Arguments in order are: `target`, `action`, `value`, `delay`.
 
 > [!WARNING]
-> Popfiles do not have enough support for nested strings, which often happen when using this attribute, like in the example above. It is recommended to use a separate nutfile, where one can first use quotes (") then backticks (`) for nested strings.
+> Look out for the escape character (\\`) to represent a quote in the context of nested strings.
 
 ---
 
@@ -753,11 +750,8 @@ insert table here
 // hud hint text on inspection
 "fires custom entity input on kill: %s"
 
-// wrong popfile usage
-`fire input on kill`: `bignet^RunScriptCode^printl(`Someone got killed 2 seconds ago!`)^2` // this breaks
-
-// correct nutfile usage
-"fire input on kill": "bignet^RunScriptCode^printl(`Someone got killed 2 seconds ago!`)^2" // this works
+// example popfile usage
+`fire input on kill`: `bignet^RunScriptCode^printl(\`Someone got killed 2 seconds ago!\`)^2`
 
 // parameters default to:
 // value = ""
@@ -768,7 +762,7 @@ insert table here
 > Arguments are separated by the circumflex symbol (^). Arguments in order are: `target`, `action`, `value`, `delay`.
 
 > [!WARNING]
-> Popfiles do not have enough support for nested strings, which often happen when using this attribute, like in the example above. It is recommended to use a separate nutfile, where one can first use quotes (") then backticks (`) for nested strings.
+> Look out for the escape character (\\`) to represent a quote in the context of nested strings.
 
 ---
 
