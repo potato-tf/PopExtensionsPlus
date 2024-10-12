@@ -6,7 +6,7 @@ A work-in-progress documentation for [PopExt](https://github.com/potato-tf/PopEx
 
 As updates to PopExt are made consistently, this documentation will inevitably fall slightly behind. Please also feel free to make pull requests to fill in new missing parts.
 
-For bug reports, please make a post in our [Discord](https://discord.gg/M8YbW3k) under "archive_restoration/PopExtensions Meta" or submit a pull request!
+For bug reports, typos, grammar mistakes and what not, please make a post in our [Discord](https://discord.gg/M8YbW3k) under "archive_restoration/PopExtensions Meta" or submit a pull request!
 
 ## Table of Contents
 
