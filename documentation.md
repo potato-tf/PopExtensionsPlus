@@ -112,7 +112,91 @@ The [example pop](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scrip
 
 ## [missionattributes](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/missionattributes.nut) menu
 
-back-and-forth links
+### Attributes
+
+[`ForceHoliday`](#MissionAttributes.ForceHoliday)  
+[`RedBotsNoRandomCrit`](#MissionAttributes.RedBotsNoRandomCrit)  
+[`NoCrumpkins`](#MissionAttributes.NoCrumpkins)  
+[`NoReanimators`](#MissionAttributes.NoReanimators)  
+[`AllMobber`](#MissionAttributes.AllMobber)  
+[`StandableHeads`](#MissionAttributes.StandableHeads)  
+[`666Wavebar`](#MissionAttributes.666Wavebar)  
+[`WaveNum`](#MissionAttributes.WaveNum)  
+[`MaxWaveNum`](#MissionAttributes.MaxWaveNum)  
+[`HuntsmanDamageFix`](#MissionAttributes.HuntsmanDamageFix)  
+[`NegativeDmgHeals`](#MissionAttributes.NegativeDmgHeals)  
+[`MultiSapper`](#MissionAttributes.MultiSapper)  
+[`SetDamageTypeIgniteFix`](#MissionAttributes.SetDamageTypeIgniteFix)  
+[`NoRefunds`](#MissionAttributes.NoRefunds)  
+[`RefundLimit`](#MissionAttributes.RefundLimit)  
+[`RefundGoal`](#MissionAttributes.RefundGoal)  
+[`FixedBuybacks`](#MissionAttributes.FixedBuybacks)  
+[`BuybacksPerWave`](#MissionAttributes.BuybacksPerWave)  
+[`NoBuybacks`](#MissionAttributes.NoBuybacks)  
+[`DeathPenalty`](#MissionAttributes.DeathPenalty)  
+[`BonusRatioHalf`](#MissionAttributes.BonusRatioHalf)  
+[`BonusRatioFull`](#MissionAttributes.BonusRatioFull)  
+[`UpgradeFile`](#MissionAttributes.UpgradeFile)  
+[`FlagEscortCount`](#MissionAttributes.FlagEscortCount)  
+[`BombMovementPenalty`](#MissionAttributes.BombMovementPenalty)  
+[`MaxSkeletons`](#MissionAttributes.MaxSkeletons)  
+[`TurboPhysics`](#MissionAttributes.TurboPhysics)  
+[`Accelerate`](#MissionAttributes.Accelerate)  
+[`AirAccelerate`](#MissionAttributes.AirAccelerate)  
+[`BotPushaway`](#MissionAttributes.BotPushaway)  
+[`TeleUberDuration`](#MissionAttributes.TeleUberDuration)  
+[`RedMaxPlayers`](#MissionAttributes.RedMaxPlayers)  
+[`MaxVelocity`](#MissionAttributes.MaxVelocity)  
+[`ConchHealthOnHitRegen`](#MissionAttributes.ConchHealthOnHitRegen)  
+[`MarkForDeathLifetime`](#MissionAttributes.MarkForDeathLifetime)  
+[`GrapplingHookEnable`](#MissionAttributes.GrapplingHookEnable)  
+[`GiantScale`](#MissionAttributes.GiantScale)  
+[`VacNumCharges`](#MissionAttributes.VacNumCharges)  
+[`DoubleDonkWindow`](#MissionAttributes.DoubleDonkWindow)  
+[`ConchSpeedBoost`](#MissionAttributes.ConchSpeedBoost)  
+[`StealthDmgReduction`](#MissionAttributes.StealthDmgReduction)  
+[`FlagCarrierCanFight`](#MissionAttributes.FlagCarrierCanFight)  
+[`HHHChaseRange`](#MissionAttributes.HHHChaseRange)  
+[`HHHAttackRange`](#MissionAttributes.HHHAttackRange)  
+[`HHHQuitRange`](#MissionAttributes.HHHQuitRange)  
+[`HHHTerrifyRange`](#MissionAttributes.HHHTerrifyRange)  
+[`HHHHealthBase`](#MissionAttributes.HHHHealthBase)  
+[`HHHHealthPerPlayer`](#MissionAttributes.HHHHealthPerPlayer)  
+[`HalloweenBossNotSolidToPlayers`](#MissionAttributes.HalloweenBossNotSolidToPlayers)  
+[`SentryHintBombForwardRange`](#MissionAttributes.SentryHintBombForwardRange)  
+[`SentryHintBombBackwardRange`](#MissionAttributes.SentryHintBombBackwardRange)  
+[`SentryHintMinDistanceFromBomb`](#MissionAttributes.SentryHintMinDistanceFromBomb)  
+[`NoBusterFF`](#MissionAttributes.NoBusterFF)  
+[`SniperHideLasers`](#MissionAttributes.SniperHideLasers)  
+[`TeamWipeWaveLoss`](#MissionAttributes.TeamWipeWaveLoss)  
+[`GiantSentryKillCountOffset`](#MissionAttributes.GiantSentryKillCountOffset)  
+[`FlagResetTime`](#MissionAttributes.FlagResetTime)  
+[`BotHeadshots`](#MissionAttributes.BotHeadshots)  
+[`PlayersAreRobots`](#MissionAttributes.PlayersAreRobots)  
+[`BotsAreHumans`](#MissionAttributes.BotsAreHumans)  
+[`NoRome`](#MissionAttributes.NoRome)  
+[`SpellRateCommon`](#MissionAttributes.SpellRateCommon)  
+[`SpellRateGiant`](#MissionAttributes.SpellRateGiant)  
+[`RareSpellRateCommon`](#MissionAttributes.RareSpellRateCommon)  
+[`RareSpellRateGiant`](#MissionAttributes.RareSpellRateGiant)  
+[`NoSkeleSplit`](#MissionAttributes.NoSkeleSplit)  
+[`WaveStartCountdown`](#MissionAttributes.WaveStartCountdown)  
+[`ExtraTankPath`](#MissionAttributes.ExtraTankPath)  
+[`HandModelOverride`](#MissionAttributes.HandModelOverride)  
+[`AddCond`](#MissionAttributes.AddCond)  
+[`PlayerAttributes`](#MissionAttributes.PlayerAttributes)  
+[`ItemAttributes`](#MissionAttributes.ItemAttributes)  
+[`LoadoutControl`](#MissionAttributes.LoadoutControl)  
+[`SoundOverrides`](#MissionAttributes.SoundOverrides)  
+[`NoThrillerTaunt`](#MissionAttributes.NoThrillerTaunt)  
+[`EnableRandomCrits`](#MissionAttributes.EnableRandomCrits)  
+[`ForceRedMoney`](#MissionAttributes.ForceRedMoney)  
+[`ReverseMVM`](#MissionAttributes.ReverseMVM)  
+[`ClassLimits`](#MissionAttributes.ClassLimits)  
+[`ShowHiddenAttributes`](#MissionAttributes.ShowHiddenAttributes)  
+[`HideRespawnText`](#MissionAttributes.HideRespawnText)  
+[`ReflectableDF`](#MissionAttributes.ReflectableDF)  
+[`RestoreYERNerf`](#MissionAttributes.RestoreYERNerf)  
 
 ## [popextensions](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/popextensions.nut) menu
 
@@ -197,6 +281,9 @@ insert table here
 // example popfile usage
 `mult teleporter recharge time`: 0.25
 ```
+
+> [!WARNING]
+> This attribute doesn't seem to work currently
 
 ---
 
@@ -739,9 +826,6 @@ insert table here
 > [!NOTE]
 > Arguments are separated by the circumflex symbol (^). Arguments in order are: `target`, `action`, `value`, `delay`.
 
-> [!WARNING]
-> Look out for the escape character (\\`) to represent a quote in the context of nested strings.
-
 ---
 
 <a name="CustomAttributes.FireInputOnKill"></a>
@@ -760,9 +844,6 @@ insert table here
 
 > [!NOTE]
 > Arguments are separated by the circumflex symbol (^). Arguments in order are: `target`, `action`, `value`, `delay`.
-
-> [!WARNING]
-> Look out for the escape character (\\`) to represent a quote in the context of nested strings.
 
 ---
 
@@ -896,5 +977,1053 @@ insert table here
 // example popfile usage
 `damage penalty while half alive`: 0.66
 ```
+
+---
+
+## [missionattributes](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/missionattributes.nut) references
+
+<a name="MissionAttributes.ForceHoliday"></a>
+
+```js
+// example usage
+ForceHoliday = 1
+```
+
+Replicates sigsegv-mvm: `ForceHoliday`. Forces a tf_holiday for the mission. Supported holidays are:
+
+- 0 - None
+- 1 - Birthday
+- 2 - Halloween
+- 3 - Christmas
+
+---
+
+<a name="MissionAttributes.RedBotsNoRandomCrit"></a>
+
+```js
+// usage
+RedBotsNoRandomCrit = 1
+```
+
+Disables random crits for red bots
+
+---
+
+<a name="MissionAttributes.NoCrumpkins"></a>
+
+```js
+// usage
+NoCrumpkins = 1
+```
+
+Disables crit pumpkins
+
+---
+
+<a name="MissionAttributes.NoReanimators"></a>
+
+```js
+// usage
+NoReanimators = 1
+```
+
+Disables reanimators
+
+---
+
+<a name="MissionAttributes.AllMobber"></a>
+
+```js
+// usage
+AllMobber = 1
+```
+
+Sets the following cvars:
+
+- `tf_bot_escort_range` to `INT_MAX`, a really big number
+- `tf_bot_flag_escort_range` to `INT_MAX`
+- `tf_bot_flag_escort_max_count` to 0
+
+---
+
+<a name="MissionAttributes.StandableHeads"></a>
+
+```js
+// usage
+StandableHeads = 1
+```
+
+Allows standing on bot heads
+
+---
+
+<a name="MissionAttributes.666Wavebar"></a>
+
+```js
+// example usage
+`666Wavebar`: 69
+```
+
+> [!WARNING]
+> Bug: seems to do the same thing as the `WaveNum` attribute
+
+---
+
+<a name="MissionAttributes.WaveNum"></a>
+
+```js
+// example usage
+WaveNum = 69
+```
+
+Sets the wave number (number before the slash) on the wavebar
+
+---
+
+<a name="MissionAttributes.MaxWaveNum"></a>
+
+```js
+// example usage
+MaxWaveNum = 420
+```
+
+Sets the max wave number (number after the slash on the wavebar)
+
+---
+
+<a name="MissionAttributes.HuntsmanDamageFix"></a>
+
+```js
+// usage
+HuntsmanDamageFix = 1
+```
+
+Enable this to fix huntsman damage bonus not scaling correctly.
+
+> [!WARNING]
+> Rafmod already does this, enabling this on potato servers will stack. A workaround is to disable the rafmod fix and enable the popext fix, though they are equivalent and should only affect local testing experience.
+
+---
+
+<a name="MissionAttributes.NegativeDmgHeals"></a>
+
+```js
+// usage
+NegativeDmgHeals = 1
+```
+
+> [!CAUTION]
+> This attribute is unfinished
+
+---
+
+<a name="MissionAttributes.MultiSapper"></a>
+
+```js
+// usage
+MultiSapper = 1
+```
+
+Allows spies to place multiple sappers when item meter is full
+
+---
+
+<a name="MissionAttributes.SetDamageTypeIgniteFix"></a>
+
+```js
+// usage
+SetDamageTypeIgniteFix = 1
+```
+
+Fix "Set DamageType Ignite" not actually making most weapons ignite on hit
+
+> [!WARNING]
+> Rafmod already does this, enabling this on potato servers will ALWAYS stack, since there does not seem to be a way to turn off the rafmod fix. Use this with `[$WIN32]` tag for local testing.
+
+---
+
+<a name="MissionAttributes.NoRefunds"></a>
+
+```js
+// usage
+NoRefunds = 1
+```
+
+Disallows refunds
+
+---
+
+<a name="MissionAttributes.RefundLimit"></a>
+
+```js
+// example usage
+RefundLimit = 5
+```
+
+Sets a limit on how many times one can refund
+
+---
+
+<a name="MissionAttributes.RefundGoal"></a>
+
+```js
+// example usage
+RefundGoal = 1500
+```
+
+Sets a credit collected goal on when one can refund
+
+---
+
+<a name="MissionAttributes.FixedBuybacks"></a>
+
+```js
+// usage
+FixedBuybacks = 1
+```
+
+Changes the buyback system so that buybacks are charge-based and finite, as opposed to the regular currency-based system
+
+---
+
+<a name="MissionAttributes.BuybacksPerWave"></a>
+
+```js
+// example usage
+BuybacksPerWave = 3
+```
+
+Sets the number of buybacks allowed in a wave
+
+---
+
+<a name="MissionAttributes.NoBuybacks"></a>
+
+```js
+// usage
+NoBuybacks = 1
+```
+
+Disallows buybacks
+
+---
+
+<a name="MissionAttributes.DeathPenalty"></a>
+
+```js
+// example usage
+DeathPenalty = 100
+```
+
+If set, player will lose this many credits on death
+
+---
+
+<a name="MissionAttributes.BonusRatioHalf"></a>
+
+```js
+// example usage
+BonusRatioHalf = 0.85
+```
+
+Sets the minimum percentage of wave money players must collect in order to qualify for min bonus. Upon reaching this percentage, $50 will be paid out. In this example, upon reaching 85% money collected, all players receive $50. Default is 0.95
+
+> [!NOTE]
+> This bonus is independent from the max bonus, i.e. when players see an A+ wave with $100 bonus, both the min and max bonuses have been paid out instead of one $100 lump sum.
+
+---
+
+<a name="MissionAttributes.BonusRatioFull"></a>
+
+```js
+// example usage
+BonusRatioFull = 0.98
+```
+
+Sets the highest percentage of wave money players must collect in order to qualify for max bonus. Upon reaching this percentage, $50 will be paid out. In this example, upon reaching 98% money collected, all players receive $50. Default is 1.00
+
+> [!NOTE]
+> This bonus is independent from the min bonus, i.e. when players see an A+ wave with $100 bonus, both the min and max bonuses have been paid out instead of one $100 lump sum.
+
+---
+
+<a name="MissionAttributes.UpgradeFile"></a>
+
+```js
+// usage
+UpgradeFile = `filepath`
+```
+
+Sets a custom upgrades file
+
+---
+
+<a name="MissionAttributes.FlagEscortCount"></a>
+
+```js
+// example usage
+FlagEscortCount = 10
+```
+
+Sets how many bots should escort a bomb-carrying (or in general, a flag-carrying) bot, default is 4
+
+---
+
+<a name="MissionAttributes.BombMovementPenalty"></a>
+
+```js
+// example usage
+BombMovementPenalty = 0.3
+```
+
+Sets the movement multiplier on a bot who is carrying the bomb, default is 0.5
+
+---
+
+<a name="MissionAttributes.MaxSkeletons"></a>
+
+```js
+// example usage
+MaxSkeletons = 8
+```
+
+Sets the maximum number of active skeletons on the map, default is 30
+
+---
+
+<a name="MissionAttributes.TurboPhysics"></a>
+
+```js
+// usage
+TurboPhysics = 1
+```
+
+Turns on turbo physics
+
+---
+
+<a name="MissionAttributes.Accelerate"></a>
+
+```js
+// example usage
+Accelerate = 20
+```
+
+Sets the `sv_accelerate` cvar, default is 10
+
+---
+
+<a name="MissionAttributes.AirAccelerate"></a>
+
+```js
+// example usage
+AirAccelerate = 20
+```
+
+Sets the `sv_airaccelerate` cvar, default is 10
+
+---
+
+<a name="MissionAttributes.BotPushaway"></a>
+
+```js
+// usage
+BotPushaway = 0
+```
+
+Sets whether teammates can push each other: default is 1, to disable set to 0
+
+---
+
+<a name="MissionAttributes.TeleUberDuration"></a>
+
+```js
+// example usage
+TeleUberDuration = 3
+```
+
+Sets how long, in seconds, that bots should be ubered after teleporting to the field via an engineer bot teleporter, default is 5
+
+---
+
+<a name="MissionAttributes.RedMaxPlayers"></a>
+
+```js
+// example usage
+RedMaxPlayers = 10
+```
+
+Sets the max players allowed on RED team
+
+---
+
+<a name="MissionAttributes.MaxVelocity"></a>
+
+```js
+// example usage
+MaxVelocity = 6900
+```
+
+Sets the `sv_maxvelocity` cvar, default is 3500
+
+---
+
+<a name="MissionAttributes.ConchHealthOnHitRegen"></a>
+
+```js
+// example usage
+ConchHealthOnHitRegen = 0.5
+```
+
+Sets the percentage health regained via the Concheror banner effect, default is 0.35 (35%)
+
+---
+
+<a name="MissionAttributes.MarkForDeathLifetime"></a>
+
+```js
+// example usage
+MarkForDeathLifetime = 8
+```
+
+Sets how long, in seconds, that a marked-for-death effect should last, default is 15
+
+---
+
+<a name="MissionAttributes.GrapplingHookEnable"></a>
+
+```js
+// usage
+GrapplingHookEnable = 1
+```
+
+Enables Grappling Hook
+
+---
+
+<a name="MissionAttributes.GiantScale"></a>
+
+```js
+// example usage
+GiantScale = 1.9
+```
+
+Sets how large of a scale giants should be by default, default is 1.75
+
+---
+
+<a name="MissionAttributes.VacNumCharges"></a>
+
+```js
+// example usage
+VacNumCharges = 5
+```
+
+Sets how many Vaccinator charges should be available
+
+---
+
+<a name="MissionAttributes.DoubleDonkWindow"></a>
+
+```js
+// example usage
+DoubleDonkWindow = 0.8
+```
+
+Sets how long, in seconds, that after an impact from a Loose Cannon projectile that an explosion will count as a double donk, default is 0.5
+
+---
+
+<a name="MissionAttributes.ConchSpeedBoost"></a>
+
+```js
+// example usage
+ConchSpeedBoost = 150
+```
+
+Sets the increase amount, in hu/s, from speed bonus effects. This includes, but not limited to: Concheror banner effect, Disciplinary Action whip effect. Default is 105
+
+---
+
+<a name="MissionAttributes.StealthDmgReduction"></a>
+
+```js
+// example usage
+StealthDmgReduction = 0.6
+```
+
+Set the `tf_stealth_damage_reduction` cvar, default is 0.8
+
+---
+
+<a name="MissionAttributes.FlagCarrierCanFight"></a>
+
+```js
+// usage
+FlagCarrierCanFight = 0
+```
+
+If set to 0, disallows bomb (in general, flag) carrier to attack
+
+---
+
+<a name="MissionAttributes.HHHChaseRange"></a>
+
+```js
+// example usage
+HHHChaseRange = 2500
+```
+
+Sets how far the HHH should chase players in units of hu, default is 1500
+
+---
+
+<a name="MissionAttributes.HHHAttackRange"></a>
+
+```js
+// example usage
+HHHAttackRange = 150
+```
+
+Sets the attack range of the HHH in units of hu, default is 200
+
+---
+
+<a name="MissionAttributes.HHHQuitRange"></a>
+
+```js
+// example usage
+HHHQuitRange = 3000
+```
+
+Sets the minimum distance, in hu, that a player should stay away from the HHH for him to give up chasing and attacking the player, default is 2000
+
+---
+
+<a name="MissionAttributes.HHHTerrifyRange"></a>
+
+```js
+// example usage
+HHHTerrifyRange = 300
+```
+
+Sets the HHH terrify effect radius in hu, default is 500
+
+---
+
+<a name="MissionAttributes.HHHHealthBase"></a>
+
+```js
+// example usage
+HHHHealthBase = 5000
+```
+
+Sets the base health of the HHH, default is 3000
+
+---
+
+<a name="MissionAttributes.HHHHealthPerPlayer"></a>
+
+```js
+// example usage
+HHHHealthPerPlayer = 500
+```
+
+Sets the health increment of the HHH per player active in the server, default is 200
+
+---
+
+<a name="MissionAttributes.HalloweenBossNotSolidToPlayers"></a>
+
+```js
+// usage
+HalloweenBossNotSolidToPlayers = 1
+```
+
+Sets Halloween bosses to not be solid to players
+
+---
+
+<a name="MissionAttributes.SentryHintBombForwardRange"></a>
+
+```js
+// example usage
+SentryHintBombForwardRange = 100
+```
+
+Sets the `tf_bot_engineer_mvm_sentry_hint_bomb_forward_range` cvar, default is 0
+
+---
+
+<a name="MissionAttributes.SentryHintBombBackwardRange"></a>
+
+```js
+// example usage
+SentryHintBombBackwardRange = 2000
+```
+
+Sets the `tf_bot_engineer_mvm_sentry_hint_bomb_backward_range` cvar, default is 3000
+
+---
+
+<a name="MissionAttributes.SentryHintMinDistanceFromBomb"></a>
+
+```js
+// example usage
+SentryHintMinDistanceFromBomb = 1000
+```
+
+Sets the `tf_bot_engineer_mvm_hint_min_distance_from_bomb` cvar, default is 1300
+
+---
+
+<a name="MissionAttributes.NoBusterFF"></a>
+
+```js
+// usage
+NoBusterFF = 1
+```
+
+Disables sentry buster friendly fire (it won't blow up friendly bots anymore)
+
+---
+
+<a name="MissionAttributes.SniperHideLasers"></a>
+
+```js
+// usage
+SniperHideLasers = 1
+```
+
+Disables sniper lasers
+
+---
+
+<a name="MissionAttributes.TeamWipeWaveLoss"></a>
+
+```js
+// usage
+TeamWipeWaveLoss = 1
+```
+
+If set, wave will be lost if team is wiped
+
+---
+
+<a name="MissionAttributes.GiantSentryKillCountOffset"></a>
+
+```js
+// example usage
+GiantSentryKillCountOffset = -4
+```
+
+Changes sentry kill count per miniboss (giant) kill. Setting to -4 will make giants count as 1 kill only.
+
+---
+
+<a name="MissionAttributes.FlagResetTime"></a>
+
+```js
+// example usage 1
+FlagResetTime = { `flagName` : 60 }
+// example usage 2
+FlagResetTime = 60
+```
+
+Sets reset time for flags (bombs). Accepts a keyvalue table of flag targetnames and their new return times like in example 1. Can also just accept a float value to apply to all flags
+
+---
+
+<a name="MissionAttributes.BotHeadshots"></a>
+
+```js
+// usage
+BotHeadshots = 1
+```
+
+Enables headshotting by bots
+
+---
+
+<a name="MissionAttributes.PlayersAreRobots"></a>
+
+```js
+// example usage
+PlayersAreRobots = 1
+
+```
+
+Uses bitflags to enable certain behaviour.
+
+- 1 - Robot animations (excluding sticky demo and jetpack pyro)
+- 2 - Human animations
+- 4 - Enable footstep sfx
+- 8 - Enable voicelines (WIP)
+- 16 - Enable viewmodels (WIP)
+
+---
+
+<a name="MissionAttributes.BotsAreHumans"></a>
+
+```js
+// example usage
+BotsAreHumans = 2
+```
+
+Uses bitflags to change behaviour.
+
+- 1 = Blu bots use human models.
+- 2 = Blu bots use zombie models. Overrides human models.
+- 4 = Red bots use human models.
+- 4 = Red bots use zombie models. Overrides human models.
+- 128 = Include buster
+
+---
+
+<a name="MissionAttributes.NoRome"></a>
+
+```js
+// example usage
+NoRome = 1
+```
+
+If set to 1, disables romevision on bots. If set to 2, disables rome carrier tank
+
+---
+
+<a name="MissionAttributes.SpellRateCommon"></a>
+
+```js
+// example usage
+SpellRateCommon = 0.15
+```
+
+Sets the common spellbook drop chances of small bots on death
+
+---
+
+<a name="MissionAttributes.SpellRateGiant"></a>
+
+```js
+// example usage
+SpellRateGiant = 0.5
+```
+
+Sets the common spellbook drop chances of giant bots on death
+
+---
+
+<a name="MissionAttributes.RareSpellRateCommon"></a>
+
+```js
+// example usage
+RareSpellRateCommon = 0.05
+```
+
+Sets the rare spellbook drop chances of small bots on death
+
+---
+
+<a name="MissionAttributes.RareSpellRateGiant"></a>
+
+```js
+// example usage
+RareSpellRateGiant = 0.3
+```
+
+Sets the rare spellbook drop chances of giant bots on death
+
+---
+
+<a name="MissionAttributes.NoSkeleSplit"></a>
+
+```js
+// usage
+NoSkeleSplit = 1
+```
+
+Skeletons spawned by bots or tf_zombie entities will no longer split into smaller skeletons
+
+---
+
+<a name="MissionAttributes.WaveStartCountdown"></a>
+
+```js
+// example usage
+WaveStartCountdown = 5
+```
+
+Sets countdown time when everyone has F4'd. Values below 9 will disable starting music
+
+---
+
+<a name="MissionAttributes.ExtraTankPath"></a>
+
+```js
+// example usage
+ExtraTankPath = [
+	[`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`], // starting node: extratankpath1_1
+	[`640 5404 350`, `640 4810 350`, `640 4400 550`, `1100 4100 650`, `1636 3900 770`] //starting node: extratankpath2_1
+	// the last track in the list will have _lastnode appended to the targetname
+]
+```
+
+Array of arrays with xyz values to spawn `path_track`s at. `path_track` names are ordered based on where they are listed in the array
+
+---
+
+<a name="MissionAttributes.HandModelOverride"></a>
+
+```js
+// example usage
+HandModelOverride = `modelname.mdl`
+```
+
+Replace viewmodel arms with custom ones
+
+---
+
+<a name="MissionAttributes.AddCond"></a>
+
+```js
+// example usage 1
+AddCond = 27
+// example usage 2
+AddCond = [27, 10]
+```
+
+Add cond to every player on spawn with an optional duration. Second value in array is the duration argument
+
+---
+
+<a name="MissionAttributes.PlayerAttributes"></a>
+
+```js
+// example usage, taken from example pop
+PlayerAttributes = {
+	`damage bonus`: 10,
+	`can breathe under water`: 1,
+	`mult swim speed`: 3,
+	`teleport instead of die`: 1,
+	`crit when health below`: 75,
+	`is miniboss`: 1,
+
+	[TF_CLASS_SCOUT] = {
+		`damage bonus` : 5,
+		`fire rate penalty` : 2,
+		`max health additive bonus` : 100,
+	},
+
+	[TF_CLASS_SOLDIER] = {
+		`damage penalty` : 0.5,
+		`fire rate bonus` : 0.5,
+		`mult dmg vs same class`: 10
+	},
+
+	[TF_CLASS_DEMOMAN] = {
+		`fire rate bonus` : 0.5,
+	}
+}
+```
+
+Add/modify player attributes, can be filtered by class
+
+---
+
+<a name="MissionAttributes.ItemAttributes"></a>
+
+```js
+// example usage, taken from example pop
+ItemAttributes = {
+	tf_weapon_scattergun = {
+		`max health additive bonus` : 100
+		`fire rate bonus` : 0.5
+		`Reload time decreased` : 0.5
+		`clip size bonus` : 2
+		`reloads full clip at once`: 1
+		`passive reload`: 1
+		`collect currency on kill`: 1
+	},
+	tf_weapon_rocketlauncher = { //string with no spaces (like item classnames) can use this syntax
+		`projectile gravity`: 10
+		`fire rate penalty` : 3
+		`damage bonus` : 10
+		`custom projectile model`: `models/player/heavy.mdl`
+		`add cond when active`: 91
+	},
+	tf_weapon_pistol = {
+		`passive reload`: 1
+	},
+	tf_weapon_shotgun = {
+		`reloads full clip at once`: 1
+	}
+	tf_weapon_crossbow = {
+		`fires milk bolt`: 1
+		`set turn to ice`: 1
+		`radius sleeper`: 1
+	},
+	[132] = { //item id, eyelander
+		`melee cleave attack`: 32
+		`stun on hit`: { duration = 4 type = 2 speedmult = 0.2 stungiants = true }
+	},
+	tf_weapon_wrench = {
+		`build small sentries`: 1
+	},
+	`The Sydney Sleeper`: { // localized name in items_game.txt/item_map.nut
+		`radius sleeper`: 1
+		`explosive bullets`: 30
+	}
+	`The Sandman` : { // strings with spaces require this syntax.
+		`old sandman stun`: 1
+	}
+	`Iron Curtain` : {
+		`alt-fire disabled`: 1
+	}
+}
+```
+
+Add/modify item attributes, can be filtered by item index or classname
+
+---
+
+<a name="MissionAttributes.LoadoutControl"></a>
+
+> [!WARNING]
+> This attribute is still WIP
+
+---
+
+<a name="MissionAttributes.SoundOverrides"></a>
+
+```js
+// example usage, taken from example pop
+SoundOverrides = { //overrides teamplay_broadcast_audio sounds
+	`Announcer.MVM_Get_To_Upgrade`: null
+	`music.mvm_end_last_wave`: null
+	`Game.YourTeamWon`: null
+	`MVM.PlayerDied`: null
+}
+```
+
+Hardcoded to only be able to replace specific sounds, because spamming stopsound in a think function is very laggy. See [replace weapon fire sound](#CustomAttributes.ReplaceWeaponFireSound) and more in `customattributes.nut` for weapon sounds. See the tank sound overrides in `hooks.nut` for disabling tank explosions.
+
+---
+
+<a name="MissionAttributes.NoThrillerTaunt"></a>
+
+```js
+// usage
+NoThrillerTaunt = 1
+```
+
+Stops the Halloween thriller taunt from being played when taunting
+
+---
+
+<a name="MissionAttributes.EnableRandomCrits"></a>
+
+```js
+// example usage
+EnableRandomCrits = 2
+```
+
+Uses bitflags to enable random crits:
+
+- 1 - BLU humans
+- 2 - BLU robots
+- 4 - RED robots
+
+---
+
+<a name="MissionAttributes.ForceRedMoney"></a>
+
+```js
+// usage
+ForceRedMoney = 1
+```
+
+Forces red money (like those dropped from sniper kills) to drop always
+
+---
+
+<a name="MissionAttributes.ReverseMVM"></a>
+
+```js
+// example usage
+ReverseMVM = 1
+```
+
+Accepts bitflags to modify behaviour.
+
+- 1 - enables basic Reverse MvM behavior
+- 2 - blu players cannot pick up bombs
+- 4 - blu players have infinite ammo
+- 8 - blu spies have infinite cloak
+- 16 - blu players have spawn protection
+- 32 - blu players cannot attack in spawn
+- 64 - remove blu footsteps
+
+> [!CAUTION]
+> This attribute is very much under heavy development right now. Use this with great caution.
+
+---
+
+<a name="MissionAttributes.ClassLimits"></a>
+
+```js
+// example usage
+`scout` : 1 // limits to 1 scout max
+`heavy` : 0 // disallows playing as heavy
+```
+
+Sets a class limit in the mission
+
+---
+
+<a name="MissionAttributes.ShowHiddenAttributes"></a>
+
+```js
+// usage
+ShowHiddenAttributes = 1
+```
+
+Shows hidden attributes
+
+---
+
+<a name="MissionAttributes.HideRespawnText"></a>
+
+```js
+// example usage
+HideRespawnText = 0
+```
+
+Hides the "Respawn in: # seconds" text. Accepts these inputs:
+
+- 0 - default behaviour (countdown)
+- 1 - hide completely
+- 2 - show only "Prepare to Respawn"
+
+---
+
+<a name="MissionAttributes.ReflectableDF"></a>
+
+```js
+// usage
+ReflectableDF = 1
+```
+
+Reverts the Dragon's Fury global fix in `globalfixes.nut`. [Visit](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/globalfixes.nut) for more info
+
+---
+
+<a name="MissionAttributes.RestoreYERNerf"></a>
+
+```js
+// usage
+RestoreYERNerf = 1
+```
+
+Reverts the Your Eternal Reward global fix in `globalfixes.nut`. [Visit](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/globalfixes.nut) for more info
 
 ---
