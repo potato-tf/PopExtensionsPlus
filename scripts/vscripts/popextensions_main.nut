@@ -2,7 +2,11 @@
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
+
+//save popfile name in global scope when we first initialize
+//if the popfile name changed, a new pop has loaded, clean everything up.
 ::__popname <- NetProps.GetPropString(o, "m_iszMvMPopfileName")
+
 // ::commentaryNode <- SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
 
 //overwrite AddThinkToEnt
@@ -52,8 +56,6 @@ if (!("_AddThinkToEnt" in _root))
 	//automated unloading is meant for multiple missions on one map, purpose-built map/mission combos (like zm_redridge) don't need this.
 	ManualCleanup = false
 
-	//save popfile name in global scope when we first initialize
-	//if the popfile name changed, a new pop has loaded, clean everything up.
 	function PlayerCleanup(player) {
 
 		NetProps.SetPropInt(player, "m_nRenderMode", kRenderNormal)
