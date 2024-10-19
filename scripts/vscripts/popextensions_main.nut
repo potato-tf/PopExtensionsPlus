@@ -206,7 +206,8 @@ if (!("_AddThinkToEnt" in _root))
 			if (__popname == GetPropString(o, "m_iszMvMPopfileName") || PopExtMain.ManualCleanup) return
 
 			//clean up all players
-			for (local i = 1; i <= MaxClients().tointeger(); i++) {
+			local maxclients = MaxClients().tointeger()
+			for (local i = 1; i <= maxclients; i++) {
 
 				local player = PlayerInstanceFromIndex(i)
 
@@ -270,7 +271,8 @@ if (!("_AddThinkToEnt" in _root))
 __CollectGameEventCallbacks(PopExtMain.Events)
 
 //HACK: forces post_inventory_application to fire on pop load
-for (local i = 1; i <= MaxClients().tointeger(); i++)
+local maxclients = MaxClients().tointeger()
+for (local i = 1; i <= maxclients; i++)
 	if (PlayerInstanceFromIndex(i) != null)
 		EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", 0.015, null, null)
 
@@ -297,5 +299,6 @@ Include("tags")
 
 Include("globalfixes")
 Include("spawntemplate")
+
 // Include("tutorialtools")
 // Include("populator")
