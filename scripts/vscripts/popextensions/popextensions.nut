@@ -107,14 +107,18 @@ local resource = FindByClassname(null, "tf_objective_resource")
 
 // Get wavebar spawn count of an icon with specified name and flags
 function PopExt::GetWaveIconSpawnCount(name, flags) {
-	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
-	for (local a = 0; a < 2; a++) {
-		local suffix = a == 0 ? "" : "2"
-		for (local i = 0; i < sizeArray * 2; i++) {
-			if (GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i) == name &&
-				(flags == 0 || GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
 
-				return GetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, i)
+	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
+
+	for (local a = 0; a < 2; a++) {
+
+		local suffix = a == 0 ? "" : "2"
+
+		for (local i = 0; i < sizeArray * 2; i++) {
+
+			if (GetPropStringArray(resource, format("m_iszMannVsMachineWaveClassNames%s", suffix), i) == name && (flags == 0 || GetPropIntArray(resource, format("m_nMannVsMachineWaveClassFlags%s", suffix), i) == flags)) {
+
+				return GetPropIntArray(resource, format("m_nMannVsMachineWaveClassCounts%s", suffix), i)
 			}
 		}
 	}
@@ -125,34 +129,44 @@ function PopExt::GetWaveIconSpawnCount(name, flags) {
 // If count is set to 0, removes the icon from the wavebar
 // Can be used to put custom icons on a wavebar
 function PopExt::SetWaveIconSpawnCount(name, flags, count, changeMaxEnemyCount = true) {
+
 	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 
 	for (local a = 0; a < 2; a++) {
-		local suffix = a == 0 ? "" : "2";
+
+		local suffix = a == 0 ? "" : "2"
+
 		for (local i = 0; i < sizeArray; i++) {
+
 			local nameSlot = GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i)
+
 			if (nameSlot == "" && count > 0) {
-				SetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, name, i)
-				SetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, count, i)
-				SetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, flags, i)
+
+				SetPropStringArray(resource, format("m_iszMannVsMachineWaveClassNames%s", suffix), name, i)
+				SetPropIntArray(resource, format("m_nMannVsMachineWaveClassCounts%s", suffix), count, i)
+				SetPropIntArray(resource, format("m_nMannVsMachineWaveClassFlags%s", suffix), flags, i)
 
 				if (changeMaxEnemyCount && (flags & (MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS))) {
+
 					SetPropInt(resource, "m_nMannVsMachineWaveEnemyCount", GetPropInt(resource, "m_nMannVsMachineWaveEnemyCount") + count)
 				}
 				return
 			}
 
-			if (nameSlot == name && (flags == 0 || GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
-				local preCount = GetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, i)
-				SetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, count, i)
+			if (nameSlot == name && (flags == 0 || GetPropIntArray(resource, format("m_nMannVsMachineWaveClassFlags%s", suffix), i) == flags)) {
+
+				local preCount = GetPropIntArray(resource, format("m_nMannVsMachineWaveClassCounts%s", suffix), i)
+				SetPropIntArray(resource, format("m_nMannVsMachineWaveClassCounts%s", suffix), count, i)
 
 				if (changeMaxEnemyCount && (flags & (MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS))) {
+
 					SetPropInt(resource, "m_nMannVsMachineWaveEnemyCount", GetPropInt(resource, "m_nMannVsMachineWaveEnemyCount") + count - preCount)
 				}
 				if (count <= 0) {
-					SetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, "", i)
-					SetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, 0, i)
-					SetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, false, i)
+
+					SetPropStringArray(resource, format("m_iszMannVsMachineWaveClassNames%s", suffix), "", i)
+					SetPropIntArray(resource, format("m_nMannVsMachineWaveClassFlags%s", suffix), 0, i)
+					SetPropBoolArray(resource, format("m_bMannVsMachineWaveClassActive%s", suffix), false, i)
 				}
 				return
 			}
@@ -169,24 +183,33 @@ function PopExt::IncrementWaveIconSpawnCount(name, flags, count = 1, changeMaxEn
 // Increment wavebar spawn count of an icon with specified name and flags
 // Use it to decrement the spawn count when the enemy is killed. Should not be used for support type icons
 function PopExt::DecrementWaveIconSpawnCount(name, flags, count = 1, changeMaxEnemyCount = false) {
+
 	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
 
 	for (local a = 0; a < 2; a++) {
-		local suffix = a == 0 ? "" : "2";
+
+		local suffix = a == 0 ? "" : "2"
+
 		for (local i = 0; i < sizeArray; i++) {
-			local nameSlot = GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i)
-			if (nameSlot == name && (flags == 0 || GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
-				local preCount = GetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, i)
-				SetPropIntArray(resource, "m_nMannVsMachineWaveClassCounts" + suffix, preCount - count > 0 ? preCount - count : 0, i)
+
+			local nameSlot = GetPropStringArray(resource, format("m_iszMannVsMachineWaveClassNames%s", suffix), i)
+
+			if (nameSlot == name && (flags == 0 || GetPropIntArray(resource, format("m_nMannVsMachineWaveClassFlags%s", suffix), i) == flags)) {
+
+				local preCount = GetPropIntArray(resource, format("m_nMannVsMachineWaveClassCounts%s", suffix), i)
+
+				SetPropIntArray(resource, format("m_nMannVsMachineWaveClassCounts%s", suffix), preCount - count > 0 ? preCount - count : 0, i)
 
 				if (changeMaxEnemyCount && (flags & (MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS))) {
+
 					SetPropInt(resource, "m_nMannVsMachineWaveEnemyCount", GetPropInt(resource, "m_nMannVsMachineWaveEnemyCount") - (count > preCount ? preCount : count))
 				}
 
 				if (preCount - count <= 0) {
-					SetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, "", i)
-					SetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, 0, i)
-					SetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, false, i)
+
+					SetPropStringArray(resource, format("m_iszMannVsMachineWaveClassNames%s", suffix), "", i)
+					SetPropIntArray(resource, format("m_nMannVsMachineWaveClassFlags%s", suffix), 0, i)
+					SetPropBoolArray(resource, format("m_bMannVsMachineWaveClassActive%s", suffix), false, i)
 				}
 				return
 			}
@@ -197,13 +220,20 @@ function PopExt::DecrementWaveIconSpawnCount(name, flags, count = 1, changeMaxEn
 
 // Used for mission and support limited bots to display them on a wavebar during the wave, set by the game automatically when an enemy with this icon spawn
 function PopExt::SetWaveIconActive(name, flags, active) {
+
 	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
+
 	for (local a = 0; a < 2; a++) {
-		local suffix = a == 0 ? "" : "2";
+
+		local suffix = a == 0 ? "" : "2"
+
 		for (local i = 0; i < sizeArray; i++) {
-			local nameSlot = GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i)
-			if (nameSlot == name && (flags == 0 || GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
-				SetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, active, i)
+
+			local nameSlot = GetPropStringArray(resource, format("m_iszMannVsMachineWaveClassNames%s", suffix), i)
+
+			if (nameSlot == name && (flags == 0 || GetPropIntArray(resource, format("m_nMannVsMachineWaveClassFlags%s", suffix), i) == flags)) {
+
+				SetPropBoolArray(resource, format("m_bMannVsMachineWaveClassActive%s", suffix), active, i)
 				return
 			}
 		}
@@ -212,13 +242,20 @@ function PopExt::SetWaveIconActive(name, flags, active) {
 
 // Used for mission and support limited bots to display them on a wavebar during the wave, set by the game automatically when an enemy with this icon spawn
 function PopExt::GetWaveIconActive(name, flags) {
+
 	local sizeArray = GetPropArraySize(resource, "m_nMannVsMachineWaveClassCounts")
+
 	for (local a = 0; a < 2; a++) {
-		local suffix = a == 0 ? "" : "2";
+
+		local suffix = a == 0 ? "" : "2"
+
 		for (local i = 0; i < sizeArray; i++) {
-			local nameSlot = GetPropStringArray(resource, "m_iszMannVsMachineWaveClassNames" + suffix, i)
-			if (nameSlot == name && (flags == 0 || GetPropIntArray(resource, "m_nMannVsMachineWaveClassFlags" + suffix, i) == flags)) {
-				return GetPropBoolArray(resource, "m_bMannVsMachineWaveClassActive" + suffix, i)
+
+			local nameSlot = GetPropStringArray(resource, format("m_iszMannVsMachineWaveClassNames%s", suffix), i)
+
+			if (nameSlot == name && (flags == 0 || GetPropIntArray(resource, format("m_nMannVsMachineWaveClassFlags%s", suffix), i) == flags)) {
+
+				return GetPropBoolArray(resource, format("m_bMannVsMachineWaveClassActive%s", suffix), i)
 			}
 		}
 	}
