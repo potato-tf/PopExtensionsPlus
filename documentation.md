@@ -210,7 +210,107 @@ back-and-forth links
 
 ### Methods
 
-back-and-forth links
+[`PopExtUtil.IsLinuxServer`](#PopExtUtil.IsLinuxServer)  
+[`PopExtUtil.ShowMessage`](#PopExtUtil.ShowMessage)  
+[`PopExtUtil.ForceChangeClass`](#PopExtUtil.ForceChangeClass)  
+[`PopExtUtil.PlayerClassCount`](#PopExtUtil.PlayerClassCount)  
+[`PopExtUtil.ChangePlayerTeamMvM`](#PopExtUtil.ChangePlayerTeamMvM)  
+[`PopExtUtil.ShowChatMessage`](#PopExtUtil.ShowChatMessage)  
+[`PopExtUtil.CopyTable`](#PopExtUtil.CopyTable)  
+[`PopExtUtil.HexToRgb`](#PopExtUtil.HexToRgb)  
+[`PopExtUtil.CountAlivePlayers`](#PopExtUtil.CountAlivePlayers)  
+[`PopExtUtil.CountAliveBots`](#PopExtUtil.CountAliveBots)  
+[`PopExtUtil.SetParentLocalOriginDo`](#PopExtUtil.SetParentLocalOriginDo)  
+[`PopExtUtil.SetParentLocalOrigin`](#PopExtUtil.SetParentLocalOrigin)  
+[`PopExtUtil.SetupTriggerBounds`](#PopExtUtil.SetupTriggerBounds)  
+[`PopExtUtil.PrintTable`](#PopExtUtil.PrintTable)  
+[`PopExtUtil.DoPrintTable`](#PopExtUtil.DoPrintTable)  
+[`PopExtUtil.CreatePlayerWearable`](#PopExtUtil.CreatePlayerWearable)  
+[`PopExtUtil.StripWeapon`](#PopExtUtil.StripWeapon)  
+[`PopExtUtil.SetPlayerAttributes`](#PopExtUtil.SetPlayerAttributes)  
+[`PopExtUtil.WeaponSwitchSlot`](#PopExtUtil.WeaponSwitchSlot)  
+[`PopExtUtil.Explanation`](#PopExtUtil.Explanation)  
+[`PopExtUtil.Info`](#PopExtUtil.Info)  
+[`PopExtUtil.IsAlive`](#PopExtUtil.IsAlive)  
+[`PopExtUtil.IsDucking`](#PopExtUtil.IsDucking)  
+[`PopExtUtil.IsOnGround`](#PopExtUtil.IsOnGround)  
+[`PopExtUtil.RemoveAmmo`](#PopExtUtil.RemoveAmmo)  
+[`PopExtUtil.GetAllEnts`](#PopExtUtil.GetAllEnts)  
+[`PopExtUtil._SetOwner`](#PopExtUtil._SetOwner)  
+[`PopExtUtil.ShowAnnotation`](#PopExtUtil.ShowAnnotation)  
+[`PopExtUtil.HideAnnotation`](#PopExtUtil.HideAnnotation)  
+[`PopExtUtil.GetPlayerName`](#PopExtUtil.GetPlayerName)  
+[`PopExtUtil.SetPlayerName`](#PopExtUtil.SetPlayerName)  
+[`PopExtUtil.GetPlayerUserID`](#PopExtUtil.GetPlayerUserID)  
+[`PopExtUtil.PlayerRespawn`](#PopExtUtil.PlayerRespawn)  
+[`PopExtUtil.DisableCloak`](#PopExtUtil.DisableCloak)  
+[`PopExtUtil.InUpgradeZone`](#PopExtUtil.InUpgradeZone)  
+[`PopExtUtil.InButton`](#PopExtUtil.InButton)  
+[`PopExtUtil.PressButton`](#PopExtUtil.PressButton)  
+[`PopExtUtil.ReleaseButton`](#PopExtUtil.ReleaseButton)  
+[`PopExtUtil.IsPointInRespawnRoom`](#PopExtUtil.IsPointInRespawnRoom)  
+[`PopExtUtil.SwitchWeaponSlot`](#PopExtUtil.SwitchWeaponSlot)  
+[`PopExtUtil.GetItemInSlot`](#PopExtUtil.GetItemInSlot)  
+[`PopExtUtil.SwitchToFirstValidWeapon`](#PopExtUtil.SwitchToFirstValidWeapon)  
+[`PopExtUtil.HasEffect`](#PopExtUtil.HasEffect)  
+[`PopExtUtil.SetEffect`](#PopExtUtil.SetEffect)  
+[`PopExtUtil.PlayerRobotModel`](#PopExtUtil.PlayerRobotModel)  
+[`PopExtUtil.HasItemInLoadout`](#PopExtUtil.HasItemInLoadout)  
+[`PopExtUtil.StunPlayer`](#PopExtUtil.StunPlayer)  
+[`PopExtUtil.Ignite`](#PopExtUtil.Ignite)  
+[`PopExtUtil.ShowHudHint`](#PopExtUtil.ShowHudHint)  
+[`PopExtUtil.SetEntityColor`](#PopExtUtil.SetEntityColor)  
+[`PopExtUtil.GetEntityColor`](#PopExtUtil.GetEntityColor)  
+[`PopExtUtil.AddAttributeToLoadout`](#PopExtUtil.AddAttributeToLoadout)  
+[`PopExtUtil.ShowModelToPlayer`](#PopExtUtil.ShowModelToPlayer)  
+[`PopExtUtil.LockInPlace`](#PopExtUtil.LockInPlace)  
+[`PopExtUtil.GetItemIndex`](#PopExtUtil.GetItemIndex)  
+[`PopExtUtil.SetItemIndex`](#PopExtUtil.SetItemIndex)  
+[`PopExtUtil.SetTargetname`](#PopExtUtil.SetTargetname)  
+[`PopExtUtil.GetPlayerSteamID`](#PopExtUtil.GetPlayerSteamID)  
+[`PopExtUtil.GetHammerID`](#PopExtUtil.GetHammerID)  
+[`PopExtUtil.GetSpawnFlags`](#PopExtUtil.GetSpawnFlags)  
+[`PopExtUtil.GetPopfileName`](#PopExtUtil.GetPopfileName)  
+[`PopExtUtil.PrecacheParticle`](#PopExtUtil.PrecacheParticle)  
+[`PopExtUtil.SpawnEffect`](#PopExtUtil.SpawnEffect)  
+[`PopExtUtil.RemoveOutputAll`](#PopExtUtil.RemoveOutputAll)  
+[`PopExtUtil.RemovePlayerWearables`](#PopExtUtil.RemovePlayerWearables)  
+[`PopExtUtil.GiveWeapon`](#PopExtUtil.GiveWeapon)  
+[`PopExtUtil.IsEntityClassnameInList`](#PopExtUtil.IsEntityClassnameInList)  
+[`PopExtUtil.SetPlayerClassRespawnAndTeleport`](#PopExtUtil.SetPlayerClassRespawnAndTeleport)  
+[`PopExtUtil.PlaySoundOnClient`](#PopExtUtil.PlaySoundOnClient)  
+[`PopExtUtil.PlaySoundOnAllClients`](#PopExtUtil.PlaySoundOnAllClients)  
+[`PopExtUtil.StopAndPlayMVMSound`](#PopExtUtil.StopAndPlayMVMSound)  
+[`PopExtUtil.EndWaveReverse`](#PopExtUtil.EndWaveReverse)  
+[`PopExtUtil.AddThinkToEnt`](#PopExtUtil.AddThinkToEnt)  
+[`PopExtUtil.SilentDisguise`](#PopExtUtil.SilentDisguise)  
+[`PopExtUtil.GetPlayerReadyCount`](#PopExtUtil.GetPlayerReadyCount)  
+[`PopExtUtil.GetWeaponMaxAmmo`](#PopExtUtil.GetWeaponMaxAmmo)  
+[`PopExtUtil.TeleportNearVictim`](#PopExtUtil.TeleportNearVictim)  
+[`PopExtUtil.IsSpaceToSpawnHere`](#PopExtUtil.IsSpaceToSpawnHere)  
+[`PopExtUtil.ClearLastKnownArea`](#PopExtUtil.ClearLastKnownArea)  
+[`PopExtUtil.KillPlayer`](#PopExtUtil.KillPlayer)  
+[`PopExtUtil.KillAllBots`](#PopExtUtil.KillAllBots)  
+[`PopExtUtil.SetDestroyCallback`](#PopExtUtil.SetDestroyCallback)  
+[`PopExtUtil.OnWeaponFire`](#PopExtUtil.OnWeaponFire)  
+
+### Math methods
+
+[`PopExtUtil.Min`](#PopExtUtil.Min)  
+[`PopExtUtil.Max`](#PopExtUtil.Max)  
+[`PopExtUtil.Round`](#PopExtUtil.Round)  
+[`PopExtUtil.Clamp`](#PopExtUtil.Clamp)  
+[`PopExtUtil.RemapVal`](#PopExtUtil.RemapVal)  
+[`PopExtUtil.RemapValClamped`](#PopExtUtil.RemapValClamped)  
+[`PopExtUtil.IntersectionPointBox`](#PopExtUtil.IntersectionPointBox)  
+[`PopExtUtil.NormalizeAngle`](#PopExtUtil.NormalizeAngle)  
+[`PopExtUtil.ApproachAngle`](#PopExtUtil.ApproachAngle)  
+[`PopExtUtil.VectorAngles`](#PopExtUtil.VectorAngles)  
+[`PopExtUtil.AnglesToVector`](#PopExtUtil.AnglesToVector)  
+[`PopExtUtil.QAngleDistance`](#PopExtUtil.QAngleDistance)  
+[`PopExtUtil.CheckBitwise`](#PopExtUtil.CheckBitwise)  
+[`PopExtUtil.StringReplace`](#PopExtUtil.StringReplace)  
+[`PopExtUtil.capwords`](#PopExtUtil.capwords)  
 
 ## Constants defined by PopExt
 
@@ -1766,7 +1866,7 @@ ExtraTankPath = [
 ]
 ```
 
-Array of arrays with xyz values to spawn `path_track`s at. `path_track` names are ordered based on where they are listed in the array
+Array of arrays with xyz values to spawn path_tracks at. path_track names are ordered based on where they are listed in the array
 
 ---
 
@@ -2023,5 +2123,942 @@ RestoreYERNerf = 1
 ```
 
 Reverts the Your Eternal Reward global fix in `globalfixes.nut`. [Visit](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/globalfixes.nut) for more info
+
+---
+
+## [util](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/util.nut) references
+
+<a name="PopExtUtil.IsLinuxServer"></a>
+
+```cpp
+bool PopExtUtil::IsLinuxServer()
+```
+
+Is the current server on linux?
+
+---
+
+<a name="PopExtUtil.ShowMessage"></a>
+
+```cpp
+void PopExtUtil::ShowMessage(string message)
+```
+
+ClientPrints everyone a message to the centre of the screen
+
+---
+
+<a name="PopExtUtil.ForceChangeClass"></a>
+
+```cpp
+void PopExtUtil::ForceChangeClass(handle player, int classindex = 1)
+```
+
+Force changes a player's class and respawns them
+
+---
+
+<a name="PopExtUtil.PlayerClassCount"></a>
+
+```cpp
+int[11] PopExtUtil::PlayerClassCount()
+```
+
+Returns the player count of all the classes in an array. 11 is the constant TF_CLASS_COUNT_ALL
+
+---
+
+<a name="PopExtUtil.ChangePlayerTeamMvM"></a>
+
+```cpp
+void PopExtUtil::ChangePlayerTeamMvM(handle player, int teamnum = TF_TEAM_PVE_INVADERS)
+```
+
+Changes player team to blu bots. Can accept other `teamnum` arguments to change to different team
+
+---
+
+<a name="PopExtUtil.ShowChatMessage"></a>
+
+```cpp
+void PopExtUtil::ShowChatMessage(handle target, string fmt, ...)
+```
+
+Prints a chat message to `target`. Pass `null` to print to everyone. For usage of `fmt`, see the below example
+
+```js
+PopExtUtil.ShowChatMessage(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT)
+```
+
+Notice the last two arguments refer back to the placeholders in the `fmt` string
+
+---
+
+<a name="PopExtUtil.CopyTable"></a>
+
+```cpp
+table PopExtUtil::CopyTable(table)
+```
+
+Copies a table and returns that copy
+
+---
+
+<a name="PopExtUtil.HexToRgb"></a>
+
+```cpp
+int[3] PopExtUtil::HexToRgb(string hex)
+```
+
+Converts a hex colour string into an array of rgb values [r, g, b]
+
+---
+
+<a name="PopExtUtil.CountAlivePlayers"></a>
+
+```cpp
+int PopExtUtil::CountAlivePlayers(bool printout = false)
+```
+
+Returns the number of currently alive players. Pass `true` to print to console too
+
+---
+
+<a name="PopExtUtil.CountAliveBots"></a>
+
+```cpp
+int PopExtUtil::CountAliveBots(bool printout = false)
+```
+
+Returns the number of currently alive bots. Pass `true` to print to console too
+
+---
+
+<a name="PopExtUtil.SetParentLocalOriginDo"></a>
+
+```cpp
+void PopExtUtil::SetParentLocalOriginDo(handle child, handle parent, string attachment = null)
+```
+
+Sets parent immediately in a dirty way. Does not retain absolute origin, retains local origin instead.
+
+---
+
+<a name="PopExtUtil.SetParentLocalOrigin"></a>
+
+```cpp
+void PopExtUtil::SetParentLocalOrigin(handle/[] child, handle parent, string attachment = null)
+```
+
+Wrapper for `SetParentLocalOriginDo()` which also accepts an array of `child` ents
+
+---
+
+<a name="PopExtUtil.SetupTriggerBounds"></a>
+
+```cpp
+void PopExtUtil::SetupTriggerBounds(handle trigger, Vector mins = null, Vector maxs = null)
+```
+
+Setup collision bounds of a trigger entity
+
+---
+
+<a name="PopExtUtil.PrintTable"></a>
+
+```cpp
+void PopExtUtil::PrintTable(table)
+```
+
+Wrapper for `DoPrintTable()` but with `indent` set to 0
+
+---
+
+<a name="PopExtUtil.DoPrintTable"></a>
+
+```cpp
+void PopExtUtil::DoPrintTable(table, int indent)
+```
+
+Prints a table to console
+
+---
+
+<a name="PopExtUtil.CreatePlayerWearable"></a>
+
+```cpp
+handle PopExtUtil::CreatePlayerWearable(handle player, string model, bool bonemerge = true, string attachment = null, bool autoDestroy = true)
+```
+
+Make a wearable that is attached to the player. The wearable is automatically removed when the owner is killed or respawned
+
+---
+
+<a name="PopExtUtil.StripWeapon"></a>
+
+```cpp
+void PopExtUtil::StripWeapon(handle player, int slot = -1)
+```
+
+---
+
+<a name="PopExtUtil.SetPlayerAttributes"></a>
+
+```cpp
+void PopExtUtil::SetPlayerAttributes(handle player, string attrib, int/float/bool/string value, handle item = null)
+```
+
+Sets an attribute onto an item of a player ent
+
+---
+
+<a name="PopExtUtil.WeaponSwitchSlot"></a>
+
+```cpp
+void PopExtUtil::WeaponSwitchSlot(handle player, int slot)
+```
+
+Force changes a player's active weapon to `slot`. This assumes that user is using the SLOT_ constants as defined in [`constants.nut`](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/constants.nut).
+
+---
+
+<a name="PopExtUtil.Explanation"></a>
+
+```cpp
+void PopExtUtil::Explanation(string message, string printColor = COLOR_YELLOW, string messagePrefix = "Explanation: ", bool syncChatWithGameText = false, float textPrintTime = -1, float textScanTime = 0.02)
+```
+
+Prints a scrolling message to the centre of everyone's screens, while also printing that message in the chat.
+
+---
+
+<a name="PopExtUtil.Info"></a>
+
+```cpp
+void PopExtUtil::Info(string message, string printColor = COLOR_YELLOW, string messagePrefix = "Explanation: ", bool syncChatWithGameText = false, float textPrintTime = -1, float textScanTime = 0.02)
+```
+
+Does the same thing as [`Explanation`](#PopExtUtil.Explanation)
+
+---
+
+<a name="PopExtUtil.IsAlive"></a>
+
+```cpp
+bool PopExtUtil::IsAlive(handle player)
+```
+
+Is this player currently alive?
+
+---
+
+<a name="PopExtUtil.IsDucking"></a>
+
+```cpp
+bool PopExtUtil::IsDucking(handle player)
+```
+
+Is this player currently ducking?
+
+---
+
+<a name="PopExtUtil.IsOnGround"></a>
+
+```cpp
+bool PopExtUtil::IsOnGround(handle player)
+```
+
+Is this player currently on the ground?
+
+---
+
+<a name="PopExtUtil.RemoveAmmo"></a>
+
+```cpp
+void PopExtUtil::RemoveAmmo(handle player)
+```
+
+Removes all ammo of all weapons of the player
+
+---
+
+<a name="PopExtUtil.GetAllEnts"></a>
+
+```cpp
+table PopExtUtil::GetAllEnts()
+```
+
+Returns a table of two kv pairs. First pair is "entlist", which contains an array of all the ents. Second pair is "numents", which is the number of total ents.
+
+---
+
+<a name="PopExtUtil._SetOwner"></a>
+
+```cpp
+void PopExtUtil::_SetOwner(handle ent, handle owner)
+```
+
+Sets netprops m_hOwnerEntity and m_hOwner to the same value
+
+---
+
+<a name="PopExtUtil.ShowAnnotation"></a>
+
+```cpp
+void PopExtUtil::ShowAnnotation(table args = {
+	string text = "This is an annotation",
+	float lifetime = 10,
+	Vector pos = Vector(),
+	int id = 0,
+	bool distance = true,
+	string sound = "misc/null.wav",
+	int entindex = 0,
+	int visbit = 0,
+	bool effect = true})
+```
+
+Sends the `show_annotation` game event with the specified arguments
+
+---
+
+<a name="PopExtUtil.HideAnnotation"></a>
+
+```cpp
+void PopExtUtil::HideAnnotation(int id)
+```
+
+Hides the annotation with a given id
+
+---
+
+<a name="PopExtUtil.GetPlayerName"></a>
+
+```cpp
+string PopExtUtil::GetPlayerName(handle player)
+```
+
+---
+
+<a name="PopExtUtil.SetPlayerName"></a>
+
+```cpp
+string PopExtUtil::SetPlayerName(handle player, string name)
+```
+
+Sets player name, also returns this name
+
+---
+
+<a name="PopExtUtil.GetPlayerUserID"></a>
+
+```cpp
+int PopExtUtil::GetPlayerUserID(handle player)
+```
+
+---
+
+<a name="PopExtUtil.PlayerRespawn"></a>
+
+```cpp
+void PopExtUtil::PlayerRespawn()
+```
+
+Force resupplies and respawns a player
+
+---
+
+<a name="PopExtUtil.DisableCloak"></a>
+
+```cpp
+void PopExtUtil::DisableCloak(handle player)
+```
+
+Disables player's ability to cloak
+
+---
+
+<a name="PopExtUtil.InUpgradeZone"></a>
+
+```cpp
+bool PopExtUtil::InUpgradeZone(handle player)
+```
+
+Is the player in upgrade zone?
+
+---
+
+<a name="PopExtUtil.InButton"></a>
+
+```cpp
+bool PopExtUtil::InButton(handle player, Constants.FButtons button)
+```
+
+Is the player holding down this button?
+
+---
+
+<a name="PopExtUtil.PressButton"></a>
+
+```cpp
+void PopExtUtil::PressButton(handle player, Constants.FButtons button)
+```
+
+Presses down a button for the player without releasing it
+
+---
+
+<a name="PopExtUtil.ReleaseButton"></a>
+
+```cpp
+void PopExtUtil::ReleaseButton(handle player, Constants.FButtons button)
+```
+
+Releases a button for the player
+
+---
+
+<a name="PopExtUtil.IsPointInRespawnRoom"></a>
+
+```cpp
+bool PopExtUtil::IsPointInRespawnRoom(Vector point)
+```
+
+Is this point in respawn room?
+
+---
+
+<a name="PopExtUtil.SwitchWeaponSlot"></a>
+
+```cpp
+void PopExtUtil::SwitchWeaponSlot(handle player, int slot)
+```
+
+Does the same thing as [`WeaponSwitchSlot`](#PopExtUtil.WeaponSwitchSlot)
+
+---
+
+<a name="PopExtUtil.GetItemInSlot"></a>
+
+```cpp
+handle PopExtUtil::GetItemInSlot(handle player, int slot)
+```
+
+Returns the script handle of the weapon of a player, given a slot
+
+---
+
+<a name="PopExtUtil.SwitchToFirstValidWeapon"></a>
+
+```cpp
+void PopExtUtil::SwitchToFirstValidWeapon(handle player)
+```
+
+Switches to the first valid weapon found
+
+---
+
+<a name="PopExtUtil.HasEffect"></a>
+
+```cpp
+bool PopExtUtil::HasEffect(handle ent, int value)
+```
+
+Does this ent have this effect?
+
+---
+
+<a name="PopExtUtil.SetEffect"></a>
+
+```cpp
+void PopExtUtil::SetEffect(handle ent, int value)
+```
+
+Sets an effect onto an ent
+
+---
+
+<a name="PopExtUtil.PlayerRobotModel"></a>
+
+```cpp
+void PopExtUtil::PlayerRobotModel(handle player, string model)
+```
+
+Set a robot model onto a player
+
+---
+
+<a name="PopExtUtil.HasItemInLoadout"></a>
+
+```cpp
+handle PopExtUtil::HasItemInLoadout(handle player, int/string/handle index)
+```
+
+Does the player has this item in their loadout? If yes, returns that weapon handle. If not, returns null. `index` accepts many types of weapon identification: a weapon ent handle, a classname, an internal name, and the weapon index itself.
+
+---
+
+<a name="PopExtUtil.StunPlayer"></a>
+
+```cpp
+void PopExtUtil::StunPlayer(handle player, float duration = 5, Constants.TF_STUN type = 1, float delay = 0, float speedreduce = 0.5)
+```
+
+Stuns a player with the given params.
+
+---
+
+<a name="PopExtUtil.Ignite"></a>
+
+```cpp
+void PopExtUtil::Ignite(handle player, float duration = 10.0, float damage = 1)
+```
+
+Ignites a player
+
+---
+
+<a name="PopExtUtil.ShowHudHint"></a>
+
+```cpp
+void PopExtUtil::ShowHudHint(string text = "This is a hud hint", handle player = null, float duration = 5.0)
+```
+
+---
+
+<a name="PopExtUtil.SetEntityColor"></a>
+
+```cpp
+void PopExtUtil::SetEntityColor(handle entity, int r, int g, int b, int a)
+```
+
+---
+
+<a name="PopExtUtil.GetEntityColor"></a>
+
+```cpp
+table PopExtUtil::GetEntityColor(handle entity)
+```
+
+Returns an integer-valued table of keys "r", "g", "b", "a"
+
+---
+
+<a name="PopExtUtil.AddAttributeToLoadout"></a>
+
+```cpp
+void PopExtUtil::AddAttributeToLoadout(handle player, string attribute, int/float/bool/string value, float duration = -1)
+```
+
+---
+
+<a name="PopExtUtil.ShowModelToPlayer"></a>
+
+```cpp
+handle PopExtUtil::ShowModelToPlayer(handle player, string model = ["models/player/heavy.mdl", 0], Vector pos = Vector(), QAngle ang = QAngle(), float duration = INT_MAX)
+```
+
+`INT_MAX` is a constant defined in [constants.nut](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/constants.nut)
+
+---
+
+<a name="PopExtUtil.LockInPlace"></a>
+
+```cpp
+void PopExtUtil::LockInPlace(handle player, bool enable = true)
+```
+
+Locks a player in place and disables weapon switching. Pass `false` to `enable` to un-lock a player
+
+---
+
+<a name="PopExtUtil.GetItemIndex"></a>
+
+```cpp
+int PopExtUtil::GetItemIndex(handle item)
+```
+
+---
+
+<a name="PopExtUtil.SetItemIndex"></a>
+
+```cpp
+void PopExtUtil::SetItemIndex(handle item, int index)
+```
+
+---
+
+<a name="PopExtUtil.SetTargetname"></a>
+
+```cpp
+void PopExtUtil::SetTargetname(handle ent, string name)
+```
+
+---
+
+<a name="PopExtUtil.GetPlayerSteamID"></a>
+
+```cpp
+string PopExtUtil::GetPlayerSteamID(handle player)
+```
+
+---
+
+<a name="PopExtUtil.GetHammerID"></a>
+
+```cpp
+int PopExtUtil::GetHammerID(handle ent)
+```
+
+---
+
+<a name="PopExtUtil.GetSpawnFlags"></a>
+
+```cpp
+int PopExtUtil::GetSpawnFlags(handle ent)
+```
+
+---
+
+<a name="PopExtUtil.GetPopfileName"></a>
+
+```cpp
+string PopExtUtil::GetPopfileName()
+```
+
+---
+
+<a name="PopExtUtil.PrecacheParticle"></a>
+
+```cpp
+void PopExtUtil::PrecacheParticle(string name)
+```
+
+---
+
+<a name="PopExtUtil.SpawnEffect"></a>
+
+```cpp
+void PopExtUtil::SpawnEffect(handle player, string effect)
+```
+
+On player spawn, dispatches an effect
+
+---
+
+<a name="PopExtUtil.RemoveOutputAll"></a>
+
+```cpp
+void PopExtUtil::RemoveOutputAll(handle ent, string output)
+```
+
+Remove all such outputs from an entity
+
+---
+
+<a name="PopExtUtil.RemovePlayerWearables"></a>
+
+```cpp
+void PopExtUtil::RemovePlayerWearables(handle player)
+```
+
+Remove all player wearables
+
+---
+
+<a name="PopExtUtil.GiveWeapon"></a>
+
+```cpp
+handle PopExtUtil::GiveWeapon(handle player, string className, int/string itemID)
+```
+
+Gives and equips a weapon onto a player while removing the existing weapon in that slot.
+
+---
+
+<a name="PopExtUtil.IsEntityClassnameInList"></a>
+
+```cpp
+bool PopExtUtil::IsEntityClassnameInList(handle entity, table/array list)
+```
+
+---
+
+<a name="PopExtUtil.SetPlayerClassRespawnAndTeleport"></a>
+
+```cpp
+void PopExtUtil::SetPlayerClassRespawnAndTeleport(handle player, Constants.ETFClass playerclass, Vector location_set = null)
+```
+
+---
+
+<a name="PopExtUtil.PlaySoundOnClient"></a>
+
+```cpp
+void PopExtUtil::PlaySoundOnClient(handle player, string name, float volume = 1.0, float pitch = 100)
+```
+
+A wrapper function for `EmitSoundEx()`
+
+---
+
+<a name="PopExtUtil.PlaySoundOnAllClients"></a>
+
+```cpp
+void PopExtUtil::PlaySoundOnAllClients(string name)
+```
+
+---
+
+<a name="PopExtUtil.StopAndPlayMVMSound"></a>
+
+```cpp
+void PopExtUtil::StopAndPlayMVMSound(handle player, string soundscript, float delay)
+```
+
+Stops the current sound and plays an MvM sound
+
+---
+
+<a name="PopExtUtil.EndWaveReverse"></a>
+
+```cpp
+void PopExtUtil::EndWaveReverse(bool doteamswitch = true)
+```
+
+Ends the wave in reverse mode
+
+---
+
+<a name="PopExtUtil.AddThinkToEnt"></a>
+
+```cpp
+void PopExtUtil::AddThinkToEnt(handle ent, function() func)
+```
+
+This function replaces the vanilla `AddThinkToEnt()`. If using popext, use this function to add thinks to ents.
+
+---
+
+<a name="PopExtUtil.SilentDisguise"></a>
+
+```cpp
+void PopExtUtil::SilentDisguise(handle player, handle target = null, Constants.ETFTeam tfteam = TF_TEAM_PVE_INVADERS, Constants.ETFClass tfclass = TF_CLASS_SCOUT)
+```
+
+Silently disguises without raising bot attention
+
+---
+
+<a name="PopExtUtil.GetPlayerReadyCount"></a>
+
+```cpp
+int PopExtUtil::GetPlayerReadyCount()
+```
+
+---
+
+<a name="PopExtUtil.GetWeaponMaxAmmo"></a>
+
+```cpp
+int PopExtUtil::GetWeaponMaxAmmo(handle player, handle wep)
+```
+
+---
+
+<a name="PopExtUtil.TeleportNearVictim"></a>
+
+```cpp
+bool PopExtUtil::TeleportNearVictim(handle ent, handle victim, int attempt)
+```
+
+---
+
+<a name="PopExtUtil.IsSpaceToSpawnHere"></a>
+
+```cpp
+bool PopExtUtil::IsSpaceToSpawnHere(Vector where, Vector hullmin, Vector hullmax)
+```
+
+Is there space to spawn a thing here?
+
+---
+
+<a name="PopExtUtil.ClearLastKnownArea"></a>
+
+```cpp
+void PopExtUtil::ClearLastKnownArea(handle bot)
+```
+
+---
+
+<a name="PopExtUtil.KillPlayer"></a>
+
+```cpp
+void PopExtUtil::KillPlayer(handle player)
+```
+
+---
+
+<a name="PopExtUtil.KillAllBots"></a>
+
+```cpp
+void PopExtUtil::KillAllBots()
+```
+
+---
+
+<a name="PopExtUtil.SetDestroyCallback"></a>
+
+```cpp
+void PopExtUtil::SetDestroyCallback(handle entity, function() callback)
+```
+
+Sets a thing to be done when the entity is destroyed. See more info [here on the VDC wiki](https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions#OnDestroy)
+
+---
+
+<a name="PopExtUtil.OnWeaponFire"></a>
+
+```cpp
+void PopExtUtil::OnWeaponFire(handle wep, function() func)
+```
+
+Sets a thing to be done when the weapon fires.
+
+---
+
+<a name="PopExtUtil.Min"></a>
+
+```cpp
+float PopExtUtil::Min(float a, float b)
+```
+
+Returns the smaller of the two numbers
+
+---
+
+<a name="PopExtUtil.Max"></a>
+
+```cpp
+float PopExtUtil::Max(float a, float b)
+```
+
+Returns the greater of the two numbers
+
+---
+
+<a name="PopExtUtil.Round"></a>
+
+```cpp
+float PopExtUtil::Round(float num, int decimals = 0)
+```
+
+Rounds a number to a certain decimal place precision
+
+---
+
+<a name="PopExtUtil.Clamp"></a>
+
+```cpp
+float PopExtUtil::Clamp(float x, float a, float b)
+```
+
+Clamps a value between a and b
+
+---
+
+<a name="PopExtUtil.RemapVal"></a>
+
+```cpp
+float PopExtUtil::RemapVal(float v, float A, float B, float C, float D)
+```
+
+Remaps a value in the range [A,B] to [C,D]
+
+---
+
+<a name="PopExtUtil.RemapValClamped"></a>
+
+```cpp
+float PopExtUtil::RemapValClamped(float v, float A, float B, float C, float D)
+```
+
+---
+
+<a name="PopExtUtil.IntersectionPointBox"></a>
+
+```cpp
+bool PopExtUtil::IntersectionPointBox(Vector pos, Vector mins, Vector maxs)
+```
+
+Is this position in the specified box?
+
+---
+
+<a name="PopExtUtil.NormalizeAngle"></a>
+
+```cpp
+float PopExtUtil::NormalizeAngle(float target)
+```
+
+---
+
+<a name="PopExtUtil.ApproachAngle"></a>
+
+```cpp
+float PopExtUtil::ApproachAngle(float target, float value, float speed)
+```
+
+---
+
+<a name="PopExtUtil.VectorAngles"></a>
+
+```cpp
+QAngle PopExtUtil::VectorAngles(Vector forward)
+```
+
+Forward direction vector -> Euler QAngle
+
+---
+
+<a name="PopExtUtil.AnglesToVector"></a>
+
+```cpp
+Vector PopExtUtil::AnglesToVector(QAngle angles)
+```
+
+---
+
+<a name="PopExtUtil.QAngleDistance"></a>
+
+```cpp
+float PopExtUtil::QAngleDistance(QAngle a, QAngle b)
+```
+
+---
+
+<a name="PopExtUtil.CheckBitwise"></a>
+
+```cpp
+bool PopExtUtil::CheckBitwise(int num)
+```
+
+---
+
+<a name="PopExtUtil.StringReplace"></a>
+
+```cpp
+string PopExtUtil::StringReplace(string str, string findwhat, string replace)
+```
+
+---
+
+<a name="PopExtUtil.capwords"></a>
+
+```cpp
+string PopExtUtil::capwords(string s, string sep = null)
+```
+
+Python's string.capwords()
 
 ---
