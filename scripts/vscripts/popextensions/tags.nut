@@ -1067,14 +1067,14 @@ local popext_funcs = {
     /*************************************************************************************************
      * CUSTOM WEAPON MODEL                                                                           *
      *                                                                                               *
-     * If no slot argument is supplied, this will be applied to the bots current active weapon       *
+     * If no slot argument is supplied, this will default to slot 0.                                 *
      *                                                                                               *
      * Example: popext_customweaponmodel{ model = `models/player/heavy.mdl`, slot = SLOT_SECONDARY } *
      *************************************************************************************************/
 
 	popext_customweaponmodel = function(bot, args) {
 
-		local wep = "slot" in args ? PopExtUtil.GetItemInSlot(bot, slot.tointeger()) : bot.GetActiveWeapon()
+		local wep = "slot" in args ? PopExtUtil.GetItemInSlot(bot, args.slot) : PopExtUtil.GetItemInSlot(bot, 0)
 
 		wep.SetModelSimple("model" in args ? args.model : args.type)
 	}
