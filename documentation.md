@@ -1,6 +1,6 @@
 # PopExtensionsPlus Documentation
 
-*Documentation last updated [14.10.2024]*
+*Documentation last updated [28.10.2024]*
 
 A work-in-progress documentation for [PopExt](https://github.com/potato-tf/PopExtensionsPlus), so some areas are still being worked on. As updates to PopExt are made consistently, this documentation will also inevitably fall slightly behind.
 
@@ -2070,8 +2070,11 @@ Accepts bitflags to modify behaviour.
 
 ```js
 // example usage
-`scout` : 1 // limits to 1 scout max
-`heavy` : 0 // disallows playing as heavy
+ClassLimits = {
+	`scout`: 1 // limits to 1 scout max
+	`heavy`: 0 // disallows playing as heavy
+}
+
 ```
 
 Sets a class limit in the mission
