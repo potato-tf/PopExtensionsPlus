@@ -195,7 +195,8 @@ if (!("_AddThinkToEnt" in _root))
 			PopExtMain.PlayerCleanup(player)
 		}
 
-		function OnGameEvent_teamplay_round_start(params) {
+		function OnGameEvent_recalculate_holidays(_) {
+			if (GetRoundState() != GR_STATE_PREROUND) return
 
 			//clean up all wearables that are not owned by a player or a bot
 			for (local wearable; wearable = FindByClassname(wearable, "tf_wearable*");)
