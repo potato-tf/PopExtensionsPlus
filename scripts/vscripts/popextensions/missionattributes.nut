@@ -37,11 +37,11 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			MissionAttributes.SetConvar("tf_forced_holiday", value)
 			if (value == kHoliday_None) return
 
-			local ent = FindByName(null, "MissionAttrHoliday");
+			local ent = FindByName(null, "_popext_missionattr_holiday");
 			if (ent != null) ent.Kill();
 
 			SpawnEntityFromTable("tf_logic_holiday", {
-				targetname   = "MissionAttrHoliday",
+				targetname   = "_popext_missionattr_holiday",
 				holiday_type = value
 			});
 
