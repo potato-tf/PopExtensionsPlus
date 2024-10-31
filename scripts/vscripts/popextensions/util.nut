@@ -1636,6 +1636,7 @@
 		}
 
 		function OnGameEvent_post_inventory_application(params) {
+			if (GetRoundState() == GR_STATE_PREROUND) return
 
 			local player = GetPlayerFromUserID(params.userid)
 
