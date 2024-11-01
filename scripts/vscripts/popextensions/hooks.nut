@@ -66,7 +66,7 @@ PopExt <- popExtEntity.GetScriptScope()
 			if (victim != null) {
 
 				local scope = victim.GetScriptScope()
-				local attackerscope = attacker.GetScriptScope()
+				if (attacker != null) local attackerscope = attacker.GetScriptScope()
 
 				if (victim.GetClassname() == "tank_boss" && "popProperty" in scope)
 					if ("CritImmune" in scope.popProperty && scope.popProperty.CritImmune)
