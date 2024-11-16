@@ -745,6 +745,7 @@
 		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") & ~button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") & ~button)
 	}
 
+	//LEGACY: use IsPointInTrigger instead
 	function IsPointInRespawnRoom(point)
 	{
 		local triggers = []
@@ -772,6 +773,36 @@
 		return trace.hit && trace.enthit.GetClassname() == "func_respawnroom"
 	}
 
+	function IsPointInTrigger(point, classname = "func_respawnroom")
+	{
+		local triggers = []
+		for (local trigger; trigger = FindByClassname(trigger, classname);)
+		{
+			if (classname == "func_respawnroom")
+				trigger.SetCollisionGroup(COLLISION_GROUP_NONE)
+
+			trigger.RemoveSolidFlags(4) // FSOLID_NOT_SOLID
+			triggers.append(trigger)
+		}
+
+		local trace =
+		{
+			start = point,
+			end = point,
+			mask = 0
+		}
+		TraceLineEx(trace)
+
+		foreach (trigger in triggers)
+		{
+			if (classname == "func_respawnroom")
+				trigger.SetCollisionGroup(COLLISION_GROUP_RESPAWNROOMS)
+
+			trigger.AddSolidFlags(FSOLID_NOT_SOLID) // FSOLID_NOT_SOLID
+		}
+
+		return trace.hit && trace.enthit.GetClassname() == classname
+	}
 
 	//assumes user is using the SLOT_ constants
 	function SwitchWeaponSlot(player, slot) {
