@@ -1669,8 +1669,6 @@ local popext_funcs = {
 			uber = 0.0
 		}
 
-		local separator = ""
-
 		//these ones aren't as re-usable as other kv's
 		if (startswith(tag, "popext_homing"))
 		{
@@ -1680,7 +1678,7 @@ local popext_funcs = {
 			tagtable.turn_power <- 1.0
 		}
 
-		tag.find("{") ? separator = "{" : separator = "|"
+		local separator = tag.find("{") ? "{" : "|"
 
 		local splittag = split(tag, separator)
 

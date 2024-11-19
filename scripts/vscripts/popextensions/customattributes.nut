@@ -316,6 +316,11 @@
 			player.GetScriptScope().attribinfo[attr] <- format("%s", value)
 		}
 
+		"custom kill icon": function(player, items, attr, value) {
+			CustomAttributes.CustomKillIcon(player, items, value)
+			player.GetScriptScope().attribinfo[attr] <- format("Custom kill icon: %s", value)
+		}
+
 		//VANILLA ATTRIBUTE REIMPLEMENTATIONS
 
 		"alt-fire disabled": function(player, items, attr, value) {
@@ -1866,6 +1871,28 @@
 			wep.RemoveAttribute("SET BONUS: max health additive bonus")
 			local addHPAmount = player.GetMaxHealth() * (value - 1)
 			wep.AddAttribute("SET BONUS: max health additive bonus", addHPAmount, -1)
+		}
+	}
+
+	function CustomKillIcon(player, items, value) {
+
+		foreach(item, attrs in items)
+		{
+			local wep = PopExtUtil.HasItemInLoadout(player, item)
+			if (wep == null) continue
+
+			CustomAttributes.TakeDamageTable[format("CustomKillIcon_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
+
+				if (params.weapon != wep || player.GetActiveWeapon() != wep) return
+
+				local killicon_dummy = CreateByClassname("info_teleport_destination")
+				SetPropString(killicon_dummy, "m_iName", format("killicon_dummy_%d_%d", player.GetScriptScope().userid, wep.entindex()))
+				SetPropString(killicon_dummy, "m_iClassname", value)
+				params.inflictor = killicon_dummy
+			}
+			CustomAttributes.TakeDamagePostTable[format("CustomKillIcon_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
+				EntFire(format("killicon_dummy_%d_%d", player.GetScriptScope().userid, wep.entindex()), "Kill")
+			}
 		}
 	}
 
