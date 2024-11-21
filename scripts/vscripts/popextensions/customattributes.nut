@@ -1084,8 +1084,9 @@
 
 				if (params.attacker &&
 					params.const_entity.IsPlayer() &&
-					params.const_entity.GetTeam() == params.attacker.GetTeam())
-				return
+					params.const_entity.GetTeam() == player.GetTeam() &&
+					params.const_entity != player)
+					return
 
 				local bomb = CreateByClassname(generic_bomb)
 				SetPropFloat(bomb, "m_flDamage", damage)
