@@ -109,7 +109,10 @@
 			CustomAttributes.ExplosiveBullets(player, items, value)
 			player.GetScriptScope().attribinfo[attr] <- format("Fires explosive rounds that deal %d damage", value)
 		}
-
+		"explosive bullets ext": function(player, items, attr, value) {
+			CustomAttributes.ExplosiveBulletsExt(player, items, value)
+			player.GetScriptScope().attribinfo[attr] <- format("Fires explosive rounds that deal %d damage in a radius of %d", value.damage, value.radius)
+		}
 		"old sandman stun": function(player, items, attr, value) {
 			CustomAttributes.OldSandmanStun(player, items)
 			player.GetScriptScope().attribinfo[attr] <- "Uses pre-JI stun mechanics"
@@ -984,6 +987,7 @@
 		}
 	}
 
+	//OBSOLETE, use ExplosiveBulletsExt instead
 	function ExplosiveBullets(player, items, value) {
 
 		foreach(item, attrs in items)
@@ -1047,6 +1051,66 @@
 		}
 	}
 
+	function ExplosiveBulletsExt(player, items, value) {
+
+		SetPropInt(PopExtUtil.Worldspawn, "m_takedamage", 1)
+
+		local generic_bomb = "tf_generic_bomb"
+
+		foreach(item, attrs in items)
+		{
+			local wep = PopExtUtil.HasItemInLoadout(player, item)
+			if (wep == null) continue
+
+			local damage = "damage" in value ? value.damage : 150
+			local radius = "radius" in value ? value.radius : 150
+			local team = "team" in value ? value.team : 0
+			local model = "model" in value ? value.model : ""
+			local particle = "particle" in value ? value.particle : "mvm_loot_explosion"
+			local sound = "sound" in value ? value.sound : "weapons/pipe_bomb1.wav"
+
+			PrecacheSound(sound)
+
+			local particleent = SpawnEntityFromTable("info_particle_system", {
+				effect_name = particle
+			})
+
+			CustomAttributes.TakeDamageTable[format("ExplosiveBulletsExt_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
+
+				if (params.const_entity.GetClassname() == generic_bomb ||
+					params.attacker.GetClassname() == generic_bomb ||
+					(params.attacker == player && params.const_entity.GetClassname() == generic_bomb))
+					return
+
+				if (params.attacker &&
+					params.const_entity.IsPlayer() &&
+					params.const_entity.GetTeam() == params.attacker.GetTeam())
+				return
+
+				local bomb = CreateByClassname(generic_bomb)
+				SetPropFloat(bomb, "m_flDamage", damage)
+				SetPropFloat(bomb, "m_flRadius", radius)
+				SetPropString(bomb, "m_explodeParticleName", particle) // doesn't work
+				SetPropString(bomb, "m_strExplodeSoundName", sound)
+				bomb.DispatchSpawn()
+				bomb.SetOwner(params.attacker)
+
+				bomb.SetTeam(team)
+				bomb.SetOrigin(params.damage_position)
+				bomb.SetHealth(1)
+				if (model != "") bomb.SetModel(model)
+
+				// infinite takedamage loop, do not uncomment
+				// bomb.AcceptInput("Detonate", "", null, null)
+
+				particleent.SetOrigin(bomb.GetOrigin())
+				EntFireByHandle(bomb, "Detonate", "", -1, player, player)
+				EntFireByHandle(particleent, "Start", "", -1, null, null)
+				EntFireByHandle(particleent, "Stop", "", SINGLE_TICK, null, null)
+			}
+		}
+	}
+
 	function OldSandmanStun(player, items, value = null) { //dummy third value to avoid wrong number of parameters errors
 
 		foreach(item, attrs in items)
@@ -1075,12 +1139,10 @@
 
 			local scope = wep.GetScriptScope()
 
-			local duration = 5, type = 2, speedmult = 0.2, stungiants = true
-
-			if ("duration" in value) duration = value.duration
-			if ("type" in value) type = value.type
-			if ("speedmult" in value) speedmult = value.speedmult
-			if ("stungiants" in value) stungiants = value.stungiants
+			local duration = "duration" in value ? value.duration : 5
+			local type = "type" in value ? value.type : 2
+			local speedmult = "speedmult" in value ? value.speedmult : 0.2
+			local stungiants = "stungiants" in value ? value.stungiants : true
 
 			// `stun on hit`: { duration = 4 type = 2 speedmult = 0.2 stungiants = false } //in order: stun duration in seconds, stun type, stun movespeed multiplier, can stun giants true/false
 
