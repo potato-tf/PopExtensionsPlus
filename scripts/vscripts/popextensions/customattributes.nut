@@ -1082,7 +1082,7 @@
 
 			CustomAttributes.TakeDamageTable[format("ExplosiveBulletsExt_%d_%d", scope.userid,  wep.entindex())] <- function(params) {
 
-				if ("explosivebullets" in scope) return
+				if ("explosivebullets" in scope || params.weapon != wep || !("explosive bullets ext" in player.GetScriptScope().attribinfo)) return
 
 				scope.explosivebullets <- true
 
