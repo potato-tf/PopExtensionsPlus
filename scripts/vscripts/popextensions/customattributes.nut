@@ -1070,29 +1070,34 @@
 
 			local damage = "damage" in value ? value.damage : 150
 			local radius = "radius" in value ? value.radius : 150
-			local team = "team" in value ? value.team : player.GetTeam()
+			local team = "team" in value ? value.team : 0
 			local model = "model" in value ? value.model : ""
 			local particle = "particle" in value ? value.particle : "mvm_loot_explosion"
 			local sound = "sound" in value ? value.sound : "weapons/pipe_bomb1.wav"
+			local killicon = "killicon" in value ? value.killicon : "megaton"
 
 			PrecacheSound(sound)
 
-			local particleent = SpawnEntityFromTable("info_particle_system", {
-				effect_name = particle
-			})
+			local scope = player.GetScriptScope()
 
-			CustomAttributes.TakeDamageTable[format("ExplosiveBulletsExt_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
+			CustomAttributes.TakeDamageTable[format("ExplosiveBulletsExt_%d_%d", scope.userid,  wep.entindex())] <- function(params) {
+
+				if ("explosivebullets" in scope) return
+
+				scope.explosivebullets <- true
+
+				local particleent = SpawnEntityFromTable("info_particle_system", { effect_name = particle })
 
 				if (params.const_entity.GetClassname() == generic_bomb ||
 					params.attacker.GetClassname() == generic_bomb ||
 					(params.attacker == player && params.const_entity.GetClassname() == generic_bomb))
 					return
 
-				if (params.attacker &&
-					params.const_entity.IsPlayer() &&
-					params.const_entity.GetTeam() == player.GetTeam() &&
-					params.const_entity != player)
-					return
+				// if (params.attacker &&
+				// 	params.const_entity.IsPlayer() &&
+				// 	params.const_entity.GetTeam() == player.GetTeam() &&
+				// 	params.const_entity != player)
+				// 	return
 
 				local bomb = CreateByClassname(generic_bomb)
 				SetPropFloat(bomb, "m_flDamage", damage)
@@ -1111,9 +1116,14 @@
 				// bomb.AcceptInput("Detonate", "", null, null)
 
 				particleent.SetOrigin(bomb.GetOrigin())
-				EntFireByHandle(bomb, "Detonate", "", -1, player, player)
+				// EntFireByHandle(bomb, "Detonate", "", -1, player, player)
+				SetPropString(bomb, "m_iClassname", killicon)
+				bomb.TakeDamage(1, DMG_CLUB, player)
 				EntFireByHandle(particleent, "Start", "", -1, null, null)
 				EntFireByHandle(particleent, "Stop", "", SINGLE_TICK, null, null)
+				EntFireByHandle(particleent, "Kill", "", SINGLE_TICK*2, null, null)
+
+				if ("explosivebullets" in scope) delete scope.explosivebullets
 			}
 		}
 	}
