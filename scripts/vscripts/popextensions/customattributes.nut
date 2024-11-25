@@ -1169,25 +1169,25 @@
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 			if (wep == null) continue
 
-			local i = 1
+			// local i = 1
 
-			wep.GetScriptScope().ItemThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+			// wep.GetScriptScope().ItemThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
 
-				if (player.GetActiveWeapon() == wep && !player.IsMiniBoss() && player.GetModelScale() == 1.0) {
+			// 	if (player.GetActiveWeapon() == wep && !player.IsMiniBoss() && player.GetModelScale() == 1.0) {
 
-					player.SetIsMiniBoss(true)
-					player.SetModelScale(1.75, -1)
-				}
+			// 		player.SetIsMiniBoss(true)
+			// 		player.SetModelScale(1.75, -1)
+			// 	}
 
-				if (!i)
-				{
-					player.SetIsMiniBoss(false)
-					player.SetModelScale(1.0, -1)
-				}
+			// 	if (!i)
+			// 	{
+			// 		player.SetIsMiniBoss(false)
+			// 		player.SetModelScale(1.0, -1)
+			// 	}
 
-				i++
-				if (i > 10) i = 0
-			}
+			// 	i++
+			// 	if (i > 10) i = 0
+			// }
 		}
 	}
 

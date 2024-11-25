@@ -77,7 +77,6 @@ WaveSchedule
 						`mult swim speed`: 3,
 						`teleport instead of die`: 1,
 						`crit when health below`: 75,
-						// `is miniboss`: 1,
 
 						[TF_CLASS_SCOUT] = {
 							`damage bonus` : 5,
