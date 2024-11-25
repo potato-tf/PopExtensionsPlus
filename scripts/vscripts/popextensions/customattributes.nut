@@ -988,65 +988,73 @@
 	}
 
 	//OBSOLETE, use ExplosiveBulletsExt instead
-	function ExplosiveBullets(player, items, value) {
+	function ExplosiveBulletsExt(player, items, value) {
+
+		SetPropInt(PopExtUtil.Worldspawn, "m_takedamage", 1)
+
+		local generic_bomb = "tf_generic_bomb"
 
 		foreach(item, attrs in items)
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 			if (wep == null) continue
-			local scope = wep.GetScriptScope()
-			//cleanup before spawning a new one
-			for (local launcher; launcher = FindByClassname(launcher, "tf_weapon_grenadelauncher");)
-				if (launcher.IsEFlagSet(EFL_USER))
-					EntFireByHandle(launcher, "Kill", "", -1, null, null)
 
+			local damage = "damage" in value ? value.damage : 150
+			local radius = "radius" in value ? value.radius : 150
+			local team = "team" in value ? value.team : 0
+			local model = "model" in value ? value.model : ""
+			local particle = "particle" in value ? value.particle : "mvm_loot_explosion"
+			local sound = "sound" in value ? value.sound : "weapons/pipe_bomb1.wav"
+			local killicon = "killicon" in value ? value.killicon : "megaton"
 
-			local launcher = CreateByClassname("tf_weapon_grenadelauncher")
-			SetPropInt(launcher, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", ID_GRENADELAUNCHER)
-			SetPropBool(launcher, "m_AttributeManager.m_Item.m_bInitialized", true)
-			launcher.AddEFlags(EFL_USER)
-			launcher.SetOwner(player)
-			launcher.DispatchSpawn()
-			launcher.DisableDraw()
+			PrecacheSound(sound)
 
-			launcher.AddAttribute("fuse bonus", 0.0, -1)
-			// launcher.AddAttribute("dmg penalty vs players", 0.0, -1)
+			local scope = player.GetScriptScope()
 
-			scope.explosivebulletsnextattack <- 0.0
-			scope.curammo <- GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1)
-			if (wep.Clip1() != -1) scope.curclip <- wep.Clip1()
+			CustomAttributes.TakeDamageTable[format("ExplosiveBulletsExt_%d_%d", scope.userid,  wep.entindex())] <- function(params) {
 
-			scope.ItemThinkTable[format("ExplosiveBullets_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function() {
+				if ("explosivebullets" in scope) return
 
-				if (!("explosive bullets" in player.GetScriptScope().attribinfo) || player.GetActiveWeapon() != wep || scope.explosivebulletsnextattack == GetPropFloat(wep, "m_flLastFireTime")) return
+				scope.explosivebullets <- true
 
-				local grenade = CreateByClassname("tf_projectile_pipe")
-				SetPropEntity(grenade, "m_hOwnerEntity", launcher)
-				SetPropEntity(grenade, "m_hLauncher", launcher)
-				SetPropEntity(grenade, "m_hThrower", player)
-				SetPropFloat(grenade, "m_flDamage", value * 2) //shithack: multiply damage by 2 to account for distance falloff
-				grenade.SetCollisionGroup(COLLISION_GROUP_DEBRIS)
+				local particleent = SpawnEntityFromTable("info_particle_system", { effect_name = particle })
 
-				DispatchSpawn(grenade)
-				grenade.DisableDraw()
+				if (params.const_entity.GetClassname() == generic_bomb ||
+					params.attacker.GetClassname() == generic_bomb ||
+					(params.attacker == player && params.const_entity.GetClassname() == generic_bomb))
+					return
 
-				local trace = {
-					start = player.EyePosition(),
-					end = player.EyePosition() + (player.EyeAngles().Forward() * 8192.0),
-					ignore = player
-				}
-				TraceLineEx(trace)
-				if (trace.hit && "enthit" in trace) {
-					if (trace.enthit.GetClassname() == "worldspawn")
-						grenade.SetOrigin(trace.endpos)
-					else
-						grenade.SetOrigin(trace.enthit.EyePosition() + Vector(0, 0, 45))
-				}
+				// if (params.attacker &&
+				// 	params.const_entity.IsPlayer() &&
+				// 	params.const_entity.GetTeam() == player.GetTeam() &&
+				// 	params.const_entity != player)
+				// 	return
 
-				scope.explosivebulletsnextattack = GetPropFloat(wep, "m_flLastFireTime")
-				scope.curammo = GetPropIntArray(player, "m_iAmmo", wep.GetSlot() + 1)
-				if ("curclip" in scope) scope.curclip = wep.Clip1()
+				local bomb = CreateByClassname(generic_bomb)
+				SetPropFloat(bomb, "m_flDamage", damage)
+				SetPropFloat(bomb, "m_flRadius", radius)
+				SetPropString(bomb, "m_explodeParticleName", particle) // doesn't work
+				SetPropString(bomb, "m_strExplodeSoundName", sound)
+				bomb.DispatchSpawn()
+				bomb.SetOwner(params.attacker)
 
+				bomb.SetTeam(team)
+				bomb.SetOrigin(params.damage_position)
+				bomb.SetHealth(1)
+				if (model != "") bomb.SetModel(model)
+
+				// infinite takedamage loop, do not uncomment
+				// bomb.AcceptInput("Detonate", "", null, null)
+
+				particleent.SetOrigin(bomb.GetOrigin())
+				// EntFireByHandle(bomb, "Detonate", "", -1, player, player)
+				SetPropString(bomb, "m_iClassname", killicon)
+				bomb.TakeDamage(1, DMG_CLUB, player)
+				EntFireByHandle(particleent, "Start", "", -1, null, null)
+				EntFireByHandle(particleent, "Stop", "", SINGLE_TICK, null, null)
+				EntFireByHandle(particleent, "Kill", "", SINGLE_TICK*2, null, null)
+
+				if ("explosivebullets" in scope) delete scope.explosivebullets
 			}
 		}
 	}
