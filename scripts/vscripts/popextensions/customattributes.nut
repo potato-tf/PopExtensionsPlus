@@ -1072,7 +1072,7 @@
 
 			local damage = "damage" in value ? value.damage : 150
 			local radius = "radius" in value ? value.radius : 150
-			local team = "team" in value ? value.team : 0
+			local team = "team" in value ? value.team : player.GetTeam()
 			local model = "model" in value ? value.model : ""
 			local particle = "particle" in value ? value.particle : "mvm_loot_explosion"
 			local sound = "sound" in value ? value.sound : "weapons/pipe_bomb1.wav"

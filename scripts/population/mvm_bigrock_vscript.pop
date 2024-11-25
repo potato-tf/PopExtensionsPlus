@@ -134,7 +134,12 @@ WaveSchedule
 						},
 						`The Sydney Sleeper`: { //localized name in items_game.txt/item_map.nut
 							`radius sleeper`: 1
-							`explosive bullets`: 30
+							`explosive bullets ext`: {
+								damage = 300
+								radius = 100
+								team = TF_TEAM_RED
+
+							}
 						}
 						`The Sandman` : { //strings with spaces require this syntax.
 							`old sandman stun`: 1
