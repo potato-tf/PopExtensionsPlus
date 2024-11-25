@@ -1070,7 +1070,7 @@
 
 			local damage = "damage" in value ? value.damage : 150
 			local radius = "radius" in value ? value.radius : 150
-			local team = "team" in value ? value.team : 0
+			local team = "team" in value ? value.team : player.GetTeam()
 			local model = "model" in value ? value.model : ""
 			local particle = "particle" in value ? value.particle : "mvm_loot_explosion"
 			local sound = "sound" in value ? value.sound : "weapons/pipe_bomb1.wav"
@@ -1093,17 +1093,13 @@
 					(params.attacker == player && params.const_entity.GetClassname() == generic_bomb))
 					return
 
-				// if (params.attacker &&
-				// 	params.const_entity.IsPlayer() &&
-				// 	params.const_entity.GetTeam() == player.GetTeam() &&
-				// 	params.const_entity != player)
-				// 	return
-
 				local bomb = CreateByClassname(generic_bomb)
+
 				SetPropFloat(bomb, "m_flDamage", damage)
 				SetPropFloat(bomb, "m_flRadius", radius)
 				SetPropString(bomb, "m_explodeParticleName", particle) // doesn't work
 				SetPropString(bomb, "m_strExplodeSoundName", sound)
+
 				bomb.DispatchSpawn()
 				bomb.SetOwner(params.attacker)
 
@@ -1112,11 +1108,7 @@
 				bomb.SetHealth(1)
 				if (model != "") bomb.SetModel(model)
 
-				// infinite takedamage loop, do not uncomment
-				// bomb.AcceptInput("Detonate", "", null, null)
-
 				particleent.SetOrigin(bomb.GetOrigin())
-				// EntFireByHandle(bomb, "Detonate", "", -1, player, player)
 				SetPropString(bomb, "m_iClassname", killicon)
 				bomb.TakeDamage(1, DMG_CLUB, player)
 				EntFireByHandle(particleent, "Start", "", -1, null, null)
