@@ -970,20 +970,26 @@
 
 	function RadiusSleeper(player, items, value = null) { //dummy third value to avoid wrong number of parameters errors
 
-		CustomAttributes.TakeDamagePostTable[format("RadiusSleeper_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
+		foreach(item, attrs in items)
+		{
+			local wep = PopExtUtil.HasItemInLoadout(player, item)
+			if (wep == null) continue
 
-			local victim = GetPlayerFromUserID(params.userid)
-			local attacker = GetPlayerFromUserID(params.attacker)
+			CustomAttributes.TakeDamagePostTable[format("RadiusSleeper_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <- function(params) {
 
-			if (attacker == null) return
+				local victim = GetPlayerFromUserID(params.userid)
+				local attacker = GetPlayerFromUserID(params.attacker)
 
-			local scope = attacker.GetScriptScope()
+				if (attacker == null) return
 
-			if (!("radius sleeper" in player.GetScriptScope().attribinfo)) return
+				local scope = attacker.GetScriptScope()
 
-			if (victim == null || attacker == null || attacker != player || GetPropFloat(attacker.GetActiveWeapon(), "m_flChargedDamage") < 150.0) return
+				if (!("radius sleeper" in player.GetScriptScope().attribinfo)) return
 
-			SpawnEntityFromTable("tf_projectile_jar", {origin = victim.EyePosition()})
+				if (victim == null || attacker == null || attacker != player || GetPropFloat(attacker.GetActiveWeapon(), "m_flChargedDamage") < 150.0) return
+
+				SpawnEntityFromTable("tf_projectile_jar", {origin = victim.EyePosition()})
+			}
 		}
 	}
 
