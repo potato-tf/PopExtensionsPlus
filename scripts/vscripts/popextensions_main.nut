@@ -42,8 +42,13 @@ if (!("_AddThinkToEnt" in _root))
 		foreach (k, v in banned_think_classnames)
 			if (startswith(ent.GetClassname(), k))
 			{
-				error(format("ERROR: AddThinkToEnt on '%s' entities is forbidden! Use PopExtUtil.AddThinkToEnt instead\n", k))
-				ClientPrint(null, HUD_PRINTTALK, format("\x08FFB4B4FF**WARNING: AddThinkToEnt on '%s' entities is forbidden!**\n\n Use PopExtUtil.AddThinkToEnt instead.\n\nExample: AddThinkToEnt(ent, \"%s\") -> PopExtUtil.AddThinkToEnt(ent, \"%s\")", k, func, func))
+				error(format("ERROR: **POPEXTENSIONS WARNING: AddThinkToEnt on '%s' entity overwritten!**\n", k))
+				// ClientPrint(null, HUD_PRINTTALK, format("\x08FFB4B4FF**WARNING: AddThinkToEnt on '%s' entities is forbidden!**\n\n Use PopExtUtil.AddThinkToEnt instead.\n\nExample: AddThinkToEnt(ent, \"%s\") -> PopExtUtil.AddThinkToEnt(ent, \"%s\")", k, func, func))
+
+				local entstring = ""+ent
+				//we use printl instead of printf because it's redirected to player console on potato servers
+				printl(format("\n\n**POPEXTENSIONS WARNING: AddThinkToEnt on '%s' overwritten!**\n\nAddThinkToEnt(ent, \"%s\") -> PopExtUtil.AddThinkToEnt(ent, \"%s\")\n\n", entstring, func, func))
+				PopExtUtil.AddThinkToEnt(ent, func)
 				return
 			}
 
