@@ -1,6 +1,6 @@
 # PopExtensionsPlus Documentation
 
-*Documentation last updated [28.10.2024]*
+*Documentation last updated [03.12.2024]*
 
 A work-in-progress documentation for [PopExt](https://github.com/potato-tf/PopExtensionsPlus), so some areas are still being worked on. As updates to PopExt are made consistently, this documentation will also inevitably fall slightly behind.
 
