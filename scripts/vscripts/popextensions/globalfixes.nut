@@ -77,21 +77,7 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 	}
 
-	Events = {
-
-		function OnScriptHook_OnTakeDamage(params) { foreach(_, func in GlobalFixes.TakeDamageTable) func(params) }
-		function OnGameEvent_player_death(params) { foreach(_, func in GlobalFixes.DeathHookTable) func(params) }
-		function OnGameEvent_player_disconnect(params) { foreach(_, func in GlobalFixes.DisconnectTable) func(params) }
-		// Hook all wave inits to reset parsing error counter.
-
-		function OnGameEvent_recalculate_holidays(params) {
-			if (GetRoundState() != GR_STATE_PREROUND) return
-
-			foreach(_, func in GlobalFixes.InitWaveTable) func(params)
-		}
-
-		function GameEvent_mvm_wave_complete(params) { delete GlobalFixes }
-	}
+	Events = { function GameEvent_mvm_wave_complete(params) { delete GlobalFixes } }
 }
 __CollectGameEventCallbacks(GlobalFixes.Events)
 
