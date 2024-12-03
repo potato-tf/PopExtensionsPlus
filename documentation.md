@@ -18,7 +18,6 @@ For the above issues, typos, grammar mistakes, as well as bug reports in PopExt 
 ⠀⠀⠀└─ [customattributes](#customattributes-menu)  
 ⠀⠀⠀└─ customweapons  
 ⠀⠀⠀└─ ent_additions  
-⠀⠀⠀└─ globalfixes  
 ⠀⠀⠀└─ hooks  
 ⠀⠀⠀└─ [missionattributes](#missionattributes-menu)  
 ⠀⠀⠀└─ [popextensions](#popextensions-menu)  
@@ -193,8 +192,6 @@ The [example pop](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scrip
 [`ClassLimits`](#MissionAttributes.ClassLimits)  
 [`ShowHiddenAttributes`](#MissionAttributes.ShowHiddenAttributes)  
 [`HideRespawnText`](#MissionAttributes.HideRespawnText)  
-[`ReflectableDF`](#MissionAttributes.ReflectableDF)  
-[`RestoreYERNerf`](#MissionAttributes.RestoreYERNerf)  
 
 ## [popextensions](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/popextensions.nut) menu
 
@@ -2104,28 +2101,6 @@ Hides the "Respawn in: # seconds" text. Accepts these inputs:
 - 0 - default behaviour (countdown)
 - 1 - hide completely
 - 2 - show only "Prepare to Respawn"
-
----
-
-<a name="MissionAttributes.ReflectableDF"></a>
-
-```js
-// usage
-ReflectableDF = 1
-```
-
-Reverts the Dragon's Fury global fix in `globalfixes.nut`. [Visit](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/globalfixes.nut) for more info
-
----
-
-<a name="MissionAttributes.RestoreYERNerf"></a>
-
-```js
-// usage
-RestoreYERNerf = 1
-```
-
-Reverts the Your Eternal Reward global fix in `globalfixes.nut`. [Visit](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/globalfixes.nut) for more info
 
 ---
 
