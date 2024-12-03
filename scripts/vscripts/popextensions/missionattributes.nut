@@ -2696,25 +2696,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			AddThinkToEnt(PopExtUtil.PlayerManager, "RespawnTextThink")
 		}
 
-		// =========================================================
-
-		// Options to revert global fixes below:
-		// View globalfixes.nut for more info
-
-		// =========================================================
-
-		ReflectableDF = function(value) {
-			if ("DragonsFuryFix" in GlobalFixes.ThinkTable)
-				delete GlobalFixes.ThinkTable.DragonsFuryFix
-		}
-
-		// =========================================================
-
-		RestoreYERNerf = function(value) {
-			if ("YERDisguiseFix" in GlobalFixes.TakeDamageTable)
-				delete GlobalFixes.TakeDamageTable.YERDisguiseFix
-		}
-
 		// DefaultGiantFoosteps = function(value) {
 		// 	foreach(bot in PopExtUtil.BotArray) {
 		// 		if ("RestoreGiantFootsteps" in bot.GetScriptScope().PlayerThinkTable)
