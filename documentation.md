@@ -112,6 +112,17 @@ The [example pop](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scrip
 ### Attributes
 
 [`ForceHoliday`](#MissionAttributes.ForceHoliday)  
+[`YERDisguiseFix`](#MissionAttributes.YERDisguiseFix)  
+[`LooseCannonFix`](#MissionAttributes.LooseCannonFix)  
+[`BotGibFix`](#MissionAttributes.BotGibFix)  
+[`HolidayPunchFix`](#MissionAttributes.HolidayPunchFix)  
+[`EnableGlobalFixes`](#MissionAttributes.EnableGlobalFixes)  
+[`DragonsFuryFix`](#MissionAttributes.DragonsFuryFix)  
+[`FastNPCUpdate`](#MissionAttributes.FastNPCUpdate)  
+[`NoCreditVelocity`](#MissionAttributes.NoCreditVelocity)  
+[`ScoutBetterMoneyCollection`](#MissionAttributes.ScoutBetterMoneyCollection)  
+[`HoldFireUntilFullReloadFix`](#MissionAttributes.HoldFireUntilFullReloadFix)  
+[`EngineerBuildingPushbackFix`](#MissionAttributes.EngineerBuildingPushbackFix)  
 [`RedBotsNoRandomCrit`](#MissionAttributes.RedBotsNoRandomCrit)  
 [`NoCrumpkins`](#MissionAttributes.NoCrumpkins)  
 [`NoReanimators`](#MissionAttributes.NoReanimators)  
@@ -1090,6 +1101,130 @@ Replicates sigsegv-mvm: `ForceHoliday`. Forces a tf_holiday for the mission. Sup
 - 1 - Birthday
 - 2 - Halloween
 - 3 - Christmas
+
+---
+
+<a name="MissionAttributes.YERDisguiseFix"></a>
+
+```js
+// usage
+YERDisguiseFix = 1
+```
+
+Enable to make disguises via Your Eternal Reward backstabs not alert any bots
+
+---
+
+<a name="MissionAttributes.LooseCannonFix"></a>
+
+```js
+// usage
+LooseCannonFix = 1
+```
+
+Fixes incorrect damage scaling on Loose Cannon double donks
+
+---
+
+<a name="MissionAttributes.BotGibFix"></a>
+
+```js
+// usage
+BotGibFix = 1
+```
+
+Enable to make bots properly gib on death
+
+---
+
+<a name="MissionAttributes.HolidayPunchFix"></a>
+
+```js
+// usage
+HolidayPunchFix = 1
+```
+
+Make robots laugh with correct animations when hit with a crit Holiday Punch
+
+---
+
+<a name="MissionAttributes.EnableGlobalFixes"></a>
+
+```js
+// usage
+EnableGlobalFixes = 1
+```
+
+Enables, all at once, the mission attributes [`DragonsFuryFix`](#MissionAttributes.DragonsFuryFix), [`FastNPCUpdate`](#MissionAttributes.FastNPCUpdate), [`NoCreditVelocity`](#MissionAttributes.NoCreditVelocity), [`ScoutBetterMoneyCollection`](#MissionAttributes.ScoutBetterMoneyCollection), [`HoldFireUntilFullReloadFix`](#MissionAttributes.HoldFireUntilFullReloadFix), [`EngineerBuildingPushbackFix`](#MissionAttributes.EngineerBuildingPushbackFix)
+
+---
+
+<a name="MissionAttributes.DragonsFuryFix"></a>
+
+```js
+// usage
+DragonsFuryFix = 1
+```
+
+Makes Dragon's Fury projectile unreflectable
+
+---
+
+<a name="MissionAttributes.FastNPCUpdate"></a>
+
+```js
+// usage
+FastNPCUpdate = 1
+```
+
+Fixes clunky animation fps on the HHH, Monoculus, Merasmus and skeletons
+
+---
+
+<a name="MissionAttributes.NoCreditVelocity"></a>
+
+```js
+// usage
+NoCreditVelocity = 1
+```
+
+Money piles will spawn without spewing around
+
+---
+
+<a name="MissionAttributes.ScoutBetterMoneyCollection"></a>
+
+```js
+// usage
+ScoutBetterMoneyCollection = 1
+```
+
+Scouts will no longer collect money like a magnet, but collect instantly upon entering collection radius (no more money tornado and it getting stuck)
+
+---
+
+<a name="MissionAttributes.HoldFireUntilFullReloadFix"></a>
+
+```js
+// usage
+HoldFireUntilFullReloadFix = 1
+```
+
+Fixes HoldFireUntilFullReload not working on certain weapons (mangler, shotguns, etc)
+
+---
+
+<a name="MissionAttributes.EngineerBuildingPushbackFix"></a>
+
+```js
+// usage
+EngineerBuildingPushbackFix = 1
+```
+
+Removes engineer building pushback
+
+> [!WARNING]
+> Does not currently work. Needs further investigation
 
 ---
 
