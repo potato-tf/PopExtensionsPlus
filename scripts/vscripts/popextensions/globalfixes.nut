@@ -24,6 +24,9 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 				projectile.AddEFlags(EFL_USER)
 			}
 		}
+
+		function DragonsFuryFix() { return }
+		function FastNPCUpdate() { return }
 	}
 
 	SpawnHookTable = {
@@ -75,6 +78,26 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		// 	}
 		// }
 
+		function ScoutBetterMoneyCollection() { return }
+		function RemoveYERAttribute() { return }
+		function HoldFireUntilFullReloadFix() { return }
+		function EngineerBuildingPushbackFix() { return }
+
+	}
+
+	InitWaveTable = {}
+
+	TakeDamageTable = {
+		function YERDisguiseFix() { return }
+		function LooseCannonFix() { return }
+		function BotGibFix() { return }
+		function HolidayPunchFix() { return }
+	}
+
+	DisconnectTable = {}
+
+	DeathHookTable = {
+		function NoCreditVelocity() { return }
 	}
 
 	Events = { function GameEvent_mvm_wave_complete(params) { delete GlobalFixes } }
