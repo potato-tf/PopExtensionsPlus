@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "12.2.2024.1"
+::popExtensionsVersion <- "12.27.2024.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
