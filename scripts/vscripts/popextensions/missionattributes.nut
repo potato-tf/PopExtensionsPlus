@@ -392,13 +392,20 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-		// =================================================
-		// doesn't work until wave switches, won't work on W1
-		// =================================================
+		// ===================================================================
+		// sets wavebar hud to display "Wave 666" flavour text w/o the zombies
+		// ===================================================================
 
 		"666Wavebar": function(value) { //need quotes for this guy.
-			MissionAttributes.StartWaveTable.EventWavebar <- function(params) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value) }
-			MissionAttributes.StartWaveTable.EventWavebar(null)
+			MissionAttributes.StartWaveTable.EventWavebar <- function(params) {
+				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMEventPopfileType", value)
+				// also needs to set wavenum and maxwavenum to be zero, thanks ptyx
+				if (value == 0) return
+				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", 0)
+				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", 0)
+			}
+			// needs to be delayed for huds loading properly
+			EntFire("bignet", "RunScriptCode", "MissionAttributes.StartWaveTable.EventWavebar(null)", SINGLE_TICK, null)
 		}
 
 		// ===================================
@@ -407,7 +414,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 		WaveNum = function(value) {
 			MissionAttributes.StartWaveTable.SetWaveNum <- function(params) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value) }
-			MissionAttributes.StartWaveTable.SetWaveNum(null)
+			EntFire("bignet", "RunScriptCode", "MissionAttributes.StartWaveTable.SetWaveNum(null)", SINGLE_TICK, null)
 		}
 
 		// =======================================
@@ -416,7 +423,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 		MaxWaveNum = function(value) {
 			MissionAttributes.StartWaveTable.SetMaxWaveNum <- function(params) { SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value) }
-			MissionAttributes.StartWaveTable.SetMaxWaveNum(null)
+			EntFire("bignet", "RunScriptCode", "MissionAttributes.StartWaveTable.SetMaxWaveNum(null)", SINGLE_TICK, null)
 		}
 
 		// =============================================================================
