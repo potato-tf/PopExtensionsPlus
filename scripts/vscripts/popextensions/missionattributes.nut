@@ -2651,7 +2651,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						}
 						if (nobreak) {
 							PopExtUtil.ForceChangeClass(player, RandomInt(1, 9))
-							MissionAttributes.ParseError(`ClassLimits could not find a free class slot.`)
+							PopExtMain.Error.ParseError(`ClassLimits could not find a free class slot.`)
 							break
 						}
 					}
@@ -2802,7 +2802,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		}
 		else {
 
-			ParseError(format("Could not find mission attribute '%s'", attr))
+			PopExtMain.Error.ParseError(format("Could not find mission attribute '%s'", attr))
 			success = false
 		}
 	}
