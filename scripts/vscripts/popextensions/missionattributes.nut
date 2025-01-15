@@ -399,9 +399,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		"666Wavebar": function(value) { //need quotes for this guy.
 			MissionAttributes.StartWaveTable.EventWavebar <- function(params) {
 				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMvMEventPopfileType", value)
-				// also needs to set wavenum and maxwavenum to be zero, thanks ptyx
+				// also needs to set maxwavenum to be zero, thanks ptyx
 				if (value == 0) return
-				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", 0)
 				SetPropInt(PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", 0)
 			}
 			// needs to be delayed for huds loading properly
