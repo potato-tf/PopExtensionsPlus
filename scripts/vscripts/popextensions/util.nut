@@ -690,24 +690,116 @@
 		SetPropEntity(ent, "m_hOwnerEntity", owner)
 	}
 
-	function ShowAnnotation(args = {text = "This is an annotation", lifetime = 10, pos = Vector(), id = 0, distance = true, sound = "misc/null.wav", entindex = 0, visbit = 0, effect = true}) {
+	/**
+	 * Displays a training annotation.
+	 *
+	 * @param table args        Annotation settings.
+	 *
+	 * Example usage:
+	 *  PopExtUtil.ShowAnnotation({
+	 *      text = `Defend the hatch!`
+	 *      entity = Entities.FindByModel(null, `models/props_mvm/mann_hatch.mdl`)
+	 *      //pos = Vector(-64.0, -1984.0, 446.5)
+	 *      lifetime = 5.0
+	 *      distance = true
+	 *      sound = `ui/hint.wav`
+	 *      players = [GetListenServerHost()]
+	 *  })
+	 *
+	 * ALL AVAILABLE ARGUMENTS:
+	 *  text    (string): Annotation message to display.
+	 *    Defaults to "This is an annotation."
+	 *
+	 *  lifetime (float): Duration to display the annotation for in seconds.
+	 *    Defaults to 10 seconds.
+	 *    Pass -1.0 to make the annotation fade in and display forever.
+	 *
+	 *  sound   (string): Sound to play when the annotation is shown.
+	 *    Must be a raw sound, SoundScripts will not work.
+	 *    Defaults to no sound.
+	 *
+	 *  distance  (bool): Display the distance between the player and the annotation.
+	 *    Defaults to false.
+	 *
+	 *  id     (integer): Annotation ID.
+	 *    Annotations must have a unique ID to display multiple simultaneously.
+	 *    Defaults to 0.
+	 *
+	 *  entity  (handle): Entity this annotation should follow. (Default: None)
+	 *    Overrides "pos" and "normal" arguments.
+	 *    Note that the entity must be networked to the client for this argument to work.a
+	 *
+	 *  pos     (Vector): Annotation position in the world.
+	 *    Defaults to the world origin (Vector(0, 0, 0)).
+	 *
+	 *  ping      (bool): Display a green in-world ping under the annotation as it appears.
+	 *    Defaults to false.
+	 *
+	 *  normal  (Vector): Relative ping effect offset from the animation.
+	 *    Requires "ping" to be set to true.
+	 *    Defaults to no offset.
+	 *
+	 *  players  (array): Players handles that are allowed to see the annotation.
+	 *    Overrides "visbit" argument.
+	 *    Defaults visibility to all players when left empty.
+	 *
+	 *  visbit (integer): Bitfield that controls which players can see the annotation.
+	 *    Can be used for manual bitfield input instead of using the "players" array.
+	 *    Defaults visibility to all players.
+	 *    Note that it is only possible to filter annotations to the first 32/64 players depending on the server's _intsize_.
+	 *      TODO: This is untested; it may be the case that only the first 32 players may be targeted even on a 64-bit server.
+	 **/
+	function ShowAnnotation(args = {}) {
+
+		if (!("pos" in args))
+			args.pos <- Vector()
+
+		if (!("normal" in args))
+			args.normal <- Vector()
+		else
+			// Normal offset is normally 20x the input value, so we correct it here.
+			args.normal *= 0.05
+
+		if ("players" in args && args.players.len() > 0) {
+			// Create visibility bitfield from passed player handles.
+			args.visbit <- 0
+
+			foreach (p in args.players)
+				if (p && p.IsValid())
+					args.visbit = args.visbit | (1 << p.entindex())
+
+			// visibilityBitfield == 0 causes the annotation to show to everyone, we override that
+			//  here otherwise "players = [<nullptr>]" would show to everyone.
+			if (args.visbit == 0) return
+		}
+
+		// "entindex" and "effect" arguments are only supported for legacy compatiability.
+		if ("entity" in args) args.entindex <- args.entity.entindex()
+		if ("ping" in args) args.effect <- args.ping
+
 		SendGlobalGameEvent("show_annotation", {
-			text = args.text
-			lifetime = args.lifetime
+			text = "text" in args ? args.text : "This is an annotation."
+			lifetime = "lifetime" in args ? args.lifetime : 10.0
 			worldPosX = args.pos.x
 			worldPosY = args.pos.y
 			worldPosZ = args.pos.z
-			id = args.id
-			play_sound = args.sound
-			show_distance = args.distance
-			show_effect = args.effect
-			follow_entindex = args.entindex
-			visibilityBitfield = args.visbit
+			id = "id" in args ? args.id : 0
+			play_sound = "sound" in args ? args.sound : "misc/null.wav"
+			show_distance = "distance" in args ? args.distance : false
+			show_effect = "effect" in args ? args.effect : false
+			follow_entindex = "entindex" in args ? args.entindex : 0
+			visibilityBitfield = "visbit" in args ? args.visbit : 0
+			worldNormalX = args.normal.x
+			worldNormalY = args.normal.y
+			worldNormalZ = args.normal.z
 		})
 	}
 
-	//This may not be necessary and hide_annotation may work, but whatever this works too.
-	function HideAnnotation(id) { ShowAnnotation("", 0.0000001, Vector(), id = id) }
+	// Hides a currently displaying training annotation by ID.
+	function HideAnnotation(id = 0) {
+		// Seems to work despite the training_annotation Hide input warning on the VDC.
+		SendGlobalGameEvent("hide_annotation", {id = id})
+	}
 
 	function GetPlayerName(player) {
 		return GetPropString(player, "m_szNetname")
