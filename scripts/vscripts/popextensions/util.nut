@@ -536,7 +536,7 @@
 
 	function WeaponSwitchSlot(player, slot)
 	{
-		 EntFireByHandle(this.ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player);
+		EntFireByHandle(this.ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player);
 	}
 
 	function DoExplanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
