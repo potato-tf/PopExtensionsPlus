@@ -70,16 +70,18 @@ is now
 
 ```PopExtUtil.CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)```
 
-# Global fixes and balance changes
-- The holiday punch can tickle robots once more, with working animations!
-- Your Eternal Reward disguises are no longer delayed.
-- Improved money collection for scout (collects instantly), money spawns with zero velocity.
-- Fixed HoldFireUntilReload on every weapon
-- Dragons Fury cannot be reflected.
-- All of these can be optionally disabled with a MissionAttributes keyvalue
+~~# Global fixes and balance changes~~
+~~- The holiday punch can tickle robots once more, with working animations!~~
+~~- Your Eternal Reward disguises are no longer delayed.~~
+~~- Improved money collection for scout (collects instantly), money spawns with zero velocity.~~
+~~- Fixed HoldFireUntilReload on every weapon~~
+~~- Dragons Fury cannot be reflected.~~
+~~- All of these can be optionally disabled with a MissionAttributes keyvalue~~
+
+Global fixes have been removed and moved to their own MissionAttributes entries instead and are no longer active by default, if you want to re-enable all of them, set the `EnableGlobalFixes` MissionAttribute.
 
 # PopExt:
-The example below makes bots with tag abc green, spawns a barrel prop on bot's head and gives them a frying pan (thanks to this script to download from here https://tf2maps.net/downloads/vscript-give_tf_weapon.14897/):
+The example below makes bots with tag abc green, spawns a barrel prop on bot's head.
 ```
         // Add or replace existing InitWaveOutput with code below
         InitWaveOutput
@@ -184,15 +186,15 @@ MissionAttributes are collected in a table on wave init.  The function for doing
 
                 MissionAttrs({
 
-                    `NoReanimators`: 1
-                    `666Wavebar`: 1
-                    `ForceHoliday`: 8
-                    `NoRome`: 2
-                    `WaveStartCountdown`: 5
-                    `PlayersAreRobots`: 2|4|8|16
-                    `SpellRateCommon`: 0.5
-                    `StandableHeads`: 1
-                    `PlayerAttributes`: {
+                    NoReanimators = 1
+                    `666Wavebar`: 1 //this one starts with numbers so it needs to use this syntax
+                    ForceHoliday = 8
+                    NoRome = 2
+                    WaveStartCountdown = 5
+                    PlayersAreRobots = 2|4|8|16
+                    SpellRateCommon = 0.5
+                    StandableHeads = 1
+                    PlayerAttributes = {
                         [TF_CLASS_SCOUT] = {
                             `damage bonus` : 5,
                             `fire rate penalty` : 2,
@@ -215,7 +217,7 @@ Every available MissionAttribute is documented in `missionattributes.nut.`
 # SpawnTemplates:
 A powerful entity spawning script that leverages the new point_script_template entity.
 
-Inside the python folder you will find a script to convert rafmod's PointTemplates spawner to a vscript equivalent.  Download the latest version of python if you don't have it, run the script, select your popfile, and a script file containing all the templates will be output to a new VScript alternative.  Note that you will need to manually spawn these entities again using the `SpawnTemplate("TemplateName")` function, use the `popext_spawntemplate|TemplateName` tag for bots, or use the `SpawnTemplate = "TemplateName"` property for tanks.
+Inside the python folder you will find a script to convert rafmod's PointTemplates spawner to a vscript equivalent.  Download the latest version of python if you don't have it, run the script, select your popfile, and a script file containing all the templates will be output to a new VScript alternative.  Note that you will need to manually spawn these entities again using the `SpawnTemplate("TemplateName")` function, use the `popext_spawntemplate{template = TemplateName}` tag for bots, or use the `SpawnTemplate = "TemplateName"` property for tanks.
 
 ## Writing new PointTemplates
 
@@ -249,10 +251,10 @@ A more advanced example of the point template spawner using Condemned - Trespass
 There is a massive selection of bot tags to choose from that replicate many rafmod features, or add new ones entirely.  All tags are prefixed with `popext_` and can be found in tags.nut
 
 Many tags accept additional arguments.  For example:
-- `popext_rocketcustomtrail|eyeboss_projectile` will apply the eyeboss_projectile particle to a rocket, giving rockets a purple monoculus trail.
-- `popext_homingprojectile|0.5|0.5` will make a bots rockets (and many other projectiles) follow their closest target with half speed and half turn power.
+- `popext_rocketcustomtrail{name = "eyeboss_projectile"}` will apply the eyeboss_projectile particle to a rocket, giving rockets a purple monoculus trail.
+- `popext_homingprojectile{turn_power = 0.5, speed_mult = 0.5}` will make a bots rockets (and many other projectiles) follow their closest target with half speed and half turn power.
 - `popext_reprogrammed` will spawn the bot on RED
-- `popext_spawnhere|-779 3302 312` will spawn a bot at these xyz coordinates (near the barn door at the front of bigrock)
+- `popext_spawnhere{where = "-779 3302 312"}` will spawn a bot at these xyz coordinates (near the barn door at the front of bigrock)
 
 # Custom Attributes
 This allows mission makers to apply fully custom weapon attributes to both bots and players.  All custom attributes can be found in the `Attrs` table at the top of `customattributes.nut`
@@ -263,7 +265,7 @@ This allows mission makers to apply fully custom weapon attributes to both bots 
 
 ### For bots:
 - use the `popext_customattr` bot tag, with two additional arguments for the attribute and value
-- example: `popext_customattr|wet immunity|1`, bot will be immune to jar effects.  Currently, this will only apply to the bots primary active weapon.
+- example: `popext_customattr{attr = "wet immunity" value = 1}`, bot will be immune to jar effects.  Currently, this will only apply to the bots primary active weapon.
 
 # Tank Additions
 
