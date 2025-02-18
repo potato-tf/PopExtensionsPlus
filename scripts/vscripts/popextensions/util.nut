@@ -1438,6 +1438,19 @@
 		return finalResult;
 	}
 
+	// Python's string.partition(), except the separator itself is not returned
+	// Basically like calling python's string.split(sep, 1), notice the 1 meaning to only split once
+	function splitonce(s, sep = null)
+	{
+		if (sep == null) return [s, null]
+
+		local pos = s.find(sep)
+		local result_left = pos == 0 ? null : s.slice(0, pos)
+		local result_right = pos == s.len() - 1 ? null : s.slice(pos + 1)
+
+		return [result_left, result_right]
+	}
+
 	function EndWaveReverse(doteamswitch = true)
 	{
 		local temp = CreateByClassname("info_teleport_destination")

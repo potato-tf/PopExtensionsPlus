@@ -1680,7 +1680,7 @@ local popext_funcs = {
 
 		local separator = tag.find("{") ? "{" : "|"
 
-		local splittag = split(tag, separator)
+		local splittag = separator == "{" ? PopExtUtil.splitonce(tag, separator) : split(tag, separator)
 
 		if (separator ==  "|")
 		{
