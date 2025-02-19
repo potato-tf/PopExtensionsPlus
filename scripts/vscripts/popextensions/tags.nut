@@ -872,6 +872,7 @@ local popext_funcs = {
 	 * Example: Give a scout bot the pomson with +40% firing speed and +180% faster reload time                                                             *
 	 *          popext_giveweapon{ weapon = `tf_weapon_drg_pomson`, id = ID_POMSON_6000, attrs = { `fire rate bonus`: 0.6, `faster reload rate`: -0.8 } }   *
 	 * These added attributes display properly on spectator inspection.                                                                                     *
+	 * You can also name the "attrs" key as "attr" for convenience. Don't have both in the tag, though.                                                     *
      ********************************************************************************************************************************************************/
 
 	popext_giveweapon = function(bot, args) {
@@ -890,6 +891,11 @@ local popext_funcs = {
 		if ("attrs" in args)
 		{
 			foreach (k, v in args.attrs)
+				weapon.AddAttribute(k, v, -1)
+		}
+		else if ("attr" in args)
+		{
+			foreach (k, v in args.attr)
 				weapon.AddAttribute(k, v, -1)
 		}
 
