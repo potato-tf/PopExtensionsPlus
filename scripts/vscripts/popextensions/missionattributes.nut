@@ -51,7 +51,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		// =========================================
 		// Restore original YER disguise behavior
 		// =========================================
-		YERDisguiseFix = function(params) {
+		YERDisguiseFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
 
 			MissionAttributes.TakeDamageTable.YERDisguiseFix <- function(params) {
 				local victim   = params.const_entity
@@ -78,7 +78,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		}
 
 
-		LooseCannonFix = function(params) {
+		LooseCannonFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
 
 			MissionAttributes.TakeDamageTable.LooseCannonFix <- function(params) {
 				local wep = params.weapon
@@ -90,7 +90,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		}
 
 
-		BotGibFix = function(params) {
+		BotGibFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
 
 			MissionAttributes.TakeDamageTable.BotGibFix <- function(params) {
 				local victim = params.const_entity
@@ -99,7 +99,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-		HolidayPunchFix = function(params) {
+		HolidayPunchFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
 
 			MissionAttributes.TakeDamageTable.HolidayPunchFix <- function(params) {
 				local wep   = params.weapon
@@ -138,21 +138,21 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-		EnableGlobalFixes = function() {
+		EnableGlobalFixes = function(value = null) { // dummy third value to avoid wrong number of parameters error
 			local fixes = ["DragonsFuryFix", "FastNPCUpdate", "NoCreditVelocity", "ScoutBetterMoneyCollection", "HoldFireUntilFullReloadFix", "EngineerBuildingPushbackFix"]
 			foreach (fix in fixes) {
-				MissionAttributes[fix]()
+				MissionAttributes.Attrs[fix]()
 			}
 		}
 
-		DragonsFuryFix = function() {
+		DragonsFuryFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
 			MissionAttributes.ThinkTable.DragonsFuryFix <- function() {
 				for (local fireball; fireball = FindByClassname(fireball, "tf_projectile_balloffire");)
 					fireball.RemoveFlag(FL_GRENADE)
 			}
 		}
 
-		FastNPCUpdate = function() {
+		FastNPCUpdate = function(value = null) { // dummy third value to avoid wrong number of parameters error
 
 			MissionAttributes.ThinkTable.FastNPCUpdate <- function() {
 				local validnpcs = ["headless_hatman", "eyeball_boss", "merasmus", "tf_zombie"]
@@ -164,7 +164,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		}
 
 
-		NoCreditVelocity = function(params) {
+		NoCreditVelocity = function(value = null) { // dummy third value to avoid wrong number of parameters error
 
 			MissionAttributes.DeathHookTable.NoCreditVelocity <- function(params) {
 				local player = GetPlayerFromUserID(params.userid)
@@ -174,7 +174,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					money.SetAbsVelocity(Vector(1, 1, 1)) //0 velocity breaks our reverse mvm money pickup methods.  set to 1hu instead
 			}
 		}
-		ScoutBetterMoneyCollection = function(params) {
+		ScoutBetterMoneyCollection = function(value = null) { // dummy third value to avoid wrong number of parameters error
 
 			MissionAttributes.SpawnHookTable.ScoutBetterMoneyCollection <- function(params) {
 				local player = GetPlayerFromUserID(params.userid)
@@ -194,7 +194,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-		HoldFireUntilFullReloadFix = function(params) {
+		HoldFireUntilFullReloadFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
 
 			MissionAttributes.SpawnHookTable.HoldFireUntilFullReloadFix <- function(params) {
 				local player = GetPlayerFromUserID(params.userid)
@@ -226,7 +226,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 		// Doesn't fully work correctly, need to investigate
-		EngineerBuildingPushbackFix = function(params) {
+		EngineerBuildingPushbackFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
 
 			MissionAttributes.SpawnHookTable.EngineerBuildingPushbackFix <- function(params) {
 
