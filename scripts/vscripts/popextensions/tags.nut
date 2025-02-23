@@ -891,12 +891,12 @@ local popext_funcs = {
 		if ("attrs" in args)
 		{
 			foreach (k, v in args.attrs)
-				weapon.AddAttribute(k, v, -1)
+				PopExtUtil.SetPlayerAttributes(bot, k, v, weapon)
 		}
 		else if ("attr" in args)
 		{
 			foreach (k, v in args.attr)
-				weapon.AddAttribute(k, v, -1)
+				PopExtUtil.SetPlayerAttributes(bot, k, v, weapon)
 		}
 
 		return weapon
