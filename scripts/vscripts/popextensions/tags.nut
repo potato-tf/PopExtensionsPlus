@@ -587,7 +587,7 @@ local popext_funcs = {
 		else
 		{
 			local buf = ""
-			point.find(",") ?  buf = split(point, ",") : buf = split(point, " ")
+			point.find(",") ? buf = split(point, ",") : buf = split(point, " ")
 			buf.apply(function(v) { return v.tofloat()})
 
 			pos = Vector(buf[0], buf[1], buf[2])
@@ -1526,6 +1526,38 @@ local popext_funcs = {
 				bot_scope.Teleported = true
 			}
 		}
+	}
+
+	/**********************************************************
+	 * DISBAND SQUAD AFTER									  *
+	 *														  *
+	 * Example usage: disband squad after 20 seconds		  *
+	 * popext_disbandsquadafter{`delay` = 20}				  *
+	 **********************************************************/
+
+
+	popext_disbandsquadafter = function(bot, args) {
+
+		local delay = "delay" in args ? args.delay : args.type
+
+		if (bot.IsInASquad())
+			EntFireByHandle(bot, "RunScriptCode", "self.DisbandCurrentSquad()", delay, null, null)
+	}
+
+
+	/**********************************************************
+	 * LEAVE SQUAD AFTER									  *
+	 *														  *
+	 * Example usage: leave squad after 20 seconds		 	  *
+	 * popext_leavesquadafter{`delay` = 20}				 	  *
+	 **********************************************************/
+	
+	popext_leavesquadafter = function(bot, args) {
+
+		local delay = "delay" in args ? args.delay : args.type
+
+		if (bot.IsInASquad())
+			EntFireByHandle(bot, "RunScriptCode", "self.LeaveSquad()", delay, null, null)
 	}
 }
 ::Homing <- {

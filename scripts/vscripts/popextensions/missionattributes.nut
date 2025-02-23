@@ -139,7 +139,18 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		}
 
 		EnableGlobalFixes = function(value = null) { // dummy third value to avoid wrong number of parameters error
-			local fixes = ["DragonsFuryFix", "FastNPCUpdate", "NoCreditVelocity", "ScoutBetterMoneyCollection", "HoldFireUntilFullReloadFix", "EngineerBuildingPushbackFix"]
+			local fixes = [
+				"DragonsFuryFix",
+				"FastNPCUpdate",
+				"NoCreditVelocity",
+				"ScoutBetterMoneyCollection",
+				"HoldFireUntilFullReloadFix",
+				"EngineerBuildingPushbackFix",
+				"YERDisguiseFix",
+				"HolidayPunchFix",
+				"LooseCannonFix",
+				"BotGibFix"
+			]
 			foreach (fix in fixes) {
 				MissionAttributes.Attrs[fix]()
 			}
