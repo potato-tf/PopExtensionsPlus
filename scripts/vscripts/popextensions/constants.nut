@@ -210,6 +210,25 @@ const DMG_DONT_COUNT_DAMAGE_TOWARDS_CRIT_RATE = 67108864 //DMG_DISSOLVE
 const DMG_IGNORE_MAXHEALTH = 2
 const DMG_IGNORE_DEBUFFS = 4
 
+// death flags
+const TF_DEATH_DOMINATION 			= 1
+const TF_DEATH_ASSISTER_DOMINATION 	= 2
+const TF_DEATH_REVENGE 				= 4
+const TF_DEATH_ASSISTER_REVENGE 	= 8
+const TF_DEATH_FIRST_BLOOD 			= 16
+const TF_DEATH_FEIGN_DEATH 			= 32
+const TF_DEATH_INTERRUPTED 			= 64
+const TF_DEATH_GIBBED 				= 128
+const TF_DEATH_PURGATORY 			= 256
+const TF_DEATH_MINIBOSS 			= 512
+const TF_DEATH_AUSTRALIUM 			= 1024
+
+// m_nWaterLevel
+const WL_NotInWater 	= 0
+const WL_Feet 			= 1 // movement unaffected
+const WL_Waist 			= 2 // we can still breathe
+const WL_Eyes 			= 3 // completely submerged
+
 //stun flags
 const TF_STUN_NONE = 0
 const TF_STUN_MOVEMENT = 1
@@ -536,6 +555,77 @@ const MAXAMMO_BASE_SNIPER_SECONDARY = 75
 
 const MAXAMMO_BASE_SPY_PRIMARY = 24
 
+// DAMAGE enums, https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/Constants#DAMAGE
+const DAMAGE_NO 			= 0
+const DAMAGE_EVENTS_ONLY 	= 1
+const DAMAGE_YES 			= 2
+const DAMAGE_AIM 			= 3
+
+// FFADE flags, https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/Constants#FFADE
+const FFADE_IN 			= 1
+const FFADE_OUT 		= 2
+const FFADE_MODULATE 	= 4
+const FFADE_STAYOUT 	= 8
+const FFADE_PURGE 		= 16
+
+// kBonusEffect enums, https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/Constants#kBonusEffect
+const kBonusEffect_Crit 				= 0
+const kBonusEffect_MiniCrit 			= 1
+const kBonusEffect_DoubleDonk 			= 2
+const kBonusEffect_WaterBalloonSploosh 	= 3
+const kBonusEffect_None 				= 4
+const kBonusEffect_DragonsFury		 	= 5
+const kBonusEffect_Stomp 				= 6
+const kBonusEffect_Count 				= 7
+
+// MASK, https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/Constants#MASK
+const MASK_ALL 						= -1
+const MASK_SPLITAREAPORTAL 			= 48
+const MASK_SOLID_BRUSHONLY 			= 16395
+const MASK_WATER 					= 16432
+const MASK_BLOCKLOS 				= 16449
+const MASK_OPAQUE 					= 16513
+const MASK_DEADSOLID 				= 65547
+const MASK_PLAYERSOLID_BRUSHONLY 	= 81931
+const MASK_NPCWORLDSTATIC 			= 131083
+const MASK_NPCSOLID_BRUSHONLY 		= 147467
+const MASK_CURRENT				 	= 16515072
+const MASK_SHOT_PORTAL 				= 33570819
+const MASK_SOLID 					= 33570827
+const MASK_BLOCKLOS_AND_NPCS 		= 33570881
+const MASK_OPAQUE_AND_NPCS 			= 33570945
+const MASK_VISIBLE_AND_NPCS 		= 33579137
+const MASK_PLAYERSOLID 				= 33636363
+const MASK_NPCSOLID 				= 33701899
+const MASK_SHOT_HULL 				= 100679691
+const MASK_SHOT 					= 1174421507
+
+// RUNE enums, likely used in mannpower mode, https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/Constants#RUNE
+const RUNE_NONE 		= -1
+const RUNE_STRENGTH 	= 0
+const RUNE_HASTE 		= 1
+const RUNE_REGEN 		= 2
+const RUNE_RESIST 		= 3
+const RUNE_VAMPIRE 		= 4
+const RUNE_REFLECT 		= 5
+const RUNE_PRECISION 	= 6
+const RUNE_AGILITY 		= 7
+const RUNE_KNOCKOUT 	= 8
+const RUNE_KING 		= 9
+const RUNE_PLAGUE 		= 10
+const RUNE_SUPERNOVA 	= 11
+const RUNE_TYPES_MAX 	= 12
+
+// TFCOLLISION_GROUP, https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/Constants#TFCOLLISION_GROUP
+const TFCOLLISION_GROUP_GRENADES 							= 20
+const TFCOLLISION_GROUP_OBJECT 								= 21
+const TFCOLLISION_GROUP_OBJECT_SOLIDTOPLAYERMOVEMENT 		= 22
+const TFCOLLISION_GROUP_COMBATOBJECT 						= 23
+const TFCOLLISION_GROUP_ROCKETS 							= 24
+const TFCOLLISION_GROUP_RESPAWNROOMS 						= 25
+const TFCOLLISION_GROUP_PUMPKIN_BOMB 						= 26
+const TFCOLLISION_GROUP_ROCKET_BUT_NOT_WITH_OTHER_ROCKETS 	= 27
+
 // Content masks
 CONST.MASK_OPAQUE      <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_OPAQUE)
 CONST.MASK_PLAYERSOLID <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
@@ -544,7 +634,9 @@ CONST.MASK_SOLID_BRUSHONLY <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|
 // NavMesh related
 const STEP_HEIGHT = 18
 
-//random useful constants
+// https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/Constants#MATHLIB
+const DEG2RAD   = 0.0174532924
+const RAD2DEG   = 57.295779513
 const FLT_SMALL = 0.0000001
 const FLT_MIN   = 1.175494e-38
 const FLT_MAX   = 3.402823466e+38
