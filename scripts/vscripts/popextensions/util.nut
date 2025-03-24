@@ -145,29 +145,34 @@
 		tf_projectile_healing_bolt		= 1 // Crusader's Crossbow, Rescue Ranger
 		tf_projectile_lightningorb		= 1 // Lightning Orb Spell
 		tf_projectile_mechanicalarmorb	= 1 // Short Circuit
-		tf_projectile_rocket				= 1
+		tf_projectile_rocket			= 1
 		tf_projectile_sentryrocket		= 1
 		tf_projectile_spellfireball		= 1
 		tf_projectile_energy_ring		= 1 // Bison
 		tf_projectile_flare				= 1
 	}
 
-	GameRules = FindByClassname(null, "tf_gamerules")
+	Worldspawn 		  = Entities.First()
+	GameRules 		  = FindByClassname(null, "tf_gamerules")
 	ObjectiveResource = FindByClassname(null, "tf_objective_resource")
-	MonsterResource = FindByClassname(null, "monster_resource")
-	MvMLogicEnt = FindByClassname(null, "tf_logic_mann_vs_machine")
-	MvMStatsEnt = FindByClassname(null, "tf_mann_vs_machine_stats")
-	PlayerManager = FindByClassname(null, "tf_player_manager")
-	Worldspawn = FindByClassname(null, "worldspawn")
-	StartRelay = FindByName(null, "wave_start_relay")
-	FinishedRelay = FindByName(null, "wave_finished_relay")
-	TriggerHurt = CreateByClassname("trigger_hurt")
+	MonsterResource   = FindByClassname(null, "monster_resource")
+	MvMLogicEnt 	  = FindByClassname(null, "tf_logic_mann_vs_machine")
+	MvMStatsEnt 	  = FindByClassname(null, "tf_mann_vs_machine_stats")
+	PlayerManager 	  = FindByClassname(null, "tf_player_manager")
+	StartRelay 		  = FindByName(null, "wave_start_relay")
+	FinishedRelay 	  = FindByName(null, "wave_finished_relay")
 
-	CurrentWaveNum = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
+	PopInterface 	  = FindByClassname(null, "point_populator_interface") ?
+						FindByClassname(null, "point_populator_interface") :
+						SpawnEntityFromTable("point_populator_interface", {targetname = "__util_pop_interface"})
 
-	ClientCommand = SpawnEntityFromTable("point_clientcommand", {targetname = "_clientcommand"})
-	GameRoundWin = SpawnEntityFromTable("game_round_win", {targetname = "__utilroundwin", TeamNum = TF_TEAM_PVE_INVADERS, force_map_reset = 1})
-	RespawnOverride = SpawnEntityFromTable("trigger_player_respawn_override", {spawnflags = SF_TRIGGER_ALLOW_CLIENTS})
+	TriggerHurt 	  = CreateByClassname("trigger_hurt")
+
+	CurrentWaveNum 	  = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
+
+	ClientCommand	  = SpawnEntityFromTable("point_clientcommand", {targetname = "__util_clientcommand"})
+	GameRoundWin 	  = SpawnEntityFromTable("game_round_win", {targetname = "__util_roundwin", TeamNum = TF_TEAM_PVE_INVADERS, force_map_reset = 1})
+	RespawnOverride   = SpawnEntityFromTable("trigger_player_respawn_override", {targetname = "__util_respawnoverride", spawnflags = SF_TRIGGER_ALLOW_CLIENTS})
 
 	function IsLinuxServer() {
 		return RAND_MAX != 32767
@@ -286,7 +291,7 @@
 
 		foreach (player in this.HumanArray)
 		{
-			if (this.IsAlive(player))
+			if (player.IsAlive())
 				playersalive++
 		}
 
@@ -306,7 +311,7 @@
 
 		foreach (bot in this.BotArray)
 		{
-			if (this.IsAlive(bot))
+			if (bot.IsAlive())
 				botsalive++
 		}
 
@@ -648,9 +653,9 @@
 		DoExplanation.call(PopExtUtil, message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
 	}
 
-	function IsAlive(player) {
-		return GetPropInt(player, "m_lifeState") == 0
-	}
+	// function IsAlive(player) {
+	// 	return GetPropInt(player, "m_lifeState") == 0
+	// }
 
 	function IsDucking(player) {
 		return player.GetFlags() & FL_DUCKING
@@ -838,8 +843,8 @@
 	}
 
 	//LEGACY: use IsPointInTrigger instead
-	function IsPointInRespawnRoom(point)
-	{
+	function IsPointInRespawnRoom(point) {
+
 		local triggers = []
 		for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
 		{
@@ -865,8 +870,8 @@
 		return trace.hit && trace.enthit.GetClassname() == "func_respawnroom"
 	}
 
-	function IsPointInTrigger(point, classname = "func_respawnroom")
-	{
+	function IsPointInTrigger(point, classname = "func_respawnroom") {
+
 		local triggers = []
 		for (local trigger; trigger = FindByClassname(trigger, classname);)
 		{
@@ -902,6 +907,7 @@
 	}
 
 	function GetItemInSlot(player, slot) {
+
 		local item
 		for (local i = 0; i < SLOT_COUNT; i++) {
 			local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
@@ -914,6 +920,7 @@
 	}
 
 	function SwitchToFirstValidWeapon(player) {
+
 		for (local i = 0; i < SLOT_COUNT; i++) {
 			local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 			if ( wep == null) continue
@@ -932,6 +939,7 @@
 	}
 
 	function PlayerRobotModel(player, model) {
+
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
@@ -959,6 +967,7 @@
 	}
 
 	function HasItemInLoadout(player, index) {
+
 		local t = null
 
 		for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
@@ -974,7 +983,8 @@
 		for (local i = 0; i < SLOT_COUNT; i++) {
 			local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
 
-			if (wep == null || wep.GetClassname() != index || wep != index || this.GetItemIndex(wep) != index || (index in PopExtItems && this.GetItemIndex(wep) == PopExtItems[index].id)) continue
+			if (wep == null || wep.GetClassname() != index || wep != index || this.GetItemIndex(wep) != index || (index in PopExtItems && this.GetItemIndex(wep) == PopExtItems[index].id))
+				continue
 
 			t = wep
 			break
@@ -1010,8 +1020,8 @@
 		EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
 	}
 
-	function Ignite(player, duration = 10.0, damage = 1)
-	{
+	function Ignite(player, duration = 10.0, damage = 1) {
+
 		local utilignite = FindByName(null, "__utilignite")
 		if (utilignite == null)
 		{
@@ -1027,6 +1037,7 @@
 	}
 
 	function ShowHudHint(text = "This is a hud hint", player = null, duration = 5.0) {
+
 		local hudhint = FindByName(null, "__utilhudhint")
 
 		local flags = (player == null) ? 1 : 0
@@ -1476,7 +1487,7 @@
 			}
 			//kill all bots
 			foreach (bot in this.BotArray)
-				if (this.IsAlive(bot) && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
+				if (bot.IsAlive() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
 					this.KillPlayer(bot);
 		}
 
@@ -1695,8 +1706,15 @@
 
 	function KillAllBots() {
 		foreach (bot in this.BotArray)
-			if (this.IsAlive(bot))
+			if (bot.IsAlive())
 				this.KillPlayer(bot)
+	}
+
+	// wrapper for handling dead players without putting isalive checks everywhere
+	function PlayerScriptEntFire(player, param, delay = -1, activator = null, caller = null) {
+
+		local entfirefunc = typeof(player) == "string" ? DoEntFire : EntFireByHandle
+		entfirefunc(player, "RunScriptCode", format(@"if(self.IsAlive()) %s", param), delay, activator, caller)
 	}
 
 	function SetDestroyCallback(entity, callback)
@@ -1852,6 +1870,38 @@
 				if (PopExtUtil.PlayerArray[i] == null || PopExtUtil.PlayerArray[i] == player)
 					PopExtUtil.PlayerArray.remove(i)
 		}
+	}
+	function ChangeLevel(mapname = "", delay = 1.0, mvm_cyclemissionfile = false)
+	{
+		if (mapname != "")
+		{
+			// check the allowlist
+			if (Convars.IsConVarOnAllowList("nextlevel"))
+				Convars.SetValue("nextlevel", mapname)
+
+			// not in the allowlist, check for allow point_servercommand, listen servers can always do this
+			else if ( !IsDedicatedServer() || ( IsDedicatedServer() && Convars.GetStr("sv_allow_point_servercommand" ) == "always") )
+				SendToServerConsole( format( "nextlevel %s", mapname ) )
+
+			// can't set it, just load the next map in the mapcycle file or hope the server sets it for us
+			else
+				printl( "PopExtUtil.ChangeLevel: cannot set nextlevel! loading next map instead..." )
+		}
+
+		// required for GoToIntermission
+		Convars.SetValue( "mp_tournament", 0 )
+
+		// wait at scoreboard for this many seconds
+		Convars.SetValue( "mp_chattime", delay )
+
+		local intermission = Entities.CreateByClassname("point_intermission")
+
+		// for mvm, otherwise it'll just switch to the next map in the missioncycle file
+		if (!mvm_cyclemissionfile)
+			EntFire("info_populator", "Kill")
+
+		// don't use acceptinput so we execute after info_populator kill
+		EntFireByHandle(intermission, "Activate", "", -1, null, null)
 	}
 }
 

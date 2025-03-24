@@ -261,7 +261,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				scope.PlayerThinkTable.EngineerBuildingPushbackFix <- function() {
 					if (scope.nextthink > -1 && Time() < scope.nextthink) return
 
-					if (!PopExtUtil.IsAlive(self)) return
+					if (!self.IsAlive()) return
 
 					local velocity = self.GetAbsVelocity()
 
@@ -1291,7 +1291,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				}
 
 			local lastnode = tracks[tracks.len() - 1]
-			PopExtUtil.SetTargetname(lastnode, format("%s_lastnode", GetPropString(lastnode, "m_iName")))
+			PopExtUtil.SetTargetname(lastnode, format("%s_lastnode", lastnode.GetName()))
 
 			tracks.append(null) //dummy value to put at the end
 
@@ -1446,7 +1446,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						local idarray = split(k, ",")
 
 						if (idarray.len() > 1)
-							idarray.apply(function (val) {return val.tofloat()})
+							idarray.apply(@(val) val.tofloat() )
 						k = idarray
 					}
 					if (typeof k == "array")
@@ -1507,7 +1507,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						local idarray = split(item, ",")
 
 						if (idarray.len() > 1)
-							idarray.apply(function (val) {return val.tointeger()})
+							idarray.apply(@(val) val.tointeger() )
 						item = idarray
 					}
 					if (typeof item == "array")
@@ -1852,7 +1852,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						scope.melee_crit_chance <- base_melee_crit_chance
 					}
 
-					if (!PopExtUtil.IsAlive(player) || player.GetTeam() == TEAM_SPECTATOR) continue
+					if (!player.IsAlive() || player.GetTeam() == TEAM_SPECTATOR) continue
 
 					local wep       = player.GetActiveWeapon()
 					local index     = PopExtUtil.GetItemIndex(wep)
@@ -2097,7 +2097,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 					if (!("laser_spawntime" in scope)) scope.laser_spawntime <- -1
 
-					if (!PopExtUtil.IsAlive(player) || player.GetTeam() == TEAM_SPECTATOR) return
+					if (!player.IsAlive() || player.GetTeam() == TEAM_SPECTATOR) return
 
 					local wep = self.GetActiveWeapon()
 

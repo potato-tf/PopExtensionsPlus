@@ -93,7 +93,8 @@ class AI_Bot {
 
 		foreach (player in PopExtUtil.PlayerArray) {
 
-			if (player == bot || !PopExtUtil.IsAlive(player) || player.GetTeam() == team || (must_be_visible && !IsThreatVisible(player))) continue
+			if (player == bot || !player.IsAlive() || player.GetTeam() == team || (must_be_visible && !IsThreatVisible(player))) 
+				continue
 
 			local dist = GetThreatDistanceSqr(player)
 			if (dist < closestThreatDist) {
@@ -109,7 +110,8 @@ class AI_Bot {
 		local threatarray = []
 		foreach (player in PopExtUtil.PlayerArray)
 		{
-			if (player == bot || player.GetTeam() == bot.GetTeam() || (player.IsFullyInvisible() && !invisible) || (player.IsStealthed() && !disguised) || GetThreatDistanceSqr(player) > maxdist) continue
+			if (player == bot || player.GetTeam() == bot.GetTeam() || (player.IsFullyInvisible() && !invisible) || (player.IsStealthed() && !disguised) || GetThreatDistanceSqr(player) > maxdist) 
+				continue
 
 			threatarray.append(player)
 		}

@@ -2090,9 +2090,7 @@
 	function GetAttributeFunctionFromStringName(attr) {
 
 		local str = ""
-		split(attr, " ").apply(function(s) {
-		    str += format("%s%s", s.slice(0, 1).toupper(), s.slice(1, s.len()))
-		})
+		split(attr, " ").apply(@(s) str += format("%s%s", s.slice(0, 1).toupper(), s.slice(1, s.len())) )
 		return str
 	}
 	function CleanupFunctionTable(handle, table, attr) {

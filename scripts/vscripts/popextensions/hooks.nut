@@ -627,7 +627,7 @@ function PopulatorThink() {
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
-		local alive = PopExtUtil.IsAlive(player)
+		local alive = player.IsAlive()
 		if (alive && !("botCreated" in scope)) {
 			scope.botCreated <- true
 

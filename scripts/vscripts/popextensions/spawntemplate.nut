@@ -57,7 +57,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 						else
 						{
 							local orgbuf = v[0].find(",") ? split(v[0], ",") : split(v[0], " ")
-							orgbuf.apply(function (val) { return val.tofloat() })
+							orgbuf.apply(@(val) val.tofloat() )
 							k.SetOrigin(Vector(orgbuf[0], orgbuf[1], orgbuf[2]))
 						}
 					}
@@ -68,7 +68,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 						else 
 						{
 							local angbuf = v[1].find(",") ? split(v[1], ",") : split(v[1], " ")
-							angbuf.apply(function (val) { return val.tofloat() })
+							angbuf.apply(@(val) val.tofloat() )
 							k.SetAbsAngles(QAngle(angbuf[0], angbuf[1], angbuf[2]))
 						}
 					}
@@ -252,7 +252,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 						if (typeof(keyvalues.origin) == "string") {
 							local buf = keyvalues.origin.find(",") ? split(keyvalues.origin, ",") : split(keyvalues.origin, " ")
 
-							buf.apply(function (val) { return val.tofloat()})
+							buf.apply(@(val) val.tofloat() )
 							keyvalues.origin = Vector(buf[0], buf[1], buf[2])
 						}
 						// keyvalues.origin += origin
@@ -264,7 +264,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 						if (typeof(keyvalues.angles) == "string") {
 							local buf = keyvalues.angles.find(",") ? split(keyvalues.angles, ",") : split(keyvalues.angles, " ")
 
-							buf.apply(function (val) { return val.tofloat()})
+							buf.apply(@(val) val.tofloat() )
 							keyvalues.angles = QAngle(buf[0], buf[1], buf[2])
 						}
 						// keyvalues.angles += angles

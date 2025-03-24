@@ -45,7 +45,7 @@ local PopulatorEnt = CreateByClassname("info_teleport_destination")
 
 			local spawner = FindByClassnameNearest("bot_generator", player.GetOrigin(), 256)
 
-			scope.spawner <- GetPropString(spawner, "m_iName")
+			scope.spawner <- spawner.GetName()
 			scope.bot_attributes <- BECOME_SPECTATOR_ON_DEATH
 
 			local additional_attributes = 0
@@ -261,7 +261,7 @@ local PopulatorEnt = CreateByClassname("info_teleport_destination")
 							}
 
 							//no targetnames found, assume KVString
-							local split = split(org, " ").apply(function(val) { return val.tofloat() })
+							local split = split(org, " ").apply(@(val) val.tofloat() )
 
 							org = Vector(split[0], split[1], split[2])
 						}
@@ -311,7 +311,7 @@ local PopulatorEnt = CreateByClassname("info_teleport_destination")
 
 								for (local g; g = FindByClassname(g, "bot_generator");) {
 
-									if (!g.IsEFlagSet(EFL_SPAWNER_ACTIVE) && "WaveSpawn" in g.GetScriptScope() && "WaitForAllSpawned" in g.GetScriptScope().WaveSpawn && GetPropString(self, "m_iName") == g.GetScriptScope().WaveSpawn.WaitForAllSpawned) {
+									if (!g.IsEFlagSet(EFL_SPAWNER_ACTIVE) && "WaveSpawn" in g.GetScriptScope() && "WaitForAllSpawned" in g.GetScriptScope().WaveSpawn && self.GetName() == g.GetScriptScope().WaveSpawn.WaitForAllSpawned) {
 
 										self.AcceptInput("Disable", "", null, null)
 										g.AddEFlags(EFL_SPAWNER_ACTIVE)

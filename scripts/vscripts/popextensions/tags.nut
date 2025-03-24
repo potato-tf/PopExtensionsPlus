@@ -84,7 +84,7 @@ local popext_funcs = {
 		local filter_type = "filter_type" in args ? args.filter_type : 0
 		local filter_param = "filter_param" in args ? args.filter_param : -1
 
-		PopExtTags.DeathHookTable.DeathSound <- function(params) {
+		bot.GetScriptScope().DeathHookTable.DeathSound <- function(params) {
 
 			local victim = GetPlayerFromUserID(params.userid)
 
@@ -213,8 +213,8 @@ local popext_funcs = {
 	popext_usehumananims = function(bot, args) {
 
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
-		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), SINGLE_TICK, null, null)
-		EntFireByHandle(bot, "RunScriptCode", format("PopExtUtil.PlayerRobotModel(self, `models/bots/%s/bot_%s.mdl`)", class_string, class_string), SINGLE_TICK, null, null)
+		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), SINGLE_TICK)
+		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PlayerRobotModel(self, `models/bots/%s/bot_%s.mdl`)", class_string, class_string), SINGLE_TICK)
 		bot.GetScriptScope().usingcustommodel <- true
 	}
 
@@ -279,7 +279,7 @@ local popext_funcs = {
 			maxrepeats++
 
 			PopExtUtil.PressButton(bot, button)
-			EntFireByHandle(bot, "RunScriptCode", format("PopExtUtil.ReleaseButton(self, %d)", button), duration, null, null)
+			PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.ReleaseButton(self, %d)", button), duration)
 			cooldowntime = Time() + cooldown
 		}
 	}
@@ -323,8 +323,8 @@ local popext_funcs = {
 
 			bot.Weapon_Switch(PopExtUtil.GetItemInSlot(bot, slot))
 			bot.AddCustomAttribute("disable weapon switch", 1, duration)
-			EntFireByHandle(bot, "RunScriptCode","self.RemoveCustomAttribute(`disable weapon switch`)", duration, null, null)
-			EntFireByHandle(bot, "RunScriptCode", format("self.Weapon_Switch(PopExtUtil.GetItemInSlot(self, %d))", slot), duration+SINGLE_TICK, null, null)
+			PopExtUtil.PlayerScriptEntFire(bot, "self.RemoveCustomAttribute(`disable weapon switch`)", duration)
+			PopExtUtil.PlayerScriptEntFire(bot, format("self.Weapon_Switch(PopExtUtil.GetItemInSlot(self, %d))", slot), duration+SINGLE_TICK)
 			cooldowntime = Time() + cooldown
 		}
 	}
@@ -426,7 +426,9 @@ local popext_funcs = {
 
 	popext_forceromevision = function(bot, args) {
 
-		//kill the existing romevision
+		// kill the existing romevision
+		// we had issues before where this would execute too early and we get no romevision
+		// wrapped in a big ugly EntFireByHandle as a workaround
 		EntFireByHandle(bot, "RunScriptCode", @"
 			local killrome = []
 
@@ -513,7 +515,7 @@ local popext_funcs = {
 
 			for (local player; player = FindByClassnameWithin(player, "player", origin, radius);)
 			{
-				if (player.GetTeam() == bot.GetTeam() || !PopExtUtil.IsAlive(player)) continue
+				if (player.GetTeam() == bot.GetTeam() || !player.IsAlive()) continue
 
 				player.TakeDamage(damage, DMG_BURN, bot)
 				PopExtUtil.Ignite(player)
@@ -555,7 +557,7 @@ local popext_funcs = {
 
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
 			local threat = aibot.threat;
-			if (threat != null && threat.IsValid() && PopExtUtil.IsAlive(threat)) return
+			if (threat != null && threat.IsValid() && threat.IsAlive()) return
 
 			local threats = aibot.CollectThreats()
 
@@ -588,7 +590,7 @@ local popext_funcs = {
 		{
 			local buf = ""
 			point.find(",") ? buf = split(point, ",") : buf = split(point, " ")
-			buf.apply(function(v) { return v.tofloat()})
+			buf.apply(@(v) v.tofloat())
 
 			pos = Vector(buf[0], buf[1], buf[2])
 		}
@@ -605,55 +607,114 @@ local popext_funcs = {
 	 *                                                                                                                                                                                                          *
 	 * You can also create entirely new action points by passing x y z coordinates where you want it to be spawned                                                                                              *
 	 *                                                                                                                                                                                                          *
-	 * Example: "popext_actionpoint{target = `500 500 500`, next_action_point = `optional_next_action_point_targetname`, desired_distance = 50, stay_time = 5, command = `attack sentry at next action point`}" *
+	 * Example: 																																																*
+	 * "popext_actionpoint{target = `500 500 500`, next_action_point = `optional_next_action_point_targetname`, desired_distance = 50, stay_time = 5, command = `attack sentry at next action point`}" 			*
 	 ************************************************************************************************************************************************************************************************************/
 
 	popext_actionpoint = function(bot, args) {
 
-		local pos = Vector()
-		local point = "target" in args ? args.target : args.type
+		local point			    = "target" in args ? args.target : args.type
+		local aimtarget			= "aimtarget" in args ? args.aimtarget : null
+		local killaimtarget		= "killaimtarget" in args ? args.killaimtarget : false
+		local alwayslook		= "alwayslook" in args ? args.alwayslook : false
 		local next_action_point = "next_action_point" in args ? args.next_action_point : ""
-		local desired_distance = "desired_distance" in args ? args.desired_distance : args.duration
-		local stay_time = "stay_time" in args ? args.stay_time : args.repeats
-		local command = "command" in args ? args.command : "attack sentry at next action point"
+		local distance			= "distance" in args ? args.distance : 50
+		local duration			= "duration" in args ? args.duration : 10
+		local stay_time			= "stay_time" in args ? args.stay_time : 10
+		local command 			= "command" in args ? args.command : "goto action point"
+		local delay 			= "delay" in args ? args.delay : -1
+		local repeats 			= "repeats" in args ? args.repeats : -1
 
-		local action_point = FindByName(null, point)
+		// look for action point entity
+		local action_point = typeof(point) == "string" ? FindByName(null, point) : null
 
-		if (action_point) return
-
-		if (pos == Vector())
+		// invalid ent, assume we're using xyz coordinates
+		if (!action_point || !action_point.IsValid())
 		{
-			local buf = ""
-			point.find(",") ?  buf = split(point, ",") : buf = split(point, " ")
-			buf.apply(function(v) { return v.tofloat()})
+			local pos = Vector()
 
-			pos = Vector(buf[0], buf[1], buf[2])
+			if (typeof(point) == "Vector")
+				pos = point
+			else
+			{
+				// this should throw a type error if we pass an invalid targetname instead of coordinates
+				local buf = null
+				point.find(",") ? buf = split(point, ",") : buf = split(point, " ")
+				buf.apply(@(v) v.tofloat() )
+				pos = Vector(buf[0], buf[1], buf[2])
+			}
+
+			action_point = CreateByClassname("bot_action_point")
+
+			action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
+			action_point.KeyValueFromString("next_action_point", next_action_point)
+			action_point.KeyValueFromString("command", command)
+
+			action_point.KeyValueFromInt("desired_distance", distance)
+			action_point.KeyValueFromInt("stay_time", stay_time)
+
+			action_point.SetOrigin(pos)
+
+			if ("output" in args && args.output.len() > 1)
+			{
+				local target  = args.output.target
+				local action  =  args.output.action
+				local param   = "param" in args.output ? args.output.param : ""
+				local delay   = "delay" in args.output ? args.output.delay : -1
+				local repeats = "repeats" in args.output ? args.output.repeats : -1
+
+				AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
+			}
+
+			DispatchSpawn(action_point)
 		}
 
-		action_point = CreateByClassname("bot_action_point")
-
-		action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
-		action_point.KeyValueFromString("next_action_point", next_action_point)
-		action_point.KeyValueFromString("command", command)
-
-		action_point.KeyValueFromInt("desired_distance", desired_distance)
-		action_point.KeyValueFromInt("stay_time", stay_time)
-
-		action_point.SetOrigin(pos)
-
-		if ("output" in args)
+		// AIM TARGET
+		// look for entity name first
+		if (aimtarget && typeof(aimtarget) == "string")
 		{
-			local target = args.output.target
-			local action =  args.output.action
-			local param = "param" in args.output ? args.output.param : ""
-			local delay = "delay" in args.output ? args.output.delay : -1
-			local repeats = "repeats" in args.output ? args.output.repeats : -1
+			if (aimtarget == "RandomEnemy")
+			{
+				local threats = aibot.CollectThreats()
+				local random = threats[RandomInt(0, threats.len() - 1)]
 
-			AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
+				// convert to vector
+				aimtarget = random.EyePosition()
+			}
+			else
+				// convert to entity handle
+				aimtarget = FindByName(null, aimtarget)
+
+			// invalid ent or using xyz coordinates
+			if (!aimtarget || !aimtarget.IsValid())
+			{
+				local buf = ""
+				aimtarget.find(",") ? buf = split(aimtarget, ",") : buf = split(aimtarget, " ")
+				if (buf.len() > 2)
+				{
+					buf.apply(@(v) v.tofloat())
+					aimtarget = Vector(buf[0], buf[1], buf[2])
+				}
+			}
+			else
+				aimtarget = aimtarget.GetOrigin()
+		}
+		bot.GetScriptScope().PlayerThinkTable.AimTarget <- function() {
+
+			if (aimtarget == "ClosestPlayer")
+			{
+				local closest = aibot.FindClosestThreat(INT_MAX, alwayslook)
+
+				if (closest)
+					aibot.LookAt(closest.EyePosition(), 50, 50)
+
+			}
+			else if ( aimtarget == "RandomEnemy" && random && random.IsAlive() )
+				aibot.LookAt(random.EyePosition(), 50, 50)
 		}
 
-		DispatchSpawn(action_point)
-		bot.SetActionPoint(action_point)
+		PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(FindByName(null, `%s`))", action_point.GetName()), delay)
+		PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
 	}
 
     /*******************************************************************************************************************************************************************************************************************************
@@ -671,14 +732,32 @@ local popext_funcs = {
 
 	popext_fireinput = function(bot, args) {
 
-		DoEntFire(
-			"target" in args ? args.target : args.type,
-			"action" in args ? args.action : args.cooldown,
-			"param" in args ? args.param : "",
-			"delay" in args ? args.delay : -1,
-			"activator" in args ? FindByName(null, args.activator) : null,
-			"caller" in args ? FindByName(null, args.caller) : null
-		 )
+		local target 	  = "target" in args ? args.target : args.type
+		local action 	  = "action" in args ? args.action : args.cooldown
+		local param 	  = "param" in args ? args.param : ""
+		local delay       = "delay" in args ? args.delay : -1
+		local activator   = "activator" in args ? FindByName(null, args.activator) : null
+		local caller 	  = "caller" in args ? FindByName(null, args.caller) : null
+		local refire_time = "refire_time" in args ? args.refire_time : INT_MAX
+
+		local entfirefunc = DoEntFire
+
+		if (target == "!self") {
+			entfirefunc = EntFireByHandle
+			target = bot
+		}
+		local cooldowntime = 0.0
+		if (refire_time == INT_MAX)
+			entfirefunc( target, action, param, delay, activator, caller )
+		else
+			bot.GetScriptScope().PlayerThinkTable.EntFireRepeats <- function() {
+
+				if ( Time() < cooldowntime ) return
+
+				entfirefunc( target, action, param, delay, activator, caller )
+
+				cooldowntime = Time() + refire_time
+			}
 	}
 
     /*****************************************************************************
@@ -696,12 +775,19 @@ local popext_funcs = {
 		local weapon = args.weapon ? args.weapon : args.type
 		local amount = ("amount" in args) ? args.amount.tofloat() : args.cooldown.tofloat()
 
-		PopExtTags.TakeDamageTable.WeaponResistTakeDamage <- function(params)
+		bot.GetScriptScope().TakeDamageTable.WeaponResistTakeDamage <- function(params)
 		{
-			local player = params.const_entity
-			if (!player.IsPlayer() || params.attacker == null || params.weapon == null || !PopExtUtil.HasItemInLoadout(player, params.weapon)) return
+			local player = params.attacker
 
-			if (params.damage * amount < player.GetHealth()) params.damage *= amount
+			if ( !player || !player.IsPlayer() ) return
+
+			weapon = PopExtUtil.HasItemInLoadout( player, weapon )
+
+			if ( params.const_entity != bot || params.weapon == null || params.weapon != weapon )
+				return
+
+			// if ( params.damage * amount < player.GetHealth() )
+			params.damage *= amount
 		}
 	}
     /****************************************
@@ -715,27 +801,29 @@ local popext_funcs = {
 
 	popext_setskin = function(bot, args) {
 
-		SetPropBool(bot, "m_bForcedSkin", true)
-		SetPropInt(bot, "m_nForcedSkin", ("skin" in args) ? args.skin.tointeger() : args.type.tointeger() )
+		SetPropBool( bot, "m_bForcedSkin", true )
+		SetPropInt( bot, "m_nForcedSkin", "skin" in args ? args.skin.tointeger() : args.type.tointeger() )
 
-		PopExtTags.TakeDamageTable.ResetSkin <- function(params) {
+		bot.GetScriptScope().TakeDamageTable.ResetSkin <- function(params) {
 
 			local victim = params.const_entity
 
-			if (victim == bot && params.damage > victim.GetHealth()) {
-				SetPropBool(bot, "m_bForcedSkin", true)
-				SetPropInt(bot, "m_nForcedSkin", 1)
-				SetPropInt(bot, "m_iPlayerSkinOverride", 1)
+			if ( victim == bot && params.damage > victim.GetHealth() ) {
+
+				SetPropBool( bot, "m_bForcedSkin", true )
+				SetPropInt( bot, "m_nForcedSkin", 1 )
+				SetPropInt( bot, "m_iPlayerSkinOverride", 1 )
 			}
 		}
-		PopExtTags.TeamSwitchTable.ResetSkin <- function(params) {
+		bot.GetScriptScope().TeamSwitchTable.ResetSkin <- function(params) {
 
 			local b = GetPlayerFromUserID(params.userid)
 
-			if (b == bot && params.team == TEAM_SPECTATOR) {
-				SetPropBool(bot, "m_bForcedSkin", true)
-				SetPropInt(bot, "m_nForcedSkin", 1)
-				SetPropInt(bot, "m_iPlayerSkinOverride", 1)
+			if ( b == bot && params.team == TEAM_SPECTATOR ) {
+
+				SetPropBool( bot, "m_bForcedSkin", true )
+				SetPropInt( bot, "m_nForcedSkin", 1 )
+				SetPropInt( bot, "m_iPlayerSkinOverride", 1 )
 			}
 		}
 	}
@@ -1037,14 +1125,15 @@ local popext_funcs = {
 			}
 		}
 
-		PopExtTags.TakeDamageTable.HomingTakeDamage <- function(params) {
+		bot.GetScriptScope().TakeDamageTable.HomingTakeDamage <- function(params) {
 
 			if (!params.const_entity.IsPlayer()) return
 
-			local classname = params.inflictor.GetClassname()
+			local inflictor = params.inflictor
+			local classname = inflictor.GetClassname()
 			if (classname != "tf_projectile_flare" && classname != "tf_projectile_energy_ring") return
 
-			EntFireByHandle(params.inflictor, "Kill", null, 0.5, null, null)
+			EntFireByHandle(inflictor, "Kill", null, 0.5, null, null)
 		}
 	}
 
@@ -1114,7 +1203,7 @@ local popext_funcs = {
 		else
 		{
 			local org = split(args.where, " ")
-			org.apply(function(val) { return val.tofloat() })
+			org.apply(@(val) val.tofloat() )
 			bot.Teleport(true, Vector(org[0], org[1], org[2]), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
 		}
 
@@ -1159,7 +1248,7 @@ local popext_funcs = {
 							break
 						case 2: // Advanced Airblast, deflect regardless of FOV
 
-						aibot.LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
+							aibot.LookAt(projectile.GetOrigin(), INT_MAX, INT_MAX)
 							break
 
 						case 3: // Expert Airblast, deflect regardless of FOV back to Sender
@@ -1218,6 +1307,9 @@ local popext_funcs = {
 				}
 			}
 		}
+		if ("duration" in args)
+			PopExtUtil.PlayerScriptEntFire(bot, "delete self.GetScriptScope().PlayerThinkTable.AimAtThink", args.duration.tofloat())
+
 	}
 
 
@@ -1400,7 +1492,7 @@ local popext_funcs = {
 
 	popext_halloweenboss = function(bot, args) {
 
-		if (!("bosskiller" in ROOT)) ::bosskiller <- null
+		if (!("__popext_bosskiller" in ROOT)) ::__popext_bosskiller <- null
 
 		local scope = bot.GetScriptScope()
 
@@ -1413,7 +1505,7 @@ local popext_funcs = {
 		local org = split(args.where, " ")
 
 		if (org.len() > 1)
-			org.apply(function(v) { return v.tofloat()})
+			org.apply(@(v) v.tofloat() )
 		else
 		{
 			local entorg = FindByName(null, org[0]).GetOrigin()
@@ -1470,7 +1562,7 @@ local popext_funcs = {
 			foreach (cond in uberconds)
 					bot.RemoveCondEx(cond, true)
 
-			bot.TakeDamage(INT_MAX, DMG_GENERIC, bosskiller)
+			bot.TakeDamage(INT_MAX, DMG_GENERIC, __popext_bosskiller)
 		}
 	}
 
@@ -1496,7 +1588,7 @@ local popext_funcs = {
 				local players = []
 
 				foreach (player in PopExtUtil.HumanArray)
-					if (PopExtUtil.IsAlive(player))
+					if (player.IsAlive())
 						players.push(player)
 
 
@@ -1541,7 +1633,7 @@ local popext_funcs = {
 		local delay = "delay" in args ? args.delay : args.type
 
 		if (bot.IsInASquad())
-			EntFireByHandle(bot, "RunScriptCode", "self.DisbandCurrentSquad()", delay, null, null)
+			PopExtUtil.PlayerScriptEntFire(bot, "if (self.IsAlive()) self.DisbandCurrentSquad()", delay)
 	}
 
 
@@ -1551,13 +1643,143 @@ local popext_funcs = {
 	 * Example usage: leave squad after 20 seconds		 	  *
 	 * popext_leavesquadafter{`delay` = 20}				 	  *
 	 **********************************************************/
-	
+
 	popext_leavesquadafter = function(bot, args) {
 
 		local delay = "delay" in args ? args.delay : args.type
 
 		if (bot.IsInASquad())
-			EntFireByHandle(bot, "RunScriptCode", "self.LeaveSquad()", delay, null, null)
+			PopExtUtil.PlayerScriptEntFire(bot, "if (self.IsAlive()) self.LeaveSquad()", delay)
+	}
+
+	/******************************************************************************************
+	 * MISSION																  				  *
+	 *																						  *
+	 * accepts a mission constant and an optional targetname.								  *
+	 * if MISSION_DESTROY_SENTRIES is set without a target, a random sentry will be selected. *
+	 * Example usage: popext_mission{mission = MISSION_DESTROY_SENTRIES, target = `sentry_1`} *
+	 ******************************************************************************************/
+
+	popext_mission = function(bot, args) {
+
+		local mission = "mission" in args ? args.mission : args.type
+		local target = "target" in args ? args.target : "__POPEXT_MISSION_NO_TARGET"
+		local suicide_bomber = "suicide_bomber" in args ? args.suicide_bomber : false
+
+		bot.SetMission(mission, true)
+		local mission_target = FindByName(null, target)
+		if (target == "__POPEXT_MISSION_NO_TARGET" || (!mission_target || !mission_target.IsValid()))
+		{
+			if ( mission == MISSION_DESTROY_SENTRIES )
+			{
+				local target_list = []
+				local classname = suicide_bomber ? "player" : "obj_sentrygun"
+				for (local random_target; random_target = FindByClassname(random_target, classname);)
+					if (random_target.GetTeam() != bot.GetTeam())
+						target_list.append(random_target)
+
+				if (target_list.len())
+					mission_target = target_list[RandomInt(0, target_list.len() - 1)]
+			}
+			else return
+		}
+		else
+
+		if (mission_target && mission_target.IsValid())
+			bot.SetMissionTarget(mission_target)
+	}
+
+	/***********************************************************************************************************************
+	 * SUICIDE COUNTER																									   *
+	 *																													   *
+	 * Configurable health drain with an optional damage type.															   *
+	 * See TakeDamageCustom documentation for all args																	   *
+	 *																													   *
+	 * Example usage: takes 2 burn damage every 0.5 seconds																   *
+	 * popext_suicidecounter{interval = 0.5, amount = 2.0, damage_type = DMG_BURN, damage_custom = TF_DMG_CUSTOM_BURNING } *
+	 **********************************************************************************************************************/
+
+	popext_suicidecounter = function(bot, args) {
+
+		local interval  	= "interval" in args ? args.interval : 1.0
+		local duration 		= "duration" in args ? args.duration : 0.0
+
+		local inflictor 	= "inflictor" in args ? args.inflictor : bot
+		local attacker 		= "attacker" in args ? args.attacker : bot
+		local weapon 		= "weapon" in args ? args.weapon : null
+		local force 	    = "force" in args ? args.force : Vector()
+		local position 		= "position" in args ? args.position : bot.GetOrigin()
+		local amount 		= "amount" in args ? args.amount : 1.0
+		local damage_type 	= "damage_type" in args ? args.damage_type : DMG_PREVENT_PHYSICS_FORCE
+		local damage_custom = "damage_custom" in args ? args.damage_custom : TF_DMG_CUSTOM_NONE
+
+		local cooldowntime = 0.0
+		bot.GetScriptScope().PlayerThinkTable.SuicideCounterThink <- function() {
+
+			if (cooldowntime > Time()) return
+
+			bot.TakeDamageCustom(inflictor, attacker, weapon, position, force, amount, damage_type, damage_custom)
+
+			cooldowntime = Time() + interval
+		}
+		if (duration)
+			PopExtUtil.PlayerScriptEntFire(bot, "delete self.GetScriptScope().PlayerThinkTable.SuicideCounterThink", duration)
+	}
+
+	/***********************************************************************************************************************
+	 * ICON COUNT																										   *
+	 * wrapper for PopExt.SetWaveIconSpawnCount																			   *
+	 *																													   *
+	 **********************************************************************************************************************/
+
+	popext_iconcount = function(bot, args) {
+
+		local icon  = "icon" in args ? args.icon : args.type
+		local count = "count" in args ? args.count : 0
+		local flags = "flags" in args ? args.flags : 0
+		local changeMaxEnemyCount = "changeMaxEnemyCount" in args ? args.changeMaxEnemyCount : true
+
+		PopExt.SetWaveIconSpawnCount(icon, flags, count, changeMaxEnemyCount)
+	}
+
+	/***********************************************************************************************************************
+	 * CHANGE ATTRIBUTES																								   *
+	 **********************************************************************************************************************/
+
+	popext_changeattributes = function(bot, args) {
+
+		local name 	 		= "name" in args ? args.name : args.type
+		local delay  		= "delay" in args ? args.delay : -1
+		local cooldown 		= "cooldown" in args ? args.cooldown : 10.0
+		local repeats 		= "repeats" in args ? args.repeats : 1
+		local ifseetarget 	= "ifseetarget" in args ? args.ifseetarget : false
+		local ifhealthbelow = "ifhealthbelow" in args ? args.ifhealthbelow : INT_MAX
+
+		if (!repeats && ifhealthbelow == INT_MAX && !ifseetarget)
+			PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PopInterface.AcceptInput(`ChangeBotAttributes`, `%s`, null, null)", name), delay, bot, bot)
+		else
+		{
+			local cooldowntime = 0.0
+			bot.GetScriptScope().PlayerThinkTable.ChangeAttributesThink <- function() {
+
+				if (cooldowntime > Time()) return
+
+				if ( bot.GetHealth() < ifhealthbelow || ( ifseetarget && aibot.IsThreatVisible( aibot.FindClosestThreat( INT_MAX, false ) ) ) )
+				{
+					PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PopInterface.AcceptInput(`ChangeBotAttributes`, `%s`, null, null)", name), delay, bot, bot)
+
+				repeats--
+
+				if (repeats < 1)
+				{
+					delete PlayerThinkTable.ChangeAttributesThink
+					return
+				}
+
+				cooldowntime = Time() + cooldown
+				}
+			}
+		}
 	}
 }
 ::Homing <- {
@@ -1612,7 +1834,7 @@ local popext_funcs = {
 
 		local projectile_scope = projectile.GetScriptScope()
 		// Early out if basic conditions aren't met
-		if (distance > min_distance || victim.GetTeam() == projectile.GetTeam() || !PopExtUtil.IsAlive(victim)) {
+		if (distance > min_distance || victim.GetTeam() == projectile.GetTeam() || !victim.IsAlive()) {
 			return false
 		}
 
@@ -1681,9 +1903,9 @@ local popext_funcs = {
 
 ::PopExtTags <- {
 
-	TakeDamageTable = {}
-	DeathHookTable = {}
-	TeamSwitchTable = {}
+	// TakeDamageTable = {}
+	// DeathHookTable = {} // do this per bot
+	// TeamSwitchTable = {}
 
 	function ParseTagArguments(bot, tag) {
 
@@ -1770,6 +1992,7 @@ local popext_funcs = {
 				tagtable.attribute <- null
 				tagtable.value <- null
 				tagtable.weapon <- func == "popext_giveweapon" ? args[0] : args_len > 3 ? args[3] : tagtable.weapon <- bot.GetActiveWeapon()
+
 			} else if (func ==  "popext_actionpoint") {
 				tagtable.next_action_point <- ""
 				tagtable. desired_distance <- 10
@@ -1804,7 +2027,7 @@ local popext_funcs = {
 		return tagtable
 	}
 
-	function EvaluateTags(bot) {
+	function EvaluateTags(bot, changeattributes = false) {
 
 		local bottags = {}
 
@@ -1828,15 +2051,32 @@ local popext_funcs = {
 
 	function OnScriptHook_OnTakeDamage(params) {
 
-		foreach (_, func in this.TakeDamageTable) { func(params) }
+		local bot = params.const_entity
+
+		if (!bot.IsBotOfType(TF_BOT_TYPE)) return
+
+		local scope = bot.GetScriptScope()
+		foreach (_, func in scope.TakeDamageTable) { func(params) }
 	}
 
 	function OnGameEvent_player_team(params) {
 
 		local bot = GetPlayerFromUserID(params.userid)
+
+		if (!bot.IsBotOfType(TF_BOT_TYPE)) return
+
+		//this can fire before we are spawned
+		local scope = bot.GetScriptScope()
+		if (!scope)
+		{
+			bot.ValidateScriptScope()
+			scope = bot.GetScriptScope()
+		}
+		if ( !( "TeamSwitchTable" in scope ) ) scope.TeamSwitchTable <- {}
+
 		if (params.team == TEAM_SPECTATOR) _AddThinkToEnt(bot, null)
 
-		foreach (_, func in this.TeamSwitchTable) func(params)
+		foreach (_, func in scope.TeamSwitchTable) func(params)
 	}
 
 	function OnGameEvent_player_death(params) {
@@ -1846,7 +2086,7 @@ local popext_funcs = {
 
 		local scope = bot.GetScriptScope()
 		bot.ClearAllBotTags()
-		foreach (_, func in this.DeathHookTable) func(params)
+		foreach (_, func in scope.DeathHookTable) func(params)
 
 		_AddThinkToEnt(bot, null)
 	}
@@ -1857,7 +2097,7 @@ local popext_funcs = {
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
 	}
 	function OnGameEvent_halloween_boss_killed(params) {
-		::bosskiller <- GetPlayerFromUserID(params.killer)
+		::__popext_bosskiller <- GetPlayerFromUserID(params.killer)
 	}
 }
 __CollectGameEventCallbacks(PopExtTags)

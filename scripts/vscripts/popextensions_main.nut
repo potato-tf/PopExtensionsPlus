@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "12.27.2024.1"
+::popExtensionsVersion <- "03.24.2025.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -153,6 +153,10 @@ if (!("_AddThinkToEnt" in _root))
 
 			if (player.IsBotOfType(TF_BOT_TYPE))
 			{
+				scope.TeamSwitchTable <- {}
+				scope.DeathHookTable <- {}
+				scope.TakeDamageTable <- {}
+
 				EntFireByHandle(player, "RunScriptCode", @"
 					PopExtTags.EvaluateTags(self)
 					aibot <- AI_Bot(self)
@@ -164,7 +168,6 @@ if (!("_AddThinkToEnt" in _root))
 							if (e == `the index 'bot' does not exist`) return
 					}
 				", -1, player, player);
-
 			}
 
 			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func.call(scope); return -1 }

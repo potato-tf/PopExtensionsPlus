@@ -1,3 +1,7 @@
+// most global fixes have been moved to missionattributes.nut
+// dummy functions here to prevent errors
+
+
 const EFL_USER = 1048576
 
 local GlobalFixesEntity = FindByName(null, "_popext_globalfixes")

@@ -278,6 +278,15 @@ const TTYPE_NONE     = 0
 const TTYPE_ENTRANCE = 1
 const TTYPE_EXIT     = 2
 
+const NO_MISSION 			   = 0
+const MISSION_SEEK_AND_DESTROY = 1 // focus on finding and killing enemy players
+const MISSION_DESTROY_SENTRIES = 2 // focus on finding and destroying enemy sentry guns (and buildings)
+const MISSION_SNIPER 		   = 3 // maintain teams of snipers harassing the enemy
+const MISSION_SPY 			   = 4 // maintain teams of spies harassing the enemy
+const MISSION_ENGINEER 		   = 5 // maintain engineer nests for harassing the enemy
+const MISSION_REPROGRAMMED 	   = 6 // MvM: robot has been hacked and will do bad things to their team
+
+
 // Flags for wavebar functions below
 const MVM_CLASS_FLAG_NONE			 = 0
 const MVM_CLASS_FLAG_NORMAL          = 1 // Non support or mission icon
