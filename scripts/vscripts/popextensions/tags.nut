@@ -605,17 +605,26 @@ local popext_funcs = {
 	 * 				                                                                                                                                                                                            *
 	 * Example: "popext_actionpoint{target = `action_point_targetname`}"                                                                                                                                        *
 	 *                                                                                                                                                                                                          *
-	 * You can also create entirely new action points by passing x y z coordinates where you want it to be spawned                                                                                              *
-	 *                                                                                                                                                                                                          *
+	 * Accepts entity handle, targetnames or x y z coordinates where you want the action point to be spawned 																									*
+	 * Do not manually spawn bot_action_points, this tag spawns them and handles parenting etc automatically																									*
+	 * killaimtarget accepts a bitflag for the buttons to press when the bot reaches the action point.  for example IN_ATTACK2                                                                                  *
+	 * setting it to 1 just does primary fire, see FButtons constants for valid buttons to press	 																											*
+	 *																																																			*
+	 * NOTE: This has different behavior for bot_generator spawned bots!																																		*
+	 * see the VDC page for bot_action_point																																									*
+	 * stay_time is useless for populator spawned bots																																							*
+	 * duration < stay_time will override stay_time																																								*
 	 * Example: 																																																*
 	 * "popext_actionpoint{target = `500 500 500`, next_action_point = `optional_next_action_point_targetname`, desired_distance = 50, stay_time = 5, command = `attack sentry at next action point`}" 			*
 	 ************************************************************************************************************************************************************************************************************/
 
+	 // TODO:
+	 // allow for chaining multiple next_action_points together and dynamically spawn them
 	popext_actionpoint = function(bot, args) {
 
 		local point			    = "target" in args ? args.target : args.type
 		local aimtarget			= "aimtarget" in args ? args.aimtarget : null
-		local killaimtarget		= "killaimtarget" in args ? args.killaimtarget : false
+		local killaimtarget		= "killaimtarget" in args ? args.killaimtarget : 0
 		local alwayslook		= "alwayslook" in args ? args.alwayslook : false
 		local next_action_point = "next_action_point" in args ? args.next_action_point : ""
 		local distance			= "distance" in args ? args.distance : 50
@@ -623,82 +632,62 @@ local popext_funcs = {
 		local stay_time			= "stay_time" in args ? args.stay_time : 10
 		local command 			= "command" in args ? args.command : "goto action point"
 		local delay 			= "delay" in args ? args.delay : -1
-		local repeats 			= "repeats" in args ? args.repeats : -1
+		local repeats 			= "repeats" in args ? args.repeats : 0
+		local repeat_cooldown	= "repeat_cooldown" in args ? args.repeat_cooldown : 0
 
-		// look for action point entity
-		local action_point = typeof(point) == "string" ? FindByName(null, point) : null
+		local cooldowntime = 0.0
+		bot.GetScriptScope().PlayerThinkTable.ActionPointThink <- function() {
 
-		// invalid ent, assume we're using xyz coordinates
-		if (!action_point || !action_point.IsValid())
-		{
-			local pos = Vector()
-
-			if (typeof(point) == "Vector")
-				pos = point
-			else
+			if (!bot.HasBotTag("popext_generatorbot") && bot.GetActionPoint() )
 			{
-				// this should throw a type error if we pass an invalid targetname instead of coordinates
-				local buf = null
-				point.find(",") ? buf = split(point, ",") : buf = split(point, " ")
-				buf.apply(@(v) v.tofloat() )
-				pos = Vector(buf[0], buf[1], buf[2])
+				aibot.UpdatePathAndMove(bot.GetActionPoint().GetOrigin())
 			}
 
-			action_point = CreateByClassname("bot_action_point")
+			if (Time() < cooldowntime) return
 
-			action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
-			action_point.KeyValueFromString("next_action_point", next_action_point)
-			action_point.KeyValueFromString("command", command)
+			PopExtTags.SetupActionPoint(bot, args)
+			repeats--
 
-			action_point.KeyValueFromInt("desired_distance", distance)
-			action_point.KeyValueFromInt("stay_time", stay_time)
-
-			action_point.SetOrigin(pos)
-
-			if ("output" in args && args.output.len() > 1)
+			if (repeats < 0)
 			{
-				local target  = args.output.target
-				local action  =  args.output.action
-				local param   = "param" in args.output ? args.output.param : ""
-				local delay   = "delay" in args.output ? args.output.delay : -1
-				local repeats = "repeats" in args.output ? args.output.repeats : -1
-
-				AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
+				delete PlayerThinkTable.ActionPointThink
+				return
 			}
 
-			DispatchSpawn(action_point)
+			cooldowntime = Time() + repeat_cooldown
 		}
 
 		// AIM TARGET
-		// look for entity name first
+		// look for entity name/handle first
+		local aimtarget_ent = null
+		local aimtarget_pos = Vector()
+
 		if (aimtarget && typeof(aimtarget) == "string")
 		{
-			if (aimtarget == "RandomEnemy")
-			{
-				local threats = aibot.CollectThreats()
-				local random = threats[RandomInt(0, threats.len() - 1)]
-
-				// convert to vector
-				aimtarget = random.EyePosition()
-			}
-			else
-				// convert to entity handle
-				aimtarget = FindByName(null, aimtarget)
+			// convert to entity handle
+			aimtarget_ent = FindByName(null, aimtarget)
 
 			// invalid ent or using xyz coordinates
-			if (!aimtarget || !aimtarget.IsValid())
+			if (!aimtarget_ent || !aimtarget_ent.IsValid())
 			{
+				// this should throw an error if we pass an invalid targetname instead of coordinates
 				local buf = ""
 				aimtarget.find(",") ? buf = split(aimtarget, ",") : buf = split(aimtarget, " ")
+
 				if (buf.len() > 2)
 				{
 					buf.apply(@(v) v.tofloat())
-					aimtarget = Vector(buf[0], buf[1], buf[2])
+					aimtarget_pos = Vector(buf[0], buf[1], buf[2])
 				}
 			}
-			else
-				aimtarget = aimtarget.GetOrigin()
 		}
+		// if we get an entity handle
+		else if (aimtarget && typeof(aimtarget) == "instance" && aimtarget.IsValid())
+		{
+			aimtarget_ent = aimtarget
+			aimtarget_pos = aimtarget.GetOrigin()
+		}
+
 		bot.GetScriptScope().PlayerThinkTable.AimTarget <- function() {
 
 			if (aimtarget == "ClosestPlayer")
@@ -706,15 +695,27 @@ local popext_funcs = {
 				local closest = aibot.FindClosestThreat(INT_MAX, alwayslook)
 
 				if (closest)
-					aibot.LookAt(closest.EyePosition(), 50, 50)
-
+					aimtarget_pos = closest.EyePosition()
 			}
-			else if ( aimtarget == "RandomEnemy" && random && random.IsAlive() )
-				aibot.LookAt(random.EyePosition(), 50, 50)
-		}
 
-		PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(FindByName(null, `%s`))", action_point.GetName()), delay)
-		PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
+			else if (aimtarget == "RandomEnemy")
+			{
+				local threats = aibot.CollectThreats()
+				local random = threats[RandomInt(0, threats.len() - 1)]
+
+				// convert to vector
+				aimtarget_ent = random
+				aimtarget_pos = random.EyePosition()
+			}
+			else if (aimtarget == "ActionPoint" && bot.GetActionPoint())
+				aimtarget_pos = bot.GetActionPoint().GetOrigin()
+
+			aibot.LookAt(aimtarget_pos, 500, 500)
+
+			if (killaimtarget && !PopExtUtil.InButton(bot, killaimtarget) && (bot.GetOrigin() - aimtarget_pos).Length() < distance)
+				PopExtUtil.PressButton(bot, killaimtarget, duration)
+
+		}
 	}
 
     /*******************************************************************************************************************************************************************************************************************************
@@ -1953,6 +1954,8 @@ local popext_funcs = {
 
 		local splittag = separator == "{" ? PopExtUtil.splitonce(tag, separator) : split(tag, separator)
 
+		// ugly compatibility stuff for the older pipe syntax
+		// if someone has issues when using pipe syntax tell them to use brackets instead
 		if (separator ==  "|")
 		{
 			ClientPrint(null, 2, "Pipe syntax is deprecated! Newer tags will not use this syntax")
@@ -2013,9 +2016,9 @@ local popext_funcs = {
 					}
 					str += sub + "\""
 				}
-				compilestring(format("::__popexttagstemp <- { %s", str))()
+				compilestring(format(@"::__popexttagstemp <- { %s", str))()
 			} else {
-				compilestring(format("::__popexttagstemp <- { %s", splittag[1]))()
+				compilestring(format(@"::__popexttagstemp <- { %s", splittag[1]))()
 			}
 
 			foreach(k, v in ::__popexttagstemp) tagtable[k] <- v
@@ -2048,12 +2051,85 @@ local popext_funcs = {
 
 		}
 	}
+	function SetupActionPoint(bot, args) {
+
+		local point			    = "target" in args ? args.target : args.type
+		local aimtarget			= "aimtarget" in args ? args.aimtarget : null
+		local killaimtarget		= "killaimtarget" in args ? args.killaimtarget : 0
+		local alwayslook		= "alwayslook" in args ? args.alwayslook : false
+		local next_action_point = "next_action_point" in args ? args.next_action_point : ""
+		local distance			= "distance" in args ? args.distance : 50
+		local duration			= "duration" in args ? args.duration : 10
+		local stay_time			= "stay_time" in args ? args.stay_time : 10
+		local command 			= "command" in args ? args.command : "goto action point"
+		local delay 			= "delay" in args ? args.delay : -1
+		local repeats 			= "repeats" in args ? args.repeats : 0
+		local repeat_cooldown	= "repeat_cooldown" in args ? args.repeat_cooldown : 0
+
+		// look for action point entity name or handle
+		local target_point_ent = typeof(point) == "string" ? FindByName(null, point) : null
+		target_point_ent = !target_point_ent && typeof(point) == "instance" && point.IsValid() ? point : target_point_ent
+
+		local target_point = target_point_ent ? target_point_ent.GetOrigin() : Vector()
+
+		// spawn an action point
+		local action_point = CreateByClassname("bot_action_point")
+
+		action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
+		action_point.KeyValueFromString("next_action_point", next_action_point)
+		action_point.KeyValueFromString("command", command)
+
+		action_point.KeyValueFromInt("desired_distance", distance)
+		action_point.KeyValueFromInt("stay_time", stay_time)
+
+		action_point.SetOrigin(target_point)
+
+		// parent to the target if it's a player, building, or tank
+		// for making bots attack sentries use the "attack sentry at next action point" command
+		if (target_point_ent && command == "goto action point" && ( target_point_ent.IsPlayer() || target_point_ent.GetClassname() == "tank_boss" || startswith(target_point_ent.GetClassname(), "obj_") ) )
+			action_point.AcceptInput("SetParent", "!activator", target_point_ent, target_point_ent)
+
+		if ("output" in args && args.output.len() > 1)
+		{
+			local target  = args.output.target
+			local action  =  args.output.action
+			local param   = "param" in args.output ? args.output.param : ""
+			local delay   = "delay" in args.output ? args.output.delay : -1
+			local repeats = "repeats" in args.output ? args.output.repeats : -1
+
+			AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
+		}
+
+		DispatchSpawn(action_point)
+
+		// invalid ent, assume we're using xyz coordinates
+		if (!target_point_ent || !target_point_ent.IsValid())
+		{
+			local pos = Vector()
+
+			if (typeof(point) == "Vector")
+				pos = point
+			else
+			{
+				// this should throw a type error if we pass an invalid targetname instead of coordinates
+				local buf = null
+				point.find(",") ? buf = split(point, ",") : buf = split(point, " ")
+				buf.apply(@(v) v.tofloat() )
+				pos = Vector(buf[0], buf[1], buf[2])
+			}
+
+			action_point.SetOrigin(pos)
+		}
+
+		PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(FindByName(null, `%s`))", action_point.GetName()), delay)
+		PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
+	}
 
 	function OnScriptHook_OnTakeDamage(params) {
 
 		local bot = params.const_entity
 
-		if (!bot.IsBotOfType(TF_BOT_TYPE)) return
+		if (!bot.IsPlayer() || !bot.IsBotOfType(TF_BOT_TYPE)) return
 
 		local scope = bot.GetScriptScope()
 		foreach (_, func in scope.TakeDamageTable) { func(params) }

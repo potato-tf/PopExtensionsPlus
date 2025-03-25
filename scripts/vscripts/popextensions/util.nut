@@ -835,8 +835,10 @@
 		return (GetPropInt(player, "m_nButtons") & button)
 	}
 
-	function PressButton(player, button) {
+	function PressButton(player, button, duration = -1) {
 		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") | button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") | button)
+		if (duration != -1)
+			this.PlayerScriptEntFire(player, format("PopExtUtil.ReleaseButton(self, %d)", button), duration)
 	}
 	function ReleaseButton(player, button) {
 		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") & ~button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") & ~button)
