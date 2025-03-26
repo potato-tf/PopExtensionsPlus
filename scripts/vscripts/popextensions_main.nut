@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "03.26.2025.1"
+::popExtensionsVersion <- "03.26.2025.2"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -142,6 +142,9 @@ if (!("_AddThinkToEnt" in _root))
 
 			local player = GetPlayerFromUserID(params.userid)
 
+			if (player.IsEFlagSet(1073741824)) //EFL_CUSTOM_WEARABLE
+				return
+
 			PopExtMain.PlayerCleanup(player)
 
 			player.ValidateScriptScope()
@@ -155,7 +158,7 @@ if (!("_AddThinkToEnt" in _root))
 			if (player.IsBotOfType(TF_BOT_TYPE))
 			{
 				scope.TeamSwitchTable <- {}
-				scope.DeathHookTable <- {}
+				scope.DeathHookTable  <- {}
 				scope.TakeDamageTable <- {}
 
 				EntFireByHandle(player, "RunScriptCode", @"

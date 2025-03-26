@@ -95,6 +95,7 @@ PopExt <- popExtEntity.GetScriptScope()
 						EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 				delete scope.popWearablesToDestroy
+				player.RemoveEFlags(EFL_CUSTOM_WEARABLE)
 			}
 
 			if (player.IsBotOfType(TF_BOT_TYPE)) {
@@ -130,6 +131,7 @@ PopExt <- popExtEntity.GetScriptScope()
 						EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 				delete scope.popWearablesToDestroy
+				player.RemoveEFlags(EFL_CUSTOM_WEARABLE)
 			}
 
 			if (player.IsBotOfType(TF_BOT_TYPE)) {

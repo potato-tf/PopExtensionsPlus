@@ -1066,8 +1066,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
-				MissionAttributes.HumanModel <- function(player)
-				{
+				MissionAttributes.HumanModel <- function(player) {
 
 					if ("usingcustommodel" in player.GetScriptScope() || (!(value & 128) && player.GetModelName() ==  "models/bots/demo/bot_sentry_buster.mdl")) return
 
@@ -1079,7 +1078,10 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						{
 							// CTFBot.GenerateAndWearItem() works here, but causes a big perf warning spike on bot spawn
 							// faking it doesn't do this
-							PopExtUtil.CreatePlayerWearable(player, format("models/player/items/%s/%s_zombie.mdl", classname, classname))
+
+							// this function doesn't apply cosmetics to ragdolls on death
+							// PopExtUtil.CreatePlayerWearable(player, format("models/player/items/%s/%s_zombie.mdl", classname, classname))
+							PopExtUtil.GiveWearableItem(player, CONST[format("ID_ZOMBIE_%s", classname.toupper())], format("models/player/items/%s/%s_zombie.mdl", classname, classname))
 							SetPropBool(player, "m_bForcedSkin", true)
 							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
 							SetPropInt(player, "m_iPlayerSkinOverride", 1)
@@ -1092,7 +1094,9 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						player.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classname))
 						if (value & 8)
 						{
-							format(PopExtUtil.CreatePlayerWearable(player, "models/player/items/%s/%s_zombie.mdl"), classname, classname)
+							// this function doesn't apply cosmetics to ragdolls on death
+							// PopExtUtil.CreatePlayerWearable(player, "models/player/items/%s/%s_zombie.mdl", classname, classname)
+							PopExtUtil.GiveWearableItem(player, CONST[format("ID_ZOMBIE_%s", classname.toupper())], format("models/player/items/%s/%s_zombie.mdl", classname, classname))
 							SetPropBool(player, "m_bForcedSkin", true)
 							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
 							SetPropInt(player, "m_iPlayerSkinOverride", 1)
@@ -1242,10 +1246,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		WaveStartCountdown = function(value) {
 
 			MissionAttributes.ThinkTable.WaveStartCountdown <- function() {
+
 				if (PopExtUtil.IsWaveStarted) return
 
 				local roundtime = GetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime")
+
 				if (roundtime > Time() + value) {
+
 					local ready = PopExtUtil.GetPlayerReadyCount()
 					if (ready >= PopExtUtil.HumanArray.len() || (roundtime <= 12.0))
 						SetPropFloat(PopExtUtil.GameRules, "m_flRestartRoundTime", Time() + value)

@@ -468,12 +468,19 @@ local popext_funcs = {
 
 			if (bot.GetModelName() == "models/bots/demo/bot_sentry_buster.mdl")
 			{
-				PopExtUtil.CreatePlayerWearable(bot, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2])
+				// GiveWearableItem is subject to romevision restrictions, we don't want this
+				// figure out a way to apply cosmetics to ragdolls on death without this
+				local wearable = PopExtUtil.CreatePlayerWearable(bot, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2])
+				// PopExtUtil.GiveWearableItem(bot, PopExtUtil.ROMEVISION_ITEM_INDEXES[bot.GetPlayerClass()][2], PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2])
+				SetPropString(wearable, "m_iName", "__bot_romevision_model")
 				return
 			}
-			foreach (cosmetic in cosmetics)
+			foreach (i, cosmetic in cosmetics)
 			{
+				// GiveWearableItem is subject to romevision restrictions, we don't want this
+				// figure out a way to apply cosmetics to ragdolls on death without this
 				local wearable = PopExtUtil.CreatePlayerWearable(bot, cosmetic)
+				// local wearable = PopExtUtil.GiveWearableItem(bot, PopExtUtil.ROMEVISION_ITEM_INDEXES[bot.GetPlayerClass()][i], cosmetic)
 				SetPropString(wearable, "m_iName", "__bot_romevision_model")
 			}
 	}
@@ -579,17 +586,22 @@ local popext_funcs = {
 
 	popext_mobber = function(bot, args) {
 
+		if (!bot.HasBotAttribute(IGNORE_FLAG))
+			bot.AddBotAttribute(IGNORE_FLAG)
+
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
+
+			if (bot.GetActionPoint() && bot.GetActionPoint().IsValid())
+				return
 
 			local threat = aibot.threat;
 			if (threat != null && threat.IsValid() && threat.IsAlive()) return
 
 			local threats = aibot.CollectThreats(INT_MAX, false, false)
 
-			local t = threats[RandomInt(0, threats.len() - 1)]
+			if (!threats.len()) return
 
-			// Move(t)
-			aibot.UpdatePathAndMove(t.GetOrigin())
+			local t = threats[RandomInt(0, threats.len() - 1)]
 		}
 	}
 
@@ -659,7 +671,7 @@ local popext_funcs = {
 		local command 			= "command" in args ? args.command : "goto action point"
 		local delay 			= "delay" in args ? args.delay : -1
 		local repeats 			= "repeats" in args ? args.repeats : 0
-		local repeat_cooldown	= "repeat_cooldown" in args ? args.repeat_cooldown : 0
+		local repeat_cooldown	= "repeat_cooldown" in args ? args.repeat_cooldown : 0.0
 
 		local cooldowntime = 0.0
 		bot.GetScriptScope().PlayerThinkTable.ActionPointThink <- function() {
@@ -670,6 +682,8 @@ local popext_funcs = {
 
 			if ( !bot.HasBotTag("popext_generatorbot") && action_point && (bot.GetOrigin() - action_point.GetOrigin()).Length() > distance)
 			{
+				// aibot.threat = action_point
+				// aibot.FindPathToThreat()
 				aibot.UpdatePathAndMove(action_point.GetOrigin())
 			}
 
@@ -684,8 +698,6 @@ local popext_funcs = {
 
 			PopExtTags.SetupActionPoint(bot, args)
 			repeats--
-
-			printl(repeats)
 
 			if (repeats < 0)
 			{
@@ -750,7 +762,10 @@ local popext_funcs = {
 
 				else if (aimtarget == "RandomEnemy")
 				{
-					local threats = aibot.CollectThreats()
+					local threats = aibot.CollectThreats(INT_MAX, alwayslook, alwayslook)
+
+					if (!threats.len()) return
+
 					local random = threats[RandomInt(0, threats.len() - 1)]
 
 					// convert to vector
@@ -762,10 +777,9 @@ local popext_funcs = {
 				else if (aimtarget == "ActionPoint" && action_point)
 					aimtarget_pos = action_point.GetOrigin()
 
-				if ((bot.GetOrigin() - action_point.GetOrigin()).Length() < distance)
+				if (aimtarget_pos != Vector() && (bot.GetOrigin() - action_point.GetOrigin()).Length() < distance)
 				{
 					aibot.LookAt(aimtarget_pos, INT_MAX, INT_MAX)
-
 					if (killaimtarget && !PopExtUtil.InButton(bot, killaimtarget))
 						PopExtUtil.PressButton(bot, killaimtarget, duration)
 				}
@@ -1007,7 +1021,7 @@ local popext_funcs = {
      * THIS DOES NOT WORK WITH CUSTOM WEAPONS!!!                                                                                                            *
      *                                                                                                                                                      *
      * You can technically give bots cosmetics using this function as well, but it's not recommended and the syntax is different                            *
-     * Use PopExtUtil.CreatePlayerWearable instead                                                                                                          *
+     * Use PopExtUtil.GiveWearableItem instead	                                                                                                            *
      *                                                                                                                                                      *
      * Add this to a pyro bot to give them a family business                                                                                                *
      *                                                                                                                                                      *
@@ -1255,16 +1269,23 @@ local popext_funcs = {
      ************************************************************************************/
 
 	popext_spawnhere = function(bot, args) {
-		if (FindByName(null, args.where) != null)
-			bot.Teleport(true, FindByName(null, args.where).GetOrigin(), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
+
+		local where = args.where
+		local spawn_uber_duration = "spawn_uber_duration" in args ? args.spawn_uber_duration.tofloat() : args.cooldown.tofloat()
+		local viewangle = "viewangle" in args ? args.viewangle : bot.EyeAngles()
+		local velocity = "velocity" in args ? args.velocity : bot.GetAbsVelocity()
+
+		if (FindByName(null, where) != null)
+			bot.Teleport(true, FindByName(null, where).GetOrigin(), true, viewangle, true, velocity)
 		else
 		{
-			local org = split(args.where, " ")
+			local org = args.where.find(",") ? split(args.where, ",") : split(args.where, " ")
+
 			org.apply(@(val) val.tofloat() )
-			bot.Teleport(true, Vector(org[0], org[1], org[2]), true, bot.EyeAngles(), true, bot.GetAbsVelocity())
+			bot.Teleport(true, Vector(org[0], org[1], org[2]), true, viewangle, true, velocity)
 		}
 
-		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, "spawn_uber_duration" in args ? args.spawn_uber_duration.tofloat() : args.cooldown.tofloat(), null)
+		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, spawn_uber_duration, null)
 	}
 
     /******************************************************************************************************************
@@ -2200,7 +2221,9 @@ local popext_funcs = {
 		if (!bot.IsPlayer() || !bot.IsBotOfType(TF_BOT_TYPE)) return
 
 		local scope = bot.GetScriptScope()
-		foreach (func in scope.TakeDamageTable) { func(params) }
+
+		if ("TakeDamageTable" in scope)
+			foreach (func in scope.TakeDamageTable) { func(params) }
 	}
 
 	function OnGameEvent_player_team(params) {

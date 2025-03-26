@@ -92,7 +92,7 @@ function OnPostSpawn()
 
         self.GetScriptScope().ProjectileFixes <- function()
         {
-            for (local projectile; projectile = FindByClassnameWithin(projectile, "tf_projectile*", self.GetOrigin(), 1);)
+            for (local projectile; projectile = FindByClassnameWithin(projectile, "tf_projectile*", self.GetOrigin(), 16);)
             {
                 if (projectile.GetEFlags() & EFL_NO_MEGAPHYSCANNON_RAGDOLL) continue
 
@@ -133,9 +133,7 @@ function OnPostSpawn()
 
                     if (GetPropBool(self, "m_bCrits"))
                     {
-                        local particlecrits = ""
-
-                        projectile.GetTeam() < 3 ? particlecrits = "critical_pipe_red" : particlecrits = "critical_pipe_blue"
+                        local particlecrits = projectile.GetTeam() < 3 ? "critical_pipe_red" : "critical_pipe_blue"
 
                         particle.KeyValueFromString("particle_name", particlecrits)
                         EntFireByHandle(particle, "StartTouch", "!activator", -1, projectile, projectile)

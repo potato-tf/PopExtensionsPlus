@@ -119,6 +119,19 @@
 
 	}
 
+	ROMEVISION_ITEM_INDEXES = {
+
+		[1] = [ID_TW_SCOUTBOT_ARMOR, ID_TW_SCOUTBOT_HAT],
+		[2] = [ID_TW_SNIPERBOT_ARMOR, ID_TW_SNIPERBOT_HELMET],
+		[3] = [ID_TW_SOLDIERBOT_ARMOR, ID_TW_SOLDIERBOT_HELMET],
+		[4] = [ID_TW_DEMOBOT_ARMOR, ID_TW_DEMOBOT_HELMET, ID_TW_SENTRYBUSTER],
+		[5] = [ID_TW_MEDIBOT_CHARIOT, ID_TW_MEDIBOT_HAT],
+		[6] = [ID_TW_HEAVYBOT_ARMOR, ID_TW_HEAVYBOT_HELMET],
+		[7] = [ID_TW_PYROBOT_ARMOR, ID_TW_PYROBOT_HELMET],
+		[8] = [ID_TW_SPYBOT_ARMOR, ID_TW_SPYBOT_HOOD],
+		[9] = [ID_TW_ENGINEERBOT_ARMOR, ID_TW_ENGINEERBOT_HELMET],
+	}
+
 	ROMEVISION_MODELINDEXES = []
 
 	DeflectableProjectiles = {
@@ -135,7 +148,7 @@
 		tf_projectile_mechanicalarmorb	   = 1 // Short Circuit energy ball
 		tf_projectile_pipe				   = 1 // Grenade Launcher bomb
 		tf_projectile_pipe_remote		   = 1 // Stickybomb Launcher bomb
-		tf_projectile_rocket				   = 1 // Rocket Launcher rocket
+		tf_projectile_rocket			   = 1 // Rocket Launcher rocket
 		tf_projectile_sentryrocket		   = 1 // Sentry gun rocket
 		tf_projectile_stun_ball			   = 1 // Baseball
 	}
@@ -423,7 +436,8 @@
 		ClientPrint(null, 2, line)
 	}
 
-	// Make a wearable that is attached to the player. The wearable is automatically removed when the owner is killed or respawned
+	// Make a fake wearable that is attached to the player. The wearable is automatically removed when the owner is killed or respawned
+	// this does not apply to ragdolls!, use GiveWearableItem instead
 	function CreatePlayerWearable(player, model, bonemerge = true, attachment = null, autoDestroy = true) {
 		local modelIndex = GetModelIndex(model)
 		if (modelIndex == -1)
@@ -455,6 +469,45 @@
 
 			scope.popWearablesToDestroy.append(wearable)
 		}
+		return wearable
+	}
+
+	function GiveWearableItem(player, item_id, model = false) {
+
+		local modelindex = GetModelIndex(model)
+		if (modelindex == -1)
+			modelindex = PrecacheModel(model)
+
+		local dummy = CreateByClassname("tf_weapon_parachute")
+		SetPropInt(dummy, STRING_NETPROP_ITEMDEF, ID_BASE_JUMPER)
+		SetPropBool(dummy, "m_AttributeManager.m_Item.m_bInitialized", true)
+		dummy.SetTeam(player.GetTeam())
+		DispatchSpawn(dummy)
+		player.Weapon_Equip(dummy)
+
+		local wearable = GetPropEntity(dummy, "m_hExtraWearable")
+		dummy.Kill()
+
+		SetPropInt(wearable, STRING_NETPROP_ITEMDEF, item_id)
+		SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+		SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
+		DispatchSpawn(wearable)
+
+		if (model)
+			wearable.SetModelSimple(model)
+
+		// avoid infinite loops from post_inventory_application hooks
+		player.AddEFlags(EFL_CUSTOM_WEARABLE)
+
+		SendGlobalGameEvent("post_inventory_application",  { userid = PopExtUtil.GetPlayerUserID(player) })
+
+		player.ValidateScriptScope()
+		local scope = player.GetScriptScope()
+		if (!("popWearablesToDestroy" in scope))
+			scope.popWearablesToDestroy <- []
+
+		scope.popWearablesToDestroy.append(wearable)
+
 		return wearable
 	}
 
@@ -1050,6 +1103,10 @@
 
 		EntFireByHandle(hudhint, "ShowHudHint", "", -1, player, player)
 		EntFireByHandle(hudhint, "HideHudHint", "", duration, player, player)
+	}
+
+	function ShowHintMessage(message) {
+		SendGlobalGameEvent("player_hintmessage", {hintmessage = message})
 	}
 
 	function SetEntityColor(entity, r, g, b, a) {
@@ -1792,9 +1849,13 @@
 		}
 
 		function OnGameEvent_post_inventory_application(params) {
+
 			if (GetRoundState() == GR_STATE_PREROUND) return
 
 			local player = GetPlayerFromUserID(params.userid)
+
+			if (player.IsEFlagSet(EFL_CUSTOM_WEARABLE))
+				return
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
