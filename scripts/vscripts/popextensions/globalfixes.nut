@@ -111,7 +111,7 @@ __CollectGameEventCallbacks(GlobalFixes.Events)
 GlobalFixesEntity.ValidateScriptScope()
 
 GlobalFixesEntity.GetScriptScope().GlobalFixesThink <- function() {
-	foreach(_, func in GlobalFixes.ThinkTable) func()
+	foreach(func in GlobalFixes.ThinkTable) func()
 	return -1
 }
 

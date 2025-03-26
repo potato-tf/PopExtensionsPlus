@@ -91,7 +91,8 @@ PopExt <- popExtEntity.GetScriptScope()
 
 			if (scope != null && "popWearablesToDestroy" in scope) {
 				foreach(wearable in scope.popWearablesToDestroy)
-					if (wearable.IsValid()) EntFireByHandle(wearable, "Kill", "", -1, null, null)
+					if (wearable.IsValid())
+						EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 				delete scope.popWearablesToDestroy
 			}
@@ -125,7 +126,8 @@ PopExt <- popExtEntity.GetScriptScope()
 
 			if (scope != null && "popWearablesToDestroy" in scope) {
 				foreach(wearable in scope.popWearablesToDestroy)
-					if (wearable.IsValid()) EntFireByHandle(wearable, "Kill", "", -1, null, null)
+					if (wearable.IsValid())
+						EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 				delete scope.popWearablesToDestroy
 			}

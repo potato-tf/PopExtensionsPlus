@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "03.25.2025.1"
+::popExtensionsVersion <- "03.26.2025.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -137,6 +137,7 @@ if (!("_AddThinkToEnt" in _root))
 	}
 	Events = {
 		function OnGameEvent_post_inventory_application(params) {
+
 			if (GetRoundState() == GR_STATE_PREROUND) return
 
 			local player = GetPlayerFromUserID(params.userid)
@@ -180,11 +181,11 @@ if (!("_AddThinkToEnt" in _root))
 				scope.buildings <- []
 			}
 
-			if ("MissionAttributes" in _root) foreach (_, func in MissionAttributes.SpawnHookTable) func(params)
-			// if ("GlobalFixes" in _root) foreach (_, func in GlobalFixes.SpawnHookTable) func(params)
-			if ("CustomAttributes" in _root) foreach (_, func in CustomAttributes.SpawnHookTable) func(params)
-			if ("PopExtPopulator" in _root) foreach (_, func in PopExtPopulator.SpawnHookTable) func(params)
-			if ("CustomWeapons" in _root) foreach (_, func in CustomWeapons.SpawnHookTable) func(params)
+			if ("MissionAttributes" in _root) foreach (func in MissionAttributes.SpawnHookTable) func(params)
+			// if ("GlobalFixes" in _root) foreach (func in GlobalFixes.SpawnHookTable) func(params)
+			if ("CustomAttributes" in _root) foreach (func in CustomAttributes.SpawnHookTable) func(params)
+			if ("PopExtPopulator" in _root) foreach (func in PopExtPopulator.SpawnHookTable) func(params)
+			if ("CustomWeapons" in _root) foreach (func in CustomWeapons.SpawnHookTable) func(params)
 		}
 		function OnGameEvent_player_changeclass(params) {
 			local player = GetPlayerFromUserID(params.userid)

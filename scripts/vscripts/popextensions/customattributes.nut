@@ -2106,13 +2106,13 @@
 	}
     Events = {
 
-		function OnScriptHook_OnTakeDamage(params) { foreach (_, func in CustomAttributes.TakeDamageTable) func(params); }
-		function OnGameEvent_player_hurt(params) { foreach (_, func in CustomAttributes.TakeDamagePostTable) func(params) }
-		function OnGameEvent_player_death(params) { foreach (_, func in CustomAttributes.DeathHookTable) func(params) }
-		function OnGameEvent_player_teleported(params) { foreach (_, func in CustomAttributes.PlayerTeleportTable) func(params) }
-		function OnGameEvent_player_builtobject(params){ foreach (_, func in CustomAttributes.BuiltObjectTable) func(params) }
-		function OnGameEvent_player_upgradedobject(params){ foreach (_, func in CustomAttributes.UpgradedObjectTable) func(params) }
-		function OnGameEvent_mvm_quick_sentry_upgrade(params){ foreach (_, func in CustomAttributes.QuickSentryUpgradeTable) func(params) }
+		function OnScriptHook_OnTakeDamage(params) { foreach (func in CustomAttributes.TakeDamageTable) func(params); }
+		function OnGameEvent_player_hurt(params) { foreach (func in CustomAttributes.TakeDamagePostTable) func(params) }
+		function OnGameEvent_player_death(params) { foreach (func in CustomAttributes.DeathHookTable) func(params) }
+		function OnGameEvent_player_teleported(params) { foreach (func in CustomAttributes.PlayerTeleportTable) func(params) }
+		function OnGameEvent_player_builtobject(params){ foreach (func in CustomAttributes.BuiltObjectTable) func(params) }
+		function OnGameEvent_player_upgradedobject(params){ foreach (func in CustomAttributes.UpgradedObjectTable) func(params) }
+		function OnGameEvent_mvm_quick_sentry_upgrade(params){ foreach (func in CustomAttributes.QuickSentryUpgradeTable) func(params) }
 	}
 }
 __CollectGameEventCallbacks(CustomAttributes.Events)

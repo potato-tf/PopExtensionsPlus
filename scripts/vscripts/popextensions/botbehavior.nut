@@ -93,7 +93,7 @@ class AI_Bot {
 
 		foreach (player in PopExtUtil.PlayerArray) {
 
-			if (player == bot || !player.IsAlive() || player.GetTeam() == team || (must_be_visible && !IsThreatVisible(player))) 
+			if (player == bot || !player.IsAlive() || player.GetTeam() == team || (must_be_visible && !IsThreatVisible(player)))
 				continue
 
 			local dist = GetThreatDistanceSqr(player)
@@ -105,12 +105,17 @@ class AI_Bot {
 		return closestThreat
 	}
 
-	function CollectThreats(maxdist = INT_MAX, disguised = false, invisible = false) {
+	function CollectThreats(maxdist = INT_MAX, disguised = false, invisible = false, alive = true) {
 
 		local threatarray = []
 		foreach (player in PopExtUtil.PlayerArray)
 		{
-			if (player == bot || player.GetTeam() == bot.GetTeam() || (player.IsFullyInvisible() && !invisible) || (player.IsStealthed() && !disguised) || GetThreatDistanceSqr(player) > maxdist) 
+			if (player == bot ||
+				player.GetTeam() == bot.GetTeam() ||
+				(player.IsFullyInvisible() && !invisible) ||
+				(player.IsStealthed() && !disguised) ||
+				(alive && !player.IsAlive()) ||
+				GetThreatDistanceSqr(player) > maxdist)
 				continue
 
 			threatarray.append(player)
@@ -427,7 +432,9 @@ class AI_Bot {
 		}
 
 		local point = path_points[path_index].pos;
-		locomotion.Approach(point, 999)
+		// locomotion.Approach(point, 1.0)
+		locomotion.DriveTo(point)
+		locomotion.FaceTowards(point)
 
 		local look_pos = Vector(point.x, point.y, cur_eye_pos.z);
 		if (threat != null)

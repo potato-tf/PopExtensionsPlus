@@ -255,7 +255,7 @@ function StartTutorial(eventname)
 				if (typeof v == "string")
 					tutorialfunc = v
 				else if (typeof v == "array" || typeof v == "table") //allow for making an array/table of things to format into a single RunScriptCode
-					foreach (_, func in v) tutorialfunc += format("%s;", func)	
+					foreach (func in v) tutorialfunc += format("%s;", func)	
 			break
 
 			case "entfire":

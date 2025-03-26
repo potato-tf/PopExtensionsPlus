@@ -2741,7 +2741,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 	RedMoneyValue = 0
 
 	// function InitWave() {
-	// 	foreach (_, func in MissionAttributes.InitWaveTable) func()
+	// 	foreach (func in MissionAttributes.InitWaveTable) func()
 
 	// 	// foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
 	// 	// PopExtMain.Error.RaisedParseError = false
@@ -2829,11 +2829,11 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 	// Example: Print a message that the script is working as expected.
 	Events = {
 
-		function OnScriptHook_OnTakeDamage(params) { foreach (_, func in MissionAttributes.TakeDamageTable) func(params) }
-		function OnGameEvent_player_hurt(params) { foreach (_, func in MissionAttributes.TakeDamageTablePost) func(params) }
-		function OnGameEvent_player_disconnect(params) { foreach (_, func in MissionAttributes.DisconnectTable) func(params) }
-		function OnGameEvent_mvm_begin_wave(params) { foreach (_, func in MissionAttributes.StartWaveTable) func(params) }
-		function OnGameEvent_player_changeclass(params) { foreach (_, func in MissionAttributes.ChangeClassTable) func(params) }
+		function OnScriptHook_OnTakeDamage(params) { foreach (func in MissionAttributes.TakeDamageTable) func(params) }
+		function OnGameEvent_player_hurt(params) { foreach (func in MissionAttributes.TakeDamageTablePost) func(params) }
+		function OnGameEvent_player_disconnect(params) { foreach (func in MissionAttributes.DisconnectTable) func(params) }
+		function OnGameEvent_mvm_begin_wave(params) { foreach (func in MissionAttributes.StartWaveTable) func(params) }
+		function OnGameEvent_player_changeclass(params) { foreach (func in MissionAttributes.ChangeClassTable) func(params) }
 		function OnGameEvent_player_team(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (!player.IsBotOfType(TF_BOT_TYPE) && params.team == TEAM_SPECTATOR && params.oldteam == TF_TEAM_PVE_INVADERS)
@@ -2876,7 +2876,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					}
 			}
 
-			foreach (_, func in MissionAttributes.DeathHookTable) func(params)
+			foreach (func in MissionAttributes.DeathHookTable) func(params)
 		}
 		function OnGameEvent_recalculate_holidays(params)
 		{
@@ -2897,7 +2897,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 		function OnGameEvent_mvm_mission_complete(params)
 		{
-			foreach (_, func in ScriptUnloadTable) func()
+			foreach (func in ScriptUnloadTable) func()
 		}
 		function OnGameEvent_teamplay_broadcast_audio(params)
 		{
@@ -2916,7 +2916,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 	}
 };
 
-foreach (_, func in ScriptLoadTable) func()
+foreach (func in ScriptLoadTable) func()
 
 __CollectGameEventCallbacks(MissionAttributes.Events);
 
@@ -3037,7 +3037,7 @@ if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_te
 
 function MissionAttrThink() {
 	if (!MissionAttrEntity || !("MissionAttributes" in ROOT)) return -1; // Prevent error on mission complete
-	foreach (_, func in MissionAttributes.ThinkTable) func()
+	foreach (func in MissionAttributes.ThinkTable) func()
 	return -1
 }
 

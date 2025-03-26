@@ -428,30 +428,54 @@ local popext_funcs = {
 
 		// kill the existing romevision
 		// we had issues before where this would execute too early and we get no romevision
-		// wrapped in a big ugly EntFireByHandle as a workaround
-		EntFireByHandle(bot, "RunScriptCode", @"
+		// seemingly not necessary anymore
+
+		// EntFireByHandle(bot, "RunScriptCode", @"
+		// 	local killrome = []
+
+		// 	if (self.IsBotOfType(TF_BOT_TYPE))
+		// 		for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
+		// 			if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
+		// 				killrome.append(child)
+
+		// 	for (local i = killrome.len() - 1; i >= 0; i--) killrome[i].Kill()
+
+		// 	local cosmetics = PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()]
+
+		// 	if (self.GetModelName() == `models/bots/demo/bot_sentry_buster.mdl`)
+		// 	{
+		// 		PopExtUtil.CreatePlayerWearable(self, PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()][2])
+		// 		return
+		// 	}
+		// 	foreach (cosmetic in cosmetics)
+		// 	{
+		// 		local wearable = PopExtUtil.CreatePlayerWearable(self, cosmetic)
+		// 		SetPropString(wearable, `m_iName`, `__bot_romevision_model`)
+		// 	}
+		// ", -1, null, null)
 			local killrome = []
 
-			if (self.IsBotOfType(TF_BOT_TYPE))
-				for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
-					if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
+			if (bot.IsBotOfType(TF_BOT_TYPE))
+				for (local child = bot.FirstMoveChild(); child != null; child = child.NextMovePeer())
+					if (child.GetClassname() == "tf_wearable" && startswith(child.GetModelName(), format("models/workshop/player/items/%s/tw", PopExtUtil.Classes[bot.GetPlayerClass()])))
 						killrome.append(child)
 
-			for (local i = killrome.len() - 1; i >= 0; i--) killrome[i].Kill()
+			local killrome_len_iter = killrome.len() - 1
+			for (local i = killrome_len_iter; i >= 0; i--)
+				killrome[i].Kill()
 
-			local cosmetics = PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()]
+			local cosmetics = PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()]
 
-			if (self.GetModelName() == `models/bots/demo/bot_sentry_buster.mdl`)
+			if (bot.GetModelName() == "models/bots/demo/bot_sentry_buster.mdl")
 			{
-				PopExtUtil.CreatePlayerWearable(self, PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()][2])
+				PopExtUtil.CreatePlayerWearable(bot, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2])
 				return
 			}
 			foreach (cosmetic in cosmetics)
 			{
-				local wearable = PopExtUtil.CreatePlayerWearable(self, cosmetic)
-				SetPropString(wearable, `m_iName`, `__bot_romevision_model`)
+				local wearable = PopExtUtil.CreatePlayerWearable(bot, cosmetic)
+				SetPropString(wearable, "m_iName", "__bot_romevision_model")
 			}
-		", -1, null, null)
 	}
 
     /**********************************************************************************************************************************************************************
@@ -556,10 +580,11 @@ local popext_funcs = {
 	popext_mobber = function(bot, args) {
 
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
+
 			local threat = aibot.threat;
 			if (threat != null && threat.IsValid() && threat.IsAlive()) return
 
-			local threats = aibot.CollectThreats()
+			local threats = aibot.CollectThreats(INT_MAX, false, false)
 
 			local t = threats[RandomInt(0, threats.len() - 1)]
 
@@ -627,6 +652,7 @@ local popext_funcs = {
 		local killaimtarget		= "killaimtarget" in args ? args.killaimtarget : 0
 		local alwayslook		= "alwayslook" in args ? args.alwayslook : false
 		local next_action_point = "next_action_point" in args ? args.next_action_point : ""
+		local waituntildone		= "waituntildone" in args ? args.waituntildone : false
 		local distance			= "distance" in args ? args.distance : 50
 		local duration			= "duration" in args ? args.duration : 10
 		local stay_time			= "stay_time" in args ? args.stay_time : 10
@@ -638,9 +664,20 @@ local popext_funcs = {
 		local cooldowntime = 0.0
 		bot.GetScriptScope().PlayerThinkTable.ActionPointThink <- function() {
 
-			if (!bot.HasBotTag("popext_generatorbot") && bot.GetActionPoint() )
+			local action_point = bot.GetActionPoint()
+
+			// printl(action_point)
+
+			if ( !bot.HasBotTag("popext_generatorbot") && action_point && (bot.GetOrigin() - action_point.GetOrigin()).Length() > distance)
 			{
-				aibot.UpdatePathAndMove(bot.GetActionPoint().GetOrigin())
+				aibot.UpdatePathAndMove(action_point.GetOrigin())
+			}
+
+			// printl(cooldowntime + " : " + Time())
+			if (waituntildone && action_point && (bot.GetOrigin() - action_point.GetOrigin()).Length() > distance)
+			{
+				cooldowntime = Time() + (duration + repeat_cooldown)
+				return
 			}
 
 			if (Time() < cooldowntime) return
@@ -648,73 +685,92 @@ local popext_funcs = {
 			PopExtTags.SetupActionPoint(bot, args)
 			repeats--
 
+			printl(repeats)
+
 			if (repeats < 0)
 			{
 				delete PlayerThinkTable.ActionPointThink
+				if ("AimTarget" in PlayerThinkTable)
+					delete PlayerThinkTable.AimTarget
 				return
 			}
 
-			cooldowntime = Time() + repeat_cooldown
+			cooldowntime = Time() + (duration + repeat_cooldown)
 		}
 
-		// AIM TARGET
-		// look for entity name/handle first
-		local aimtarget_ent = null
-		local aimtarget_pos = Vector()
-
-		if (aimtarget && typeof(aimtarget) == "string")
+		if (aimtarget)
 		{
+			// AIM TARGET
+			// look for entity name/handle first
+			local aimtarget_ent = null
+			local aimtarget_pos = Vector()
+
 			// convert to entity handle
-			aimtarget_ent = FindByName(null, aimtarget)
-
-			// invalid ent or using xyz coordinates
-			if (!aimtarget_ent || !aimtarget_ent.IsValid())
+			if (typeof(aimtarget) == "string")
 			{
-				// this should throw an error if we pass an invalid targetname instead of coordinates
-				local buf = ""
-				aimtarget.find(",") ? buf = split(aimtarget, ",") : buf = split(aimtarget, " ")
+				aimtarget_ent = FindByName(null, aimtarget)
 
-				if (buf.len() > 2)
+				// invalid ent or using xyz coordinates
+				if (!aimtarget_ent || !aimtarget_ent.IsValid())
 				{
-					buf.apply(@(v) v.tofloat())
-					aimtarget_pos = Vector(buf[0], buf[1], buf[2])
+					// this should throw an error if we pass an invalid targetname instead of coordinates
+					local buf = ""
+					aimtarget.find(",") ? buf = split(aimtarget, ",") : buf = split(aimtarget, " ")
+
+					if (buf.len() > 2)
+					{
+						buf.apply(@(v) v.tofloat())
+						aimtarget_pos = Vector(buf[0], buf[1], buf[2])
+					}
 				}
 			}
-		}
-		// if we get an entity handle
-		else if (aimtarget && typeof(aimtarget) == "instance" && aimtarget.IsValid())
-		{
-			aimtarget_ent = aimtarget
-			aimtarget_pos = aimtarget.GetOrigin()
-		}
-
-		bot.GetScriptScope().PlayerThinkTable.AimTarget <- function() {
-
-			if (aimtarget == "ClosestPlayer")
+			// if we get an entity handle
+			else if (aimtarget && typeof(aimtarget) == "instance" && aimtarget.IsValid())
 			{
-				local closest = aibot.FindClosestThreat(INT_MAX, alwayslook)
-
-				if (closest)
-					aimtarget_pos = closest.EyePosition()
+				aimtarget_ent = aimtarget
+				aimtarget_pos = aimtarget.GetOrigin()
 			}
 
-			else if (aimtarget == "RandomEnemy")
-			{
-				local threats = aibot.CollectThreats()
-				local random = threats[RandomInt(0, threats.len() - 1)]
+			bot.GetScriptScope().PlayerThinkTable.AimTarget <- function() {
 
-				// convert to vector
-				aimtarget_ent = random
-				aimtarget_pos = random.EyePosition()
+				local action_point = bot.GetActionPoint()
+
+				if (!action_point || !action_point.IsValid()) return
+
+				if (aimtarget == "ClosestPlayer")
+				{
+					local closest = aibot.FindClosestThreat(INT_MAX, alwayslook)
+
+					if (closest)
+					{
+						aimtarget_ent = closest
+						aimtarget_pos = closest.EyePosition()
+					}
+				}
+
+				else if (aimtarget == "RandomEnemy")
+				{
+					local threats = aibot.CollectThreats()
+					local random = threats[RandomInt(0, threats.len() - 1)]
+
+					// convert to vector
+					aimtarget_ent = random
+					aimtarget_pos = random.EyePosition()
+
+					// printl(aimtarget_pos)
+				}
+				else if (aimtarget == "ActionPoint" && action_point)
+					aimtarget_pos = action_point.GetOrigin()
+
+				if ((bot.GetOrigin() - action_point.GetOrigin()).Length() < distance)
+				{
+					aibot.LookAt(aimtarget_pos, INT_MAX, INT_MAX)
+
+					if (killaimtarget && !PopExtUtil.InButton(bot, killaimtarget))
+						PopExtUtil.PressButton(bot, killaimtarget, duration)
+				}
+
 			}
-			else if (aimtarget == "ActionPoint" && bot.GetActionPoint())
-				aimtarget_pos = bot.GetActionPoint().GetOrigin()
-
-			aibot.LookAt(aimtarget_pos, 500, 500)
-
-			if (killaimtarget && !PopExtUtil.InButton(bot, killaimtarget) && (bot.GetOrigin() - aimtarget_pos).Length() < distance)
-				PopExtUtil.PressButton(bot, killaimtarget, duration)
-
 		}
 	}
 
@@ -2057,6 +2113,7 @@ local popext_funcs = {
 		local aimtarget			= "aimtarget" in args ? args.aimtarget : null
 		local killaimtarget		= "killaimtarget" in args ? args.killaimtarget : 0
 		local alwayslook		= "alwayslook" in args ? args.alwayslook : false
+		local waituntildone		= "waituntildone" in args ? args.waituntildone : false
 		local next_action_point = "next_action_point" in args ? args.next_action_point : ""
 		local distance			= "distance" in args ? args.distance : 50
 		local duration			= "duration" in args ? args.duration : 10
@@ -2122,7 +2179,18 @@ local popext_funcs = {
 		}
 
 		PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(FindByName(null, `%s`))", action_point.GetName()), delay)
-		PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
+
+		if (!waituntildone)
+			PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
+		else
+			bot.GetScriptScope().PlayerThinkTable.ActionPointWaitUntilDone <- function() {
+
+				if (action_point && action_point.IsValid() && (bot.GetOrigin() - action_point.GetOrigin()).Length() > distance)
+					return
+
+				PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
+				delete PlayerThinkTable.ActionPointWaitUntilDone
+			}
 	}
 
 	function OnScriptHook_OnTakeDamage(params) {
@@ -2132,7 +2200,7 @@ local popext_funcs = {
 		if (!bot.IsPlayer() || !bot.IsBotOfType(TF_BOT_TYPE)) return
 
 		local scope = bot.GetScriptScope()
-		foreach (_, func in scope.TakeDamageTable) { func(params) }
+		foreach (func in scope.TakeDamageTable) { func(params) }
 	}
 
 	function OnGameEvent_player_team(params) {
@@ -2152,7 +2220,7 @@ local popext_funcs = {
 
 		if (params.team == TEAM_SPECTATOR) _AddThinkToEnt(bot, null)
 
-		foreach (_, func in scope.TeamSwitchTable) func(params)
+		foreach (func in scope.TeamSwitchTable) func(params)
 	}
 
 	function OnGameEvent_player_death(params) {
@@ -2162,7 +2230,7 @@ local popext_funcs = {
 
 		local scope = bot.GetScriptScope()
 		bot.ClearAllBotTags()
-		foreach (_, func in scope.DeathHookTable) func(params)
+		foreach (func in scope.DeathHookTable) func(params)
 
 		_AddThinkToEnt(bot, null)
 	}
