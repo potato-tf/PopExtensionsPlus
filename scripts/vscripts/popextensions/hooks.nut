@@ -10,6 +10,7 @@ PopExt <- popExtEntity.GetScriptScope()
 	icons 	  = []
 
 	function AddHooksToScope(name, table, scope) {
+
 		foreach(hookName, func in table) {
 			// Entries in hook table must begin with 'On' to be considered hooks
 			if (hookName.slice(0,2) == "On") {
@@ -69,7 +70,7 @@ PopExt <- popExtEntity.GetScriptScope()
 				if (attacker != null) local attackerscope = attacker.GetScriptScope()
 
 				if (victim.GetClassname() == "tank_boss" && "popProperty" in scope)
-					if ("CritImmune" in scope.popProperty && scope.popProperty.CritImmune)
+					if ("CritImmune" in scope.popProperty && scope.popProperty.CritImmune && params.damage_type & DMG_CRITICAL)
 						params.damage_type = params.damage_type &~ DMG_CRITICAL
 
 				else if (attacker != null && attacker.GetClassname() == "tank_boss" && "popProperty" in attackerscope && victim.IsPlayer())
@@ -316,10 +317,12 @@ __CollectGameEventCallbacks(PopExtHooks.Events)
 function PopulatorThink() {
 
 	for (local tank; tank = FindByClassname(tank, "tank_boss");) {
+
 		tank.ValidateScriptScope()
 		local scope = tank.GetScriptScope()
 
 		if (!("created" in scope)) {
+
 			scope.created         <- true
 			scope.TankThinkTable  <- {}
 			scope.maxHealth       <- tank.GetMaxHealth()
@@ -337,13 +340,16 @@ function PopulatorThink() {
 			}
 
 			local tankName = tank.GetName().tolower()
+
 			foreach(name, table in tankNamesWildcard)
 				if (startswith(tankName, name))
 					PopExtHooks.AddHooksToScope(tankName, table, scope)
+
 			if (tankName in tankNames)
 				PopExtHooks.AddHooksToScope(tankName, tankNames[tankName], scope)
 
 			if ("popProperty" in scope) {
+
 				if ("TankModel" in scope.popProperty) {
 					scope.popProperty.Model <- scope.popProperty.TankModel
 					delete scope.popProperty.TankModel
@@ -412,6 +418,7 @@ function PopulatorThink() {
 				}
 
 				if ("Team" in scope.popProperty && !scope.teamchanged) {
+
 					switch(scope.popProperty.Team.tostring().toupper()) {
 						case "RED":
 							scope.popProperty.Team = TF_TEAM_PVE_DEFENDERS
@@ -437,6 +444,7 @@ function PopulatorThink() {
 					ScreenShake(tank.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true)
 
 				if ("IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
+
 					//todo fix rage on same team tank
 					if (!("DisableTracks" in scope.popProperty))
 						scope.popProperty.DisableTracks <- true
@@ -481,9 +489,13 @@ function PopulatorThink() {
 					scope.blimpTrain <- SpawnEntityFromTable("func_tracktrain", {origin = tank.GetOrigin(), startspeed = INT_MAX, target = scope.popProperty.StartTrack})
 
 					scope.TankThinkTable.BlimpThink <- function() {
-						if (self == null) return //this is normally not possible, however we need to do a pretty gross hack that will turn the tank into a null instance sometimes
+
+						// this is normally not possible, however we need to do a pretty gross hack that will turn the tank into a null instance sometimes
+						if (self == null) return
+
 						self.SetAbsOrigin(blimpTrain.GetOrigin())
 						self.GetLocomotionInterface().Reset()
+
 						//update func_tracktrain if tank's speed is changed
 						if (GetPropFloat(blimpTrain, "m_flSpeed") != GetPropFloat(self, "m_speed"))
 							EntFireByHandle(blimpTrain, "SetSpeedReal", GetPropFloat(self, "m_speed").tostring(), -1, null, null)

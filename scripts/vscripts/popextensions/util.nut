@@ -349,14 +349,14 @@
 		child.SetLocalAngles(origAngles + QAngle(0, 0, 1))
 		child.SetLocalAngles(origAngles)
 
-		local origVel = child.GetVelocity()
+		local origVel = child.GetAbsVelocity()
 		child.SetAbsVelocity(origVel + Vector(0, 0, 1))
 		child.SetAbsVelocity(origVel)
 
-		EntFireByHandle(child, "SetParent", "!activator", 0, parent, parent)
+		EntFireByHandle(child, "SetParent", "!activator", -1, parent, parent)
 		if (attachment != null) {
 			SetPropEntity(child, "m_iParentAttachment", parent.LookupAttachment(attachment))
-			EntFireByHandle(child, "SetParentAttachmentMaintainOffset", attachment, 0, parent, parent)
+			EntFireByHandle(child, "SetParentAttachmentMaintainOffset", attachment, -1, parent, parent)
 		}
 	}
 

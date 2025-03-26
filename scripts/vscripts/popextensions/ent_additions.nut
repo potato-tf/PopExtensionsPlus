@@ -92,7 +92,7 @@ function OnPostSpawn()
 
         self.GetScriptScope().ProjectileFixes <- function()
         {
-            for (local projectile; projectile = FindByClassnameWithin(projectile, "tf_projectile*", self.GetOrigin(), 16);)
+            for (local projectile; projectile = FindByClassnameWithin(projectile, "tf_projectile*", self.GetOrigin(), 1);)
             {
                 if (projectile.GetEFlags() & EFL_NO_MEGAPHYSCANNON_RAGDOLL) continue
 

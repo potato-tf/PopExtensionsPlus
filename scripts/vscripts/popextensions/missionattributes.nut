@@ -1525,124 +1525,16 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				}
 
 				EntFireByHandle(player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon(self)", SINGLE_TICK, null, null)
-
-				//old mince code, needlessly complicated
-				// function HasVal(arr, val) foreach (v in arr) if (v == val) return true
-
-				// function IsInMultiList(arr, val) {
-				// 	if (arr.len() <= 0) return false
-
-				// 	local in_list = false
-				// 	foreach (a in arr) {
-				// 		if (HasVal(a, val)) {
-				// 			in_list = true
-				// 			break
-				// 		}
-				// 	}
-				// 	return in_list
-				// }
-
-				// for (local i = 0; i < SLOT_COUNT; ++i) {
-				// 	local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
-				// 	if (wep == null) continue
-
-				// 	local tfclass = PopExtUtil.Classes[player.GetPlayerClass()]
-
-				// 	local slot  = PopExtUtil.Slots[i]
-				// 	local index = PopExtUtil.GetItemIndex(wep)
-				// 	local cls	= wep.GetClassname()
-
-				// 	local whitelists = []
-				// 	local tables     = []
-
-				// 	tables.insert(0, value)
-				// 	if ("Whitelist" in value) whitelists.insert(0, value.Whitelist)
-
-				// 	if (tfclass in value) {
-				// 		tables.insert(0, value[tfclass])
-				// 		if ("Whitelist" in value[tfclass])
-				// 			whitelists.insert(0, value[tfclass].Whitelist)
-				// 	}
-
-				// 	if (tfclass in value && slot in value[tfclass]) {
-				// 		tables.insert(0, value[tfclass][slot])
-				// 		if ("Whitelist" in value[tfclass][slot])
-				// 			whitelists.insert(0, value[tfclass][slot].Whitelist)
-				// 	}
-
-
-				// 	if (whitelists.len() > 0) {
-				// 		local in_whitelist = IsInMultiList(whitelists, index) || IsInMultiList(whitelists, cls)
-
-				// 		if (!in_whitelist) {
-				// 			wep.Kill()
-				// 			continue
-				// 		}
-				// 	}
-
-				// 	foreach (table in tables) {
-				// 		local identifiers = [index, cls]
-				// 		local full_break  = false
-
-				// 		foreach (id in identifiers) {
-				// 			if (id in table) {
-				// 				local value = table[id]
-
-				// 				if (value == null) {
-				// 					wep.Kill()
-				// 					full_break = true
-				// 					break
-				// 				}
-				// 				else if (value == "") {
-				// 					printl("GIVE STOCK ITEM, check with IsInMultiList")
-				// 				}
-				// 				else if (typeof value == "string" && value.len() > 0) {
-				// 					printl("INVALID VALUE "+value+ "FOR k: "+id)
-				// 					continue
-				// 				}
-				// 				else {
-				// 					try {
-				// 						local value = value.tointeger()
-				// 						printl("REPLACE ITEM WITH ITEMINDEX "+value)
-				// 					}
-				// 					catch (e) {}
-				// 				}
-				// 			}
-				// 		}
-
-				// 		if (full_break) break
-				// 	}
-				// }
 			}
 		}
 
-		// DisableSound = function(value) {
+		// =====================================================================================
+		// mostly used for replacing teamplay_broadcast_audio sounds
+		// also hardcoded to replace specific sounds for tanks/deaths
 
-		// 	if (typeof value != "array") PopExtMain.Error.RaiseValueError("DisableSound", value, "value must be an array")
-
-		// 	MissionAttributes.ThinkTable.DisableSounds <- function() {
-
-		// 		foreach (sound in value)
-		// 		{
-
-		// 			foreach (player in PopExtUtil.HumanArray)
-		// 			{
-		// 				StopSoundOn(sound, player)
-		// 				player.StopSound(sound)
-		// 			}
-
-		// 			StopSoundOn(sound, PopExtUtil.Worldspawn)
-		// 			PopExtUtil.Worldspawn.StopSound(sound)
-		// 		}
-		// 	}
-		// break
-
-		// =================================================================================
-		// hardcoded to only be able to replace specific sounds
-		// spamming stopsound in a think function is very laggy, gotta be smarter than that
 		// see `replace weapon fire sound` and more in customattributes.nut for wep sounds
-		// see the tank sound overrides in hooks.nut for disabling tank explosions
-		// =================================================================================
+		// see the tank sound overrides in hooks.nut for more comprehensive tank sound overrides
+		// =====================================================================================
 
 		SoundOverrides = function(value) {
 
@@ -1665,7 +1557,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				"MVM.TankDeploy" : null
 				"MVM.TankExplodes" : null
 			}
-			local names = []
 
 			// local BroadcastAudioSounds = {
 
@@ -1707,24 +1598,30 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					if (override != null) TankSounds[sound].append(override)
 				}
 
-				{
-					MissionAttributes.ThinkTable.SetTankSounds <- function()
-					{
-						for (local tank; tank = FindByClassname(tank, "tank_boss");)
-						{
-							local scope = tank.GetScriptScope()
-
-							if (!("popProperty" in scope)) scope.popProperty <- {}
-							if (!("SoundOverrides" in scope)) scope.popProperty.SoundOverrides <- {}
-							foreach (tanksound, tankoverride in TankSounds) if (!(split(tanksound, "k")[1] in scope.popProperty.SoundOverrides)) scope.popProperty.SoundOverrides[split(tanksound, "k")[1]] <- tankoverride
-							if ("created" in scope) delete scope.created
-						}
-					}
-
-				}
-
 				MissionAttributes.SoundsToReplace[sound] <- override
 			}
+
+
+			MissionAttributes.ThinkTable.SetTankSounds <- function()
+			{
+				for (local tank; tank = FindByClassname(tank, "tank_boss");)
+				{
+					tank.ValidateScriptScope()
+					local scope = tank.GetScriptScope()
+
+					if (!("popProperty" in scope)) scope.popProperty <- {}
+					if (!("SoundOverrides" in scope)) scope.popProperty.SoundOverrides <- {}
+
+					foreach (tanksound, tankoverride in TankSounds)
+					{
+						local tanksound_popproperty = split(tanksound, "k")[1]
+
+						if (!(tanksound_popproperty in scope.popProperty.SoundOverrides))
+							scope.popProperty.SoundOverrides[tanksound_popproperty] <- tankoverride
+					}
+				}
+			}
+
 
 			//sounds played on death (giant/buster explosions)
 			MissionAttributes.DeathHookTable.SoundOverrides <- function(params) {
@@ -1736,7 +1633,11 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					if (override)
 					{
 						// StopSoundOn(sound, victim)
-						MissionAttributes.EmitSoundFunc <- function() { if (override && override.len()) EmitSoundEx({sound_name = override[0], entity = victim}) }
+						MissionAttributes.EmitSoundFunc <- function() {
+							if (override && override.len())
+								EmitSoundEx({sound_name = override[0], entity = victim})
+						}
+
 						EntFireByHandle(victim, "RunScriptCode", format("StopSoundOn(`%s`, self)", sound), -1, null, null)
 						EntFireByHandle(victim, "RunScriptCode", "MissionAttributes.EmitSoundFunc()", -1, null, null)
 					}
@@ -2872,7 +2773,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		}
 
 		function OnGameEvent_player_death(params) {
-			if (MissionAttributes.SoundsToReplace.len() != 0)
+			if (MissionAttributes.SoundsToReplace.len())
 			{
 				foreach (sound, override in MissionAttributes.SoundsToReplace)
 					foreach (player in PopExtUtil.HumanArray)
@@ -2912,8 +2813,11 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 			if (params.sound in MissionAttributes.SoundsToReplace)
 			{
+				local split_sound = split(params.sound, ".")
+				local sound_last = split_sound[split_sound.len() - 1]
+
 				foreach (player in PopExtUtil.HumanArray)
-					StopSoundOn(params.sound, player)
+					sound_last == "wav" || sound_last == "mp3" ? player.StopSound(params.sound) : StopSoundOn(params.sound, player)
 
 				if (MissionAttributes.SoundsToReplace[params.sound] == null) return
 

@@ -5,11 +5,13 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
 ::SpawnTemplate <- function (pointtemplate, parent = null, origin = "", angles = "", forceparent = false) {
-	
-	if (forceparent && parent.IsEFlagSet(EFL_SPAWNTEMPLATE)) parent.RemoveEFlags(EFL_SPAWNTEMPLATE) //forceparent is set, delete the EFlag to parent another template
 
-	if (parent != null && parent.IsEFlagSet(EFL_SPAWNTEMPLATE)) return //we already have a template
-	
+	if (forceparent && parent.IsEFlagSet(EFL_SPAWNTEMPLATE))
+		parent.RemoveEFlags(EFL_SPAWNTEMPLATE) //forceparent is set, delete the EFlag to parent another template
+
+	if (parent != null && parent.IsEFlagSet(EFL_SPAWNTEMPLATE))
+		return //we already have a template
+
 	// credit to ficool2
 	PopExt.globalTemplateSpawnCount <- PopExt.globalTemplateSpawnCount + 1
 	local template = CreateByClassname("point_script_template")
@@ -34,16 +36,22 @@ PopExt.globalTemplateSpawnCount   <- 0
 			entities.append(value)
 		}
 	})
+
 	scope.PostSpawn <- function(named_entities) {
+
 		//can only set bounding box size for brush entities after they spawn
-		foreach(entity in Entities) {
+		foreach(entity in Entities)
+		{
 			local responsecontext = GetPropString(entity, "m_iszResponseContext")
 			local buf = responsecontext.find(",") ? split(responsecontext, ",") : split(responsecontext, " ")
-			if (buf.len() == 6) {
+
+			if (buf.len() == 6)
+			{
 				buf.apply( function(val) { return val.tofloat() })
 				entity.SetSize(Vector(buf[0], buf[1], buf[2]), Vector(buf[3], buf[4], buf[5]))
 				entity.SetSolid(2)
 			}
+
 			scope.SpawnedEntities[entity] <- [origin, angles]
 
 			if (origin != "" || angles != "")
@@ -65,7 +73,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 					{
 						if (typeof angles == "QAngle")
 							k.SetAbsAngles(angles)
-						else 
+						else
 						{
 							local angbuf = v[1].find(",") ? split(v[1], ",") : split(v[1], " ")
 							angbuf.apply(@(val) val.tofloat() )
@@ -85,7 +93,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 				//entities parented to players do not kill itself when the player dies as the player entity is not considered killed
 				if (parent.IsPlayer()) {
-					
+
 					parent.AddEFlags(EFL_SPAWNTEMPLATE)
 
 					if (keepalive == false) {
@@ -102,8 +110,11 @@ PopExt.globalTemplateSpawnCount   <- 0
 			}
 		}
 		if (parent != null) {
+
 			function FireOnParentKilledOutputs() {
+
 				foreach(output in scope.OnParentKilledOutputArray) {
+
 					local target = output.Target
 					local action = output.Action
 					local param  = ("Param" in output) ? output.Param.tostring() : ""
@@ -114,8 +125,10 @@ PopExt.globalTemplateSpawnCount   <- 0
 			}
 
 			if (parent.IsPlayer()) {
+
 				// copied from popextensions_hooks.nut
 				if (scope.OnParentKilledOutputArray.len()) {
+
 					local playerscope = parent.GetScriptScope()
 
 					// if (!("popHooks" in playerscope)) {
@@ -136,6 +149,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 			}
 			//use own think instead of parent's think
 			function CheckIfKilled() {
+
 				if (parent.IsValid()) {
 					lastorigin <- parent.GetOrigin()
 					lastangles <- parent.GetAbsAngles()
@@ -151,6 +165,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 					FireOnParentKilledOutputs()
 
 					SetPropString(self, "m_iszScriptThinkFunction", "")
+					self.RemoveEFlags(EFL_SPAWNTEMPLATE)
 				}
 
 				if (removeifkilled != "") {
@@ -238,13 +253,13 @@ PopExt.globalTemplateSpawnCount   <- 0
 		if (typeof(entity) == "table") {
 
 			foreach(classname, keyvalues in entity) {
-		
-				if (classname == "OnSpawnOutput") 
+
+				if (classname == "OnSpawnOutput")
 					scope.OnSpawnOutputArray.append(keyvalues)
-					
-				else if (classname == "OnParentKilledOutput") 
+
+				else if (classname == "OnParentKilledOutput")
 					scope.OnParentKilledOutputArray.append(keyvalues)
-				
+
 				else {
 					//adjust origin and angles
 					if ("origin" in keyvalues) {
