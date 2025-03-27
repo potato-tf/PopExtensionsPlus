@@ -1807,7 +1807,7 @@ local popext_funcs = {
 		local delay = "delay" in args ? args.delay : args.type
 
 		if (bot.IsInASquad())
-			PopExtUtil.PlayerScriptEntFire(bot, "if (self.IsAlive()) self.DisbandCurrentSquad()", delay)
+			PopExtUtil.PlayerScriptEntFire(bot, "self.DisbandCurrentSquad()", delay)
 	}
 
 
@@ -1823,7 +1823,7 @@ local popext_funcs = {
 		local delay = "delay" in args ? args.delay : args.type
 
 		if (bot.IsInASquad())
-			PopExtUtil.PlayerScriptEntFire(bot, "if (self.IsAlive()) self.LeaveSquad()", delay)
+			PopExtUtil.PlayerScriptEntFire(bot, "self.LeaveSquad()", delay)
 	}
 
 	/******************************************************************************************

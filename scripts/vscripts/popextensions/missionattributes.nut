@@ -2663,7 +2663,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		MissionAttributes.ResetConvars()
 		this.PathNum = 0
 		foreach (bot in PopExtUtil.BotArray)
-			if (bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
+			if (bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
 
 		for (local wearable; wearable = FindByClassname(wearable, "tf_wearable");)
@@ -2796,7 +2796,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 
             foreach (player in PopExtUtil.PlayerArray)
-                PopExtMain.PlayerCleanup(player)
+				if (player.IsValid())
+					PopExtMain.PlayerCleanup(player)
 
 			MissionAttributes.Cleanup()
 		}
