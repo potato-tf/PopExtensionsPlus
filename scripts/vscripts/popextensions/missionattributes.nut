@@ -1287,6 +1287,9 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				MissionAttributes.PathNum++
 
+				for (local path; path = FindByName(path, "extratankpath*");)
+					EntFireByHandle(path, "Kill", "", -1, null, null)
+
 				foreach (i, pos in path) {
 					local org = split(pos, " ")
 
@@ -1297,14 +1300,14 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					tracks.append(track)
 				}
 
-			local lastnode = tracks[tracks.len() - 1]
-			PopExtUtil.SetTargetname(lastnode, format("%s_lastnode", lastnode.GetName()))
+				local lastnode = tracks[tracks.len() - 1]
+				PopExtUtil.SetTargetname(lastnode, format("%s_lastnode", lastnode.GetName()))
 
-			tracks.append(null) //dummy value to put at the end
+				tracks.append(null) //dummy value to put at the end
 
-			for (local i = 0; i < tracks.len() - 1; i++)
-				if (tracks[i] != null)
-					SetPropEntity(tracks[i], "m_pnext", tracks[i+1])
+				for (local i = 0; i < tracks.len() - 1; i++)
+					if (tracks[i] != null)
+						SetPropEntity(tracks[i], "m_pnext", tracks[i+1])
 			}
 		}
 

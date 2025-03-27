@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "03.26.2025.3"
+::popExtensionsVersion <- "03.27.2025.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -278,6 +278,7 @@ if (!("_AddThinkToEnt" in _root))
 			EntFire("_popext*", "Kill")
 			EntFire("__util*", "Kill")
 			EntFire("__bot*", "Kill")
+			EntFire("extratankpath*", "Kill")
 		}
 	}
 }

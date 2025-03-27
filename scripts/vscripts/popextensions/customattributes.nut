@@ -547,10 +547,15 @@
 			if (wep == null) continue
 
 			CustomAttributes.TakeDamageTable[format("DmgVsSameClass_%d_%d", player.GetScriptScope().userid,  wep.entindex())] <-  function(params) {
+
 				local victim = params.const_entity
 				local attacker = params.attacker
 
+				if (attacker && (!attacker.IsValid() || attacker.GetTeam() == player.GetTeam()))
+					return
+
 				local scope = attacker.GetScriptScope()
+
 				if (
 					!attacker.IsPlayer() || !victim.IsPlayer() ||
 					!("mult dmg vs same class" in player.GetScriptScope().attribinfo) ||

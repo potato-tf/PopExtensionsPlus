@@ -415,7 +415,14 @@ local popext_funcs = {
      ******************************************************************************************/
 
 	popext_spawntemplate = function(bot, args) {
-		SpawnTemplate("template" in args ? args.template : args.type, bot)
+
+		local template   = "template" in args ? args.template : args.type
+		local parent 	 = "parent" in args ? args.parent : bot
+		local origin 	 = "origin" in args ? args.origin : bot.GetOrigin()
+		local angles 	 = "angles" in args ? args.angles : bot.EyeAngles()
+		local attachment = "attachment" in args ? args.attachment : null
+
+		SpawnTemplate(template, parent, origin, angles, attachment)
 	}
 
     /**********************************************************
@@ -504,16 +511,16 @@ local popext_funcs = {
 
 	popext_customattr = function(bot, args) {
 
-		local wep
+		local attr = "attr" in args ? args.attr : args.attribute
+		local value = args.value
+		local wep = "weapon" in args ? args.weapon : null
 
-		if ("weapon" in args) wep = PopExtUtil.HasItemInLoadout(bot, args.weapon)
+		local weapon = PopExtUtil.HasItemInLoadout(bot, wep)
 
-		local weapon = wep ? wep : bot.GetActiveWeapon()
+		if (wep == "ActiveWeapon")
+			weapon = bot.GetActiveWeapon()
 
-		if ("attr" in args)
-			CustomAttributes.AddAttr(bot, args.attr, args.value, weapon)
-		else
-			CustomAttributes.AddAttr(bot, args.attribute, args.value, weapon)
+		PopExtUtil.SetPlayerAttributes(bot, attr, value, weapon)
 	}
 
     /**********************************************************************************************************************************************
@@ -671,7 +678,7 @@ local popext_funcs = {
 		local command 			= "command" in args ? args.command : "goto action point"
 		local delay 			= "delay" in args ? args.delay : -1
 		local repeats 			= "repeats" in args ? args.repeats : 0
-		local repeat_cooldown	= "repeat_cooldown" in args ? args.repeat_cooldown : 0.0
+		local repeat_cooldown	= "cooldown" in args ? args.cooldown : 0.0
 
 		local cooldowntime = 0.0
 		bot.GetScriptScope().PlayerThinkTable.ActionPointThink <- function() {
@@ -696,7 +703,86 @@ local popext_funcs = {
 
 			if (Time() < cooldowntime) return
 
-			PopExtTags.SetupActionPoint(bot, args)
+			// look for action point entity name or handle
+			local target_point_ent = typeof(point) == "string" ? FindByName(null, point) : null
+			target_point_ent = !target_point_ent && typeof(point) == "instance" && point.IsValid() ? point : target_point_ent
+
+			local target_point = target_point_ent ? target_point_ent.GetOrigin() : Vector()
+
+			// spawn an action point
+			local action_point = CreateByClassname("bot_action_point")
+
+			action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
+			action_point.KeyValueFromString("next_action_point", next_action_point)
+			action_point.KeyValueFromString("command", command)
+
+			action_point.KeyValueFromInt("desired_distance", distance)
+			action_point.KeyValueFromInt("stay_time", stay_time)
+
+			action_point.SetOrigin(target_point)
+
+			// parent to the target if it's a player, building, or tank
+			// for making bots attack sentries use the "attack sentry at next action point" command
+			if (target_point_ent && command == "goto action point" && ( target_point_ent.IsPlayer() || target_point_ent.GetClassname() == "tank_boss" || startswith(target_point_ent.GetClassname(), "obj_") ) )
+				action_point.AcceptInput("SetParent", "!activator", target_point_ent, target_point_ent)
+
+			if ("output" in args && args.output.len() > 1)
+			{
+				local target  = args.output.target
+				local action  =  args.output.action
+				local param   = "param" in args.output ? args.output.param : ""
+				local delay   = "delay" in args.output ? args.output.delay : -1
+				local activator = "activator" in args.output ? args.output.activator : null
+				local caller = "caller" in args.output ? args.output.caller : null
+				local repeats = "repeats" in args.output ? args.output.repeats : -1
+
+				if (bot.HasBotTag("popext_generatorbot"))
+					AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
+				else
+					PopExtUtil.SetDestroyCallback(action_point, function() {
+
+						if (target == "!self")
+							target = bot
+
+						local entfirefunc = typeof(target) == "string" ? DoEntFire : EntFireByHandle
+						entfirefunc(target, action, param, delay, activator, caller)
+					})
+			}
+
+			DispatchSpawn(action_point)
+
+			// invalid ent, assume we're using xyz coordinates
+			if (!target_point_ent || !target_point_ent.IsValid())
+			{
+				local pos = Vector()
+
+				if (typeof(point) == "Vector")
+					pos = point
+				else
+				{
+					// this should throw a type error if we pass an invalid targetname instead of coordinates
+					local buf = null
+					point.find(",") ? buf = split(point, ",") : buf = split(point, " ")
+					buf.apply(@(v) v.tofloat() )
+					pos = Vector(buf[0], buf[1], buf[2])
+				}
+
+				action_point.SetOrigin(pos)
+			}
+
+			PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(FindByName(null, `%s`))", action_point.GetName()), delay)
+
+			if (!waituntildone)
+				PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
+			else
+				bot.GetScriptScope().PlayerThinkTable.ActionPointWaitUntilDone <- function() {
+
+					if (action_point && action_point.IsValid() && (bot.GetOrigin() - action_point.GetOrigin()).Length() > distance)
+						return
+
+					PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
+					delete PlayerThinkTable.ActionPointWaitUntilDone
+				}
 			repeats--
 
 			if (repeats < 0)
@@ -708,6 +794,12 @@ local popext_funcs = {
 			}
 
 			cooldowntime = Time() + (duration + repeat_cooldown)
+		}
+
+		bot.GetScriptScope().DeathHookTable.ActionPointDeath <- function() {
+			local action_point = bot.GetActionPoint()
+			if (action_point && action_point.IsValid())
+				action_point.Kill()
 		}
 
 		if (aimtarget)
@@ -793,9 +885,6 @@ local popext_funcs = {
      *                                                                                                                                                                                                                             *
      * Fires an entity input as soon as the bot spawns                                                                                                                                                                             *
      *                                                                                                                                                                                                                             *
-     * !!!WARNING!!! Passing a null activator/caller to certain entities will crash the server!                                                                                                                                    *
-     * trigger_stun and trigger_player_respawn_override are two notable examples                                                                                                                                                   *
-     *                                                                                                                                                                                                                             *
      * param, delay, activator, and caller are all optional                                                                                                                                                                        *
      *                                                                                                                                                                                                                             *
      * Example: popext_fireinput{target = `bignet`, action = `RunScriptCode`, param = `ClientPrint(null, 3, `I spawned one second ago!`)`, delay = 1, activator = `activator_targetname_here`, caller = `caller_targetname_here` } *
@@ -807,10 +896,10 @@ local popext_funcs = {
 		local action 	  = "action" in args ? args.action : args.cooldown
 		local param 	  = "param" in args ? args.param : ""
 		local delay       = "delay" in args ? args.delay : -1
-		local activator   = "activator" in args ? FindByName(null, args.activator) : null
-		local caller 	  = "caller" in args ? FindByName(null, args.caller) : null
-		local refire_time = "refire_time" in args ? args.refire_time : INT_MAX
-
+		local activator   = "activator" in args ? FindByName(null, args.activator) : bot
+		local caller 	  = "caller" in args ? FindByName(null, args.caller) : bot
+		local refire      = "refire" in args ? args.refire : 0
+		local refire_time = "refire_time" in args ? args.refire_time : 10.0
 		local entfirefunc = DoEntFire
 
 		if (target == "!self") {
@@ -818,7 +907,7 @@ local popext_funcs = {
 			target = bot
 		}
 		local cooldowntime = 0.0
-		if (refire_time == INT_MAX)
+		if (!refire)
 			entfirefunc( target, action, param, delay, activator, caller )
 		else
 			bot.GetScriptScope().PlayerThinkTable.EntFireRepeats <- function() {
@@ -826,6 +915,13 @@ local popext_funcs = {
 				if ( Time() < cooldowntime ) return
 
 				entfirefunc( target, action, param, delay, activator, caller )
+				refire--
+
+				if (refire < 0)
+				{
+					delete PlayerThinkTable.EntFireRepeats
+					return
+				}
 
 				cooldowntime = Time() + refire_time
 			}
@@ -1859,6 +1955,117 @@ local popext_funcs = {
 			}
 		}
 	}
+	popext_taunt = function(bot, args) {
+
+		local id       = args.id
+		local delay    = "delay" in args ? args.delay : -1
+		local cooldown = "cooldown" in args ? args.cooldown : 10.0
+		local repeats  = "repeats" in args ? args.repeats : 1
+		local duration = "duration" in args ? args.duration : INT_MAX
+
+		local cooldowntime = 0.0
+		bot.GetScriptScope().PlayerThinkTable.TauntThink <- function() {
+
+			if (cooldowntime > Time()) return
+
+			PopExtUtil.PlayerScriptEntFire(bot, @"
+				local weapon = CreateByClassname(`tf_weapon_bat`);
+				local active_weapon = bot.GetActiveWeapon();
+				bot.StopTaunt(true);
+				bot.RemoveCond(7);
+				DispatchSpawn(weapon);
+				SetPropInt(weapon, STRING_NETPROP_ITEMDEF, id);
+				SetPropBool(weapon, `m_AttributeManager.m_Item.m_bInitialized`, true);
+				SetPropBool(weapon, `m_bForcePurgeFixedupStrings`, true);
+				SetPropEntity(self, `m_hActiveWeapon`, activator);
+				SetPropInt(bot, `m_iFOV`, 0);
+				bot.HandleTauntCommand(0);
+				SetPropEntity(bot, `m_hActiveWeapon`, active_weapon);
+			", delay, null, null)
+			EntFireByHandle(weapon, "Kill", "", delay, null, null)
+
+			repeats--
+
+			if (repeats < 0)
+			{
+				delete PlayerThinkTable.TauntThink
+				return
+			}
+
+			cooldowntime = Time() + cooldown
+		}
+	}
+
+	popext_playsequence = function(bot, args) {
+
+		local sequence 		= "sequence" in args ? args.sequence : args.type
+		local playback_rate = "playback_rate" in args ? args.playback_rate : 1.0
+		local delay 		= "delay" in args ? args.delay : -1
+		local cooldown 		= "cooldown" in args ? args.cooldown : 10.0
+		local repeats 		= "repeats" in args ? args.repeats : 0
+		local duration 		= "duration" in args ? args.duration : INT_MAX
+		local ifseetarget 	= "ifseetarget" in args ? args.ifseetarget : false
+		local ifhealthbelow = "ifhealthbelow" in args ? args.ifhealthbelow : INT_MAX
+
+		local cooldowntime = Time() + delay
+		bot.GetScriptScope().PlayerThinkTable.PlaySequenceThink <- function() {
+
+			if (cooldowntime > Time()) return
+
+			if (bot.GetHealth() < ifhealthbelow) return
+			if (ifseetarget && !aibot.IsThreatVisible( aibot.FindClosestThreat( INT_MAX, false ) )) return
+
+			PopExtUtil.PlayerScriptEntFire(bot, format(@"
+				SetPropInt(self, `m_nRenderMode`, kRenderTransColor)
+				SetPropInt(self, `m_clrRender`, 0)
+				local dummy = CreateByClassname(`funCBaseFlex`)
+				dummy.KeyValueFromString(`targetname`, format(`__bot_dummy_model%d`, self.entindex()))
+
+				dummy.SetModel(self.GetModelName())
+				dummy.SetOrigin(self.GetOrigin())
+				dummy.SetSkin(self.GetSkin())
+				dummy.SetAbsAngles(QAngle(0, self.EyeAngles().y, 0))
+
+				DispatchSpawn(dummy)
+				dummy.AcceptInput(`SetParent`, `!activator`, self, self)
+
+				dummy.ResetSequence(typeof(%s) == dummy.LookupSequence(%s))
+				dummy.SetPlaybackRate(%f)
+
+				dummy.ValidateScriptScope()
+				dummy.GetScriptScope().PlaySequenceThink <- function() {
+
+					dummy.KeyValueFromVector(`origin`, self.GetOrigin())
+					dummy.KeyValueFromString(`angles`, self.GetAbsAngles().ToKVString())
+
+					if (GetPropFloat(self, `m_flCycle`) >= 0.99)
+					{
+						SetPropInt(self, `m_clrRender`, 0xFFFFFFFF)
+						if (self.IsValid())
+							self.Kill()
+						return
+					}
+					dummy.StudioFrameAdvance()
+					return -1
+				}
+				AddThinkToEnt(dummy, `PlaySequenceThink`)
+			", sequence, playback_rate), delay, null, null)
+
+
+			repeats--
+
+			if (repeats < 0)
+			{
+				delete PlayerThinkTable.PlaySequenceThink
+				return
+			}
+
+			cooldowntime = Time() + cooldown
+		}
+	}
+	popext_ignore = function(bot, args) {
+		bot.SetBehaviorFlag(args.flags)
+	}
 }
 ::Homing <- {
 	// Modify the AttachProjectileThinker function to accept projectile speed adjustment if needed
@@ -2127,91 +2334,6 @@ local popext_funcs = {
 			if (func in popext_funcs) popext_funcs[func](bot, args)
 
 		}
-	}
-	function SetupActionPoint(bot, args) {
-
-		local point			    = "target" in args ? args.target : args.type
-		local aimtarget			= "aimtarget" in args ? args.aimtarget : null
-		local killaimtarget		= "killaimtarget" in args ? args.killaimtarget : 0
-		local alwayslook		= "alwayslook" in args ? args.alwayslook : false
-		local waituntildone		= "waituntildone" in args ? args.waituntildone : false
-		local next_action_point = "next_action_point" in args ? args.next_action_point : ""
-		local distance			= "distance" in args ? args.distance : 50
-		local duration			= "duration" in args ? args.duration : 10
-		local stay_time			= "stay_time" in args ? args.stay_time : 10
-		local command 			= "command" in args ? args.command : "goto action point"
-		local delay 			= "delay" in args ? args.delay : -1
-		local repeats 			= "repeats" in args ? args.repeats : 0
-		local repeat_cooldown	= "repeat_cooldown" in args ? args.repeat_cooldown : 0
-
-		// look for action point entity name or handle
-		local target_point_ent = typeof(point) == "string" ? FindByName(null, point) : null
-		target_point_ent = !target_point_ent && typeof(point) == "instance" && point.IsValid() ? point : target_point_ent
-
-		local target_point = target_point_ent ? target_point_ent.GetOrigin() : Vector()
-
-		// spawn an action point
-		local action_point = CreateByClassname("bot_action_point")
-
-		action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
-		action_point.KeyValueFromString("next_action_point", next_action_point)
-		action_point.KeyValueFromString("command", command)
-
-		action_point.KeyValueFromInt("desired_distance", distance)
-		action_point.KeyValueFromInt("stay_time", stay_time)
-
-		action_point.SetOrigin(target_point)
-
-		// parent to the target if it's a player, building, or tank
-		// for making bots attack sentries use the "attack sentry at next action point" command
-		if (target_point_ent && command == "goto action point" && ( target_point_ent.IsPlayer() || target_point_ent.GetClassname() == "tank_boss" || startswith(target_point_ent.GetClassname(), "obj_") ) )
-			action_point.AcceptInput("SetParent", "!activator", target_point_ent, target_point_ent)
-
-		if ("output" in args && args.output.len() > 1)
-		{
-			local target  = args.output.target
-			local action  =  args.output.action
-			local param   = "param" in args.output ? args.output.param : ""
-			local delay   = "delay" in args.output ? args.output.delay : -1
-			local repeats = "repeats" in args.output ? args.output.repeats : -1
-
-			AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
-		}
-
-		DispatchSpawn(action_point)
-
-		// invalid ent, assume we're using xyz coordinates
-		if (!target_point_ent || !target_point_ent.IsValid())
-		{
-			local pos = Vector()
-
-			if (typeof(point) == "Vector")
-				pos = point
-			else
-			{
-				// this should throw a type error if we pass an invalid targetname instead of coordinates
-				local buf = null
-				point.find(",") ? buf = split(point, ",") : buf = split(point, " ")
-				buf.apply(@(v) v.tofloat() )
-				pos = Vector(buf[0], buf[1], buf[2])
-			}
-
-			action_point.SetOrigin(pos)
-		}
-
-		PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(FindByName(null, `%s`))", action_point.GetName()), delay)
-
-		if (!waituntildone)
-			PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
-		else
-			bot.GetScriptScope().PlayerThinkTable.ActionPointWaitUntilDone <- function() {
-
-				if (action_point && action_point.IsValid() && (bot.GetOrigin() - action_point.GetOrigin()).Length() > distance)
-					return
-
-				PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
-				delete PlayerThinkTable.ActionPointWaitUntilDone
-			}
 	}
 
 	function OnScriptHook_OnTakeDamage(params) {

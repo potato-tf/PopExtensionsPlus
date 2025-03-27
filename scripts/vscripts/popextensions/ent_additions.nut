@@ -1,32 +1,38 @@
 function Precache()
 {
     local classname = self.GetClassname()
-    if (classname == "obj_sentrygun" && GetPropInt(self, "m_spawnflags") & 64)
+    local spawnflags = GetPropInt(self, "m_spawnflags")
+
+    if (classname == "obj_sentrygun" && spawnflags & 64)
         SetPropBool(self, "m_bMiniBuilding", true);
+
+    else if (classname == "path_track")
+        self.SetEFlags(EFL_SERVER_ONLY)
 }
 
 function OnPostSpawn()
 {
     local classname = self.GetClassname()
+    local spawnflags = GetPropInt(self, "m_spawnflags")
     if (endswith(classname, "_button"))
     {
         //https://github.com/ValveSoftware/source-sdk-2013/pull/401
-        if (GetPropInt(self, "m_spawnflags") & SF_BUTTON_LOCKED)
+        if (spawnflags & SF_BUTTON_LOCKED)
             SetPropBool(self, "m_bLocked", true)
 
         //add non-solid spawnflag to func_button
-        if (GetPropInt(self, "m_spawnflags") & 16384)
+        if (spawnflags & 16384)
         {
             self.AddEFlags(EFL_USE_PARTITION_WHEN_NOT_SOLID)
             self.AddSolidFlags(FSOLID_NOT_SOLID)
         }
     }
     //add start disabled spawnflag
-    else if (classname == "light_dynamic" && GetPropInt(self, "m_spawnflags") & 16)
+    else if (classname == "light_dynamic" && spawnflags & 16)
         EntFireByHandle(self, "TurnOff", "", -1, null, null)
 
     //mini-sentry spawnflag
-    else if (classname == "obj_sentrygun" && GetPropInt(self, "m_spawnflags") & 64)
+    else if (classname == "obj_sentrygun" && spawnflags & 64)
     {
         self.SetModelScale(0.75, 0.0)
         self.SetSkin(self.GetSkin() + 2)
@@ -41,6 +47,7 @@ function OnPostSpawn()
 
         self.ValidateScriptScope()
         self.GetScriptScope().RotateFixThink <- function() {
+
             for (local i = 0; i < 3; i++)
             {
                 xyz[i] = GetPropFloat(self, format("m_angRotation[%d]", i))
@@ -80,7 +87,80 @@ function OnPostSpawn()
         self.GetScriptScope().Inputkill <- InputKill
         self.GetScriptScope().InputKillHierarchy <- InputKillHierarchy
         self.GetScriptScope().Inputkillhierarchy <- InputKillHierarchy
-        InputKillHierarchy()
+    }
+    // add spawnflag to apply to all players
+    // add spawnflag to allow for taking damage
+    // fix not being able to disable on dead players
+    // fix persisting between map/round changes
+    else if (classname == "point_viewcontrol")
+    {
+        function InputEnable()
+        {
+            if (spawnflags & 512)
+            {
+                local takedamage = GetPropInt(activator, "m_takedamage")
+                SetPropEntity(self, "m_hPlayer", null)
+                EntFireByHandle(activator, "RunScriptCode", format("SetPropInt(self, `m_takedamage`, %d)", takedamage), SINGLE_TICK, null, null)
+            }
+            if (self.IsEFlagSet(EFL_USER))
+                return true
+
+            if (spawnflags & 256)
+            {
+                self.AddEFlags(EFL_USER)
+                for (local i = 1; i <= MAX_CLIENTS; i++)
+                {
+                    local player = PlayerInstanceFromIndex(i)
+                    if (player && player.IsValid())
+                    {
+                        self.AcceptInput("Enable", "", player, player)
+                        SetPropEntity(self, "m_hPlayer", player)
+                    }
+                }
+                self.RemoveEFlags(EFL_USER)
+            }
+
+            return true
+        }
+
+        function InputDisable()
+        {
+            if (self.IsEFlagSet(EFL_USER))
+                return true
+
+            if (!activator.IsAlive())
+            {
+                SetPropEntity(self, "m_hPlayer", activator)
+                local life_state = GetPropInt(activator, "m_lifeState")
+                SetPropInt(activator, "m_lifeState", LIFE_ALIVE)
+                EntFireByHandle(activator, "RunScriptCode", format("SetPropInt(self, `m_lifeState`, %d)", life_state), SINGLE_TICK, null, null)
+            }
+
+            if (spawnflags & 256)
+            {
+                self.AddEFlags(EFL_USER)
+                for (local i = 1; i <= MAX_CLIENTS; i++)
+                {
+                    local player = PlayerInstanceFromIndex(i)
+                    if (player && player.IsValid())
+                    {
+                        SetPropEntity(self, "m_hPlayer", player)
+                        local life_state = GetPropInt(player, "m_lifeState")
+                        SetPropInt(player, "m_lifeState", LIFE_ALIVE)
+                        self.AcceptInput("Disable", "", player, player)
+                        EntFireByHandle(player, "RunScriptCode", format("SetPropInt(self, `m_lifeState`, %d)", life_state), SINGLE_TICK, null, null)
+                    }
+                }
+                self.RemoveEFlags(EFL_USER)
+            }
+            return true
+        }
+
+        self.ValidateScriptScope()
+        self.GetScriptScope().InputEnable <- InputEnable
+        self.GetScriptScope().Inputenable <- InputEnable
+        self.GetScriptScope().InputDisable <- InputDisable
+        self.GetScriptScope().Inputdisable <- InputDisable
     }
     else if (classname == "tf_point_weapon_mimic")
     {
@@ -149,13 +229,22 @@ function OnPostSpawn()
     }
 }
 
-::RotateEvent <- {
-    function OnGameEvent_recalculate_holidays(_)
-    {
-        if (GetRoundState() != GR_STATE_PREROUND) return
+::EntAdditionEvents <- {
+    function OnGameEvent_recalculate_holidays(_) {
 
-        for (local rotate; rotate = FindByClassname(rotate, "func_rotating");)
-            EntFireByHandle(rotate, "Kill", "", -1, null, null)
+        if (GetRoundState() == GR_STATE_PREROUND)
+            EntFire("func_rotating", "Kill")
+
+        else if (GetRoundState() == GR_STATE_GAME_OVER)
+            EntFire("player", "RunScriptCode", "DoEntFire(`point_viewcontrol`, `Disable`, ``, -1, self, self)")
+    }
+
+    function OnGameEvent_round_start(_) {
+        EntFire("player", "RunScriptCode", "DoEntFire(`point_viewcontrol`, `Disable`, ``, -1, self, self)")
+    }
+
+    function OnGameEvent_teamplay_round_start(_) {
+        EntFire("player", "RunScriptCode", "DoEntFire(`point_viewcontrol`, `Disable`, ``, -1, self, self)")
     }
 }
-__CollectGameEventCallbacks(RotateEvent)
+__CollectGameEventCallbacks(EntAdditionEvents)

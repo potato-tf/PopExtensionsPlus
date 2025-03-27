@@ -1938,17 +1938,21 @@
 	{
 		if (mapname != "")
 		{
-			// check the allowlist
-			if (Convars.IsConVarOnAllowList("nextlevel"))
-				Convars.SetValue("nextlevel", mapname)
+			// listen servers can just do this
+			if ( !IsDedicatedServer() )
+				SendToConsole( format( "nextlevel %s", mapname ) )
 
-			// not in the allowlist, check for allow point_servercommand, listen servers can always do this
-			else if ( !IsDedicatedServer() || ( IsDedicatedServer() && Convars.GetStr("sv_allow_point_servercommand" ) == "always") )
+			// check for allow point_servercommand
+			else if ( Convars.GetStr( "sv_allow_point_servercommand" ) == "always" )
 				SendToServerConsole( format( "nextlevel %s", mapname ) )
 
-			// can't set it, just load the next map in the mapcycle file or hope the server sets it for us
+			// check the allowlist
+			else if ( Convars.IsConVarOnAllowList( "nextlevel" ) )
+				Convars.SetValue( "nextlevel", mapname )
+
+			// can't set it, just load the next map in the mapcycle file or hope the server sets nextlevel for us
 			else
-				printl( "PopExtUtil.ChangeLevel: cannot set nextlevel! loading next map instead..." )
+				printl( "cannot set nextlevel! loading next map instead..." )
 		}
 
 		// required for GoToIntermission
@@ -1957,14 +1961,14 @@
 		// wait at scoreboard for this many seconds
 		Convars.SetValue( "mp_chattime", delay )
 
-		local intermission = Entities.CreateByClassname("point_intermission")
+		local intermission = Entities.CreateByClassname( "point_intermission" )
 
-		// for mvm, otherwise it'll just switch to the next map in the missioncycle file
+		// for mvm, otherwise it'll ignore delay and switch to the next map in the missioncycle file
 		if (!mvm_cyclemissionfile)
-			EntFire("info_populator", "Kill")
+			EntFire( "info_populator", "Kill" )
 
 		// don't use acceptinput so we execute after info_populator kill
-		EntFireByHandle(intermission, "Activate", "", -1, null, null)
+		EntFireByHandle( intermission, "Activate", "", -1, null, null )
 	}
 }
 

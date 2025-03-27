@@ -4,7 +4,7 @@ PopExt.wavePointTemplates         <- []
 PopExt.globalTemplateSpawnCount   <- 0
 
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
-::SpawnTemplate <- function (pointtemplate, parent = null, origin = "", angles = "", forceparent = false) {
+::SpawnTemplate <- function(pointtemplate, parent = null, origin = "", angles = "", forceparent = false, attachment = null) {
 
 	if (forceparent && parent.IsEFlagSet(EFL_SPAWNTEMPLATE))
 		parent.RemoveEFlags(EFL_SPAWNTEMPLATE) //forceparent is set, delete the EFlag to parent another template
@@ -88,8 +88,8 @@ PopExt.globalTemplateSpawnCount   <- 0
 			if (parent != null) {
 
 				if (typeof parent == "string") parent = FindByName(null, parent)
-				//this function is defined in popextensions.nut
-				PopExtUtil.SetParentLocalOrigin(entity, parent)
+				//this function is defined in util.nut
+				PopExtUtil.SetParentLocalOrigin(entity, parent, attachment)
 
 				//entities parented to players do not kill itself when the player dies as the player entity is not considered killed
 				if (parent.IsPlayer()) {
@@ -292,6 +292,15 @@ PopExt.globalTemplateSpawnCount   <- 0
 						local maxs = ("maxs" in keyvalues) ? keyvalues.maxs : Vector()
 						if (typeof(mins) == "Vector") mins =  mins.ToKVString()
 						if (typeof(maxs) == "Vector") maxs =  maxs.ToKVString()
+
+						local mins_sum = (mins.find(",") ? split(mins, ",") : split(mins, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
+						local maxs_sum = (maxs.find(",") ? split(maxs, ",") : split(maxs, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
+
+						if (mins_sum > maxs_sum) {
+							printl("\n\n**SPAWNTEMPLATE WARNING: mins > maxs on %s! Inverting...**\n\n", classname)
+							keyvalues.mins <- maxs
+							keyvalues.maxs <- mins
+						}
 
 						//overwrite responsecontext even if someone fills it in for some reason
 						keyvalues.responsecontext <- format("%s %s", mins, maxs)
