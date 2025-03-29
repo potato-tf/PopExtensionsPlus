@@ -297,9 +297,11 @@ PopExt.globalTemplateSpawnCount   <- 0
 						local maxs_sum = (maxs.find(",") ? split(maxs, ",") : split(maxs, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
 
 						if (mins_sum > maxs_sum) {
-							printl(format("\n\n**SPAWNTEMPLATE WARNING: mins > maxs on %s! Inverting...**\n\n", classname))
+							printl(format("\n\n**SPAWNTEMPLATE WARNING: mins > maxs on %s! Inverting...**\n\n", "targetname" in keyvalues ? keyvalues.targetname : classname))
 							keyvalues.mins <- maxs
 							keyvalues.maxs <- mins
+							mins = maxs
+							maxs = mins
 						}
 
 						//overwrite responsecontext even if someone fills it in for some reason
