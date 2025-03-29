@@ -219,6 +219,8 @@
 		}
 	}
 
+	// example
+	// ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT)
 	function ShowChatMessage(target, fmt, ...) {
 		local result = "\x07FFCC22[Map] "
 		local start = 0
@@ -266,11 +268,12 @@
 		ClientPrint(target, HUD_PRINTTALK, result)
 	}
 
-	// example
-	// ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT)
 	function CopyTable(table) {
-		if (table == null) return
+
+		if (table == null || typeof(table) != "table") return
+
 		local newtable = {}
+
 		foreach (key, value in table)
 		{
 			newtable[key] <- value
@@ -1833,6 +1836,7 @@
 		function OnGameEvent_teamplay_round_start(params) {
 
 			for (local i = 1; i <= MAX_CLIENTS; i++) {
+
 				local player = PlayerInstanceFromIndex(i)
 
 				// printl(player)

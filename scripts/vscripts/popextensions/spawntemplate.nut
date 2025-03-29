@@ -4,7 +4,7 @@ PopExt.wavePointTemplates         <- []
 PopExt.globalTemplateSpawnCount   <- 0
 
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
-::SpawnTemplate <- function(pointtemplate, parent = null, origin = "", angles = "", forceparent = false, attachment = null) {
+::SpawnTemplate <- function(pointtemplate, parent = null, origin = "", angles = "", forceparent = false, attachment = null, purgestrings = true) {
 
 	if (forceparent && parent.IsEFlagSet(EFL_SPAWNTEMPLATE))
 		parent.RemoveEFlags(EFL_SPAWNTEMPLATE) //forceparent is set, delete the EFlag to parent another template
@@ -52,6 +52,9 @@ PopExt.globalTemplateSpawnCount   <- 0
 				entity.SetSolid(2)
 			}
 
+			if (purgestrings)
+				SetPropBool(entity, "m_bForcePurgeFixedupStrings", true)
+
 			scope.SpawnedEntities[entity] <- [origin, angles]
 
 			if (origin != "" || angles != "")
@@ -96,7 +99,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 					parent.AddEFlags(EFL_SPAWNTEMPLATE)
 
-					if (keepalive == false) {
+					if (!keepalive) {
 						parent.ValidateScriptScope()
 						local scope = parent.GetScriptScope()
 
@@ -150,15 +153,14 @@ PopExt.globalTemplateSpawnCount   <- 0
 			//use own think instead of parent's think
 			function CheckIfKilled() {
 
-				if (parent.IsValid()) {
+				if (parent && parent.IsValid()) {
 					lastorigin <- parent.GetOrigin()
 					lastangles <- parent.GetAbsAngles()
 				}
 				else {
-					if (keepalive == true) {
+					if (keepalive)
 						//spawn template again after being killed
 						SpawnTemplate(pointtemplate, null, lastorigin + origin, lastangles + angles)
-					}
 
 					//fire OnParentKilledOutputs
 					//does not work on its own internal entities if NoFixup is true since the entities are always killed
@@ -171,7 +173,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 				if (removeifkilled != "") {
 					if (FindByName(null, removeifkilled) == null) {
 						foreach(entity, _ in scope.SpawnedEntities)
-							if (entity.IsValid())
+							if (entity && entity.IsValid())
 								entity.Kill()
 
 						SetPropString(self, "m_iszScriptThinkFunction", "")
@@ -179,7 +181,9 @@ PopExt.globalTemplateSpawnCount   <- 0
 				}
 				return -1
 			}
-			"PlayerThinkTable" in scope ? scope.PlayerThinkTable.CheckIfKilled <- CheckIfKilled : scope.CheckIfKilled <- CheckIfKilled; AddThinkToEnt(template, "CheckIfKilled")
+			"PlayerThinkTable" in scope ?
+			scope.PlayerThinkTable.CheckIfKilled <- CheckIfKilled :
+			scope.CheckIfKilled <- CheckIfKilled; AddThinkToEnt(template, "CheckIfKilled")
 		}
 
 		//fire OnSpawnOutputs
@@ -196,50 +200,58 @@ PopExt.globalTemplateSpawnCount   <- 0
 	//make a copy of the pointtemplate
 	local pointtemplatecopy = PopExtUtil.CopyTable(PointTemplates[pointtemplate])
 
+	if ("DontPurgeStrings" in pointtemplatecopy && !pointtemplatecopy.DontPurgeStrings)
+		purgestrings = false
+
 	//establish "flags"
 	foreach(index, entity in pointtemplatecopy) {
-		if (typeof(index) == "string") {
-			if (index.tolower() == "nofixup" && (entity == 1 || entity)) nofixup = true
-			else if (index.tolower() == "keepalive" && (entity == 1 || entity)) keepalive = true
-			else if (index.tolower() == "removeifkilled") scope.removeifkilled <- entity
-		}
+
+		if (typeof(index) != "string") continue
+
+		if (index.tolower() == "nofixup" && entity)
+			nofixup = true
+
+		else if (index.tolower() == "keepalive" && entity)
+			keepalive = true
+
+		else if (index.tolower() == "dontpurgestrings" && entity)
+			purgestrings = false
+
+		else if (index.tolower() == "removeifkilled")
+			scope.removeifkilled <- entity
 	}
 
 	//perform name fixup
-	if (nofixup == false) {
+	if (!nofixup) {
 		//first, get list of targetnames in the point template for name fixup
-		foreach(index, entity in pointtemplatecopy) {
-			if (typeof(entity) == "table") {
-				foreach(classname, keyvalues in entity) {
-					foreach(key, value in keyvalues) {
-						if (key == "targetname" && scope.EntityFixedUpTargetName.find(value) == null) {
-							scope.EntityFixedUpTargetName.append(value)
-						}
-					}
-				}
-			}
+		foreach(index, entity in pointtemplatecopy)
+		{
+			if (typeof(entity) != "table") continue
+
+			foreach(classname, keyvalues in entity)
+				foreach(key, value in keyvalues)
+					if (key == "targetname" && scope.EntityFixedUpTargetName.find(value) == null)
+						scope.EntityFixedUpTargetName.append(value)
 		}
 
 		//iterate through all entities and fixup every value containing a valid targetname
 		//may have issues with targetnames that are substrings of other targetnames?
 		//this should cover targetnames, parentnames, target, and output params
-		foreach(index, entity in pointtemplatecopy) {
+		foreach(index, entity in pointtemplatecopy)
+		{
+			if (typeof(entity) != "table") continue
 
-			if (typeof(entity) == "table") {
+			foreach(classname, keyvalues in entity)
+			{
+				foreach(key, value in keyvalues)
+				{
+					if (typeof(value) != "string") continue
 
-				foreach(classname, keyvalues in entity) {
-
-					foreach(key, value in keyvalues) {
-
-						if (typeof(value) == "string") {
-
-							foreach(targetname in scope.EntityFixedUpTargetName) {
-
-								if (value.find(targetname) != null && value.find("/") == null) //ignore potential file paths, also ignores targetnames with "/"
-								{
-									keyvalues[key] <- value.slice(0, targetname.len()) + PopExt.globalTemplateSpawnCount + value.slice(targetname.len())
-								}
-							}
+					foreach(targetname in scope.EntityFixedUpTargetName)
+					{
+						if (value.find(targetname) != null && value.find("/") == null) //ignore potential file paths, also ignores targetnames with "/"
+						{
+							keyvalues[key] <- value.slice(0, targetname.len()) + PopExt.globalTemplateSpawnCount + value.slice(targetname.len())
 						}
 					}
 				}
@@ -249,67 +261,70 @@ PopExt.globalTemplateSpawnCount   <- 0
 	}
 
 	//add templates to point_script_template
-	foreach(index, entity in pointtemplatecopy) {
-		if (typeof(entity) == "table") {
+	foreach(index, entity in pointtemplatecopy)
+	{
+		if (typeof(entity) != "table") continue
 
-			foreach(classname, keyvalues in entity) {
+		foreach(classname, keyvalues in entity)
+		{
+			if (classname == "OnSpawnOutput")
+				scope.OnSpawnOutputArray.append(keyvalues)
 
-				if (classname == "OnSpawnOutput")
-					scope.OnSpawnOutputArray.append(keyvalues)
+			else if (classname == "OnParentKilledOutput")
+				scope.OnParentKilledOutputArray.append(keyvalues)
 
-				else if (classname == "OnParentKilledOutput")
-					scope.OnParentKilledOutputArray.append(keyvalues)
+			else
+			{
+				//adjust origin and angles
+				if ("origin" in keyvalues)
+				{
+					//if origin is a string, construct vectors to perform math on them if needed
+					if (typeof(keyvalues.origin) == "string") {
+						local buf = keyvalues.origin.find(",") ? split(keyvalues.origin, ",") : split(keyvalues.origin, " ")
 
-				else {
-					//adjust origin and angles
-					if ("origin" in keyvalues) {
-						//if origin is a string, construct vectors to perform math on them if needed
-						if (typeof(keyvalues.origin) == "string") {
-							local buf = keyvalues.origin.find(",") ? split(keyvalues.origin, ",") : split(keyvalues.origin, " ")
-
-							buf.apply(@(val) val.tofloat() )
-							keyvalues.origin = Vector(buf[0], buf[1], buf[2])
-						}
-						// keyvalues.origin += origin
+						buf.apply(@(val) val.tofloat() )
+						keyvalues.origin = Vector(buf[0], buf[1], buf[2])
 					}
-					else keyvalues.origin <- origin
-
-					if ("angles" in keyvalues) {
-						//if angles is a string, construct qangles to perform math on them if needed
-						if (typeof(keyvalues.angles) == "string") {
-							local buf = keyvalues.angles.find(",") ? split(keyvalues.angles, ",") : split(keyvalues.angles, " ")
-
-							buf.apply(@(val) val.tofloat() )
-							keyvalues.angles = QAngle(buf[0], buf[1], buf[2])
-						}
-						// keyvalues.angles += angles
-					}
-					else keyvalues.angles <- angles
-
-					//needed for brush entities
-					if ("mins" in keyvalues || "maxs" in keyvalues) {
-						local mins = ("mins" in keyvalues) ? keyvalues.mins : Vector()
-						local maxs = ("maxs" in keyvalues) ? keyvalues.maxs : Vector()
-						if (typeof(mins) == "Vector") mins =  mins.ToKVString()
-						if (typeof(maxs) == "Vector") maxs =  maxs.ToKVString()
-
-						local mins_sum = (mins.find(",") ? split(mins, ",") : split(mins, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
-						local maxs_sum = (maxs.find(",") ? split(maxs, ",") : split(maxs, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
-
-						if (mins_sum > maxs_sum) {
-							printl(format("\n\n**SPAWNTEMPLATE WARNING: mins > maxs on %s! Inverting...**\n\n", "targetname" in keyvalues ? keyvalues.targetname : classname))
-							keyvalues.mins <- maxs
-							keyvalues.maxs <- mins
-							mins = maxs
-							maxs = mins
-						}
-
-						//overwrite responsecontext even if someone fills it in for some reason
-						keyvalues.responsecontext <- format("%s %s", mins, maxs)
-					}
-
-					template.AddTemplate(classname, keyvalues)
+					// keyvalues.origin += origin
 				}
+				else keyvalues.origin <- origin
+
+				if ("angles" in keyvalues)
+				{
+					//if angles is a string, construct qangles to perform math on them if needed
+					if (typeof(keyvalues.angles) == "string") {
+						local buf = keyvalues.angles.find(",") ? split(keyvalues.angles, ",") : split(keyvalues.angles, " ")
+
+						buf.apply(@(val) val.tofloat() )
+						keyvalues.angles = QAngle(buf[0], buf[1], buf[2])
+					}
+					// keyvalues.angles += angles
+				}
+				else keyvalues.angles <- angles
+
+				//needed for brush entities
+				if ("mins" in keyvalues || "maxs" in keyvalues) {
+					local mins = ("mins" in keyvalues) ? keyvalues.mins : Vector()
+					local maxs = ("maxs" in keyvalues) ? keyvalues.maxs : Vector()
+					if (typeof(mins) == "Vector") mins =  mins.ToKVString()
+					if (typeof(maxs) == "Vector") maxs =  maxs.ToKVString()
+
+					local mins_sum = (mins.find(",") ? split(mins, ",") : split(mins, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
+					local maxs_sum = (maxs.find(",") ? split(maxs, ",") : split(maxs, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
+
+					if (mins_sum > maxs_sum) {
+						printl(format("\n\n**SPAWNTEMPLATE WARNING: mins > maxs on %s! Inverting...**\n\n", "targetname" in keyvalues ? keyvalues.targetname : classname))
+						keyvalues.mins <- maxs
+						keyvalues.maxs <- mins
+						mins = maxs
+						maxs = mins
+					}
+
+					//overwrite responsecontext even if someone fills it in for some reason
+					keyvalues.responsecontext <- format("%s %s", mins, maxs)
+				}
+
+				template.AddTemplate(classname, keyvalues)
 			}
 		}
 	}
@@ -325,7 +340,9 @@ PopExt.globalTemplateSpawnCount   <- 0
 ::SpawnTemplates <- {
 	//hook to both of these events to emulate OnWaveInit
 	Events = {
+
 		function OnGameEvent_mvm_wave_complete(params) {
+
 			foreach(entity in PopExt.wavePointTemplates)
 				if (entity.IsValid())
 					entity.Kill()
@@ -333,7 +350,8 @@ PopExt.globalTemplateSpawnCount   <- 0
 			PopExt.wavePointTemplates.clear()
 		}
 
-		function OnGameEvent_mvm_wave_failed(params) { //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
+		//despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
+		function OnGameEvent_mvm_wave_failed(params) {
 
 			foreach(entity in PopExt.wavePointTemplates)
 				if (entity.IsValid())
@@ -343,19 +361,23 @@ PopExt.globalTemplateSpawnCount   <- 0
 				SpawnTemplate(param[0], null, param[1], param[2])
 			}
 		}
+
 		function OnGameEvent_player_death(params) {
+
 			local player = GetPlayerFromUserID(params.userid)
 			local scope = player.GetScriptScope()
 
 			if ("TemplatesToKill" in scope)
 				foreach (func in scope.TemplatesToKill)
 					func()
+
 			player.RemoveEFlags(EFL_SPAWNTEMPLATE)
 		}
 	}
 
-	function DoSpawnTemplate(args = {pointtemplate = null, parent = null, origin = "", angles = "", forceparent = false}) {
-		SpawnTemplate(args.pointtemplate, args.parent, args.origin, args.angles, args.forceparent)
+	// alternative version that accepts a table of arguments
+	function DoSpawnTemplate(args = { pointtemplate = null, parent = null, origin = "", angles = "", forceparent = false, purgestrings = true }) {
+		SpawnTemplate(args.pointtemplate, args.parent, args.origin, args.angles, args.forceparent, args.purgestrings)
 	}
 }
 __CollectGameEventCallbacks(SpawnTemplates.Events)

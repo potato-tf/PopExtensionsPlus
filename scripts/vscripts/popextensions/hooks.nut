@@ -14,6 +14,7 @@ PopExt <- popExtEntity.GetScriptScope()
 		foreach(hookName, func in table) {
 			// Entries in hook table must begin with 'On' to be considered hooks
 			if (hookName.slice(0,2) == "On") {
+
 				if (!("popHooks" in scope))
 					scope.popHooks <- {}
 
@@ -62,8 +63,10 @@ PopExt <- popExtEntity.GetScriptScope()
 	Events = {
 
 		function OnScriptHook_OnTakeDamage(params) {
+
 			local victim = params.const_entity
 			local attacker = params.attacker
+
 			if (victim != null) {
 
 				local scope = victim.GetScriptScope()
@@ -86,6 +89,7 @@ PopExt <- popExtEntity.GetScriptScope()
 				PopExtHooks.FireHooksParam(attacker, scope, "OnDealDamage", params)
 			}
 		}
+
 		function OnGameEvent_player_spawn(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			local scope = player.GetScriptScope()
@@ -116,6 +120,7 @@ PopExt <- popExtEntity.GetScriptScope()
 
 			}
 		}
+
 		function OnGameEvent_player_team(params) {
 
 			if (params.team != TEAM_SPECTATOR) return
@@ -152,6 +157,7 @@ PopExt <- popExtEntity.GetScriptScope()
 
 			}
 		}
+
 		function OnGameEvent_player_hurt(params) {
 			local victim = GetPlayerFromUserID(params.userid)
 			if (victim.IsBotOfType(TF_BOT_TYPE)) {
@@ -165,6 +171,7 @@ PopExt <- popExtEntity.GetScriptScope()
 				PopExtHooks.FireHooksParam(attacker, scope, "OnDealDamagePost", params)
 			}
 		}
+
 		function OnGameEvent_player_death(params) {
 			local player = GetPlayerFromUserID(params.userid)
 			if (player.IsBotOfType(TF_BOT_TYPE)) {
@@ -187,6 +194,7 @@ PopExt <- popExtEntity.GetScriptScope()
 			// 	delete player.GetScriptScope().popWearablesToDestroy
 			// }
 		}
+
 		function OnGameEvent_npc_hurt(params) {
 
 			local victim = EntIndexToHScript(params.entindex)
@@ -268,6 +276,7 @@ PopExt <- popExtEntity.GetScriptScope()
 				}
 			}
 		}
+
 		function OnGameEvent_mvm_begin_wave(params) {
 
 			if ("waveIconsFunction" in PopExt)
@@ -279,6 +288,7 @@ PopExt <- popExtEntity.GetScriptScope()
 			foreach(v in PopExtHooks.icons)
 				PopExt._PopIncrementIcon(v)
 		}
+
 		function OnGameEvent_teamplay_round_win(params) {
 			for (local tank; tank = FindByClassname(tank, "tank_boss");) {
 				local scope = tank.GetScriptScope()
@@ -286,6 +296,7 @@ PopExt <- popExtEntity.GetScriptScope()
 					tank.AddEFlags(EFL_KILLME)
 			}
 		}
+
 		function OnGameEvent_recalculate_holidays(params) {
 
 			if ("waveIconsFunction" in PopExt)
@@ -315,6 +326,9 @@ PopExt <- popExtEntity.GetScriptScope()
 __CollectGameEventCallbacks(PopExtHooks.Events)
 
 function PopulatorThink() {
+
+	if (!PopExtUtil.IsWaveStarted)
+		return 0.2
 
 	for (local tank; tank = FindByClassname(tank, "tank_boss");) {
 
@@ -648,7 +662,9 @@ function PopulatorThink() {
 			scope.botCreated <- true
 
 			foreach(tag, table in robotTags)
-				if (player.HasBotTag(tag)) {
+
+				if (player.HasBotTag(tag))
+				{
 					scope.popFiredDeathHook <- false
 					PopExtHooks.AddHooksToScope(tag, table, scope)
 
@@ -664,6 +680,5 @@ function PopulatorThink() {
 			delete scope.popFiredDeathHook
 		}
 	}
-
 	return -1
 }
