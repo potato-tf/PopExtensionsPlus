@@ -297,7 +297,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 						local maxs_sum = (maxs.find(",") ? split(maxs, ",") : split(maxs, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
 
 						if (mins_sum > maxs_sum) {
-							printl("\n\n**SPAWNTEMPLATE WARNING: mins > maxs on %s! Inverting...**\n\n", classname)
+							printl(format("\n\n**SPAWNTEMPLATE WARNING: mins > maxs on %s! Inverting...**\n\n", classname))
 							keyvalues.mins <- maxs
 							keyvalues.maxs <- mins
 						}
