@@ -796,7 +796,7 @@ local popext_funcs = {
 			cooldowntime = Time() + (duration + repeat_cooldown)
 		}
 
-		bot.GetScriptScope().DeathHookTable.ActionPointDeath <- function() {
+		bot.GetScriptScope().DeathHookTable.ActionPointDeath <- function(params) {
 			local action_point = bot.GetActionPoint()
 			if (action_point && action_point.IsValid())
 				action_point.Kill()
@@ -1903,7 +1903,7 @@ local popext_funcs = {
 	/***********************************************************************************************************************
 	 * ICON COUNT																										   *
 	 * wrapper for PopExt.SetWaveIconSpawnCount																			   *
-	 *																													   *
+	 * See IconOverride for a more comprehensive way to control wavebar icons.											   *
 	 **********************************************************************************************************************/
 
 	popext_iconcount = function(bot, args) {
@@ -2065,6 +2065,31 @@ local popext_funcs = {
 	}
 	popext_ignore = function(bot, args) {
 		bot.SetBehaviorFlag(args.flags)
+	}
+
+	/****************************************************************************************
+	 * ICON OVERRIDE																		*
+	 *																						*
+	 * Required for use alongside the IconOverride Mission Attribute.						*
+	 *																						*
+	 * count can be positive to increment the icon on death instead of decrementing.		*
+	 * Example:																				*
+	 *																						*
+	 * 	popext_iconoverride{																*
+	 * 		icon = `scout_bat`																*
+	 * 		count = -2 //decrement the scout_bat icon by 2									*
+	 * 	}																					*
+	 ***************************************************************************************/
+
+	popext_iconoverride = function(bot, args) {
+
+		local icon  	 = "icon" in args ? args.icon : args.type
+		local count 	 = "count" in args ? args.count : -1
+
+		bot.GetScriptScope().DeathHookTable.IconOverride <- function(params)
+		{
+			PopExt.SetWaveIconSlot(icon, icon, 0, count, PopExt.GetWaveIconSlot(icon, 0),  true)
+		}
 	}
 }
 ::Homing <- {

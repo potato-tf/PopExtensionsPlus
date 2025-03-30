@@ -2624,6 +2624,63 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			AddThinkToEnt(PopExtUtil.PlayerManager, "RespawnTextThink")
 		}
 
+		// =========================================================================================================
+		// Override or remove icons from the specified wave.
+		// if no wave specified it will override the current wave.
+		//
+		// WARNING: Bots must have an associated popext_iconoverride tag for decrementing/incrementing on death.
+		//
+		// Example:
+		//
+		// IconOverride = {
+
+		// 	 heavy_mittens = { //set count to 2 for wave 2
+		// 	 	wave = 2
+		// 	 	flags = 0 // see constants.nut for flags
+		// 	 	count = 2
+		// 	 }
+
+		// 	 scout = { //remove from current wave
+		// 	 	count = 0, //remove
+		// 	 }
+
+		// 	pyro = { //replace with a new icon
+		// 		replace = `scout_bat`
+		// 		count = 20 //set count to 20 for current wave
+		// 		flags = MVM_CLASS_FLAG_ALWAYSCRIT|MVM_CLASS_FLAG_MINIBOSS // see constants.nut for flags
+		//		// index is required if you want to preserve the icon order on the wavebar
+		// 		// icon index is going to be trial and error and is not consistent, try values until it works.
+		//		// for example in the bigrock pop the pyro icon index is normally 0, but gets changed to 4 by IconOverride
+		// 		// this will change if you update your wave with more bots
+		//
+		//		index = 4
+		// 	}
+		// }
+		//
+		// =========================================================================================================
+		IconOverride = function(value) {
+
+			if (typeof value != "table") return
+
+			local wave = PopExtUtil.CurrentWaveNum
+
+			PopExt.SetWaveIconsFunction(function() {
+				foreach (icon, params in value) {
+
+					if (typeof params != "table" || ("wave" in params && params.wave != wave)) continue
+
+					local replace 	   = "replace" in params ? params.replace : icon
+					local count   	   = "count" in params ? params.count : -1
+					local flags   	   = "flags" in params ? params.flags : -1
+					local index   	   = "index" in params ? params.index : -1
+
+					// printl(icon + " = " + replace)
+					PopExt.SetWaveIconSlot(icon, replace, flags, count, index)
+
+				}
+			})
+		}
+
 		// DefaultGiantFoosteps = function(value) {
 		// 	foreach(bot in PopExtUtil.BotArray) {
 		// 		if ("RestoreGiantFootsteps" in bot.GetScriptScope().PlayerThinkTable)
@@ -2632,8 +2689,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		// 		bot.AddCustomAttribute("override footstep sound set", 2.0, -1)
 		// 	}
 	}
-	CurAttrs			= {} // Array storing currently modified attributes.
-	ConVars  			= {} //table storing original convar values
+	CurAttrs			= {} // table storing currently modified attributes.
+	ConVars  			= {} // table storing original convar values
 	SoundsToReplace 	= {}
 
 	ThinkTable     		= {}
@@ -2641,22 +2698,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 	TakeDamageTablePost = {}
 	SpawnHookTable   	= {}
 	DeathHookTable  	= {}
-	//InitWaveTable 	= {}
 	DisconnectTable 	= {}
 	StartWaveTable  	= {}
 	ChangeClassTable 	= {}
 	DebugText        	= false
 
 	PathNum 			= 0
-
-	RedMoneyValue = 0
-
-	// function InitWave() {
-	// 	foreach (func in MissionAttributes.InitWaveTable) func()
-
-	// 	// foreach (attr, value in MissionAttributes.CurAttrs) printl(attr+" = "+value)
-	// 	// PopExtMain.Error.RaisedParseError = false
-	// }
+	RedMoneyValue 		= 0
 
 	function Cleanup()
 	{
@@ -2789,6 +2837,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 			foreach (func in MissionAttributes.DeathHookTable) func(params)
 		}
+
 		function OnGameEvent_recalculate_holidays(params)
 		{
 
@@ -2811,6 +2860,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		{
 			foreach (func in ScriptUnloadTable) func()
 		}
+
 		function OnGameEvent_teamplay_broadcast_audio(params)
 		{
 			if (!MissionAttributes.SoundsToReplace.len()) return

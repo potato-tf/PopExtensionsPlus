@@ -112,18 +112,21 @@ PopExt.globalTemplateSpawnCount   <- 0
 				}
 			}
 		}
-		if (parent != null) {
+		if (parent && parent.IsValid()) {
 
 			function FireOnParentKilledOutputs() {
 
 				foreach(output in scope.OnParentKilledOutputArray) {
 
-					local target = output.Target
-					local action = output.Action
-					local param  = ("Param" in output) ? output.Param.tostring() : ""
-					local delay  = ("Delay" in output) ? output.Delay.tofloat() : -1
+					local target 	= output.Target
+					local action 	= output.Action
+					local param  	= ("Param" in output) ? output.Param.tostring() : ""
+					local delay  	= ("Delay" in output) ? output.Delay.tofloat() : -1
+					local activator = ("Activator" in output) ? (typeof(output.Activator) == "string" ? FindByName(null, output.Activator) : output.Activator) : null
+					local caller 	= ("Caller" in output) ? (typeof(output.Caller) == "string" ? FindByName(null, output.Caller) : output.Caller) : null
 
-					EntFire(target, action, param, delay)
+					local entfirefunc = typeof(target) == "string" ? DoEntFire : EntFireByHandle
+					entfirefunc(target, action, param, delay, activator, caller)
 				}
 			}
 
@@ -134,16 +137,17 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 					local playerscope = parent.GetScriptScope()
 
-					// if (!("popHooks" in playerscope)) {
-					// 	playerscope["popHooks"] <- {}
-					// }
-					// if (!("OnDeath" in playerscope.popHooks)) {
-					// 	playerscope.popHooks["OnDeath"] <- []
-					// }
+					if (!("popHooks" in playerscope)) {
+						playerscope.popHooks <- {}
+					}
+
+					if (!("OnDeath" in playerscope.popHooks)) {
+						playerscope.popHooks.OnDeath <- []
+					}
 
 					// FireOnParentKilledOutputs()
 
-					// playerscope.popHooks["OnDeath"].append(FireOnParentKilledOutputs)
+					playerscope.popHooks.OnDeath.append(FireOnParentKilledOutputs)
 
 					FireOnParentKilledOutputs()
 					if (!("TemplatesToKill" in playerscope)) playerscope.TemplatesToKill <- []
@@ -188,12 +192,16 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 		//fire OnSpawnOutputs
 		foreach(output in scope.OnSpawnOutputArray) {
-			local target = output.Target
-			local action = output.Action
-			local param  = ("Param" in output) ? output.Param.tostring() : ""
-			local delay  = ("Delay" in output) ? output.Delay.tofloat() : -1
 
-			EntFire(target, action, param, delay, null)
+			local target 	= output.Target
+			local action 	= output.Action
+			local param  	= ("Param" in output) ? output.Param.tostring() : ""
+			local delay  	= ("Delay" in output) ? output.Delay.tofloat() : -1
+			local activator = ("Activator" in output) ? (typeof(output.Activator) == "string" ? FindByName(null, output.Activator) : output.Activator) : null
+			local caller 	= ("Caller" in output) ? (typeof(output.Caller) == "string" ? FindByName(null, output.Caller) : output.Caller) : null
+
+			local entfirefunc = typeof(target) == "string" ? DoEntFire : EntFireByHandle
+			entfirefunc(target, action, param, delay, activator, caller)
 		}
 	}
 

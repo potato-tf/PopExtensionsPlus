@@ -96,6 +96,9 @@ function OnPostSpawn()
     {
         function InputEnable()
         {
+            if (!self || !self.IsValid())
+                return true
+
             if (spawnflags & 512)
             {
                 local takedamage = GetPropInt(activator, "m_takedamage")
@@ -125,7 +128,7 @@ function OnPostSpawn()
 
         function InputDisable()
         {
-            if (self.IsEFlagSet(EFL_USER))
+            if (!self || !self.IsValid() || self.IsEFlagSet(EFL_USER))
                 return true
 
             if (!activator.IsAlive())
