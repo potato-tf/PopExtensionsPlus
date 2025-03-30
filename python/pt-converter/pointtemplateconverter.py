@@ -10,6 +10,8 @@ COLOR = {
 	'RED': '\033[91m',
 	"ENDC": '\033[0m',
 }
+from os import system
+system('color')
 
 convertedkeys = [
 	'$playsoundtoself',
@@ -565,7 +567,6 @@ def convertpointtemplates(pop, indentationnumber, depth):
 					if minsum > maxsum:
 						print(COLOR['RED'],f'ERROR: mins ({minsum}) > maxs ({maxsum})!\nINVERT THIS IN THE OUTPUT FILE TO AVOID A SERVER CRASH!\n',COLOR['ENDC'])
 						print(COLOR['RED'],pop,COLOR['ENDC'])
-						input('\nPress Enter to continue...')
 					minmax_check.clear()
 	
 				print(key, end = '', file=output)

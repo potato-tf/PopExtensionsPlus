@@ -26,10 +26,17 @@ function PopExt::AddTankName(name, table) {
 
 	if ("Icon" in table) {
 		if (typeof table.Icon == "table") {
-			PopExt.AddCustomTankIcon(table.Icon.name, table.Icon.count, table.Icon.isCrit, table.Icon.isBoss, table.Icon.isSupport, table.Icon.isSupportLimited)
-		} else {
-			PopExt.AddCustomTankIcon(table.Icon, 1, false, false, false, false)
+			local icon 			   = "name" in table.Icon ? table.Icon.name : table.Icon.icon
+			local count  		   = "count" in table.Icon ? table.Icon.count : 1
+			local isCrit 		   = "isCrit" in table.Icon ? table.Icon.isCrit : false
+			local isBoss 		   = "isBoss" in table.Icon ? table.Icon.isBoss : true
+			local isSupport 	   = "isSupport" in table.Icon ? table.Icon.isSupport : false
+			local isSupportLimited = "isSupportLimited" in table.Icon ? table.Icon.isSupportLimited : false
+
+			PopExt.AddCustomTankIcon(icon, count, isCrit, isBoss, isSupport, isSupportLimited)
 		}
+		else
+			PopExt.AddCustomTankIcon(table.Icon, 1)
 	}
 
 	name = name.tolower()
