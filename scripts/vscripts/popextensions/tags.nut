@@ -19,10 +19,11 @@ local popext_funcs = {
 	popext_addcond = function(bot, args) {
 
 		local cond = "cond" in args ? args.cond.tointeger() : args.type.tointeger()
+		local duration = "duration" in args ? args.duration.tointeger() : INT_MAX
 		if (cond == TF_COND_REPROGRAMMED)
 			bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
 		else
-			bot.AddCondEx(cond, args.duration.tointeger(), null)
+			bot.AddCondEx(cond, duration, null)
 	}
 
 
@@ -500,7 +501,7 @@ local popext_funcs = {
      *                                                                                                                                                                    *
      * If no "weapon" keyvalue is supplied, attributes will be applied to the bots current active weapon only                                                             *
      * You can pass a weapon classname, item index, weapon handle, or english name to the weapon parameter and PopExtUtil.HasItemInLoadout will try to find it on the bot *
-     * If it can't find any weapon, it it'll default back to the current active weapon                                                                                    *
+     * If it can't find any weapon and "ActiveWeapon" is not supplied, it will apply the attribute to every item														  *
      *                                                                                                                                                                    *
      * Example: popext_customattr{weapon = `tf_weapon_scattergun`, attribute = `last shot crits`, value = 1}                                                              *
 	 *                                                                                                                                                                    *
@@ -513,14 +514,18 @@ local popext_funcs = {
 
 		local attr = "attr" in args ? args.attr : args.attribute
 		local value = args.value
-		local wep = "weapon" in args ? args.weapon : null
+		local wep = "weapon" in args ? args.weapon : -1
+		local delay = "delay" in args ? args.delay : -1
 
 		local weapon = PopExtUtil.HasItemInLoadout(bot, wep)
 
 		if (wep == "ActiveWeapon")
 			weapon = bot.GetActiveWeapon()
 
-		PopExtUtil.SetPlayerAttributes(bot, attr, value, weapon)
+		if (weapon == null)
+			weapon = -1
+
+		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.SetPlayerAttributes(self, `%s`, %s, %d)", attr, value, PopExtUtil.GetItemIndex(weapon)), delay)
 	}
 
     /**********************************************************************************************************************************************
@@ -596,12 +601,16 @@ local popext_funcs = {
 		if (!bot.HasBotAttribute(IGNORE_FLAG))
 			bot.AddBotAttribute(IGNORE_FLAG)
 
+		local bomb = GetPropEntity(bot, "m_hItem")
+		if (bomb)
+			bomb.AcceptInput("ForceResetSilent", "", null, null)
+
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
 
 			if (bot.GetActionPoint() && bot.GetActionPoint().IsValid())
 				return
 
-			local threat = aibot.threat;
+			local threat = aibot.threat
 			if (threat != null && threat.IsValid() && threat.IsAlive()) return
 
 			local threats = aibot.CollectThreats(INT_MAX, false, false)
@@ -900,7 +909,8 @@ local popext_funcs = {
 		local caller 	  = "caller" in args ? FindByName(null, args.caller) : bot
 		local refire      = "refire" in args ? args.refire : 0
 		local refire_time = "refire_time" in args ? args.refire_time : 10.0
-		local entfirefunc = DoEntFire
+
+		local entfirefunc = typeof(target) == "string" ? DoEntFire : EntFireByHandle
 
 		if (target == "!self") {
 			entfirefunc = EntFireByHandle
@@ -1839,6 +1849,16 @@ local popext_funcs = {
 		local mission = "mission" in args ? args.mission : args.type
 		local target = "target" in args ? args.target : "__POPEXT_MISSION_NO_TARGET"
 		local suicide_bomber = "suicide_bomber" in args ? args.suicide_bomber : false
+		
+		if (mission != NO_MISSION)
+		{
+			if (!bot.HasBotAttribute(IGNORE_FLAG))
+				bot.AddBotAttribute(IGNORE_FLAG)
+
+			local bomb = GetPropEntity(bot, "m_hItem")
+			if (bomb)
+				bomb.AcceptInput("ForceResetSilent", "", null, null)
+		}
 
 		bot.SetMission(mission, true)
 		local mission_target = FindByName(null, target)
@@ -1892,7 +1912,7 @@ local popext_funcs = {
 
 			if (cooldowntime > Time()) return
 
-			bot.TakeDamageCustom(inflictor, attacker, weapon, position, force, amount, damage_type, damage_custom)
+			bot.TakeDamageCustom(inflictor, attacker, weapon, force, position, amount, damage_type, damage_custom)
 
 			cooldowntime = Time() + interval
 		}
@@ -2319,6 +2339,7 @@ local popext_funcs = {
 			if (end > 1) {
 				local str = ""
 				foreach (i, sub in arr) {
+
 					if (i == end) {
 						str += sub
 						break

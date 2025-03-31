@@ -27,6 +27,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 	scope.EntityFixedUpTargetName <- []
 	scope.OnSpawnOutputArray <- []
 	scope.OnParentKilledOutputArray <- []
+	scope.OnAllKilledOutputArray <- []
 	scope.SpawnedEntities <- {}
 
 	scope.__EntityMakerResult <- {
@@ -118,12 +119,12 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 				foreach(output in scope.OnParentKilledOutputArray) {
 
-					local target 	= output.Target
-					local action 	= output.Action
-					local param  	= ("Param" in output) ? output.Param.tostring() : ""
-					local delay  	= ("Delay" in output) ? output.Delay.tofloat() : -1
-					local activator = ("Activator" in output) ? (typeof(output.Activator) == "string" ? FindByName(null, output.Activator) : output.Activator) : null
-					local caller 	= ("Caller" in output) ? (typeof(output.Caller) == "string" ? FindByName(null, output.Caller) : output.Caller) : null
+					local target 	= output.target
+					local action 	= output.action
+					local param  	= ("param" in output) ? output.param.tostring() : ""
+					local delay  	= ("delay" in output) ? output.delay.tofloat() : -1
+					local activator = ("activator" in output) ? (typeof(output.activator) == "string" ? FindByName(null, output.activator) : output.activator) : null
+					local caller 	= ("caller" in output) ? (typeof(output.caller) == "string" ? FindByName(null, output.caller) : output.caller) : null
 
 					local entfirefunc = typeof(target) == "string" ? DoEntFire : EntFireByHandle
 					entfirefunc(target, action, param, delay, activator, caller)
@@ -149,7 +150,6 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 					playerscope.popHooks.OnDeath.append(FireOnParentKilledOutputs)
 
-					FireOnParentKilledOutputs()
 					if (!("TemplatesToKill" in playerscope)) playerscope.TemplatesToKill <- []
 					playerscope.TemplatesToKill.append(FireOnParentKilledOutputs);
 				}
@@ -193,12 +193,12 @@ PopExt.globalTemplateSpawnCount   <- 0
 		//fire OnSpawnOutputs
 		foreach(output in scope.OnSpawnOutputArray) {
 
-			local target 	= output.Target
-			local action 	= output.Action
-			local param  	= ("Param" in output) ? output.Param.tostring() : ""
-			local delay  	= ("Delay" in output) ? output.Delay.tofloat() : -1
-			local activator = ("Activator" in output) ? (typeof(output.Activator) == "string" ? FindByName(null, output.Activator) : output.Activator) : null
-			local caller 	= ("Caller" in output) ? (typeof(output.Caller) == "string" ? FindByName(null, output.Caller) : output.Caller) : null
+			local target 	= output.target
+			local action 	= output.action
+			local param  	= ("param" in output) ? output.param.tostring() : ""
+			local delay  	= ("delay" in output) ? output.delay.tofloat() : -1
+			local activator = ("activator" in output) ? (typeof(output.activator) == "string" ? FindByName(null, output.activator) : output.activator) : null
+			local caller 	= ("caller" in output) ? (typeof(output.caller) == "string" ? FindByName(null, output.caller) : output.caller) : null
 
 			local entfirefunc = typeof(target) == "string" ? DoEntFire : EntFireByHandle
 			entfirefunc(target, action, param, delay, activator, caller)
@@ -208,24 +208,33 @@ PopExt.globalTemplateSpawnCount   <- 0
 	//make a copy of the pointtemplate
 	local pointtemplatecopy = PopExtUtil.CopyTable(PointTemplates[pointtemplate])
 
-	if ("DontPurgeStrings" in pointtemplatecopy && !pointtemplatecopy.DontPurgeStrings)
-		purgestrings = false
-
-	//establish "flags"
+	//establish "flags", lowercase all keys
 	foreach(index, entity in pointtemplatecopy) {
+
+		if (typeof(entity) == "table") 
+		{
+			foreach(k, v in entity)
+			if (typeof(k) == "string")
+			{
+				delete entity[k]
+				entity[k.tolower()] <- v
+			}
+		}
 
 		if (typeof(index) != "string") continue
 
-		if (index.tolower() == "nofixup" && entity)
+		index = index.tolower()
+
+		if (index == "nofixup" && entity)
 			nofixup = true
 
-		else if (index.tolower() == "keepalive" && entity)
+		else if (index == "keepalive" && entity)
 			keepalive = true
 
-		else if (index.tolower() == "dontpurgestrings" && entity)
+		else if (index == "dontpurgestrings" && entity)
 			purgestrings = false
 
-		else if (index.tolower() == "removeifkilled")
+		else if (index == "removeifkilled")
 			scope.removeifkilled <- entity
 	}
 
@@ -240,6 +249,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 				foreach(key, value in keyvalues)
 					if (key == "targetname" && scope.EntityFixedUpTargetName.find(value) == null)
 						scope.EntityFixedUpTargetName.append(value)
+
 		}
 
 		//iterate through all entities and fixup every value containing a valid targetname
@@ -264,7 +274,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 					}
 				}
 			}
-			if (index == "RemoveIfKilled") scope.removeifkilled <- entity + PopExt.globalTemplateSpawnCount
+			if (index == "removeifkilled") scope.removeifkilled <- entity + PopExt.globalTemplateSpawnCount
 		}
 	}
 
@@ -275,25 +285,34 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 		foreach(classname, keyvalues in entity)
 		{
-			if (classname == "OnSpawnOutput")
+			foreach(k, v in keyvalues)
+			{
+				if (typeof(v) == "string")
+				{
+					delete keyvalues[k]
+					keyvalues[k.tolower()] <- v
+				}
+			}
+			if (classname == "onspawnoutput")
 				scope.OnSpawnOutputArray.append(keyvalues)
 
-			else if (classname == "OnParentKilledOutput")
+			else if (classname == "onparentkilledoutput")
 				scope.OnParentKilledOutputArray.append(keyvalues)
+
+			else if (classname == "onallkilledoutput")
+				scope.OnAllKilledOutputArray.append(keyvalues)
 
 			else
 			{
 				//adjust origin and angles
 				if ("origin" in keyvalues)
 				{
-					//if origin is a string, construct vectors to perform math on them if needed
 					if (typeof(keyvalues.origin) == "string") {
 						local buf = keyvalues.origin.find(",") ? split(keyvalues.origin, ",") : split(keyvalues.origin, " ")
 
 						buf.apply(@(val) val.tofloat() )
 						keyvalues.origin = Vector(buf[0], buf[1], buf[2])
 					}
-					// keyvalues.origin += origin
 				}
 				else keyvalues.origin <- origin
 
@@ -306,17 +325,20 @@ PopExt.globalTemplateSpawnCount   <- 0
 						buf.apply(@(val) val.tofloat() )
 						keyvalues.angles = QAngle(buf[0], buf[1], buf[2])
 					}
-					// keyvalues.angles += angles
 				}
 				else keyvalues.angles <- angles
 
 				//needed for brush entities
 				if ("mins" in keyvalues || "maxs" in keyvalues) {
+
 					local mins = ("mins" in keyvalues) ? keyvalues.mins : Vector()
 					local maxs = ("maxs" in keyvalues) ? keyvalues.maxs : Vector()
+
 					if (typeof(mins) == "Vector") mins =  mins.ToKVString()
 					if (typeof(maxs) == "Vector") maxs =  maxs.ToKVString()
 
+					// guard against inverted mins and maxs values
+					// rafmod PTs silently handle this, this normally crashes the server
 					local mins_sum = (mins.find(",") ? split(mins, ",") : split(mins, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
 					local maxs_sum = (maxs.find(",") ? split(maxs, ",") : split(maxs, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
 

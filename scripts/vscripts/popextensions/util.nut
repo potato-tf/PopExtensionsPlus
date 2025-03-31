@@ -268,7 +268,7 @@
 		ClientPrint(target, HUD_PRINTTALK, result)
 	}
 
-	function CopyTable(table) {
+	function CopyTable(table, keyfunc = null, valuefunc = null) {
 
 		if (table == null || typeof(table) != "table") return
 
@@ -276,6 +276,13 @@
 
 		foreach (key, value in table)
 		{
+			//run optional functions on the key and value
+			if (keyfunc != null)
+				key = keyfunc(key)
+
+			if (valuefunc != null)
+				value = valuefunc(value)
+
 			newtable[key] <- value
 			if (typeof(value) == "table" || typeof(value) == "array")
 			{
@@ -529,8 +536,6 @@
 		}
 	}
 
-
-	// TODO: rework this boosted ass shit
 	function SetPlayerAttributes(player, attrib, value, item = null)
 	{
 		local items = {}
@@ -550,15 +555,14 @@
 			}
 		}
 		if (attrib in specialattribs) specialattribs[attrib]()
-
-		if (item)
-			items[this.HasItemInLoadout(player, item)] <- [attrib, value]
+		local item_handle = this.HasItemInLoadout(player, item)
+		if (item_handle)
+			items[item_handle] <- [attrib, value]
 		else
 			for (local i = 0; i < GetPropArraySize(player, "m_hMyWeapons"); i++)
 				if (GetPropEntityArray(player, "m_hMyWeapons", i))
 					items[GetPropEntityArray(player, "m_hMyWeapons", i)] <- [attrib, value]
 
-		// printl(this.HasItemInLoadout(player, item))
 		//do the customattributes check first, since we replace some vanilla attributes
 		if (attrib in CustomAttributes.Attrs)
 			CustomAttributes.AddAttr(player, attrib, value, items)
@@ -569,16 +573,16 @@
 				MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
 			else
 			{
-				if (!item)
+				if (!item_handle)
 					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %.2f, -1)", attrib, value.tofloat()), -1, null, null)
 				else
 				if ("CustomWeapons" in player.GetScriptScope())
 				{
-					item.AddAttribute(attrib, value.tofloat(), -1)
-					item.ReapplyProvision()
+					item_handle.AddAttribute(attrib, value.tofloat(), -1)
+					item_handle.ReapplyProvision()
 				}
 				else
-					EntFireByHandle(item, "RunScriptCode", format("self.AddAttribute(`%s`, %.2f, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
+					EntFireByHandle(item_handle, "RunScriptCode", format("self.AddAttribute(`%s`, %.2f, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
 
 
 				if (attrib in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
@@ -1005,7 +1009,6 @@
 		SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
 		SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model))
 		SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
-		SetPropBool(wearable, STRING_NETPROP_ITEMDEF, true)
 		SetPropEntity(wearable, "m_hOwnerEntity", player)
 		wearable.SetTeam(player.GetTeam())
 		wearable.SetOwner(player)

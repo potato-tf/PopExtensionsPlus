@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "03.30.2025.1"
+::popExtensionsVersion <- "03.31.2025.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -142,10 +142,8 @@ if (!("_AddThinkToEnt" in _root))
 
 			local player = GetPlayerFromUserID(params.userid)
 
-			if (player.IsEFlagSet(1073741824)) //EFL_CUSTOM_WEARABLE
-				return
-
-			PopExtMain.PlayerCleanup(player)
+			if (!player.IsEFlagSet(1073741824)) //EFL_CUSTOM_WEARABLE
+				PopExtMain.PlayerCleanup(player)
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -161,17 +159,11 @@ if (!("_AddThinkToEnt" in _root))
 				scope.DeathHookTable  <- {}
 				scope.TakeDamageTable <- {}
 
-				EntFireByHandle(player, "RunScriptCode", @"
-					PopExtTags.EvaluateTags(self)
-					aibot <- AI_Bot(self)
-
-					PlayerThinkTable.BotThink <- function() {
-						try
-							aibot.OnUpdate()
-						catch(e)
-							if (e == `the index 'bot' does not exist`) return
-					}
-				", -1, player, player);
+				scope.aibot <- AI_Bot(player)
+				scope.PlayerThinkTable.BotThink <- function() {
+						aibot.OnUpdate()
+				}
+				EntFireByHandle(player, "RunScriptCode", "PopExtTags.EvaluateTags(self)", -1, player, player);
 			}
 
 			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func.call(scope); return -1 }
