@@ -573,7 +573,7 @@
 				MissionAttributes.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
 			else
 			{
-				if (!item_handle)
+				if (!item_handle || !(item_handle instanceof CEconEntity))
 					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %.2f, -1)", attrib, value.tofloat()), -1, null, null)
 				else
 				if ("CustomWeapons" in player.GetScriptScope())

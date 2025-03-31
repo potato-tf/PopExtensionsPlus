@@ -525,7 +525,7 @@ local popext_funcs = {
 		if (weapon == null)
 			weapon = -1
 
-		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.SetPlayerAttributes(self, `%s`, %s, %d)", attr, value, PopExtUtil.GetItemIndex(weapon)), delay)
+		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.SetPlayerAttributes(self, `%s`, %.2f, %d)", attr, value.tofloat(), PopExtUtil.GetItemIndex(weapon)), delay)
 	}
 
     /**********************************************************************************************************************************************
