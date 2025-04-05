@@ -1022,7 +1022,7 @@
 
 		scope.PlayerThinkTable.BotModelThink <- function() {
 			if (wearable.IsValid() && (player.IsTaunting() || wearable.GetMoveParent() != player))
-				EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player)
+				wearable.AcceptInput("SetParent", "!activator", player, player)
 			return -1
 		}
 	}

@@ -1291,11 +1291,11 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					EntFireByHandle(path, "Kill", "", -1, null, null)
 
 				foreach (i, pos in path) {
-					local org = split(pos, " ")
-
+					local org = pos.find(",") ? split(pos, ",") : split(pos, " ")
+					org.apply(@(val) val.tofloat())
 					local track = SpawnEntityFromTable("path_track", {
 						targetname = format("extratankpath%d_%d", MissionAttributes.PathNum, i+1)
-						origin = Vector(org[0].tointeger(), org[1].tointeger(), org[2].tointeger())
+						origin = Vector(org[0], org[1], org[2])
 					})
 					tracks.append(track)
 				}
@@ -1456,7 +1456,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						local idarray = split(k, ",")
 
 						if (idarray.len() > 1)
-							idarray.apply(@(val) val.tofloat() )
+							idarray.apply(@(val) val.tofloat())
 						k = idarray
 					}
 					if (typeof k == "array")
@@ -1517,7 +1517,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						local idarray = split(item, ",")
 
 						if (idarray.len() > 1)
-							idarray.apply(@(val) val.tointeger() )
+							idarray.apply(@(val) val.tointeger())
 						item = idarray
 					}
 					if (typeof item == "array")

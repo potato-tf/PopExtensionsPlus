@@ -283,7 +283,7 @@ class AI_Bot {
 
 			if ((path_points.len() == 0) || ((threat_pos - threat_cur_pos).LengthSqr() > 4096.0)) // 64
 			{
-				local area = GetThreatArea(threat)
+				local area = GetNavArea(threat_cur_pos, 0.0)
 				if (area != null)
 				{
 					UpdatePathAndMove(threat_cur_pos)
@@ -302,7 +302,7 @@ class AI_Bot {
 		path_index = null
 		path_recompute_time = 0
 	}
-	function UpdatePathAndMove(target_pos)
+	function UpdatePathAndMove(target_pos, lookat = true, turnrate_min = 600, turnrate_max = 1500)
 	{
 		local dist_to_target = (target_pos - bot.GetOrigin()).Length()
 
@@ -432,15 +432,16 @@ class AI_Bot {
 		}
 
 		local point = path_points[path_index].pos;
-		// locomotion.Approach(point, 1.0)
-		locomotion.DriveTo(point)
-		locomotion.FaceTowards(point)
+		locomotion.Approach(point, 1.0)
+		// locomotion.DriveTo(point)
+		// locomotion.FaceTowards(point)
 
 		local look_pos = Vector(point.x, point.y, cur_eye_pos.z);
-		if (threat != null)
-			LookAt(look_pos, 600.0, 1500.0);
-		else
-			LookAt(look_pos, 350.0, 600.0);
+		if (lookat)
+			if (threat != null)
+				LookAt(look_pos, turnrate_min, turnrate_max);
+			else
+				LookAt(look_pos, 350.0, 600.0);
 
 		// calc lookahead point
 

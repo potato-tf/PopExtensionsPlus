@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "03.31.2025.2"
+::popExtensionsVersion <- "04.04.2025.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -59,6 +59,7 @@ if (!("_AddThinkToEnt" in _root))
 
 	//manual cleanup flag, set to true for missions that are created for a specific map.
 	//automated unloading is meant for multiple missions on one map, purpose-built map/mission combos (like zm_redridge) don't need this.
+	//this should also be used if you change the popfile name mid-mission.
 	ManualCleanup = false
 
 	function PlayerCleanup(player) {
@@ -226,7 +227,6 @@ if (!("_AddThinkToEnt" in _root))
 
 			//nuke it all
 			local cleanup = [
-
 				"MissionAttributes"
 				"CustomAttributes"
 				"PopExt"
@@ -242,7 +242,6 @@ if (!("_AddThinkToEnt" in _root))
 				"CustomWeapons"
 				"__popname"
 				"AI_Bot"
-				"CustomWeapons"
 				"ExtraItems"
 				"Homing"
 				"Include"
@@ -263,6 +262,7 @@ if (!("_AddThinkToEnt" in _root))
 				"RespawnStartTouch"
 				"ScriptLoadTable"
 				"ScriptUnloadTable"
+				"EntAdditions"
 			]
 
 			foreach(c in cleanup) if (c in _root) delete _root[c]

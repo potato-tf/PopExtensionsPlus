@@ -21,7 +21,10 @@ local popext_funcs = {
 		local cond = "cond" in args ? args.cond.tointeger() : args.type.tointeger()
 		local duration = "duration" in args ? args.duration.tointeger() : INT_MAX
 		if (cond == TF_COND_REPROGRAMMED)
+		{
 			bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)
+			aibot.team = TF_TEAM_PVE_DEFENDERS
+		}
 		else
 			bot.AddCondEx(cond, duration, null)
 	}
@@ -35,9 +38,9 @@ local popext_funcs = {
 
 	popext_reprogrammed = function(bot, args) {
 
-		// EntFireByHandle(bot, "RunScriptCode", "self.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, true)", -1, null, null)
 		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
 		bot.AddCustomAttribute("ammo regen", 999.0, -1)
+		aibot.team = TF_TEAM_PVE_DEFENDERS
 	}
 
 	// popext_reprogrammed_neutral = function(bot, args) {
@@ -571,6 +574,7 @@ local popext_funcs = {
 
 	popext_meleeai = function(bot, args) {
 
+		local turnrate = "turnrate" in args ? args.turnrate : 1500
 		local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- function() {
@@ -583,7 +587,7 @@ local popext_funcs = {
 			{
 				// bot.AddBotAttribute(SUPPRESS_FIRE)
 				aibot.SetThreat(t, false)
-				aibot.LookAt(t.EyePosition(), 50, 50)
+				aibot.LookAt(t.EyePosition(), turnrate, turnrate)
 				bot.SetAttentionFocus(t)
 			}
 			// if (bot.hasbotattrEntFireByHandle(bot, "RunScriptCode", "self.RemoveBotAttribute(SUPPRESS_FIRE)", -1, null, null)
@@ -598,6 +602,10 @@ local popext_funcs = {
 
 	popext_mobber = function(bot, args) {
 
+		local threat_type = "threat_type" in args ? args.threat_type : "closest"
+		local threat_dist = "threat_dist" in args ? args.threat_dist : 256.0
+		local lookat = "lookat" in args ? args.lookat : false
+		local turnrate = "turnrate" in args ? args.turnrate : 150
 		if (!bot.HasBotAttribute(IGNORE_FLAG))
 			bot.AddBotAttribute(IGNORE_FLAG)
 
@@ -605,19 +613,41 @@ local popext_funcs = {
 		if (bomb)
 			bomb.AcceptInput("ForceResetSilent", "", null, null)
 
+		local cooldown = 0.0
+		local threat_cooldown = 5.0
 		bot.GetScriptScope().PlayerThinkTable.MobberThink <- function() {
 
 			if (bot.GetActionPoint() && bot.GetActionPoint().IsValid())
 				return
 
 			local threat = aibot.threat
-			if (threat != null && threat.IsValid() && threat.IsAlive()) return
 
-			local threats = aibot.CollectThreats(INT_MAX, false, false)
+			if (threat_type == "closest")
+			{
+				if ((threat && !threat.IsAlive()) || Time() > cooldown)
+				{
+					aibot.threat = aibot.FindClosestThreat(INT_MAX, false)
+					cooldown = Time() + threat_cooldown //find new threat every threat_cooldown seconds
+				}
+			}
+			else if (threat_type == "random")
+			{
+				if (!threat || !threat.IsValid() || !threat.IsAlive() || threat.GetTeam() == bot.GetTeam())
+				{
+					local threats = aibot.CollectThreats(INT_MAX, true, true)
+					if (!threats.len()) return
+					aibot.threat = threats[RandomInt(0, threats.len() - 1)]
+				}
 
-			if (!threats.len()) return
-
-			local t = threats[RandomInt(0, threats.len() - 1)]
+			}
+			if (threat && threat.IsValid() && threat.IsAlive())
+			{
+				local distance = (bot.GetOrigin() - threat.GetOrigin()).Length()
+				if (distance > threat_dist)
+					aibot.UpdatePathAndMove(threat.GetOrigin(), lookat, turnrate, turnrate)
+				else
+					aibot.LookAt(threat.EyePosition() - Vector(0, 0, 20), 1500, 1500)
+			}
 		}
 	}
 
@@ -1377,21 +1407,39 @@ local popext_funcs = {
 	popext_spawnhere = function(bot, args) {
 
 		local where = args.where
-		local spawn_uber_duration = "spawn_uber_duration" in args ? args.spawn_uber_duration.tofloat() : args.cooldown.tofloat()
+		local spawn_uber_duration = "spawn_uber_duration" in args ? args.spawn_uber_duration.tofloat() : "cooldown" in args ? args.cooldown.tofloat() : 0.0
 		local viewangle = "viewangle" in args ? args.viewangle : bot.EyeAngles()
 		local velocity = "velocity" in args ? args.velocity : bot.GetAbsVelocity()
 
-		if (FindByName(null, where) != null)
-			bot.Teleport(true, FindByName(null, where).GetOrigin(), true, viewangle, true, velocity)
-		else
+		local where_type = typeof(where)
+		local spawn_point = null
+
+		if (where_type == "Vector")
+			spawn_point = where
+
+		else if (where_type == "string" && FindByName(null, where) != null)
+			spawn_point = FindByName(null, where).GetOrigin()
+
+		else if (where_type == "string")
 		{
 			local org = args.where.find(",") ? split(args.where, ",") : split(args.where, " ")
 
 			org.apply(@(val) val.tofloat() )
-			bot.Teleport(true, Vector(org[0], org[1], org[2]), true, viewangle, true, velocity)
+			spawn_point = Vector(org[0], org[1], org[2])
 		}
 
 		bot.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, spawn_uber_duration, null)
+
+		//gross hack to stop the game from panicking and spawning them at some random spawn
+
+		bot.GetScriptScope().PlayerThinkTable.SpawnHereCollisionFix <- function() {
+			if ((bot.GetOrigin() - spawn_point).Length() > 16.0)
+			{
+				bot.Teleport(true, spawn_point, true, viewangle, true, velocity)
+				return
+			}
+			delete PlayerThinkTable.SpawnHereCollisionFix
+		}
 	}
 
     /******************************************************************************************************************
@@ -1849,7 +1897,7 @@ local popext_funcs = {
 		local mission = "mission" in args ? args.mission : args.type
 		local target = "target" in args ? args.target : "__POPEXT_MISSION_NO_TARGET"
 		local suicide_bomber = "suicide_bomber" in args ? args.suicide_bomber : false
-		
+
 		if (mission != NO_MISSION)
 		{
 			if (!bot.HasBotAttribute(IGNORE_FLAG))
