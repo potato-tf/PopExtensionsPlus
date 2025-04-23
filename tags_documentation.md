@@ -274,13 +274,13 @@ Tag "popext_customattr{weapon = `tf_weapon_scattergun`, attribute = `last shot c
 ```
 
 > [!NOTE]
-> You can use either "attribute" or "attr" as the key name.
-> For custom warpaints on bots, use `popext_warpaint`
-> Despite the name, this is also used for applying standard non-custom attributes
+> - Despite the name, this is also used for applying standard non-custom attributes
+> - You can use either "attribute" or "attr" as the key name.
+> - For custom warpaints on bots, use `popext_warpaint`
 
 > [!WARNING]
-> VScript cannot set string attribute types like `item name text override` or `meter_label`.
-> The only exception in this library is `custom projectile model`, as its functionality has been replaced. 
+> VScript cannot set string attribute types like `item name text override` or `meter_label`.  The only exception in this library is `custom projectile model`, as its functionality has been replaced.
+> - `custom projectile model` must be applied with this tag if you intend to use it for anything except for Grenade or Sticky launchers.  Applying it normally through the bots `ItemAttributes` block will use vanilla behavior.
 ---
 
 <a name="popext_ringoffire"></a>
@@ -304,8 +304,7 @@ Tag "popext_ringoffire{damage = 20, interval = 3, radius = 150, hide_particle_ef
 
 ### popext_meleeai
 
-Improves AI for melee combat.
-Parameters are optional.
+Bots will always target the closest enemy, similar to melee AI, rather than using the standard vision system.
 
 ```js
 Tag "popext_meleeai{turnrate = 1500}"
@@ -317,13 +316,12 @@ Tag "popext_meleeai{turnrate = 1500}"
 
 ### popext_mobber
 
-Makes the bot hunt down players.
-Parameters are optional.
+Makes the bot hunt down players.  All parameters are optional.
 
 ```js
 Tag "popext_mobber{threat_type = `closest`, threat_dist = 256.0, lookat = false, turnrate = 150}"
 ```
-Valid threat types are `closest` and `random`.  `random` will pick a single random player on spawn and will not lose focus on them until the player dies.
+Valid threat types are `closest` and `random`.  Default is `closest`.  `random` will pick a single random player on spawn and will not lose focus on them until the player dies.
 
 ---
 
@@ -375,8 +373,8 @@ Accepts entity handle, targetnames or x y z string coordinates for the target pa
 
 > [!WARNING]
 > - This tag has different behavior for bot_generator spawned bots versus populator spawned bots.  See bot_action_point on the VDC.
-> - For populator spawned bots, stay_time parameter does nothing.
-> - For bot_generator spawned bots, duration < stay_time will override stay_time.
+> - For populator spawned bots, `stay_time` does nothing.  Use `duration` instead
+> - For bot_generator spawned bots, `duration` < `stay_time` will override `stay_time`.
 
 ---
 
@@ -390,6 +388,14 @@ Requires target and action parameters, others are optional.
 ```js
 Tag "popext_fireinput{target = `bignet`, action = `RunScriptCode`, param = `ClientPrint(null, 3, \`I spawned one second ago!\`)`, delay = 1, activator = `activator_targetname_here`, caller = `caller_targetname_here`}"
 ```
+> [!NOTE]
+> - `activator` and `caller` accept a string targetname and will call VScript's `Entities.FindByName` function internally.
+> - `activator` and `caller` default to the bot if not specified
+> - use `` target = `!self` `` to target the bot.
+
+> [!CAUTION]
+> - This does not handle nested quotes/backticks inside of the `param` very well if you intend to use RunScriptCode here.
+> - Define your code in a separate global function in InitWaveOutput/another included script and do `` popext_fireinput{ target = `target_here`, action = `callscriptfunction` param = `FunctionNameHere`} ``
 
 ---
 
