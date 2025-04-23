@@ -374,9 +374,9 @@ Accepts entity handle, targetnames or x y z string coordinates for the target pa
     - **cooldown**: Time between repeats
 
 > [!WARNING]
-> This tag has different behavior for bot_generator spawned bots versus populator spawned bots.  See bot_action_point on the VDC.
-> For populator spawned bots, stay_time parameter does nothing
-> For bot_generator spawned bots, duration < stay_time will override stay_time.
+> - This tag has different behavior for bot_generator spawned bots versus populator spawned bots.  See bot_action_point on the VDC.
+> - For populator spawned bots, stay_time parameter does nothing.
+> - For bot_generator spawned bots, duration < stay_time will override stay_time.
 
 ---
 
