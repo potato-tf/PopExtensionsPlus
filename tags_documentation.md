@@ -55,11 +55,10 @@ Tag "popext_actionpoint{
 
 ### popext_addcond
 
-```js
-// Adds a condition to the bot, duration optional
-// TF_COND_REPROGRAMMED has special handling to change team
+Adds a condition to the bot, duration optional.
+TF_COND_REPROGRAMMED has special handling to change team.
 
-// example usage
+```js
 Tag "popext_addcond{cond = TF_COND_SPEED_BOOST, duration = 15}"
 ```
 
@@ -69,11 +68,10 @@ Tag "popext_addcond{cond = TF_COND_SPEED_BOOST, duration = 15}"
 
 ### popext_reprogrammed
 
-```js
-// Changes the bot to the defending team
-// No parameters required
+Changes the bot to the defending team.
+No parameters required.
 
-// example usage
+```js
 Tag "popext_reprogrammed"
 ```
 
@@ -86,11 +84,10 @@ Tag "popext_reprogrammed"
 
 ### popext_altfire
 
-```js
-// Makes the bot hold secondary fire button
-// Duration is optional
+Makes the bot hold secondary fire button.
+Duration is optional.
 
-// example usage
+```js
 Tag "popext_altfire{duration = 30}" // hold for 30 seconds after spawning
 Tag "popext_altfire" // hold indefinitely
 ```
@@ -101,11 +98,10 @@ Tag "popext_altfire" // hold indefinitely
 
 ### popext_deathsound
 
-```js
-// Customizes the sound played when the bot dies
-// See EmitSoundEx for valid arguments
+Customizes the sound played when the bot dies.
+See EmitSoundEx for valid arguments.
 
-// example usage
+```js
 Tag "popext_deathsound{sound = `ui/chime_rd_2base_neg.wav`}"
 ```
 
@@ -115,11 +111,10 @@ Tag "popext_deathsound{sound = `ui/chime_rd_2base_neg.wav`}"
 
 ### popext_stepsound
 
-```js
-// Customizes the sound played when the bot takes a step
-// See EmitSoundEx for valid arguments
+Customizes the sound played when the bot takes a step.
+See EmitSoundEx for valid arguments.
 
-// example usage
+```js
 Tag "popext_stepsound{sound = `ui/chime_rd_2base_pos.wav`}"
 ```
 
@@ -132,11 +127,10 @@ Tag "popext_stepsound{sound = `ui/chime_rd_2base_pos.wav`}"
 
 ### popext_usehumanmodel
 
-```js
-// Makes the bot use the human player model instead of robot model
-// No parameters required
+Makes the bot use the human player model instead of robot model.
+No parameters required.
 
-// example usage
+```js
 Tag "popext_usehumanmodel"
 ```
 
@@ -146,11 +140,10 @@ Tag "popext_usehumanmodel"
 
 ### popext_usecustommodel
 
-```js
-// Applies a custom model to the bot
-// Requires model parameter
+Applies a custom model to the bot.
+Requires model parameter.
 
-// example usage
+```js
 Tag "popext_usecustommodel{model = `models/player/heavy.mdl`}"
 ```
 
@@ -160,11 +153,10 @@ Tag "popext_usecustommodel{model = `models/player/heavy.mdl`}"
 
 ### popext_usehumananims
 
-```js
-// Makes the bot use human animations while keeping robot appearance
-// No parameters required
+Makes the bot use human animations while keeping robot appearance.
+No parameters required.
 
-// example usage
+```js
 Tag "popext_usehumananims"
 ```
 
@@ -177,11 +169,10 @@ Tag "popext_usehumananims"
 
 ### popext_alwaysglow
 
-```js
-// Makes the bot permanently glow
-// No parameters required
+Makes the bot permanently glow.
+No parameters required.
 
-// example usage
+```js
 Tag "popext_alwaysglow"
 ```
 > [!NOTE]
@@ -193,11 +184,10 @@ Tag "popext_alwaysglow"
 
 ### popext_stripslot
 
-```js
-// Removes the weapon in the specified slot
-// Requires slot parameter
+Removes the weapon in the specified slot.
+Requires slot parameter.
 
-// example usage
+```js
 Tag "popext_stripslot{slot = SLOT_MELEE}"
 ```
 
@@ -207,11 +197,10 @@ Tag "popext_stripslot{slot = SLOT_MELEE}"
 
 ### popext_fireweapon
 
-```js
-// Makes the bot press a button with various conditions
-// Only button parameter is required, others are optional
+Makes the bot press a button with various conditions.
+Only button parameter is required, others are optional.
 
-// example usage
+```js
 Tag "popext_fireweapon{button = IN_RELOAD, cooldown = 3, delay = 10, repeats = 5, ifhealthbelow = 100, duration = 2}"
 ```
 
@@ -224,11 +213,10 @@ Tag "popext_fireweapon{button = IN_RELOAD, cooldown = 3, delay = 10, repeats = 5
 
 ### popext_weaponswitch
 
-```js
-// Makes the bot switch to a weapon with various conditions
-// Only slot parameter is required, others are optional
+Makes the bot switch to a weapon with various conditions.
+Only slot parameter is required, others are optional.
 
-// example usage
+```js
 Tag "popext_weaponswitch{slot = SLOT_SECONDARY, cooldown = 3, delay = 10, repeats = 5, ifhealthbelow = 100}"
 ```
 
@@ -238,12 +226,11 @@ Tag "popext_weaponswitch{slot = SLOT_SECONDARY, cooldown = 3, delay = 10, repeat
 
 ### popext_spell
 
-```js
-// Makes the bot cast a spell
-// Only type parameter is required, others are optional
-// See constants.nut for spell type values
+Makes the bot cast a spell.
+Only type parameter is required, others are optional.
+See constants.nut for spell type values.
 
-// example usage
+```js
 Tag "popext_spell{type = SPELL_SKELETON, cooldown = 3, delay = 10, repeats = 5, ifhealthbelow = 100, charges = 5}"
 ```
 
@@ -253,11 +240,10 @@ Tag "popext_spell{type = SPELL_SKELETON, cooldown = 3, delay = 10, repeats = 5, 
 
 ### popext_spawntemplate
 
-```js
-// Spawns a point template from the global PointTemplates table parented to the bot
-// Requires template parameter
+Spawns a point template from the global PointTemplates table parented to the bot.
+Requires template parameter.
 
-// example usage
+```js
 Tag "popext_spawntemplate{template = `MyTemplateName`}"
 ```
 
@@ -267,11 +253,10 @@ Tag "popext_spawntemplate{template = `MyTemplateName`}"
 
 ### popext_forceromevision
 
-```js
-// Forces romevision cosmetics on the bot regardless of player settings
-// No parameters required
+Forces romevision cosmetics on the bot regardless of player settings.
+No parameters required.
 
-// example usage
+```js
 Tag "popext_forceromevision"
 ```
 >[!NOTE]
@@ -283,12 +268,11 @@ Tag "popext_forceromevision"
 
 ### popext_customattr
 
-```js
-// Applies a custom attribute to a bot or its weapon
-// Requires attribute and value parameters
-// See customattributes.nut for a list of valid attributes
+Applies a custom attribute to a bot or its weapon.
+Requires attribute and value parameters.
+See customattributes.nut for a list of valid attributes.
 
-// example usage
+```js
 Tag "popext_customattr{attribute = `wet immunity`, value = 1}"
 Tag "popext_customattr{weapon = `tf_weapon_scattergun`, attribute = `last shot crits`, value = 1, delay = 10}"
 ```
@@ -303,11 +287,10 @@ Tag "popext_customattr{weapon = `tf_weapon_scattergun`, attribute = `last shot c
 
 ### popext_ringoffire
 
-```js
-// Creates a damaging ring of fire around the bot
-// Requires damage, interval, and radius parameters
+Creates a damaging ring of fire around the bot.
+Requires damage, interval, and radius parameters.
 
-// example usage
+```js
 Tag "popext_ringoffire{damage = 20, interval = 3, radius = 150}"
 Tag "popext_ringoffire{damage = 20, interval = 3, radius = 150, hide_particle_effect = 1}"
 ```
@@ -321,11 +304,10 @@ Tag "popext_ringoffire{damage = 20, interval = 3, radius = 150, hide_particle_ef
 
 ### popext_meleeai
 
-```js
-// Improves AI for melee combat
-// Parameters are optional
+Improves AI for melee combat.
+Parameters are optional.
 
-// example usage
+```js
 Tag "popext_meleeai{turnrate = 1500}"
 ```
 
@@ -335,11 +317,10 @@ Tag "popext_meleeai{turnrate = 1500}"
 
 ### popext_mobber
 
-```js
-// Makes the bot hunt down players
-// Parameters are optional
+Makes the bot hunt down players.
+Parameters are optional.
 
-// example usage
+```js
 Tag "popext_mobber{threat_type = `closest`, threat_dist = 256.0, lookat = false, turnrate = 150}"
 ```
 
@@ -351,12 +332,11 @@ Tag "popext_mobber{threat_type = `closest`, threat_dist = 256.0, lookat = false,
 
 ### popext_movetopoint
 
-```js
-// OBSOLETE - Use popext_actionpoint instead
-// Makes the bot move to a specified point
-// Requires target parameter
+OBSOLETE - Use popext_actionpoint instead.
+Makes the bot move to a specified point.
+Requires target parameter.
 
-// example usage
+```js
 Tag "popext_movetopoint{target = `entity_to_move_to`}"
 Tag "popext_movetopoint{target = `500 500 500`}"
 ```
@@ -367,12 +347,11 @@ Tag "popext_movetopoint{target = `500 500 500`}"
 
 ### popext_actionpoint
 
-```js
-// Creates an action point for the bot to move to
-// Only target parameter is required, others are optional
-// Action points control bot movement and targeting behaviors
+Creates an action point for the bot to move to.
+Only target parameter is required, others are optional.
+Action points control bot movement and targeting behaviors.
 
-// example usage
+```js
 Tag "popext_actionpoint{target = `action_point_targetname`}"
 Tag "popext_actionpoint{target = `500 500 500`, next_action_point = `optional_next_action_point_targetname`, desired_distance = 50, duration = 10, command = `attack sentry at next action point`}"
 ```
@@ -406,11 +385,10 @@ Tag "popext_actionpoint{target = `500 500 500`, next_action_point = `optional_ne
 
 ### popext_fireinput
 
-```js
-// Fires an entity input as soon as the bot spawns
-// Requires target and action parameters, others are optional
+Fires an entity input as soon as the bot spawns.
+Requires target and action parameters, others are optional.
 
-// example usage
+```js
 Tag "popext_fireinput{target = `bignet`, action = `RunScriptCode`, param = `ClientPrint(null, 3, \`I spawned one second ago!\`)`, delay = 1, activator = `activator_targetname_here`, caller = `caller_targetname_here`}"
 ```
 
@@ -420,11 +398,10 @@ Tag "popext_fireinput{target = `bignet`, action = `RunScriptCode`, param = `Clie
 
 ### popext_weaponresist
 
-```js
-// Makes the bot resistant to damage from specific weapons
-// Requires weapon and amount parameters
+Makes the bot resistant to damage from specific weapons.
+Requires weapon and amount parameters.
 
-// example usage
+```js
 Tag "popext_weaponresist{weapon = `tf_weapon_minigun`, amount = 0.5}"
 ```
 
@@ -437,11 +414,10 @@ Tag "popext_weaponresist{weapon = `tf_weapon_minigun`, amount = 0.5}"
 
 ### popext_setskin
 
-```js
-// Sets a custom skin index for the bot
-// Requires skin parameter
+Sets a custom skin index for the bot.
+Requires skin parameter.
 
-// example usage
+```js
 Tag "popext_setskin{skin = 2}"
 ```
 
@@ -451,11 +427,10 @@ Tag "popext_setskin{skin = 2}"
 
 ### popext_dispenseroverride
 
-```js
-// Makes engineer bots build dispensers instead of other buildings
-// Requires type parameter
+Makes engineer bots build dispensers instead of other buildings.
+Requires type parameter.
 
-// example usage
+```js
 Tag "popext_dispenseroverride{type = OBJ_SENTRYGUN}"
 ```
 
@@ -465,11 +440,10 @@ Tag "popext_dispenseroverride{type = OBJ_SENTRYGUN}"
 
 ### popext_giveweapon
 
-```js
-// Gives the bot a weapon
-// Requires weapon and id parameters
+Gives the bot a weapon.
+Requires weapon and id parameters.
 
-// example usage
+```js
 Tag "popext_giveweapon{weapon = `tf_weapon_shotgun_pyro`, id = 425}"
 
 // with custom attributes
@@ -485,11 +459,10 @@ Tag "popext_giveweapon{weapon = `tf_weapon_drg_pomson`, id = ID_POMSON_6000, att
 
 ### popext_meleewhenclose
 
-```js
-// Makes the bot switch to melee when enemies are close
-// Requires distance parameter
+Makes the bot switch to melee when enemies are close.
+Requires distance parameter.
 
-// example usage
+```js
 Tag "popext_meleewhenclose{distance = 250}"
 ```
 
@@ -499,11 +472,10 @@ Tag "popext_meleewhenclose{distance = 250}"
 
 ### popext_usebestweapon
 
-```js
-// Makes the bot use the most appropriate weapon for different situations
-// No parameters required
+Makes the bot use the most appropriate weapon for different situations.
+No parameters required.
 
-// example usage
+```js
 Tag "popext_usebestweapon"
 ```
 
@@ -516,11 +488,10 @@ Tag "popext_usebestweapon"
 
 ### popext_homingprojectile
 
-```js
-// Makes the bot's projectiles home in on targets
-// All parameters are optional
+Makes the bot's projectiles home in on targets.
+All parameters are optional.
 
-// example usage
+```js
 Tag "popext_homingprojectile{turn_power = 1.0, speed_mult = 1.0, ignoreStealthedSpies = true, ignoreDisguisedSpies = false}"
 ```
 
@@ -533,11 +504,10 @@ Tag "popext_homingprojectile{turn_power = 1.0, speed_mult = 1.0, ignoreStealthed
 
 ### popext_rocketcustomtrail
 
-```js
-// Applies a custom particle trail to rockets
-// Requires name parameter
+Applies a custom particle trail to rockets.
+Requires name parameter.
 
-// example usage
+```js
 Tag "popext_rocketcustomtrail{name = `eyeboss_projectile`}"
 ```
 
@@ -547,11 +517,10 @@ Tag "popext_rocketcustomtrail{name = `eyeboss_projectile`}"
 
 ### popext_customweaponmodel
 
-```js
-// Applies a custom model to a weapon
-// Requires model parameter, slot is optional
+Applies a custom model to a weapon.
+Requires model parameter, slot is optional.
 
-// example usage
+```js
 Tag "popext_customweaponmodel{model = `models/player/heavy.mdl`, slot = SLOT_SECONDARY}"
 ```
 
@@ -561,11 +530,10 @@ Tag "popext_customweaponmodel{model = `models/player/heavy.mdl`, slot = SLOT_SEC
 
 ### popext_spawnhere
 
-```js
-// Makes the bot spawn at a specific location
-// Requires where parameter, others are optional
+Makes the bot spawn at a specific location.
+Requires where parameter, others are optional.
 
-// example usage
+```js
 Tag "popext_spawnhere{where = `ent_to_spawn_at`, spawn_uber_duration = 5.0}"
 Tag "popext_spawnhere{where = `500 500 500`}"
 ```
@@ -576,11 +544,10 @@ Tag "popext_spawnhere{where = `500 500 500`}"
 
 ### popext_improvedairblast
 
-```js
-// Improves Pyro bot airblast behavior
-// Level parameter is optional, defaults to bot difficulty
+Improves Pyro bot airblast behavior.
+Level parameter is optional, defaults to bot difficulty.
 
-// example usage
+```js
 Tag "popext_improvedairblast{level = 3}"
 Tag "popext_improvedairblast"
 ```
@@ -594,11 +561,10 @@ Tag "popext_improvedairblast"
 
 ### popext_aimat
 
-```js
-// Makes the bot aim at a specific attachment point on targets
-// Requires target parameter
+Makes the bot aim at a specific attachment point on targets.
+Requires target parameter.
 
-// example usage
+```js
 Tag "popext_aimat{target = `foot_L`}"
 ```
 
@@ -608,11 +574,10 @@ Tag "popext_aimat{target = `foot_L`}"
 
 ### popext_warpaint
 
-```js
-// Applies a warpaint to a bot's weapon
-// Requires idx parameter, others are optional
+Applies a warpaint to a bot's weapon.
+Requires idx parameter, others are optional.
 
-// example usage
+```js
 Tag "popext_warpaint{idx = 303, slot = 0, wear = 1.0, seed = `8873643875`}"
 ```
 
@@ -625,11 +590,10 @@ Tag "popext_warpaint{idx = 303, slot = 0, wear = 1.0, seed = `8873643875`}"
 
 ### popext_halloweenboss
 
-```js
-// Spawns a Halloween boss associated with this bot
-// Requires type, where, health, and boss_team parameters
+Spawns a Halloween boss associated with this bot.
+Requires type, where, health, and boss_team parameters.
 
-// example usage
+```js
 Tag "popext_halloweenboss{type = `headless_hatman`, where = `halloween_boss_spawnpoint`, health = 5000, duration = 100, boss_team = TF_TEAM_PVE_INVADERS}"
 Tag "popext_halloweenboss{type = `merasmus`, where = `500 500 500`, health = `BOTHP`, duration = 60, boss_team = 5}"
 ```
@@ -640,11 +604,10 @@ Tag "popext_halloweenboss{type = `merasmus`, where = `500 500 500`, health = `BO
 
 ### popext_teleportnearvictim
 
-```js
-// Makes the bot teleport near victims, similar to spy behavior
-// No parameters required
+Makes the bot teleport near victims, similar to spy behavior.
+No parameters required.
 
-// example usage
+```js
 Tag "popext_teleportnearvictim"
 ```
 
@@ -654,11 +617,10 @@ Tag "popext_teleportnearvictim"
 
 ### popext_disbandsquadafter
 
-```js
-// Disbands the bot's squad after a delay
-// Requires delay parameter
+Disbands the bot's squad after a delay.
+Requires delay parameter.
 
-// example usage
+```js
 Tag "popext_disbandsquadafter{delay = 20}"
 ```
 
@@ -668,11 +630,10 @@ Tag "popext_disbandsquadafter{delay = 20}"
 
 ### popext_leavesquadafter
 
-```js
-// Makes the bot leave its squad after a delay
-// Requires delay parameter
+Makes the bot leave its squad after a delay.
+Requires delay parameter.
 
-// example usage
+```js
 Tag "popext_leavesquadafter{delay = 20}"
 ```
 
@@ -682,11 +643,10 @@ Tag "popext_leavesquadafter{delay = 20}"
 
 ### popext_mission
 
-```js
-// Assigns a mission to the bot
-// Requires mission parameter, target is optional
+Assigns a mission to the bot.
+Requires mission parameter, target is optional.
 
-// example usage
+```js
 Tag "popext_mission{mission = MISSION_DESTROY_SENTRIES, target = `sentry_1`}"
 ```
 
@@ -696,11 +656,10 @@ Tag "popext_mission{mission = MISSION_DESTROY_SENTRIES, target = `sentry_1`}"
 
 ### popext_suicidecounter
 
-```js
-// Damages the bot at regular intervals
-// All parameters are optional
+Damages the bot at regular intervals.
+All parameters are optional.
 
-// example usage
+```js
 Tag "popext_suicidecounter{interval = 0.5, amount = 2.0, damage_type = DMG_BURN, damage_custom = TF_DMG_CUSTOM_BURNING}"
 ```
 
@@ -710,11 +669,10 @@ Tag "popext_suicidecounter{interval = 0.5, amount = 2.0, damage_type = DMG_BURN,
 
 ### popext_iconcount
 
-```js
-// Sets wave icon spawn count
-// Requires icon and count parameters
+Sets wave icon spawn count.
+Requires icon and count parameters.
 
-// example usage
+```js
 Tag "popext_iconcount{icon = `scout`, count = 5}"
 ```
 
@@ -724,11 +682,10 @@ Tag "popext_iconcount{icon = `scout`, count = 5}"
 
 ### popext_changeattributes
 
-```js
-// Changes the bot's attributes
-// Requires name parameter, others are optional
+Changes the bot's attributes.
+Requires name parameter, others are optional.
 
-// example usage
+```js
 Tag "popext_changeattributes{name = `AttribSetName`, delay = 10, cooldown = 10.0, repeats = 1, ifseetarget = false, ifhealthbelow = 100}"
 ```
 
@@ -738,11 +695,10 @@ Tag "popext_changeattributes{name = `AttribSetName`, delay = 10, cooldown = 10.0
 
 ### popext_taunt
 
-```js
-// Makes the bot perform a taunt
-// Requires id parameter, others are optional
+Makes the bot perform a taunt.
+Requires id parameter, others are optional.
 
-// example usage
+```js
 Tag "popext_taunt{id = 1015, delay = 1, cooldown = 10.0, repeats = 1, duration = 5}"
 ```
 
@@ -752,10 +708,9 @@ Tag "popext_taunt{id = 1015, delay = 1, cooldown = 10.0, repeats = 1, duration =
 
 ### popext_playsequence
 
-```js
-// Makes the bot play an animation sequence
-// Requires sequence parameter, others are optional
+Makes the bot play an animation sequence.
+Requires sequence parameter, others are optional.
 
-// example usage
+```js
 Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay = 0, cooldown = 10.0, repeats = 1}"
 ``` 
