@@ -1465,6 +1465,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					if (typeof item == "array")
 					{
 						foreach (_item in item)
+						{
 							local wep = PopExtUtil.HasItemInLoadout(player, _item)
 							if (wep == null) return
 
