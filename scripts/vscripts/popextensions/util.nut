@@ -554,7 +554,9 @@
 				value = casti2f(value.tointeger())
 			}
 		}
-		if (attrib in specialattribs) specialattribs[attrib]()
+		if (attrib in specialattribs)
+			specialattribs[attrib]()
+
 		local item_handle = this.HasItemInLoadout(player, item)
 		if (item_handle)
 			items[item_handle] <- [attrib, value]
@@ -582,7 +584,12 @@
 					item_handle.ReapplyProvision()
 				}
 				else
-					EntFireByHandle(item_handle, "RunScriptCode", format("self.AddAttribute(`%s`, %.2f, -1); self.ReapplyProvision()", attrib, value.tofloat()), -1, null, null)
+				{
+					local formatstr = attrib in specialattribs ?
+						format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()) :
+						format("self.AddAttribute(`%s`, %.2f, -1); self.ReapplyProvision()", attrib, value.tofloat())
+					EntFireByHandle(item_handle, "RunScriptCode", formatstr, -1, null, null)
+				}
 
 
 				if (attrib in healthattribs) EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)

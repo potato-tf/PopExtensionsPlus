@@ -1609,10 +1609,6 @@ local popext_funcs = {
 			return
 		}
 
-		// Set "paintkit_proto_def_index" by interpreting the index as a float value, as the
-		//  attribute type is set incorrectly by the game.
-		weapon.AddAttribute("paintkit_proto_def_index", casti2f(args.idx.tointeger()), -1)
-
 		// Set item texture wear.
 		//  This must be present or the warpaint will not render, so we set to 0.0 if a
 		//   value is not provided nor already present on the weapon.
@@ -1625,6 +1621,7 @@ local popext_funcs = {
 		//    "custom_paintkit_seed_lo" (the lower bits),
 		//    "custom_paintkit_seed_hi" (the higher bits).
 		// A seed does not need to be provided in order for the warpaint to render.
+		// Custom seeds must be set BEFORE paintkit_proto_def_index.
 		if ("seed" in args) {
 
 			// Simple operation if we are on 64-bit.
@@ -1665,6 +1662,10 @@ local popext_funcs = {
 				), -1)
 			}
 		}
+
+		// Set "paintkit_proto_def_index" by interpreting the index as a float value, as the
+		//  attribute type is set incorrectly by the game.
+		weapon.AddAttribute("paintkit_proto_def_index", casti2f(args.idx.tointeger()), -1)
 	}
 
 	// UNFINISHED

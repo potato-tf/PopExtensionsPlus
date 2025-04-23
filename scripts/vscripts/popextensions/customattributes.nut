@@ -324,6 +324,11 @@
 			player.GetScriptScope().attribinfo[attr] <- format("Custom kill icon: %s", value)
 		}
 
+		"set warpaint seed": function(player, items, attr, value) {
+			CustomAttributes.SetWarpaintSeed(player, items, value)
+			player.GetScriptScope().attribinfo[attr] <- format("Warpaint seed: %d", value)
+		}
+
 		//VANILLA ATTRIBUTE REIMPLEMENTATIONS
 
 		"alt-fire disabled": function(player, items, attr, value) {
@@ -2006,6 +2011,51 @@
 		}
 	}
 
+	function SetWarpaintSeed(player, items, value) {
+
+		local seed = value.tointeger()
+		foreach(item, attrs in items)
+		{
+			local wep = PopExtUtil.HasItemInLoadout(player, item)
+
+			if (wep == null) continue
+
+			if (_intsize_ == 8)
+			{
+				// This will overflow a Squirrel int as they're signed, but we don't care
+				//  since we only want the bits; the value is irrelevant.
+				wep.AddAttribute("custom_paintkit_seed_lo", casti2f(seed & 0xFFFFFFFF), -1)
+				wep.AddAttribute("custom_paintkit_seed_hi", casti2f(seed >> 32), -1)
+			}
+			else {
+				// Decompose a 64-bit decimal seed string in to four 16-bit integers,
+				//  and then compile the resulting integers to two 32 bit integers.
+				local seed = value.tostring()
+				local strlen = seed.len()
+				local digitstore = array(strlen, 0)
+
+				for (local i = 0; i < strlen; ++i) {
+					local carry = seed[i] - 48
+					local tmp = 0
+
+					for (local i = (strlen - 1); (i >= 0); --i) {
+						tmp = (digitstore[i] * 10) + carry
+						digitstore[i] = tmp & 0xFFFF
+						carry = tmp >> 16
+					}
+				}
+
+				wep.AddAttribute("custom_paintkit_seed_lo", casti2f(
+					digitstore[strlen - 2] << 16 | digitstore[strlen - 1]
+				), -1)
+				wep.AddAttribute("custom_paintkit_seed_hi", casti2f(
+					digitstore[strlen - 4] << 16 | digitstore[strlen - 3]
+				), -1)
+			}
+			wep.ReapplyProvision()
+		}
+	}
+
 	function AddAttr(player, attr, value = 0, item = null) {
 
 		local item_table = {}
@@ -2094,6 +2144,9 @@
 	}
 	function GetAttributeFunctionFromStringName(attr) {
 
+		if (attr == "alt-fire disabled")
+			return "AltFireDisabled"
+
 		local str = ""
 		split(attr, " ").apply(@(s) str += format("%s%s", s.slice(0, 1).toupper(), s.slice(1, s.len())) )
 		return str
@@ -2101,8 +2154,6 @@
 	function CleanupFunctionTable(handle, table, attr) {
 
 		local str = this.GetAttributeFunctionFromStringName(attr)
-
-		if (attr == "alt-fire disabled") str = "AltFireDisabled"
 
 		// foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
 		foreach(name, v in table)

@@ -1452,6 +1452,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				local player = GetPlayerFromUserID(params.userid)
 				if (player.IsBotOfType(TF_BOT_TYPE)) return
 
+				local scope = player.GetScriptScope()
+
 				if (typeof value != "table") {
 					PopExtMain.Error.RaiseValueError("ItemAttributes", value, "Value must be table")
 					success = false
@@ -1460,31 +1462,48 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				function ApplyAttributes(item, attr)
 				{
-
-					local wep = PopExtUtil.HasItemInLoadout(player, item)
-					if (wep == null) return
-
-					foreach (attrib, value in attr)
+					if (typeof item == "array")
 					{
-						PopExtUtil.SetPlayerAttributes(player, attrib, value, wep)
+						foreach (_item in item)
+							local wep = PopExtUtil.HasItemInLoadout(player, _item)
+							if (wep == null) return
+
+							foreach (attrib, value in attr)
+								PopExtUtil.SetPlayerAttributes(player, attrib, value, wep)
+						}
+					}
+					else
+					{
+						local wep = PopExtUtil.HasItemInLoadout(player, item)
+						if (wep == null) return
+
+						foreach (attrib, value in attr)
+						{
+							// warpaint seeds must be set before paintkit_proto_def_index
+							// otherwise it won't appear until the player/weapon respawns
+							if ("set warpaint seed" in attr && ( !("attribinfo" in scope) || !("set warpaint seed" in scope.attribinfo ) ) )
+							{
+								PopExtUtil.SetPlayerAttributes(player, "set warpaint seed", attr["set warpaint seed"], wep)
+								continue
+							}
+							PopExtUtil.SetPlayerAttributes(player, attrib, value, wep)
+						}
 					}
 				}
-
+				local scope = player.GetScriptScope()
 				foreach(k, v in value)
 				{
 					if (typeof k == "string" && k.find(","))
 					{
-						local idarray = split(k, ",")
+						local idarray = split(k, ",", true)
 
 						if (idarray.len() > 1)
 							idarray.apply(@(val) val.tofloat())
+
 						k = idarray
 					}
-					if (typeof k == "array")
-						foreach (item in k)
-							ApplyAttributes(item, v)
-					else
-						ApplyAttributes(k, v)
+
+					ApplyAttributes(k, v)
 				}
 
 			}
@@ -2755,13 +2774,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		//save original values to restore later
 		if (!(convar in MissionAttributes.ConVars)) MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
 
-		if (Convars.GetStr(convar) != value) 
+		if (Convars.GetStr(convar) != value)
 			EntFire("bignet", "runscriptcode", format( "Convars.SetValue(`%s`, `%s`)", convar, value.tostring() ) )
 
-		if (duration > 0) 
+		if (duration > 0)
 			EntFire("bignet", "RunScriptCode", format("MissionAttributes.SetConvar(`%s`,`%s`)", convar, MissionAttributes.ConVars[convar].tostring()), duration)
 
-		if (commentaryNode != null) 
+		if (commentaryNode != null)
 			EntFireByHandle(commentaryNode, "Kill", "", 1, null, null)
 	}
 

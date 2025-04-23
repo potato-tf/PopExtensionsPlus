@@ -104,6 +104,10 @@ WaveSchedule
 							`passive reload`: 1
 							`collect currency on kill`: 1
 						},
+						tf_weapon_flamethrower = {
+							`paintkit_proto_def_index` : 214
+							`set warpaint seed` : 1674041643762947354
+						},
 						tf_weapon_rocketlauncher =  { //string with no spaces (like item classnames) can use this syntax
 							`projectile gravity`: 10
 							`fire rate penalty` : 3
