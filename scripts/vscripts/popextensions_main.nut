@@ -263,6 +263,8 @@ if (!("_AddThinkToEnt" in _root))
 				"ScriptLoadTable"
 				"ScriptUnloadTable"
 				"EntAdditions"
+				"Explanation"
+				"Info"
 			]
 
 			foreach(c in cleanup) if (c in _root) delete _root[c]

@@ -110,12 +110,11 @@ if (!("EntAdditions" in ROOT))
             //fix killing func_rotating before stopping sound causing sound to play forever
             func_rotating = function(ent, spawnflags) {
 
-                local thinkinterval = 1
-                local maxangle = 180000.0 //max angle is actually 360,000.0 not 180,000.0.  Reset it early because whatever
-                local xyz = [0.0, 0.0, 0.0]
-
+                local maxangle = 350000.0 //max angle is actually 360,000.0, reset it a bit earlier just in case
+                local xyz = array(3, 0.0)
                 ent.ValidateScriptScope()
-                ent.GetScriptScope().RotateFixThink <- function() {
+                local scope = ent.GetScriptScope()
+                scope.RotateFixThink <- function() {
 
                     for (local i = 0; i < 3; i++)
                     {
@@ -127,20 +126,19 @@ if (!("EntAdditions" in ROOT))
                         ent.SetLocalAngles(QAngle(xyz[0], xyz[1], xyz[2]))
                         break
                     }
-                    return thinkinterval
+                    return -1
                 }
                 AddThinkToEnt(ent, "RotateFixThink")
+                scope.noise <- GetPropString(ent, "m_NoiseRunning")
 
-                EntAdditions.SetDestroyCallback(ent, function() {
-                    SetPropFloat(self, "m_flVolume", 0.01)
-                    self.StopSound(GetPropString(self, "m_NoiseRunning"))
-                })
+                EntAdditions.SetDestroyCallback(ent, @() StopAmbientSoundOn(self.GetScriptScope().noise, self) )
             }
             // add spawnflag to apply to all players
             // add spawnflag to allow for taking damage
             // fix not being able to disable on dead players
             // fix persisting between map/round changes
             point_viewcontrol = function(ent, spawnflags) {
+
                 function InputEnable()
                 {
                     if (!ent || !ent.IsValid())
@@ -207,10 +205,11 @@ if (!("EntAdditions" in ROOT))
                 }
 
                 ent.ValidateScriptScope()
-                ent.GetScriptScope().InputEnable <- InputEnable
-                ent.GetScriptScope().Inputenable <- InputEnable
-                ent.GetScriptScope().InputDisable <- InputDisable
-                ent.GetScriptScope().Inputdisable <- InputDisable
+                local scope = ent.GetScriptScope()
+                scope.InputEnable <- InputEnable
+                scope.Inputenable <- InputEnable
+                scope.InputDisable <- InputDisable
+                scope.Inputdisable <- InputDisable
             }
             //fix TeamNum not working
             //fix FireSound not working, added volume setting (example: "sound_name_here.wav|40")
@@ -312,7 +311,6 @@ function OnPostSpawn()
 {
     local classname = self.GetClassname()
     local spawnflags = GetPropInt(self, "m_spawnflags")
-
     if (classname in EntAdditions.OnPostSpawn)
         EntAdditions.OnPostSpawn[classname](self, spawnflags)
 }

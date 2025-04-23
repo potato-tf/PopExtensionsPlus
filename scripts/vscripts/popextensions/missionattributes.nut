@@ -1157,9 +1157,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				local bot = GetPlayerFromUserID(params.userid)
 				if (!bot.IsBotOfType(TF_BOT_TYPE) || bot.IsMiniBoss()) return
 
-				local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = TF_TEAM_PVE_DEFENDERS tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
+				local spell = SpawnEntityFromTable("tf_spell_pickup", {
+					targetname = "__popext_commonspell"
+					origin = bot.GetLocalOrigin()
+					TeamNum = TF_TEAM_PVE_DEFENDERS
+					tier = 0 "OnPlayerTouch#1": "!self,Kill,,0,-1"
+				})
 			}
-
 		}
 
 		// =========================================================
@@ -1173,9 +1177,14 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				local bot = GetPlayerFromUserID(params.userid)
 				if (!bot.IsBotOfType(TF_BOT_TYPE) || !bot.IsMiniBoss()) return
 
-				local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = TF_TEAM_PVE_DEFENDERS tier = 0 "OnPlayerTouch": "!self,Kill,,0,-1" })
+				local spell = SpawnEntityFromTable("tf_spell_pickup", {
+					targetname = "__popext_giantspell"
+					origin = bot.GetLocalOrigin()
+					TeamNum = TF_TEAM_PVE_DEFENDERS
+					tier = 0
+					"OnPlayerTouch#1": "!self,Kill,,0,-1"
+				})
 			}
-
 		}
 
 		// =========================================================
@@ -1189,7 +1198,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				local bot = GetPlayerFromUserID(params.userid)
 				if (!bot.IsBotOfType(TF_BOT_TYPE) || bot.IsMiniBoss()) return
 
-				local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_commonspell" origin = bot.GetLocalOrigin() TeamNum = TF_TEAM_PVE_DEFENDERS tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })
+				local spell = SpawnEntityFromTable("tf_spell_pickup", {
+					targetname = "__popext_commonspell"
+					origin = bot.GetLocalOrigin()
+					TeamNum = TF_TEAM_PVE_DEFENDERS
+					tier = 1
+					"OnPlayerTouch#1": "!self,Kill,,0,-1"
+				})
 			}
 
 		}
@@ -1205,7 +1220,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				local bot = GetPlayerFromUserID(params.userid)
 				if (!bot.IsBotOfType(TF_BOT_TYPE) || !bot.IsMiniBoss()) return
 
-				local spell = SpawnEntityFromTable("tf_spell_pickup", {targetname = "_giantspell" origin = bot.GetLocalOrigin() TeamNum = TF_TEAM_PVE_DEFENDERS tier = 1 "OnPlayerTouch": "!self,Kill,,0,-1" })
+				local spell = SpawnEntityFromTable("tf_spell_pickup", {
+					targetname = "__popext_giantspell"
+					origin = bot.GetLocalOrigin()
+					TeamNum = TF_TEAM_PVE_DEFENDERS
+					tier = 1
+					"OnPlayerTouch#1": "!self,Kill,,0,-1"
+				})
 			}
 
 		}
@@ -2727,17 +2748,21 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 	function SetConvar(convar, value, duration = 0, hideChatMessage = true) {
 
-		local commentaryNode = FindByClassname(null, "point_commentary_node")
-		if (commentaryNode == null && hideChatMessage) commentaryNode = SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
+		local commentaryNode
+		if (hideChatMessage)
+			commentaryNode = SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
 
 		//save original values to restore later
 		if (!(convar in MissionAttributes.ConVars)) MissionAttributes.ConVars[convar] <- Convars.GetStr(convar);
 
-		if (Convars.GetStr(convar) != value) Convars.SetValue(convar, value)
+		if (Convars.GetStr(convar) != value) 
+			EntFire("bignet", "runscriptcode", format( "Convars.SetValue(`%s`, `%s`)", convar, value.tostring() ) )
 
-		if (duration > 0) EntFire("tf_gamerules", "RunScriptCode", "MissionAttributes.SetConvar("+convar+","+MissionAttributes.ConVars[convar]+")", duration)
+		if (duration > 0) 
+			EntFire("bignet", "RunScriptCode", format("MissionAttributes.SetConvar(`%s`,`%s`)", convar, MissionAttributes.ConVars[convar].tostring()), duration)
 
-		if (commentaryNode != null) EntFireByHandle(commentaryNode, "Kill", "", -1, null, null)
+		if (commentaryNode != null) 
+			EntFireByHandle(commentaryNode, "Kill", "", 1, null, null)
 	}
 
 	function ResetConvars(hideChatMessage = true)

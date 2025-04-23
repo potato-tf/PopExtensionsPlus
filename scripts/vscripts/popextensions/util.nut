@@ -705,14 +705,6 @@
 	   AddThinkToEnt(txtent, "ExplanationTextThink")
 	}
 
-	function Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
-		DoExplanation.call(PopExtUtil, message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
-	}
-
-	function Info(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
-		DoExplanation.call(PopExtUtil, message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
-	}
-
 	// function IsAlive(player) {
 	// 	return GetPropInt(player, "m_lifeState") == 0
 	// }
@@ -1977,6 +1969,15 @@
 		// don't use acceptinput so we execute after info_populator kill
 		EntFireByHandle( intermission, "Activate", "", -1, null, null )
 	}
+}
+
+//shorter syntax in popfiles (Info(message) vs PopExtUtil.Info(message))
+function Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
+	PopExtUtil.DoExplanation(message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
+}
+
+function Info(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
+	PopExtUtil.DoExplanation(message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
 }
 
 PopExtUtil.TriggerHurt.DispatchSpawn()
