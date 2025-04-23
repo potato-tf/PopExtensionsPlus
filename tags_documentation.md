@@ -15,9 +15,6 @@ Tag "popext_tagname{key1 = value1, key2 = value2}"
 >See the [EmitSoundEx](https://developer.valvesoftware.com/wiki/Team_Fortress_2/Scripting/Script_Functions/EmitSoundEx) page for more information.
 
 >[!NOTE]
->Both `true/false` and `1/0` can be used interchangeably for boolean logic.
-
->[!NOTE]
 >Tags with multiple arguments can be broken into newlines for better readability.
 
 Example:
@@ -76,7 +73,7 @@ Tag "popext_reprogrammed"
 ```
 
 >[!NOTE]
->This applies `ammo regen 999` to the bot automatically.
+>This applies `ammo regen 999` to the bot automatically.  Use `popext_addcond{cond = TF_COND_REPROGRAMMED}` if you don't want this
 
 ---
 
@@ -84,13 +81,14 @@ Tag "popext_reprogrammed"
 
 ### popext_altfire
 
-Makes the bot hold secondary fire button.
-Duration is optional.
+Makes the bot hold their secondary fire button.  Set duration to a very large number to always hold alt-fire.
 
 ```js
 Tag "popext_altfire{duration = 30}" // hold for 30 seconds after spawning
-Tag "popext_altfire" // hold indefinitely
 ```
+
+>[!NOTE]
+> See `popext_fireweapon` for a more comprehensive way to control button presses
 
 ---
 
@@ -141,7 +139,6 @@ Tag "popext_usehumanmodel"
 ### popext_usecustommodel
 
 Applies a custom model to the bot.
-Requires model parameter.
 
 ```js
 Tag "popext_usecustommodel{model = `models/player/heavy.mdl`}"
@@ -185,7 +182,6 @@ Tag "popext_alwaysglow"
 ### popext_stripslot
 
 Removes the weapon in the specified slot.
-Requires slot parameter.
 
 ```js
 Tag "popext_stripslot{slot = SLOT_MELEE}"
@@ -280,7 +276,11 @@ Tag "popext_customattr{weapon = `tf_weapon_scattergun`, attribute = `last shot c
 > [!NOTE]
 > You can use either "attribute" or "attr" as the key name.
 > For custom warpaints on bots, use `popext_warpaint`
+> Despite the name, this is also used for applying standard non-custom attributes
 
+> [!WARNING]
+> VScript cannot set string attribute types like `item name text override` or `meter_label`.
+> The only exception in this library is `custom projectile model`, as its functionality has been replaced. 
 ---
 
 <a name="popext_ringoffire"></a>
@@ -323,8 +323,7 @@ Parameters are optional.
 ```js
 Tag "popext_mobber{threat_type = `closest`, threat_dist = 256.0, lookat = false, turnrate = 150}"
 ```
-
->Valid threat types are `closest` and `random`.  `random` will pick a single random player on spawn and will not lose focus on them until the player dies.
+Valid threat types are `closest` and `random`.  `random` will pick a single random player on spawn and will not lose focus on them until the player dies.
 
 ---
 
@@ -356,24 +355,24 @@ Tag "popext_actionpoint{target = `action_point_targetname`}"
 Tag "popext_actionpoint{target = `500 500 500`, next_action_point = `optional_next_action_point_targetname`, desired_distance = 50, duration = 10, command = `attack sentry at next action point`}"
 ```
 
-> - Accepts entity handle, targetnames or x y z string coordinates for the target parameter
-> - Parameters:
->   - **target**: Where to place the action point (required)
->   - **aimtarget**: What the bot should aim at while at the action point
->   - **killaimtarget**: Bitflag for buttons to press when the bot reaches the point (e.g., IN_ATTACK2)
->     - Setting to 1 makes the bot use primary fire
->     - See FButtons constants for valid button values
->   - **alwayslook**: Whether the bot should always look at the aim target
->   - **next_action_point**: Targetname of next action point to move to
->   - **waituntildone**: Whether to wait until the action is complete
->   - **distance/desired_distance**: How close the bot needs to be to count as "at" the point
->   - **duration**: How long the bot stays at the point
->   - **stay_time**: How long the bot stays at the point (note: ineffective for populator spawned bots)
->   - **command**: What the bot should do at the action point
->   - **delay**: Time before the bot is given this action point
->   - **repeats**: How many times to repeat this action point
->   - **cooldown**: Time between repeats
->
+Accepts entity handle, targetnames or x y z string coordinates for the target parameter
+- Parameters:
+    - **target**: Where to place the action point (required)
+    - **aimtarget**: What the bot should aim at while at the action point
+    - **killaimtarget**: Bitflag for buttons to press when the bot reaches the point (e.g., IN_ATTACK2)
+        - Setting to 1 makes the bot use primary fire
+        - See FButtons constants for valid button values
+    - **alwayslook**: Whether the bot should always look at the aim target
+    - **next_action_point**: Targetname of next action point to move to
+    - **waituntildone**: Whether to wait until the action is complete
+    - **distance/desired_distance**: How close the bot needs to be to count as "at" the point
+    - **duration**: How long the bot stays at the point
+    - **stay_time**: How long the bot stays at the point (note: ineffective for populator spawned bots)
+    - **command**: What the bot should do at the action point
+    - **delay**: Time before the bot is given this action point
+    - **repeats**: How many times to repeat this action point
+    - **cooldown**: Time between repeats
+
 > [!WARNING]
 > This tag has different behavior for bot_generator spawned bots versus populator spawned bots.  See bot_action_point on the VDC.
 > For populator spawned bots, stay_time parameter does nothing
