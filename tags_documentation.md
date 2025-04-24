@@ -28,7 +28,7 @@ Tag "popext_fireweapon{
 With that being said...
 
 >[!CAUTION]
->Tags have a length limit of 256 characters.  If you see console errors mentioning `QUIET_TRUNCATION`, or the multi-line tag is cut short in the vscript error printed to console, your tag is too long.
+> Tags have a length limit of 256 characters.  If you see console errors mentioning `QUIET_TRUNCATION`, or the multi-line tag is cut short in the vscript error printed to console, your tag is too long.
 > If you are using multi-line tags:
 > - Change your End-of-Line sequence from CRLF to LF if you haven't already (for VSCode this is at the bottom right corner of the editor, or hit CTRL+SHIFT+P and search for "end of line").
 > - If you are using VSCode (Recommended), install [VSCode VDF](https://marketplace.visualstudio.com/items?itemName=pfwobcke.vscode-vdf).  VSCode VDF will highlight tags that are too long.
@@ -43,6 +43,11 @@ Tag "popext_actionpoint{
     waituntildone = 1
 }"
 ```
+
+>[!CAUTION]
+> The older pipe syntax is DEPRECATED and will not be supported going forward, many of the more recently added tags (notably `popext_actionpoint`) already do not support it.
+> - `popext_addcond|32|10` for example would instead become `popext_addcond{cond = 32 duration = 10}`.
+> - Simpler tags such as `popext_addcond`, or older tags such as `popext_spell` will still work with this, however this syntax is highly discouraged for anything with > 2 arguments due to poor readability.
 
 ## Available Tags
 
