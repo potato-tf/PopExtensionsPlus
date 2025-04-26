@@ -1,5 +1,3 @@
-IncludeScript("popextensions/customattributes")
-
 PrecacheScriptSound("Announcer.MVM_Get_To_Upgrade")
 
 const EFL_USER 					= 1048576
@@ -488,6 +486,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				}
 			}
 		}
+		AllowMultipleSappers = @(value) this.MultiSapper(value)
 
 		// =======================================================================================
 		// Fix "Set DamageType Ignite" not actually making most weapons ignite on hit
@@ -589,6 +588,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		UpgradeFile = function(value) {
 			EntFire("tf_gamerules", "SetCustomUpgradesFile", value)
 		}
+
+		CustomUpgradesFile = @(value) this.UpgradeFile(value)
 
 		// =========================================================
 
@@ -771,6 +772,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			MissionAttributes.SetConvar("tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1)
 		}
 
+		SentryBusterFriendlyFire = @(value) this.NoBusterFF(value)
+
 		// =========================================================
 
 		HalloweenBossNotSolidToPlayers = function(value) {
@@ -895,6 +898,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				params.damage_stats = TF_DMG_CUSTOM_HEADSHOT
 			}
 		}
+
+		SniperAllowHeadshots = @(value) this.BotHeadshots(value)
 
 		// ==============================================================
 		// Uses bitflags to enable certain behavior
@@ -1145,6 +1150,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				MissionAttributes.noromecarrier = true
 			}
 		}
+
+		NoRomevisionCosmetics = @(value) this.NoRome(value)
 
 		// =========================================================
 
@@ -2132,7 +2139,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						SetPropInt(mvmStatsEnt, CREDITS_ACQUIRED_PROP, GetPropInt(mvmStatsEnt, CREDITS_ACQUIRED_PROP) + moneyValue)
 
 						for (local i = 1, player; i <= MAX_CLIENTS; i++)
-							if (player = PlayerInstanceFromIndex(i), player && !IsPlayerABot(player))
+							if (player = PlayerInstanceFromIndex(i), player && !player.IsBotOfType(TF_BOT_TYPE))
 								player.AddCurrency(moneyValue)
 
 						EmitSoundOn("MVM.MoneyPickup", player)
@@ -2497,7 +2504,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				//bitflags
 				//cannot pick up intel
-				if (value & 2 && !IsPlayerABot(player))
+				if (value & 2 && !player.IsBotOfType(TF_BOT_TYPE))
 					player.AddCustomAttribute("cannot pick up intelligence", 1, -1)
 
 				//infinite cloak
@@ -2722,6 +2729,29 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			})
 		}
 
+        /**********************************************************
+         * Disable the upgrade station                         	   *
+         * 1 = silently disable the upgrade station            	   *
+         * 2 = disable the upgrade station and print a message 	   *
+         **********************************************************/
+		NoUpgrades = function(value) {
+
+			MissionAttributes.SpawnHookTable.NoUpgrades <- function(params) {
+
+				local player = GetPlayerFromUserID(params.userid)
+				if (player.IsBotOfType(TF_BOT_TYPE)) return
+
+				player.GetScriptScope().PlayerThinkTable.NoUpgrades <- function() {
+					DoEntFire("func_upgradestation", "EndTouch", "", -1, player, player)
+					printl("NoUpgrades")
+					if (value == 2)
+						ClientPrint(player, HUD_PRINTCENTER, "The upgrade station is disabled for this wave.")
+				}
+			}
+		}
+
+		DisableUpgradeStation = @(value) this.NoUpgrades(value)
+
 		// DefaultGiantFoosteps = function(value) {
 		// 	foreach(bot in PopExtUtil.BotArray) {
 		// 		if ("RestoreGiantFootsteps" in bot.GetScriptScope().PlayerThinkTable)
@@ -2756,7 +2786,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
 
 		for (local wearable; wearable = FindByClassname(wearable, "tf_wearable");)
-			if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
+			if (wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType(TF_BOT_TYPE))
 				EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 		PopExtMain.Error.DebugLog(format("Cleaned up mission attributes"))
@@ -2950,7 +2980,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 				if (weapon == null)
 					continue
 
-				if (PopExtUtil.GetItemIndex(weapon)!= weaponDefIndex)
+				if (PopExtUtil.GetItemIndex(weapon) != weaponDefIndex)
 					continue
 
 				weapon.ValidateScriptScope()
@@ -2998,7 +3028,7 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 			SetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired", GetPropInt(mvmStats, "m_currentWaveStats.nCreditsAcquired") + packPrice)
 
 			for (local i = 1, player; i <= MaxClients(); i++)
-				if (player = PlayerInstanceFromIndex(i), player && !IsPlayerABot(player))
+				if (player = PlayerInstanceFromIndex(i), player && !player.IsBotOfType(TF_BOT_TYPE))
 					player.AddCurrency(packPrice)
 
 			// spawn a worthless currencypack which can be collected by a scout for overheal

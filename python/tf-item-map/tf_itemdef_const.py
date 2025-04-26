@@ -52,7 +52,7 @@ SCHEMA_NAME_OVERRIDE: typing.Final[tuple] = \
 	('12', 'Pyro\'s Shotgun')
 )
 
-tf_path = f'{os.environ['ProgramW6432']}/Steam/steamapps/common/Team Fortress 2/tf'
+tf_path = f'{os.environ['ProgramFiles(x86)']}/Steam/steamapps/common/Team Fortress 2/tf'
 
 if __name__ == "__main__":
 	# GPL says you're supposed to do this or something

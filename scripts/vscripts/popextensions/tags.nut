@@ -1,7 +1,4 @@
 //behavior tags
-//why does this need to be included here when it's already included in the _main file?
-IncludeScript("popextensions/botbehavior", getroottable())
-
 PopExtUtil.PlayerManager.ValidateScriptScope()
 
 local popext_funcs = {
@@ -749,21 +746,23 @@ local popext_funcs = {
 			local target_point = target_point_ent ? target_point_ent.GetOrigin() : Vector()
 
 			// spawn an action point
-			local action_point = CreateByClassname("bot_action_point")
+			local new_action_point = CreateByClassname("bot_action_point")
 
-			action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
-			action_point.KeyValueFromString("next_action_point", next_action_point)
-			action_point.KeyValueFromString("command", command)
+			printl(new_action_point)
 
-			action_point.KeyValueFromInt("desired_distance", distance)
-			action_point.KeyValueFromInt("stay_time", stay_time)
+			new_action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
+			new_action_point.KeyValueFromString("next_action_point", next_action_point)
+			new_action_point.KeyValueFromString("command", command)
 
-			action_point.SetOrigin(target_point)
+			new_action_point.KeyValueFromInt("desired_distance", distance)
+			new_action_point.KeyValueFromInt("stay_time", stay_time)
+
+			new_action_point.SetOrigin(target_point)
 
 			// parent to the target if it's a player, building, or tank
 			// for making bots attack sentries use the "attack sentry at next action point" command
 			if (target_point_ent && command == "goto action point" && ( target_point_ent.IsPlayer() || target_point_ent.GetClassname() == "tank_boss" || startswith(target_point_ent.GetClassname(), "obj_") ) )
-				action_point.AcceptInput("SetParent", "!activator", target_point_ent, target_point_ent)
+				new_action_point.AcceptInput("SetParent", "!activator", target_point_ent, target_point_ent)
 
 			if ("output" in args && args.output.len() > 1)
 			{
@@ -776,9 +775,9 @@ local popext_funcs = {
 				local repeats = "repeats" in args.output ? args.output.repeats : -1
 
 				if (bot.HasBotTag("popext_generatorbot"))
-					AddOutput(action_point, "OnBotReached", target, action, param, delay, repeats)
+					AddOutput(new_action_point, "OnBotReached", target, action, param, delay, repeats)
 				else
-					PopExtUtil.SetDestroyCallback(action_point, function() {
+					PopExtUtil.SetDestroyCallback(new_action_point, function() {
 
 						if (target == "!self")
 							target = bot
@@ -788,7 +787,7 @@ local popext_funcs = {
 					})
 			}
 
-			DispatchSpawn(action_point)
+			DispatchSpawn(new_action_point)
 
 			// invalid ent, assume we're using xyz coordinates
 			if (!target_point_ent || !target_point_ent.IsValid())
@@ -806,17 +805,17 @@ local popext_funcs = {
 					pos = Vector(buf[0], buf[1], buf[2])
 				}
 
-				action_point.SetOrigin(pos)
+				new_action_point.SetOrigin(pos)
 			}
 
-			PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(FindByName(null, `%s`))", action_point.GetName()), delay)
+			PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(FindByName(null, `%s`))", new_action_point.GetName()), delay)
 
 			if (!waituntildone)
 				PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)
 			else
 				bot.GetScriptScope().PlayerThinkTable.ActionPointWaitUntilDone <- function() {
 
-					if (action_point && action_point.IsValid() && (bot.GetOrigin() - action_point.GetOrigin()).Length() > distance)
+					if (new_action_point && new_action_point.IsValid() && (bot.GetOrigin() - new_action_point.GetOrigin()).Length() > distance)
 						return
 
 					PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(null); EntFire(`__popext_actionpoint_%d`, `Kill`)", bot.entindex()), duration)

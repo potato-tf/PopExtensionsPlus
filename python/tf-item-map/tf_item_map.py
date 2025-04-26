@@ -10,12 +10,12 @@ import vdf
 LOCALE: typing.Final[str] = 'english'
  # Max depth is relatively low as there shouldn't be too many references in prefabs
 MAX_RECURSION_DEPTH: typing.Final[str] = 50
-OUTPUT_TABLE_NAME: typing.Final[str] = 'PopExtUtil.ItemMap'
+OUTPUT_TABLE_NAME: typing.Final[str] = 'PopExtItems'
 OUTPUT_DIR: typing.Final[str] = f'{os.path.dirname(__file__)}/output'
 OUTPUT_FILE_NAME: typing.Final[str] = 'item_map.nut'
 
 # TODO: Path hardcoded currently for win32, but can be detected easily from libraryfolders.vdf.
-tf_path = f'{os.environ['ProgramW6432']}/Steam/steamapps/common/Team Fortress 2/tf'
+tf_path = f'{os.environ['ProgramFiles(x86)']}/Steam/steamapps/common/Team Fortress 2/tf'
 
 # == FUNCTIONS ==
 def schema_block_from_prefabs(prefabs: dict, block: dict, _depth: int = 0) -> dict:
@@ -47,16 +47,23 @@ def schema_block_from_prefabs(prefabs: dict, block: dict, _depth: int = 0) -> di
     block.pop('prefab', None)
     return block
 
+# def replace_dict_quote_recursive(inputdict: dict) -> dict:
+#     for k, v in inputdict.items():
+#         if type(v) == dict:
+#             v = replace_dict_quote_recursive(v)
+#         inputdict[k] = v.replace("'", "\"") if isinstance(v, str) else v
+#     return inputdict
+
 def ItemMap_to_squirrel(tablename: str, inputdict: dict, indent: str = '    ', globalscope: bool = True) -> list:
     """
     Converts an ItemMap dict to the string representation of a Squirrel table.
 
     Note that this function is not suited for wider use outside of TFItemMap as it does not use recursion,
-     given that it was designed to handle a dict case where it was unclear if a table slot should be a variable
-     or a string.
+        given that it was designed to handle a dict case where it was unclear if a table slot should be a variable
+        or a string.
 
     This function will Soon™ be deprecated in favour of declaring a derived class of str to identify
-     when a variable should be printed.
+        when a variable should be printed.
 
     :param tablename (str): Name of the Squirrel table.
     :param inputdict (dict): Target dict to convert.
@@ -79,8 +86,9 @@ def ItemMap_to_squirrel(tablename: str, inputdict: dict, indent: str = '    ', g
         lastitem_j = list(value)[-1]
         for k, v in value.items():
             try:
-                v = int(v)
-                _outputlist.append(f"{indent*2}{k} = {v}")
+                val = int(v) if type(v) != dict else v
+                str = f"{indent*2}{k} = {val}".replace("'", '"') if type(v) == dict else f"{indent*2}{k} = {val}"
+                _outputlist.append(str)
             except ValueError:
                 # Hack, some locstrings contain an actual newline which Squirrel really enjoys
                 _outputlist.append(f"{indent*2}{k} = \"{v.replace('\n', '\\n')}\"")
@@ -91,8 +99,9 @@ def ItemMap_to_squirrel(tablename: str, inputdict: dict, indent: str = '    ', g
             _outputlist[-1] += ','
     _outputlist.append("}\n")
 
+#	print(_outputlist)
     return '\n'.join(_outputlist)
-
+	# return '\n'.join(_outputlist)
 # == SCRIPT ==
 if __name__ == "__main__":
     # GPL says you're supposed to do this or something
@@ -111,6 +120,7 @@ if __name__ == "__main__":
     #        a generated file.
     items = items_game['items_game']['items']
     prefabs = items_game['items_game']['prefabs']
+    attributes = items_game['items_game']['attributes']
     del items_game  # Free some memory, item schema is fat.
     # Sort "items" entries by index numerically ascending
     items = {'default': items.pop('default'), **dict(sorted(items.items(), key=lambda item: int(item[0])))}
@@ -124,6 +134,43 @@ if __name__ == "__main__":
     items_dict = {}
 
     print('Parsing data from items_game.txt...')
+    itemmap_filter = {
+        'name':                     'LOCALIZED',
+        'item_description':         'LOCALIZED',
+        'item_class':               'item_class',
+        'item_slot':                'item_slot',
+        'prefab' :                  'prefab',
+        'baseitem':                 'baseitem',
+        'item_iconname':            'item_iconname',
+        'base_item_name':           'base_item_name',
+        'anim_slot':                'anim_slot',
+
+        'model_player':            'model_player',
+        'model_player_per_class':  'model_player_per_class',
+        'model_world':             'model_world',
+        'equip_region':            'equip_region',
+        'extra_wearable':          'extra_wearable',
+        'extra_wearable_vm':       'extra_wearable_vm',
+        'min_ilevel':              'min_ilevel',
+        'max_ilevel':              'max_ilevel',
+        'item_quality':            'item_quality',
+        'flip_viewmodel':          'flip_viewmodel',
+        'attach_to_hands':         'attach_to_hands',
+        'attach_to_hands_vm_only': 'attach_to_hands_vm_only',
+        'act_as_wearable':         'act_as_wearable',
+
+        'first_sale_date':         'first_sale_date',
+        'holiday_restriction':     'holiday_restriction',
+        'vision_filter_flags':     'vision_filter_flags',
+        'item_type_name':          'LOCALIZED',
+        'xifier_class_remap':      'xifier_class_remap',
+        'propername':              'propername',
+        'item_rarity':             'item_rarity',
+        'propername':              'propername',
+        'visuals':                 'visuals',
+        'used_by_classes':         'used_by_classes',
+
+    }
     for key, value in items.items():
         value = schema_block_from_prefabs(prefabs, value)
 
@@ -132,22 +179,16 @@ if __name__ == "__main__":
         # Set 'id' to item index.
         items_dict[value['name']]['id'] = key
         # Set 'item_class' to "item_class".
-        try:
-            items_dict[value['name']]['item_class'] = value['item_class']
-        except KeyError:
-            items_dict[value['name']]['item_class'] = ''
 
-        # Set 'item_name_*' to "item_name" resolved from locale.
-        item_localised = f'item_name_{LOCALE}'
-        try:
-            items_dict[value['name']][item_localised] = locfile[value['item_name'][1:].lower()]
-        except KeyError:
-            # Try to default to unlocalised string if entry is missing.
-            try:
-                items_dict[value['name']][item_localised] = value['item_name']
-            # Default to empty string if no localisation look-up is specified.
-            except KeyError:
-                items_dict[value['name']][item_localised] = ''
+        for k, v in value.items():
+            if (k in itemmap_filter):
+                try:
+                    items_dict[value['name']][k] = v if itemmap_filter[k] != 'LOCALIZED' else locfile[v[1:].lower()]
+
+                    if (r'"' in items_dict[value['name']][k]):
+                        items_dict[value['name']][k] = items_dict[value['name']][k].replace(r'"', r"'")
+                except KeyError:
+                    items_dict[value['name']][k] = ''
 
     full_output_path = os.path.abspath(f'{OUTPUT_DIR}/{OUTPUT_FILE_NAME}')
     print(f'Writing to \'{full_output_path}\'... ', end='', flush=True)

@@ -7908,7 +7908,7 @@ PopExtItems.GenerateItemAttributeTable <- function()
 	foreach (k, v in FromItemsGame)
 	{
 		v.index <- k.tostring()
-		x.rawset(v.name, v)
+		x[v.name] <- v
 	}
 	local filetable = ""
 	foreach(k, v in x)
@@ -7921,7 +7921,7 @@ PopExtItems.GenerateItemAttributeTable <- function()
 		filetable += "\t}\n"
 	}
 
-	StringToFile("test.nut", format("::PopExtAttribs <- {\n%s\n}", filetable))
+	StringToFile("attribute_map.nut", format("::PopExtItems.Attributes <- {\n%s\n}", filetable))
 }
 
 // PopExtItems.GenerateItemAttributeTable()

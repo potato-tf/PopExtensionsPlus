@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "04.04.2025.1"
+::popExtensionsVersion <- "04.26.2025.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -299,6 +299,7 @@ Include("popextensions")
 
 Include("robotvoicelines") //must include before missionattributes
 Include("customattributes") //must include before missionattributes
+// Include("customattributes_new") //must include before missionattributes
 Include("missionattributes")
 Include("customweapons")
 

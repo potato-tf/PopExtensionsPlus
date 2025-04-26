@@ -566,8 +566,10 @@
 					items[GetPropEntityArray(player, "m_hMyWeapons", i)] <- [attrib, value]
 
 		//do the customattributes check first, since we replace some vanilla attributes
-		if (attrib in CustomAttributes.Attrs)
-			CustomAttributes.AddAttr(player, attrib, value, items)
+		local customattr_function = CustomAttributes.GetAttributeFunctionFromStringName(attrib)
+
+		if (customattr_function in CustomAttributes.Attrs)
+			CustomAttributes.AddAttr(player, customattr_function, value, items)
 
 		else if ("Attributes" in PopExtItems && attrib in PopExtItems.Attributes)
 		{
