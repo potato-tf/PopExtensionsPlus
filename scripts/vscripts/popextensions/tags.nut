@@ -460,7 +460,7 @@ local popext_funcs = {
 		// 		local wearable = PopExtUtil.CreatePlayerWearable(self, cosmetic)
 		// 		SetPropString(wearable, `m_iName`, `__bot_romevision_model`)
 		// 	}
-		// ", -1, null, null)
+		// ", SINGLE_TICK, null, null)
 			local killrome = []
 
 			if (bot.IsBotOfType(TF_BOT_TYPE))
@@ -2132,7 +2132,8 @@ local popext_funcs = {
 		}
 	}
 	popext_ignore = function(bot, args) {
-		bot.SetBehaviorFlag(args.flags)
+		local flags = "flags" in args ? args.flags : args.type
+		bot.SetBehaviorFlag(flags)
 	}
 
 	/****************************************************************************************
@@ -2425,7 +2426,7 @@ local popext_funcs = {
 			local func = ""; tag.find("|") ? func = split(tag, "|")[0] : func = split(tag, "{")[0]
 			local args = PopExtTags.ParseTagArguments(bot, tag)
 
-			if (func in popext_funcs) popext_funcs[func](bot, args)
+			if (func in popext_funcs) popext_funcs[func].call(bot.GetScriptScope(), bot, args)
 
 		}
 	}

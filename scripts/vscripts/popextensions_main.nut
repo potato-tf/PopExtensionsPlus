@@ -143,8 +143,9 @@ if (!("_AddThinkToEnt" in _root))
 
 			local player = GetPlayerFromUserID(params.userid)
 
-			if (!player.IsEFlagSet(1073741824)) //EFL_CUSTOM_WEARABLE
-				PopExtMain.PlayerCleanup(player)
+			if (player.IsEFlagSet(1073741824)) return // EFL_CUSTOM_WEARABLE
+
+			PopExtMain.PlayerCleanup(player)
 
 			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
@@ -164,7 +165,7 @@ if (!("_AddThinkToEnt" in _root))
 				scope.PlayerThinkTable.BotThink <- function() {
 						aibot.OnUpdate()
 				}
-				EntFireByHandle(player, "RunScriptCode", "PopExtTags.EvaluateTags(self)", -1, player, player);
+				EntFireByHandle(player, "RunScriptCode", "PopExtTags.EvaluateTags(self)", 0.015, player, player);
 			}
 
 			scope.PlayerThinks <- function() { foreach (name, func in scope.PlayerThinkTable) func.call(scope); return -1 }

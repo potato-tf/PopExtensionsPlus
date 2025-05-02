@@ -46,10 +46,28 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 		}
 
+		NoHolidayPickups = function(value) {
+			local array_size = GetPropArraySize(pickup, "m_nModelIndexOverrides")
+			for (local pickup; pickup = FindByClassname(pickup, "item_healthkit*");)
+			{
+				for (local i = 0; i < array_size; i++)
+				{
+					SetPropIntArray(pickup, "m_nModelIndexOverrides", 0, i)
+				}
+			}
+			for (local pickup; pickup = FindByClassname(pickup, "item_ammopack*");)
+			{
+				for (local i = 0; i < array_size; i++)
+				{
+					SetPropIntArray(pickup, "m_nModelIndexOverrides", 0, i)
+				}
+			}
+		}
+
 		// =========================================
 		// Restore original YER disguise behavior
 		// =========================================
-		YERDisguiseFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		YERDisguiseFix = function(value = null) {
 
 			MissionAttributes.TakeDamageTable.YERDisguiseFix <- function(params) {
 				local victim   = params.const_entity
@@ -75,8 +93,10 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-
-		LooseCannonFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		// =========================================
+		// Fix loose cannon damage
+		// =========================================
+		LooseCannonFix = function(value = null) {
 
 			MissionAttributes.TakeDamageTable.LooseCannonFix <- function(params) {
 				local wep = params.weapon
@@ -87,8 +107,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-
-		BotGibFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		BotGibFix = function(value = null) {
 
 			MissionAttributes.TakeDamageTable.BotGibFix <- function(params) {
 				local victim = params.const_entity
@@ -97,7 +116,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-		HolidayPunchFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		HolidayPunchFix = function(value = null) {
 
 			MissionAttributes.TakeDamageTable.HolidayPunchFix <- function(params) {
 				local wep   = params.weapon
@@ -136,7 +155,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-		EnableGlobalFixes = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		EnableGlobalFixes = function(value = null) {
 			local fixes = [
 				"DragonsFuryFix",
 				"FastNPCUpdate",
@@ -154,14 +173,14 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-		DragonsFuryFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		DragonsFuryFix = function(value = null) {
 			MissionAttributes.ThinkTable.DragonsFuryFix <- function() {
 				for (local fireball; fireball = FindByClassname(fireball, "tf_projectile_balloffire");)
 					fireball.RemoveFlag(FL_GRENADE)
 			}
 		}
 
-		FastNPCUpdate = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		FastNPCUpdate = function(value = null) {
 
 			MissionAttributes.ThinkTable.FastNPCUpdate <- function() {
 				local validnpcs = ["headless_hatman", "eyeball_boss", "merasmus", "tf_zombie"]
@@ -172,8 +191,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-
-		NoCreditVelocity = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		NoCreditVelocity = function(value = null) {
 
 			MissionAttributes.DeathHookTable.NoCreditVelocity <- function(params) {
 				local player = GetPlayerFromUserID(params.userid)
@@ -183,7 +201,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					money.SetAbsVelocity(Vector(1, 1, 1)) //0 velocity breaks our reverse mvm money pickup methods.  set to 1hu instead
 			}
 		}
-		ScoutBetterMoneyCollection = function(value = null) { // dummy third value to avoid wrong number of parameters error
+
+		ScoutBetterMoneyCollection = function(value = null) {
 
 			MissionAttributes.SpawnHookTable.ScoutBetterMoneyCollection <- function(params) {
 				local player = GetPlayerFromUserID(params.userid)
@@ -203,7 +222,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
-		HoldFireUntilFullReloadFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		HoldFireUntilFullReloadFix = function(value = null) {
 
 			MissionAttributes.SpawnHookTable.HoldFireUntilFullReloadFix <- function(params) {
 				local player = GetPlayerFromUserID(params.userid)
@@ -234,8 +253,9 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				}
 			}
 		}
+
 		// Doesn't fully work correctly, need to investigate
-		EngineerBuildingPushbackFix = function(value = null) { // dummy third value to avoid wrong number of parameters error
+		EngineerBuildingPushbackFix = function(value = null) {
 
 			MissionAttributes.SpawnHookTable.EngineerBuildingPushbackFix <- function(params) {
 
@@ -486,7 +506,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				}
 			}
 		}
-		AllowMultipleSappers = @(value) this.MultiSapper(value)
 
 		// =======================================================================================
 		// Fix "Set DamageType Ignite" not actually making most weapons ignite on hit
@@ -772,7 +791,15 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			MissionAttributes.SetConvar("tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1)
 		}
 
-		SentryBusterFriendlyFire = @(value) this.NoBusterFF(value)
+		// =========================================================
+
+		RobotLimit = function(value) {
+
+			if (value > ( MAX_CLIENTS - Convars.GetInt("tf_mvm_defenders_team_size") ) )
+				PopExtMain.Error.RaiseValueError(attr, value, "MAX INVADERS > MAX PLAYERS!  Update your servers maxplayers!")
+
+			MissionAttributes.SetConvar("tf_mvm_max_invaders", value)
+		}
 
 		// =========================================================
 
@@ -1071,45 +1098,39 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
-				MissionAttributes.HumanModel <- function(player) {
+				if ("usingcustommodel" in player.GetScriptScope() || (!(value & 128) && player.GetModelName() ==  "models/bots/demo/bot_sentry_buster.mdl")) return
 
-					if ("usingcustommodel" in player.GetScriptScope() || (!(value & 128) && player.GetModelName() ==  "models/bots/demo/bot_sentry_buster.mdl")) return
-
-					local classname = PopExtUtil.Classes[player.GetPlayerClass()]
-					if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value > 0)
+				local classname = PopExtUtil.Classes[player.GetPlayerClass()]
+				if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value > 0)
+				{
+					if (value & 2)
 					{
-						player.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classname))
-						if (value & 2)
-						{
-							// CTFBot.GenerateAndWearItem() works here, but causes a big perf warning spike on bot spawn
-							// faking it doesn't do this
+						// CTFBot.GenerateAndWearItem() works here, but causes a big perf warning spike on bot spawn
+						// faking it doesn't do this
 
-							// this function doesn't apply cosmetics to ragdolls on death
-							// PopExtUtil.CreatePlayerWearable(player, format("models/player/items/%s/%s_zombie.mdl", classname, classname))
-							PopExtUtil.GiveWearableItem(player, CONST[format("ID_ZOMBIE_%s", classname.toupper())], format("models/player/items/%s/%s_zombie.mdl", classname, classname))
-							SetPropBool(player, "m_bForcedSkin", true)
-							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
-							SetPropInt(player, "m_iPlayerSkinOverride", 1)
-						}
+						// this function doesn't apply cosmetics to ragdolls on death
+						// PopExtUtil.CreatePlayerWearable(player, format("models/player/items/%s/%s_zombie.mdl", classname, classname))
+						PopExtUtil.GiveWearableItem(player, CONST[format("ID_ZOMBIE_%s", classname.toupper())], format("models/player/items/%s/%s_zombie.mdl", classname, classname))
+						SetPropBool(player, "m_bForcedSkin", true)
+						SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
+						SetPropInt(player, "m_iPlayerSkinOverride", 1)
 					}
-
-					if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value & 4)
-					{
-
-						player.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", classname))
-						if (value & 8)
-						{
-							// this function doesn't apply cosmetics to ragdolls on death
-							// PopExtUtil.CreatePlayerWearable(player, "models/player/items/%s/%s_zombie.mdl", classname, classname)
-							PopExtUtil.GiveWearableItem(player, CONST[format("ID_ZOMBIE_%s", classname.toupper())], format("models/player/items/%s/%s_zombie.mdl", classname, classname))
-							SetPropBool(player, "m_bForcedSkin", true)
-							SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
-							SetPropInt(player, "m_iPlayerSkinOverride", 1)
-						}
-					}
+					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classname), -1, null, null)
 				}
 
-				EntFireByHandle(player, "RunScriptCode", "try MissionAttributes.HumanModel(self) catch(_) return", 0.033, null, null)
+				if (player.GetTeam() == TF_TEAM_PVE_INVADERS && value & 4)
+				{
+					if (value & 8)
+					{
+						// this function doesn't apply cosmetics to ragdolls on death
+						// PopExtUtil.CreatePlayerWearable(player, "models/player/items/%s/%s_zombie.mdl", classname, classname)
+						PopExtUtil.GiveWearableItem(player, CONST[format("ID_ZOMBIE_%s", classname.toupper())], format("models/player/items/%s/%s_zombie.mdl", classname, classname))
+						SetPropBool(player, "m_bForcedSkin", true)
+						SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
+						SetPropInt(player, "m_iPlayerSkinOverride", 1)
+					}
+					EntFireByHandle(player, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", classname), -1, null, null)
+				}
 			}
 		}
 
@@ -1150,8 +1171,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				MissionAttributes.noromecarrier = true
 			}
 		}
-
-		NoRomevisionCosmetics = @(value) this.NoRome(value)
 
 		// =========================================================
 
@@ -1652,7 +1671,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				MissionAttributes.SoundsToReplace[sound] <- override
 			}
 
-
+			//tank overrides
 			MissionAttributes.ThinkTable.SetTankSounds <- function()
 			{
 				for (local tank; tank = FindByClassname(tank, "tank_boss");)
@@ -1673,8 +1692,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				}
 			}
 
-
-			//sounds played on death (giant/buster explosions)
+			//death overrides
 			MissionAttributes.DeathHookTable.SoundOverrides <- function(params) {
 
 				local victim = GetPlayerFromUserID(params.userid)
@@ -1695,6 +1713,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				}
 			}
 
+			//unused
 			MissionAttributes.TakeDamageTablePost.SoundOverrides <- function(params) {
 
 			}
@@ -2556,6 +2575,10 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			}
 		}
 
+		HumansMustJoinTeam = function(value) {
+			MissionAttributes.SetConvar("mp_humans_must_join_team", value)
+		}
+
 		// =========================================================
 		ClassLimits = function(value) {
 
@@ -2638,7 +2661,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		// =========================================================
 
 		ShowHiddenAttributes = function(value) {
-			MissionAttributes.CurAttrs[value] <- true
+			MissionAttributes.CurAttrs.ShowHiddenAttributes <- value
 		}
 
 		// =========================================================
@@ -2731,26 +2754,124 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
         /**********************************************************
          * Disable the upgrade station                         	   *
-         * 1 = silently disable the upgrade station            	   *
-         * 2 = disable the upgrade station and print a message 	   *
+         * 1 = disable the upgrade station and print a message 	   *
+         * 2 = silently disable the upgrade station            	   *
          **********************************************************/
 		NoUpgrades = function(value) {
 
-			MissionAttributes.SpawnHookTable.NoUpgrades <- function(params) {
+			EntFire("func_upgradestation", "Disable")
 
-				local player = GetPlayerFromUserID(params.userid)
-				if (player.IsBotOfType(TF_BOT_TYPE)) return
+			if (value == 2) return
 
-				player.GetScriptScope().PlayerThinkTable.NoUpgrades <- function() {
-					DoEntFire("func_upgradestation", "EndTouch", "", -1, player, player)
-					printl("NoUpgrades")
-					if (value == 2)
-						ClientPrint(player, HUD_PRINTCENTER, "The upgrade station is disabled for this wave.")
-				}
+			for (local upgradestation; upgradestation = FindByClassname(upgradestation, "func_upgradestation");)
+			{
+				local trigger = CreateByClassname("trigger_multiple")
+				trigger.KeyValueFromString("model", GetPropString(upgradestation, "m_ModelName"))
+				trigger.KeyValueFromString("targetname", "_popext_upgradestop")
+				trigger.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_CLIENTS)
+				AddOutput(trigger, "OnStartTouch", "!activator", "RunScriptCode", "ClientPrint(self, HUD_PRINTCENTER, `The upgrade station is disabled for this wave.`)", -1, 0)
+				trigger.SetOrigin(upgradestation.GetOrigin())
+				DispatchSpawn(trigger)
 			}
 		}
 
-		DisableUpgradeStation = @(value) this.NoUpgrades(value)
+		BotSpectateTime = function(value) {
+
+			MissionAttributes.DeathHookTable.BotSpectateTime <- function(params) {
+
+				local player = GetPlayerFromUserID(params.userid)
+
+				if (!player.IsBotOfType(TF_BOT_TYPE)) return
+
+				EntFireByHandle(player, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", value, null, null)
+			}
+		}
+
+		FastEntityNameLookup = function(value) {
+
+			local ents = PopExtUtil.GetAllEnts()
+
+			foreach (ent in ents.entlist) {
+
+				local entname = ent.GetName()
+
+				if (entname == "") continue
+
+				SetPropString(ent, "m_iName", entname.tolower())
+			}
+		}
+
+		RemoveOffhandViewmodel = function(value) {
+			foreach (player in PopExtUtil.HumanArray) {
+
+				if (player.GetPlayerClass() == TF_CLASS_SPY) continue
+
+				GetPropEntityArray(player, "m_hViewModel", 0).Kill()
+			}
+		}
+
+		MissionUnloadOutput = function(value) {
+			if (typeof value != "table")
+			{
+				PopExtMain.Error.RaiseValueError("MissionUnloadOutput must be a table")
+				return
+			}
+
+			ScriptUnloadTable.UnloadOutput <- function(value)
+			{
+				local target = value.target
+				local action = value.action
+				local param = "param" in value ? value.param : ""
+				local delay = "delay" in value ? value.delay : 0
+				local activator = "activator" in value ? value.activator : null
+				local caller = "caller" in value ? value.caller : null
+				DoEntFire(target, action, param, delay, activator, caller)
+			}
+
+		}
+
+        /***************************************************************
+         * rafmod kv's for compatibility                               *
+         * blu human ... options must be done with ReverseMVM instead. *
+         ***************************************************************/
+		DisableUpgradeStation    	   = @(value) this.NoUpgrades(value)
+		NoRomevisionCosmetics    	   = @(value) this.NoRome(value)
+		MaxRedPlayers 		     	   = @(value) this.MaxRedPlayers(value)
+		AllowMultipleSappers     	   = @(value) this.MultiSapper(value)
+		RespecEnabled 		     	   = @(value) this.NoRefunds(value)
+		RespecLimit 		     	   = @(value) this.RefundLimit(value)
+		NoCreditsVelocity 	     	   = @(value) this.NoCreditVelocity(value)
+		CustomUpgradesFile 	     	   = @(value) this.UpgradeFile(value)
+		SentryBusterFriendlyFire 	   = @(value) this.NoBusterFF(value)
+		SendBotsToSpectatorImmediately = @(value) this.BotSpectateTime(-1)
+		BotsRandomCrit 	     	   	   = @(value) this.EnableRandomCrits(6)
+		FlagCarrierMovementPenalty     = @(value) this.BombMovementPenalty(value)
+		BotTeleportUberDuration        = @(value) this.TeleUberDuration(value)
+		AllowFlagCarrierToFight        = @(value) this.FlagCarrierCanFight(value)
+		FlagEscortCountOffset          = @(value) this.FlagEscortCount(value)
+		MinibossSentrySingleKill       = @(value) this.GiantSentryKillCountOffset(1)
+		NoRedBotsRandomCrit            = @(value) this.RedBotsNoRandomCrit(0)
+		DefaultMiniBossScale           = @(value) this.GiantScale(value)
+		ConchHealthOnHit               = @(value) this.ConchHealthOnHitRegen(value)
+		MarkedForDeathLifetime         = @(value) this.MarkForDeathLifetime(value)
+		StealthDamageReduction         = @(value) this.StealthDmgReduction(value)
+		SpellDropRateCommon            = @(value) this.SpellRateCommon(value)
+		SpellDropRateGiant             = @(value) this.SpellRateGiant(value)
+		GiantsDropRareSpells           = @(value) this.RareSpellRateGiant(1)
+		NoCritPumpkin                  = @(value) this.NoCrumpkins(value)
+		NoSkeletonSplit                = @(value) this.NoSkeleSplit(value)
+		MaxActiveSkeletons             = @(value) this.MaxSkeletons(value)
+		ZombiesNoWave666               = @(value) this["666Wavebar"](value)
+		HHHNonSolidToPlayers           = @(value) this.HalloweenBossNotSolidToPlayers(value)
+		OverrideSounds                 = @(value) this.SoundOverrides(value)
+		PlayerAddCond                  = @(value) this.AddCond(value)
+		RemoveUnusedOffhandViewmodel   = @(value) this.RemoveOffhandViewmodel(value)
+
+		SpellsEnabled  = @() PopExtMain.Error.RaiseValueError("Obsolete keyvalue 'SpellsEnabled', ignoring")
+		BotsDropSpells = @() PopExtMain.Error.RaiseValueError("Obsolete keyvalue 'BotsDropSpells', ignoring")
+
+		NoMvMDeathTune = @(value) this.SoundOverrides({ "MVM.PlayerDied" : null })
+
 
 		// DefaultGiantFoosteps = function(value) {
 		// 	foreach(bot in PopExtUtil.BotArray) {
@@ -2781,6 +2902,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 	{
 		MissionAttributes.ResetConvars()
 		this.PathNum = 0
+
 		foreach (bot in PopExtUtil.BotArray)
 			if (bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
@@ -2788,6 +2910,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		for (local wearable; wearable = FindByClassname(wearable, "tf_wearable");)
 			if (wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType(TF_BOT_TYPE))
 				EntFireByHandle(wearable, "Kill", "", -1, null, null)
+
+		EntFire("func_upgradestation", "Enable")
 
 		PopExtMain.Error.DebugLog(format("Cleaned up mission attributes"))
 	}
@@ -2853,7 +2977,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		}
 		else {
 
-			PopExtMain.Error.ParseError(format("Could not find mission attribute '%s'", attr))
+			PopExtMain.Error.RaiseValueError(format("Could not find mission attribute '%s'", attr))
 			success = false
 		}
 	}

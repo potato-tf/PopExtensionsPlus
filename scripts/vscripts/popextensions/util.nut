@@ -511,6 +511,8 @@
 
 		SendGlobalGameEvent("post_inventory_application",  { userid = PopExtUtil.GetPlayerUserID(player) })
 
+		player.RemoveEFlags(EFL_CUSTOM_WEARABLE)
+
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 		if (!("popWearablesToDestroy" in scope))
@@ -732,14 +734,17 @@
 		}
 	}
 	function GetAllEnts() {
-		local entdata = { "entlist": [], "numents": 0 }
+		local entlist = []
+		local numents = 0
+
 		for (local i = MAX_CLIENTS, ent; i <= MAX_EDICTS; i++) {
 			if (ent = EntIndexToHScript(i)) {
-				entdata.numents++
-				entdata.entlist.append(ent)
+				entlist.append(ent)
+				numents++
 			}
 		}
-		return entdata
+
+		return { "entlist": entlist, "numents": numents }
 	}
 
 	//sets m_hOwnerEntity and m_hOwner to the same value

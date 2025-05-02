@@ -62,7 +62,7 @@ WaveSchedule
 					ForceHoliday = 2
 					NoRome = 2
 					BotHeadshots = 1
-					NoUpgrades = 1
+					NoUpgrades = 2
 					NoCrumpkins = 1
 					BotsAreHumans = 2
 					WaveStartCountdown = 3
@@ -191,7 +191,7 @@ WaveSchedule
 						repeat_cooldown = 10
 						killaimtarget = 2048
 						aimtarget = `RandomEnemy`
-					}"
+				}"
 				// Tag "popext_giveweapon|tf_weapon_shotgun_pyro|425" //family business
 				// Tag "popext_homingprojectile|1.0|1.0"
 				// Tag "popext_improvedairblast"

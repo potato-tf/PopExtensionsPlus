@@ -101,7 +101,6 @@ PopExt <- popExtEntity.GetScriptScope()
 						EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 				delete scope.popWearablesToDestroy
-				player.RemoveEFlags(EFL_CUSTOM_WEARABLE)
 			}
 
 			if ("popFiredDeathHook" in scope && !scope.popFiredDeathHook) {
@@ -135,7 +134,6 @@ PopExt <- popExtEntity.GetScriptScope()
 						EntFireByHandle(wearable, "Kill", "", -1, null, null)
 
 				delete scope.popWearablesToDestroy
-				player.RemoveEFlags(EFL_CUSTOM_WEARABLE)
 			}
 
 			if ("popFiredDeathHook" in scope && !scope.popFiredDeathHook) {
