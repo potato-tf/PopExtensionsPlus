@@ -2783,7 +2783,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
-				EntFireByHandle(player, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", value, null, null)
+				EntFireByHandle(player, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", value.tostring(), null, null)
 			}
 		}
 
