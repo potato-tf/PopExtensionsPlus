@@ -37,6 +37,7 @@ local popext_funcs = {
 
 		bot.ForceChangeTeam(TF_TEAM_PVE_DEFENDERS, false)
 		bot.AddCustomAttribute("ammo regen", 999.0, -1)
+		bot.AddCustomAttribute("cannot pick up intelligence", 1.0, -1)
 		aibot.team = TF_TEAM_PVE_DEFENDERS
 	}
 

@@ -1964,7 +1964,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			// Prevent bots on red team from hogging slots so players can always join and get switched to blue
 			// TODO: Needs testing
 			// also need to reset it
-			//MissionAttributes.SetConvar("tf_mvm_defenders_team_size", 999)
+			// MissionAttributes.SetConvar("tf_mvm_defenders_team_size", 999)
 			MissionAttributes.DeployBombStart <- function(player) {
 
 				//do this so we can do CancelPending

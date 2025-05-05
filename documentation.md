@@ -287,7 +287,7 @@ Tag "popext_reprogrammed"
 ```
 
 >[!NOTE]
->This applies `ammo regen 999` to the bot automatically.  Use `popext_addcond{cond = TF_COND_REPROGRAMMED}` if you don't want this
+>This applies `ammo regen 999` and `cannot pick up intelligence 1` to the bot automatically.  Use `popext_addcond{cond = TF_COND_REPROGRAMMED}` if you don't want this
 
 ---
 
@@ -764,7 +764,8 @@ Tag "popext_spawnhere{where = `500 500 500`}"
 ### popext_improvedairblast
 
 Improves Pyro bot airblast behavior.
-Level parameter is optional, defaults to bot difficulty.
+Each level applies progressively stronger airblasting behavior to bots
+If `level` is not specified this will default to the bots skill level (Normal/Hard/Expert)
 
 ```js
 Tag "popext_improvedairblast{level = 3}"
@@ -772,7 +773,10 @@ Tag "popext_improvedairblast"
 ```
 
 > [!NOTE]
-> Levels: 1=Normal (deflect in FOV), 2=Advanced (snap to projectile), 3=Expert (redirect to sender)
+> Levels:
+> - 1=Normal (deflect in FOV) 
+> - 2=Advanced (snap to projectile)
+> - 3=Expert (redirect to sender)
 
 ---
 
