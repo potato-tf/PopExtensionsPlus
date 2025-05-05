@@ -331,6 +331,7 @@ This library has a handful of features that rely on convars that are not include
 
 ```
 tf_mvm_defenders_team_size
+tf_mvm_max_invaders
 tf_dev_health_on_damage_recover_percentage
 tf_dev_marked_for_death_lifetime
 tf_whip_speed_increase
