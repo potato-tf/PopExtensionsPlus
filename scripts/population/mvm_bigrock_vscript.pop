@@ -76,7 +76,7 @@ WaveSchedule
 					GiantSentryKillCountOffset = -4
 					ClassLimits = {
 						[TF_CLASS_SCOUT]   = 1,      // Limit class to 1
-						[TF_CLASS_SOLDIER] = 0,      // Prevent class selection
+						[TF_CLASS_SPY] = 0,      // Prevent class selection
 					}
 					SoundOverrides = { //overrides teamplay_broadcast_audio sounds
 						`Announcer.MVM_Get_To_Upgrade`: null
@@ -131,16 +131,19 @@ WaveSchedule
 						// `is miniboss`: 1,
 						`max health additive bonus` : 100,
 						`cannot upgrade` : 1,
+
 						[TF_CLASS_SCOUT] = {
 							`damage bonus` : 5,
 							`fire rate penalty` : 2,
 							`max health additive bonus` : 100,
+							`replace weapon fire sound`: [ [`Weapon_Soda_Popper.Single`, `Weapon_Soda_Popper.SingleCrit`], [`weapons/flaregun/fire.wav`, `Weapon_CowMangler.Single`] ],
 						},
 
 						[TF_CLASS_SOLDIER] = {
 							`damage penalty` : 0.5,
 							`fire rate bonus` : 0.5,
 							// `mult dmg vs same class`: 10
+							`replace weapon fire sound`: [ [`Weapon_Liberty_Launcher.Single`, `Weapon_Liberty_Launcher.SingleCrit`], [`weapons/flaregun/fire.wav`, `Weapon_CowMangler.Single`] ],
 						},
 
 						[TF_CLASS_DEMOMAN] = {

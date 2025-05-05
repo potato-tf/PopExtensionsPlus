@@ -13,18 +13,47 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 		//add think table to all projectiles
 		//there is apparently no better way to do this lol
-		function AddProjectileThink() {
+		function AddProjectileThink()
+		{
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");) {
 				if (projectile.GetEFlags() & EFL_USER) continue
 
 				projectile.ValidateScriptScope()
 				local scope = projectile.GetScriptScope()
+				local owner = projectile.GetOwner()
 
-				if (!("ProjectileThinkTable" in scope)) scope.ProjectileThinkTable <- {}
+				if (owner && owner.IsValid()) {
 
-				scope.ProjectileThink <- function () { foreach (name, func in scope.ProjectileThinkTable) { func() } return -1 }
+					local owner_scope = owner.GetScriptScope()
+					if (!owner_scope)
+					{
+						owner.ValidateScriptScope()
+						owner_scope = owner.GetScriptScope()
+					}
+
+					if (!("ActiveProjectiles" in owner_scope))
+						owner_scope.ActiveProjectiles <- {}
+
+					owner_scope.ActiveProjectiles[projectile.entindex()] <- [projectile, Time()]
+
+					PopExtUtil.SetDestroyCallback(projectile, function() {
+						delete owner_scope.ActiveProjectiles[self.entindex()]
+					})
+				}
+
+				if (!("ProjectileThinkTable" in scope))
+					scope.ProjectileThinkTable <- {}
+
+				scope.ProjectileThink <- function ()
+				{
+					foreach (name, func in scope.ProjectileThinkTable)
+						func.call(scope)
+
+					return -1
+				}
 
 				_AddThinkToEnt(projectile, "ProjectileThink")
+
 				projectile.AddEFlags(EFL_USER)
 			}
 		}

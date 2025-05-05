@@ -101,6 +101,34 @@
 			["tf_weapon_revolver"] = 24,
 		},
 	}
+	PROJECTILE_WEAPONS = {
+
+		tf_weapon_jar_milk 				   = true
+		tf_weapon_cleaver 				   = true
+
+		tf_weapon_rocketlauncher 		   = true
+		tf_weapon_rocketlauncher_airstrike = true
+		tf_weapon_rocketlauncher_directhit = true
+		tf_weapon_particle_cannon 		   = true
+		tf_weapon_raygun 				   = true
+
+		tf_weapon_rocketlauncher_fireball  = true
+		tf_weapon_flaregun 				   = true
+		tf_weapon_flaregun_revenge 		   = true
+		tf_weapon_jar_gas 				   = true
+
+		tf_weapon_grenadelauncher  		   = true
+		tf_weapon_cannon		  		   = true
+		tf_weapon_pipebomblauncher 		   = true
+
+		tf_weapon_shotgun_building_rescue  = true
+		tf_weapon_drg_pomson 			   = true
+
+		tf_weapon_syringegun_medic 		   = true
+
+		tf_weapon_compound_bow 			   = true
+		tf_weapon_jar 					   = true
+	}
 
 	ItemWhitelist = []
 	ItemBlacklist = []
@@ -1834,6 +1862,32 @@
 			}
 			return
 		}
+	}
+
+	function IsProjectileWeapon(wep) {
+
+		local wep_classname = wep.GetClassname()
+		local override_projectile = wep.GetAttribute("override projectile type", 0.0)
+
+		return (wep_classname in this.PROJECTILE_WEAPONS && override_projectile != 1) || override_projectile > 1
+	}
+
+	function GetLastFiredProjectile(player) {
+
+		if (!("ActiveProjectiles" in player.GetScriptScope()))
+			return null
+
+		local active_projectiles = player.GetScriptScope().ActiveProjectiles
+		local projectiles = []
+
+		foreach (projectile, info in active_projectiles)
+			projectiles.append(info)
+
+		projectiles.sort(@(a, b) a[1] <=> b[1])
+
+		local projectiles_len = projectiles.len()
+		return projectiles_len ? projectiles[projectiles_len - 1 ][0] : null
+
 	}
 
 	Events = {
