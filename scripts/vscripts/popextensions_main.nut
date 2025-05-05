@@ -121,12 +121,6 @@ if (!("_AddThinkToEnt" in _root))
 			}
 			ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s.\n", POPEXT_ERROR, ErrorMsg))
 
-			foreach (player in PopExtUtil.HumanArray) {
-
-				if (player == null) continue
-
-				EntFireByHandle(PopExtUtil.ClientCommand, "Command", format("echo %s %s.\n", POPEXT_ERROR, ErrorMsg), -1, player, player)
-			}
 			printf("%s %s.\n", POPEXT_ERROR, ErrorMsg)
 		}
 

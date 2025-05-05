@@ -1966,7 +1966,7 @@
 
 			// can't set it, just load the next map in the mapcycle file or hope the server sets nextlevel for us
 			else
-				printl( "cannot set nextlevel! loading next map instead..." )
+				PopExtMain.Error.ParseError( "PopExtUtil.ChangeLevel: cannot set nextlevel! loading next map instead..." )
 		}
 
 		// required for GoToIntermission

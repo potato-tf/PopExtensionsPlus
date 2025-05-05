@@ -329,12 +329,13 @@ This library supports custom entity features and spawnflags to enable certain be
 # IMPORTANT NOTE FOR SERVER OWNERS
 This library has a handful of features that rely on convars that are not included by default in `cfg/vscript_convar_allowlist.txt`.  You will need to modify this cfg file to add the following convars:
 
-```
-tf_mvm_defenders_team_size
-tf_mvm_max_invaders
-tf_dev_health_on_damage_recover_percentage
-tf_dev_marked_for_death_lifetime
-tf_whip_speed_increase
+```js
+nextlevel // PopExtUtil.ChangeLevel
+tf_mvm_defenders_team_size // RedMaxPlayers missionattribute
+tf_mvm_max_invaders // RobotLimit missionattribute
+tf_dev_health_on_damage_recover_percentage // ConchHealthOnHitRegen missionattribute
+tf_dev_marked_for_death_lifetime // MarkForDeathLifetime missionattribute
+tf_whip_speed_increase // ConchSpeedBoost missionattribute
 ```
 
 # Miscellaneous
