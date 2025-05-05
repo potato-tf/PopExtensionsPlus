@@ -299,8 +299,8 @@ Include("hooks") //must include before popextensions
 Include("popextensions")
 
 Include("robotvoicelines") //must include before missionattributes
+// Include("customattributes_old") //must include before missionattributes
 Include("customattributes") //must include before missionattributes
-// Include("customattributes_new") //must include before missionattributes
 Include("missionattributes")
 Include("customweapons")
 

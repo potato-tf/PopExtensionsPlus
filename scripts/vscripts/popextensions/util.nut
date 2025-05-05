@@ -1547,19 +1547,19 @@
 		temp.ValidateScriptScope()
 		temp.GetScriptScope().ClearWave <- function()
 		{
-			if (!this.IsWaveStarted) {
+			if (!PopExtUtil.IsWaveStarted) {
 
 				if (doteamswitch)
-					foreach (player in this.HumanArray)
-						this.ChangePlayerTeamMvM(player, TF_TEAM_PVE_INVADERS)
+					foreach (player in PopExtUtil.HumanArray)
+						PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_INVADERS)
 
 				SetPropString(self, "m_iszScriptThinkFunction", "")
 				EntFireByHandle(self, "Kill", "", -1, null, null)
 			}
 			//kill all bots
-			foreach (bot in this.BotArray)
+			foreach (bot in PopExtUtil.BotArray)
 				if (bot.IsAlive() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
-					this.KillPlayer(bot);
+					PopExtUtil.KillPlayer(bot);
 		}
 
 		AddThinkToEnt(temp, "ClearWave")
@@ -1589,11 +1589,12 @@
 		local thinkfunc
 		if(func != null)
 		{
-			if(func in scope)
+			if (func in scope)
 				thinkfunc = scope[func]
-			else if(func in ROOT)
+			else if (func in ROOT)
 				thinkfunc = ROOT[func]
-			else return
+			else
+				return
 		}
 
 		if (!(thinktable in scope)) scope[thinktable] <- {}
