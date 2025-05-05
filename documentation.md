@@ -23,7 +23,7 @@ For the above issues, typos, grammar mistakes, as well as bug reports in PopExt 
 ⠀⠀⠀└─ [popextensions](#popextensions-menu)  
 ⠀⠀⠀└─ populator  
 ⠀⠀⠀└─ spawntemplate  
-⠀⠀⠀└─ [tags](#tags-menu)
+⠀⠀⠀└─ [tags](#tags-menu)  
 ⠀⠀⠀└─ tutorialtools  
 ⠀⠀⠀└─ [util](#util-menu)  
 ⠀⠀⠀└─ [**Constants defined by PopExt**](#constants-defined-by-popext)  
