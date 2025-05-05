@@ -1925,9 +1925,7 @@ local popext_funcs = {
 			}
 			else return
 		}
-		else
-
-		if (mission_target && mission_target.IsValid())
+		else if (mission_target && mission_target.IsValid())
 			bot.SetMissionTarget(mission_target)
 	}
 
