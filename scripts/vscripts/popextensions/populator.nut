@@ -266,7 +266,7 @@ local PopulatorEnt = CreateByClassname("info_teleport_destination")
 							org = Vector(split[0], split[1], split[2])
 						}
 
-						generator.SetOrigin(org)
+						generator.SetAbsOrigin(org)
 
 						AddOutput(generator, "OnExpended", "!self", "RunScriptCode", "self.AddEFlags(EFL_SPAWNER_EXPENDED)", -1, -1)
 

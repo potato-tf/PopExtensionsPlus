@@ -65,12 +65,12 @@ PopExt.globalTemplateSpawnCount   <- 0
 					if (origin != "")
 					{
 						if (typeof origin == "Vector")
-							k.SetOrigin(origin)
+							k.SetAbsOrigin(origin)
 						else
 						{
 							local orgbuf = v[0].find(",") ? split(v[0], ",") : split(v[0], " ")
 							orgbuf.apply(@(val) val.tofloat() )
-							k.SetOrigin(Vector(orgbuf[0], orgbuf[1], orgbuf[2]))
+							k.SetAbsOrigin(Vector(orgbuf[0], orgbuf[1], orgbuf[2]))
 						}
 					}
 					if (angles != "")

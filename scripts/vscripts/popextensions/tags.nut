@@ -758,7 +758,7 @@ local popext_funcs = {
 			new_action_point.KeyValueFromInt("desired_distance", distance)
 			new_action_point.KeyValueFromInt("stay_time", stay_time)
 
-			new_action_point.SetOrigin(target_point)
+			new_action_point.SetAbsOrigin(target_point)
 
 			// parent to the target if it's a player, building, or tank
 			// for making bots attack sentries use the "attack sentry at next action point" command
@@ -806,7 +806,7 @@ local popext_funcs = {
 					pos = Vector(buf[0], buf[1], buf[2])
 				}
 
-				new_action_point.SetOrigin(pos)
+				new_action_point.SetAbsOrigin(pos)
 			}
 
 			PopExtUtil.PlayerScriptEntFire(bot, format("self.SetActionPoint(FindByName(null, `%s`))", new_action_point.GetName()), delay)
@@ -1700,7 +1700,7 @@ local popext_funcs = {
 			SetPropInt(droppedweapon, "m_Item.m_iEntityQuality", 6)
 			SetPropBool(droppedweapon, "m_Item.m_bInitialized", true)
 			droppedweapon.SetModelSimple(modelname)
-			droppedweapon.SetOrigin(bot.GetOrigin())
+			droppedweapon.SetAbsOrigin(bot.GetOrigin())
 
 			droppedweapon.DispatchSpawn()
 
@@ -1745,7 +1745,7 @@ local popext_funcs = {
 			org = [entorg.x, entorg.y, entorg.z]
 		}
 
-		boss.SetOrigin(Vector(org[0], org[1], org[2]))
+		boss.SetAbsOrigin(Vector(org[0], org[1], org[2]))
 
 		boss.SetTeam(args.boss_team)
 
@@ -2089,7 +2089,7 @@ local popext_funcs = {
 				dummy.KeyValueFromString(`targetname`, format(`__bot_dummy_model%d`, self.entindex()))
 
 				dummy.SetModel(self.GetModelName())
-				dummy.SetOrigin(self.GetOrigin())
+				dummy.SetAbsOrigin(self.GetOrigin())
 				dummy.SetSkin(self.GetSkin())
 				dummy.SetAbsAngles(QAngle(0, self.EyeAngles().y, 0))
 

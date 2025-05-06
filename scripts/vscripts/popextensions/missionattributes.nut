@@ -217,7 +217,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 					local origin = player.GetOrigin()
 					for (local money; money = FindByClassnameWithin(money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS);)
-						money.SetOrigin(origin)
+						money.SetAbsOrigin(origin)
 				}
 			}
 		}
@@ -1986,7 +1986,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				local dummy = CreateByClassname("prop_dynamic")
 
 				PopExtUtil.SetTargetname(dummy, format("__deployanim%d", player.entindex()))
-				dummy.SetOrigin(player.GetOrigin())
+				dummy.SetAbsOrigin(player.GetOrigin())
 				dummy.SetAbsAngles(player.GetAbsAngles())
 				dummy.SetModel(player.GetModelName())
 				dummy.SetSkin(player.GetSkin())
@@ -2189,9 +2189,9 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						// 		// printl(self.GetVelocity().Length())
 						// 		if (moneypile.GetVelocity().Length() == 0)
 						// 		{
-						// 			// moneypile.SetOrigin(Vector(0, 0, FLT_MIN))
+						// 			// moneypile.SetAbsOrigin(Vector(0, 0, FLT_MIN))
 
-						// 			moneypile.SetOrigin(hurt.GetOrigin())
+						// 			moneypile.SetAbsOrigin(hurt.GetOrigin())
 						// 			DispatchSpawn(moneypile)
 						// 			EmitSoundOn("MVM.MoneyPickup", player)
 						// 		}
@@ -2203,7 +2203,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 						// 	// 		for (local hurt; hurt = FindByClassname(hurt, `trigger_hurt`);)
 						// 	// 		{
 						// 	// 			EmitSoundOn(`MVM.MoneyPickup`, self)
-						// 	// 			self.SetOrigin(hurt.GetOrigin())
+						// 	// 			self.SetAbsOrigin(hurt.GetOrigin())
 						// 	// 			DispatchSpawn(self)
 						// 	// 		}
 						// 	// 		// The money counters are fucked from what we did in the above loop, fix it here
@@ -2770,7 +2770,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				trigger.KeyValueFromString("targetname", "_popext_upgradestop")
 				trigger.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_CLIENTS)
 				AddOutput(trigger, "OnStartTouch", "!activator", "RunScriptCode", "ClientPrint(self, HUD_PRINTCENTER, `The upgrade station is disabled for this wave.`)", -1, 0)
-				trigger.SetOrigin(upgradestation.GetOrigin())
+				trigger.SetAbsOrigin(upgradestation.GetOrigin())
 				DispatchSpawn(trigger)
 			}
 		}

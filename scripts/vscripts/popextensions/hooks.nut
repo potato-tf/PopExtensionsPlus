@@ -208,7 +208,7 @@ PopExt <- popExtEntity.GetScriptScope()
 					}
 					if ("NoDeathFX" in scope.popProperty && scope.popProperty.NoDeathFX > 0)
 					{
-						victim.SetOrigin(victim.GetOrigin() - Vector(0, 0, 10000))
+						victim.SetAbsOrigin(victim.GetOrigin() - Vector(0, 0, 10000))
 						function FindTankDestructionEnt()
 						{
 							for (local destruction; destruction = FindByClassnameWithin(destruction, "tank_destruction", self.GetOrigin(), 1);)
@@ -219,7 +219,7 @@ PopExt <- popExtEntity.GetScriptScope()
 							return -1
 						}
 						local temp = CreateByClassname("info_teleport_destination")
-						temp.SetOrigin(victim.GetOrigin())
+						temp.SetAbsOrigin(victim.GetOrigin())
 						temp.ValidateScriptScope()
 						temp.GetScriptScope().FindTankDestructionEnt <- FindTankDestructionEnt
 						AddThinkToEnt(temp, "FindTankDestructionEnt")

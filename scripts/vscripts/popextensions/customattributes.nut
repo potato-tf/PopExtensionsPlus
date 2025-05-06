@@ -753,9 +753,9 @@
 					TraceLineEx(trace)
 					if (trace.hit && "enthit" in trace) {
 						if (trace.enthit.GetClassname() == "worldspawn")
-							grenade.SetOrigin(trace.endpos)
+							grenade.SetAbsOrigin(trace.endpos)
 						else
-							grenade.SetOrigin(trace.enthit.EyePosition() + Vector(0, 0, 45))
+							grenade.SetAbsOrigin(trace.enthit.EyePosition() + Vector(0, 0, 45))
 					}
 
 					scope.explosivebulletsnextattack = GetPropFloat(wep, "m_flLastFireTime")
@@ -814,11 +814,11 @@
 					bomb.SetOwner(params.attacker)
 
 					bomb.SetTeam(team)
-					bomb.SetOrigin(params.damage_position)
+					bomb.SetAbsOrigin(params.damage_position)
 					bomb.SetHealth(1)
 					if (model != "") bomb.SetModel(model)
 
-					particleent.SetOrigin(bomb.GetOrigin())
+					particleent.SetAbsOrigin(bomb.GetOrigin())
 					SetPropString(bomb, "m_iClassname", killicon)
 					bomb.TakeDamage(1, DMG_CLUB, player)
 					EntFireByHandle(particleent, "Start", "", -1, null, null)
