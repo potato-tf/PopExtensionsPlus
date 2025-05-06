@@ -650,7 +650,7 @@
 			spawnflags = SF_ENVTEXT_ALLPLAYERS,
 			color = format("%d %d %d", rgb[0], rgb[1], rgb[2]),
 			color2 = "255 254 255",
-			fxtime = 0.02,
+			fxtime = textScanTime,
 			// holdtime = 5,
 			fadeout = 0.01,
 			fadein = 0.01,
