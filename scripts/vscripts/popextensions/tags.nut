@@ -2476,7 +2476,7 @@ local popext_funcs = {
 	function OnGameEvent_teamplay_round_start(params) {
 
 		foreach (bot in PopExtUtil.BotArray)
-			if (bot.GetTeam() != TEAM_SPECTATOR)
+			if (bot.IsValid() && bot.GetTeam() != TEAM_SPECTATOR)
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
 	}
 	function OnGameEvent_halloween_boss_killed(params) {
