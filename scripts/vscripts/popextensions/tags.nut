@@ -182,7 +182,6 @@ local popext_funcs = {
 	popext_usehumanmodel = function(bot, args) {
 
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
-		bot.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string))
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), -1, null, null)
 		bot.GetScriptScope().usingcustommodel <- true
 	}
@@ -203,21 +202,44 @@ local popext_funcs = {
     /**************************************************************************************************************************
      * USE HUMAN ANIMATIONS                                                                                                   *
      *                                                                                                                        *
-     * !!!WARNING!!! This tag is incompatible with UseCustomModel!!!                                                          *
-     *                                                                                                                        *
+     * !!!WARNING!!! This tag is incompatible with popext_usecustommodel!!!                                                   *
+     * use the model argument here instead 					                                                                  *
+	 * 																														  *
      * Works by setting the bot model to a human model, then bonemerging a tf_wearable using the bot model to the human model *
      * Haven't actually checked if this messes up cosmetics lol                                                               *
      * Maybe a popext_customwearable tag would work alongside this to generate an additional wearable alongside the bot one?  *
 	 * 																														  *
      * No parameters required, only tag presence is necessary 																  *
      **************************************************************************************************************************/
-
 	popext_usehumananims = function(bot, args) {
 
+		local model = "model" in args ? args.model : format("models/bots/%s/bot_%s.mdl", class_string, class_string)
+
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
-		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), SINGLE_TICK)
-		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PlayerRobotModel(self, `models/bots/%s/bot_%s.mdl`)", class_string, class_string), SINGLE_TICK)
+		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), SINGLE_TICK, null, null)
+		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PlayerRobotModel(self, `%s`)", model), SINGLE_TICK)
 		bot.GetScriptScope().usingcustommodel <- true
+	}
+
+	/**************************************************************************************************************************
+     * BONEMERGE MODEL				                                                                                          *
+     *                                                                                                                        *
+     * !!!WARNING!!! This tag is incompatible with popext_usecustommodel!!!                                                   *
+     * use the bonemerge_model argument here instead 		                                                                  *
+	 * 																														  *
+     * Expanded version of popext_usehumananims, accepts a custom animation base instead of the bot class' human model 		  *
+	 * 																														  *
+     **************************************************************************************************************************/
+	popext_bonemergemodel = function(bot, args) {
+
+		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
+		local anim_set = "anim_set" in args ? args.anim_set : format("models/player/%s.mdl", class_string)
+		local bonemerge_model = "bonemerge_model" in args ? args.bonemerge_model : format("models/bots/%s/bot_%s.mdl", class_string, class_string)
+
+		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", anim_set, SINGLE_TICK, null, null)
+		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PlayerRobotModel(self, `%s`)", bonemerge_model), SINGLE_TICK)
+		bot.GetScriptScope().usingcustommodel <- true
+
 	}
 
     /**********************************************************
@@ -435,33 +457,6 @@ local popext_funcs = {
 
 	popext_forceromevision = function(bot, args) {
 
-		// kill the existing romevision
-		// we had issues before where this would execute too early and we get no romevision
-		// seemingly not necessary anymore
-
-		// EntFireByHandle(bot, "RunScriptCode", @"
-		// 	local killrome = []
-
-		// 	if (self.IsBotOfType(TF_BOT_TYPE))
-		// 		for (local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer())
-		// 			if (child.GetClassname() == `tf_wearable` && startswith(child.GetModelName(), `models/workshop/player/items/`+PopExtUtil.Classes[self.GetPlayerClass()]+`/tw`))
-		// 				killrome.append(child)
-
-		// 	for (local i = killrome.len() - 1; i >= 0; i--) killrome[i].Kill()
-
-		// 	local cosmetics = PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()]
-
-		// 	if (self.GetModelName() == `models/bots/demo/bot_sentry_buster.mdl`)
-		// 	{
-		// 		PopExtUtil.CreatePlayerWearable(self, PopExtUtil.ROMEVISION_MODELS[self.GetPlayerClass()][2])
-		// 		return
-		// 	}
-		// 	foreach (cosmetic in cosmetics)
-		// 	{
-		// 		local wearable = PopExtUtil.CreatePlayerWearable(self, cosmetic)
-		// 		SetPropString(wearable, `m_iName`, `__bot_romevision_model`)
-		// 	}
-		// ", SINGLE_TICK, null, null)
 			local killrome = []
 
 			if (bot.IsBotOfType(TF_BOT_TYPE))
@@ -479,8 +474,8 @@ local popext_funcs = {
 			{
 				// GiveWearableItem is subject to romevision restrictions, we don't want this
 				// figure out a way to apply cosmetics to ragdolls on death without this
-				local wearable = PopExtUtil.CreatePlayerWearable(bot, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2])
-				// PopExtUtil.GiveWearableItem(bot, PopExtUtil.ROMEVISION_ITEM_INDEXES[bot.GetPlayerClass()][2], PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2])
+				// local wearable = PopExtUtil.CreatePlayerWearable(bot, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2])
+				local wearable = PopExtUtil.GiveWearableItem(bot, 9911, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2])
 				SetPropString(wearable, "m_iName", "__bot_romevision_model")
 				return
 			}
@@ -488,8 +483,8 @@ local popext_funcs = {
 			{
 				// GiveWearableItem is subject to romevision restrictions, we don't want this
 				// figure out a way to apply cosmetics to ragdolls on death without this
-				local wearable = PopExtUtil.CreatePlayerWearable(bot, cosmetic)
-				// local wearable = PopExtUtil.GiveWearableItem(bot, PopExtUtil.ROMEVISION_ITEM_INDEXES[bot.GetPlayerClass()][i], cosmetic)
+				// local wearable = PopExtUtil.CreatePlayerWearable(bot, cosmetic)
+				local wearable = PopExtUtil.GiveWearableItem(bot, 9911, cosmetic)
 				SetPropString(wearable, "m_iName", "__bot_romevision_model")
 			}
 	}
@@ -2285,38 +2280,40 @@ local popext_funcs = {
 	// DeathHookTable = {} // do this per bot
 	// TeamSwitchTable = {}
 
+		//table of all possible keyvalues for all tags
+		//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
+		//any newly added tags should similarly ensure any required keyvalues do not silently fail.
+	tagtable = {
+
+		//required tags
+		type = null
+		button = null
+		slot = null
+		weapon = null
+		where = null
+
+		//default values
+		health = 0.0
+		delay = 0.0
+		duration = INT_MAX
+		cooldown = 3.0
+		delay = 0.0
+		repeats = INT_MAX
+		ifhealthbelow = INT_MAX
+		charges = INT_MAX
+		ifseetarget = 1
+		damage = 7.5
+		radius = 135.0
+		amount = 0.0
+		interval = 0.5
+		uber = 0.0
+	}
+
 	function ParseTagArguments(bot, tag) {
 
 		if (!tag.find("{") && !tag.find("|")) return {}
 
-		//table of all possible keyvalues for all tags
-		//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
-		//any newly added tags should similarly ensure any required keyvalues do not silently fail.
-		local tagtable = {
-
-			//required tags
-			type = null
-			button = null
-			slot = null
-			weapon = null
-			where = null
-
-			//default values
-			health = 0.0
-			delay = 0.0
-			duration = INT_MAX
-			cooldown = 3.0
-			delay = 0.0
-			repeats = INT_MAX
-			ifhealthbelow = INT_MAX
-			charges = INT_MAX
-			ifseetarget = 1
-			damage = 7.5
-			radius = 135.0
-			amount = 0.0
-			interval = 0.5
-			uber = 0.0
-		}
+		local tagtable = this.tagtable
 
 		//these ones aren't as re-usable as other kv's
 		if (startswith(tag, "popext_homing"))
@@ -2335,7 +2332,7 @@ local popext_funcs = {
 		// if someone has issues when using pipe syntax tell them to use brackets instead
 		if (separator ==  "|")
 		{
-			ClientPrint(null, 2, "Pipe syntax is deprecated! Newer tags will not use this syntax")
+			PopExtMain.Error.RaiseDeprecationWarning("Tag PIPE( | ) syntax", "Bracket { } Syntax ( popext_tag{arg = value} )")
 			local args = splittag
 			local func = args.remove(0)
 

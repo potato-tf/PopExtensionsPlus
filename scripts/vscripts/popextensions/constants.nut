@@ -36,6 +36,7 @@ foreach(k, v in ::NavMesh.getclass())
 		ROOT[k] <- ::NavMesh[k].bindenv(::NavMesh)
 
 const POPEXT_ERROR = "POPEXTENSIONS ERROR: "
+const POPEXTENSIONS_WARNING = "POPEXTENSIONS WARNING: "
 const STRING_NETPROP_ITEMDEF = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
 const SINGLE_TICK = 0.015
 

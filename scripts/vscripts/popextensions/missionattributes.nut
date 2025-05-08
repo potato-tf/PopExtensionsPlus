@@ -1110,6 +1110,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 						// this function doesn't apply cosmetics to ragdolls on death
 						// PopExtUtil.CreatePlayerWearable(player, format("models/player/items/%s/%s_zombie.mdl", classname, classname))
+
+						// this one does
 						PopExtUtil.GiveWearableItem(player, CONST[format("ID_ZOMBIE_%s", classname.toupper())], format("models/player/items/%s/%s_zombie.mdl", classname, classname))
 						SetPropBool(player, "m_bForcedSkin", true)
 						SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)
@@ -1122,8 +1124,11 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				{
 					if (value & 8)
 					{
+
 						// this function doesn't apply cosmetics to ragdolls on death
-						// PopExtUtil.CreatePlayerWearable(player, "models/player/items/%s/%s_zombie.mdl", classname, classname)
+						// PopExtUtil.CreatePlayerWearable(player, format("models/player/items/%s/%s_zombie.mdl", classname, classname))
+
+						// this one does
 						PopExtUtil.GiveWearableItem(player, CONST[format("ID_ZOMBIE_%s", classname.toupper())], format("models/player/items/%s/%s_zombie.mdl", classname, classname))
 						SetPropBool(player, "m_bForcedSkin", true)
 						SetPropInt(player, "m_nForcedSkin", player.GetSkin() + 4)

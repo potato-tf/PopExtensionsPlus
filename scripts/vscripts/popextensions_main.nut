@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "05.05.2025.1"
+::popExtensionsVersion <- "05.07.2025.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -93,6 +93,10 @@ if (!("_AddThinkToEnt" in _root))
 			if (MissionAttributes.DebugText) {
 				ClientPrint(null, HUD_PRINTCONSOLE, format("MissionAttr: %s.", LogMsg))
 			}
+		}
+
+		function RaiseDeprecationWarning(old, new) {
+			ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s is DEPRECATED. Use %s instead.", POPEXTENSIONS_WARNING, old, new))
 		}
 		// TODO: implement a try catch raise system instead of this
 

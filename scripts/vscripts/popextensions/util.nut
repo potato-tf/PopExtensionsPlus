@@ -474,9 +474,10 @@
 		ClientPrint(null, 2, line)
 	}
 
-	// Make a fake wearable that is attached to the player. The wearable is automatically removed when the owner is killed or respawned
-	// this does not apply to ragdolls!, use GiveWearableItem instead
+	// LEGACY: THIS DOES NOT APPLY TO RAGDOLLS! use GiveWearableItem instead
 	function CreatePlayerWearable(player, model, bonemerge = true, attachment = null, autoDestroy = true) {
+
+		PopExtMain.Error.RaiseDeprecationWarning("PopExtUtil.CreatePlayerWearable", "PopExtUtil.GiveWearableItem")
 		local modelIndex = GetModelIndex(model)
 		if (modelIndex == -1)
 			modelIndex = PrecacheModel(model)
@@ -510,6 +511,8 @@
 		return wearable
 	}
 
+	// Make a fake wearable that is attached to the player.
+	// The wearable is automatically removed on respawn.
 	function GiveWearableItem(player, item_id, model = false) {
 
 		local modelindex = GetModelIndex(model)
@@ -744,9 +747,11 @@
 	   AddThinkToEnt(txtent, "ExplanationTextThink")
 	}
 
-	// function IsAlive(player) {
-	// 	return GetPropInt(player, "m_lifeState") == 0
-	// }
+	// LEGACY: keeping this around since some archive missions use it
+	function IsAlive(player) {
+		PopExtMain.Error.RaiseDeprecationWarning("PopExtUtil.IsAlive", "player.IsAlive()")
+		return player.IsAlive()
+	}
 
 	function IsDucking(player) {
 		return player.GetFlags() & FL_DUCKING
@@ -1034,6 +1039,7 @@
 		SetPropInt(ent, "m_fEffects", value)
 	}
 
+	// misleading name, this can accept any model
 	function PlayerRobotModel(player, model) {
 
 		player.ValidateScriptScope()
