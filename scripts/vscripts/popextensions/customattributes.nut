@@ -293,7 +293,7 @@
 					if (
 						!player.IsPlayer() || player.GetHealth() > params.damage ||
 						!("teleport instead of die" in scope.attribinfo) ||
-						player.IsInvulnerable() || PopExtUtil.IsPointInRespawnRoom(player.EyePosition())
+						player.IsInvulnerable() || PopExtUtil.IsPointInTrigger(player.EyePosition())
 					) return
 
 					local health = player.GetHealth()
@@ -436,8 +436,8 @@
 
 
 				local freeze_proxy_weapon = CreateByClassname("tf_weapon_knife")
-				SetPropInt(freeze_proxy_weapon, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", ID_SPY_CICLE)
-				SetPropBool(freeze_proxy_weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
+				SetPropInt(freeze_proxy_weapon, STRING_NETPROP_ITEMDEF, ID_SPY_CICLE)
+				SetPropBool(freeze_proxy_weapon, STRING_NETPROP_INIT, true)
 				freeze_proxy_weapon.AddEFlags(EFL_USER)
 				SetPropEntity(freeze_proxy_weapon, "m_hOwner", player)
 				freeze_proxy_weapon.DispatchSpawn()
@@ -717,8 +717,8 @@
 
 
 				local launcher = CreateByClassname("tf_weapon_grenadelauncher")
-				SetPropInt(launcher, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", ID_GRENADELAUNCHER)
-				SetPropBool(launcher, "m_AttributeManager.m_Item.m_bInitialized", true)
+				SetPropInt(launcher, STRING_NETPROP_ITEMDEF, ID_GRENADELAUNCHER)
+				SetPropBool(launcher, STRING_NETPROP_INIT, true)
 				launcher.AddEFlags(EFL_USER)
 				launcher.SetOwner(player)
 				launcher.DispatchSpawn()

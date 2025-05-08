@@ -169,9 +169,7 @@
 
 		//create item entity
 		local item = CreateByClassname(item_class)
-		SetPropInt(item, "m_AttributeManager.m_Item.m_iItemDefinitionIndex", id)
-		SetPropBool(item, "m_AttributeManager.m_Item.m_bInitialized", true)
-		SetPropBool(item, "m_bValidatedAttachedEntity", true)
+		PopExtUtil.InitEconItem(item, id)
 		item.SetTeam(player.GetTeam())
 		DispatchSpawn(item)
 		local reservedKeywords = {
@@ -200,8 +198,8 @@
 				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
 					local ammofix = CreateByClassname("tf_wearable")
-					SetPropBool(ammofix, "m_bValidatedAttachedEntity", true)
-					SetPropBool(ammofix, "m_AttributeManager.m_Item.m_bInitialized", true)
+					SetPropBool(ammofix, STRING_NETPROP_INIT, true)
+					SetPropBool(ammofix, STRING_NETPROP_ATTACH, true)
 					SetPropEntity(ammofix, "m_hOwnerEntity", player)
 					ammofix.SetOwner(player)
 					ammofix.DispatchSpawn()
@@ -227,8 +225,8 @@
 				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
 					local ammofix = CreateByClassname("tf_wearable")
-					SetPropBool(ammofix, "m_bValidatedAttachedEntity", true)
-					SetPropBool(ammofix, "m_AttributeManager.m_Item.m_bInitialized", true)
+					SetPropBool(ammofix, STRING_NETPROP_INIT, true)
+					SetPropBool(ammofix, STRING_NETPROP_ATTACH, true)
 					SetPropEntity(ammofix, "m_hOwnerEntity", player)
 					ammofix.SetOwner(player)
 					ammofix.DispatchSpawn()
@@ -296,8 +294,8 @@
 			{
 				local tpWearable = CreateByClassname("tf_wearable")
 				SetPropInt(tpWearable, "m_nModelIndex", modelindex)
-				SetPropBool(tpWearable, "m_bValidatedAttachedEntity", true)
-				SetPropBool(tpWearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+				SetPropBool(tpWearable, STRING_NETPROP_INIT, true)
+				SetPropBool(tpWearable, STRING_NETPROP_ATTACH, true)
 				SetPropEntity(tpWearable, "m_hOwnerEntity", player)
 				tpWearable.SetOwner(player)
 				tpWearable.DispatchSpawn()
@@ -320,13 +318,13 @@
 			local hands = SpawnEntityFromTable("tf_wearable_vm", {
 				modelindex = PrecacheModel(format("models/weapons/c_models/c_%s_arms.mdl", playerclass))
 			})
-			SetPropBool(hands, "m_bForcePurgeFixedupStrings", true)
+			SetPropBool(hands, STRING_NETPROP_PURGESTRINGS, true)
 			player.EquipWearableViewModel(hands)
 
 			local hands2 = SpawnEntityFromTable("tf_wearable_vm", {
 				modelindex = PrecacheModel(model)
 			})
-			SetPropBool(hands2, "m_bForcePurgeFixedupStrings", true)
+			SetPropBool(hands2, STRING_NETPROP_PURGESTRINGS, true)
 			player.EquipWearableViewModel(hands2)
 
 			SetPropEntity(hands2, "m_hWeaponAssociatedWith", item)
@@ -347,7 +345,7 @@
 		else
 		{
 			//base jumper and invis watches are not included as they have classnames starting with "tf_weapon_"
-			local id = GetPropInt(item, "m_AttributeManager.m_Item.m_iItemDefinitionIndex")
+			local id = GetPropInt(item, STRING_NETPROP_ITEMDEF)
 
 			//Ali Baba's Wee Booties and Bootlegger
 			if ([405, 608].find(id) != null) return 0
@@ -417,8 +415,8 @@
 						local tpWearable = CreateByClassname("tf_wearable")
 						SetPropInt(tpWearable, "m_iTeamNum", self.GetTeam())
 						SetPropInt(tpWearable, "m_nModelIndex", modelindex)
-						SetPropBool(tpWearable, "m_bValidatedAttachedEntity", true)
-						SetPropBool(tpWearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+						SetPropBool(tpWearable, STRING_NETPROP_INIT, true)
+						SetPropBool(tpWearable, STRING_NETPROP_ATTACH, true)
 						SetPropEntity(tpWearable, "m_hOwnerEntity", self)
 						tpWearable.SetOwner(self)
 						tpWearable.SetSkin(self.GetTeam()-2)

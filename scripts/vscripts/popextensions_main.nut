@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "05.07.2025.1"
+::popExtensionsVersion <- "05.08.2025.1"
 local _root = getroottable()
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
@@ -45,9 +45,8 @@ if (!("_AddThinkToEnt" in _root))
 				error(format("ERROR: **POPEXTENSIONS WARNING: AddThinkToEnt on '%s' entity overwritten!**\n", k))
 				// ClientPrint(null, HUD_PRINTTALK, format("\x08FFB4B4FF**WARNING: AddThinkToEnt on '%s' entities is forbidden!**\n\n Use PopExtUtil.AddThinkToEnt instead.\n\nExample: AddThinkToEnt(ent, \"%s\") -> PopExtUtil.AddThinkToEnt(ent, \"%s\")", k, func, func))
 
-				local entstring = ""+ent
 				//we use printl instead of printf because it's redirected to player console on potato servers
-				printl(format("\n\n**POPEXTENSIONS WARNING: AddThinkToEnt on '%s' overwritten!**\n\nAddThinkToEnt(ent, \"%s\") -> PopExtUtil.AddThinkToEnt(ent, \"%s\")\n\n", entstring, func, func))
+				printl(format("\n\n**POPEXTENSIONS WARNING: AddThinkToEnt on '%s' overwritten!**\n\nAddThinkToEnt(ent, \"%s\") -> PopExtUtil.AddThinkToEnt(ent, \"%s\")\n\n", ent.tostring(), func, func))
 				PopExtUtil.AddThinkToEnt(ent, func)
 				return
 			}
@@ -57,9 +56,11 @@ if (!("_AddThinkToEnt" in _root))
 }
 ::PopExtMain <- {
 
-	//manual cleanup flag, set to true for missions that are created for a specific map.
-	//automated unloading is meant for multiple missions on one map, purpose-built map/mission combos (like zm_redridge) don't need this.
-	//this should also be used if you change the popfile name mid-mission.
+	DebugText = false
+
+	// manual cleanup flag, set to true for missions that are created for a specific map.
+	// automated unloading is meant for multiple missions on one map, purpose-built map/mission combos (like mvm_redridge) don't need this.
+	// this should also be used if you change the popfile name mid-mission.
 	ManualCleanup = false
 
 	function PlayerCleanup(player) {
@@ -90,14 +91,18 @@ if (!("_AddThinkToEnt" in _root))
 		RaisedParseError = false
 
 		function DebugLog(LogMsg) {
-			if (MissionAttributes.DebugText) {
-				ClientPrint(null, HUD_PRINTCONSOLE, format("MissionAttr: %s.", LogMsg))
-			}
+			if (!PopExtMain.DebugText) return
+			ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s.", POPEXT_DEBUG, LogMsg))
 		}
 
-		function RaiseDeprecationWarning(old, new) {
-			ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s is DEPRECATED. Use %s instead.", POPEXTENSIONS_WARNING, old, new))
+		function GenericWarning(msg) {
+			ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s.", POPEXT_WARNING, msg))
 		}
+
+		function DeprecationWarning(old, new) {
+			ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s is DEPRECATED. Use %s instead.", POPEXT_WARNING, old, new))
+		}
+
 		// TODO: implement a try catch raise system instead of this
 
 		// Raises an error if the user passes an index that is out of range.

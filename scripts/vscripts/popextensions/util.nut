@@ -220,7 +220,7 @@
 	}
 
 	function ShowMessage(message) {
-		ClientPrint(null, HUD_PRINTCENTER , message)
+		ClientPrint(null, HUD_PRINTCENTER, message)
 	}
 
 	function ForceChangeClass(player, classindex = 1)
@@ -374,7 +374,8 @@
 
 		return botsalive
 	}
-	function SetParentLocalOriginDo(child, parent, attachment = null) {
+	function SetParentLocalOriginDo(child, parent, attachment = null) 
+	{
 		SetPropEntity(child, "m_hMovePeer", parent.FirstMoveChild())
 		SetPropEntity(parent, "m_hMoveChild", child)
 		SetPropEntity(child, "m_hMoveParent", parent)
@@ -400,7 +401,8 @@
 
 	// Sets parent immediately in a dirty way. Does not retain absolute origin, retains local origin instead.
 	// child parameter may also be an array of entities
-	function SetParentLocalOrigin(child, parent, attachment = null) {
+	function SetParentLocalOrigin(child, parent, attachment = null) 
+	{
 		if (typeof child == "array")
 			foreach(i, childIn in child)
 				this.SetParentLocalOriginDo(childIn, parent, attachment)
@@ -409,7 +411,8 @@
 	}
 
 	// Setup collision bounds of a trigger entity
-	function SetupTriggerBounds(trigger, mins = null, maxs = null) {
+	function SetupTriggerBounds(trigger, mins = null, maxs = null) 
+	{
 		trigger.SetModel("models/weapons/w_models/w_rocket.mdl")
 
 		if (mins != null) {
@@ -424,7 +427,8 @@
 		trigger.SetSolid(SOLID_BBOX)
 	}
 
-	function PrintTable(table) {
+	function PrintTable(table) 
+	{
 		if (table == null) return;
 
 		this.DoPrintTable(table, 0)
@@ -475,9 +479,9 @@
 	}
 
 	// LEGACY: THIS DOES NOT APPLY TO RAGDOLLS! use GiveWearableItem instead
-	function CreatePlayerWearable(player, model, bonemerge = true, attachment = null, autoDestroy = true) {
-
-		PopExtMain.Error.RaiseDeprecationWarning("PopExtUtil.CreatePlayerWearable", "PopExtUtil.GiveWearableItem")
+	function CreatePlayerWearable(player, model, bonemerge = true, attachment = null, autoDestroy = true) 
+	{
+		PopExtMain.Error.DeprecationWarning("PopExtUtil.CreatePlayerWearable", "PopExtUtil.GiveWearableItem")
 		local modelIndex = GetModelIndex(model)
 		if (modelIndex == -1)
 			modelIndex = PrecacheModel(model)
@@ -488,8 +492,8 @@
 		wearable.SetTeam(player.GetTeam())
 		wearable.SetSolidFlags(4)
 		wearable.SetCollisionGroup(11)
-		SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
-		SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
+		SetPropBool(wearable, STRING_NETPROP_ATTACH, true)
+		SetPropBool(wearable, STRING_NETPROP_INIT, true)
 		SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityQuality", 0)
 		SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityLevel", 1)
 		SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDLow", 2048)
@@ -513,15 +517,15 @@
 
 	// Make a fake wearable that is attached to the player.
 	// The wearable is automatically removed on respawn.
-	function GiveWearableItem(player, item_id, model = false) {
-
+	function GiveWearableItem(player, item_id, model = false) 
+	{
 		local modelindex = GetModelIndex(model)
 		if (modelindex == -1)
 			modelindex = PrecacheModel(model)
 
 		local dummy = CreateByClassname("tf_weapon_parachute")
 		SetPropInt(dummy, STRING_NETPROP_ITEMDEF, ID_BASE_JUMPER)
-		SetPropBool(dummy, "m_AttributeManager.m_Item.m_bInitialized", true)
+		SetPropBool(dummy, STRING_NETPROP_INIT, true)
 		dummy.SetTeam(player.GetTeam())
 		DispatchSpawn(dummy)
 		player.Weapon_Equip(dummy)
@@ -529,9 +533,7 @@
 		local wearable = GetPropEntity(dummy, "m_hExtraWearable")
 		dummy.Kill()
 
-		SetPropInt(wearable, STRING_NETPROP_ITEMDEF, item_id)
-		SetPropBool(wearable, "m_AttributeManager.m_Item.m_bInitialized", true)
-		SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
+		PopExtUtil.InitEconItem(wearable, item_id)
 		DispatchSpawn(wearable)
 
 		if (model)
@@ -646,7 +648,8 @@
 		EntFireByHandle(this.ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player);
 	}
 
-	function DoExplanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
+	function DoExplanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02)
+	{
 		local rgb = this.HexToRgb("FFFF66")
 		local txtent = SpawnEntityFromTable("game_text", {
 			effect = 2,
@@ -661,7 +664,7 @@
 			x = 0.3,
 			y = 0.3
 		})
-		SetPropBool(txtent, "m_bForcePurgeFixedupStrings", true)
+		SetPropBool(txtent, STRING_NETPROP_PURGESTRINGS, true)
 		SetTargetname(txtent, format("__utilExplanationText%d",txtent.entindex()))
 		local strarray = []
 
@@ -718,8 +721,8 @@
 			}
 
 			//shits fucked
-			function calculate_x(string) {
-				local len = string.len()
+			function calculate_x(str) {
+				local len = str.len()
 				local t = 1 - (len.tofloat() / 48)
 				local x = 1 * (1 - t)
 				x = (1 - (x / 3)) / 2.1
@@ -749,7 +752,7 @@
 
 	// LEGACY: keeping this around since some archive missions use it
 	function IsAlive(player) {
-		PopExtMain.Error.RaiseDeprecationWarning("PopExtUtil.IsAlive", "player.IsAlive()")
+		PopExtMain.Error.DeprecationWarning("PopExtUtil.IsAlive", "player.IsAlive()")
 		return player.IsAlive()
 	}
 
@@ -783,12 +786,13 @@
 	//sets m_hOwnerEntity and m_hOwner to the same value
 	function _SetOwner(ent, owner) {
 		//incase we run into an ent that for some reason uses both of these netprops for two different entities
-		if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwnerEntity")) {
-			ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
-			ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
-			ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
-			ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
-			ClientPrint(null, 3, "m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+		if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwnerEntity")) 
+		{
+			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
 		}
 		ent.SetOwner(owner)
 		SetPropEntity(ent, "m_hOwnerEntity", owner)
@@ -882,26 +886,25 @@
 		if ("ping" in args) args.effect <- args.ping
 
 		SendGlobalGameEvent("show_annotation", {
-			text = "text" in args ? args.text : "This is an annotation."
-			lifetime = "lifetime" in args ? args.lifetime : 10.0
-			worldPosX = args.pos.x
-			worldPosY = args.pos.y
-			worldPosZ = args.pos.z
-			id = "id" in args ? args.id : 0
-			play_sound = "sound" in args ? args.sound : "misc/null.wav"
-			show_distance = "distance" in args ? args.distance : false
-			show_effect = "effect" in args ? args.effect : false
-			follow_entindex = "entindex" in args ? args.entindex : 0
+			text 			   = "text" in args ? args.text : "This is an annotation."
+			lifetime 		   = "lifetime" in args ? args.lifetime : 10.0
+			worldPosX 		   = args.pos.x
+			worldPosY 		   = args.pos.y
+			worldPosZ 		   = args.pos.z
+			id 				   = "id" in args ? args.id : 0
+			play_sound 		   = "sound" in args ? args.sound : "misc/null.wav"
+			show_distance 	   = "distance" in args ? args.distance : false
+			show_effect 	   = "effect" in args ? args.effect : false
+			follow_entindex    = "entindex" in args ? args.entindex : 0
 			visibilityBitfield = "visbit" in args ? args.visbit : 0
-			worldNormalX = args.normal.x
-			worldNormalY = args.normal.y
-			worldNormalZ = args.normal.z
+			worldNormalX 	   = args.normal.x
+			worldNormalY 	   = args.normal.y
+			worldNormalZ 	   = args.normal.z
 		})
 	}
 
 	// Hides a currently displaying training annotation by ID.
 	function HideAnnotation(id = 0) {
-		// Seems to work despite the training_annotation Hide input warning on the VDC.
 		SendGlobalGameEvent("hide_annotation", {id = id})
 	}
 
@@ -917,6 +920,7 @@
 		return GetPropIntArray(this.PlayerManager, "m_iUserID", player.entindex()) //TODO replace PlayerManager with the actual entity name
 	}
 
+	// why
 	function PlayerRespawn() {
 		self.ForceRegenerateAndRespawn()
 	}
@@ -935,16 +939,21 @@
 	}
 
 	function PressButton(player, button, duration = -1) {
-		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") | button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") | button)
+		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") | button)
+		SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") | button)
+		
 		if (duration != -1)
 			this.PlayerScriptEntFire(player, format("PopExtUtil.ReleaseButton(self, %d)", button), duration)
 	}
 	function ReleaseButton(player, button) {
-		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") & ~button); SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") & ~button)
+		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") & ~button)
+		SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") & ~button)
 	}
 
 	//LEGACY: use IsPointInTrigger instead
 	function IsPointInRespawnRoom(point) {
+
+		PopExtMain.Error.DeprecationWarning("PopExtUtil.IsPointInRespawnRoom", "PopExtUtil.IsPointInTrigger")
 
 		local triggers = []
 		for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
@@ -1002,7 +1011,6 @@
 		return trace.hit && trace.enthit.GetClassname() == classname
 	}
 
-	//assumes user is using the SLOT_ constants
 	function SwitchWeaponSlot(player, slot) {
 		EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player)
 	}
@@ -1048,7 +1056,7 @@
 		local wearable = CreateByClassname("tf_wearable")
 		SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
 		SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model))
-		SetPropBool(wearable, "m_bValidatedAttachedEntity", true)
+		SetPropBool(wearable, STRING_NETPROP_ATTACH, true)
 		SetPropEntity(wearable, "m_hOwnerEntity", player)
 		wearable.SetTeam(player.GetTeam())
 		wearable.SetOwner(player)
@@ -1072,7 +1080,12 @@
 		local t = null
 
 		for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
-			if (child.GetClassname() == index || child == index || this.GetItemIndex(child) == index || (index in PopExtItems && this.GetItemIndex(child) == PopExtItems[index].id)) {
+			if (
+				child == index
+				|| child.GetClassname() == index
+				|| this.GetItemIndex(child) == index
+				|| (index in PopExtItems && this.GetItemIndex(child) == PopExtItems[index].id)
+			) {
 				t = child
 				break
 			}
@@ -1083,17 +1096,23 @@
 		//didn't find weapon in children, go through m_hMyWeapons instead
 		for (local i = 0; i < SLOT_COUNT; i++) {
 			local wep = GetPropEntityArray(player, "m_hMyWeapons", i)
+			
+			if (!wep || !wep.IsValid()) continue
 
-			if (wep == null || wep.GetClassname() != index || wep != index || this.GetItemIndex(wep) != index || (index in PopExtItems && this.GetItemIndex(wep) == PopExtItems[index].id))
-				continue
-
-			t = wep
-			break
+			if (
+				wep == index
+				|| wep.GetClassname() == index
+				|| this.GetItemIndex(wep) == index
+				|| (index in PopExtItems && this.GetItemIndex(wep) == PopExtItems[index].id)
+			) {
+				t = wep
+				break
+			}
 		}
 		return t
 	}
-
-	function StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5) {
+	// This was made before StunPlayer was exposed, however StunPlayer doesn't control m_bStunEffects like this does.
+	function StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5, scared = false) {
 
 		// CreateByClassname is significantly faster than SpawnEntityFromTable
 
@@ -1111,6 +1130,7 @@
 
 		utilstun.KeyValueFromString("targetname", "__utilstun")
 		utilstun.KeyValueFromInt("stun_type", type)
+		utilstun.KeyValueFromInt("stun_effects", scared.tointeger())
 		utilstun.KeyValueFromFloat("stun_duration", duration.tofloat())
 		utilstun.KeyValueFromFloat("move_speed_reduction", speedreduce.tofloat())
 		utilstun.KeyValueFromFloat("trigger_delay", delay.tofloat())
@@ -1118,7 +1138,8 @@
 
 		DispatchSpawn(utilstun)
 
-		EntFireByHandle(utilstun, "EndTouch", "", -1, player, player)
+		utilstun.AcceptInput("EndTouch", "", player, player)
+		utilstun.Kill()
 	}
 
 	function Ignite(player, duration = 10.0, damage = 1) {
@@ -1141,7 +1162,7 @@
 
 		local hudhint = FindByName(null, "__utilhudhint")
 
-		local flags = (player == null) ? 1 : 0
+		local flags = player == null ? 1 : 0
 
 		if (!hudhint) hudhint = SpawnEntityFromTable("env_hudhint", { targetname = "__utilhudhint", spawnflags = flags, message = text })
 
@@ -1182,7 +1203,7 @@
 		}
 	}
 
-	function ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = INT_MAX) {
+	function ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = INT_MAX, bodygroup = null) {
 		PrecacheModel(model[0])
 		local proxy_entity = CreateByClassname("obj_teleporter") // use obj_teleporter to set bodygroups.  not using SpawnEntityFromTable as that creates spawning noises
 		proxy_entity.SetAbsOrigin(pos)
@@ -1205,21 +1226,29 @@
 
 
 	function LockInPlace(player, enable = true) {
+
 		if (enable) {
 			player.AddFlag(FL_ATCONTROLS)
 			player.AddCustomAttribute("no_jump", 1, -1)
 			player.AddCustomAttribute("no_duck", 1, -1)
 			player.AddCustomAttribute("no_attack", 1, -1)
 			player.AddCustomAttribute("disable weapon switch", 1, -1)
+			return
 
 		}
-		else {
-			player.RemoveFlag(FL_ATCONTROLS)
-			player.RemoveCustomAttribute("no_jump")
-			player.RemoveCustomAttribute("no_duck")
-			player.RemoveCustomAttribute("no_attack")
-			player.RemoveCustomAttribute("disable weapon switch")
-		}
+
+		player.RemoveFlag(FL_ATCONTROLS)
+		player.RemoveCustomAttribute("no_jump")
+		player.RemoveCustomAttribute("no_duck")
+		player.RemoveCustomAttribute("no_attack")
+		player.RemoveCustomAttribute("disable weapon switch")
+	}
+
+	function InitEconItem(item, index) {
+
+		SetPropInt(item, STRING_NETPROP_ITEMDEF, index)
+		SetPropBool(item, STRING_NETPROP_INIT, true)
+		SetPropBool(item, STRING_NETPROP_ATTACH, true)
 	}
 
 	function GetItemIndex(item) {
@@ -1289,9 +1318,7 @@
 			return
 		}
 		local weapon = CreateByClassname(className)
-		SetPropInt(weapon, STRING_NETPROP_ITEMDEF, itemID)
-		SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
-		SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
+		this.InitEconItem(weapon, itemID)
 		weapon.SetTeam(player.GetTeam())
 		DispatchSpawn(weapon)
 
@@ -1613,7 +1640,7 @@
 		else if (startswith(ent.GetClassname(), "tf_projectile"))
 			thinktable = "ProjectileThinkTable"
 
-		else if (HasProp(ent, "m_bValidatedAttachedEntity"))
+		else if (HasProp(ent, STRING_NETPROP_ATTACH))
 			thinktable = "ItemThinkTable"
 		else
 			_AddThinkToEnt(ent, func)

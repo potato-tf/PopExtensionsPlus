@@ -1105,7 +1105,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				{
 					if (value & 2)
 					{
-						// CTFBot.GenerateAndWearItem() works here, but causes a big perf warning spike on bot spawn
+						// GenerateAndWearItem() works here, but causes a big perf warning spike on bot spawn
 						// faking it doesn't do this
 
 						// this function doesn't apply cosmetics to ragdolls on death
@@ -1313,7 +1313,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		}
 
 		// =======================================================================================================================
-		// array of arrays with xyz values to spawn path_tracks at
+		// array of arrays with xyz values to spawn path_tracks at, also accepts vectors
 		// path_track names are ordered based on where they are listed in the array
 
 		// example:
@@ -1332,8 +1332,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				success = false
 				return
 			}
-			if (!("ExtraTankPathTracks" in MissionAttributes)) MissionAttributes.ExtraTankPathTracks <- []
-			foreach (path in value) {
+			if (!("ExtraTankPathTracks" in MissionAttributes)) 
+				MissionAttributes.ExtraTankPathTracks <- []
+
+			// we get silly
+			local paths = value.map( @(path)( path.map( @(pos) typeof pos == "Vector" ? pos : ( ( ( pos.find(",") ? split(pos, ",") : split(pos, " ") ).apply( @(val) val.tofloat() ) ).apply( @(_, _, val) Vector(val[0], val[1], val[2]) )[0] ) ) ) )
+
+			foreach (path in paths) {
 
 				local tracks = []
 
@@ -1343,11 +1348,9 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 					EntFireByHandle(path, "Kill", "", -1, null, null)
 
 				foreach (i, pos in path) {
-					local org = pos.find(",") ? split(pos, ",") : split(pos, " ")
-					org.apply(@(val) val.tofloat())
 					local track = SpawnEntityFromTable("path_track", {
 						targetname = format("extratankpath%d_%d", MissionAttributes.PathNum, i+1)
-						origin = Vector(org[0], org[1], org[2])
+						origin = pos
 					})
 					tracks.append(track)
 				}
@@ -1973,7 +1976,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			MissionAttributes.DeployBombStart <- function(player) {
 
 				//do this so we can do CancelPending
-				local deployrelay = SpawnEntityFromTable("logic_relay" {
+				local deployrelay = SpawnEntityFromTable("logic_relay", {
 					targetname = "__bombdeploy"
 					"OnTrigger#1": "bignetRunScriptCodePopExtUtil.EndWaveReverse()2-1"
 					"OnTrigger#2": "boss_deploy_relay,Trigger,,2,-1"
@@ -2541,7 +2544,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				{
 					scope.PlayerThinkTable.InRespawnThink <- function()
 					{
-						if (!PopExtUtil.IsPointInRespawnRoom(player.EyePosition())) return
+						if (!PopExtUtil.IsPointInTrigger(player.EyePosition())) return
 
 						if (value & 16 && !player.InCond(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED))
 							player.AddCondEx(TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, 2.0, null)
@@ -2976,7 +2979,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 		if (attr in this.Attrs)
 		{
-			this.Attrs[attr](value) //ugly ass
+			this.Attrs[attr](value)
 			PopExtMain.Error.DebugLog(format("Added mission attribute %s", attr))
 			this.CurAttrs[attr] <- value
 		}
@@ -2986,10 +2989,6 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			success = false
 		}
 	}
-	// Logging Functions
-	// =========================================================
-	// Generic debug message that is visible if PrintDebugText is true.
-	// Example: Print a message that the script is working as expected.
 	Events = {
 
 		function OnScriptHook_OnTakeDamage(params) { foreach (func in MissionAttributes.TakeDamageTable) func(params) }

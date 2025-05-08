@@ -289,7 +289,7 @@ WaveSchedule
                     `WaveStartCountdown`: 1
                     `ExtraTankPath`: [
 						[`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`],
-						[`640 5404 350`, `640 4810 350`, `640 4400 550`, `1100 4100 650`, `1636 3900 770`]
+						[`640 5404 350`, Vector(640, 4810, 350), `640 4400 550`, `1100 4100 650`, `1636 3900 770`]
 					]
 					`SoundOverrides` : { //overrides teamplay_broadcast_audio sounds
 						`Announcer.MVM_Get_To_Upgrade`: null

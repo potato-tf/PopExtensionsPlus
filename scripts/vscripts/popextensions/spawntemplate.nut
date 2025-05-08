@@ -54,7 +54,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 			}
 
 			if (purgestrings)
-				SetPropBool(entity, "m_bForcePurgeFixedupStrings", true)
+				SetPropBool(entity, STRING_NETPROP_PURGESTRINGS, true)
 
 			scope.SpawnedEntities[entity] <- [origin, angles]
 

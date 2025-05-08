@@ -382,9 +382,7 @@ local popext_funcs = {
 		if (spellbook == null)
 		{
 			local book = CreateByClassname("tf_weapon_spellbook")
-			SetPropInt(book, STRING_NETPROP_ITEMDEF, ID_BASIC_SPELLBOOK)
-			SetPropBool(book, "m_AttributeManager.m_Item.m_bInitialized", true)
-			SetPropBool(book, "m_bValidatedAttachedEntity", true)
+			PopExtUtil.InitEconItem(book, ID_BASIC_SPELLBOOK)
 			SetPropEntityArray(bot, "m_hMyWeapons", book, book.GetSlot())
 
 			book.SetTeam(bot.GetTeam())
@@ -1168,9 +1166,7 @@ local popext_funcs = {
 	popext_giveweapon = function(bot, args) {
 
 		local weapon = CreateByClassname(args.weapon ? args.weapon : args.type)
-		SetPropInt(weapon, STRING_NETPROP_ITEMDEF, "id" in args ? args.id.tointeger() : args.cooldown.tointeger())
-		SetPropBool(weapon, "m_AttributeManager.m_Item.m_bInitialized", true)
-		SetPropBool(weapon, "m_bValidatedAttachedEntity", true)
+		PopExtUtil.InitEconItem(weapon, "id" in args ? args.id.tointeger() : args.cooldown.tointeger())
 		weapon.SetTeam(bot.GetTeam())
 		DispatchSpawn(weapon)
 
@@ -2037,8 +2033,8 @@ local popext_funcs = {
 				bot.RemoveCond(7);
 				DispatchSpawn(weapon);
 				SetPropInt(weapon, STRING_NETPROP_ITEMDEF, id);
-				SetPropBool(weapon, `m_AttributeManager.m_Item.m_bInitialized`, true);
-				SetPropBool(weapon, `m_bForcePurgeFixedupStrings`, true);
+				SetPropBool(weapon, STRING_NETPROP_INIT, true);
+				SetPropBool(weapon, STRING_NETPROP_PURGESTRINGS, true);
 				SetPropEntity(self, `m_hActiveWeapon`, activator);
 				SetPropInt(bot, `m_iFOV`, 0);
 				bot.HandleTauntCommand(0);
@@ -2332,7 +2328,7 @@ local popext_funcs = {
 		// if someone has issues when using pipe syntax tell them to use brackets instead
 		if (separator ==  "|")
 		{
-			PopExtMain.Error.RaiseDeprecationWarning("Tag PIPE( | ) syntax", "Bracket { } Syntax ( popext_tag{arg = value} )")
+			PopExtMain.Error.DeprecationWarning("Tag PIPE( | ) syntax", "Bracket { } Syntax ( popext_tag{arg = value} )")
 			local args = splittag
 			local func = args.remove(0)
 
