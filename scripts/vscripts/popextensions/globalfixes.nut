@@ -37,7 +37,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 					owner_scope.ActiveProjectiles[projectile.entindex()] <- [projectile, Time()]
 
 					PopExtUtil.SetDestroyCallback(projectile, function() {
-						delete owner_scope.ActiveProjectiles[self.entindex()]
+						if ("ActiveProjectiles" in owner_scope)
+							delete owner_scope.ActiveProjectiles[self.entindex()]
 					})
 				}
 

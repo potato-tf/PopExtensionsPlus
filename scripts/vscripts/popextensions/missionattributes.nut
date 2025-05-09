@@ -793,7 +793,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 		RobotLimit = function(value) {
 
 			if (value > ( MAX_CLIENTS - Convars.GetInt("tf_mvm_defenders_team_size") ) )
-				PopExtMain.Error.RaiseValueError(attr, value, "MAX INVADERS > MAX PLAYERS!  Update your servers maxplayers!")
+				PopExtMain.Error.RaiseValueError("RobotLimit", value, "MAX INVADERS > MAX PLAYERS! Update your servers maxplayers!")
 
 			MissionAttributes.SetConvar("tf_mvm_max_invaders", value)
 		}
@@ -2023,7 +2023,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				//do this so we can do CancelPending
 				local deployrelay = SpawnEntityFromTable("logic_relay", {
 					targetname = "__bombdeploy"
-					"OnTrigger#1": "bignetRunScriptCodePopExtUtil.EndWaveReverse()2-1"
+					"OnTrigger#1": "bignet,RunScriptCode,PopExtUtil.EndWaveReverse(),2,-1"
 					"OnTrigger#2": "boss_deploy_relay,Trigger,,2,-1"
 				})
 				if (GetPropEntity(player, "m_hItem") == null) return
@@ -2792,7 +2792,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				if (!player.IsBotOfType(TF_BOT_TYPE)) return
 
-				EntFireByHandle(player, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", value.tostring(), null, null)
+				EntFireByHandle(player, "RunScriptCode", "self.ForceChangeTeam(TEAM_SPECTATOR, true)", value.tofloat(), null, null)
 			}
 		}
 

@@ -1033,7 +1033,6 @@
 					}
 					SetPropString(wep, "m_iClassname", classname)
 					SetPropInt(wep, STRING_NETPROP_ITEMDEF, index)
-					
 				}
 			}
 			player.GetScriptScope().attribinfo["cannot upgrade"] <- "Weapon cannot be upgraded"
