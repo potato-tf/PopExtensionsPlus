@@ -1,5 +1,12 @@
-::popExtensionsVersion <- "05.08.2025.1"
-local _root = getroottable()
+::popExtensionsVersion <- "05.09.2025.1"
+
+local ROOT = getroottable()
+
+// these get defined here so we can use them
+// for some reason including constants in this same file still throws not found errors
+const POPEXT_ERROR   = "POPEXTENSIONS ERROR: "
+const POPEXT_WARNING = "POPEXTENSIONS WARNING: "
+const POPEXT_DEBUG   = "POPEXTENSIONS DEBUG: "
 
 local o = Entities.FindByClassname(null, "tf_objective_resource")
 
@@ -9,10 +16,10 @@ local o = Entities.FindByClassname(null, "tf_objective_resource")
 
 // ::commentaryNode <- SpawnEntityFromTable("point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"})
 
-//overwrite AddThinkToEnt
-//certain entity types use think tables, meaning any external scripts will conflict with this and break everything
-//we could replace this behavior entirely, but this would be misleading to newer scripters
-//don't want to lead them astray by allowing adding multiple thinks with AddThinkToEnt in our library and our library only.
+// overwrite AddThinkToEnt
+// certain entity types use think tables, meaning any external scripts will conflict with this and break everything
+// don't want to confuse new scripters by allowing adding multiple thinks with AddThinkToEnt in our library and our library only
+// spew a big fat warning below so they know what's going on
 
 local banned_think_classnames = {
 	player = "PlayerThinkTable"
@@ -22,7 +29,7 @@ local banned_think_classnames = {
 	tf_wearable = "ItemThinkTable"
 }
 
-if (!("_AddThinkToEnt" in _root))
+if (!("_AddThinkToEnt" in ROOT))
 {
 	//rename so we can still use it elsewhere
 	//this also allows people to override the think restriction by using _AddThinkToEnt(ent, "FuncNameHere") instead
@@ -32,7 +39,7 @@ if (!("_AddThinkToEnt" in _root))
 	::AddThinkToEnt <- function(ent, func)
 	{
 		//mission unloaded, revert back to vanilla AddThinkToEnt
-		if (!("__popname" in _root))
+		if (!("__popname" in ROOT))
 		{
 			_AddThinkToEnt(ent, func)
 			AddThinkToEnt <- _AddThinkToEnt
@@ -123,9 +130,9 @@ if (!("_AddThinkToEnt" in _root))
 		// Raises a template parsing error, if nothing else fits.
 		function ParseError(ErrorMsg) {
 
-			if (!this.RaisedParseError) {
+			if (!RaisedParseError) {
 
-				this.RaisedParseError = true
+				RaisedParseError = true
 				ClientPrint(null, HUD_PRINTTALK, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details.")
 			}
 			ClientPrint(null, HUD_PRINTCONSOLE, format("%s %s.\n", POPEXT_ERROR, ErrorMsg))
@@ -181,11 +188,11 @@ if (!("_AddThinkToEnt" in _root))
 				scope.buildings <- []
 			}
 
-			if ("MissionAttributes" in _root) foreach (func in MissionAttributes.SpawnHookTable) func(params)
-			// if ("GlobalFixes" in _root) foreach (func in GlobalFixes.SpawnHookTable) func(params)
-			if ("CustomAttributes" in _root) foreach (func in CustomAttributes.SpawnHookTable) func(params)
-			if ("PopExtPopulator" in _root) foreach (func in PopExtPopulator.SpawnHookTable) func(params)
-			if ("CustomWeapons" in _root) foreach (func in CustomWeapons.SpawnHookTable) func(params)
+			if ("MissionAttributes" in ROOT) foreach (func in MissionAttributes.SpawnHookTable) func(params)
+			// if ("GlobalFixes" in ROOT) foreach (func in GlobalFixes.SpawnHookTable) func(params) //these have all been moved to missionattributes
+			if ("CustomAttributes" in ROOT) foreach (func in CustomAttributes.SpawnHookTable) func(params)
+			if ("PopExtPopulator" in ROOT) foreach (func in PopExtPopulator.SpawnHookTable) func(params)
+			if ("CustomWeapons" in ROOT) foreach (func in CustomWeapons.SpawnHookTable) func(params)
 		}
 		function OnGameEvent_player_changeclass(params) {
 			local player = GetPlayerFromUserID(params.userid)
@@ -207,7 +214,7 @@ if (!("_AddThinkToEnt" in _root))
 
 		function OnGameEvent_teamplay_round_start(_) {
 
-			//clean up all wearables that are not owned by a player or a bot
+			// clean up lingering wearables
 			for (local wearable; wearable = FindByClassname(wearable, "tf_wearable*");)
 				if (wearable.GetOwner() == null || IsPlayerABot(wearable.GetOwner()))
 					EntFireByHandle(wearable, "Kill", "", -1, null, null)
@@ -271,7 +278,7 @@ if (!("_AddThinkToEnt" in _root))
 				"Info"
 			]
 
-			foreach(c in cleanup) if (c in _root) delete _root[c]
+			foreach(c in cleanup) if (c in ROOT) delete ROOT[c]
 
 			EntFire("_popext*", "Kill")
 			EntFire("__util*", "Kill")
@@ -282,6 +289,7 @@ if (!("_AddThinkToEnt" in _root))
 }
 __CollectGameEventCallbacks(PopExtMain.Events)
 
+
 //HACK: forces post_inventory_application to fire on pop load
 local maxclients = MaxClients().tointeger()
 for (local i = 1; i <= maxclients; i++)
@@ -289,7 +297,7 @@ for (local i = 1; i <= maxclients; i++)
 		EntFireByHandle(PlayerInstanceFromIndex(i), "RunScriptCode", "self.Regenerate(true)", 0.015, null, null)
 
 function Include(path) {
-	try IncludeScript(format("popextensions/%s", path), _root) catch(e) printl(e)
+	try IncludeScript(format("popextensions/%s", path), ROOT) catch(e) printl(e)
 }
 
 Include("constants") //constants must include first
@@ -302,8 +310,8 @@ Include("hooks") //must include before popextensions
 Include("popextensions")
 
 Include("robotvoicelines") //must include before missionattributes
-// Include("customattributes_old") //must include before missionattributes
 Include("customattributes") //must include before missionattributes
+// Include("customattributes_noloop")
 Include("missionattributes")
 Include("customweapons")
 

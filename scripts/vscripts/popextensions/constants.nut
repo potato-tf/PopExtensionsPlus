@@ -1,10 +1,9 @@
 //"reminder that constants are resolved at preprocessor level and not runtime"
 //"if you add them dynamically to the table they wont show up until you execute a new script as the preprocessor isnt aware yet"
-
 //fold into both const and root table to work around this.
 
+::ROOT  <- getroottable()
 ::CONST <- getconsttable()
-::ROOT <- getroottable()
 
 if (!("ConstantNamingConvention" in ROOT)) {
 
@@ -35,14 +34,12 @@ foreach(k, v in ::NavMesh.getclass())
 	if (k != "IsValid" && !(k in ROOT))
 		ROOT[k] <- ::NavMesh[k].bindenv(::NavMesh)
 
-const POPEXT_ERROR   = "POPEXTENSIONS ERROR: "
-const POPEXT_WARNING = "POPEXTENSIONS WARNING: "
-const POPEXT_DEBUG   = "POPEXTENSIONS DEBUG: "
-
 const STRING_NETPROP_ITEMDEF 	  = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
 const STRING_NETPROP_INIT 	 	  = "m_AttributeManager.m_Item.m_bInitialized"
 const STRING_NETPROP_ATTACH  	  = "m_bValidatedAttachedEntity"
 const STRING_NETPROP_PURGESTRINGS = "m_bForcePurgeFixedupStrings"
+const STRING_NETPROP_MYWEAPONS    = "m_hMyWeapons"
+
 const SINGLE_TICK = 0.015
 
 // Clientprint chat colors

@@ -55,6 +55,22 @@ WaveSchedule
 				}
 				SpawnTemplate(`viewcontrol`)
 
+				::ExtraItems <-	// Example, make your own script and use ::ExtraItems to set up custom weapon list
+				{
+					`Wasp Launcher`:
+					{
+						OriginalItemName = `Upgradeable TF_WEAPON_ROCKETLAUNCHER`
+						Model = `models/weapons/c_models/c_wasp_launcher/c_wasp_launcher.mdl`
+						`blast radius increased` : 1.5
+						`max health additive bonus` : 100
+						`reloads full clip at once` : 1
+						`is miniboss` : 1
+						`provide on active` : 1
+						`move speed bonus` : 0.4
+						`override footstep sound set` : 6
+					}
+				}
+
 				MissionAttrs({
 
 					EnableGlobalFixes = 1
@@ -62,12 +78,13 @@ WaveSchedule
 					ForceHoliday = 2
 					NoRome = 2
 					BotHeadshots = 1
-					NoUpgrades = 2
+					// NoUpgrades = 2
 					NoCrumpkins = 1
 					BotsAreHumans = 2
 					WaveStartCountdown = 3
 					SpellRateCommon = 0.5
 					NoSkeleSplit = 1
+					OptimizePathTracks = 1
 					WaveNum = 3
 					MaxWaveNum = 60
 					StandableHeads = 1
@@ -108,7 +125,7 @@ WaveSchedule
 
 					LoadoutControl = {
 
-						// `tf_weapon_scattergun`: null,
+						`tf_weapon_rocketlauncher_directhit`: `Wasp Launcher`, //accepts custom weapons as well
 						// `Mad Milk`: `Pretty Boy's Pocket Pistol`,
 						// [812] = {`tf_weapon_pistol`: 23},
 						// tf_weapon_sniperrifle = null,
@@ -130,7 +147,6 @@ WaveSchedule
 						// `fires milk bolt` : 1,
 						// `is miniboss`: 1,
 						`max health additive bonus` : 100,
-						`cannot upgrade` : 1,
 
 						[TF_CLASS_SCOUT] = {
 							`damage bonus` : 5,
@@ -142,7 +158,7 @@ WaveSchedule
 						[TF_CLASS_SOLDIER] = {
 							`damage penalty` : 0.5,
 							`fire rate bonus` : 0.5,
-							// `mult dmg vs same class`: 10
+							`mult dmg vs same class`: 10
 							`replace weapon fire sound`: [ [`Weapon_Liberty_Launcher.Single`, `Weapon_Liberty_Launcher.SingleCrit`], [`weapons/flaregun/fire.wav`, `Weapon_CowMangler.Single`] ],
 						},
 
@@ -150,6 +166,11 @@ WaveSchedule
 							`fire rate bonus` : 0.5,
 						}
 					},
+					ItemAttributes = {
+						`tf_weapon_scattergun` : {
+							`cannot upgrade` : 1,
+						}
+					}
 				})
 			"
 		}

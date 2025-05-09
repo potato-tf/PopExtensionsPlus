@@ -270,7 +270,7 @@ function StartTutorial(eventname)
 			break
         
             default:
-                printl("invalid tutorial type!")
+                PopExtMain.Error.RaiseValueError("tutorial type", k, "Invalid tutorial type!")
 			break
         }
 		EntFire("worldspawn", "RunScriptCode", tutorialfunc, delay)

@@ -339,11 +339,11 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 					// guard against inverted mins and maxs values
 					// rafmod PTs silently handle this, this normally crashes the server
-					local mins_sum = (mins.find(",") ? split(mins, ",") : split(mins, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
-					local maxs_sum = (maxs.find(",") ? split(maxs, ",") : split(maxs, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b, 0)
+					local mins_sum = (mins.find(",") ? split(mins, ",") : split(mins, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b)
+					local maxs_sum = (maxs.find(",") ? split(maxs, ",") : split(maxs, " ")).apply(@(val) val.tofloat()).reduce(@(a, b) a + b)
 
 					if (mins_sum > maxs_sum) {
-						printl(format("\n\n**SPAWNTEMPLATE WARNING: mins > maxs on %s! Inverting...**\n\n", "targetname" in keyvalues ? keyvalues.targetname : classname))
+						PopExtMain.Error.RaiseValueError("mins > maxs in point template (%s)! Inverting...", "targetname" in keyvalues ? keyvalues.targetname : classname)
 						keyvalues.mins <- maxs
 						keyvalues.maxs <- mins
 						mins = maxs

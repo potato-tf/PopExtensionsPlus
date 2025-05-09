@@ -383,7 +383,7 @@ local popext_funcs = {
 		{
 			local book = CreateByClassname("tf_weapon_spellbook")
 			PopExtUtil.InitEconItem(book, ID_BASIC_SPELLBOOK)
-			SetPropEntityArray(bot, "m_hMyWeapons", book, book.GetSlot())
+			SetPropEntityArray(bot, STRING_NETPROP_MYWEAPONS, book, book.GetSlot())
 
 			book.SetTeam(bot.GetTeam())
 			DispatchSpawn(book)
@@ -414,11 +414,12 @@ local popext_funcs = {
 			SetPropInt(spellbook, "m_iSelectedSpellIndex", type)
 			SetPropInt(spellbook, "m_iSpellCharges", charges)
 			try {
-
 				bot.Weapon_Switch(spellbook)
 				spellbook.AddAttribute("disable weapon switch", 1, 1) // duration doesn't work here?
 				spellbook.ReapplyProvision()
-			} catch(e) printl("can't find spellbook!")
+			} catch(e) {
+				PopExtMain.Error.DebugLog(format("popext_spell: Can't find spellbook!\n %s", e))
+			}
 
 			EntFireByHandle(spellbook, "RunScriptCode", "self.RemoveAttribute(`disable weapon switch`)", 1, null, null)
 			EntFireByHandle(spellbook, "RunScriptCode", "self.ReapplyProvision()", 1, null, null)
@@ -715,16 +716,12 @@ local popext_funcs = {
 
 			local action_point = bot.GetActionPoint()
 
-			// printl(action_point)
 
 			if ( !bot.HasBotTag("popext_generatorbot") && action_point && (bot.GetOrigin() - action_point.GetOrigin()).Length() > distance)
 			{
-				// aibot.threat = action_point
-				// aibot.FindPathToThreat()
 				aibot.UpdatePathAndMove(action_point.GetOrigin())
 			}
 
-			// printl(cooldowntime + " : " + Time())
 			if (waituntildone && action_point && (bot.GetOrigin() - action_point.GetOrigin()).Length() > distance)
 			{
 				cooldowntime = Time() + (duration + repeat_cooldown)
@@ -741,8 +738,6 @@ local popext_funcs = {
 
 			// spawn an action point
 			local new_action_point = CreateByClassname("bot_action_point")
-
-			printl(new_action_point)
 
 			new_action_point.KeyValueFromString("targetname", format("__popext_actionpoint_%d", bot.entindex()))
 			new_action_point.KeyValueFromString("next_action_point", next_action_point)
@@ -895,8 +890,6 @@ local popext_funcs = {
 					// convert to vector
 					aimtarget_ent = random
 					aimtarget_pos = random.EyePosition()
-
-					// printl(aimtarget_pos)
 				}
 				else if (aimtarget == "ActionPoint" && action_point)
 					aimtarget_pos = action_point.GetOrigin()
@@ -1457,7 +1450,7 @@ local popext_funcs = {
 
 			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile_*");) {
 
-				if (projectile.GetTeam() == bot.GetTeam() || !this.IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
+				if (projectile.GetTeam() == bot.GetTeam() || !IsValidProjectile(projectile, PopExtUtil.DeflectableProjectiles))
 					continue
 
 				if (aibot.GetThreatDistanceSqr(projectile) <= 67000 && aibot.IsVisible(projectile)) {
@@ -1582,7 +1575,7 @@ local popext_funcs = {
 		local weapon = null
 		local notfound = true
 		for (local i = 0; i < SLOT_COUNT; ++i) {
-			weapon = GetPropEntityArray(bot, "m_hMyWeapons", i)
+			weapon = GetPropEntityArray(bot, STRING_NETPROP_MYWEAPONS, i)
 			if (weapon == null || weapon.GetSlot() != slot) continue
 			notfound = false
 			break
@@ -1668,7 +1661,6 @@ local popext_funcs = {
 
 		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- function(params) {
 
-			printl("dropping weapon")
 			local slot = args.type ? args.type.tointeger() : -1
 			local wep  = (slot == -1) ? bot.GetActiveWeapon() : PopExtUtil.GetItemInSlot(bot, slot)
 			if (wep == null) return
@@ -2165,7 +2157,6 @@ local popext_funcs = {
 			projectile_speed *= speed_mult
 			projectile_scope.speedmultiplied = true
 		}
-		// printl("speed: " + projectile_speed)
 
 		projectile_scope.turn_power			  <- turn_power
 		projectile_scope.projectile_speed	  <- projectile_speed
@@ -2234,7 +2225,6 @@ local popext_funcs = {
 
 		local current_dir = projectile.GetForwardVector()
 		local new_dir = current_dir + (desired_dir - current_dir) * scope.turn_power
-		// printl("Dir: " + new_dir)
 		new_dir.Norm()
 
 		local move_ang = PopExtUtil.VectorAngles(new_dir)
@@ -2309,8 +2299,6 @@ local popext_funcs = {
 
 		if (!tag.find("{") && !tag.find("|")) return {}
 
-		local tagtable = this.tagtable
-
 		//these ones aren't as re-usable as other kv's
 		if (startswith(tag, "popext_homing"))
 		{
@@ -2373,7 +2361,9 @@ local popext_funcs = {
 				tagtable.command <- ""
 			}
 
-		} else if (separator == "{") {
+		} 
+		else if (separator == "{") 
+		{
 			// Allow inputting strings in new-style tags using backticks.
 			local arr = split(splittag[1], "`")
 			local end = arr.len() - 1
@@ -2418,7 +2408,12 @@ local popext_funcs = {
 			local func = ""; tag.find("|") ? func = split(tag, "|")[0] : func = split(tag, "{")[0]
 			local args = PopExtTags.ParseTagArguments(bot, tag)
 
-			if (func in popext_funcs) popext_funcs[func].call(bot.GetScriptScope(), bot, args)
+			if (PopExtMain.DebugText)
+				foreach (k, v in args)
+					PopExtMain.Error.DebugLog(format("(%s) EvaluateTags (%s): {%s = %s}", Convars.GetClientConvarValue("name", bot.entindex()), func, k.tostring(), v ? v.tostring() : "null"))
+
+			if (func in popext_funcs)
+				popext_funcs[func].call(bot.GetScriptScope(), bot, args)
 
 		}
 	}

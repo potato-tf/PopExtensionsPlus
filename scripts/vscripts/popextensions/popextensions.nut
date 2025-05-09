@@ -298,9 +298,7 @@ function PopExt::GetWaveIconSlot(name, flags) {
 			local flagsSlot = GetPropIntArray(resource, format("m_nMannVsMachineWaveClassFlags%s", suffix), i)
 
 			if (nameSlot == name && (flags == 0 || flagsSlot == flags)) {
-				// printl(i)
 				return i
-
 			}
 		}
 	}

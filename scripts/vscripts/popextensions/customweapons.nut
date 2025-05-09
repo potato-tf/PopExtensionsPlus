@@ -99,9 +99,9 @@
 		}
 	}
 
-	//give item to specified player
-	//itemname accepts strings
-	//player accepts player entities
+	// give item to specified player
+	// itemname accepts strings
+	// player accepts player entities
 	function GiveItem(itemname, player)
 	{
 		player.ValidateScriptScope()
@@ -116,49 +116,46 @@
 		local id = null
 		local item_class = null
 		local item_slot = null
+		local original_itemname = "OriginalItemName" in ExtraItems[itemname] ? ExtraItems[itemname].OriginalItemName : itemname
 
-		//if item is a custom item, overwrite itemname with OriginalItemName
 		if (itemname in ExtraItems)
-		{
 			extraitem = ExtraItems[itemname]
-			itemname = ExtraItems[itemname].OriginalItemName
-		}
 
-		if (itemname in PopExtItems)
+		if (original_itemname in PopExtItems)
 		{
-			id = PopExtItems[itemname].id
-			model = PopExtItems[itemname].model_player
+			id = PopExtItems[original_itemname].id
+			model = PopExtItems[original_itemname].model_player
 			modelindex = PrecacheModel(model)
-			animset = PopExtItems[itemname].animset
-			item_class = PopExtItems[itemname].item_class
-			item_slot = PopExtItems[itemname].item_slot
+			animset = PopExtItems[original_itemname].animset
+			item_class = PopExtItems[original_itemname].item_class
+			item_slot = PopExtItems[original_itemname].item_slot
 
-			if (typeof(PopExtItems[itemname].animset) == "array")
+			if (typeof(PopExtItems[original_itemname].animset) == "array")
 			{
-				if (PopExtItems[itemname].animset.find(playerclass) == null)
+				if (PopExtItems[original_itemname].animset.find(playerclass) == null)
 				{
-					animset = PopExtItems[itemname].animset[0]
-					item_class = PopExtItems[itemname].item_class[0]
-					item_slot = PopExtItems[itemname].item_slot[0]
+					animset = PopExtItems[original_itemname].animset[0]
+					item_class = PopExtItems[original_itemname].item_class[0]
+					item_slot = PopExtItems[original_itemname].item_slot[0]
 				}
 				else
 				{
-					animset = PopExtItems[itemname].animset[PopExtItems[itemname].animset.find(playerclass)]
-					item_class = PopExtItems[itemname].item_class[PopExtItems[itemname].animset.find(playerclass)]
-					item_slot = PopExtItems[itemname].item_slot[PopExtItems[itemname].animset.find(playerclass)]
+					animset = PopExtItems[original_itemname].animset[PopExtItems[original_itemname].animset.find(playerclass)]
+					item_class = PopExtItems[original_itemname].item_class[PopExtItems[original_itemname].animset.find(playerclass)]
+					item_slot = PopExtItems[original_itemname].item_slot[PopExtItems[original_itemname].animset.find(playerclass)]
 				}
 			}
 
-			//multiclass items will not spawn unless they are specified for a certain class
-			//this includes multiclass shotguns, melees, base jumper, pain train (but not half zatoichi)
-			//the stock pistol, tf_weapon_pistol is a valid classname and will spawn however tf_weapon_pistol_scout is also supported
+			// multiclass items will not spawn unless they are specified for a certain class
+			// this includes multiclass shotguns, melees, base jumper, pain train (but not half zatoichi)
+			// the stock pistol, tf_weapon_pistol is a valid classname and will spawn however tf_weapon_pistol_scout is also supported
 
-			//animset can be a array or a string, arrays exist for weapons that are multi class (shotgun pistol and all class melees)
-			//if the current player's class is not one of the classes listed in the table, it will fall back to the first index
+			// animset can be a array or a string, arrays exist for weapons that are multi class (shotgun pistol and all class melees)
+			// if the current player's class is not one of the classes listed in the table, it will fall back to the first index
 		}
 		else return
 
-		//replace overrides if they exist in extraitems
+		// replace overrides if they exist in extraitems
 		if (extraitem != null)
 		{
 			if ("ItemClass" in extraitem) item_class = extraitem.ItemClass
@@ -167,7 +164,7 @@
 			if ("Slot" in extraitem) item_slot = extraitem.Slot
 		}
 
-		//create item entity
+		// create item entity
 		local item = CreateByClassname(item_class)
 		PopExtUtil.InitEconItem(item, id)
 		item.SetTeam(player.GetTeam())
@@ -183,7 +180,8 @@
 
 		if (!("CustomWeapons" in player.GetScriptScope()))
 			player.GetScriptScope().CustomWeapons <- {}
-		player.GetScriptScope().CustomWeapons[item] <- modelindex
+
+		player.GetScriptScope().CustomWeapons[item] <- {modelidx = modelindex, name = itemname, original_itemname = original_itemname} 
 		item.ValidateScriptScope()
 		local scope = item.GetScriptScope()
 		scope.ItemThinkTable <- {}
@@ -193,7 +191,7 @@
 		//if max ammo needs to be changed, create a tf_wearable and assign attributes to it
 		if (item_slot == "primary")
 		{
-			if (this.TF_AMMO_PER_CLASS_PRIMARY[playerclass] != this.TF_AMMO_PER_CLASS_PRIMARY[animset])
+			if (TF_AMMO_PER_CLASS_PRIMARY[playerclass] != TF_AMMO_PER_CLASS_PRIMARY[animset])
 			{
 				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
@@ -212,7 +210,7 @@
 					}
 					player.GetScriptScope().ExtraLoadout.append(ammofix) //for clean up
 				}
-				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden primary max ammo bonus", this.TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / this.TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0)
+				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden primary max ammo bonus", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0)
 				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
 				SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 1), 1)
 			}
@@ -220,7 +218,7 @@
 
 		if (item_slot == "secondary")
 		{
-			if (this.TF_AMMO_PER_CLASS_SECONDARY[playerclass] != this.TF_AMMO_PER_CLASS_SECONDARY[animset])
+			if (TF_AMMO_PER_CLASS_SECONDARY[playerclass] != TF_AMMO_PER_CLASS_SECONDARY[animset])
 			{
 				if (!("ammofix" in player.GetScriptScope().CustomWeapons))
 				{
@@ -239,7 +237,7 @@
 					}
 					player.GetScriptScope().ExtraLoadout.append(ammofix) //for clean up
 				}
-				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden secondary max ammo penalty", this.TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / this.TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0)
+				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute("hidden secondary max ammo penalty", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0)
 				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
 				SetPropIntArray(player, "m_iAmmo", GetMaxAmmo(player, 2), 2)
 			}
@@ -269,11 +267,10 @@
 			// Apply attributes
 			// THIS MUST BE DONE AFTER WEAPON_EQUIP!!!
 			// Normal attributes can work for owner-less items, custom attributes cannot.
-
 			if (extraitem != null)
-			foreach (attribute, value in extraitem)
-				if (!(attribute in reservedKeywords))
-					PopExtUtil.SetPlayerAttributes(player, attribute, value, item)
+				foreach (attribute, value in extraitem)
+					if (!(attribute in reservedKeywords))
+						PopExtUtil.SetPlayerAttributes(player, attribute, value, item, true)
 
 			// copied from ficool2 mw2_highrise
 			// viewmodel
@@ -330,7 +327,10 @@
 			SetPropEntity(hands2, "m_hWeaponAssociatedWith", item)
 			SetPropEntity(item, "m_hExtraWearableViewModel", hands2)
 
-			player.Weapon_Switch(item)
+			// Doesn't work, needs entfire delay
+			// player.Weapon_Switch(item)
+
+			PopExtUtil.WeaponSwitchSlot(player, item.GetSlot())
 		}
 		return item;
 	}
@@ -407,11 +407,11 @@
 				local activeweapon = self.GetActiveWeapon()
 				if (activeweapon in self.GetScriptScope().CustomWeapons)
 				{
-					if (("worldmodel" in self.GetScriptScope().CustomWeapons) && (GetPropInt(self.GetScriptScope().CustomWeapons.worldmodel, "m_nModelIndex") != self.GetScriptScope().CustomWeapons[activeweapon]))
+					if (("worldmodel" in self.GetScriptScope().CustomWeapons) && (GetPropInt(self.GetScriptScope().CustomWeapons.worldmodel, "m_nModelIndex") != self.GetScriptScope().CustomWeapons[activeweapon].modelidx))
 					{
 						if (self.GetScriptScope().CustomWeapons.worldmodel.IsValid()) self.GetScriptScope().CustomWeapons.worldmodel.Kill()
 
-						local modelindex = self.GetScriptScope().CustomWeapons[activeweapon]
+						local modelindex = self.GetScriptScope().CustomWeapons[activeweapon].modelidx
 						local tpWearable = CreateByClassname("tf_wearable")
 						SetPropInt(tpWearable, "m_iTeamNum", self.GetTeam())
 						SetPropInt(tpWearable, "m_nModelIndex", modelindex)
@@ -454,11 +454,11 @@
 		switch(slot) {
 			case 1: //primary ammo
 				attributearray = ["hidden primary max ammo bonus", "maxammo primary increased", "maxammo primary reduced"]
-				slottable = this.TF_AMMO_PER_CLASS_PRIMARY
+				slottable = TF_AMMO_PER_CLASS_PRIMARY
 				break
 			case 2: //secondary ammo
 				attributearray = ["hidden secondary max ammo penalty", "maxammo secondary increased", "maxammo secondary reduced"]
-				slottable = this.TF_AMMO_PER_CLASS_SECONDARY
+				slottable = TF_AMMO_PER_CLASS_SECONDARY
 				break
 			case 3: //metal
 				attributearray = ["maxammo metal increased", "maxammo metal reduced"]

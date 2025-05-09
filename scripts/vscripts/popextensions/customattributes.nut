@@ -56,17 +56,12 @@
 
 				CustomAttributes.TakeDamageTable[format("FireMilkBolt_%d_%d", player.GetScriptScope().userid, wep.entindex())] <- function(params) {
 
-
-					// local victim = GetPlayerFromUserID(params.userid)
-					// local attacker = GetPlayerFromUserID(params.attacker)
 					local victim = params.const_entity
 					local attacker = params.attacker
 
 					if (!attacker || !victim.IsPlayer()) return
 
 					local wep = PopExtUtil.HasItemInLoadout(player, params.weapon)
-
-					// printl(EntIndexToHScript(params.weaponid))
 
 					local scope = wep ? scope = wep.GetScriptScope() : false
 
@@ -374,8 +369,6 @@
 				if (!("rechargeset" in teleportscope)) teleportscope.rechargeset <- false
 
 				teleportscope.TeleportMultThink <- function() {
-
-					// printl(GetPropFloat(teleporter, "m_flCurrentRechargeDuration"))
 
 					if (!teleportscope.rechargeset)
 					{
@@ -884,25 +877,18 @@
 				local wep = PopExtUtil.HasItemInLoadout(player, item)
 				if (wep == null) continue
 
-				// local i = 1
+				wep.GetScriptScope().ItemThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid, wep.entindex())] <- function() {
 
-				// wep.GetScriptScope().ItemThinkTable[format("IsMiniBoss_%d_%d", player.GetScriptScope().userid, wep.entindex())] <- function() {
+					if (player.GetActiveWeapon() == wep) {
 
-				// 	if (player.GetActiveWeapon() == wep && !player.IsMiniBoss() && player.GetModelScale() == 1.0) {
+						player.SetIsMiniBoss(true)
+						player.SetModelScale(1.75, -1)
+						return
+					}
+					player.SetIsMiniBoss(false)
+					player.SetModelScale(1.0, -1)
 
-				// 		player.SetIsMiniBoss(true)
-				// 		player.SetModelScale(1.75, -1)
-				// 	}
-
-				// 	if (!i)
-				// 	{
-				// 		player.SetIsMiniBoss(false)
-				// 		player.SetModelScale(1.0, -1)
-				// 	}
-
-				// 	i++
-				// 	if (i > 10) i = 0
-				// }
+				}
 			}
 			player.GetScriptScope().attribinfo["is miniboss"] <- "When weapon is active: player becomes giant"
 		}
@@ -967,8 +953,6 @@
 							player.StopSound(value[0])
 							EmitSoundEx({sound_name = value[1], entity = player})
 						}
-	
-						// EntFireByHandle(player, "RunScriptCode", "EmitSoundEx({sound_name = "+value[1]+", entity = self})", -1, null, null)
 	
 						scope.attacksound = GetPropFloat(wep, "m_flLastFireTime")
 					}
@@ -1038,21 +1022,18 @@
 
 				wep.GetScriptScope().ItemThinkTable[format("CannotUpgrade_%d_%d", player.GetScriptScope().userid, wep.entindex())] <- function() {
 
-					if (player.GetActiveWeapon() != wep) return
-
-					if (GetPropBool(player, "m_Shared.m_bInUpgradeZone") && PopExtUtil.GetItemIndex(wep) != -1)
+					if (PopExtUtil.InUpgradeZone(player))
 					{
-						DoEntFire("func_upgradestation", "EndTouch", "", -1, player, player)
-						ClientPrint(player, HUD_PRINTCENTER, "This weapon cannot be upgraded")
+						if (GetPropInt(wep, STRING_NETPROP_ITEMDEF) != -1 && player.GetActiveWeapon() == wep)
+							ClientPrint(player, HUD_PRINTCENTER, "This weapon cannot be upgraded")
+
 						SetPropInt(wep, STRING_NETPROP_ITEMDEF, -1)
 						SetPropString(wep, "m_iClassname", "")
 						return
 					}
-					else if (PopExtUtil.GetItemIndex(wep) == -1)
-					{
-						SetPropString(wep, "m_iClassname", classname)
-						SetPropInt(wep, STRING_NETPROP_ITEMDEF, index)
-					}
+					SetPropString(wep, "m_iClassname", classname)
+					SetPropInt(wep, STRING_NETPROP_ITEMDEF, index)
+					
 				}
 			}
 			player.GetScriptScope().attribinfo["cannot upgrade"] <- "Weapon cannot be upgraded"
@@ -1535,8 +1516,6 @@
 
 				scope.ItemThinkTable[format("ReloadFullClipAtOnce_%d_%d", player.GetScriptScope().userid, wep.entindex())] <- function() {
 
-					if (player.GetActiveWeapon() != wep) return
-
 					local currentClip = wep.Clip1()
 					local wepSlot = wep.GetSlot() + 1
 
@@ -1884,7 +1863,9 @@
 
 	function AddAttr(player, attr_string, value = 0, item = null) {
 
-		local attr = split(attr_string, " ", true).len() > 1 ? this.GetAttributeFunctionFromStringName(attr_string) : attr_string
+		PopExtMain.Error.DeprecationWarning("CustomAttributes::AddAttr.  Unless you're passing a table or array,", "PopExtUtil::SetPlayerAttributes")
+
+		local attr = split(attr_string, " ", true).len() > 1 ? GetAttributeFunctionFromStringName(attr_string) : attr_string
 
 		local item_table = {}
 
@@ -1911,7 +1892,7 @@
 
 			// invalid item
 			default:
-				error( "ERROR: **POPEXTENSIONS WARNING: Invalid item passed to CustomAttributes::AddAttr!**\n" )
+				PopExtMain.Error.RaiseValueError( "Invalid item (" + item + ") passed to CustomAttributes::AddAttr!" )
 				break
 		}
 
@@ -1922,7 +1903,6 @@
 		local t = ["TakeDamageTable", "TakeDamagePostTable", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable"]
 		foreach (tablename in t)
 			foreach(table, func in CustomAttributes[tablename])
-				//remove the attribute for the player from the global CustomAttributes event table
 				if (tablename in CustomAttributes)
 					CustomAttributes.CleanupFunctionTable(player, table, attr)
 
@@ -1937,11 +1917,9 @@
 		{
 			local wep = PopExtUtil.HasItemInLoadout(player, item)
 
-			if (wep == null || !(attr in CustomAttributes.Attrs)) return
+			if (wep == null || !(attr in CustomAttributes.Attrs)) continue
 
 			CustomAttributes.Attrs[attr](player, item_table, value)
-
-			// printl(CustomAttributes.Attrs[attr])
 
 			CustomAttributes.RefreshDescs(player)
 		}
@@ -1953,8 +1931,6 @@
 
 		local scope = player.GetScriptScope()
 		local formattedtable = []
-
-		// local formatted = ""
 
 		foreach (desc, attr in scope.attribinfo)
 			if (!formattedtable.find(attr))
@@ -1995,9 +1971,8 @@
 
 	function CleanupFunctionTable(handle, table, attr) {
 
-		local str = this.GetAttributeFunctionFromStringName(attr)
+		local str = GetAttributeFunctionFromStringName(attr)
 
-		// foreach(name, v in table) if (typeof v == "function") printl(name + " : " + format("%s_%d", str, player.GetScriptScope().userid) +  " : " + startswith(name, format("%s_%d", str, player.GetScriptScope().userid)))
 		foreach(name, v in table)
 			if (typeof v == "function" && startswith(name, format("%s_%d", str, handle.GetScriptScope().userid)))
 				delete table[format("%s", name)]
