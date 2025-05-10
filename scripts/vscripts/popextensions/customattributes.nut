@@ -1055,7 +1055,7 @@
 		}
 
 		function AddCondWhenActive(player, items, value) {
-
+			local duration = 0.033
 			foreach(item, attrs in items)
 			{
 				local wep = PopExtUtil.HasItemInLoadout(player, item)

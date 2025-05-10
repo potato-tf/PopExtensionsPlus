@@ -177,14 +177,6 @@ PopExt <- popExtEntity.GetScriptScope()
 				local scope = attacker.GetScriptScope()
 				PopExtHooks.FireHooksParam(attacker, scope, "OnKill", params)
 			}
-
-			// if (player.GetScriptScope() != null && "popWearablesToDestroy" in player.GetScriptScope()) {
-			// 	foreach(i, wearable in player.GetScriptScope().popWearablesToDestroy)
-			// 		if (wearable.IsValid())
-			// 			wearable.Kill()
-
-			// 	delete player.GetScriptScope().popWearablesToDestroy
-			// }
 		}
 
 		function OnGameEvent_npc_hurt(params) {
@@ -198,46 +190,49 @@ PopExt <- popExtEntity.GetScriptScope()
 
 				if (dead && "popProperty" in scope)
 				{
-					if ("SoundOverrides" in scope.popProperty)
+					local pop_property = scope.popProperty
+					if ("SoundOverrides" in pop_property)
 					{
-						if ("Explodes" in scope.popProperty.SoundOverrides)
+						local sound_overrides = pop_property.SoundOverrides
+
+						if ("Explodes" in sound_overrides)
 						{
 							StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
-							EntFire("tf_gamerules", "PlayVO", scope.popProperty.SoundOverrides.Explodes)
+							EntFire("tf_gamerules", "PlayVO", sound_overrides.Explodes)
 						}
 					}
-					if ("NoDeathFX" in scope.popProperty && scope.popProperty.NoDeathFX > 0)
+					if ("NoDeathFX" in pop_property && pop_property.NoDeathFX > 0)
 					{
 						victim.SetAbsOrigin(victim.GetOrigin() - Vector(0, 0, 10000))
-						function FindTankDestructionEnt()
+
+						local has_explode_sound = "SoundOverrides" in pop_property && "Explodes" in pop_property.SoundOverrides && pop_property.SoundOverrides.Explodes
+
+						local temp = CreateByClassname("info_teleport_destination")
+						temp.KeyValueFromString("targetname", "_popext_temp_nodeathfx")
+						temp.SetAbsOrigin(victim.GetOrigin())
+						temp.ValidateScriptScope()
+						temp.GetScriptScope().FindTankDestructionEnt <- function()
 						{
 							for (local destruction; destruction = FindByClassnameWithin(destruction, "tank_destruction", self.GetOrigin(), 1);)
 							{
+								if (pop_property.NoDeathFX == 2 && !has_explode_sound)
+									StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
+
 								EntFireByHandle(destruction, "Kill", "", -1, null, null)
+								self.Kill()
+								return 1
 							}
 
 							return -1
 						}
-						local temp = CreateByClassname("info_teleport_destination")
-						temp.SetAbsOrigin(victim.GetOrigin())
-						temp.ValidateScriptScope()
-						temp.GetScriptScope().FindTankDestructionEnt <- FindTankDestructionEnt
 						AddThinkToEnt(temp, "FindTankDestructionEnt")
-						DispatchSpawn(temp)
-
-						if (scope.popProperty.NoDeathFX > 1)
-						{
-							if ("SoundOverrides" in scope.popProperty && "Explodes" in scope.popProperty.SoundOverrides) return
-
-							StopSoundOn("MVM.TankExplodes", PopExtUtil.Worldspawn)
-						}
 					}
-					if ("IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp)
+					if ("IsBlimp" in pop_property && pop_property.IsBlimp)
 						EntFireByHandle(scope.blimpTrain, "Kill", "", -1, null, null)
 				}
 
-				if (dead && scope && !("popFiredDeathHook" in scope)) {
-
+				if (dead && scope && !("popFiredDeathHook" in scope)) 
+				{
 					scope.popFiredDeathHook <- true
 
 					if ("popProperty" in scope && "Icon" in scope.popProperty) {
@@ -326,58 +321,68 @@ function PopulatorThink() {
 			if (tankName in tankNames)
 				PopExtHooks.AddHooksToScope(tankName, tankNames[tankName], scope)
 
-			if ("popProperty" in scope) {
-
-				if ("TankModel" in scope.popProperty) {
+			if ("popProperty" in scope)
+			{
+				if ("TankModel" in scope.popProperty) 
+				{
 					scope.popProperty.Model <- scope.popProperty.TankModel
 					delete scope.popProperty.TankModel
 				}
 
-				if ("TankModelVisionOnly" in scope.popProperty) {
+				if ("TankModelVisionOnly" in scope.popProperty)
+				{
 					scope.popProperty.ModelVisionOnly <- scope.popProperty.TankModelVisionOnly
 					delete scope.popProperty.TankModelVisionOnly
 				}
 
-				if ("SoundOverrides" in scope.popProperty) {
-
+				if ("SoundOverrides" in scope.popProperty)
+				{
 					foreach (k, v in scope.popProperty.SoundOverrides)
 						PrecacheSound(v)
 
+					local sound_overrides = scope.popProperty.SoundOverrides
+					
+					if ("Destroy" in sound_overrides)
+						scope.popProperty.SoundOverrides.Explodes <- sound_overrides.Destroy
+
+					__DumpScope(0, scope.popProperty)
 					local cooldowntime = 0.0
-					if ("Ping" in scope.popProperty.SoundOverrides) {
+					if ("Ping" in sound_overrides) {
 
 						scope.TankThinkTable.PingSound <- function() {
 							StopSoundOn("MVM.TankPing", self)
 
 							if (Time() < cooldowntime) return
 
-							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Ping, entity = tank})
+							EmitSoundEx({sound_name = sound_overrides.Ping, entity = tank})
 
 							cooldowntime = Time() + 5.0
 						}
 					}
-					if ("EngineLoop" in scope.popProperty.SoundOverrides && !scope.engineloopreplaced) {
+					if ("EngineLoop" in sound_overrides && !scope.engineloopreplaced) {
 
 						StopSoundOn("MVM.TankEngineLoop", tank)
-						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank})
+						EmitSoundEx({sound_name = sound_overrides.EngineLoop, entity = tank})
 
 						PopExtUtil.SetDestroyCallback(tank, function() {
-							EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = self, flags = SND_STOP})
+							// needs both of these?
+							self.StopSound(sound_overrides.EngineLoop)
+							EmitSoundEx({sound_name = sound_overrides.EngineLoop, entity = self, flags = SND_STOP})
 						})
 
 						scope.engineloopreplaced = true
 					}
-					if ("Start" in scope.popProperty.SoundOverrides) {
+					if ("Start" in sound_overrides) {
 						StopSoundOn("MVM.TankStart", tank)
-						EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.Start, entity = tank})
+						EmitSoundEx({sound_name = sound_overrides.Start, entity = tank})
 						delete scope.popProperty.SoundOverrides.Start
 					}
-					if ("Deploy" in scope.popProperty.SoundOverrides) {
+					if ("Deploy" in sound_overrides) {
 
 						//tank becomes a null reference when we start deploying
 						//store the sound in a variable to still play it, then delete the think function when this happens
 
-						local deploysound = scope.popProperty.SoundOverrides.Deploy
+						local deploysound = sound_overrides.Deploy
 
 						scope.TankThinkTable.DeploySound <- function() {
 
@@ -385,8 +390,8 @@ function PopulatorThink() {
 
 							StopSoundOn("MVM.TankDeploy", self)
 
-							if ("EngineLoop" in scope.popProperty.SoundOverrides)
-								EmitSoundEx({sound_name = scope.popProperty.SoundOverrides.EngineLoop, entity = tank, flags = SND_STOP})
+							if ("EngineLoop" in sound_overrides)
+								EmitSoundEx({sound_name = sound_overrides.EngineLoop, entity = tank, flags = SND_STOP})
 
 							EmitSoundEx({sound_name = deploysound, entity = tank})
 

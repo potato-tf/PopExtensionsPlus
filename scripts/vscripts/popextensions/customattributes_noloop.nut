@@ -466,7 +466,6 @@
 
                 return
             }
-			local duration = 0.033
 			if ("duration" in value) duration = value.duration
 			player.GetScriptScope().attribinfo["last shot crits"] <- format("Crit boost on last shot. Crit boost will stay active for %.2f seconds after holster", duration.tofloat())
 		}

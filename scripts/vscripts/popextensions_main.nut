@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "05.09.2025.1"
+::popExtensionsVersion <- "05.09.2025.2"
 
 local ROOT = getroottable()
 

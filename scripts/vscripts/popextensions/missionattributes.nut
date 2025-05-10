@@ -1672,13 +1672,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 			local TankSounds = {
 
-				"MVM.TankStart" : null
-				// "MVM.TankEnd" : null
-				"MVM.TankPing" : null
-				"MVM.TankEngineLoop" : null
-				// "MVM.TankSmash" : null
-				"MVM.TankDeploy" : null
-				"MVM.TankExplodes" : null
+				"MVM.TankStart"		 : "SOUNDOVERRIDE_PLACEHOLDER"
+				"MVM.TankEnd" 		 : "SOUNDOVERRIDE_PLACEHOLDER"
+				"MVM.TankPing" 		 : "SOUNDOVERRIDE_PLACEHOLDER"
+				"MVM.TankEngineLoop" : "SOUNDOVERRIDE_PLACEHOLDER"
+				"MVM.TankSmash" 	 : "SOUNDOVERRIDE_PLACEHOLDER"
+				"MVM.TankDeploy" 	 : "SOUNDOVERRIDE_PLACEHOLDER"
+				"MVM.TankExplodes" 	 : "SOUNDOVERRIDE_PLACEHOLDER"
 			}
 
 			// local BroadcastAudioSounds = {
@@ -1734,13 +1734,13 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 					if (!("popProperty" in scope)) scope.popProperty <- {}
 					if (!("SoundOverrides" in scope)) scope.popProperty.SoundOverrides <- {}
-
+					local sound_overrides = scope.popProperty.SoundOverrides
 					foreach (tanksound, tankoverride in TankSounds)
 					{
 						local tanksound_popproperty = split(tanksound, "k")[1]
 
-						if (!(tanksound_popproperty in scope.popProperty.SoundOverrides))
-							scope.popProperty.SoundOverrides[tanksound_popproperty] <- tankoverride
+						if (!(tanksound_popproperty in sound_overrides) && tankoverride != "SOUNDOVERRIDE_PLACEHOLDER")
+							sound_overrides[tanksound_popproperty] <- tankoverride
 					}
 				}
 			}

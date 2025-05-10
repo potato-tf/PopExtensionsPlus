@@ -319,11 +319,6 @@ WaveSchedule
 					}
                 })
 
-                // PopExt.SetWaveIconsFunction(function() {
-                    // PopExt.SetWaveIconSpawnCount(`blimp2_lite`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
-                    // PopExt.SetWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
-                // })
-
                 PopExt.AddTankName(`abc*`, {
                     OnSpawn = function(tank, name) {
                         local prop = SpawnEntityFromTable(`prop_dynamic`, {model = `models/props_badlands/barrel01.mdl`, origin = `0 0 79`})
@@ -334,15 +329,14 @@ WaveSchedule
 
                         tank.KeyValueFromString(`rendercolor`, `255 0 0`)
                     },
-                    // OnDeath = function(tank, params) {
-                    //     PopExt.DecrementWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
-                    // }
                     Scale = `0.5`
                     DisableSmoke = true
+					NoDeathFX = 2
                 })
-				PopExt.AddCustomTankIcon(`blimp2_lite`, 1, true, false, false, false)
+
                 PopExt.AddTankName(`tank2`, {
                     IsBlimp = true
+					Icon = `blimp2_lite`
 					StartTrack = `extratankpath2_1` //this is only required for blimps so the func_tracktrain knows where to go
 					CritImmune = true
 					NoScreenShake = true
@@ -359,35 +353,34 @@ WaveSchedule
                 })
             "
 		}
-        // WaveSpawn
-        // {
-        //     Name "Wave2"
-        //     TotalCount 1
-        //     TotalCurrency 0
-
-        //     Tank
-        //     {
-        //         Health 100
-        //         Speed 75
-        //         Name "abcd"
-        //         StartingPathTrackNode "extratankpath1_1"
-
-        //         OnBombDroppedOutput
-        //         {
-        //             Target boss_deploy_relay
-        //             Action Trigger
-        //         }
-        //     }
-        // }
         WaveSpawn
         {
-            Name "Wave2"
+            Name "Wave2a"
             TotalCount 1
             TotalCurrency 0
-
             Tank
             {
-                Health 10000
+                Health 100
+                Speed 75
+                Name "abcd"
+                StartingPathTrackNode "extratankpath1_1"
+
+                OnBombDroppedOutput
+                {
+                    Target boss_deploy_relay
+                    Action Trigger
+                }
+            }
+        }
+        WaveSpawn
+        {
+            Name "Wave2b"
+            TotalCount 1
+            TotalCurrency 0
+			WaitForAllDead "Wave2a"
+            Tank
+            {
+                Health 100
                 Speed 70
                 Name "tank2"
                 Skin 0
@@ -400,13 +393,6 @@ WaveSchedule
                 }
             }
         }
-		WaveSpawn
-		{
-			Name "Wave3"
-			Where spawnbot
-			TotalCount 1
-			TotalCurrency 0
-		}
 	}
 
 	Wave
