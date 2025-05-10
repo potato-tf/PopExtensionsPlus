@@ -1546,7 +1546,8 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 							local wep = PopExtUtil.HasItemInLoadout(player, _item)
 							if (wep == null) return
 
-							PopExtUtil.SetPlayerAttributes(player, attr, value, wep)
+							foreach(attrib, value in attr)
+								PopExtUtil.SetPlayerAttributes(player, attrib, value, wep)
 						}
 					}
 					else
