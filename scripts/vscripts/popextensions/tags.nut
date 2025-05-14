@@ -240,6 +240,12 @@ local popext_funcs = {
 		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PlayerRobotModel(self, `%s`)", bonemerge_model), SINGLE_TICK)
 		bot.GetScriptScope().usingcustommodel <- true
 
+		bot.GetScriptScope().TakeDamageTable.BonemergeDeathModel <- function(params)
+		{
+			local victim = params.const_entity
+			if (victim != bot || victim.GetHealth() - params.damage > 0) return
+			bot.AcceptInput("SetCustomModelWithClassAnimations", bonemerge_model, null, null)
+		}
 	}
 
     /**********************************************************
