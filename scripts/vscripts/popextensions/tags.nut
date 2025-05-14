@@ -596,8 +596,6 @@ local popext_funcs = {
 		}
 	}
 
-	//FIX THIS
-
 	popext_mobber = function(bot, args) {
 
 		local threat_type = "threat_type" in args ? args.threat_type : "closest"
