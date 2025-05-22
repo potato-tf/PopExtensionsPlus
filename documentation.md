@@ -287,7 +287,11 @@ Tag "popext_reprogrammed"
 ```
 
 >[!NOTE]
->This applies `ammo regen 999` and `cannot pick up intelligence 1` to the bot automatically.  Use `popext_addcond{cond = TF_COND_REPROGRAMMED}` if you don't want this
+>Additional behavior/attributes set:
+> - `ammo regen 999`
+> - `cannot pick up intelligence 1`.
+> - 
+> Use `popext_addcond{cond = TF_COND_REPROGRAMMED}` if you don't want this
 
 ---
 

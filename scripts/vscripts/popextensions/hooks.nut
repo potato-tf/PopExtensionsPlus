@@ -208,7 +208,7 @@ PopExt <- popExtEntity.GetScriptScope()
 						local has_explode_sound = "SoundOverrides" in pop_property && "Explodes" in pop_property.SoundOverrides && pop_property.SoundOverrides.Explodes
 
 						local temp = CreateByClassname("info_teleport_destination")
-						temp.KeyValueFromString("targetname", "_popext_temp_nodeathfx")
+						temp.KeyValueFromString("targetname", "__popext_temp_nodeathfx")
 						temp.SetAbsOrigin(victim.GetOrigin())
 						temp.ValidateScriptScope()
 						temp.GetScriptScope().FindTankDestructionEnt <- function()
@@ -430,7 +430,7 @@ function PopulatorThink() {
 
 				//does not work
 				if ("NoScreenShake" in scope.popProperty && scope.popProperty.NoScreenShake)
-					ScreenShake(tank.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true)
+					scope.TankThinkTable.NoScreenShake <- @() ScreenShake(tank.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true)
 
 				if ("IsBlimp" in scope.popProperty && scope.popProperty.IsBlimp) {
 

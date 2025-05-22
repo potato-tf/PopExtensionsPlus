@@ -41,19 +41,8 @@ WaveSchedule
 				// Load popextensions script
 				IncludeScript(`popextensions_main.nut`, getroottable())
 
-				::PointTemplates <- {
-					viewcontrol = {
-						[0] = {
-							point_viewcontrol = {
-								spawnflags = 768 //custom spawnflags to fix viewcontrol + enable for all players
-								vscripts = `popextensions/ent_additions`
-								origin = `1542.759521 -666.897766 806.412964`
-								angles = `0 120 0`
-							}
-						}
-					}
-				}
-				SpawnTemplate(`viewcontrol`)
+				//parameters: text, prefix color, prefix text, sync with game_text true/false
+				Info(`This is an explanation text example|PAUSE 2|Explanation text can support pauses, and optionally syncing chat prints with the game_text|By default, text lifetime is determined by the length of the sentence|See DoExplanation in util.nut for more info`, `FFFF66`, `Explanation: `, true)
 
 				::ExtraItems <-	// Example, make your own script and use ::ExtraItems to set up custom weapon list
 				{
@@ -84,7 +73,6 @@ WaveSchedule
 					WaveStartCountdown = 3
 					SpellRateCommon = 0.5
 					NoSkeleSplit = 1
-					OptimizePathTracks = 1
 					WaveNum = 3
 					MaxWaveNum = 60
 					StandableHeads = 1
@@ -93,7 +81,7 @@ WaveSchedule
 					GiantSentryKillCountOffset = -4
 					ClassLimits = {
 						[TF_CLASS_SCOUT]   = 1,      // Limit class to 1
-						[TF_CLASS_SPY] = 0,      // Prevent class selection
+						[TF_CLASS_SPY] 	   = 1,      // Prevent class selection
 					}
 					SoundOverrides = { //overrides teamplay_broadcast_audio sounds
 						`Announcer.MVM_Get_To_Upgrade`: null
@@ -103,22 +91,22 @@ WaveSchedule
 					}
 					IconOverride = {
 		
-						// heavy_mittens = {
-						// 	wave = 2
-						// 	flags = 0 // see constants.nut for flags
-						// 	count = 2
-						// }
+						heavy_mittens = {
+							wave = 2
+							flags = 0 // see constants.nut for flags
+							count = 2
+						}
 
-						// scout = { //remove from current wave
-						// 	count = 0, //remove
-						// }
+						scout = { //remove from current wave
+							count = 0, //remove
+						}
 
-						// pyro = { //replace with a new icon
-						// 	replace = `scout_bat`
-						// 	count = 20
-						// 	flags = MVM_CLASS_FLAG_ALWAYSCRIT|MVM_CLASS_FLAG_MINIBOSS // see constants.nut for flags
-						// 	index = 4
-						// }
+						pyro = { //replace with a new icon
+							replace = `scout_bat`
+							count = 20
+							flags = MVM_CLASS_FLAG_ALWAYSCRIT|MVM_CLASS_FLAG_MINIBOSS // see constants.nut for flags
+							index = 4
+						}
 					}
 
 					AddCond = [32, 10] //speed boost for 10s
@@ -161,14 +149,17 @@ WaveSchedule
 							`mult dmg vs same class`: 10
 							`replace weapon fire sound`: [ [`Weapon_Liberty_Launcher.Single`, `Weapon_Liberty_Launcher.SingleCrit`], [`weapons/flaregun/fire.wav`, `Weapon_CowMangler.Single`] ],
 						},
-
-						[TF_CLASS_DEMOMAN] = {
-							`fire rate bonus` : 0.5,
-						}
 					},
 					ItemAttributes = {
-						`tf_weapon_scattergun` : {
-							`cannot upgrade` : 1,
+						`Memes vs Machines Player 2019` : {
+							// `set item tint RGB`: 3555399,
+							`set item tint RGB`: 4669494,
+							`set item tint RGB 2`: 4079424,
+							`item style override`: 1,
+						}
+						`Madness vs Machines Hopeful Heart 2019`: {
+							`set item tint RGB 2`: 9894655,
+
 						}
 					}
 				})
@@ -202,9 +193,10 @@ WaveSchedule
 				Tag "popext_forceromevision"
 				Tag "popext_addcond{cond = 32, duration = 10}"
 				Tag "popext_alwaysglow"
+				// remove 2 scout_bats per death, positive values will add icons on death
 				Tag "popext_iconoverride{
 					icon = `scout_bat`
-					count = 2
+					count = -2
 				}"
 				Tag "popext_actionpoint{
 						target = `-648 4802 234`
@@ -319,7 +311,7 @@ WaveSchedule
 					}
                 })
 
-                PopExt.AddTankName(`abc*`, {
+                PopExt.CustomTank(`abc*`, {
                     OnSpawn = function(tank, name) {
                         local prop = SpawnEntityFromTable(`prop_dynamic`, {model = `models/props_badlands/barrel01.mdl`, origin = `0 0 79`})
 
@@ -334,7 +326,7 @@ WaveSchedule
 					NoDeathFX = 2
                 })
 
-                PopExt.AddTankName(`tank2`, {
+                PopExt.CustomTank(`tank2`, {
                     IsBlimp = true
 					Icon = `blimp2_lite`
 					StartTrack = `extratankpath2_1` //this is only required for blimps so the func_tracktrain knows where to go
@@ -351,7 +343,40 @@ WaveSchedule
 					}
 					// SpawnTemplate = `templateName`
                 })
+				// create a point_viewcontrol with custom ent_additions spawnflags
+				::PointTemplates <- {
+					viewcontrol = {
+						[0] = {
+							point_viewcontrol = {
+								targetname = `viewcontrol_example`
+								spawnflags = 768 //custom spawnflags to fix viewcontrol + enable for all players
+								vscripts = `popextensions/ent_additions`
+								origin = `32 4892 659`
+								angles = `23 -47 0`
+							}
+						}
+					}
+				}
             "
+		}
+		StartWaveOutput
+		{
+			Target bignet
+			Action RunScriptCode
+			Param "
+				EntFire(`wave_start_relay`, `Trigger`)
+
+				SpawnTemplate(`viewcontrol`)
+
+				// the name ends with 1 due to name fixup, set NoFixup 1 in 'viewcontrol' to disable this
+				EntFire(`viewcontrol_example1`, `Enable`, 1)
+				EntFire(`viewcontrol_example1`, `Disable`, 3)
+			"
+		}
+		DoneOutput
+		{
+			Target wave_finished_relay
+			Action trigger
 		}
         WaveSpawn
         {
@@ -406,7 +431,10 @@ WaveSchedule
 
 				// Besides loading your 'point templates' from a separate pointtemplates.nut file,
 				// you can also add them on the fly
-				if(!(`PointTemplates` in getroottable())) ::PointTemplates <- {}
+
+				if(!(`PointTemplates` in getroottable()))
+					::PointTemplates <- {}
+
 				PointTemplates.SampleTemplateName <- {
 					NoFixup = 1, //Name fix-up behaves somewhat similarly to point_template name fix-up, appending a unique number to the end of the targetname to separate identical templates.  Set NoFixup 1 to disable this behavior
 					[0] = { //first entity to spawn in the template
@@ -471,7 +499,8 @@ WaveSchedule
 				// The original StartWaveOutput trigger, change if necessary
 				EntFire(`wave_start_relay`, `Trigger`)
 
-				// SpawnTemplate's signature is (string pointtemplatename, handle parent = null, string|vector origin = '', string|QAngle angles = '')
+				// SpawnTemplate's args: (string pointtemplatename, handle parent = null, origin = '', angles = '')
+				// origin/angles will also accept Vectors/QAngles
 				// calling SpawnTemplate here will spawn when the wave starts
 				SpawnTemplate(`Sentry`, null, `0 -800 500`)
 
@@ -616,7 +645,6 @@ WaveSchedule
 								damage = 300
 								radius = 100
 								team = TF_TEAM_RED
-
 							}
 						}
 						`The Sandman` : { //strings with spaces require this syntax.
@@ -627,8 +655,6 @@ WaveSchedule
 						}
 					}
 				})
-				//parameters: text, prefix color, prefix text, sync with game_text true/false
-				Info(`This is an explanation text example|PAUSE 2|Explanation text can support pauses, and optionally syncing chat prints with the game_text|By default, text lifetime is determined by the length of the sentence|See DoExplanation in util.nut for more info`, `FFFF66`, `Explanation: `, true)
 			"
 		}
 		StartWaveOutput

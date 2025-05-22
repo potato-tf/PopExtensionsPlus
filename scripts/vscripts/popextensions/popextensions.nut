@@ -49,6 +49,9 @@ function PopExt::AddTankName(name, table) {
 		PopExt.tankNames[name] <- table
 }
 
+// wrapper with more intuitive name
+PopExt.CustomTank <- PopExt.AddTankName
+
 function PopExt::_PopIncrementTankIcon(icon) {
 	local flags = MVM_CLASS_FLAG_NORMAL
 	if (icon.isCrit) {

@@ -4,8 +4,8 @@
 
 const EFL_USER = 1048576
 
-local GlobalFixesEntity = FindByName(null, "_popext_globalfixes")
-if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "_popext_globalfixes" })
+local GlobalFixesEntity = FindByName(null, "__popext_globalfixes")
+if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "__popext_globalfixes" })
 
 ::GlobalFixes <- {
 

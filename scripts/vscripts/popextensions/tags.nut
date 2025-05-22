@@ -1039,8 +1039,6 @@ local popext_funcs = {
      *                                                                *
      * When an engi-bot builds something, replace it with a dispenser *
      *                                                                *
-     * replace sentry gun with a dispenser                            *
-	 * 																  *
      * Example: popext_dispenseroverride{ type = OBJ_SENTRYGUN }      *
      ******************************************************************/
 
@@ -2069,41 +2067,7 @@ local popext_funcs = {
 			if (bot.GetHealth() < ifhealthbelow) return
 			if (ifseetarget && !aibot.IsThreatVisible( aibot.FindClosestThreat( INT_MAX, false ) )) return
 
-			PopExtUtil.PlayerScriptEntFire(bot, format(@"
-				SetPropInt(self, `m_nRenderMode`, kRenderTransColor)
-				SetPropInt(self, `m_clrRender`, 0)
-				local dummy = CreateByClassname(`funCBaseFlex`)
-				dummy.KeyValueFromString(`targetname`, format(`__bot_dummy_model%d`, self.entindex()))
-
-				dummy.SetModel(self.GetModelName())
-				dummy.SetAbsOrigin(self.GetOrigin())
-				dummy.SetSkin(self.GetSkin())
-				dummy.SetAbsAngles(QAngle(0, self.EyeAngles().y, 0))
-
-				DispatchSpawn(dummy)
-				dummy.AcceptInput(`SetParent`, `!activator`, self, self)
-
-				dummy.ResetSequence(typeof(%s) == dummy.LookupSequence(%s))
-				dummy.SetPlaybackRate(%f)
-
-				dummy.ValidateScriptScope()
-				dummy.GetScriptScope().PlaySequenceThink <- function() {
-
-					dummy.KeyValueFromVector(`origin`, self.GetOrigin())
-					dummy.KeyValueFromString(`angles`, self.GetAbsAngles().ToKVString())
-
-					if (GetPropFloat(self, `m_flCycle`) >= 0.99)
-					{
-						SetPropInt(self, `m_clrRender`, 0xFFFFFFFF)
-						if (self.IsValid())
-							self.Kill()
-						return
-					}
-					dummy.StudioFrameAdvance()
-					return -1
-				}
-				AddThinkToEnt(dummy, `PlaySequenceThink`)
-			", sequence, playback_rate), delay, null, null)
+			PopExtUtil.PlayerScriptEntFire(bot, format(@"PopExtUtil.PlayerSequence(self, `%s`, %f)", sequence.tostring(), playback_rate), delay, null, null)
 
 
 			repeats--

@@ -36,11 +36,11 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			MissionAttributes.SetConvar("tf_forced_holiday", value)
 			if (value == kHoliday_None) return
 
-			local ent = FindByName(null, "_popext_missionattr_holiday");
+			local ent = FindByName(null, "__popext_missionattr_holiday");
 			if (ent != null) ent.Kill();
 
 			SpawnEntityFromTable("tf_logic_holiday", {
-				targetname   = "_popext_missionattr_holiday",
+				targetname   = "__popext_missionattr_holiday",
 				holiday_type = value
 			});
 
@@ -2777,7 +2777,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 			{
 				local trigger = CreateByClassname("trigger_multiple")
 				trigger.KeyValueFromString("model", GetPropString(upgradestation, "m_ModelName"))
-				trigger.KeyValueFromString("targetname", "_popext_upgradestop")
+				trigger.KeyValueFromString("targetname", "__popext_upgradestop")
 				trigger.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_CLIENTS)
 				AddOutput(trigger, "OnStartTouch", "!activator", "RunScriptCode", "ClientPrint(self, HUD_PRINTCENTER, `The upgrade station is disabled for this wave.`)", -1, 0)
 				trigger.SetAbsOrigin(upgradestation.GetOrigin())
@@ -3204,8 +3204,8 @@ MissionAttributes.DeathHookTable.ForceRedMoneyKill <- function(params) {
 	}
 }
 
-local MissionAttrEntity = FindByName(null, "_popext_missionattr_ent")
-if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "_popext_missionattr_ent"});
+local MissionAttrEntity = FindByName(null, "__popext_missionattr_ent")
+if (MissionAttrEntity == null) MissionAttrEntity = SpawnEntityFromTable("info_teleport_destination", {targetname = "__popext_missionattr_ent"});
 
 function MissionAttrThink() {
 	if (!MissionAttrEntity || !("MissionAttributes" in ROOT)) return -1; // Prevent error on mission complete

@@ -197,7 +197,7 @@ if (!("_AddThinkToEnt" in ROOT))
 		function OnGameEvent_player_changeclass(params) {
 			local player = GetPlayerFromUserID(params.userid)
 
-			for (local model; model = FindByName(model, "__bot_bonemerge_model");)
+			for (local model; model = FindByName(model, "__util_bonemerge_model");)
 				if (model.GetMoveParent() == player)
 					EntFireByHandle(model, "Kill", "", -1, null, null)
 		}
@@ -280,7 +280,7 @@ if (!("_AddThinkToEnt" in ROOT))
 
 			foreach(c in cleanup) if (c in ROOT) delete ROOT[c]
 
-			EntFire("_popext*", "Kill")
+			EntFire("__popext*", "Kill")
 			EntFire("__util*", "Kill")
 			EntFire("__bot*", "Kill")
 			EntFire("extratankpath*", "Kill")

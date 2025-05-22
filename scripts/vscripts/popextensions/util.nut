@@ -800,7 +800,7 @@
 
 	// LEGACY: keeping this around since some archive missions use it
 	function IsAlive(player) {
-		PopExtMain.Error.DeprecationWarning("PopExtUtil.IsAlive", "player.IsAlive()")
+		PopExtMain.Error.DeprecationWarning("PopExtUtil.IsAlive(player)", "player.IsAlive()")
 		return player.IsAlive()
 	}
 
@@ -834,7 +834,7 @@
 	//sets m_hOwnerEntity and m_hOwner to the same value
 	function _SetOwner(ent, owner) {
 		//incase we run into an ent that for some reason uses both of these netprops for two different entities
-		if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwnerEntity")) 
+		if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwner")) 
 		{
 			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
 			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
@@ -843,7 +843,7 @@
 			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
 		}
 		ent.SetOwner(owner)
-		SetPropEntity(ent, "m_hOwnerEntity", owner)
+		SetPropEntity(ent, "m_hOwner", owner)
 	}
 
 	/**
@@ -1116,14 +1116,18 @@
 		SetPropInt(ent, "m_fEffects", value)
 	}
 
-	// misleading name, this can accept any model
+	// OBSOLETE: Use PlayerBonemergeModel instead
+	// misleading name, this can accept any model 
+	// previously was only used for popext_usehumananimations
 	function PlayerRobotModel(player, model) {
+
+		PopExtMain.Error.DeprecationWarning("PopExtUtil.PlayerRobotModel", "PopExtUtil.PlayerBonemergeModel")
 
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
-
+		
 		local wearable = CreateByClassname("tf_wearable")
-		SetPropString(wearable, "m_iName", "__bot_bonemerge_model")
+		SetPropString(wearable, "m_iName", "__util_bonemerge_model")
 		SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model))
 		SetPropBool(wearable, STRING_NETPROP_ATTACH, true)
 		SetPropEntity(wearable, "m_hOwnerEntity", player)
@@ -1142,6 +1146,86 @@
 				wearable.AcceptInput("SetParent", "!activator", player, player)
 			return -1
 		}
+	}
+
+	function PlayerBonemergeModel(player, model, apply_to_ragdoll = true) {
+
+		player.ValidateScriptScope()
+		local scope = player.GetScriptScope()
+
+		if ("bonemerge_model" in scope && scope.bonemerge_model && scope.bonemerge_model.IsValid())
+			scope.bonemerge_model.Kill()
+
+		local bonemerge_model = CreateByClassname("tf_wearable")
+		SetPropString(bonemerge_model, "m_iName", "__util_bonemerge_model")
+		SetPropInt(bonemerge_model, "m_nModelIndex", PrecacheModel(model))
+		SetPropBool(bonemerge_model, STRING_NETPROP_ATTACH, true)
+		SetPropEntity(bonemerge_model, "m_hOwnerEntity", player)
+		bonemerge_model.SetTeam(player.GetTeam())
+		bonemerge_model.SetOwner(player)
+		DispatchSpawn(bonemerge_model)
+		EntFireByHandle(bonemerge_model, "SetParent", "!activator", -1, player, player)
+		SetPropInt(bonemerge_model, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL)
+		scope.bonemerge_model <- bonemerge_model
+
+		SetPropInt(player, "m_nRenderMode", kRenderTransColor)
+		SetPropInt(player, "m_clrRender", 0)
+
+		scope.PlayerThinkTable.BotModelThink <- function() {
+			if (wearable.IsValid() && (player.IsTaunting() || wearable.GetMoveParent() != player))
+				wearable.AcceptInput("SetParent", "!activator", player, player)
+			return -1
+		}
+	}
+
+	function PlayerSequence(player, sequence, model_override = "", playbackrate = 1.0, freeze_player = false, thirdperson = false) {
+
+		SetPropInt(player, "m_nRenderMode", kRenderTransColor)
+		SetPropInt(player, "m_clrRender", 0)
+		local scope = player.GetScriptScope()
+
+		local has_bonemerge_model = "bonemerge_model" in scope && scope.bonemerge_model && scope.bonemerge_model.IsValid()
+
+		local dummy = CreateByClassname("funCBaseFlex")
+		dummy.KeyValueFromString("targetname", format("__util_sequence_dummy%d", player.entindex()))
+
+		// SetModelSimple is more expensive but handles precaching and refreshes bone cache automatically
+		if (model_override != "")
+			dummy.SetModelSimple(model_override)
+		else
+			dummy.SetModel(has_bonemerge_model ? scope.bonemerge_model.GetModelName() : player.GetModelName())
+
+		dummy.SetAbsOrigin(player.GetOrigin())
+		dummy.SetSkin(player.GetSkin())
+		dummy.SetAbsAngles(QAngle(0, player.EyeAngles().y, 0))
+
+		DispatchSpawn(dummy)
+		dummy.AcceptInput("SetParent", "!activator", player, player)
+
+		dummy.ResetSequence(typeof(sequence) == "string" ? dummy.LookupSequence(sequence) : sequence)
+		dummy.SetPlaybackRate(playbackrate)
+
+		dummy.ValidateScriptScope()
+		dummy.GetScriptScope().PlaySequenceThink <- function() {
+
+			// kv origin/angles are smoothly interpolated, SetOrigin/SetAngles may look choppy in comparison
+			dummy.KeyValueFromVector("origin", player.GetOrigin())
+			dummy.KeyValueFromString("angles", player.GetAbsAngles().ToKVString())
+
+			if (GetPropFloat(dummy, "m_flCycle") >= 0.99)
+			{
+				SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
+				if (freeze_player) LockInPlace(player, false)
+				if (thirdperson) player.AcceptInput("SetForcedTauntCam", "0", null, null)
+				if (dummy.IsValid()) dummy.Kill()
+				return // no -1 think to avoid null instance errors
+			}
+			dummy.StudioFrameAdvance()
+			return -1
+		}
+		AddThinkToEnt(dummy, "PlaySequenceThink")
+		if (freeze_player) LockInPlace(player)
+		if (thirdperson) player.AcceptInput("SetForcedTauntCam", "1", null, null)
 	}
 
 	function HasItemInLoadout(player, index) {
@@ -1181,6 +1265,7 @@
 		if (t != null) return t
 
 		// check for custom weapons
+		// only accepts weapon handle or weapon string name
 		local scope = player.GetScriptScope()
 		if ("CustomWeapons" in scope) {
 			foreach (wep, v in scope.CustomWeapons)
@@ -1198,18 +1283,6 @@
 	}
 	// This was made before StunPlayer was exposed, however StunPlayer doesn't control m_bStunEffects like this does.
 	function StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5, scared = false) {
-
-		// CreateByClassname is significantly faster than SpawnEntityFromTable
-
-		// local utilstun = SpawnEntityFromTable("trigger_stun", {
-		// 	targetname = "__utilstun"
-		// 	stun_type = type
-		// 	stun_duration = duration
-		// 	move_speed_reduction = speedreduce
-		// 	trigger_delay = delay
-		// 	StartDisabled = 0
-		// 	spawnflags = SF_TRIGGER_ALLOW_CLIENTS
-		// })
 
 		local utilstun = CreateByClassname("trigger_stun")
 
@@ -1787,6 +1860,7 @@
 
 
 	function SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT) {
+
 		if (player == null || !player.IsPlayer()) return
 
 		function FindTargetPlayer(passcond) {
