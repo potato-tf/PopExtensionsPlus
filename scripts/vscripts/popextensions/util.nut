@@ -1148,7 +1148,7 @@
 		}
 	}
 
-	function PlayerBonemergeModel(player, model, apply_to_ragdoll = true) {
+	function PlayerBonemergeModel(player, model) {
 
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
@@ -1160,7 +1160,7 @@
 		SetPropString(bonemerge_model, "m_iName", "__util_bonemerge_model")
 		SetPropInt(bonemerge_model, "m_nModelIndex", PrecacheModel(model))
 		SetPropBool(bonemerge_model, STRING_NETPROP_ATTACH, true)
-		SetPropEntity(bonemerge_model, "m_hOwnerEntity", player)
+		SetPropEntity(bonemerge_model, "m_hOwner", player)
 		bonemerge_model.SetTeam(player.GetTeam())
 		bonemerge_model.SetOwner(player)
 		DispatchSpawn(bonemerge_model)

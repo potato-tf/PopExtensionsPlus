@@ -217,7 +217,7 @@ local popext_funcs = {
 
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", format("models/player/%s.mdl", class_string), SINGLE_TICK, null, null)
-		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PlayerRobotModel(self, `%s`)", model), SINGLE_TICK)
+		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PlayerBonemergeModel(self, `%s`)", model), SINGLE_TICK)
 		bot.GetScriptScope().usingcustommodel <- true
 	}
 
@@ -235,16 +235,21 @@ local popext_funcs = {
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
 		local anim_set = "anim_set" in args ? args.anim_set : format("models/player/%s.mdl", class_string)
 		local bonemerge_model = "bonemerge_model" in args ? args.bonemerge_model : format("models/bots/%s/bot_%s.mdl", class_string, class_string)
+		local apply_to_ragdoll = "apply_to_ragdoll" in args ? args.apply_to_ragdoll : true
 
 		EntFireByHandle(bot, "SetCustomModelWithClassAnimations", anim_set, SINGLE_TICK, null, null)
-		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PlayerRobotModel(self, `%s`)", bonemerge_model), SINGLE_TICK)
+		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.PlayerBonemergeModel(self, `%s`)", bonemerge_model), SINGLE_TICK)
 		bot.GetScriptScope().usingcustommodel <- true
 
-		bot.GetScriptScope().TakeDamageTable.BonemergeDeathModel <- function(params)
+		if (apply_to_ragdoll)
 		{
-			local victim = params.const_entity
-			if (victim != bot || victim.GetHealth() - params.damage > 0) return
-			bot.AcceptInput("SetCustomModelWithClassAnimations", bonemerge_model, null, null)
+			bot.GetScriptScope().TakeDamageTable.BonemergeDeathModel <- function(params)
+			{
+				local victim = params.const_entity
+				if (victim == bot && victim.GetHealth() - params.damage <= 0)
+					EntFireByHandle(bot, "SetCustomModelWithClassAnimations", bonemerge_model, -1, null, null)
+					// bot.AcceptInput("SetCustomModelWithClassAnimations", bonemerge_model, null, null)
+			}
 		}
 	}
 

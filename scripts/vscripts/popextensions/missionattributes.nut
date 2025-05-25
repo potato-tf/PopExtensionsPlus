@@ -136,7 +136,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 					victim.SetCustomModelWithClassAnimations(format("models/player/%s.mdl", class_string))
 
-					PopExtUtil.PlayerRobotModel(victim, botmodel)
+					PopExtUtil.PlayerBonemergeModel(victim, botmodel)
 
 					//overwrite the existing bot model think to remove it after taunt
 					victim.GetScriptScope().PlayerThinkTable.BotModelThink <- function() {
@@ -953,7 +953,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 				if (value & 1) {
 					//sticky anims and thruster anims are particularly problematic
 					if (PopExtUtil.HasItemInLoadout(player, "tf_weapon_pipebomblauncher") || PopExtUtil.HasItemInLoadout(player, ID_THERMAL_THRUSTER)) {
-						PopExtUtil.PlayerRobotModel(player, model)
+						PopExtUtil.PlayerBonemergeModel(player, model)
 						return
 					}
 
@@ -964,7 +964,7 @@ if (!("ScriptUnloadTable" in ROOT)) ::ScriptUnloadTable <- {}
 
 				if (value & 2) {
 					if (value & 1) value = value & 1 //incompatible flags
-					PopExtUtil.PlayerRobotModel(player, model)
+					PopExtUtil.PlayerBonemergeModel(player, model)
 				}
 
 				if (value & 4) {
