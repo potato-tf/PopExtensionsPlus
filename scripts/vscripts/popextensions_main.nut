@@ -61,6 +61,14 @@ if (!("_AddThinkToEnt" in ROOT))
 		_AddThinkToEnt(ent, func)
 	}
 }
+
+// include event wrapper here instead of at the bottom as
+// PopExtMain contains and registers events
+try
+	IncludeScript( "popextensions/event_wrapper", ROOT )
+catch ( e )
+	printl( e )
+
 ::PopExtMain <- {
 
 	DebugText = false
