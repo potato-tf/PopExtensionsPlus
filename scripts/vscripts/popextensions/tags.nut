@@ -2407,7 +2407,7 @@ local popext_funcs = {
 
 		local bot = GetPlayerFromUserID(params.userid)
 
-		if (!bot.IsBotOfType(TF_BOT_TYPE)) return
+		if (!bot || !bot.IsValid() || !bot.IsBotOfType(TF_BOT_TYPE)) return
 
 		//this can fire before we are spawned
 		local scope = bot.GetScriptScope()
