@@ -1885,4 +1885,3 @@
 				delete table[ format( "%s", name ) ]
 	}
 }
-PopExtEvents.CollectEvents()
