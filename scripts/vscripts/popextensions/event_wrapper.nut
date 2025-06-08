@@ -56,7 +56,6 @@
                         func(params)
             }
         }
-
         __CollectGameEventCallbacks(PopExtEvents.CompiledEvents)
     }
 }
