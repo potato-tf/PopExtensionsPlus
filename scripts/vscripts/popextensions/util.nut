@@ -542,7 +542,7 @@
 		// avoid infinite loops from post_inventory_application hooks
 		player.AddEFlags(EFL_CUSTOM_WEARABLE)
 
-		SendGlobalGameEvent("post_inventory_application",  { userid = PopExtUtil.GetPlayerUserID(player) })
+		SendGlobalGameEvent("post_inventory_application",  { userid = GetPlayerUserID(player) })
 
 		player.RemoveEFlags(EFL_CUSTOM_WEARABLE)
 
@@ -574,7 +574,7 @@
 	function SetPlayerAttributes(player, attrib, value, item = null, customwep_force = false)
 	{
 		local items = {}
-		
+
 		//setting maxhealth attribs doesn't update current HP
 		local healthattribs = {
 			"max health additive bonus" : null,
@@ -638,6 +638,120 @@
 				if (wep == null || !(customattr_function in CustomAttributes.Attrs)) return
 
 				CustomAttributes.Attrs[customattr_function](player, items, value)
+
+				CustomAttributes.RefreshDescs(player)
+
+				if (PopExtMain.DebugText)
+					foreach(attr, value in attrs)
+						PopExtMain.Error.DebugLog(format("Added custom attribute '%s' to player %d (weapon %d)", customattr_function, player.GetScriptScope().userid, item ? item.entindex() : -1))
+			}
+		}
+		else if ("Attributes" in PopExtItems && attrib in PopExtItems.Attributes)
+		{
+			if ("attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string")
+				PopExtMain.Error.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
+			else
+			{
+				//player attributes
+				if (!item_handle || !(item_handle instanceof CEconEntity))
+					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %.2f, -1)", attrib, value.tofloat()), -1, null, null)
+				else
+				{
+					//custom weapons need their attributes applied immediately
+					if ("CustomWeapons" in scope && item_handle in scope.CustomWeapons)
+					{
+						item_handle.AddAttribute(attrib, value.tofloat(), -1)
+						item_handle.ReapplyProvision()
+					}
+					else
+					{
+						// warpaint attributes need the full float value, rest can be truncated for cleaner printouts
+						local formatstr = attrib in specialattribs ?
+							format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()) :
+							format("self.AddAttribute(`%s`, %.2f, -1); self.ReapplyProvision()", attrib, value.tofloat())
+						EntFireByHandle(item_handle, "RunScriptCode", formatstr, -1, null, null)
+					}
+				}
+
+				if (attrib in healthattribs)
+					EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
+			}
+			//add hidden attributes to our custom attribute display
+			if (
+				"hidden" in PopExtItems.Attributes[attrib]
+				&& PopExtItems.Attributes[attrib]["hidden"] == "1"
+				&& "ShowHiddenAttributes" in MissionAttributes.CurAttrs
+				&& MissionAttributes.CurAttrs.ShowHiddenAttributes
+			) {
+				if (!("attribinfo" in scope)) scope.attribinfo <- {}
+
+				scope.attribinfo[attrib] <- format("%s: %s" attrib, value.tostring())
+				CustomAttributes.RefreshDescs(player)
+			}
+		}
+	}
+	function SetPlayerAttributesNoLoop(player, attrib, value, item = null, customwep_force = false)
+	{
+		local items = {}
+
+		//setting maxhealth attribs doesn't update current HP
+		local healthattribs = {
+			"max health additive bonus" : null,
+			"max health additive penalty": null,
+			"SET BONUS: max health additive bonus": null,
+			"hidden maxhealth non buffed": null,
+		}
+
+		//some attributes require special handling of their values
+		local specialattribs = {
+
+			"paintkit_proto_def_index" : function() {
+				value = casti2f(value.tointeger())
+			}
+		}
+
+		if (attrib in specialattribs)
+			specialattribs[attrib]()
+
+		local item_handle = HasItemInLoadout(player, item)
+		local scope = player.GetScriptScope()
+
+		if ( item_handle in scope.CustomWeapons && !customwep_force )
+		{
+			PopExtMain.Error.DebugLog("Ignoring attributes for custom weapon: " + item)
+			return
+		}
+
+		if (item_handle && item_handle.IsValid())
+			items[item_handle] <- [attrib, value]
+		else
+			for (local i = 0; i < GetPropArraySize(player, STRING_NETPROP_MYWEAPONS); i++)
+				if (GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i))
+					items[GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)] <- [attrib, value]
+
+		//do the customattributes check first, since we replace some vanilla attributes
+		local customattr_function = CustomAttributes.GetAttributeFunctionFromStringName(attrib)
+
+		if (customattr_function in CustomAttributes.Attrs)
+		{
+			//easy access table in player scope for our items and their attributes
+			scope.CustomAttrItems <- items
+
+			PopExtEvents.AddRemoveEventHook("*", format("%s_%d_*", customattr_function, GetPlayerUserID(player)), null)
+
+			//cleanup item thinks
+			foreach(item, _ in items)
+				CustomAttributes.CleanupFunctionTable(item, "ItemThinkTable", customattr_function)
+
+			if (!("attribinfo" in scope)) scope.attribinfo <- {}
+
+			foreach(item, attrs in items)
+			{
+				local wep = HasItemInLoadout(player, item)
+
+				if (wep == null || !(customattr_function in CustomAttributes.Attrs)) return
+
+				CustomAttributes.Attrs[customattr_function](player, wep, value)
 
 				CustomAttributes.RefreshDescs(player)
 
