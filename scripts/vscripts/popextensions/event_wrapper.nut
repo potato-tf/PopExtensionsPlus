@@ -68,21 +68,21 @@
         if ( old_table_name in PopExtEvents )
             old_table = PopExtEvents[ old_table_name ]
 
-        foreach ( event, event_table in EventsPreCollect )
+        foreach ( event, new_table in EventsPreCollect )
         {
-            __DumpScope( 0, event_table )
-            local call_order = array( event_table.len() )
+            // __DumpScope( 0, new_table )
+            local call_order = array( new_table.len() )
 
-            foreach ( index, func_table in event_table )
+            foreach ( index, func_table in new_table )
                 if ( index != "unordered" )
                     call_order[ index ] = func_table
 
-            if ( "unordered" in event_table )
-                call_order[ call_order.len() - 1 ] = event_table[ "unordered" ]
+            if ( "unordered" in new_table )
+                call_order[ call_order.len() - 1 ] = new_table[ "unordered" ]
 
             foreach ( tbl in call_order )
                 foreach ( name, func in tbl )
-                    if ( name in old_table && !( name in event_table ) )
+                    if ( name in old_table && !( name in new_table ) )
                         delete old_table[ name ]
 
             local event_string = event == "OnTakeDamage" ? "OnScriptHook_" : "OnGameEvent_"

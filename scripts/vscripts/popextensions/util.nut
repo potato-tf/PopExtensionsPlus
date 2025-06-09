@@ -597,7 +597,7 @@
 		local item_handle = HasItemInLoadout(player, item)
 		local scope = player.GetScriptScope()
 
-		if ( item_handle in scope.CustomWeapons && !customwep_force )
+		if ( "CustomWeapons" in scope  && item_handle in scope.CustomWeapons && !customwep_force )
 		{
 			PopExtMain.Error.DebugLog("Ignoring attributes for custom weapon: " + item)
 			return
@@ -716,7 +716,7 @@
 		local item_handle = HasItemInLoadout(player, item)
 		local scope = player.GetScriptScope()
 
-		if ( item_handle in scope.CustomWeapons && !customwep_force )
+		if ( "CustomWeapons" in scope && item_handle in scope.CustomWeapons && !customwep_force )
 		{
 			PopExtMain.Error.DebugLog("Ignoring attributes for custom weapon: " + item)
 			return
@@ -772,7 +772,7 @@
 				else
 				{
 					//custom weapons need their attributes applied immediately
-					if ("CustomWeapons" in scope && item_handle in scope.CustomWeapons)
+					if ( "CustomWeapons" in scope && item_handle in scope.CustomWeapons )
 					{
 						item_handle.AddAttribute(attrib, value.tofloat(), -1)
 						item_handle.ReapplyProvision()

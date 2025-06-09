@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "05.09.2025.2"
+::popExtensionsVersion <- "06.09.2025.1"
 
 local ROOT = getroottable()
 
@@ -79,7 +79,9 @@ catch ( e )
 	ManualCleanup = false
 
 
-	//ignore these variables when cleaning up
+	// ignore these variables when cleaning up
+	// "Preserved" is a special table that will persist through the cleanup process
+	// any player scoped variables you want to use across multiple waves should be added here
 	IgnoreTable = {
 		"self"         : null
 		"__vname"      : null
@@ -157,6 +159,19 @@ catch ( e )
 		}
 	}
 	Events = {
+		function OnGameEvent_player_spawn(params) {
+
+			local player = GetPlayerFromUserID(params.userid)
+			local scope = player.GetScriptScope()
+			if (!scope)
+			{
+				player.ValidateScriptScope()
+				scope = player.GetScriptScope()
+			}
+			if (!("Preserved" in scope))
+				scope.Preserved <- {}
+		}
+
 		function OnGameEvent_post_inventory_application(params) {
 
 			if (GetRoundState() == GR_STATE_PREROUND) return
@@ -167,13 +182,11 @@ catch ( e )
 
 			PopExtMain.PlayerCleanup(player)
 
-			player.ValidateScriptScope()
 			local scope = player.GetScriptScope()
 
 			scope.userid <- params.userid
 
 			if (!("PlayerThinkTable" in scope)) scope.PlayerThinkTable <- {}
-			if (!("Preserved" in scope)) scope.Preserved <- {}
 
 			if (player.IsBotOfType(TF_BOT_TYPE))
 			{
@@ -200,7 +213,7 @@ catch ( e )
 
 			if ("MissionAttributes" in ROOT) foreach (func in MissionAttributes.SpawnHookTable) func(params)
 			// if ("GlobalFixes" in ROOT) foreach (func in GlobalFixes.SpawnHookTable) func(params) //these have all been moved to missionattributes
-			if ("CustomAttributes" in ROOT) foreach (func in CustomAttributes.SpawnHookTable) func(params)
+			// if ("CustomAttributes" in ROOT) foreach (func in CustomAttributes.SpawnHookTable) func(params)
 			if ("PopExtPopulator" in ROOT) foreach (func in PopExtPopulator.SpawnHookTable) func(params)
 			if ("CustomWeapons" in ROOT) foreach (func in CustomWeapons.SpawnHookTable) func(params)
 		}
