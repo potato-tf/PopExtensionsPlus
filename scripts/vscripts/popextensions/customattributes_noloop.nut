@@ -92,7 +92,9 @@
 				typeof value == "array" ? victim.AddCondEx( value[ 0 ], value[ 1 ], attacker ) : victim.AddCond( value )
 			})
 
-			local desc_string = typeof value == "array" ? format( "applies cond %d to victim on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) : format( "applies cond %d to victim on hit", value )
+			local desc_string = typeof value == "array" ?
+			format( "applies cond %d to victim on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
+			format( "applies cond %d to victim on hit", value )
 			player.GetScriptScope().attribinfo[ "add cond on hit" ] <- desc_string
 		}
 
@@ -129,7 +131,9 @@
 				typeof value == "array" ? attacker.AddCondEx( value[ 0 ], value[ 1 ], attacker ) : attacker.AddCond( value )
 			})
 
-			local desc_string = typeof value == "array" ? format( "applies cond %d to self on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) : format( "applies cond %d to self on hit", value )
+			local desc_string = typeof value == "array" ?
+			format( "applies cond %d to self on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
+			format( "applies cond %d to self on hit", value )
 			player.GetScriptScope().attribinfo[ "self add cond on hit" ] <- desc_string
 		}
 
@@ -146,9 +150,11 @@
 					return
 
 				typeof value == "array" ? attacker.AddCondEx( value[ 0 ], value[ 1 ], attacker ) : attacker.AddCond( value )
-			}
+			})
 
-			local desc_string = typeof value == "array" ? format( "applies cond %d to self on kill for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) : format( "applies cond %d to self on kill", value )
+			local desc_string = typeof value == "array" ?
+			format( "applies cond %d to self on kill for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
+			format( "applies cond %d to self on kill", value )
 			player.GetScriptScope().attribinfo[ "self add cond on kill" ] <- desc_string
 		}
 
@@ -199,7 +205,7 @@
 					return
 
 				targetname = "!self" ? EntFireByHandle( GetPlayerFromUserID( params.attacker ), input, param, delay, null, null ) : DoEntFire( targetname, input, param, delay, null, null )
-			}
+			})
 
 			player.GetScriptScope().attribinfo[ "fire input on kill" ] <- format( "fires custom entity input on kill: %s", value )
 		}
@@ -453,7 +459,7 @@
 
 				local teleportedplayer = GetPlayerFromUserID(params.userid)
 				teleportedplayer.AddCondEx(TF_COND_SPEED_BOOST, value, player)
-			}
+			})
 
 			player.GetScriptScope().attribinfo[ "mod teleporter speed boost" ] <- format( "Teleporters grant a speed boost for %.2f seconds upon exiting", value )
 		}
@@ -593,7 +599,7 @@
 
 					SetPropInt( self, `m_iUpgradeMetalRequired`, 150 )
 				", SINGLE_TICK, null, null);
-			}
+			})
 
 			PopExtEvents.AddRemoveEventHook( "player_upgradedobject", event_hook_string, function( params )
 			{
@@ -612,7 +618,7 @@
 
 					SetPropInt( self, `m_iUpgradeMetalRequired`, 150 )
 				", SINGLE_TICK, null, null );
-			}
+			})
 
 			PopExtEvents.AddRemoveEventHook( "mvm_quick_sentry_upgrade", event_hook_string, function( params )
 			{
@@ -628,7 +634,7 @@
 						", SINGLE_TICK, null, null);
 					}
 				}
-			}
+			})
 
 			player.GetScriptScope().attribinfo[ "build small sentries" ] <- "Sentries are 20⁒ smaller, have 33⁒ less health, take 25⁒ less metal to upgrade"
 		}
@@ -921,6 +927,7 @@
 			PopExtEvents.AddRemoveEventHook( "OnTakeDamage", event_hook_string, function( params )
 			{
 				local _weapon = params.weapon
+				printl(_weapon)
 
 				if ( !_weapon || _weapon != item )
 					return
@@ -1013,7 +1020,9 @@
 					player.AddCondEx( value, duration, player )
 			}
 
-			local desc_string = duration != 0.033 ? format( "On deploy: player receives cond %d for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) : format( "When active: player receives cond %d", value )
+			local desc_string = duration != 0.033 ?
+			format( "On deploy: player receives cond %d for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
+			format( "When active: player receives cond %d", value )
 			player.GetScriptScope().attribinfo[ "add cond when active" ] <- desc_string
 		}
 
@@ -1705,7 +1714,7 @@
 			PopExtEvents.AddRemoveEventHook( "post_inventory_application", event_hook_string, function( params )
 			{
 				SetPropInt( GetPlayerFromUserID( params.userid ), "m_afButtonDisabled", 0 )
-			}
+			})
 
 			player.GetScriptScope().attribinfo[ "alt-fire disabled" ] <- "Secondary fire disabled"
 		}
