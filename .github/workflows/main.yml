@@ -38,7 +38,8 @@ jobs:
         env:
             SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          for i in "22 pterodactyl@us.potato.tf:/" "22 pterodactyl@sgp.potato.tf:/" "27035 pterodactyl@eu.potato.tf:/" "22 pterodactyl@eu1.potato.tf:/"; do a=( $i ); 
+          mapfile -t servers < <(curl -s https://raw.githubusercontent.com/potato-tf/deploy/refs/heads/main/serverlist.json | jq -r '.servers[]')
+          for i in "${servers[@]}"; do a=( $i );
           {
               rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/vscripts/ ${a[1]}var/tf2testingserver/tf/download/scripts/vscripts/
               rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/population/mvm_bigrock_vscript.pop ${a[1]}var/tf2testingserver/tf/download/scripts/population/mvm_bigrock_vscript.pop
