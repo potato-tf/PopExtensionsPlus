@@ -29,6 +29,8 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 						owner.ValidateScriptScope()
 						owner_scope = owner.GetScriptScope()
 					}
+					if (!("Preserved" in owner_scope))
+						owner_scope.Preserved <- {}
 
 					if (!("ActiveProjectiles" in owner_scope.Preserved))
 						owner_scope.Preserved.ActiveProjectiles <- {}
