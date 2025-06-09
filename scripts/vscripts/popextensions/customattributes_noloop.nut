@@ -92,9 +92,7 @@
 				typeof value == "array" ? victim.AddCondEx( value[ 0 ], value[ 1 ], attacker ) : victim.AddCond( value )
 			})
 
-			local desc_string = typeof value == "array" ?
-			format( "applies cond %d to victim on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
-			format( "applies cond %d to victim on hit", value )
+			local desc_string = typeof value == "array" ? format( "applies cond %d to victim on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) : format( "applies cond %d to victim on hit", value )
 			player.GetScriptScope().attribinfo[ "add cond on hit" ] <- desc_string
 		}
 
@@ -131,9 +129,7 @@
 				typeof value == "array" ? attacker.AddCondEx( value[ 0 ], value[ 1 ], attacker ) : attacker.AddCond( value )
 			})
 
-			local desc_string = typeof value == "array" ?
-			format( "applies cond %d to self on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
-			format( "applies cond %d to self on hit", value )
+			local desc_string = typeof value == "array" ? format( "applies cond %d to self on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) : format( "applies cond %d to self on hit", value )
 			player.GetScriptScope().attribinfo[ "self add cond on hit" ] <- desc_string
 		}
 
@@ -152,9 +148,7 @@
 				typeof value == "array" ? attacker.AddCondEx( value[ 0 ], value[ 1 ], attacker ) : attacker.AddCond( value )
 			}
 
-			local desc_string = typeof value == "array" ?
-			format( "applies cond %d to self on kill for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
-			format( "applies cond %d to self on kill", value )
+			local desc_string = typeof value == "array" ? format( "applies cond %d to self on kill for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) : format( "applies cond %d to self on kill", value )
 			player.GetScriptScope().attribinfo[ "self add cond on kill" ] <- desc_string
 		}
 
@@ -694,11 +688,8 @@
 
 			scope.ItemThinkTable[ event_hook_string ] <- function()
 			{
-				if (
-					!( "explosive bullets" in player.GetScriptScope().attribinfo )
-					|| player.GetActiveWeapon() != item
-					|| scope.explosivebulletsnextattack == GetPropFloat( item, "m_flLastFireTime" )
-				) return
+				if ( !( "explosive bullets" in player.GetScriptScope().attribinfo ) || player.GetActiveWeapon() != item || scope.explosivebulletsnextattack == GetPropFloat( item, "m_flLastFireTime" ) )
+					return
 
 				local grenade = CreateByClassname( "tf_projectile_pipe" )
 				SetPropEntity( grenade, "m_hOwnerEntity", launcher )
@@ -756,11 +747,7 @@
 
 			PopExtEvents.AddRemoveEventHook( "OnTakeDamage", event_hook_string, function( params )
 			{
-				if (
-					"explosivebullets" in scope
-					|| params.weapon != item
-					|| !( "explosive bullets ext" in player.GetScriptScope().attribinfo )
-				)
+				if ( "explosivebullets" in scope || params.weapon != item || !( "explosive bullets ext" in player.GetScriptScope().attribinfo ) )
 					return
 
 				scope.explosivebullets <- true
@@ -957,9 +944,7 @@
 				}
 			})
 
-			local infostring = typeof value[ 1 ] == "array" ?
-			format( "Weapon fire sound replaced with %s (normal) and %s (critical)", value[ 1 ][ 0 ], value[ 1 ][ 1 ] )
-			: format( "Weapon fire sound replaced with %s", value[ 1 ] )
+			local infostring = typeof value[ 1 ] == "array" ? format( "Weapon fire sound replaced with %s (normal) and %s (critical)", value[ 1 ][ 0 ], value[ 1 ][ 1 ] ) : format( "Weapon fire sound replaced with %s", value[ 1 ] )
 			player.GetScriptScope().attribinfo[ "replace weapon fire sound" ] <- infostring
 		}
 
@@ -1028,9 +1013,7 @@
 					player.AddCondEx( value, duration, player )
 			}
 
-			local desc_string = duration != 0.033 ?
-			format( "On deploy: player receives cond %d for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
-			format( "When active: player receives cond %d", value )
+			local desc_string = duration != 0.033 ? format( "On deploy: player receives cond %d for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) : format( "When active: player receives cond %d", value )
 			player.GetScriptScope().attribinfo[ "add cond when active" ] <- desc_string
 		}
 
