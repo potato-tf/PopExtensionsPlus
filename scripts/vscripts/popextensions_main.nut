@@ -78,6 +78,17 @@ catch ( e )
 	// this should also be used if you change the popfile name mid-mission.
 	ManualCleanup = false
 
+
+	//ignore these variables when cleaning up
+	IgnoreTable = {
+		"self"         : null
+		"__vname"      : null
+		"__vrefs"      : null
+		"Preserved"    : null
+		"ExtraLoadout" : null
+		"popWearablesToDestroy" : null
+	}
+
 	function PlayerCleanup(player) {
 
 		NetProps.SetPropInt(player, "m_nRenderMode", kRenderNormal)
@@ -88,17 +99,8 @@ catch ( e )
 
 		if (scope.len() <= 5) return
 
-		//ignore these variables when cleaning up
-		local ignore_table = {
-			"self"      : null
-			"__vname"   : null
-			"__vrefs"   : null
-			"Preserved" : null
-			"popWearablesToDestroy" : null
-			"ExtraLoadout" : null
-		}
 		foreach (k, v in scope)
-			if (!(k in ignore_table))
+			if (!(k in IgnoreTable))
 				delete scope[k]
 	}
 	Error = {

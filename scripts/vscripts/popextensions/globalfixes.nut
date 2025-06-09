@@ -1,7 +1,6 @@
 // most global fixes have been moved to missionattributes.nut
 // dummy functions here to prevent errors
 
-
 const EFL_USER = 1048576
 
 local GlobalFixesEntity = FindByName(null, "__popext_globalfixes")
@@ -31,14 +30,14 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 						owner_scope = owner.GetScriptScope()
 					}
 
-					if (!("ActiveProjectiles" in owner_scope))
-						owner_scope.ActiveProjectiles <- {}
+					if (!("ActiveProjectiles" in owner_scope.Preserved))
+						owner_scope.Preserved.ActiveProjectiles <- {}
 
-					owner_scope.ActiveProjectiles[projectile.entindex()] <- [projectile, Time()]
+					owner_scope.Preserved.ActiveProjectiles[projectile.entindex()] <- [projectile, Time()]
 
 					PopExtUtil.SetDestroyCallback(projectile, function() {
-						if ("ActiveProjectiles" in owner_scope)
-							delete owner_scope.ActiveProjectiles[self.entindex()]
+						if ("ActiveProjectiles" in owner_scope.Preserved && self.entindex() in owner_scope.Preserved.ActiveProjectiles)
+							delete owner_scope.Preserved.ActiveProjectiles[self.entindex()]
 					})
 				}
 
@@ -64,6 +63,11 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 	}
 
 	SpawnHookTable = {
+
+		function ScoutBetterMoneyCollection() { return }
+		function RemoveYERAttribute() { return }
+		function HoldFireUntilFullReloadFix() { return }
+		function EngineerBuildingPushbackFix() { return }
 
 		// function RestoreGiantFootsteps(params) {
 
@@ -111,11 +115,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		// 		scope.stepside = (GetPropInt(player, "m_Local.m_nStepside"))
 		// 	}
 		// }
-
-		function ScoutBetterMoneyCollection() { return }
-		function RemoveYERAttribute() { return }
-		function HoldFireUntilFullReloadFix() { return }
-		function EngineerBuildingPushbackFix() { return }
 
 	}
 
