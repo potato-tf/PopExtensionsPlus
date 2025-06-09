@@ -530,8 +530,13 @@ local popext_funcs = {
 
 		if (weapon == null)
 			weapon = -1
-
-		PopExtUtil.PlayerScriptEntFire(bot, format("PopExtUtil.SetPlayerAttributes(self, `%s`, %.2f, %d)", attr, value.tofloat(), PopExtUtil.GetItemIndex(weapon)), delay)
+		if ( ( typeof value == "array" || typeof value == "string" ) && delay != -1 )
+		{
+			PopExtMain.Error.GenericWarning( "popext_customattr: Cannot set delay on array or table values" )
+			PopExtUtil.SetPlayerAttributes( bot, attr, value, PopExtUtil.GetItemIndex( weapon ) )
+			return
+		}
+		PopExtUtil.PlayerScriptEntFire( bot, format( "PopExtUtil.SetPlayerAttributes( self, `%s`, %.2f, %d )", attr, value.tofloat(), PopExtUtil.GetItemIndex( weapon ) ), delay )
 	}
 
     /**********************************************************************************************************************************************
