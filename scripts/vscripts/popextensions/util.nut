@@ -383,7 +383,7 @@
 	function CountAliveBots(printout = false) {
 
 		// PopExtMain.Error.DeprecationWarning("PopExtUtil.CountAliveBots", "PopExtUtil.CountAlivePlayers(true)")
-		CountAlivePlayers(true, printout)
+		return CountAlivePlayers(true, printout)
 	}
 	function SetParentLocalOriginDo(child, parent, attachment = null) {
 

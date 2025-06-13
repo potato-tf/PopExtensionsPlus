@@ -31,6 +31,10 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 						owner_scope = owner.GetScriptScope()
 					}
 
+					// this should not be a thing.  Preserved gets added in player_spawn but we still get does not exist errors
+					if (!("Preserved" in owner_scope))
+						owner_scope.Preserved <- {}
+
 					if (!("ActiveProjectiles" in owner_scope.Preserved))
 						owner_scope.Preserved.ActiveProjectiles <- {}
 
