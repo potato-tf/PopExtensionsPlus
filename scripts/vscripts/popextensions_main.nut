@@ -1,4 +1,4 @@
-::popExtensionsVersion <- "06.09.2025.1"
+::popExtensionsVersion <- "06.12.2025.1"
 
 local ROOT = getroottable()
 
@@ -83,11 +83,12 @@ catch ( e )
 	// "Preserved" is a special table that will persist through the cleanup process
 	// any player scoped variables you want to use across multiple waves should be added here
 	IgnoreTable = {
-		"self"         : null
-		"__vname"      : null
-		"__vrefs"      : null
-		"Preserved"    : null
-		"ExtraLoadout" : null
+		"self"         			: null
+		"__vname"      			: null
+		"__vrefs"      			: null
+		"Preserved"    			: null
+		"ExtraLoadout" 			: null
+		"PointTemplatesToKill" 	: null
 		"popWearablesToDestroy" : null
 	}
 
@@ -99,7 +100,7 @@ catch ( e )
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
-		if (scope.len() <= 5) return
+		if (scope.len() <= IgnoreTable.len()) return
 
 		foreach (k, v in scope)
 			if (!(k in IgnoreTable))
@@ -159,6 +160,7 @@ catch ( e )
 		}
 	}
 	Events = {
+
 		function OnGameEvent_player_spawn(params) {
 
 			local player = GetPlayerFromUserID(params.userid)
@@ -194,7 +196,7 @@ catch ( e )
 				scope.DeathHookTable  <- {}
 				scope.TakeDamageTable <- {}
 
-				scope.aibot <- AI_Bot(player)
+				scope.aibot <- PopExtBotBehavior(player)
 				scope.PlayerThinkTable.BotThink <- function() {
 						aibot.OnUpdate()
 				}
@@ -213,7 +215,7 @@ catch ( e )
 
 			if ("MissionAttributes" in ROOT) foreach (func in MissionAttributes.SpawnHookTable) func(params)
 			// if ("GlobalFixes" in ROOT) foreach (func in GlobalFixes.SpawnHookTable) func(params) //these have all been moved to missionattributes
-			// if ("CustomAttributes" in ROOT) foreach (func in CustomAttributes.SpawnHookTable) func(params)
+			if ("CustomAttributes" in ROOT) foreach (func in CustomAttributes.SpawnHookTable) func(params)
 			if ("PopExtPopulator" in ROOT) foreach (func in PopExtPopulator.SpawnHookTable) func(params)
 			if ("CustomWeapons" in ROOT) foreach (func in CustomWeapons.SpawnHookTable) func(params)
 		}
@@ -261,21 +263,17 @@ catch ( e )
 
 			//nuke it all
 			local cleanup = [
+
 				"MissionAttributes"
 				"CustomAttributes"
-				"PopExt"
-				"PopExtTags"
-				"PopExtHooks"
 				"GlobalFixes"
 				"SpawnTemplate"
 				"SpawnTemplateWaveSchedule"
 				"SpawnTemplates"
 				"VCD_SOUNDSCRIPT_MAP"
-				"PopExtUtil"
 				"PointTemplates"
 				"CustomWeapons"
 				"__popname"
-				"AI_Bot"
 				"ExtraItems"
 				"Homing"
 				"Include"
@@ -284,16 +282,22 @@ catch ( e )
 				"MissionAttr"
 				"MissionAttrs"
 				"MissionAttrThink"
-				"PathPoint"
-				"popExtensionsVersion"
-				"popExtEntity"
+
+				"PopExt"
+				"PopExtTags"
+				"PopExtHooks"
+				"PopExtUtil"
+				"PopExtPathPoint"
+				"PopExtBotBehavior"
+				"PopExtWeapons"
+				"PopExtAttributes"
 				"PopExtItems"
 				"PopExtMain"
-				"popExtThinkFuncSet"
+				"PopExtGlobalThink"
 				"PopExtTutorial"
-				"PopulatorThink"
-				"RespawnEndTouch"
-				"RespawnStartTouch"
+				"popExtThinkFuncSet"
+				"popExtensionsVersion"
+
 				"ScriptLoadTable"
 				"ScriptUnloadTable"
 				"EntAdditions"

@@ -455,8 +455,7 @@ local popext_funcs = {
 		local origin 	 = "origin" in args ? args.origin : bot.GetOrigin()
 		local angles 	 = "angles" in args ? args.angles : bot.EyeAngles()
 		local attachment = "attachment" in args ? args.attachment : null
-
-		SpawnTemplate(template, parent, origin, angles, attachment)
+		SpawnTemplate(template, parent, origin, angles, true, attachment, true, true)
 	}
 
     /**********************************************************
@@ -521,7 +520,7 @@ local popext_funcs = {
 		local attr = "attr" in args ? args.attr : args.attribute
 		local value = args.value
 		local wep = "weapon" in args ? args.weapon : -1
-		local delay = "delay" in args ? args.delay : -1
+		local delay = "delay" in args ? args.delay : 0.0
 
 		local weapon = PopExtUtil.HasItemInLoadout(bot, wep)
 
@@ -530,13 +529,14 @@ local popext_funcs = {
 
 		if (weapon == null)
 			weapon = -1
-		if ( ( typeof value == "array" || typeof value == "string" ) && delay != -1 )
+		if ( ( typeof value == "array" || typeof value == "table" ) && delay > 0.0 )
 		{
 			PopExtMain.Error.GenericWarning( "popext_customattr: Cannot set delay on array or table values" )
 			PopExtUtil.SetPlayerAttributes( bot, attr, value, PopExtUtil.GetItemIndex( weapon ) )
 			return
 		}
-		PopExtUtil.PlayerScriptEntFire( bot, format( "PopExtUtil.SetPlayerAttributes( self, `%s`, %.2f, %d )", attr, value.tofloat(), PopExtUtil.GetItemIndex( weapon ) ), delay )
+		if (typeof value == "string") value = format( "`%s`", value )
+		PopExtUtil.PlayerScriptEntFire( bot, format( "PopExtUtil.SetPlayerAttributes( self, `%s`, "+value+", %d )", attr, PopExtUtil.GetItemIndex( weapon ) ), delay )
 	}
 
     /**********************************************************************************************************************************************
@@ -721,7 +721,7 @@ local popext_funcs = {
 		local duration			= "duration" in args ? args.duration : 10
 		local stay_time			= "stay_time" in args ? args.stay_time : 10
 		local command 			= "command" in args ? args.command : "goto action point"
-		local delay 			= "delay" in args ? args.delay : -1
+		local delay 			= "delay" in args ? args.delay : 0.0
 		local repeats 			= "repeats" in args ? args.repeats : 0
 		local repeat_cooldown	= "cooldown" in args ? args.cooldown : 0.0
 
@@ -934,7 +934,7 @@ local popext_funcs = {
 		local target 	  = "target" in args ? args.target : args.type
 		local action 	  = "action" in args ? args.action : args.cooldown
 		local param 	  = "param" in args ? args.param : ""
-		local delay       = "delay" in args ? args.delay : -1
+		local delay       = "delay" in args ? args.delay : 0.0
 		local activator   = "activator" in args ? FindByName(null, args.activator) : bot
 		local caller 	  = "caller" in args ? FindByName(null, args.caller) : bot
 		local refire      = "refire" in args ? args.refire : 0
@@ -1057,13 +1057,13 @@ local popext_funcs = {
 		local alwaysfire = bot.HasBotAttribute(ALWAYS_FIRE_WEAPON)
 
 		//force deploy dispenser when leaving spawn and kill it immediately
-		if (!alwaysfire && args.type.tointeger() == 1) bot.PressFireButton(INT_MAX)
+		if (!alwaysfire && args.type == OBJ_SENTRYGUN) bot.PressFireButton(INT_MAX)
 
 		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- function() {
 
 			//start forcing primary attack when near hint
 			local hint = FindByClassnameWithin(null, "bot_hint*", bot.GetOrigin(), 16)
-				if (hint && !alwaysfire) bot.PressFireButton(0.0)
+			if (hint && !alwaysfire) bot.PressFireButton(0.0)
 		}
 
 		bot.GetScriptScope().BuiltObjectTable.DispenserBuildOverride <- function(params) {
@@ -1073,8 +1073,9 @@ local popext_funcs = {
 			//dispenser built, stop force firing
 			if (!alwaysfire) bot.PressFireButton(0.0)
 
-			if ((args.type.tointeger() == 1 && obj == OBJ_SENTRYGUN) || (args.type.tointeger() == 2 && obj == OBJ_TELEPORTER)) {
-				if (obj == OBJ_SENTRYGUN) bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
+			if (obj == args.type) {
+				if (obj == OBJ_SENTRYGUN)
+					bot.AddCustomAttribute("engy sentry radius increased", FLT_SMALL, -1)
 
 				bot.AddCustomAttribute("upgrade rate decrease", 8, -1)
 				local building = EntIndexToHScript(params.index)
@@ -1985,7 +1986,7 @@ local popext_funcs = {
 	popext_changeattributes = function(bot, args) {
 
 		local name 	 		= "name" in args ? args.name : args.type
-		local delay  		= "delay" in args ? args.delay : -1
+		local delay  		= "delay" in args ? args.delay : 0.0
 		local cooldown 		= "cooldown" in args ? args.cooldown : 10.0
 		local repeats 		= "repeats" in args ? args.repeats : 1
 		local ifseetarget 	= "ifseetarget" in args ? args.ifseetarget : false
@@ -2020,7 +2021,7 @@ local popext_funcs = {
 	popext_taunt = function(bot, args) {
 
 		local id       = args.id
-		local delay    = "delay" in args ? args.delay : -1
+		local delay    = "delay" in args ? args.delay : 0.0
 		local cooldown = "cooldown" in args ? args.cooldown : 10.0
 		local repeats  = "repeats" in args ? args.repeats : 1
 		local duration = "duration" in args ? args.duration : INT_MAX
@@ -2062,7 +2063,7 @@ local popext_funcs = {
 
 		local sequence 		= "sequence" in args ? args.sequence : args.type
 		local playback_rate = "playback_rate" in args ? args.playback_rate : 1.0
-		local delay 		= "delay" in args ? args.delay : -1
+		local delay 		= "delay" in args ? args.delay : 0.0
 		local cooldown 		= "cooldown" in args ? args.cooldown : 10.0
 		local repeats 		= "repeats" in args ? args.repeats : 0
 		local duration 		= "duration" in args ? args.duration : INT_MAX
@@ -2439,12 +2440,25 @@ local popext_funcs = {
 
 		_AddThinkToEnt(bot, null)
 	}
+	
 	function OnGameEvent_teamplay_round_start(params) {
 
 		foreach (bot in PopExtUtil.BotArray)
 			if (bot.IsValid() && bot.GetTeam() != TEAM_SPECTATOR)
 				bot.ForceChangeTeam(TEAM_SPECTATOR, true)
 	}
+	
+	function OnGameEvent_player_builtobject(params) {
+
+		local bot = GetPlayerFromUserID(params.userid)
+
+		if (!bot.IsBotOfType(TF_BOT_TYPE)) return
+
+		local scope = bot.GetScriptScope()
+		if ("BuiltObjectTable" in scope)
+			foreach (func in scope.BuiltObjectTable) func(params)
+	}
+
 	function OnGameEvent_halloween_boss_killed(params) {
 		::__popext_bosskiller <- GetPlayerFromUserID(params.killer)
 	}

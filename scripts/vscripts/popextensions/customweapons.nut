@@ -499,3 +499,6 @@
 		return multiplier * slottable[PopExtUtil.Classes[player.GetPlayerClass()]]
 	}
 }
+
+// TODO: deprecate the old namespace
+::PopExtWeapons <- CustomWeapons

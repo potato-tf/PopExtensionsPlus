@@ -1292,7 +1292,7 @@
 				local scope = wep.GetScriptScope()
 				scope.collectCurrencyOnKill <- true
 			}
-			player.GetScriptScope().attribinfo["collect currency on kill"] <- "bots drop money when killed"
+			player.GetScriptScope().attribinfo["collect currency on kill"] <- "bots drop red money when killed"
 		}
 
 		function RocketPenetration(player, items, value) {

@@ -11,7 +11,7 @@ PrecacheModel("models/weapons/w_models/w_rocket.mdl")
 
 function PopExt::AddRobotTag(tag, table) {
 	if (!popExtThinkFuncSet) {
-		AddThinkToEnt(popExtEntity, "PopulatorThink")
+		AddThinkToEnt(popExtEntity, "PopExtGlobalThink")
 		popExtThinkFuncSet = true
 	}
 	PopExt.robotTags[tag] <- table
@@ -20,7 +20,7 @@ function PopExt::AddRobotTag(tag, table) {
 function PopExt::AddTankName(name, table) {
 
 	if (!popExtThinkFuncSet) {
-		AddThinkToEnt(popExtEntity, "PopulatorThink")
+		AddThinkToEnt(popExtEntity, "PopExtGlobalThink")
 		popExtThinkFuncSet = true
 	}
 

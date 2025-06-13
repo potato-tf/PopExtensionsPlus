@@ -4,7 +4,7 @@ PopExt.wavePointTemplates         <- []
 PopExt.globalTemplateSpawnCount   <- 0
 
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
-::SpawnTemplate <- function(pointtemplate, parent = null, origin = "", angles = "", forceparent = false, attachment = null, purgestrings = true) {
+::SpawnTemplate <- function(pointtemplate, parent = null, origin = "", angles = "", forceparent = false, attachment = null, parentabsorigin = true, nonsolidchildren = false) {
 
 	if (forceparent && parent.IsEFlagSet(EFL_SPAWNTEMPLATE))
 		parent.RemoveEFlags(EFL_SPAWNTEMPLATE) //forceparent is set, delete the EFlag to parent another template
@@ -41,8 +41,8 @@ PopExt.globalTemplateSpawnCount   <- 0
 	scope.PostSpawn <- function(named_entities) {
 
 		//can only set bounding box size for brush entities after they spawn
-		foreach(entity in Entities)
-		{
+		foreach(entity in Entities) {
+
 			local responsecontext = GetPropString(entity, "m_iszResponseContext")
 			local buf = responsecontext.find(",") ? split(responsecontext, ",") : split(responsecontext, " ")
 
@@ -53,17 +53,16 @@ PopExt.globalTemplateSpawnCount   <- 0
 				entity.SetSolid(2)
 			}
 
-			if (purgestrings)
-				SetPropBool(entity, STRING_NETPROP_PURGESTRINGS, true)
+			SetPropBool(entity, STRING_NETPROP_PURGESTRINGS, true)
 
 			scope.SpawnedEntities[entity] <- [origin, angles]
 
-			if (origin != "" || angles != "")
-			{
-				foreach(k, v in SpawnedEntities)
-				{
-					if (origin != "")
-					{
+			if (origin != "" || angles != "") {
+
+				foreach(k, v in SpawnedEntities) {
+
+					if (origin != "") {
+
 						if (typeof origin == "Vector")
 							k.SetAbsOrigin(origin)
 						else
@@ -73,8 +72,8 @@ PopExt.globalTemplateSpawnCount   <- 0
 							k.SetAbsOrigin(Vector(orgbuf[0], orgbuf[1], orgbuf[2]))
 						}
 					}
-					if (angles != "")
-					{
+					if (angles != "") {
+
 						if (typeof angles == "QAngle")
 							k.SetAbsAngles(angles)
 						else
@@ -92,8 +91,16 @@ PopExt.globalTemplateSpawnCount   <- 0
 			if (parent != null) {
 
 				if (typeof parent == "string") parent = FindByName(null, parent)
-				//this function is defined in util.nut
-				PopExtUtil.SetParentLocalOrigin(entity, parent, attachment)
+				if (parentabsorigin) {
+
+					entity.AcceptInput("SetParent", "!activator", parent, parent)
+					if (attachment) entity.AcceptInput("SetParentAttachment", attachment, null, null)
+				} else {
+					PopExtUtil.SetParentLocalOrigin(entity, parent, attachment)
+				}
+
+				if (nonsolidchildren)
+					entity.SetSolid(0)
 
 				//entities parented to players do not kill itself when the player dies as the player entity is not considered killed
 				if (parent.IsPlayer()) {
@@ -105,10 +112,10 @@ PopExt.globalTemplateSpawnCount   <- 0
 						local scope = parent.GetScriptScope()
 
 						// reused from CreatePlayerWearable function
-						if (!("popWearablesToDestroy" in scope))
-							scope.popWearablesToDestroy <- []
+						if (!("PointTemplatesToKill" in scope))
+							scope.PointTemplatesToKill <- []
 
-						scope.popWearablesToDestroy.append(entity)
+						scope.PointTemplatesToKill.append(entity)
 					}
 				}
 			}
@@ -150,8 +157,9 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 					playerscope.popHooks.OnDeath.append(FireOnParentKilledOutputs)
 
-					if (!("TemplatesToKill" in playerscope)) playerscope.TemplatesToKill <- []
-					playerscope.TemplatesToKill.append(FireOnParentKilledOutputs);
+					if (!("PointTemplatesToKill" in playerscope))
+						playerscope.PointTemplatesToKill <- []
+					playerscope.PointTemplatesToKill.append(FireOnParentKilledOutputs)
 				}
 			}
 			//use own think instead of parent's think
@@ -211,7 +219,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 	//establish "flags", lowercase all keys
 	foreach(index, entity in pointtemplatecopy) {
 
-		if (typeof(entity) == "table") 
+		if (typeof(entity) == "table")
 		{
 			foreach(k, v in entity)
 			if (typeof(k) == "string")
@@ -231,9 +239,6 @@ PopExt.globalTemplateSpawnCount   <- 0
 		else if (index == "keepalive" && entity)
 			keepalive = true
 
-		else if (index == "dontpurgestrings" && entity)
-			purgestrings = false
-
 		else if (index == "removeifkilled")
 			scope.removeifkilled <- entity
 	}
@@ -241,8 +246,8 @@ PopExt.globalTemplateSpawnCount   <- 0
 	//perform name fixup
 	if (!nofixup) {
 		//first, get list of targetnames in the point template for name fixup
-		foreach(index, entity in pointtemplatecopy)
-		{
+		foreach(index, entity in pointtemplatecopy) {
+
 			if (typeof(entity) != "table") continue
 
 			foreach(classname, keyvalues in entity)
@@ -255,18 +260,18 @@ PopExt.globalTemplateSpawnCount   <- 0
 		//iterate through all entities and fixup every value containing a valid targetname
 		//may have issues with targetnames that are substrings of other targetnames?
 		//this should cover targetnames, parentnames, target, and output params
-		foreach(index, entity in pointtemplatecopy)
-		{
+		foreach(index, entity in pointtemplatecopy) {
+
 			if (typeof(entity) != "table") continue
 
-			foreach(classname, keyvalues in entity)
-			{
-				foreach(key, value in keyvalues)
-				{
+			foreach(classname, keyvalues in entity) {
+
+				foreach(key, value in keyvalues) {
+
 					if (typeof(value) != "string") continue
 
-					foreach(targetname in scope.EntityFixedUpTargetName)
-					{
+					foreach(targetname in scope.EntityFixedUpTargetName) {
+
 						if (value.find(targetname) != null && value.find("/") == null) //ignore potential file paths, also ignores targetnames with "/"
 						{
 							keyvalues[key] <- value.slice(0, targetname.len()) + PopExt.globalTemplateSpawnCount + value.slice(targetname.len())
@@ -279,14 +284,14 @@ PopExt.globalTemplateSpawnCount   <- 0
 	}
 
 	//add templates to point_script_template
-	foreach(index, entity in pointtemplatecopy)
-	{
+	foreach(index, entity in pointtemplatecopy) {
+
 		if (typeof(entity) != "table") continue
 
-		foreach(classname, keyvalues in entity)
-		{
-			foreach(k, v in keyvalues)
-			{
+		foreach(classname, keyvalues in entity) {
+
+			foreach(k, v in keyvalues) {
+
 				if (typeof(v) == "string")
 				{
 					delete keyvalues[k]
@@ -305,8 +310,8 @@ PopExt.globalTemplateSpawnCount   <- 0
 			else
 			{
 				//adjust origin and angles
-				if ("origin" in keyvalues)
-				{
+				if ("origin" in keyvalues) {
+
 					if (typeof(keyvalues.origin) == "string") {
 						local buf = keyvalues.origin.find(",") ? split(keyvalues.origin, ",") : split(keyvalues.origin, " ")
 
@@ -316,8 +321,8 @@ PopExt.globalTemplateSpawnCount   <- 0
 				}
 				else keyvalues.origin <- origin
 
-				if ("angles" in keyvalues)
-				{
+				if ("angles" in keyvalues) {
+
 					//if angles is a string, construct qangles to perform math on them if needed
 					if (typeof(keyvalues.angles) == "string") {
 						local buf = keyvalues.angles.find(",") ? split(keyvalues.angles, ",") : split(keyvalues.angles, " ")
@@ -397,17 +402,18 @@ PopExt.globalTemplateSpawnCount   <- 0
 			local player = GetPlayerFromUserID(params.userid)
 			local scope = player.GetScriptScope()
 
-			if ("TemplatesToKill" in scope)
-				foreach (func in scope.TemplatesToKill)
-					func()
+			if ("PointTemplatesToKill" in scope)
+				foreach (item in scope.PointTemplatesToKill)
+					typeof item == "function" ? item() : item.Kill()
+
 
 			player.RemoveEFlags(EFL_SPAWNTEMPLATE)
 		}
 	}
 
 	// alternative version that accepts a table of arguments
-	function DoSpawnTemplate(args = { pointtemplate = null, parent = null, origin = "", angles = "", forceparent = false, purgestrings = true }) {
-		SpawnTemplate(args.pointtemplate, args.parent, args.origin, args.angles, args.forceparent, args.purgestrings)
+	function DoSpawnTemplate(args = { pointtemplate = null, parent = null, origin = "", angles = "", forceparent = false, parentabsorigin = false, nonsolidchildren = false }) {
+		SpawnTemplate(args.pointtemplate, args.parent, args.origin, args.angles, args.forceparent, args.parentabsorigin, args.nonsolidchildren)
 	}
 }
 __CollectGameEventCallbacks(SpawnTemplates.Events)

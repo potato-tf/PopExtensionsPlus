@@ -1,5 +1,6 @@
 // most global fixes have been moved to missionattributes.nut
-// dummy functions here to prevent errors
+// piles of dummy functions are here for backwards compatibility
+// these will be removed once red ridge is updated to remove `delete GlobalFixes.ThinkTable.HolidayPunchFix`
 
 const EFL_USER = 1048576
 
@@ -68,54 +69,6 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function RemoveYERAttribute() { return }
 		function HoldFireUntilFullReloadFix() { return }
 		function EngineerBuildingPushbackFix() { return }
-
-		// function RestoreGiantFootsteps(params) {
-
-		// 	local player = GetPlayerFromUserID(params.userid)
-
-		// 	if (!player.IsBotOfType(TF_BOT_TYPE) || !player.IsMiniBoss()) return
-		// 	player.AddCustomAttribute("override footstep sound set", 0, -1)
-
-		// 	local validclasses = {
-		// 		[TF_CLASS_SCOUT] = null,
-		// 		[TF_CLASS_SOLDIER] = null,
-		// 		[TF_CLASS_PYRO] = null ,
-		// 		[TF_CLASS_DEMOMAN] = null ,
-		// 		[TF_CLASS_HEAVYWEAPONS] = null
-		// 	}
-
-		// 	if (!(player.GetPlayerClass() in validclasses)) return
-
-		// 	local cstring = PopExtUtil.Classes[player.GetPlayerClass()]
-
-		// 	player.ValidateScriptScope()
-		// 	local scope = player.GetScriptScope()
-
-		// 	scope.stepside <- GetPropInt(player, "m_Local.m_nStepside")
-		// 	scope.stepcount <- 0
-		// 	scope.PlayerThinkTable.RestoreGiantFootsteps <- function() {
-
-		// 		if ((GetPropInt(player, "m_Local.m_nStepside")) == scope.stepside) return
-		// 		// if (GetPropFloat(player, "m_flStepSoundTime") != 400) return
-
-		// 		printl(GetPropFloat(player, "m_flStepSoundTime"))
-
-
-		// 		local footstepsound = format("^mvm/giant_%s/giant_%s_step_0%d.wav", cstring, cstring, RandomInt(1, 4))
-
-		// 		if (player.GetPlayerClass() == TF_CLASS_DEMOMAN)
-		// 			footstepsound = format("^mvm/giant_demoman/giant_demoman_step_0%d.wav", RandomInt(1, 4))
-
-		// 		else if (player.GetPlayerClass() == TF_CLASS_SOLDIER || player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS)
-		// 			footstepsound = format("^mvm/giant_%s/giant_%s_step0%d.wav", cstring, cstring, RandomInt(1, 4))
-
-		// 		PrecacheSound(footstepsound)
-		// 		player.EmitSound(footstepsound)
-
-		// 		scope.stepside = (GetPropInt(player, "m_Local.m_nStepside"))
-		// 	}
-		// }
-
 	}
 
 	InitWaveTable = {}

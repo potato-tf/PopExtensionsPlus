@@ -8,7 +8,7 @@ WaveSchedule
 
 	StartingCurrency		1200
 	RespawnWaveTime 		2
-	CanBotsAttackWhileInSpawnRoom 1
+	CanBotsAttackWhileInSpawnRoom no
 
 	Mission
 	{
@@ -25,7 +25,7 @@ WaveSchedule
 		{
 			// Template T_TFBot_Engineer_Sentry_Teleporter
 			Template T_TFBot_Engineer_Sentry_Tele_Battle
-			Tag "popext_dispenseroverride|2"
+			Tag "popext_dispenseroverride{type = OBJ_SENTRYGUN}"
 			// Attributes AlwaysFireWeapon
 		}
 	}
@@ -109,7 +109,7 @@ WaveSchedule
 						}
 					}
 
-					AddCond = [32, 10] //speed boost for 10s
+					// AddCond = [32, 10] //speed boost for 10s
 
 					LoadoutControl = {
 
@@ -249,7 +249,7 @@ WaveSchedule
 			TFBot
 			{
 				Template T_TFBot_Giant_Soldier
-				Attributes HoldFireUntilFullReload //now works with every clip-based weapon
+				Attributes HoldFireUntilFullReload // now works with every clip-based weapon with EnableGlobalFixes mission attribute
 				// Attributes IgnoreFlag
 				Item "The Cow Mangler 5000"
 				// Tag "popext_homingprojectile|0.5|1.0"
@@ -257,7 +257,7 @@ WaveSchedule
 				// Tag "popext_usehumanmodel"
 				// Tag "popext_meleeai"
 				// Tag "popext_spawnhere|-779.491150 3302.379883 312.992340|3" //custom spawn origin
-				Tag "popext_customattr{attribute = `wet immunity`, value = 1}"
+				Tag "popext_customattr{attr = `wet immunity`, value = 1}"
 				// Tag "popext_weaponresist|298|20" //20x damage from iron curtain
 				// Tag "popext_weaponresist{type = 298, amount = 20}"
 				// Tag "popext_setskin|0" //red skin
@@ -460,7 +460,7 @@ WaveSchedule
 							OnSpawnOutput = { //Parent entity is the !activator. Set builder to parent entity
 								Target = `sentry` //targetname of an entity added below
 								Action = `setbuilder`
-								Delay = 0.00
+								Delay = 0.2
 							}
 					},
 					[1] = {
@@ -515,7 +515,7 @@ WaveSchedule
 
 		WaveSpawn
 		{
-			Name "Wave2"
+			Name "Wave3"
 			Where spawnbot
 			TotalCount 2
 			MaxActive 2
@@ -528,7 +528,7 @@ WaveSchedule
 				Template T_TFBot_Giant_Soldier
 				Attributes HoldFireUntilFullReload //now works with every clip-based weapon
 				Item "The Cow Mangler 5000"
-				Tag "popext_spawntemplate|Sentry" // spawns the template with the bot as its parent
+				Tag "popext_spawntemplate{template = `Sentry`, attachment = `head`}" // spawns the template with the bot as its parent
 			}
 		}
 
@@ -550,12 +550,13 @@ WaveSchedule
 				MissionAttrs({
 					NoReanimators = 1
 					ForceHoliday = 8
+					EnableGlobalFixes = 1
 					NoRome = 2
 					BotHeadshots = 1
 					NoCrumpkins = 1
 					WaveStartCountdown = 3
 					PlayersAreRobots = 1|8|16 //see missionattributes.nut for bitflag info
-					// ReverseMVM = 1|2|8|16|32|64  //see missionattributes.nut for bitflag info
+					ReverseMVM = 1|2|8|16|32|64  //see missionattributes.nut for bitflag info
 					SpellRateCommon = 0.5
 					NoSkeleSplit = 1
 					WaveNum = 3
@@ -564,6 +565,8 @@ WaveSchedule
 					MultiSapper = 1
 					TeamWipeWaveLoss = 1
 					GiantSentryKillCountOffset = -4
+					RemoveBotViewmodels = 1
+					UnusedGiantFootsteps = 1
 
 					SoundOverrides = { //overrides teamplay_broadcast_audio sounds
 						`Announcer.MVM_Get_To_Upgrade`: null
@@ -625,7 +628,7 @@ WaveSchedule
 						},
 						tf_weapon_shotgun = {
 							`reloads full clip at once`: 1
-						}
+						},
 						tf_weapon_crossbow = {
 							`fires milk bolt`: 1
 							`set turn to ice`: 1
@@ -646,10 +649,10 @@ WaveSchedule
 								radius = 100
 								team = TF_TEAM_RED
 							}
-						}
+						},
 						`The Sandman` : { //strings with spaces require this syntax.
 							`old sandman stun`: 1
-						}
+						},
 						`Iron Curtain` : {
 							`alt-fire disabled`: 1
 						}
@@ -667,49 +670,10 @@ WaveSchedule
 			Target wave_finished_relay
 			Action trigger
 		}
-		// WaveSpawn
-		// {
-		// 	Name "Wave1"
-		// 	Where spawnbot
-		// 	TotalCount 50
-		// 	MaxActive 5
-		// 	SpawnCount 5
-		// 	WaitBeforeStarting 0
-		// 	TotalCurrency 200
-		// 	TFBot
-		// 	{
-		// 		// Tag "popext_forceromevision"
-		// 		// Tag "popext_addcond|32|10"
-		// 		// Tag "popext_usehumanmodel"
-		// 		// Tag "popext_alwaysglow"
-		// 		// Tag "popext_usebestweapon"
-		// 		// Tag "popext_giveweapon|tf_weapon_shotgun_pyro|425" //family business
-		// 		// Tag "popext_homingprojectile|1.0|1.0"
-		// 		// Tag "popext_improvedairblast"
-		// 		// Tag "popext_usehumananims"
-		// 		// Tag "popext_spell|11|5|2"
-		// 		// Tag "popext_ringoffire|20|2"
-		// 		Tag "popext_meleeai"
-		// 		Tag "popext_reprogrammed"
-		// 		// Tag "popext_weaponswitch|2"
-		// 		// Tag "popext_weaponresist|tf_weapon_minigun|99999"
-		// 		// Tag "popext_weaponresist|11|0.01" //stock heavy shotgun
-		// 		Class Pyro
-		// 		Skill Hard
-		// 		// Item "The Thermal Thruster"
-		// 		// Item "TF_WEAPON_SPELLBOOK"
-		// 		// Attributes IgnoreEnemies
-		// 		// WeaponRestrictions PrimaryOnly
-		// 		CharacterAttributes
-		// 		{
-		// 			"damage bonus" -10
-		// 		}
-		// 	}
-		// }
 		WaveSpawn
 		{
 
-			Name "Wave1a"
+			Name "Wave4"
 			Where spawnbot
 			TotalCount 10
 			MaxActive 5
@@ -722,15 +686,16 @@ WaveSchedule
 				Template T_TFBot_Giant_Soldier
 				Attributes HoldFireUntilFullReload //now works with every clip-based weapon
 				Item "The Cow Mangler 5000"
-				// Tag "popext_homingprojectile|0.5|1.0"
-				Tag "popext_homingprojectile|0.5|0.5"
+				Tag "popext_homingprojectile{turn_power = 0.5, speed_mult = 2.0}"
 				Tag "popext_reprogrammed"
-				Tag "popext_spawnhere|-779.491150 3302.379883 312.992340|3" //custom spawn origin
-				Tag "popext_customattr|wet immunity|1"
-				Tag "popext_weaponresist|298|20" //20x damage from iron curtain
-				Tag "popext_setskin|0" //red skin
+				Tag "popext_spawnhere{where = `-779.491150 3302.379883 312.992340`, spawn_uber_duration = 3}" //custom spawn origin
+				Tag "popext_customattr{attr = `wet immunity`, value = 1}"
+				Tag "popext_customattr{attr = `custom projectile model`, value = `models/player/heavy.mdl`}"
+				Tag "popext_weaponresist{weapon = ID_IRON_CURTAIN, amount = 20}" //20x damage from iron curtain
+				Tag "popext_mobber"
+				Tag "popext_setskin{skin = 0}" //red skin
 				// Tag "popext_fireweapon|2048"
-				Tag "popext_rocketcustomtrail|eyeboss_projectile"
+				Tag "popext_rocketcustomtrail{name = `eyeboss_projectile`}"
 			}
 		}
 	}

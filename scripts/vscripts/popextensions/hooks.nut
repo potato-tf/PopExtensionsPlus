@@ -1,5 +1,5 @@
-popExtEntity <- FindByName(null, "_popext")
-if (popExtEntity == null) popExtEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "_popext" })
+popExtEntity <- FindByName(null, "__popext")
+if (popExtEntity == null) popExtEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "__popext" })
 
 popExtEntity.ValidateScriptScope()
 PopExt <- popExtEntity.GetScriptScope()
@@ -284,7 +284,7 @@ PopExt <- popExtEntity.GetScriptScope()
 }
 __CollectGameEventCallbacks(PopExtHooks.Events)
 
-function PopulatorThink() {
+function PopExtGlobalThink() {
 
 	if (!PopExtUtil.IsWaveStarted)
 		return 0.2

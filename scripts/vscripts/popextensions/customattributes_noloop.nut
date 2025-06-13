@@ -1687,6 +1687,11 @@
 			player.GetScriptScope().attribinfo[ "set warpaint seed" ] <- format( "warpaint seed: %d", value.tointeger() )
 		}
 
+		function MinRespawnTime( player, item, value )
+		{
+			player.GetScriptScope().attribinfo[ "min respawn time" ] <- format( "Respawn time: %d", value.tointeger() )
+		}
+
 		function SpecialItemDescription( player, item, value )
 		{
 			player.GetScriptScope().attribinfo[ "special item description" ] <- format( "%s", value )
@@ -1894,3 +1899,6 @@
 				delete table[ format( "%s", name ) ]
 	}
 }
+
+// TODO: deprecate the old namespace.
+::PopExtAttributes <- CustomAttributes

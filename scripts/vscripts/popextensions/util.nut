@@ -1,9 +1,15 @@
 // All Global Utility Functions go here, also use IncludeScript and place it inside Root
 ::PopExtUtil <- {
 
+	// TODO: these should be tables indexed by player handle instead
+	// simpler code, O(1) access/insertion/deletion
+	// tables could also be used for userid lookups for the value instead of PopExtUtil.GetPlayerUserID(player)
+	// can be made backwards compatible by mapping HumanTable/BotTable/PlayerTable keys to HumanArray/BotArray/PlayerArray
+
 	HumanArray = []
 	BotArray = []
 	PlayerArray = []
+
 	Classes = ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer", "civilian"] //make element 0 a dummy string instead of doing array + 1 everywhere
 	ClassesCaps = ["", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer", "Civilian"] //make element 0 a dummy string instead of doing array + 1 everywhere
 	Slots   = ["slot_primary", "slot_secondary", "slot_melee", "slot_utility", "slot_building", "slot_pda", "slot_pda2"]
@@ -193,7 +199,7 @@
 		tf_projectile_flare				= 1
 	}
 
-	Worldspawn 		  = Entities.First()
+	Worldspawn 		  = First()
 	GameRules 		  = FindByClassname(null, "tf_gamerules")
 	ObjectiveResource = FindByClassname(null, "tf_objective_resource")
 	MonsterResource   = FindByClassname(null, "monster_resource")
@@ -215,35 +221,42 @@
 	GameRoundWin 	  = SpawnEntityFromTable("game_round_win", {targetname = "__util_roundwin", TeamNum = TF_TEAM_PVE_INVADERS, force_map_reset = 1})
 	RespawnOverride   = SpawnEntityFromTable("trigger_player_respawn_override", {targetname = "__util_respawnoverride", spawnflags = SF_TRIGGER_ALLOW_CLIENTS})
 
-	function IsLinuxServer() {
-		return RAND_MAX != 32767
-	}
+	// fix delayed starttouch crash
+	// TODO: may be able to automate this
+	// iterate over all triggers, check if InputStart/EndTouch is in scope, if not apply this.
+	TouchCrashFix 	  = @() (activator == null || !activator.IsValid()) ? false : true
+
+	// This can just be a variable name since RAND_MAX is a pre-defined constant
+	// would not be backwards compatible if anyone's using PopExtUtil.IsLinuxServer() though
+	IsLinuxServer = @() RAND_MAX != 32767
 
 	function ShowMessage(message) {
 		ClientPrint(null, HUD_PRINTCENTER, message)
 	}
 
-	function ForceChangeClass(player, classindex = 1)
-	{
+	function ForceChangeClass(player, classindex = 1) {
+
 		player.SetPlayerClass(classindex);
 		SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", classindex);
 		player.ForceRegenerateAndRespawn();
 	}
 
-	function PlayerClassCount()
-	{
+	function PlayerClassCount() {
+
 		local classes = array(TF_CLASS_COUNT_ALL, 0)
 		foreach (player in HumanArray)
 			++classes[player.GetPlayerClass()]
 		return classes
 	}
 
-	function ChangePlayerTeamMvM(player, teamnum = TF_TEAM_PVE_INVADERS)
-	{
+	function ChangePlayerTeamMvM(player, teamnum = TF_TEAM_PVE_INVADERS, forcerespawn = false) {
+
 		if (GameRules) {
 			SetPropBool(GameRules, "m_bPlayingMannVsMachine", false);
 			player.ForceChangeTeam(teamnum, false);
 			SetPropBool(GameRules, "m_bPlayingMannVsMachine", true);
+			if (forcerespawn)
+				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", SINGLE_TICK, null, null)
 		}
 	}
 
@@ -334,16 +347,27 @@
 		// Return the RGB values as an array
 		return [r, g, b]
 	}
-	function CountAlivePlayers(printout = false)
-	{
+
+	function CountAlivePlayers(countbots = false, printout = false) {
+
 		if (!IsWaveStarted) return
 
 		local playersalive = 0
 
-		foreach (player in HumanArray)
+		local player_array = countbots ? BotArray : HumanArray
+		local players_len = player_array.len() - 1
+
+		for (local i = players_len; i >= 0; i--)
 		{
-			if (player.IsAlive())
-				playersalive++
+			local player = player_array[i]
+			if (!player || !player.IsValid())
+			{
+				player_array.remove(i)
+				continue
+			}
+			if (!player.IsAlive()) continue
+
+			playersalive++
 		}
 
 		if (printout)
@@ -354,28 +378,15 @@
 
 		return playersalive
 	}
-	function CountAliveBots(printout = false)
-	{
-		if (!IsWaveStarted) return
 
-		local botsalive = 0
+	// TODO: add deprecation warning after updating redridge to use PopExtUtil.CountAlivePlayers(true)
+	function CountAliveBots(printout = false) {
 
-		foreach (bot in BotArray)
-		{
-			if (bot.IsAlive())
-				botsalive++
-		}
-
-		if (printout)
-		{
-			ClientPrint(null, HUD_PRINTTALK, format("Bots Alive: %d", botsalive))
-			printf("Bots Alive: %d\n", botsalive)
-		}
-
-		return botsalive
+		// PopExtMain.Error.DeprecationWarning("PopExtUtil.CountAliveBots", "PopExtUtil.CountAlivePlayers(true)")
+		CountAlivePlayers(true, printout)
 	}
-	function SetParentLocalOriginDo(child, parent, attachment = null) 
-	{
+	function SetParentLocalOriginDo(child, parent, attachment = null) {
+
 		SetPropEntity(child, "m_hMovePeer", parent.FirstMoveChild())
 		SetPropEntity(parent, "m_hMoveChild", child)
 		SetPropEntity(child, "m_hMoveParent", parent)
@@ -401,8 +412,8 @@
 
 	// Sets parent immediately in a dirty way. Does not retain absolute origin, retains local origin instead.
 	// child parameter may also be an array of entities
-	function SetParentLocalOrigin(child, parent, attachment = null) 
-	{
+	function SetParentLocalOrigin(child, parent, attachment = null) {
+
 		if (typeof child == "array")
 			foreach(i, childIn in child)
 				SetParentLocalOriginDo(childIn, parent, attachment)
@@ -411,8 +422,8 @@
 	}
 
 	// Setup collision bounds of a trigger entity
-	function SetupTriggerBounds(trigger, mins = null, maxs = null) 
-	{
+	function SetupTriggerBounds(trigger, mins = null, maxs = null) {
+
 		trigger.SetModel("models/weapons/w_models/w_rocket.mdl")
 
 		if (mins != null) {
@@ -427,8 +438,8 @@
 		trigger.SetSolid(SOLID_BBOX)
 	}
 
-	function PrintTable(table) 
-	{
+	function PrintTable(table) {
+
 		if (table == null) return;
 
 		DoPrintTable(table, 0)
@@ -479,8 +490,8 @@
 	}
 
 	// LEGACY: THIS DOES NOT APPLY TO RAGDOLLS! use GiveWearableItem instead
-	function CreatePlayerWearable(player, model, bonemerge = true, attachment = null, autoDestroy = true) 
-	{
+	function CreatePlayerWearable(player, model, bonemerge = true, attachment = null, autoDestroy = true) {
+
 		PopExtMain.Error.DeprecationWarning("PopExtUtil.CreatePlayerWearable", "PopExtUtil.GiveWearableItem")
 		local modelIndex = GetModelIndex(model)
 		if (modelIndex == -1)
@@ -517,8 +528,8 @@
 
 	// Make a fake wearable that is attached to the player.
 	// The wearable is automatically removed on respawn.
-	function GiveWearableItem(player, item_id, model = false) 
-	{
+	function GiveWearableItem(player, item_id, model = false) {
+
 		local modelindex = GetModelIndex(model)
 		if (modelindex == -1)
 			modelindex = PrecacheModel(model)
@@ -556,8 +567,8 @@
 		return wearable
 	}
 
-	function StripWeapon(player, slot = -1)
-	{
+	function StripWeapon(player, slot = -1) {
+
 		if (slot == -1) slot = player.GetActiveWeapon().GetSlot()
 
 		for (local i = 0; i < SLOT_COUNT; i++)
@@ -571,8 +582,8 @@
 		}
 	}
 
-	function SetPlayerAttributes(player, attrib, value, item = null, customwep_force = false)
-	{
+	function SetPlayerAttributes(player, attrib, value, item = null, customwep_force = false) {
+
 		local items = {}
 
 		//setting maxhealth attribs doesn't update current HP
@@ -690,8 +701,8 @@
 			}
 		}
 	}
-	function SetPlayerAttributesNoLoop(player, attrib, value, item = null, customwep_force = false)
-	{
+	function SetPlayerAttributesNoLoop(player, attrib, value, item = null, customwep_force = false) {
+
 		local items = {}
 
 		//setting maxhealth attribs doesn't update current HP
@@ -805,13 +816,13 @@
 		}
 	}
 
-	function WeaponSwitchSlot(player, slot)
-	{
+	function WeaponSwitchSlot(player, slot) {
+
 		EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player)
 	}
 
-	function DoExplanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02)
-	{
+	function DoExplanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
+
 		local rgb = HexToRgb("FFFF66")
 		local txtent = SpawnEntityFromTable("game_text", {
 			effect = 2,
@@ -948,7 +959,7 @@
 	//sets m_hOwnerEntity and m_hOwner to the same value
 	function _SetOwner(ent, owner) {
 		//incase we run into an ent that for some reason uses both of these netprops for two different entities
-		if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwner")) 
+		if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwner"))
 		{
 			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
 			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
@@ -1078,12 +1089,12 @@
 
 		SetPropBool(GameRules, "m_bIsInTraining", true)
 		SetPropBool(GameRules, "m_bAllowTrainingAchievements", true)
-	
+
 		tutorial_text.AcceptInput("ShowTrainingHUD","", null, null)
 		tutorial_text.AcceptInput("ShowTrainingObjective", title, null, null)
 		tutorial_text.AcceptInput("ShowTrainingMsg", text, null, null)
 		tutorial_text.Kill()
-		
+
 		Convars.SetValue("hide_server", 0)
 
 		EntFireByHandle(GameRules, "RunScriptCode", "SetPropBool(self, `m_bIsInTraining`, false)", duration, null, null)
@@ -1124,7 +1135,7 @@
 	function PressButton(player, button, duration = -1) {
 		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") | button)
 		SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") | button)
-		
+
 		if (duration != -1)
 			PlayerScriptEntFire(player, format("PopExtUtil.ReleaseButton(self, %d)", button), duration)
 	}
@@ -1215,7 +1226,7 @@
 
 		for (local i = 0; i < SLOT_COUNT; i++) {
 			local wep = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)
-			if ( wep == null) continue
+			if ( wep == null ) continue
 
 			player.Weapon_Switch(wep)
 			return wep
@@ -1231,7 +1242,7 @@
 	}
 
 	// OBSOLETE: Use PlayerBonemergeModel instead
-	// misleading name, this can accept any model 
+	// misleading name, this can accept any model
 	// previously was only used for popext_usehumananimations
 	function PlayerRobotModel(player, model) {
 
@@ -1239,7 +1250,7 @@
 
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
-		
+
 		local wearable = CreateByClassname("tf_wearable")
 		SetPropString(wearable, "m_iName", "__util_bonemerge_model")
 		SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model))
@@ -1285,9 +1296,10 @@
 		SetPropInt(player, "m_nRenderMode", kRenderTransColor)
 		SetPropInt(player, "m_clrRender", 0)
 
-		scope.PlayerThinkTable.BotModelThink <- function() {
-			if (wearable.IsValid() && (player.IsTaunting() || wearable.GetMoveParent() != player))
-				wearable.AcceptInput("SetParent", "!activator", player, player)
+		scope.PlayerThinkTable.BonemergeModelThink <- function() {
+
+			if (bonemerge_model.IsValid() && (player.IsTaunting() || bonemerge_model.GetMoveParent() != player))
+				bonemerge_model.AcceptInput("SetParent", "!activator", player, player)
 			return -1
 		}
 	}
@@ -1363,7 +1375,7 @@
 		//didn't find weapon in children, go through m_hMyWeapons instead
 		for (local i = 0; i < SLOT_COUNT; i++) {
 			local wep = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)
-			
+
 			if (!wep || !wep.IsValid()) continue
 
 			if (
@@ -1464,6 +1476,7 @@
 	}
 
 	function AddAttributeToLoadout(player, attribute, value, duration = -1) {
+
 		for (local i = 0; i < SLOT_COUNT; i++) {
 
 			local wep = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)
@@ -1476,6 +1489,7 @@
 	}
 
 	function ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = INT_MAX, bodygroup = null) {
+
 		PrecacheModel(model[0])
 		local proxy_entity = CreateByClassname("obj_teleporter") // use obj_teleporter to set bodygroups.  not using SpawnEntityFromTable as that creates spawning noises
 		proxy_entity.SetAbsOrigin(pos)
@@ -1591,7 +1605,7 @@
 			return GetPropEntityArray(ent, prop, i)
 		else if (type == "integer")
 			return GetPropIntArray(ent, prop, i)
-		else 
+		else
 		{
 			local funcname = format("GetProp%sArray", type.slice(0, 1).toupper() + type.slice(1))
 			return ROOT[funcname](ent, prop, i)
@@ -1604,7 +1618,7 @@
 			SetPropEntityArray(ent, prop, value, i)
 		else if (type == "integer")
 			SetPropIntArray(ent, prop, value, i)
-		else 
+		else
 		{
 			local funcname = format("SetProp%sArray", type.slice(0, 1).toupper() + type.slice(1))
 			ROOT[funcname](ent, prop, value, i)
@@ -1619,8 +1633,8 @@
 		return
 	}
 
-	function GiveWeapon(player, className, itemID)
-	{
+	function GiveWeapon(player, className, itemID) {
+
 		if (typeof itemID == "string" && className == "tf_wearable")
 		{
 			CTFBot.GenerateAndWearItem.call(player, itemID)
@@ -1892,8 +1906,8 @@
 
 	// Python's string.partition(), except the separator itself is not returned
 	// Basically like calling python's string.split(sep, 1), notice the 1 meaning to only split once
-	function splitonce(s, sep = null)
-	{
+	function splitonce(s, sep = null) {
+
 		if (sep == null) return [s, null]
 
 		local pos = s.find(sep)
@@ -1903,8 +1917,8 @@
 		return [result_left, result_right]
 	}
 
-	function EndWaveReverse(doteamswitch = true)
-	{
+	function EndWaveReverse(doteamswitch = true) {
+
 		local temp = CreateByClassname("info_teleport_destination")
 
 		if (!IsWaveStarted) return
@@ -1915,16 +1929,16 @@
 				ChangePlayerTeamMvM(player, TF_TEAM_PVE_DEFENDERS)
 
 		temp.ValidateScriptScope()
-		temp.GetScriptScope().ClearWave <- function()
-		{
+		temp.GetScriptScope().ClearWave <- function() {
+
 			if (!PopExtUtil.IsWaveStarted) {
 
 				if (doteamswitch)
 					foreach (player in PopExtUtil.HumanArray)
 						PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_INVADERS)
 
-				SetPropString(self, "m_iszScriptThinkFunction", "")
-				EntFireByHandle(self, "Kill", "", -1, null, null)
+				self.Kill()
+				return 1
 			}
 			//kill all bots
 			foreach (bot in PopExtUtil.BotArray)
@@ -1935,8 +1949,8 @@
 		AddThinkToEnt(temp, "ClearWave")
 	}
 
-	function AddThinkToEnt(ent, func)
-	{
+	function AddThinkToEnt(ent, func) {
+
 		local scope = ent.GetScriptScope()
 		local thinktable = ""
 
@@ -2160,8 +2174,8 @@
 		entfirefunc(player, "RunScriptCode", format(@"if(self.IsAlive()) %s", param), delay, activator, caller)
 	}
 
-	function SetDestroyCallback(entity, callback)
-	{
+	function SetDestroyCallback(entity, callback) {
+
 		entity.ValidateScriptScope();
 		local scope = entity.GetScriptScope();
 		scope.setdelegate({}.setdelegate({
@@ -2169,12 +2183,10 @@
 				id       = entity.GetScriptId()
 				index    = entity.entindex()
 				callback = callback
-				_get = function(k)
-				{
+				_get = function(k) {
 					return parent[k];
 				}
-				_delslot = function(k)
-				{
+				_delslot = function(k) {
 					if (k == id)
 					{
 						entity = EntIndexToHScript(index);
@@ -2233,8 +2245,8 @@
 
 	}
 
-	function ChangeLevel(mapname = "", delay = 1.0, mvm_cyclemissionfile = false)
-	{
+	function ChangeLevel(mapname = "", delay = 1.0, mvm_cyclemissionfile = false) {
+
 		if (mapname != "")
 		{
 			// listen servers can just do this
@@ -2270,11 +2282,13 @@
 		EntFireByHandle( intermission, "Activate", "", -1, null, null )
 	}
 
-	function ToStrictNum(str, float = false)
-	{
-	//	local rex = regexp(@"-?[0-9]+(\.0+)?")  // [-](digit)[.(>0 zeroes)]
-		local rex = regexp(@"-?[0-9]+(\.[0-9]+)?")
-		if (!rex.match(str)) return
+	function ToStrictNum(str, float = false) {
+
+		if (typeof str == "string") {
+			local rex = regexp(@"-?[0-9]+(\.[0-9]+)?")
+	
+			if (!rex.match(str)) return
+		}
 
 		try
 			return float ? str.tofloat() : str.tointeger()
@@ -2292,7 +2306,7 @@
 		function OnGameEvent_teamplay_round_start(params) {
 
 			SetPropBool(PopExtUtil.GameRules, "m_bIsInTraining", false)
-			
+
 			for (local i = 1; i <= MAX_CLIENTS; i++) {
 
 				local player = PlayerInstanceFromIndex(i)
@@ -2383,15 +2397,25 @@
 		}
 
 		function OnGameEvent_player_disconnect(params) {
+
 			local player = GetPlayerFromUserID(params.userid)
 
-			for (local i = PopExtUtil.HumanArray.len() - 1; i >= 0; i--)
-				if (PopExtUtil.HumanArray[i] == null || PopExtUtil.HumanArray[i] == player)
-					PopExtUtil.HumanArray.remove(i)
+			local human_array = PopExtUtil.HumanArray
+			local bot_array = PopExtUtil.BotArray
+			local player_array = PopExtUtil.PlayerArray
 
-			for (local i = PopExtUtil.PlayerArray.len() - 1; i >= 0; i--)
-				if (PopExtUtil.PlayerArray[i] == null || PopExtUtil.PlayerArray[i] == player)
-					PopExtUtil.PlayerArray.remove(i)
+			for (local i = human_array.len() - 1; i >= 0; i--)
+				if (human_array[i] == null || !human_array[i].IsValid() || human_array[i] == player)
+					human_array.remove(i)
+
+			// this is normally not needed, but certain missions (red ridge) will kick bots instead of moving them to spectator
+			for (local i = bot_array.len() - 1; i >= 0; i--)
+				if (bot_array[i] == null || !bot_array[i].IsValid() || bot_array[i] == player)
+					bot_array.remove(i)
+
+			for (local i = player_array.len() - 1; i >= 0; i--)
+				if (player_array[i] == null || !player_array[i].IsValid() || player_array[i] == player)
+					player_array.remove(i)
 		}
 	}
 }
@@ -2414,12 +2438,8 @@ __CollectGameEventCallbacks(PopExtUtil.Events)
 PopExtUtil.RespawnOverride.SetSolid(2);
 PopExtUtil.RespawnOverride.SetSize(Vector(), Vector(1, 1, 1))
 
-//fix delayed starttouch crash
-function RespawnStartTouch() { return (activator == null) ? false : true; }
-function RespawnEndTouch() { return (activator == null) ? false : true; }
-
 PopExtUtil.RespawnOverride.ValidateScriptScope();
-PopExtUtil.RespawnOverride.GetScriptScope().InputStartTouch <- RespawnStartTouch;
-PopExtUtil.RespawnOverride.GetScriptScope().Inputstarttouch <- RespawnStartTouch;
-PopExtUtil.RespawnOverride.GetScriptScope().InputEndTouch <- RespawnEndTouch;
-PopExtUtil.RespawnOverride.GetScriptScope().Inputendtouch <- RespawnEndTouch;
+PopExtUtil.RespawnOverride.GetScriptScope().InputStartTouch <- PopExtUtil.TouchCrashFix;
+PopExtUtil.RespawnOverride.GetScriptScope().Inputstarttouch <- PopExtUtil.TouchCrashFix;
+PopExtUtil.RespawnOverride.GetScriptScope().InputEndTouch <- PopExtUtil.TouchCrashFix;
+PopExtUtil.RespawnOverride.GetScriptScope().Inputendtouch <- PopExtUtil.TouchCrashFix;
