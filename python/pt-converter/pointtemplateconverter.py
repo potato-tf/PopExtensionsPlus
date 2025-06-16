@@ -169,7 +169,7 @@ def convert_proptype(prop, propval, arrayval):
 
 	if prop == 'm_iszMvMPopfileName':
 		print(COLOR['YELLOW'],f'WARNING: Changing m_iszMvMPopfileName can break map rotation on potato servers! Change back to default on mission complete',COLOR['ENDC'])
-  
+
 	if not arrayval == -1:
 		proptype = f'{proptype}Array'
 		return f'NetProps.SetProp{proptype}(self, `{prop}`, {propval}, {arrayval})'
@@ -191,17 +191,17 @@ def convert_proptype(prop, propval, arrayval):
 
 customweapons = {}
 def convert_raf_keyvalues(value):
-    
+
 	global switchslot, changeattribs, stripweps, customweapons
 	splitval_addoutput = []
 	if 'addoutput' in value.lower() and ':' in value.lower():
 		splitval = value.split(':')
 		splitval_addoutput = value.split(':')
 		splitval[0] = splitval_addoutput[0].split(' ')[1]
-  
+
 	elif len(value.split('')) > 1:
 		splitval = value.split('')
-  
+
 	else:
 		splitval = value.split(',')
 
@@ -217,13 +217,13 @@ def convert_raf_keyvalues(value):
 		splitval[0] = 'tf_gamerules'
 		splitval[1] = 'PlayVO'
 		splitval[2] = splitval[2].replace('\\', '/')
-  
+
 		if '|' in splitval[2]:
 			splitval[2] = splitval[2].split('|')[1]
 			print(COLOR['YELLOW'],f'WARNING: ignoring pipe separator in {splitval[2]} for $playsoundtoself',COLOR['ENDC'])
 		splitval[-1] = splitval[-1].split('"')[0]
 
-	
+
 	# convert tf_gamerules StopVO to VScript stopsound on every player
 	elif '$stopvo' in splitval[1].lower():
 		print(COLOR['GREEN'],f'Converting {splitval[1]} input to StopSound',COLOR['ENDC'])
@@ -432,7 +432,7 @@ def convert_raf_keyvalues(value):
 		stripweps = True
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'PopExtUtil.StripWeapon(self, {splitval[2]})'
-	
+
 	elif '$changelevel' in splitval[1].lower():
 		print(COLOR['GREEN'],f'Converting {splitval[1]} to PopExtUtil.ChangeLevel()',COLOR['ENDC'])
 		splitval[1] = 'RunScriptCode'
@@ -440,7 +440,7 @@ def convert_raf_keyvalues(value):
 		if len(splitkey) > 1:
 			print(COLOR['YELLOW'],f'WARNING: {splitkey[1]} will not be loaded automatically!',COLOR['ENDC'])
 		splitval[2] = f'PopExtUtil.ChangeLevel(`{splitkey[0]}`)'
-  
+
 	elif '$pausewavespawn' in splitval[1].lower() or '$resumewavespawn' in splitval[1].lower():
 		print(COLOR['RED'],f'ERROR: {splitval[1]} is not supported!\nSpawn bots at unique spawn points and enable/disable the spawns instead.',COLOR['ENDC'])
 
@@ -519,31 +519,31 @@ def convertpointtemplates(pop, indentationnumber, depth):
 
 			if key[0] == '"' and key[-1] == '"':
 				key = key[1:-1]
-    
+
 			if type(value) == str and value.count(',') == 4: value = convert_raf_keyvalues(value)
-   
+
 			newvalue = value.replace('\\', '/')
-   
+
 			if any(key.lower().startswith(x) for x in key_prefixes):
-       
+
 				if key.lower() in uniqueoutputs.keys():
 					uniqueoutputs.update({key.lower() : uniqueoutputs[key.lower()] + 1})
-     
+
 				else:
 					uniqueoutputs.update({key.lower() : 1})
 				print('"' + key + '#' + str(uniqueoutputs[key.lower()]) + '"', end = '', file=output)
 				print(" : ", end = '', file=output)
-    
+
 				if newvalue[0] == '"' and newvalue[-1] == '"':
 					newvalue = newvalue[1:-1]
-     
+
 				separator = ',' if not '' in newvalue else ''
 				newoutput = newvalue.split(separator)
-				
+
 				if len(newoutput) == 3:
 					newoutput.append("0")
 					newoutput.append("-1")
-     
+
 				if len(newoutput) == 4:
 					if newoutput[3] == '':
 						newoutput[3] = "0"
@@ -552,38 +552,38 @@ def convertpointtemplates(pop, indentationnumber, depth):
 				if len(newoutput) == 5:
 					if newoutput[4] == '':
 						newoutput[4] = "-1"
-      
+
 				print('"' + separator.join(newoutput) + '",', file=output)
-    
+
 			else:
 				if (key == 'mins' or key == 'maxs') and not valid_minmax:
 					v = value.replace('"', '').strip().split(' ')
 					minmax_check[key] = v
-		
+
 				if 'mins' in minmax_check and 'maxs' in minmax_check:
 					minsum = sum(float(i) for i in minmax_check['mins'])
 					maxsum = sum(float(i) for i in minmax_check['maxs'])
-		
+
 					if minsum > maxsum:
 						print(COLOR['RED'],f'ERROR: mins ({minsum}) > maxs ({maxsum})!\nINVERT THIS IN THE OUTPUT FILE TO AVOID A SERVER CRASH!\n',COLOR['ENDC'])
 						print(COLOR['RED'],pop,COLOR['ENDC'])
 					minmax_check.clear()
-	
+
 				print(key, end = '', file=output)
 				print(" = ", end = '', file=output)
-	
+
 				if newvalue[0] == '"' and newvalue[-1] == '"':
 					newvalue = newvalue[1:-1]
-	
+
 				try:
 					float(newvalue)
 				except:
 					print('"' + newvalue + '"' + ',', file=output)
-	
+
 				else:
 					if newvalue[0] == '.':
 						print('0' + newvalue + ',', file=output)
-	
+
 					else:
 						print(newvalue + ',', file=output)
 
@@ -616,7 +616,7 @@ def convertspawntemplates(pop):
 	# print(stemplates)
 	funcs = []
 	for template in stemplates:
-		
+
 		if len(template) < 1: continue
 
 		func = f'SpawnTemplate({template["Name"]}, null'

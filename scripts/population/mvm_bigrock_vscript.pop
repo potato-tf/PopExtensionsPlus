@@ -90,7 +90,7 @@ WaveSchedule
 						`MVM.PlayerDied`: null
 					}
 					IconOverride = {
-		
+
 						heavy_mittens = {
 							wave = 2
 							flags = 0 // see constants.nut for flags
@@ -236,7 +236,7 @@ WaveSchedule
 				// }
 			}
 		}
-		WaveSpawn 
+		WaveSpawn
 		{
 
 			Name "Wave1a"
@@ -267,7 +267,7 @@ WaveSchedule
 				// Tag "popext_rocketcustomtrail|eyeboss_projectile"
 			}
 		}
-		WaveSpawn 
+		WaveSpawn
 		{
 
 			Name "Wave1a"

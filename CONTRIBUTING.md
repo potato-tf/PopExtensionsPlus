@@ -6,7 +6,8 @@
 - K&R syntax (inline opening braces, newline after)
 - Valve-style argument formatting (spaces between opening/closing parentheses)
 - Trim whitespace (Ctrl+M then Ctrl+X in VSCode)
-- Use ternaries and lambda functions where appropriate 
+- No inline comments, comments should always be above the code they are meant to explain
+- Use ternaries and lambda functions where appropriate
     - simple yes/no conditional checks, simple functions that return a value and do nothing else, do not look at ExtraTankPath xd
 - Use PopExtUtil functions as much as possible, all generic re-usable functions go here
 - Use PopExtMain.Error for parse errors and warnings, do not use error() or other print functions
@@ -74,19 +75,19 @@ if ( condition1 != 0 )
 
     if ( condition2 == 3 )
         // wrong! condition1 and condition2 checks must also have enclosing brackets.
-        foreach( thing in myarray ) { 
+        foreach( thing in myarray ) {
 
             somevar = thing1
             printl( thing )
         }
-    
+
 ```
 
 ### Long AND/OR comparisons
 - Format like this:
 ```js
 if (
-    condition1 
+    condition1
     || condition2
     || condition3
     || condition4
@@ -107,24 +108,24 @@ if (
 
 ### VSCode regex Find/Replace patterns
 - Trailing semicolons:
-    - Find: ``;\s*$`` 
+    - Find: ``;\s*$``
     - Replace: empty string
 - Convert all Allman-style syntax (opening brace on newline) to K&R:
     - Functions/Misc:
         - Find: ``((?:function\s+\w+|function|\w+\s*=\s*function|\w+)\s*\([^)]*\)\s*)\n\s*\{``
-    - Control flow (if statements, loops, etc):    
+    - Control flow (if statements, loops, etc):
         - Find: ``((|if|else\s+if|else|for|while|switch|try|catch|class\s+\w+)\s*(?:\([^)]*\))?\s*)\n\s*\{``
     - Replace: ``$1 { \n``
     - Finding broken brackets due to inline comments: ``\/\/ s* \{``
 - Valve-style argument formatting:
     - Opening parentheses:
-        - Find: ``\(([^\s)])`` 
+        - Find: ``\(([^\s)])``
         - Replace: ``( $1``
     - Closing parentheses:
-        - Find: ``([^\s])\)`` 
+        - Find: ``([^\s])\)``
         - Replace: ``$1 )``
-    - Disable regex search 
-    - Find: ``( )`` Replace: ``()`` 
+    - Disable regex search
+    - Find: ``( )`` Replace: ``()``
     - Find: ``))`` Replace: ``) )`` (might not need this one?)
 - Trim whitespace:
     - Find: ``\s+$``
@@ -141,8 +142,8 @@ if (
 
 ## Cleanup
 - all entity targetnames prefixed with these will be wiped out on wave/mission change:
-    - `__popext` 
-    - `__util` 
+    - `__popext`
+    - `__util`
     - `__bot`
     - `extratankpath`
 - See the `teamplay_round_start` event in popextensions_main.nut for dealing with global variable cleanup

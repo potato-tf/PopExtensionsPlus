@@ -964,11 +964,14 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 					EntFireByHandle( player, "SetCustomModelWithClassAnimations", model, SINGLE_TICK, null, null )
 					PopExtUtil.SetEntityColor( player, 255, 255, 255, 255 )
-					SetPropInt( player, "m_nRenderMode", kRenderFxNone ) // dangerous constant name lol
+					SetPropInt( player, "m_nRenderMode", kRenderFxNone )
+					// doesn't completely remove the eye-glow but makes it less visible
+					EntFireByHandle( player, "DispatchEffect", "ParticleEffectStop", SINGLE_TICK, null, null )
 				}
 
 				if ( value & 2 ) {
-					if ( value & 1 ) value = value & 1 // incompatible flags
+					// incompatible flags
+					if ( value & 1 ) value = value & 1
 					PopExtUtil.PlayerBonemergeModel( player, model )
 				}
 
@@ -1037,7 +1040,6 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				if ( value & 16 ) {
 
 					//run this with a delay for LoadoutControl
-
 					EntFireByHandle( player, "RunScriptCode", @"
 
 						if ( `HandModelOverride` in MissionAttributes.SpawnHookTable ) return
