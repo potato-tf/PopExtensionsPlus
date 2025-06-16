@@ -1,4 +1,3 @@
-
 - Anything in the existing code that breaks these formatting rules was done before these rules became a thing.
 - Offending lines of code that already exist are not a pass to break them yourself.
 
