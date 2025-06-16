@@ -1,6 +1,6 @@
 local FromItemsGame = {
-	[1] =
-	{
+	[1] = {
+
 		"name" : "damage penalty"
 		"attribute_class" : "mult_dmg"
 		"description_string" : "#Attrib_DamageDone_Negative"
@@ -9,8 +9,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[2] =
-	{
+	[2] = {
+
 		"name" : "damage bonus"
 		"attribute_class" : "mult_dmg"
 		"description_string" : "#Attrib_DamageDone_Positive"
@@ -19,8 +19,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[3] =
-	{
+	[3] = {
+
 		"name" : "clip size penalty"
 		"attribute_class" : "mult_clipsize"
 		"description_string" : "#Attrib_ClipSize_Negative"
@@ -29,8 +29,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[4] =
-	{
+	[4] = {
+
 		"name" : "clip size bonus"
 		"attribute_class" : "mult_clipsize"
 		"description_string" : "#Attrib_ClipSize_Positive"
@@ -39,8 +39,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[5] =
-	{
+	[5] = {
+
 		"name" : "fire rate penalty"
 		"attribute_class" : "mult_postfiredelay"
 		"description_string" : "#Attrib_FireRate_Negative"
@@ -49,8 +49,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[6] =
-	{
+	[6] = {
+
 		"name" : "fire rate bonus"
 		"attribute_class" : "mult_postfiredelay"
 		"description_string" : "#Attrib_FireRate_Positive"
@@ -59,8 +59,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[7] =
-	{
+	[7] = {
+
 		"name" : "heal rate penalty"
 		"attribute_class" : "mult_medigun_healrate"
 		"description_string" : "#Attrib_HealRate_Negative"
@@ -69,8 +69,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[8] =
-	{
+	[8] = {
+
 		"name" : "heal rate bonus"
 		"attribute_class" : "mult_medigun_healrate"
 		"description_string" : "#Attrib_HealRate_Positive"
@@ -79,8 +79,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[9] =
-	{
+	[9] = {
+
 		"name" : "ubercharge rate penalty"
 		"attribute_class" : "mult_medigun_uberchargerate"
 		"description_string" : "#Attrib_UberchargeRate_Negative"
@@ -89,8 +89,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[10] =
-	{
+	[10] = {
+
 		"name" : "ubercharge rate bonus"
 		"attribute_class" : "mult_medigun_uberchargerate"
 		"description_string" : "#Attrib_UberchargeRate_Positive"
@@ -99,8 +99,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[11] =
-	{
+	[11] = {
+
 		"name" : "overheal bonus"
 		"attribute_class" : "mult_medigun_overheal_amount"
 		"description_string" : "#Attrib_OverhealAmount_Positive"
@@ -109,8 +109,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[12] =
-	{
+	[12] = {
+
 		"name" : "overheal decay penalty"
 		"attribute_class" : "mult_medigun_overheal_decay"
 		"description_string" : "#Attrib_OverhealDecay_Negative"
@@ -119,8 +119,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[13] =
-	{
+	[13] = {
+
 		"name" : "overheal decay bonus"
 		"attribute_class" : "mult_medigun_overheal_decay"
 		"description_string" : "#Attrib_OverhealDecay_Positive"
@@ -129,8 +129,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[14] =
-	{
+	[14] = {
+
 		"name" : "overheal decay disabled"
 		"attribute_class" : "mult_medigun_overheal_decay"
 		"description_string" : "#Attrib_OverhealDecay_Disabled"
@@ -139,8 +139,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[15] =
-	{
+	[15] = {
+
 		"name" : "crit mod disabled"
 		"attribute_class" : "mult_crit_chance"
 		"description_string" : "#Attrib_CritChance_Disabled"
@@ -150,8 +150,8 @@ local FromItemsGame = {
 		"armory_desc" : "no_crits"
 		"stored_as_integer" : "0"
 	},
-	[16] =
-	{
+	[16] = {
+
 		"name" : "heal on hit for rapidfire"
 		"attribute_class" : "add_onhit_addhealth"
 		"description_string" : "#Attrib_HealOnHit_Positive"
@@ -161,8 +161,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[17] =
-	{
+	[17] = {
+
 		"name" : "add uber charge on hit"
 		"attribute_class" : "add_onhit_ubercharge"
 		"description_string" : "#Attrib_AddUber_OnHit_Positive"
@@ -172,8 +172,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[18] =
-	{
+	[18] = {
+
 		"name" : "medigun charge is crit boost"
 		"attribute_class" : "set_charge_type"
 		"description_string" : "#Attrib_Medigun_CritBoost"
@@ -182,8 +182,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[19] =
-	{
+	[19] = {
+
 		"name" : "tmp dmgbuff on hit"
 		"attribute_class" : "addperc_ondmgdone_tmpbuff"
 		"description_string" : "#Attrib_DamageDoneBonus_Positive"
@@ -193,8 +193,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[20] =
-	{
+	[20] = {
+
 		"name" : "crit vs burning players"
 		"attribute_class" : "or_crit_vs_playercond"
 		"description_string" : "#Attrib_CritVsBurning"
@@ -203,8 +203,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[21] =
-	{
+	[21] = {
+
 		"name" : "dmg penalty vs nonburning"
 		"attribute_class" : "mult_dmg_vs_nonburning"
 		"description_string" : "#Attrib_DmgPenaltyVsNonBurning"
@@ -213,8 +213,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[22] =
-	{
+	[22] = {
+
 		"name" : "no crit vs nonburning"
 		"attribute_class" : "set_nocrit_vs_nonburning"
 		"description_string" : "#Attrib_NoCritVsNonBurning"
@@ -223,8 +223,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[23] =
-	{
+	[23] = {
+
 		"name" : "mod flamethrower push"
 		"attribute_class" : "set_flamethrower_push_disabled"
 		"description_string" : "#Attrib_ModFlamethrowerPush"
@@ -233,8 +233,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[24] =
-	{
+	[24] = {
+
 		"name" : "mod flamethrower back crit"
 		"attribute_class" : "set_flamethrower_back_crit"
 		"description_string" : "#Attrib_ModFlamethrower_BackCrits"
@@ -243,8 +243,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[25] =
-	{
+	[25] = {
+
 		"name" : "hidden secondary max ammo penalty"
 		"attribute_class" : "mult_maxammo_secondary"
 		"description_string" : "unused"
@@ -253,8 +253,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[26] =
-	{
+	[26] = {
+
 		"name" : "max health additive bonus"
 		"attribute_class" : "add_maxhealth"
 		"description_string" : "#Attrib_MaxHealth_Positive"
@@ -264,8 +264,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[27] =
-	{
+	[27] = {
+
 		"name" : "alt-fire disabled"
 		"attribute_class" : "unimplemented_altfire_disabled"
 		"description_string" : "#Attrib_AltFire_Disabled"
@@ -274,8 +274,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[28] =
-	{
+	[28] = {
+
 		"name" : "crit mod disabled hidden"
 		"attribute_class" : "mult_crit_chance"
 		"description_string" : "#Attrib_CritChance_Disabled"
@@ -284,8 +284,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[30] =
-	{
+	[30] = {
+
 		"name" : "fists have radial buff"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_FistsHaveRadialBuff"
@@ -294,8 +294,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[31] =
-	{
+	[31] = {
+
 		"name" : "critboost on kill"
 		"attribute_class" : "add_onkill_critboost_time"
 		"description_string" : "#Attrib_CritBoost_OnKill"
@@ -305,8 +305,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_kill"
 		"stored_as_integer" : "0"
 	},
-	[32] =
-	{
+	[32] = {
+
 		"name" : "slow enemy on hit"
 		"attribute_class" : "mult_onhit_enemyspeed"
 		"description_string" : "#Attrib_Slow_Enemy_OnHit"
@@ -316,8 +316,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[33] =
-	{
+	[33] = {
+
 		"name" : "set cloak is feign death"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_CloakIsFeignDeath"
@@ -327,8 +327,8 @@ local FromItemsGame = {
 		"armory_desc" : "cloak_type"
 		"stored_as_integer" : "0"
 	},
-	[34] =
-	{
+	[34] = {
+
 		"name" : "mult cloak meter consume rate"
 		"attribute_class" : "mult_cloak_meter_consume_rate"
 		"description_string" : "#Attrib_CloakMeterConsumeRate"
@@ -337,8 +337,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[35] =
-	{
+	[35] = {
+
 		"name" : "mult cloak meter regen rate"
 		"attribute_class" : "mult_cloak_meter_regen_rate"
 		"description_string" : "#Attrib_CloakMeterRegenRate"
@@ -347,8 +347,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[36] =
-	{
+	[36] = {
+
 		"name" : "spread penalty"
 		"attribute_class" : "mult_spread_scale"
 		"description_string" : "#Attrib_Spread_Negative"
@@ -357,8 +357,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[37] =
-	{
+	[37] = {
+
 		"name" : "hidden primary max ammo bonus"
 		"attribute_class" : "mult_maxammo_primary"
 		"description_string" : "unused"
@@ -367,8 +367,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[38] =
-	{
+	[38] = {
+
 		"name" : "mod bat launches balls"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_BatLaunchesBalls"
@@ -377,8 +377,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[39] =
-	{
+	[39] = {
+
 		"name" : "dmg penalty vs nonstunned"
 		"attribute_class" : "unimplemented_mod_dmg_vs_nonstunned"
 		"description_string" : "#Attrib_DmgPenaltyVsNonStunned"
@@ -387,8 +387,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[40] =
-	{
+	[40] = {
+
 		"name" : "zoom speed mod disabled"
 		"attribute_class" : "unimplemented_mod_zoom_speed_disabled"
 		"description_string" : "#Attrib_ZoomSpeedMod_Disabled"
@@ -397,8 +397,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[41] =
-	{
+	[41] = {
+
 		"name" : "sniper charge per sec"
 		"attribute_class" : "mult_sniper_charge_per_sec"
 		"description_string" : "#Attrib_SniperCharge_Per_Sec"
@@ -407,8 +407,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[42] =
-	{
+	[42] = {
+
 		"name" : "sniper no headshots"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_SniperNoHeadshots"
@@ -417,8 +417,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[43] =
-	{
+	[43] = {
+
 		"name" : "scattergun no reload single"
 		"attribute_class" : "set_scattergun_no_reload_single"
 		"description_string" : "#Attrib_Scattergun_NoReloadSingle"
@@ -427,8 +427,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[44] =
-	{
+	[44] = {
+
 		"name" : "scattergun has knockback"
 		"attribute_class" : "set_scattergun_has_knockback"
 		"description_string" : "#Attrib_Scattergun_HasKnockback"
@@ -437,8 +437,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[45] =
-	{
+	[45] = {
+
 		"name" : "bullets per shot bonus"
 		"attribute_class" : "mult_bullets_per_shot"
 		"description_string" : "#Attrib_BulletsPerShot_Bonus"
@@ -447,8 +447,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[46] =
-	{
+	[46] = {
+
 		"name" : "sniper zoom penalty"
 		"attribute_class" : "mult_zoom_fov"
 		"description_string" : "#Attrib_SniperZoom_Penalty"
@@ -457,8 +457,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[47] =
-	{
+	[47] = {
+
 		"name" : "sniper no charge"
 		"attribute_class" : "unimplemented_mod_sniper_no_charge"
 		"description_string" : "#Attrib_SniperNoCharge"
@@ -467,8 +467,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[48] =
-	{
+	[48] = {
+
 		"name" : "set cloak is movement based"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_CloakIsMovementBased"
@@ -478,8 +478,8 @@ local FromItemsGame = {
 		"armory_desc" : "cloak_type"
 		"stored_as_integer" : "0"
 	},
-	[49] =
-	{
+	[49] = {
+
 		"name" : "no double jump"
 		"attribute_class" : "set_scout_doublejump_disabled"
 		"description_string" : "#Attrib_NoDoubleJump"
@@ -488,8 +488,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[50] =
-	{
+	[50] = {
+
 		"name" : "absorb damage while cloaked"
 		"attribute_class" : "unimplemented_absorb_dmg_while_cloaked"
 		"description_string" : "#Attrib_AbsorbDmgWhileCloaked"
@@ -498,8 +498,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[51] =
-	{
+	[51] = {
+
 		"name" : "revolver use hit locations"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_RevolverUseHitLocations"
@@ -508,8 +508,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[52] =
-	{
+	[52] = {
+
 		"name" : "backstab shield"
 		"attribute_class" : "set_blockbackstab_once"
 		"description_string" : "#Attrib_BackstabShield"
@@ -518,8 +518,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[53] =
-	{
+	[53] = {
+
 		"name" : "fire retardant"
 		"attribute_class" : "set_fire_retardant"
 		"description_string" : "#Attrib_FireRetardant"
@@ -529,8 +529,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[54] =
-	{
+	[54] = {
+
 		"name" : "move speed penalty"
 		"attribute_class" : "mult_player_movespeed"
 		"description_string" : "#Attrib_MoveSpeed_Penalty"
@@ -540,8 +540,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[55] =
-	{
+	[55] = {
+
 		"name" : "obsolete ammo penalty"
 		"attribute_class" : "obsolete"
 		"description_string" : "unused"
@@ -550,8 +550,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[56] =
-	{
+	[56] = {
+
 		"name" : "jarate description"
 		"attribute_class" : "desc_jarate_description"
 		"description_string" : "#Attrib_Jarate_Description"
@@ -560,8 +560,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[57] =
-	{
+	[57] = {
+
 		"name" : "health regen"
 		"attribute_class" : "add_health_regen"
 		"description_string" : "#Attrib_HealthRegen"
@@ -571,8 +571,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[58] =
-	{
+	[58] = {
+
 		"name" : "self dmg push force increased"
 		"attribute_class" : "mult_dmgself_push_force"
 		"description_string" : "#Attrib_SelfDmgPush_Increased"
@@ -582,8 +582,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[59] =
-	{
+	[59] = {
+
 		"name" : "self dmg push force decreased"
 		"attribute_class" : "mult_dmgself_push_force"
 		"description_string" : "#Attrib_SelfDmgPush_Decreased"
@@ -593,8 +593,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[60] =
-	{
+	[60] = {
+
 		"name" : "dmg taken from fire reduced"
 		"attribute_class" : "mult_dmgtaken_from_fire"
 		"description_string" : "#Attrib_DmgTaken_From_Fire_Reduced"
@@ -604,8 +604,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[61] =
-	{
+	[61] = {
+
 		"name" : "dmg taken from fire increased"
 		"attribute_class" : "mult_dmgtaken_from_fire"
 		"description_string" : "#Attrib_DmgTaken_From_Fire_Increased"
@@ -615,8 +615,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[62] =
-	{
+	[62] = {
+
 		"name" : "dmg taken from crit reduced"
 		"attribute_class" : "mult_dmgtaken_from_crit"
 		"description_string" : "#Attrib_DmgTaken_From_Crit_Reduced"
@@ -626,8 +626,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[63] =
-	{
+	[63] = {
+
 		"name" : "dmg taken from crit increased"
 		"attribute_class" : "mult_dmgtaken_from_crit"
 		"description_string" : "#Attrib_DmgTaken_From_Crit_Increased"
@@ -637,8 +637,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[64] =
-	{
+	[64] = {
+
 		"name" : "dmg taken from blast reduced"
 		"attribute_class" : "mult_dmgtaken_from_explosions"
 		"description_string" : "#Attrib_DmgTaken_From_Blast_Reduced"
@@ -648,8 +648,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[65] =
-	{
+	[65] = {
+
 		"name" : "dmg taken from blast increased"
 		"attribute_class" : "mult_dmgtaken_from_explosions"
 		"description_string" : "#Attrib_DmgTaken_From_Blast_Increased"
@@ -659,8 +659,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[66] =
-	{
+	[66] = {
+
 		"name" : "dmg taken from bullets reduced"
 		"attribute_class" : "mult_dmgtaken_from_bullets"
 		"description_string" : "#Attrib_DmgTaken_From_Bullets_Reduced"
@@ -670,8 +670,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[67] =
-	{
+	[67] = {
+
 		"name" : "dmg taken from bullets increased"
 		"attribute_class" : "mult_dmgtaken_from_bullets"
 		"description_string" : "#Attrib_DmgTaken_From_Bullets_Increased"
@@ -681,8 +681,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[68] =
-	{
+	[68] = {
+
 		"name" : "increase player capture value"
 		"attribute_class" : "add_player_capturevalue"
 		"description_string" : "#Attrib_CaptureValue_Increased"
@@ -692,8 +692,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[69] =
-	{
+	[69] = {
+
 		"name" : "health from healers reduced"
 		"attribute_class" : "mult_health_fromhealers"
 		"description_string" : "#Attrib_HealthFromHealers_Reduced"
@@ -703,8 +703,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[70] =
-	{
+	[70] = {
+
 		"name" : "health from healers increased"
 		"attribute_class" : "mult_health_fromhealers"
 		"description_string" : "#Attrib_HealthFromHealers_Increased"
@@ -714,8 +714,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[71] =
-	{
+	[71] = {
+
 		"name" : "weapon burn dmg increased"
 		"attribute_class" : "mult_wpn_burndmg"
 		"description_string" : "#Attrib_WpnBurnDmg_Increased"
@@ -724,8 +724,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[72] =
-	{
+	[72] = {
+
 		"name" : "weapon burn dmg reduced"
 		"attribute_class" : "mult_wpn_burndmg"
 		"description_string" : "#Attrib_WpnBurnDmg_Reduced"
@@ -734,8 +734,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[73] =
-	{
+	[73] = {
+
 		"name" : "weapon burn time increased"
 		"attribute_class" : "mult_wpn_burntime"
 		"description_string" : "#Attrib_WpnBurnTime_Increased"
@@ -744,8 +744,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[74] =
-	{
+	[74] = {
+
 		"name" : "weapon burn time reduced"
 		"attribute_class" : "mult_wpn_burntime"
 		"description_string" : "#Attrib_WpnBurnTime_Reduced"
@@ -754,8 +754,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[75] =
-	{
+	[75] = {
+
 		"name" : "aiming movespeed increased"
 		"attribute_class" : "mult_player_aiming_movespeed"
 		"description_string" : "#Attrib_AimingMoveSpeed_Increased"
@@ -765,8 +765,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[76] =
-	{
+	[76] = {
+
 		"name" : "maxammo primary increased"
 		"attribute_class" : "mult_maxammo_primary"
 		"description_string" : "#Attrib_MaxammoPrimary_Increased"
@@ -776,8 +776,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[77] =
-	{
+	[77] = {
+
 		"name" : "maxammo primary reduced"
 		"attribute_class" : "mult_maxammo_primary"
 		"description_string" : "#Attrib_MaxammoPrimary_Reduced"
@@ -787,8 +787,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[78] =
-	{
+	[78] = {
+
 		"name" : "maxammo secondary increased"
 		"attribute_class" : "mult_maxammo_secondary"
 		"description_string" : "#Attrib_MaxammoSecondary_Increased"
@@ -798,8 +798,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[79] =
-	{
+	[79] = {
+
 		"name" : "maxammo secondary reduced"
 		"attribute_class" : "mult_maxammo_secondary"
 		"description_string" : "#Attrib_MaxammoSecondary_Reduced"
@@ -809,8 +809,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[80] =
-	{
+	[80] = {
+
 		"name" : "maxammo metal increased"
 		"attribute_class" : "mult_maxammo_metal"
 		"description_string" : "#Attrib_MaxammoMetal_Increased"
@@ -820,8 +820,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[81] =
-	{
+	[81] = {
+
 		"name" : "maxammo metal reduced"
 		"attribute_class" : "mult_maxammo_metal"
 		"description_string" : "#Attrib_MaxammoMetal_Reduced"
@@ -831,8 +831,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[82] =
-	{
+	[82] = {
+
 		"name" : "cloak consume rate increased"
 		"attribute_class" : "mult_cloak_meter_consume_rate"
 		"description_string" : "#Attrib_CloakConsumeRate_Increased"
@@ -841,8 +841,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[83] =
-	{
+	[83] = {
+
 		"name" : "cloak consume rate decreased"
 		"attribute_class" : "mult_cloak_meter_consume_rate"
 		"description_string" : "#Attrib_CloakConsumeRate_Decreased"
@@ -851,8 +851,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[84] =
-	{
+	[84] = {
+
 		"name" : "cloak regen rate increased"
 		"attribute_class" : "mult_cloak_meter_regen_rate"
 		"description_string" : "#Attrib_CloakRegenRate_Increased"
@@ -861,8 +861,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[85] =
-	{
+	[85] = {
+
 		"name" : "cloak regen rate decreased"
 		"attribute_class" : "mult_cloak_meter_regen_rate"
 		"description_string" : "#Attrib_CloakRegenRate_Decreased"
@@ -871,8 +871,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[86] =
-	{
+	[86] = {
+
 		"name" : "minigun spinup time increased"
 		"attribute_class" : "mult_minigun_spinup_time"
 		"description_string" : "#Attrib_MinigunSpinup_Increased"
@@ -881,8 +881,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[87] =
-	{
+	[87] = {
+
 		"name" : "minigun spinup time decreased"
 		"attribute_class" : "mult_minigun_spinup_time"
 		"description_string" : "#Attrib_MinigunSpinup_Decreased"
@@ -891,8 +891,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[88] =
-	{
+	[88] = {
+
 		"name" : "max pipebombs increased"
 		"attribute_class" : "add_max_pipebombs"
 		"description_string" : "#Attrib_MaxPipebombs_Increased"
@@ -901,8 +901,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[89] =
-	{
+	[89] = {
+
 		"name" : "max pipebombs decreased"
 		"attribute_class" : "add_max_pipebombs"
 		"description_string" : "#Attrib_MaxPipebombs_Decreased"
@@ -911,8 +911,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[90] =
-	{
+	[90] = {
+
 		"name" : "SRifle Charge rate increased"
 		"attribute_class" : "mult_sniper_charge_per_sec"
 		"description_string" : "#Attrib_SRifleChargeRate_Increased"
@@ -921,8 +921,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[91] =
-	{
+	[91] = {
+
 		"name" : "SRifle Charge rate decreased"
 		"attribute_class" : "mult_sniper_charge_per_sec"
 		"description_string" : "#Attrib_SRifleChargeRate_Decreased"
@@ -931,8 +931,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[92] =
-	{
+	[92] = {
+
 		"name" : "Construction rate increased"
 		"attribute_class" : "mult_construction_value"
 		"description_string" : "#Attrib_ConstructionRate_Increased"
@@ -941,8 +941,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[93] =
-	{
+	[93] = {
+
 		"name" : "Construction rate decreased"
 		"attribute_class" : "mult_construction_value"
 		"description_string" : "#Attrib_ConstructionRate_Decreased"
@@ -951,8 +951,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[94] =
-	{
+	[94] = {
+
 		"name" : "Repair rate increased"
 		"attribute_class" : "mult_repair_value"
 		"description_string" : "#Attrib_RepairRate_Increased"
@@ -961,8 +961,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[95] =
-	{
+	[95] = {
+
 		"name" : "Repair rate decreased"
 		"attribute_class" : "mult_repair_value"
 		"description_string" : "#Attrib_RepairRate_Decreased"
@@ -971,8 +971,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[96] =
-	{
+	[96] = {
+
 		"name" : "Reload time increased"
 		"attribute_class" : "mult_reload_time"
 		"description_string" : "#Attrib_ReloadTime_Increased"
@@ -981,8 +981,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[97] =
-	{
+	[97] = {
+
 		"name" : "Reload time decreased"
 		"attribute_class" : "mult_reload_time"
 		"description_string" : "#Attrib_ReloadTime_Decreased"
@@ -991,8 +991,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[98] =
-	{
+	[98] = {
+
 		"name" : "selfdmg on hit for rapidfire"
 		"attribute_class" : "add_onhit_addhealth"
 		"description_string" : "#Attrib_HealOnHit_Negative"
@@ -1002,8 +1002,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[99] =
-	{
+	[99] = {
+
 		"name" : "Blast radius increased"
 		"attribute_class" : "mult_explosion_radius"
 		"description_string" : "#Attrib_BlastRadius_Increased"
@@ -1012,8 +1012,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[100] =
-	{
+	[100] = {
+
 		"name" : "Blast radius decreased"
 		"attribute_class" : "mult_explosion_radius"
 		"description_string" : "#Attrib_BlastRadius_Decreased"
@@ -1022,8 +1022,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[101] =
-	{
+	[101] = {
+
 		"name" : "Projectile range increased"
 		"attribute_class" : "mult_projectile_range"
 		"description_string" : "#Attrib_ProjectileRange_Increased"
@@ -1032,8 +1032,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[102] =
-	{
+	[102] = {
+
 		"name" : "Projectile range decreased"
 		"attribute_class" : "mult_projectile_range"
 		"description_string" : "#Attrib_ProjectileRange_Decreased"
@@ -1042,8 +1042,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[103] =
-	{
+	[103] = {
+
 		"name" : "Projectile speed increased"
 		"attribute_class" : "mult_projectile_speed"
 		"description_string" : "#Attrib_ProjectileSpeed_Increased"
@@ -1052,8 +1052,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[104] =
-	{
+	[104] = {
+
 		"name" : "Projectile speed decreased"
 		"attribute_class" : "mult_projectile_speed"
 		"description_string" : "#Attrib_ProjectileSpeed_Decreased"
@@ -1062,8 +1062,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[105] =
-	{
+	[105] = {
+
 		"name" : "overheal penalty"
 		"attribute_class" : "mult_medigun_overheal_amount"
 		"description_string" : "#Attrib_OverhealAmount_Negative"
@@ -1072,8 +1072,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[106] =
-	{
+	[106] = {
+
 		"name" : "weapon spread bonus"
 		"attribute_class" : "mult_spread_scale"
 		"description_string" : "#Attrib_Spread_Positive"
@@ -1082,8 +1082,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[107] =
-	{
+	[107] = {
+
 		"name" : "move speed bonus"
 		"attribute_class" : "mult_player_movespeed"
 		"description_string" : "#Attrib_MoveSpeed_Bonus"
@@ -1093,8 +1093,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[108] =
-	{
+	[108] = {
+
 		"name" : "health from packs increased"
 		"attribute_class" : "mult_health_frompacks"
 		"description_string" : "#Attrib_HealthFromPacks_Increased"
@@ -1104,8 +1104,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[109] =
-	{
+	[109] = {
+
 		"name" : "health from packs decreased"
 		"attribute_class" : "mult_health_frompacks"
 		"description_string" : "#Attrib_HealthFromPacks_Decreased"
@@ -1115,8 +1115,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[110] =
-	{
+	[110] = {
+
 		"name" : "heal on hit for slowfire"
 		"attribute_class" : "add_onhit_addhealth"
 		"description_string" : "#Attrib_HealOnHit_Positive"
@@ -1126,8 +1126,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[111] =
-	{
+	[111] = {
+
 		"name" : "selfdmg on hit for slowfire"
 		"attribute_class" : "add_onhit_addhealth"
 		"description_string" : "#Attrib_HealOnHit_Negative"
@@ -1137,8 +1137,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[112] =
-	{
+	[112] = {
+
 		"name" : "ammo regen"
 		"attribute_class" : "addperc_ammo_regen"
 		"description_string" : "#Attrib_AmmoRegen"
@@ -1148,8 +1148,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[113] =
-	{
+	[113] = {
+
 		"name" : "metal regen"
 		"attribute_class" : "add_metal_regen"
 		"description_string" : "#Attrib_MetalRegen"
@@ -1159,8 +1159,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[114] =
-	{
+	[114] = {
+
 		"name" : "mod mini-crit airborne"
 		"attribute_class" : "mini_crit_airborne"
 		"description_string" : "#Attrib_MiniCritAirborneEnemies"
@@ -1169,8 +1169,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[115] =
-	{
+	[115] = {
+
 		"name" : "mod shovel damage boost"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_ShovelDamageBoost"
@@ -1179,8 +1179,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[116] =
-	{
+	[116] = {
+
 		"name" : "mod soldier buff type"
 		"attribute_class" : "set_buff_type"
 		"description_string" : "#Attrib_SoldierBuffType"
@@ -1189,8 +1189,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[117] =
-	{
+	[117] = {
+
 		"name" : "dmg falloff increased"
 		"attribute_class" : "mult_dmg_falloff"
 		"description_string" : "#Attrib_Dmg_Falloff_Increased"
@@ -1199,8 +1199,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[118] =
-	{
+	[118] = {
+
 		"name" : "dmg falloff decreased"
 		"attribute_class" : "mult_dmg_falloff"
 		"description_string" : "#Attrib_Dmg_Falloff_Decreased"
@@ -1209,8 +1209,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[119] =
-	{
+	[119] = {
+
 		"name" : "sticky detonate mode"
 		"attribute_class" : "set_detonate_mode"
 		"description_string" : "#Attrib_StickyDetonateMode"
@@ -1219,8 +1219,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[120] =
-	{
+	[120] = {
+
 		"name" : "sticky arm time penalty"
 		"attribute_class" : "sticky_arm_time"
 		"description_string" : "#Attrib_StickyArmTimePenalty"
@@ -1229,8 +1229,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[121] =
-	{
+	[121] = {
+
 		"name" : "stickies detonate stickies"
 		"attribute_class" : "stickies_detonate_stickies"
 		"description_string" : "#Attrib_StickiesDetonateStickies"
@@ -1239,8 +1239,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[122] =
-	{
+	[122] = {
+
 		"name" : "mod demo buff type"
 		"attribute_class" : "set_buff_type"
 		"description_string" : "#Attrib_DemoBuffType"
@@ -1249,8 +1249,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[123] =
-	{
+	[123] = {
+
 		"name" : "speed boost when active"
 		"attribute_class" : "mult_move_speed_when_active"
 		"description_string" : "#Attrib_SpeedBoostWhenActive"
@@ -1260,8 +1260,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_active"
 		"stored_as_integer" : "0"
 	},
-	[124] =
-	{
+	[124] = {
+
 		"name" : "mod wrench builds minisentry"
 		"attribute_class" : "wrench_builds_minisentry"
 		"description_string" : "#Attrib_WrenchBuildsMiniSentry"
@@ -1270,8 +1270,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[125] =
-	{
+	[125] = {
+
 		"name" : "max health additive penalty"
 		"attribute_class" : "add_maxhealth"
 		"description_string" : "#Attrib_MaxHealth_Negative"
@@ -1281,8 +1281,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[126] =
-	{
+	[126] = {
+
 		"name" : "sticky arm time bonus"
 		"attribute_class" : "sticky_arm_time"
 		"description_string" : "#Attrib_StickyArmTimeBonus"
@@ -1291,8 +1291,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[127] =
-	{
+	[127] = {
+
 		"name" : "sticky air burst mode"
 		"attribute_class" : "set_detonate_mode"
 		"description_string" : "#Attrib_StickyAirBurstMode"
@@ -1301,8 +1301,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[128] =
-	{
+	[128] = {
+
 		"name" : "provide on active"
 		"attribute_class" : "provide_on_active"
 		"description_string" : "#Attrib_ProvideOnActive"
@@ -1312,8 +1312,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_active"
 		"stored_as_integer" : "0"
 	},
-	[129] =
-	{
+	[129] = {
+
 		"name" : "health drain"
 		"attribute_class" : "add_health_regen"
 		"description_string" : "#Attrib_HealthDrain"
@@ -1323,8 +1323,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[130] =
-	{
+	[130] = {
+
 		"name" : "medic regen bonus"
 		"attribute_class" : "medic_regen"
 		"description_string" : "#Attrib_MedicRegenBonus"
@@ -1334,8 +1334,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[131] =
-	{
+	[131] = {
+
 		"name" : "medic regen penalty"
 		"attribute_class" : "medic_regen"
 		"description_string" : "#Attrib_MedicRegenPenalty"
@@ -1345,8 +1345,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[132] =
-	{
+	[132] = {
+
 		"name" : "community description"
 		"attribute_class" : "desc_community_description"
 		"description_string" : "#Attrib_Community_Description"
@@ -1355,8 +1355,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[133] =
-	{
+	[133] = {
+
 		"name" : "soldier model index"
 		"attribute_class" : "desc_soldiermedal_index"
 		"description_string" : "#Attrib_MedalIndex_Description"
@@ -1365,8 +1365,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[134] =
-	{
+	[134] = {
+
 		"name" : "attach particle effect"
 		"attribute_class" : "set_attached_particle"
 		"description_string" : "#Attrib_AttachedParticle"
@@ -1376,8 +1376,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"can_affect_market_name" : "1"
 	},
-	[135] =
-	{
+	[135] = {
+
 		"name" : "rocket jump damage reduction"
 		"attribute_class" : "rocket_jump_dmg_reduction"
 		"description_string" : "#Attrib_RocketJumpDmgReduction"
@@ -1386,8 +1386,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[136] =
-	{
+	[136] = {
+
 		"name" : "mod sentry killed revenge"
 		"attribute_class" : "sentry_killed_revenge"
 		"description_string" : "#Attrib_SentryKilledRevenge"
@@ -1396,8 +1396,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[137] =
-	{
+	[137] = {
+
 		"name" : "dmg bonus vs buildings"
 		"attribute_class" : "mult_dmg_vs_buildings"
 		"description_string" : "#Attrib_DmgVsBuilding_Increased"
@@ -1406,8 +1406,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[138] =
-	{
+	[138] = {
+
 		"name" : "dmg penalty vs players"
 		"attribute_class" : "mult_dmg_vs_players"
 		"description_string" : "#Attrib_DmgVsPlayer_Decreased"
@@ -1416,8 +1416,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[139] =
-	{
+	[139] = {
+
 		"name" : "lunchbox adds maxhealth bonus"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_LunchboxAddsMaxHealth"
@@ -1426,8 +1426,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[140] =
-	{
+	[140] = {
+
 		"name" : "hidden maxhealth non buffed"
 		"attribute_class" : "add_maxhealth_nonbuffed"
 		"description_string" : "#Attrib_MaxHealth_Positive"
@@ -1436,8 +1436,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[141] =
-	{
+	[141] = {
+
 		"name" : "selfmade description"
 		"attribute_class" : "desc_selfmade_description"
 		"description_string" : "#Attrib_Selfmade_Description"
@@ -1446,8 +1446,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[142] =
-	{
+	[142] = {
+
 		"name" : "set item tint RGB"
 		"attribute_class" : "set_item_tint_rgb"
 		"description_string" : "#Attrib_SetItemTintRGB"
@@ -1456,8 +1456,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[143] =
-	{
+	[143] = {
+
 		"name" : "custom employee number"
 		"attribute_class" : "set_employee_number"
 		"description_string" : "#Attrib_EmployeeNumber"
@@ -1466,8 +1466,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[144] =
-	{
+	[144] = {
+
 		"name" : "lunchbox adds minicrits"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_LunchboxAddsMinicrits"
@@ -1476,8 +1476,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[145] =
-	{
+	[145] = {
+
 		"name" : "taunt is highfive"
 		"attribute_class" : "enable_misc2_highfive"
 		"description_string" : "#Attrib_DamageDone_Negative"
@@ -1486,8 +1486,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[146] =
-	{
+	[146] = {
+
 		"name" : "damage applies to sappers"
 		"attribute_class" : "set_dmg_apply_to_sapper"
 		"description_string" : "#Attrib_DmgAppliesToSappers"
@@ -1496,8 +1496,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[147] =
-	{
+	[147] = {
+
 		"name" : "Wrench index"
 		"attribute_class" : "desc_wrench_index"
 		"description_string" : "#Attrib_WrenchNumber"
@@ -1506,8 +1506,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[148] =
-	{
+	[148] = {
+
 		"name" : "building cost reduction"
 		"attribute_class" : "building_cost_reduction"
 		"description_string" : "#Attrib_BuildingCostReduction"
@@ -1516,8 +1516,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[149] =
-	{
+	[149] = {
+
 		"name" : "bleeding duration"
 		"attribute_class" : "bleeding_duration"
 		"description_string" : "#Attrib_BleedingDuration"
@@ -1527,8 +1527,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit bleed"
 		"stored_as_integer" : "0"
 	},
-	[150] =
-	{
+	[150] = {
+
 		"name" : "turn to gold"
 		"attribute_class" : "set_turn_to_gold"
 		"description_string" : "#Attrib_TurnToGold"
@@ -1537,8 +1537,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[151] =
-	{
+	[151] = {
+
 		"name" : "DEPRECATED socketed item definition id DEPRECATED "
 		"attribute_class" : "socketed_item_definition_id"
 		"description_string" : "#Attrib_Socket"
@@ -1547,8 +1547,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[152] =
-	{
+	[152] = {
+
 		"name" : "custom texture lo"
 		"attribute_class" : "custom_texture_lo"
 		"description_string" : "#Attrib_CustomTexture"
@@ -1557,8 +1557,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[153] =
-	{
+	[153] = {
+
 		"name" : "cannot trade"
 		"attribute_class" : "cannot_trade"
 		"description_string" : "#Attrib_CannotTrade"
@@ -1567,8 +1567,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[154] =
-	{
+	[154] = {
+
 		"name" : "disguise on backstab"
 		"attribute_class" : "set_disguise_on_backstab"
 		"description_string" : "#Attrib_DisguiseOnBackstab"
@@ -1577,8 +1577,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[155] =
-	{
+	[155] = {
+
 		"name" : "cannot disguise"
 		"attribute_class" : "set_cannot_disguise"
 		"description_string" : "#Attrib_CannotDisguise"
@@ -1587,8 +1587,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[156] =
-	{
+	[156] = {
+
 		"name" : "silent killer"
 		"attribute_class" : "set_silent_killer"
 		"description_string" : "#Attrib_SilentKiller"
@@ -1597,8 +1597,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[157] =
-	{
+	[157] = {
+
 		"name" : "disguise speed penalty"
 		"attribute_class" : "disguise_speed_penalty"
 		"description_string" : "#Attrib_DisguiseSpeedPenalty"
@@ -1607,8 +1607,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[158] =
-	{
+	[158] = {
+
 		"name" : "add cloak on kill"
 		"attribute_class" : "add_cloak_on_kill"
 		"description_string" : "#Attrib_AddCloakOnKill"
@@ -1617,8 +1617,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[159] =
-	{
+	[159] = {
+
 		"name" : "SET BONUS: cloak blink time penalty"
 		"attribute_class" : "cloak_blink_time_penalty"
 		"description_string" : "#Attrib_CloakBlinkTimePenalty"
@@ -1628,8 +1628,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[160] =
-	{
+	[160] = {
+
 		"name" : "SET BONUS: quiet unstealth"
 		"attribute_class" : "set_quiet_unstealth"
 		"description_string" : "#Attrib_QuietUnstealth"
@@ -1639,8 +1639,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[161] =
-	{
+	[161] = {
+
 		"name" : "flame size penalty"
 		"attribute_class" : "mult_flame_size"
 		"description_string" : "#Attrib_FlameSize_Negative"
@@ -1649,8 +1649,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[162] =
-	{
+	[162] = {
+
 		"name" : "flame size bonus"
 		"attribute_class" : "mult_flame_size"
 		"description_string" : "#Attrib_FlameSize_Positive"
@@ -1659,8 +1659,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[163] =
-	{
+	[163] = {
+
 		"name" : "flame life penalty"
 		"attribute_class" : "mult_flame_life"
 		"description_string" : "#Attrib_FlameLife_Negative"
@@ -1669,8 +1669,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[164] =
-	{
+	[164] = {
+
 		"name" : "flame life bonus"
 		"attribute_class" : "mult_flame_life"
 		"description_string" : "#Attrib_FlameLife_Positive"
@@ -1679,8 +1679,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[165] =
-	{
+	[165] = {
+
 		"name" : "charged airblast"
 		"attribute_class" : "set_charged_airblast"
 		"description_string" : "#Attrib_ChargedAirblast"
@@ -1689,8 +1689,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[166] =
-	{
+	[166] = {
+
 		"name" : "add cloak on hit"
 		"attribute_class" : "add_cloak_on_hit"
 		"description_string" : "#Attrib_AddCloakOnHit"
@@ -1699,8 +1699,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[167] =
-	{
+	[167] = {
+
 		"name" : "disguise damage reduction"
 		"attribute_class" : "disguise_damage_reduction"
 		"description_string" : "#Attrib_DisguiseDamageReduction"
@@ -1709,8 +1709,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[168] =
-	{
+	[168] = {
+
 		"name" : "disguise no burn"
 		"attribute_class" : "disguise_no_burn"
 		"description_string" : "#Attrib_DisguiseNoBurn"
@@ -1719,8 +1719,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[169] =
-	{
+	[169] = {
+
 		"name" : "SET BONUS: dmg from sentry reduced"
 		"attribute_class" : "dmg_from_sentry_reduced"
 		"description_string" : "#Attrib_DmgFromSentryReduced"
@@ -1730,8 +1730,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[170] =
-	{
+	[170] = {
+
 		"name" : "airblast cost increased"
 		"attribute_class" : "mult_airblast_cost"
 		"description_string" : "#Attrib_AirblastCost_Increased"
@@ -1740,8 +1740,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[171] =
-	{
+	[171] = {
+
 		"name" : "airblast cost decreased"
 		"attribute_class" : "mult_airblast_cost"
 		"description_string" : "#Attrib_AirblastCost_Decreased"
@@ -1750,8 +1750,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[172] =
-	{
+	[172] = {
+
 		"name" : "purchased"
 		"attribute_class" : "purchased"
 		"description_string" : "#Attrib_Purchased"
@@ -1760,8 +1760,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[173] =
-	{
+	[173] = {
+
 		"name" : "flame ammopersec increased"
 		"attribute_class" : "mult_flame_ammopersec"
 		"description_string" : "#Attrib_FlameAmmoPerSec_Increased"
@@ -1770,8 +1770,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[174] =
-	{
+	[174] = {
+
 		"name" : "flame ammopersec decreased"
 		"attribute_class" : "mult_flame_ammopersec"
 		"description_string" : "#Attrib_FlameAmmoPerSec_Decreased"
@@ -1780,8 +1780,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[175] =
-	{
+	[175] = {
+
 		"name" : "jarate duration"
 		"attribute_class" : "jarate_duration"
 		"description_string" : "#Attrib_JarateDuration"
@@ -1791,8 +1791,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit jarate"
 		"stored_as_integer" : "0"
 	},
-	[176] =
-	{
+	[176] = {
+
 		"name" : "SET BONUS: no death from headshots"
 		"attribute_class" : "no_death_from_headshots"
 		"description_string" : "#Attrib_NoDeathFromHeadshots"
@@ -1802,8 +1802,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[177] =
-	{
+	[177] = {
+
 		"name" : "deploy time increased"
 		"attribute_class" : "mult_deploy_time"
 		"description_string" : "#Attrib_DeployTime_Increased"
@@ -1812,8 +1812,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[178] =
-	{
+	[178] = {
+
 		"name" : "deploy time decreased"
 		"attribute_class" : "mult_deploy_time"
 		"description_string" : "#Attrib_DeployTime_Decreased"
@@ -1822,8 +1822,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[179] =
-	{
+	[179] = {
+
 		"name" : "minicrits become crits"
 		"attribute_class" : "minicrits_become_crits"
 		"description_string" : "#Attrib_MinicritsBecomeCrits"
@@ -1832,8 +1832,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[180] =
-	{
+	[180] = {
+
 		"name" : "heal on kill"
 		"attribute_class" : "heal_on_kill"
 		"description_string" : "#Attrib_HealOnKill"
@@ -1842,8 +1842,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[181] =
-	{
+	[181] = {
+
 		"name" : "no self blast dmg"
 		"attribute_class" : "no_self_blast_dmg"
 		"description_string" : "#Attrib_NoSelfBlastDmg"
@@ -1852,8 +1852,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[182] =
-	{
+	[182] = {
+
 		"name" : "slow enemy on hit major"
 		"attribute_class" : "mult_onhit_enemyspeed_major"
 		"description_string" : "#Attrib_Slow_Enemy_OnHit_Major"
@@ -1863,8 +1863,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[183] =
-	{
+	[183] = {
+
 		"name" : "aiming movespeed decreased"
 		"attribute_class" : "mult_player_aiming_movespeed"
 		"description_string" : "#Attrib_AimingMoveSpeed_Decreased"
@@ -1874,8 +1874,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[184] =
-	{
+	[184] = {
+
 		"name" : "duel loser account id"
 		"attribute_class" : "duel_loser_account_id"
 		"description_string" : "#Attrib_DuelLoserAccountID"
@@ -1884,8 +1884,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[185] =
-	{
+	[185] = {
+
 		"name" : "event date"
 		"attribute_class" : "event_date"
 		"description_string" : "#Attrib_EventDate"
@@ -1894,8 +1894,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[186] =
-	{
+	[186] = {
+
 		"name" : "gifter account id"
 		"attribute_class" : "gifter_account_id"
 		"description_string" : "#Attrib_GifterAccountID"
@@ -1904,8 +1904,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[187] =
-	{
+	[187] = {
+
 		"name" : "set supply crate series"
 		"attribute_class" : "supply_crate_series"
 		"description_string" : "#Attrib_SupplyCrateSeries"
@@ -1915,8 +1915,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"can_affect_market_name" : "1"
 	},
-	[188] =
-	{
+	[188] = {
+
 		"name" : "preserve ubercharge"
 		"attribute_class" : "preserve_ubercharge"
 		"description_string" : "#Attrib_PreserveUbercharge"
@@ -1925,8 +1925,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[189] =
-	{
+	[189] = {
+
 		"name" : "elevate quality"
 		"attribute_class" : "set_elevated_quality"
 		"description_string" : "#Attrib_ElevateQuality"
@@ -1935,8 +1935,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[190] =
-	{
+	[190] = {
+
 		"name" : "active health regen"
 		"attribute_class" : "active_item_health_regen"
 		"description_string" : "#Attrib_HealthRegen"
@@ -1946,8 +1946,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[191] =
-	{
+	[191] = {
+
 		"name" : "active health degen"
 		"attribute_class" : "active_item_health_regen"
 		"description_string" : "#Attrib_HealthDrain"
@@ -1957,8 +1957,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[192] =
-	{
+	[192] = {
+
 		"name" : "referenced item id low"
 		"attribute_class" : "referenced_item_id_low"
 		"description_format" : "value_is_additive"
@@ -1967,8 +1967,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "1"
 	},
-	[193] =
-	{
+	[193] = {
+
 		"name" : "referenced item id high"
 		"attribute_class" : "referenced_item_id_high"
 		"description_format" : "value_is_additive"
@@ -1977,8 +1977,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "1"
 	},
-	[194] =
-	{
+	[194] = {
+
 		"name" : "referenced item def UPDATED"
 		"attribute_class" : "referenced_item_def"
 		"description_string" : "#Attrib_ReferencedItem"
@@ -1988,8 +1988,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "1"
 	},
-	[195] =
-	{
+	[195] = {
+
 		"name" : "always tradable"
 		"attribute_class" : "always_tradable"
 		"description_string" : "#Attrib_Always_Tradable"
@@ -1998,8 +1998,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[196] =
-	{
+	[196] = {
+
 		"name" : "noise maker"
 		"attribute_class" : "enable_misc2_noisemaker"
 		"description_string" : "#Attrib_NoiseMaker"
@@ -2008,8 +2008,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[197] =
-	{
+	[197] = {
+
 		"name" : "halloween item"
 		"attribute_class" : "halloween_item"
 		"description_string" : "#Attrib_Halloween_Item"
@@ -2018,8 +2018,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[198] =
-	{
+	[198] = {
+
 		"name" : "collection bits DEPRECATED"
 		"attribute_class" : "collection_bits_DEPRECATED"
 		"description_string" : "#Attrib_Halloween_Item"
@@ -2028,8 +2028,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[199] =
-	{
+	[199] = {
+
 		"name" : "switch from wep deploy time decreased"
 		"attribute_class" : "mult_switch_from_wep_deploy_time"
 		"description_string" : "#Attrib_SingleWepHolsterBonus"
@@ -2038,8 +2038,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[200] =
-	{
+	[200] = {
+
 		"name" : "enables aoe heal"
 		"attribute_class" : "enables_aoe_heal"
 		"description_string" : "#Attrib_EnablesAOEHeal"
@@ -2048,8 +2048,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[201] =
-	{
+	[201] = {
+
 		"name" : "gesture speed increase"
 		"attribute_class" : "mult_gesture_time"
 		"description_string" : "#Attrib_GestureSpeed_Increase"
@@ -2059,8 +2059,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[202] =
-	{
+	[202] = {
+
 		"name" : "charge time increased"
 		"attribute_class" : "mod_charge_time"
 		"description_string" : "#Attrib_ChargeTime_Increase"
@@ -2070,8 +2070,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[203] =
-	{
+	[203] = {
+
 		"name" : "drop health pack on kill"
 		"attribute_class" : "drop_health_pack_on_kill"
 		"description_string" : "#Attrib_DropHealthPackOnKill"
@@ -2080,8 +2080,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[204] =
-	{
+	[204] = {
+
 		"name" : "hit self on miss"
 		"attribute_class" : "hit_self_on_miss"
 		"description_string" : "#Attrib_HitSelfOnMiss"
@@ -2090,8 +2090,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[205] =
-	{
+	[205] = {
+
 		"name" : "dmg from ranged reduced"
 		"attribute_class" : "dmg_from_ranged"
 		"description_string" : "#Attrib_DmgFromRanged_Reduced"
@@ -2101,8 +2101,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_active"
 		"stored_as_integer" : "0"
 	},
-	[206] =
-	{
+	[206] = {
+
 		"name" : "dmg from melee increased"
 		"attribute_class" : "dmg_from_melee"
 		"description_string" : "#Attrib_DmgFromMelee_Increased"
@@ -2112,8 +2112,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_active"
 		"stored_as_integer" : "0"
 	},
-	[207] =
-	{
+	[207] = {
+
 		"name" : "blast dmg to self increased"
 		"attribute_class" : "blast_dmg_to_self"
 		"description_string" : "#Attrib_BlastDamageToSelf_Increased"
@@ -2122,8 +2122,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[208] =
-	{
+	[208] = {
+
 		"name" : "Set DamageType Ignite"
 		"attribute_class" : "set_dmgtype_ignite"
 		"description_string" : "#Attrib_SetDamageType_Ignite"
@@ -2132,8 +2132,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[209] =
-	{
+	[209] = {
+
 		"name" : "minicrit vs burning player"
 		"attribute_class" : "or_minicrit_vs_playercond_burning"
 		"description_string" : "#Attrib_Minicrit_Vs_Burning_Player"
@@ -2144,8 +2144,8 @@ local FromItemsGame = {
 	},
 
 
-	[211] =
-	{
+	[211] = {
+
 		"name" : "tradable after date"
 		"attribute_class" : "tradable_after_date"
 		"description_string" : "#Attrib_TradableAfterDate"
@@ -2154,8 +2154,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[212] =
-	{
+	[212] = {
+
 		"name" : "force level display"
 		"attribute_class" : "force_level_display"
 		"description_format" : "value_is_additive"
@@ -2165,8 +2165,8 @@ local FromItemsGame = {
 	},
 
 
-	[214] =
-	{
+	[214] = {
+
 		"name" : "kill eater"
 		"attribute_class" : "kill_eater"
 		"description_format" : "value_is_additive"
@@ -2175,8 +2175,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "1"
 		"can_affect_market_name" : "1"
 	},
-	[215] =
-	{
+	[215] = {
+
 		"name" : "apply z velocity on damage"
 		"attribute_class" : "apply_z_velocity_on_damage"
 		"description_format" : "value_is_additive"
@@ -2184,8 +2184,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[216] =
-	{
+	[216] = {
+
 		"name" : "apply look velocity on damage"
 		"attribute_class" : "apply_look_velocity_on_damage"
 		"description_string" : "#Attrib_Knockback"
@@ -2194,8 +2194,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[217] =
-	{
+	[217] = {
+
 		"name" : "sanguisuge"
 		"attribute_class" : "sanguisuge"
 		"description_string" : "#Attrib_Sanguisuge"
@@ -2204,8 +2204,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[218] =
-	{
+	[218] = {
+
 		"name" : "mark for death"
 		"attribute_class" : "mark_for_death"
 		"description_string" : "#Attrib_MarkForDeath"
@@ -2214,8 +2214,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[219] =
-	{
+	[219] = {
+
 		"name" : "decapitate type"
 		"attribute_class" : "decapitate_type"
 		"description_string" : "#Attrib_DamageDone_Negative"
@@ -2224,8 +2224,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[220] =
-	{
+	[220] = {
+
 		"name" : "restore health on kill"
 		"attribute_class" : "restore_health_on_kill"
 		"description_string" : "#Attrib_RestoreHealthOnKill"
@@ -2234,8 +2234,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[221] =
-	{
+	[221] = {
+
 		"name" : "mult decloak rate"
 		"attribute_class" : "mult_decloak_rate"
 		"description_string" : "#Attrib_DecloakRate"
@@ -2244,8 +2244,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[222] =
-	{
+	[222] = {
+
 		"name" : "mult sniper charge after bodyshot"
 		"attribute_class" : "mult_sniper_charge_after_bodyshot"
 		"description_string" : "#Attrib_MultSniperChargeAfterBodyshot"
@@ -2254,8 +2254,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[223] =
-	{
+	[223] = {
+
 		"name" : "mult sniper charge after miss"
 		"attribute_class" : "mult_sniper_charge_after_miss"
 		"description_string" : "#Attrib_MultSniperChargeAfterMiss"
@@ -2264,8 +2264,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[224] =
-	{
+	[224] = {
+
 		"name" : "dmg bonus while half dead"
 		"attribute_class" : "mult_dmg_bonus_while_half_dead"
 		"description_string" : "#Attrib_MultDmgBonusWhileHalfDead"
@@ -2274,8 +2274,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[225] =
-	{
+	[225] = {
+
 		"name" : "dmg penalty while half alive"
 		"attribute_class" : "mult_dmg_penalty_while_half_alive"
 		"description_string" : "#Attrib_MultDmgPenaltyWhileHalfAlive"
@@ -2284,8 +2284,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[226] =
-	{
+	[226] = {
+
 		"name" : "honorbound"
 		"attribute_class" : "honorbound"
 		"description_string" : "#Attrib_Honorbound"
@@ -2294,8 +2294,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[227] =
-	{
+	[227] = {
+
 		"name" : "custom texture hi"
 		"attribute_class" : "custom_texture_hi"
 		"description_string" : "#Attrib_CustomTexture"
@@ -2304,8 +2304,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[228] =
-	{
+	[228] = {
+
 		"name" : "makers mark id"
 		"attribute_class" : "makers_mark_id"
 		"description_string" : "#Attrib_MakersMark"
@@ -2314,8 +2314,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[229] =
-	{
+	[229] = {
+
 		"name" : "unique craft index"
 		"attribute_class" : "unique_craft_index"
 		"description_format" : "value_is_additive"
@@ -2323,8 +2323,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[230] =
-	{
+	[230] = {
+
 		"name" : "mod medic killed revenge"
 		"attribute_class" : "medic_killed_revenge"
 		"description_string" : "#Attrib_MedicKilledRevenge"
@@ -2333,8 +2333,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[231] =
-	{
+	[231] = {
+
 		"name" : "medigun charge is megaheal"
 		"attribute_class" : "set_charge_type"
 		"description_string" : "#Attrib_Medigun_MegaHeal"
@@ -2343,8 +2343,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[232] =
-	{
+	[232] = {
+
 		"name" : "mod medic killed minicrit boost"
 		"attribute_class" : "medic_killed_minicrit_boost"
 		"description_string" : "#Attrib_MedicKilledMiniCritBoost"
@@ -2353,8 +2353,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[233] =
-	{
+	[233] = {
+
 		"name" : "mod medic healed damage bonus"
 		"attribute_class" : "medic_healed_damage_bonus"
 		"description_string" : "#Attrib_MedicHealedDamageBonus"
@@ -2363,8 +2363,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[234] =
-	{
+	[234] = {
+
 		"name" : "mod medic healed deploy time penalty"
 		"attribute_class" : "mod_medic_healed_deploy_time"
 		"description_string" : "#Attrib_MedicHealedDeployTimePenalty"
@@ -2373,8 +2373,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[235] =
-	{
+	[235] = {
+
 		"name" : "mod shovel speed boost"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_ShovelSpeedBoost"
@@ -2383,8 +2383,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[236] =
-	{
+	[236] = {
+
 		"name" : "mod weapon blocks healing"
 		"attribute_class" : "weapon_blocks_healing"
 		"description_string" : "#Attrib_WeaponBlocksHealing"
@@ -2394,8 +2394,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"apply_tag_to_item_definition" : "prevents_uber"
 	},
-	[237] =
-	{
+	[237] = {
+
 		"name" : "mult sniper charge after headshot"
 		"attribute_class" : "mult_sniper_charge_after_headshot"
 		"description_string" : "#Attrib_MultSniperChargeAfterHeadshot"
@@ -2404,8 +2404,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[238] =
-	{
+	[238] = {
+
 		"name" : "minigun no spin sounds"
 		"attribute_class" : "minigun_no_spin_sounds"
 		"description_string" : "#Attrib_MinigunNoSpinSounds"
@@ -2414,8 +2414,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[239] =
-	{
+	[239] = {
+
 		"name" : "ubercharge rate bonus for healer"
 		"attribute_class" : "mult_uberchargerate_for_healer"
 		"description_string" : "#Attrib_UberchargeRate_ForHealer"
@@ -2424,8 +2424,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[240] =
-	{
+	[240] = {
+
 		"name" : "reload time decreased while healed"
 		"attribute_class" : "mult_reload_time_while_healed"
 		"description_string" : "#Attrib_ReloadTime_Decreased_While_Healed"
@@ -2434,8 +2434,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[241] =
-	{
+	[241] = {
+
 		"name" : "reload time increased hidden"
 		"attribute_class" : "mult_reload_time_hidden"
 		"description_string" : "#Attrib_ReloadTime_Increased"
@@ -2444,8 +2444,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[242] =
-	{
+	[242] = {
+
 		"name" : "mod medic killed marked for death"
 		"attribute_class" : "medic_killed_marked_for_death"
 		"description_string" : "#Attrib_MedicKilledMarkedForDeath"
@@ -2454,8 +2454,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[243] =
-	{
+	[243] = {
+
 		"name" : "mod rage on hit penalty"
 		"attribute_class" : "rage_on_hit"
 		"description_string" : "#Attrib_RageOnHitPenalty"
@@ -2464,8 +2464,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[244] =
-	{
+	[244] = {
+
 		"name" : "mod rage on hit bonus"
 		"attribute_class" : "rage_on_hit"
 		"description_string" : "#Attrib_RageOnHitBonus"
@@ -2474,8 +2474,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[245] =
-	{
+	[245] = {
+
 		"name" : "mod rage damage boost"
 		"attribute_class" : "rage_damage"
 		"description_string" : "#Attrib_RageDamageBoost"
@@ -2484,8 +2484,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[246] =
-	{
+	[246] = {
+
 		"name" : "mult charge turn control"
 		"attribute_class" : "charge_turn_control"
 		"description_string" : "#Attrib_ChargeTurnControl"
@@ -2494,8 +2494,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[247] =
-	{
+	[247] = {
+
 		"name" : "no charge impact range"
 		"attribute_class" : "no_charge_impact_range"
 		"description_string" : "#Attrib_NoChargeImpactRange"
@@ -2504,8 +2504,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[248] =
-	{
+	[248] = {
+
 		"name" : "charge impact damage increased"
 		"attribute_class" : "charge_impact_damage"
 		"description_string" : "#Attrib_ChargeImpactDamageIncreased"
@@ -2514,8 +2514,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[249] =
-	{
+	[249] = {
+
 		"name" : "charge recharge rate increased"
 		"attribute_class" : "charge_recharge_rate"
 		"description_string" : "#Attrib_ChargeRechargeRateIncreased"
@@ -2524,8 +2524,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[250] =
-	{
+	[250] = {
+
 		"name" : "air dash count"
 		"attribute_class" : "air_dash_count"
 		"description_string" : "#Attrib_AirDashCountIncreased"
@@ -2534,8 +2534,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[251] =
-	{
+	[251] = {
+
 		"name" : "speed buff ally"
 		"attribute_class" : "speed_buff_ally"
 		"description_string" : "#Attrib_SpeedBuffAlly"
@@ -2544,8 +2544,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[252] =
-	{
+	[252] = {
+
 		"name" : "damage force reduction"
 		"attribute_class" : "damage_force_reduction"
 		"description_string" : "#Attrib_DamageForceReduction"
@@ -2554,8 +2554,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[253] =
-	{
+	[253] = {
+
 		"name" : "mult cloak rate"
 		"attribute_class" : "mult_cloak_rate"
 		"description_string" : "#Attrib_CloakRate"
@@ -2564,8 +2564,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[255] =
-	{
+	[255] = {
+
 		"name" : "airblast pushback scale"
 		"attribute_class" : "airblast_pushback_scale"
 		"description_string" : "#Attrib_AirBlastPushScale"
@@ -2574,8 +2574,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[256] =
-	{
+	[256] = {
+
 		"name" : "mult airblast refire time"
 		"attribute_class" : "mult_airblast_refire_time"
 		"description_format" : "value_is_percentage"
@@ -2583,8 +2583,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[257] =
-	{
+	[257] = {
+
 		"name" : "airblast vertical pushback scale"
 		"attribute_class" : "airblast_vertical_pushback_scale"
 		"description_format" : "value_is_percentage"
@@ -2592,8 +2592,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[258] =
-	{
+	[258] = {
+
 		"name" : "ammo becomes health"
 		"attribute_class" : "ammo_becomes_health"
 		"description_string" : "#Attrib_AmmoBecomesHealth"
@@ -2602,8 +2602,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[259] =
-	{
+	[259] = {
+
 		"name" : "boots falling stomp"
 		"attribute_class" : "boots_falling_stomp"
 		"description_string" : "#Attrib_BootsFallingStomp"
@@ -2612,8 +2612,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[260] =
-	{
+	[260] = {
+
 		"name" : "deflection size multiplier"
 		"attribute_class" : "deflection_size_multiplier"
 		"description_string" : "#Attrib_DeflectionSizeMultiplier"
@@ -2622,8 +2622,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[261] =
-	{
+	[261] = {
+
 		"name" : "set item tint RGB 2"
 		"attribute_class" : "set_item_tint_rgb_2"
 		"description_string" : "#Attrib_SetItemTintRGB"
@@ -2632,8 +2632,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[262] =
-	{
+	[262] = {
+
 		"name" : "saxxy award category"
 		"attribute_class" : "saxxy_award_category"
 		"description_string" : "#Attrib_SaxxyAward"
@@ -2642,8 +2642,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[263] =
-	{
+	[263] = {
+
 		"name" : "melee bounds multiplier"
 		"attribute_class" : "melee_bounds_multiplier"
 		"description_format" : "value_is_percentage"
@@ -2651,8 +2651,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[264] =
-	{
+	[264] = {
+
 		"name" : "melee range multiplier"
 		"attribute_class" : "melee_range_multiplier"
 		"description_string" : "#Attrib_MeleeRangeMultiplier"
@@ -2661,8 +2661,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[265] =
-	{
+	[265] = {
+
 		"name" : "mod mini-crit airborne deploy"
 		"attribute_class" : "mini_crit_airborne_deploy"
 		"description_string" : "#Attrib_MiniCritAirborneEnemiesDeploy"
@@ -2671,8 +2671,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[266] =
-	{
+	[266] = {
+
 		"name" : "projectile penetration"
 		"attribute_class" : "projectile_penetration"
 		"description_string" : "#Attrib_Penetration"
@@ -2681,8 +2681,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[267] =
-	{
+	[267] = {
+
 		"name" : "mod crit while airborne"
 		"attribute_class" : "crit_while_airborne"
 		"description_string" : "#Attrib_CritWhileAirborne"
@@ -2691,8 +2691,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[268] =
-	{
+	[268] = {
+
 		"name" : "mult sniper charge penalty DISPLAY ONLY"
 		"attribute_class" : "mult_sniper_charge_base_dummy"
 		"description_string" : "#Attrib_MultSniperChargePenalty"
@@ -2701,8 +2701,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[269] =
-	{
+	[269] = {
+
 		"name" : "mod see enemy health"
 		"attribute_class" : "see_enemy_health"
 		"description_string" : "#Attrib_SeeEnemyHealth"
@@ -2711,8 +2711,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[270] =
-	{
+	[270] = {
+
 		"name" : "powerup max charges"
 		"attribute_class" : "powerup_max_charges"
 		"description_string" : "#Attrib_PowerupMaxCharges"
@@ -2721,8 +2721,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[271] =
-	{
+	[271] = {
+
 		"name" : "powerup charges"
 		"attribute_class" : "powerup_charges"
 		"description_string" : "#Attrib_PowerupCharges"
@@ -2731,8 +2731,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[272] =
-	{
+	[272] = {
+
 		"name" : "powerup duration"
 		"attribute_class" : "powerup_duration"
 		"description_string" : "#Attrib_PowerupDuration"
@@ -2741,8 +2741,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[273] =
-	{
+	[273] = {
+
 		"name" : "critboost"
 		"attribute_class" : "critboost"
 		"description_string" : "#Attrib_CritBoost"
@@ -2751,8 +2751,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[274] =
-	{
+	[274] = {
+
 		"name" : "ubercharge"
 		"attribute_class" : "ubercharge"
 		"description_string" : "#Attrib_Ubercharge"
@@ -2761,8 +2761,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[275] =
-	{
+	[275] = {
+
 		"name" : "cancel falling damage"
 		"attribute_class" : "cancel_falling_damage"
 		"description_string" : "#Attrib_CancelFallingDamage"
@@ -2771,8 +2771,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[276] =
-	{
+	[276] = {
+
 		"name" : "bidirectional teleport"
 		"attribute_class" : "bidirectional_teleport"
 		"description_string" : "#Attrib_BiDirectionalTP"
@@ -2780,8 +2780,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[277] =
-	{
+	[277] = {
+
 		"name" : "multiple sentries"
 		"attribute_class" : "multiple_sentries"
 		"description_string" : "#Attrib_MultipleSentries"
@@ -2790,8 +2790,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[278] =
-	{
+	[278] = {
+
 		"name" : "effect bar recharge rate increased"
 		"attribute_class" : "effectbar_recharge_rate"
 		"description_string" : "#Attrib_EffectBarRechargeRateIncreased"
@@ -2800,8 +2800,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[279] =
-	{
+	[279] = {
+
 		"name" : "maxammo grenades1 increased"
 		"attribute_class" : "mult_maxammo_grenades1"
 		"description_string" : "#Attrib_MaxammoGrenades1_Increased"
@@ -2811,8 +2811,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[280] =
-	{
+	[280] = {
+
 		"name" : "override projectile type"
 		"attribute_class" : "override_projectile_type"
 		"description_format" : "value_is_additive"
@@ -2820,8 +2820,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[281] =
-	{
+	[281] = {
+
 		"name" : "energy weapon no ammo"
 		"attribute_class" : "energy_weapon_no_ammo"
 		"description_string" : "#Attrib_EnergyWeaponNoAmmo"
@@ -2830,8 +2830,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[282] =
-	{
+	[282] = {
+
 		"name" : "energy weapon charged shot"
 		"attribute_class" : "energy_weapon_charged_shot"
 		"description_string" : "#Attrib_EnergyWeaponChargedShot"
@@ -2840,8 +2840,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[283] =
-	{
+	[283] = {
+
 		"name" : "energy weapon penetration"
 		"attribute_class" : "energy_weapon_penetration"
 		"description_string" : "#Attrib_EnergyWeaponPenetration"
@@ -2850,8 +2850,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[284] =
-	{
+	[284] = {
+
 		"name" : "energy weapon no hurt building"
 		"attribute_class" : "energy_weapon_no_hurt_building"
 		"description_string" : "#Attrib_EnergyWeaponNoHurtBuilding"
@@ -2860,8 +2860,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[285] =
-	{
+	[285] = {
+
 		"name" : "energy weapon no deflect"
 		"attribute_class" : "energy_weapon_no_deflect"
 		"description_string" : "#Attrib_EnergyWeaponNoDeflect"
@@ -2870,8 +2870,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[286] =
-	{
+	[286] = {
+
 		"name" : "engy building health bonus"
 		"attribute_class" : "mult_engy_building_health"
 		"description_string" : "#Attrib_EngyBuildingHealthBonus"
@@ -2880,8 +2880,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[287] =
-	{
+	[287] = {
+
 		"name" : "engy sentry damage bonus"
 		"attribute_class" : "mult_engy_sentry_damage"
 		"description_string" : "#Attrib_EngySentryDamageBonus"
@@ -2890,8 +2890,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[288] =
-	{
+	[288] = {
+
 		"name" : "no crit boost"
 		"attribute_class" : "no_crit_boost"
 		"description_string" : "#Attrib_NoCritBoost"
@@ -2900,8 +2900,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[289] =
-	{
+	[289] = {
+
 		"name" : "centerfire projectile"
 		"attribute_class" : "centerfire_projectile"
 		"description_string" : "#Attrib_CenterFireProjectile"
@@ -2910,8 +2910,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[292] =
-	{
+	[292] = {
+
 		"name" : "kill eater score type"
 		"attribute_class" : "kill_eater_score_type"
 		"description_format" : "value_is_additive"
@@ -2919,8 +2919,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[293] =
-	{
+	[293] = {
+
 		"name" : "kill eater score type 2"
 		"attribute_class" : "kill_eater_score_type_2"
 		"description_format" : "value_is_additive"
@@ -2928,8 +2928,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[294] =
-	{
+	[294] = {
+
 		"name" : "kill eater 2"
 		"attribute_class" : "kill_eater_2"
 		"description_format" : "value_is_additive"
@@ -2937,8 +2937,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[295] =
-	{
+	[295] = {
+
 		"name" : "has pipboy build interface"
 		"attribute_class" : "set_custom_buildmenu"
 		"description_string" : ""
@@ -2947,8 +2947,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[296] =
-	{
+	[296] = {
+
 		"name" : "sapper kills collect crits"
 		"attribute_class" : "sapper_kills_collect_crits"
 		"description_string" : "#Attrib_SapperKillsCollectCrits"
@@ -2957,8 +2957,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[297] =
-	{
+	[297] = {
+
 		"name" : "sniper only fire zoomed"
 		"attribute_class" : "sniper_only_fire_zoomed"
 		"description_string" : "#Attrib_SniperOnlyFireZoomed"
@@ -2967,8 +2967,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[298] =
-	{
+	[298] = {
+
 		"name" : "mod ammo per shot"
 		"attribute_class" : "mod_ammo_per_shot"
 		"description_string" : "#Attrib_AmmoPerShot"
@@ -2977,8 +2977,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[299] =
-	{
+	[299] = {
+
 		"name" : "add onhit addammo"
 		"attribute_class" : "add_onhit_addammo"
 		"description_string" : "#Attrib_OnHit_AddAmmo"
@@ -2987,8 +2987,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[300] =
-	{
+	[300] = {
+
 		"name" : "electrical airblast DISPLAY ONLY"
 		"attribute_class" : "electrical_airblast_DISPLAY_ONLY"
 		"description_string" : "#Attrib_ElectricalAirblast"
@@ -2997,8 +2997,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[301] =
-	{
+	[301] = {
+
 		"name" : "mod use metal ammo type"
 		"attribute_class" : "mod_use_metal_ammo_type"
 		"description_string" : "#Attrib_UseMetalAmmoType"
@@ -3007,8 +3007,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[302] =
-	{
+	[302] = {
+
 		"name" : "expiration date"
 		"attribute_class" : "expiration_date"
 		"description_string" : "#Attrib_ExpirationDate"
@@ -3017,8 +3017,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[303] =
-	{
+	[303] = {
+
 		"name" : "mod max primary clip override"
 		"attribute_class" : "mod_max_primary_clip_override"
 		"description_string" : ""
@@ -3027,8 +3027,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[304] =
-	{
+	[304] = {
+
 		"name" : "sniper full charge damage bonus"
 		"attribute_class" : "sniper_full_charge_damage_bonus"
 		"description_string" : "#Attrib_Sniper_FullChargeBonus"
@@ -3037,8 +3037,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[305] =
-	{
+	[305] = {
+
 		"name" : "sniper fires tracer"
 		"attribute_class" : "sniper_fires_tracer"
 		"description_string" : "#Attrib_Sniper_FiresTracer"
@@ -3047,8 +3047,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[306] =
-	{
+	[306] = {
+
 		"name" : "sniper no headshot without full charge"
 		"attribute_class" : "sniper_no_headshot_without_full_charge"
 		"description_string" : "#Attrib_Sniper_NoHeadShot"
@@ -3057,8 +3057,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[307] =
-	{
+	[307] = {
+
 		"name" : "mod no reload DISPLAY ONLY"
 		"attribute_class" : "mod_no_reload_display_only"
 		"description_string" : "#Attrib_NoReload"
@@ -3067,8 +3067,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[308] =
-	{
+	[308] = {
+
 		"name" : "sniper penetrate players when charged"
 		"attribute_class" : "sniper_penetrate_players_when_charged"
 		"description_string" : "#Attrib_SniperFullChargePenetration"
@@ -3077,8 +3077,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[309] =
-	{
+	[309] = {
+
 		"name" : "crit kill will gib"
 		"attribute_class" : "crit_kill_will_gib"
 		"description_string" : "#Attrib_CritKillWillGib"
@@ -3087,8 +3087,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[310] =
-	{
+	[310] = {
+
 		"name" : "recall"
 		"attribute_class" : "recall"
 		"description_string" : "#Attrib_Recall"
@@ -3097,8 +3097,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[311] =
-	{
+	[311] = {
+
 		"name" : "unlimited quantity"
 		"attribute_class" : "unlimited_quantity"
 		"description_string" : "#Attrib_Unlimited"
@@ -3107,8 +3107,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[312] =
-	{
+	[312] = {
+
 		"name" : "disable weapon hiding for animations"
 		"attribute_class" : "disable_weapon_hiding_for_animations"
 		"description_format" : "value_is_additive"
@@ -3116,8 +3116,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[313] =
-	{
+	[313] = {
+
 		"name" : "applies snare effect"
 		"attribute_class" : "applies_snare_effect"
 		"description_string" : "#Attrib_AppliesSnareEffect"
@@ -3126,8 +3126,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[314] =
-	{
+	[314] = {
+
 		"name" : "uber duration bonus"
 		"attribute_class" : "add_uber_time"
 		"description_string" : "#Attrib_UberDurationBonus"
@@ -3136,8 +3136,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[315] =
-	{
+	[315] = {
+
 		"name" : "refill_ammo"
 		"attribute_class" : "refill_ammo"
 		"description_string" : "#Attrib_RefillAmmo"
@@ -3146,8 +3146,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[317] =
-	{
+	[317] = {
+
 		"name" : "store sort override DEPRECATED"
 		"attribute_class" : "store_sort_override_DEPRECATED"
 		"description_string" : "#Attrib_AlternateRocketEffect"
@@ -3156,8 +3156,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[318] =
-	{
+	[318] = {
+
 		"name" : "faster reload rate"
 		"attribute_class" : "fast_reload"
 		"description_string" : "#Attrib_FastReload"
@@ -3166,8 +3166,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[319] =
-	{
+	[319] = {
+
 		"name" : "increase buff duration"
 		"attribute_class" : "mod_buff_duration"
 		"description_string" : "#Attrib_BuffTime_Increased"
@@ -3176,8 +3176,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[320] =
-	{
+	[320] = {
+
 		"name" : "robo sapper"
 		"attribute_class" : "robo_sapper"
 		"description_string" : "#Attrib_RoboSapper"
@@ -3186,8 +3186,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[321] =
-	{
+	[321] = {
+
 		"name" : "build rate bonus"
 		"attribute_class" : "mod_build_rate"
 		"description_string" : "#Attrib_BuildRateBonus"
@@ -3196,8 +3196,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[322] =
-	{
+	[322] = {
+
 		"name" : "taunt is press and hold"
 		"attribute_class" : "enable_misc2_holdtaunt"
 		"description_string" : "#Attrib_DamageDone_Negative"
@@ -3206,8 +3206,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[323] =
-	{
+	[323] = {
+
 		"name" : "attack projectiles"
 		"attribute_class" : "attack_projectiles"
 		"description_string" : "#Attrib_AttackProjectiles"
@@ -3215,8 +3215,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[324] =
-	{
+	[324] = {
+
 		"name" : "accuracy scales damage"
 		"attribute_class" : "accuracy_scales_damage"
 		"description_string" : "#Attrib_AccurScalesDmg"
@@ -3225,8 +3225,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[325] =
-	{
+	[325] = {
+
 		"name" : "currency bonus"
 		"attribute_class" : "currency_bonus"
 		"description_string" : "#Attrib_CurrencyBonus"
@@ -3235,8 +3235,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[326] =
-	{
+	[326] = {
+
 		"name" : "increased jump height"
 		"attribute_class" : "mod_jump_height"
 		"description_string" : "#Attrib_JumpHeightBonus"
@@ -3245,8 +3245,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[327] =
-	{
+	[327] = {
+
 		"name" : "building instant upgrade"
 		"attribute_class" : "building_instant_upgrade"
 		"description_string" : "#Attrib_BuildingInstaUpgrade"
@@ -3254,8 +3254,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[328] =
-	{
+	[328] = {
+
 		"name" : "disable fancy class select anim"
 		"attribute_class" : "disable_fancy_class_select_anim"
 		"description_format" : "value_is_percentage"
@@ -3263,8 +3263,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[329] =
-	{
+	[329] = {
+
 		"name" : "airblast vulnerability multiplier"
 		"attribute_class" : "airblast_vulnerability_multiplier"
 		"description_string" : "#Attrib_AirBlastVulnerabilityMultipier"
@@ -3273,8 +3273,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[330] =
-	{
+	[330] = {
+
 		"name" : "override footstep sound set"
 		"attribute_class" : "override_footstep_sound_set"
 		"description_format" : "value_is_additive"
@@ -3282,8 +3282,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[331] =
-	{
+	[331] = {
+
 		"name" : "spawn with physics toy"
 		"attribute_class" : "spawn_with_physics_toy"
 		"description_format" : "value_is_additive"
@@ -3291,8 +3291,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[332] =
-	{
+	[332] = {
+
 		"name" : "fish damage override"
 		"attribute_class" : "fish_damage_override"
 		"description_format" : "value_is_additive"
@@ -3300,8 +3300,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[333] =
-	{
+	[333] = {
+
 		"name" : "SET BONUS: special dsp"
 		"attribute_class" : "special_dsp"
 		"description_format" : "value_is_additive"
@@ -3310,8 +3310,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[334] =
-	{
+	[334] = {
+
 		"name" : "bombinomicon effect on death"
 		"attribute_class" : "bombinomicon_effect_on_death"
 		"description_string" : "#Attrib_BombinomiconEffectOnDeath"
@@ -3320,8 +3320,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[335] =
-	{
+	[335] = {
+
 		"name" : "clip size bonus upgrade"
 		"attribute_class" : "mult_clipsize_upgrade"
 		"description_string" : "#Attrib_ClipSize_Positive"
@@ -3330,8 +3330,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[336] =
-	{
+	[336] = {
+
 		"name" : "hide enemy health"
 		"attribute_class" : "hide_enemy_health"
 		"description_string" : "#Attrib_HideEnemyHealth"
@@ -3340,8 +3340,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[337] =
-	{
+	[337] = {
+
 		"name" : "subtract victim medigun charge on hit"
 		"attribute_class" : "subtract_victim_medigun_charge_onhit"
 		"description_string" : "#Attrib_SubtractVictimMedigunChargeOnHit"
@@ -3351,8 +3351,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[338] =
-	{
+	[338] = {
+
 		"name" : "subtract victim cloak on hit"
 		"attribute_class" : "subtract_victim_cloak_on_hit"
 		"description_string" : "#Attrib_SubtractVictimCloakOnHit"
@@ -3361,8 +3361,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[339] =
-	{
+	[339] = {
+
 		"name" : "reveal cloaked victim on hit"
 		"attribute_class" : "reveal_cloaked_victim_on_hit"
 		"description_string" : "#Attrib_RevealCloakedVictimOnHit"
@@ -3371,8 +3371,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[340] =
-	{
+	[340] = {
+
 		"name" : "reveal disguised victim on hit"
 		"attribute_class" : "reveal_disguised_victim_on_hit"
 		"description_string" : "#Attrib_RevealDisguisedVictimOnHit"
@@ -3381,8 +3381,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[341] =
-	{
+	[341] = {
+
 		"name" : "jarate backstabber"
 		"attribute_class" : "jarate_backstabber"
 		"description_string" : "#Attrib_JarateBackstabber"
@@ -3391,8 +3391,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[343] =
-	{
+	[343] = {
+
 		"name" : "engy sentry fire rate increased"
 		"attribute_class" : "mult_sentry_firerate"
 		"description_string" : "#Attrib_SentryFireRate_Increased"
@@ -3401,8 +3401,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[344] =
-	{
+	[344] = {
+
 		"name" : "engy sentry radius increased"
 		"attribute_class" : "mult_sentry_range"
 		"description_string" : "#Attrib_SentryRadius_Increased"
@@ -3411,8 +3411,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[345] =
-	{
+	[345] = {
+
 		"name" : "engy dispenser radius increased"
 		"attribute_class" : "mult_dispenser_radius"
 		"description_string" : "#Attrib_DispenserRadius_Increased"
@@ -3421,8 +3421,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[346] =
-	{
+	[346] = {
+
 		"name" : "mod bat launches ornaments"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_BatLaunchesOrnaments"
@@ -3431,8 +3431,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[347] =
-	{
+	[347] = {
+
 		"name" : "freeze backstab victim"
 		"attribute_class" : "freeze_backstab_victim"
 		"description_string" : "#Attrib_FreezeBackstabVictim"
@@ -3441,8 +3441,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[348] =
-	{
+	[348] = {
+
 		"name" : "fire rate penalty HIDDEN"
 		"attribute_class" : "mult_postfiredelay"
 		"description_string" : ""
@@ -3451,8 +3451,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[349] =
-	{
+	[349] = {
+
 		"name" : "energy weapon no drain"
 		"attribute_class" : "energy_weapon_no_drain"
 		"description_string" : ""
@@ -3461,8 +3461,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[350] =
-	{
+	[350] = {
+
 		"name" : "ragdolls become ash"
 		"attribute_class" : "ragdolls_become_ash"
 		"description_string" : ""
@@ -3471,8 +3471,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[351] =
-	{
+	[351] = {
+
 		"name" : "engy disposable sentries"
 		"attribute_class" : "engy_disposable_sentries"
 		"description_string" : "#Attrib_EngyDisposableSentries"
@@ -3481,8 +3481,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[352] =
-	{
+	[352] = {
+
 		"name" : "alt fire teleport to spawn"
 		"attribute_class" : "alt_fire_teleport_to_spawn"
 		"description_string" : "#Attrib_AltFireTeleportToSpawn"
@@ -3491,8 +3491,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[353] =
-	{
+	[353] = {
+
 		"name" : "cannot pick up buildings"
 		"attribute_class" : "cannot_pick_up_buildings"
 		"description_string" : "#Attrib_CannotPickUpBuildings"
@@ -3501,8 +3501,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[354] =
-	{
+	[354] = {
+
 		"name" : "stun enemies wielding same weapon"
 		"attribute_class" : "stun_enemies_wielding_same_weapon"
 		"description_string" : "#Attrib_StunEnemiesWieldingSameWeapon"
@@ -3511,8 +3511,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[355] =
-	{
+	[355] = {
+
 		"name" : "mod ammo per shot missed DISPLAY ONLY"
 		"attribute_class" : "mod_ammo_per_shot_missed_DISPLAY_ONLY"
 		"description_string" : "#Attrib_AmmoPerShotMissed"
@@ -3521,8 +3521,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[356] =
-	{
+	[356] = {
+
 		"name" : "airblast disabled"
 		"attribute_class" : "airblast_disabled"
 		"description_string" : "#Attrib_AirblastDisabled"
@@ -3531,8 +3531,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[357] =
-	{
+	[357] = {
+
 		"name" : "increase buff duration HIDDEN"
 		"attribute_class" : "mod_buff_duration"
 		"description_string" : "#Attrib_BuffTime_Increased"
@@ -3541,8 +3541,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[358] =
-	{
+	[358] = {
+
 		"name" : "crit forces victim to laugh"
 		"attribute_class" : "crit_forces_victim_to_laugh"
 		"description_string" : "#Attrib_CritForcesLaugh"
@@ -3551,8 +3551,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[359] =
-	{
+	[359] = {
+
 		"name" : "melts in fire"
 		"attribute_class" : "melts_in_fire"
 		"description_string" : "#Attrib_MeltsInFire"
@@ -3561,8 +3561,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[360] =
-	{
+	[360] = {
+
 		"name" : "damage all connected"
 		"attribute_class" : "damage_all_connected"
 		"description_string" : "#Attrib_DamageAllConnected"
@@ -3571,8 +3571,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[361] =
-	{
+	[361] = {
+
 		"name" : "become fireproof on hit by fire"
 		"attribute_class" : "become_fireproof_on_hit_by_fire"
 		"description_string" : "#Attrib_BecomeFireproofOnHitByFire"
@@ -3581,8 +3581,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[362] =
-	{
+	[362] = {
+
 		"name" : "crit from behind"
 		"attribute_class" : "crit_from_behind"
 		"description_string" : "#Attrib_CritFromBehind"
@@ -3591,8 +3591,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[363] =
-	{
+	[363] = {
+
 		"name" : "crit does no damage"
 		"attribute_class" : "crit_does_no_damage"
 		"description_string" : "#Attrib_CritDoesNoDamage"
@@ -3601,8 +3601,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[364] =
-	{
+	[364] = {
+
 		"name" : "add jingle to footsteps"
 		"attribute_class" : "add_jingle_to_footsteps"
 		"description_string" : "#Attrib_AddJingleToFootsteps"
@@ -3611,8 +3611,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[365] =
-	{
+	[365] = {
+
 		"name" : "set icicle knife mode"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_SetIcicleKnifeMode"
@@ -3621,8 +3621,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[366] =
-	{
+	[366] = {
+
 		"name" : "mod stun waist high airborne"
 		"attribute_class" : "stun_waist_high_airborne"
 		"description_string" : "#Attrib_StunWaistHighAirborne"
@@ -3631,8 +3631,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[367] =
-	{
+	[367] = {
+
 		"name" : "extinguish earns revenge crits"
 		"attribute_class" : "extinguish_revenge"
 		"description_string" : "#Attrib_ExtinguishRevenge"
@@ -3641,8 +3641,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[368] =
-	{
+	[368] = {
+
 		"name" : "burn damage earns rage"
 		"attribute_class" : "burn_damage_earns_rage"
 		"description_string" : "#Attrib_BurnDamageEarnsRage"
@@ -3651,8 +3651,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[369] =
-	{
+	[369] = {
+
 		"name" : "tickle enemies wielding same weapon"
 		"attribute_class" : "tickle_enemies_wielding_same_weapon"
 		"description_string" : "#Attrib_TickleEnemiesWieldingSameWeapon"
@@ -3661,8 +3661,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[370] =
-	{
+	[370] = {
+
 		"name" : "attach particle effect static"
 		"attribute_class" : "set_attached_particle_static"
 		"description_format" : "value_is_particle_index"
@@ -3670,8 +3670,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[371] =
-	{
+	[371] = {
+
 		"name" : "cosmetic taunt sound"
 		"attribute_class" : "cosmetic_taunt_sound"
 		"attribute_type" : "string"
@@ -3680,8 +3680,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[372] =
-	{
+	[372] = {
+
 		"name" : "accepted wedding ring account id 1"
 		"attribute_class" : "accepted_wedding_ring_account_id_1"
 		"description_string" : "#Attrib_AcceptedWeddingRingAccount1"
@@ -3690,8 +3690,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[373] =
-	{
+	[373] = {
+
 		"name" : "accepted wedding ring account id 2"
 		"attribute_class" : "accepted_wedding_ring_account_id_2"
 		"description_string" : "#Attrib_AcceptedWeddingRingAccount2"
@@ -3700,8 +3700,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[374] =
-	{
+	[374] = {
+
 		"name" : "tool escrow until date"
 		"attribute_class" : "tool_escrow_until_date"
 		"description_string" : "#Attrib_ToolEscrowUntilDate"
@@ -3710,8 +3710,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[375] =
-	{
+	[375] = {
+
 		"name" : "generate rage on damage"
 		"attribute_class" : "generate_rage_on_dmg"
 		"description_string" : "#Attrib_RageOnDamage"
@@ -3720,8 +3720,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[376] =
-	{
+	[376] = {
+
 		"name" : "aiming no flinch"
 		"attribute_class" : "aiming_no_flinch"
 		"description_string" : "#Attrib_AimingNoFlinch"
@@ -3731,8 +3731,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[377] =
-	{
+	[377] = {
+
 		"name" : "aiming knockback resistance"
 		"attribute_class" : "mult_aiming_knockback_resistance"
 		"description_string" : "#Attrib_AimingKnockbackResistance"
@@ -3742,8 +3742,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[378] =
-	{
+	[378] = {
+
 		"name" : "sniper aiming movespeed decreased"
 		"attribute_class" : "mult_player_aiming_movespeed"
 		"description_string" : "#Attrib_SniperAimingMoveSpeed_Decreased"
@@ -3753,8 +3753,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[379] =
-	{
+	[379] = {
+
 		"name" : "kill eater user 1"
 		"attribute_class" : "kill_eater_user_1"
 		"description_format" : "value_is_additive"
@@ -3762,8 +3762,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[380] =
-	{
+	[380] = {
+
 		"name" : "kill eater user score type 1"
 		"attribute_class" : "kill_eater_user_score_type_1"
 		"description_format" : "value_is_additive"
@@ -3771,8 +3771,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[381] =
-	{
+	[381] = {
+
 		"name" : "kill eater user 2"
 		"attribute_class" : "kill_eater_user_2"
 		"description_format" : "value_is_additive"
@@ -3780,8 +3780,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[382] =
-	{
+	[382] = {
+
 		"name" : "kill eater user score type 2"
 		"attribute_class" : "kill_eater_user_score_type_2"
 		"description_format" : "value_is_additive"
@@ -3789,8 +3789,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[383] =
-	{
+	[383] = {
+
 		"name" : "kill eater user 3"
 		"attribute_class" : "kill_eater_user_3"
 		"description_format" : "value_is_additive"
@@ -3798,8 +3798,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[384] =
-	{
+	[384] = {
+
 		"name" : "kill eater user score type 3"
 		"attribute_class" : "kill_eater_user_score_type_3"
 		"description_format" : "value_is_additive"
@@ -3807,8 +3807,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[385] =
-	{
+	[385] = {
+
 		"name" : "strange part new counter ID"
 		"attribute_class" : "strange_part_new_counter_id"
 		"description_format" : "value_is_additive"
@@ -3816,8 +3816,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[386] =
-	{
+	[386] = {
+
 		"name" : "mvm completed challenges bitmask"
 		"attribute_class" : "mvm_completed_challenges_bitmask"
 		"description_format" : "value_is_additive"
@@ -3825,8 +3825,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[387] =
-	{
+	[387] = {
+
 		"name" : "rage on kill"
 		"attribute_class" : "rage_on_kill"
 		"description_string" : "#Attrib_RageGainOnKill"
@@ -3836,8 +3836,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[388] =
-	{
+	[388] = {
+
 		"name" : "kill eater kill type"
 		"attribute_class" : "kill_eater_kill_type"
 		"description_format" : "value_is_additive"
@@ -3845,8 +3845,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[389] =
-	{
+	[389] = {
+
 		"name" : "shot penetrate all players"
 		"attribute_class" : "shot_penetrate_all_players"
 		"description_string" : "#Attrib_ShotPenetration"
@@ -3855,8 +3855,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[390] =
-	{
+	[390] = {
+
 		"name" : "headshot damage increase"
 		"attribute_class" : "headshot_damage_modify"
 		"description_string" : "#Attrib_HeadshotDamageIncrease"
@@ -3865,8 +3865,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[391] =
-	{
+	[391] = {
+
 		"name" : "SET BONUS: mystery solving time decrease"
 		"attribute_class" : "mystery_solving_time_decrease"
 		"description_string" : "#Attrib_MysterySolvingTimeDecrease"
@@ -3876,8 +3876,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[392] =
-	{
+	[392] = {
+
 		"name" : "damage penalty on bodyshot"
 		"attribute_class" : "bodyshot_damage_modify"
 		"description_string" : "#Attrib_DamageDone_Bodyshot_Negative"
@@ -3886,8 +3886,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[393] =
-	{
+	[393] = {
+
 		"name" : "sniper rage DISPLAY ONLY"
 		"attribute_class" : "sniper_rage_DISPLAY_ONLY"
 		"description_string" : "#Attrib_SniperRageDisplayOnly"
@@ -3896,8 +3896,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[394] =
-	{
+	[394] = {
+
 		"name" : "fire rate bonus HIDDEN"
 		"attribute_class" : "mult_postfiredelay"
 		"description_string" : "#Attrib_FireRate_Positive"
@@ -3906,8 +3906,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[395] =
-	{
+	[395] = {
+
 		"name" : "explosive sniper shot"
 		"attribute_class" : "explosive_sniper_shot"
 		"description_string" : "#Attrib_ExplosiveSniperShot"
@@ -3917,8 +3917,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[396] =
-	{
+	[396] = {
+
 		"name" : "melee attack rate bonus"
 		"attribute_class" : "mult_postfiredelay"
 		"description_string" : "#Attrib_MeleeRate_Positive"
@@ -3927,8 +3927,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[397] =
-	{
+	[397] = {
+
 		"name" : "projectile penetration heavy"
 		"attribute_class" : "projectile_penetration"
 		"description_string" : "#Attrib_Penetration_Heavy"
@@ -3937,8 +3937,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[398] =
-	{
+	[398] = {
+
 		"name" : "rage on assists"
 		"attribute_class" : "rage_on_assists"
 		"description_string" : "#Attrib_RageGainOnAssists"
@@ -3948,8 +3948,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[399] =
-	{
+	[399] = {
+
 		"name" : "armor piercing"
 		"attribute_class" : "armor_piercing"
 		"description_string" : "#Attrib_ArmorPiercing"
@@ -3959,8 +3959,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[400] =
-	{
+	[400] = {
+
 		"name" : "cannot pick up intelligence"
 		"attribute_class" : "cannot_pick_up_intelligence"
 		"description_string" : "#Attrib_CannotPickUpIntelligence"
@@ -3969,8 +3969,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[401] =
-	{
+	[401] = {
+
 		"name" : "SET BONUS: chance of hunger decrease"
 		"attribute_class" : "chance_of_hunger_decrease"
 		"description_string" : "#Attrib_ChanceOfHungerDecrease"
@@ -3980,8 +3980,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[402] =
-	{
+	[402] = {
+
 		"name" : "cannot be backstabbed"
 		"attribute_class" : "cannot_be_backstabbed"
 		"description_string" : "#Attrib_CannotBeBackstabbed"
@@ -3990,8 +3990,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[403] =
-	{
+	[403] = {
+
 		"name" : "squad surplus claimer id DEPRECATED"
 		"attribute_class" : "squad_surplus_claimer_account_id_DEPRECATED"
 		"description_string" : "#Attrib_SquadSurplusClaimerAccountID"
@@ -4000,8 +4000,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[404] =
-	{
+	[404] = {
+
 		"name" : "share consumable with patient"
 		"attribute_class" : "share_consumable_with_patient"
 		"description_string" : "#Attrib_ShareConsumable"
@@ -4011,8 +4011,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[405] =
-	{
+	[405] = {
+
 		"name" : "airblast vertical vulnerability multiplier"
 		"attribute_class" : "airblast_vertical_vulnerability_multiplier"
 		"description_string" : "#Attrib_AirBlastVerticalVulnerabilityMultipier"
@@ -4021,8 +4021,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[406] =
-	{
+	[406] = {
+
 		"name" : "vision opt in flags"
 		"attribute_class" : "vision_opt_in_flags"
 		"description_format" : "value_is_or"
@@ -4030,8 +4030,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[407] =
-	{
+	[407] = {
+
 		"name" : "crit vs disguised players"
 		"attribute_class" : "or_crit_vs_playercond"
 		"description_string" : "#Attrib_CritVsDisguised"
@@ -4040,8 +4040,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[408] =
-	{
+	[408] = {
+
 		"name" : "crit vs non burning players"
 		"attribute_class" : "or_crit_vs_not_playercond"
 		"description_string" : "#Attrib_CritVsNonBurning"
@@ -4050,8 +4050,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[409] =
-	{
+	[409] = {
+
 		"name" : "kill forces attacker to laugh"
 		"attribute_class" : "kill_forces_attacker_to_laugh"
 		"description_string" : "#Attrib_KillForcesAttackerLaugh"
@@ -4060,8 +4060,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[410] =
-	{
+	[410] = {
+
 		"name" : "damage bonus while disguised"
 		"attribute_class" : "mult_dmg_disguised"
 		"description_string" : "#Attrib_DmgBonus_Disguised"
@@ -4070,8 +4070,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[411] =
-	{
+	[411] = {
+
 		"name" : "projectile spread angle penalty"
 		"attribute_class" : "projectile_spread_angle"
 		"description_string" : "#Attrib_Projectile_Spread_Angle_Negative"
@@ -4080,8 +4080,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[412] =
-	{
+	[412] = {
+
 		"name" : "dmg taken increased"
 		"attribute_class" : "mult_dmgtaken"
 		"description_string" : "#Attrib_DmgTaken_Increased"
@@ -4091,8 +4091,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[413] =
-	{
+	[413] = {
+
 		"name" : "auto fires full clip"
 		"attribute_class" : "auto_fires_full_clip"
 		"description_string" : "#Attrib_AutoFiresFullClip"
@@ -4101,8 +4101,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[414] =
-	{
+	[414] = {
+
 		"name" : "self mark for death"
 		"attribute_class" : "self_mark_for_death"
 		"description_string" : "#Attrib_SelfMarkForDeath"
@@ -4111,8 +4111,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[415] =
-	{
+	[415] = {
+
 		"name" : "counts as assister is some kind of pet this update is going to be awesome"
 		"attribute_class" : "counts_as_assister"
 		"description_format" : "value_is_additive"
@@ -4121,8 +4121,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "1"
 	},
-	[416] =
-	{
+	[416] = {
+
 		"name" : "mod flaregun fires pellets with knockback"
 		"attribute_class" : "set_weapon_mode"
 		"description_string" : "#Attrib_FlaregunPelletsWithKnockback"
@@ -4131,8 +4131,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[417] =
-	{
+	[417] = {
+
 		"name" : "can overload"
 		"attribute_class" : "can_overload"
 		"description_string" : "#Attrib_CanOverload"
@@ -4141,8 +4141,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[418] =
-	{
+	[418] = {
+
 		"name" : "boost on damage"
 		"attribute_class" : "boost_on_damage"
 		"description_string" : "#Attrib_BoostOnDamage"
@@ -4151,8 +4151,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[419] =
-	{
+	[419] = {
+
 		"name" : "hype resets on jump"
 		"attribute_class" : "hype_resets_on_jump"
 		"description_string" : "#Attrib_HypeResetsOnJump"
@@ -4161,8 +4161,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[420] =
-	{
+	[420] = {
+
 		"name" : "pyro year number"
 		"attribute_class" : "pyro_year_number"
 		"description_string" : "#Attrib_PyroYearNumber"
@@ -4171,8 +4171,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[421] =
-	{
+	[421] = {
+
 		"name" : "no primary ammo from dispensers while active"
 		"attribute_class" : "no_primary_ammo_from_dispensers"
 		"description_string" : "#Attrib_NoPrimaryAmmoFromDispensers"
@@ -4181,8 +4181,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[422] =
-	{
+	[422] = {
+
 		"name" : "pyrovision only DISPLAY ONLY"
 		"attribute_class" : "pyrovision_only_display"
 		"description_string" : "#Attrib_PyrovisionFilter"
@@ -4191,8 +4191,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[424] =
-	{
+	[424] = {
+
 		"name" : "clip size penalty HIDDEN"
 		"attribute_class" : "mult_clipsize"
 		"description_string" : "#Attrib_ClipSize_Negative"
@@ -4201,8 +4201,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[425] =
-	{
+	[425] = {
+
 		"name" : "sapper damage bonus"
 		"attribute_class" : "mult_sapper_damage"
 		"description_string" : "#Attrib_Sapper_Damage_Bonus"
@@ -4211,8 +4211,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[426] =
-	{
+	[426] = {
+
 		"name" : "sapper damage penalty"
 		"attribute_class" : "mult_sapper_damage"
 		"description_string" : "#Attrib_Sapper_Damage_Penalty"
@@ -4221,8 +4221,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[427] =
-	{
+	[427] = {
+
 		"name" : "sapper damage leaches health"
 		"attribute_class" : "sapper_damage_leaches_health"
 		"description_string" : "#Attrib_Sapper_Leaches_Health"
@@ -4231,8 +4231,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[428] =
-	{
+	[428] = {
+
 		"name" : "sapper health bonus"
 		"attribute_class" : "mult_sapper_health"
 		"description_string" : "#Attrib_Sapper_Health_Bonus"
@@ -4241,8 +4241,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[429] =
-	{
+	[429] = {
+
 		"name" : "sapper health penalty"
 		"attribute_class" : "mult_sapper_health"
 		"description_string" : "#Attrib_Sapper_Health_Penalty"
@@ -4251,8 +4251,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[430] =
-	{
+	[430] = {
+
 		"name" : "ring of fire while aiming"
 		"attribute_class" : "ring_of_fire_while_aiming"
 		"description_string" : "#Attrib_Ring_Of_Fire_While_Aiming"
@@ -4261,8 +4261,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[431] =
-	{
+	[431] = {
+
 		"name" : "uses ammo while aiming"
 		"attribute_class" : "uses_ammo_while_aiming"
 		"description_string" : "#Attrib_Uses_Ammo_While_Aiming"
@@ -4271,8 +4271,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[433] =
-	{
+	[433] = {
+
 		"name" : "sapper degenerates buildings"
 		"attribute_class" : "sapper_degenerates_buildings"
 		"description_string" : "#Attrib_Sapper_Degenerates_Buildings"
@@ -4281,8 +4281,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[434] =
-	{
+	[434] = {
+
 		"name" : "sapper damage penalty hidden"
 		"attribute_class" : "mult_sapper_damage"
 		"description_string" : "#Attrib_Sapper_Damage_Penalty"
@@ -4291,8 +4291,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[435] =
-	{
+	[435] = {
+
 		"name" : "cleaver description"
 		"attribute_class" : "desc_cleaver_description"
 		"description_string" : "#Attrib_Cleaver_Description"
@@ -4301,8 +4301,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[436] =
-	{
+	[436] = {
+
 		"name" : "ragdolls plasma effect"
 		"attribute_class" : "ragdolls_plasma_effect"
 		"description_string" : ""
@@ -4311,8 +4311,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[437] =
-	{
+	[437] = {
+
 		"name" : "crit vs stunned players"
 		"attribute_class" : "or_crit_vs_playercond"
 		"description_string" : "#Attrib_CritVsStunned"
@@ -4321,8 +4321,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[438] =
-	{
+	[438] = {
+
 		"name" : "crit vs wet players"
 		"attribute_class" : "crit_vs_wet_players"
 		"description_string" : "#Attrib_CritVsWet"
@@ -4331,8 +4331,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[439] =
-	{
+	[439] = {
+
 		"name" : "override item level desc string"
 		"attribute_class" : "override_item_level_desc_string"
 		"description_format" : "value_is_additive"
@@ -4341,8 +4341,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "1"
 	},
 
-	[440] =
-	{
+	[440] = {
+
 		"name" : "clip size upgrade atomic"
 		"attribute_class" : "mult_clipsize_upgrade_atomic"
 		"description_string" : "#Attrib_ClipSize_Atomic"
@@ -4351,8 +4351,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[441] =
-	{
+	[441] = {
+
 		"name" : "auto fires full clip all at once"
 		"attribute_class" : "auto_fires_full_clip_all_at_once"
 		"description_string" : "#Attrib_AutoFiresFullClipAllAtOnce"
@@ -4361,8 +4361,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[442] =
-	{
+	[442] = {
+
 		"name" : "major move speed bonus"
 		"attribute_class" : "mult_player_movespeed"
 		"description_format" : "value_is_percentage"
@@ -4371,8 +4371,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[443] =
-	{
+	[443] = {
+
 		"name" : "major increased jump height"
 		"attribute_class" : "mod_jump_height"
 		"description_format" : "value_is_percentage"
@@ -4381,8 +4381,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[444] =
-	{
+	[444] = {
+
 		"name" : "head scale"
 		"attribute_class" : "head_scale"
 		"description_format" : "value_is_percentage"
@@ -4392,8 +4392,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[445] =
-	{
+	[445] = {
+
 		"name" : "pyrovision opt in DISPLAY ONLY"
 		"attribute_class" : "pyrovision_opt_in_display_only"
 		"description_string" : "#Attrib_PyroVisionOptIn"
@@ -4402,8 +4402,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[446] =
-	{
+	[446] = {
+
 		"name" : "halloweenvision opt in DISPLAY ONLY"
 		"attribute_class" : "halloweenvision_opt_in_display_only"
 		"description_string" : ""
@@ -4412,8 +4412,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[447] =
-	{
+	[447] = {
+
 		"name" : "halloweenvision filter DISPLAY ONLY"
 		"attribute_class" : "halloweenvision_filter_display_only"
 		"description_string" : ""
@@ -4422,8 +4422,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[448] =
-	{
+	[448] = {
+
 		"name" : "player skin override"
 		"attribute_class" : "player_skin_override"
 		"description_string" : "#Attrib_PlayerSkinOverride"
@@ -4432,8 +4432,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[449] =
-	{
+	[449] = {
+
 		"name" : "never craftable"
 		"attribute_class" : "never_craftable"
 		"description_format" : "value_is_additive"
@@ -4441,8 +4441,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[450] =
-	{
+	[450] = {
+
 		"name" : "zombiezombiezombiezombie"
 		"attribute_class" : "zombiezombiezombiezombie"
 		"description_format" : "value_is_additive"
@@ -4450,8 +4450,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[451] =
-	{
+	[451] = {
+
 		"name" : "sapper voice pak"
 		"attribute_class" : "sapper_voice_pak"
 		"description_string" : "#Attrib_Sapper_Voice_Pak"
@@ -4460,8 +4460,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[452] =
-	{
+	[452] = {
+
 		"name" : "sapper voice pak idle wait"
 		"attribute_class" : "sapper_voice_pak_idle_wait"
 		"description_string" : "#Attrib_Sapper_Voice_Pak_Idle_Wait"
@@ -4470,8 +4470,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[453] =
-	{
+	[453] = {
+
 		"name" : "merasmus hat level display ONLY"
 		"attribute_class" : "merasmus_hat_level_display_ONLY"
 		"description_string" : "#Attrib_Merasmus_Hat_Level"
@@ -4480,8 +4480,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[454] =
-	{
+	[454] = {
+
 		"name" : "strange restriction type 1"
 		"attribute_class" : "strange_restriction_type_1"
 		"description_format" : "value_is_additive"
@@ -4489,8 +4489,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[455] =
-	{
+	[455] = {
+
 		"name" : "strange restriction value 1"
 		"attribute_class" : "strange_restriction_value_1"
 		"description_format" : "value_is_additive"
@@ -4498,8 +4498,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[456] =
-	{
+	[456] = {
+
 		"name" : "strange restriction type 2"
 		"attribute_class" : "strange_restriction_type_2"
 		"description_format" : "value_is_additive"
@@ -4507,8 +4507,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[457] =
-	{
+	[457] = {
+
 		"name" : "strange restriction value 2"
 		"attribute_class" : "strange_restriction_value_2"
 		"description_format" : "value_is_additive"
@@ -4516,8 +4516,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[458] =
-	{
+	[458] = {
+
 		"name" : "strange restriction user type 1"
 		"attribute_class" : "strange_restriction_user_type_1"
 		"description_format" : "value_is_additive"
@@ -4525,8 +4525,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[459] =
-	{
+	[459] = {
+
 		"name" : "strange restriction user value 1"
 		"attribute_class" : "strange_restriction_user_value_1"
 		"description_format" : "value_is_additive"
@@ -4534,8 +4534,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[460] =
-	{
+	[460] = {
+
 		"name" : "strange restriction user type 2"
 		"attribute_class" : "strange_restriction_user_type_2"
 		"description_format" : "value_is_additive"
@@ -4543,8 +4543,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[461] =
-	{
+	[461] = {
+
 		"name" : "strange restriction user value 2"
 		"attribute_class" : "strange_restriction_user_value_2"
 		"description_format" : "value_is_additive"
@@ -4552,8 +4552,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[462] =
-	{
+	[462] = {
+
 		"name" : "strange restriction user type 3"
 		"attribute_class" : "strange_restriction_user_type_3"
 		"description_format" : "value_is_additive"
@@ -4561,8 +4561,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[463] =
-	{
+	[463] = {
+
 		"name" : "strange restriction user value 3"
 		"attribute_class" : "strange_restriction_user_value_3"
 		"description_format" : "value_is_additive"
@@ -4570,8 +4570,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[464] =
-	{
+	[464] = {
+
 		"name" : "engineer sentry build rate multiplier"
 		"attribute_class" : "sentry_build_rate_multiplier"
 		"description_string" : "#Attrib_Sentry_Build_Rate"
@@ -4580,8 +4580,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[465] =
-	{
+	[465] = {
+
 		"name" : "engineer teleporter build rate multiplier"
 		"attribute_class" : "teleporter_build_rate_multiplier"
 		"description_string" : "#Attrib_Teleporter_Build_Rate"
@@ -4590,8 +4590,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[466] =
-	{
+	[466] = {
+
 		"name" : "grenade launcher mortar mode"
 		"attribute_class" : "grenade_launcher_mortar_mode"
 		"description_string" : "#Attrib_Grenade_Launcher_Mortar_Mode"
@@ -4600,8 +4600,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[467] =
-	{
+	[467] = {
+
 		"name" : "grenade not explode on impact"
 		"attribute_class" : "grenade_not_explode_on_impact"
 		"description_string" : "#Attrib_Grenade_Not_Explode_On_Impact"
@@ -4610,8 +4610,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[468] =
-	{
+	[468] = {
+
 		"name" : "strange score selector"
 		"attribute_class" : "strange_score_selector"
 		"description_format" : "value_is_additive"
@@ -4619,8 +4619,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[469] =
-	{
+	[469] = {
+
 		"name" : "engineer building teleporting pickup"
 		"attribute_class" : "building_teleporting_pickup"
 		"description_string" : "#Attrib_Building_Telporting_PickUp"
@@ -4629,8 +4629,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[470] =
-	{
+	[470] = {
+
 		"name" : "grenade damage reduction on world contact"
 		"attribute_class" : "grenade_damage_reduction_on_world_contact"
 		"description_string" : "#Attrib_Grenade_Damage_Reduction_On_World_Contact"
@@ -4639,8 +4639,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[471] =
-	{
+	[471] = {
+
 		"name" : "engineer rage on dmg"
 		"attribute_class" : "generate_rage_on_dmg"
 		"description_string" : "#Attrib_EngineerBuildingRescueRage"
@@ -4650,8 +4650,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[472] =
-	{
+	[472] = {
+
 		"name" : "mark for death on building pickup"
 		"attribute_class" : "mark_for_death_on_building_pickup"
 		"description_string" : "#Attrib_MarkedForDeathOnBuildingPickup"
@@ -4661,8 +4661,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[473] =
-	{
+	[473] = {
+
 		"name" : "medigun charge is resists"
 		"attribute_class" : "set_charge_type"
 		"description_string" : "#Attrib_Medigun_Resists"
@@ -4671,8 +4671,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[474] =
-	{
+	[474] = {
+
 		"name" : "arrow heals buildings"
 		"attribute_class" : "arrow_heals_buildings"
 		"description_string" : "#Attrib_ArrowHealsBuildings"
@@ -4682,8 +4682,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[475] =
-	{
+	[475] = {
+
 		"name" : "Projectile speed increased HIDDEN"
 		"attribute_class" : "mult_projectile_speed"
 		"description_string" : "#Attrib_ProjectileSpeed_Increased"
@@ -4692,8 +4692,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[476] =
-	{
+	[476] = {
+
 		"name" : "damage bonus HIDDEN"
 		"attribute_class" : "mult_dmg"
 		"description_string" : "#Attrib_DamageDone_Positive"
@@ -4702,8 +4702,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[477] =
-	{
+	[477] = {
+
 		"name" : "cannonball push back"
 		"attribute_class" : "cannonball_push_back"
 		"description_string" : "#Attrib_Cannonball_Push_Back"
@@ -4712,8 +4712,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[478] =
-	{
+	[478] = {
+
 		"name" : "rage giving scale"
 		"attribute_class" : "rage_giving_scale"
 		"description_format" : "value_is_percentage"
@@ -4721,8 +4721,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[479] =
-	{
+	[479] = {
+
 		"name" : "overheal fill rate reduced"
 		"attribute_class" : "overheal_fill_rate"
 		"description_string" : "#Attrib_Overheal_Fill_Rate_Reduced"
@@ -4731,8 +4731,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[481] =
-	{
+	[481] = {
+
 		"name" : "canteen specialist"
 		"attribute_class" : "canteen_specialist"
 		"description_string" : "#Attrib_Canteen_Specialist"
@@ -4741,8 +4741,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[482] =
-	{
+	[482] = {
+
 		"name" : "overheal expert"
 		"attribute_class" : "overheal_expert"
 		"description_string" : "#Attrib_Overheal_Expert"
@@ -4751,8 +4751,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[484] =
-	{
+	[484] = {
+
 		"name" : "mad milk syringes"
 		"attribute_class" : "mad_milk_syringes"
 		"description_string" : "#Attrib_Medic_MadMilkSyringes"
@@ -4761,8 +4761,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[488] =
-	{
+	[488] = {
+
 		"name" : "rocket specialist"
 		"attribute_class" : "rocket_specialist"
 		"description_string" : "#Attrib_Rocket_Specialist"
@@ -4771,8 +4771,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[489] =
-	{
+	[489] = {
+
 		"name" : "SET BONUS: move speed set bonus"
 		"attribute_class" : "mult_player_movespeed"
 		"description_string" : "#Attrib_MoveSpeed_Bonus"
@@ -4783,8 +4783,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[490] =
-	{
+	[490] = {
+
 		"name" : "SET BONUS: health regen set bonus"
 		"attribute_class" : "add_health_regen"
 		"description_string" : "#Attrib_HealthRegen"
@@ -4795,8 +4795,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[491] =
-	{
+	[491] = {
+
 		"name" : "SET BONUS: dmg taken from crit reduced set bonus"
 		"attribute_class" : "mult_dmgtaken_from_crit"
 		"description_string" : "#Attrib_DmgTaken_From_Crit_Reduced"
@@ -4807,8 +4807,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[492] =
-	{
+	[492] = {
+
 		"name" : "SET BONUS: dmg taken from fire reduced set bonus"
 		"attribute_class" : "mult_dmgtaken_from_fire"
 		"description_string" : "#Attrib_DmgTaken_From_Fire_Reduced"
@@ -4819,8 +4819,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[493] =
-	{
+	[493] = {
+
 		"name" : "healing mastery"
 		"attribute_class" : "healing_mastery"
 		"description_string" : "#Attrib_Healing_Mastery"
@@ -4829,8 +4829,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[494] =
-	{
+	[494] = {
+
 		"name" : "kill eater 3"
 		"attribute_class" : "kill_eater_3"
 		"description_format" : "value_is_additive"
@@ -4838,8 +4838,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[495] =
-	{
+	[495] = {
+
 		"name" : "kill eater score type 3"
 		"attribute_class" : "kill_eater_score_type_3"
 		"description_format" : "value_is_additive"
@@ -4847,8 +4847,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[496] =
-	{
+	[496] = {
+
 		"name" : "strange restriction type 3"
 		"attribute_class" : "strange_restriction_type_3"
 		"description_format" : "value_is_additive"
@@ -4856,8 +4856,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[497] =
-	{
+	[497] = {
+
 		"name" : "strange restriction value 3"
 		"attribute_class" : "strange_restriction_value_3"
 		"description_format" : "value_is_additive"
@@ -4865,8 +4865,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[498] =
-	{
+	[498] = {
+
 		"name" : "bot custom jump particle"
 		"attribute_class" : "bot_custom_jump_particle"
 		"description_format" : "value_is_additive"
@@ -4874,8 +4874,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[499] =
-	{
+	[499] = {
+
 		"name" : "generate rage on heal"
 		"attribute_class" : "generate_rage_on_heal"
 		"description_string" : "#Attrib_RageOnHeal"
@@ -4884,8 +4884,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[500] =
-	{
+	[500] = {
+
 		"name" : "custom name attr"
 		"attribute_class" : "custom_name_attr"
 		"attribute_type" : "string"
@@ -4893,8 +4893,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[501] =
-	{
+	[501] = {
+
 		"name" : "custom desc attr"
 		"attribute_class" : "custom_desc_attr"
 		"attribute_type" : "string"
@@ -4902,8 +4902,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[503] =
-	{
+	[503] = {
+
 		"name" : "medigun bullet resist passive"
 		"attribute_class" : "medigun_bullet_resist_passive"
 		"description_format" : "value_is_additive"
@@ -4911,8 +4911,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[504] =
-	{
+	[504] = {
+
 		"name" : "medigun blast resist passive"
 		"attribute_class" : "medigun_blast_resist_passive"
 		"description_format" : "value_is_additive"
@@ -4920,8 +4920,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[505] =
-	{
+	[505] = {
+
 		"name" : "medigun fire resist passive"
 		"attribute_class" : "medigun_fire_resist_passive"
 		"description_format" : "value_is_additive"
@@ -4929,8 +4929,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[506] =
-	{
+	[506] = {
+
 		"name" : "medigun bullet resist deployed"
 		"attribute_class" : "medigun_bullet_resist_deployed"
 		"description_format" : "value_is_additive"
@@ -4938,8 +4938,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[507] =
-	{
+	[507] = {
+
 		"name" : "medigun blast resist deployed"
 		"attribute_class" : "medigun_blast_resist_deployed"
 		"description_format" : "value_is_additive"
@@ -4947,8 +4947,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[508] =
-	{
+	[508] = {
+
 		"name" : "medigun fire resist deployed"
 		"attribute_class" : "medigun_fire_resist_deployed"
 		"description_format" : "value_is_additive"
@@ -4956,8 +4956,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[509] =
-	{
+	[509] = {
+
 		"name" : "medigun crit bullet percent bar deplete"
 		"attribute_class" : "medigun_crit_bullet_percent_bar_deplete"
 		"description_format" : "value_is_additive"
@@ -4965,8 +4965,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[510] =
-	{
+	[510] = {
+
 		"name" : "medigun crit blast percent bar deplete"
 		"attribute_class" : "medigun_crit_blast_percent_bar_deplete"
 		"description_format" : "value_is_additive"
@@ -4974,8 +4974,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[511] =
-	{
+	[511] = {
+
 		"name" : "medigun crit fire percent bar deplete"
 		"attribute_class" : "medigun_crit_fire_percent_bar_deplete"
 		"description_format" : "value_is_additive"
@@ -4983,8 +4983,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[512] =
-	{
+	[512] = {
+
 		"name" : "throwable fire speed"
 		"attribute_class" : "throwable_fire_speed"
 		"description_format" : "value_is_percentage"
@@ -4992,8 +4992,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[513] =
-	{
+	[513] = {
+
 		"name" : "throwable damage"
 		"attribute_class" : "throwable_damage"
 		"description_format" : "value_is_additive"
@@ -5001,8 +5001,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[514] =
-	{
+	[514] = {
+
 		"name" : "throwable healing"
 		"attribute_class" : "throwable_healing"
 		"description_format" : "value_is_additive"
@@ -5010,8 +5010,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[515] =
-	{
+	[515] = {
+
 		"name" : "throwable particle trail only"
 		"attribute_class" : "throwable_particle_trail_only"
 		"description_format" : "value_is_additive"
@@ -5019,8 +5019,8 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[516] =
-	{
+	[516] = {
+
 		"name" : "SET BONUS: dmg taken from bullets increased"
 		"attribute_class" : "mult_dmgtaken_from_bullets"
 		"description_string" : "#Attrib_DmgTaken_From_Bullets_Increased"
@@ -5031,8 +5031,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[517] =
-	{
+	[517] = {
+
 		"name" : "SET BONUS: max health additive bonus"
 		"attribute_class" : "add_maxhealth"
 		"description_string" : "#Attrib_MaxHealth_Positive"
@@ -5043,8 +5043,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[518] =
-	{
+	[518] = {
+
 		"name" : "scattergun knockback mult"
 		"attribute_class" : "scattergun_knockback_mult"
 		"description_format" : "value_is_percentage"
@@ -5052,8 +5052,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[519] =
-	{
+	[519] = {
+
 		"name" : "particle effect vertical offset"
 		"attribute_class" : "particle_effect_vertical_offset"
 		"description_format" : "value_is_additive"
@@ -5061,8 +5061,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[520] =
-	{
+	[520] = {
+
 		"name" : "particle effect use head origin"
 		"attribute_class" : "particle_effect_use_head_origin"
 		"description_format" : "value_is_additive"
@@ -5070,8 +5070,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[521] =
-	{
+	[521] = {
+
 		"name" : "use large smoke explosion"
 		"attribute_class" : "use_large_smoke_explosion"
 		"description_format" : "value_is_additive"
@@ -5079,8 +5079,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[522] =
-	{
+	[522] = {
+
 		"name" : "damage causes airblast"
 		"attribute_class" : "damage_causes_airblast"
 		"description_format" : "value_is_additive"
@@ -5088,8 +5088,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[524] =
-	{
+	[524] = {
+
 		"name" : "increased jump height from weapon"
 		"attribute_class" : "mod_jump_height_from_weapon"
 		"description_string" : "#Attrib_JumpHeightBonus"
@@ -5098,8 +5098,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[525] =
-	{
+	[525] = {
+
 		"name" : "damage force increase"
 		"attribute_class" : "damage_force_reduction"
 		"description_string" : "#Attrib_DamageForceIncrease"
@@ -5108,8 +5108,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[526] =
-	{
+	[526] = {
+
 		"name" : "healing received bonus"
 		"attribute_class" : "mult_healing_received"
 		"description_string" : "#Attrib_HealingReceivedBonus"
@@ -5118,8 +5118,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[527] =
-	{
+	[527] = {
+
 		"name" : "afterburn immunity"
 		"attribute_class" : "afterburn_immunity"
 		"description_string" : "#Attrib_AfterburnImmunity"
@@ -5128,8 +5128,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[528] =
-	{
+	[528] = {
+
 		"name" : "decoded by itemdefindex"
 		"attribute_class" : "decoded_by_itemdefindex"
 		"description_format" : "value_is_additive"
@@ -5137,8 +5137,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[532] =
-	{
+	[532] = {
+
 		"name" : "hype decays over time"
 		"attribute_class" : "hype_decays_over_time"
 		"description_string" : "#Attrib_HypeDecays"
@@ -5147,8 +5147,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[533] =
-	{
+	[533] = {
+
 		"name" : "SET BONUS: custom taunt particle attr"
 		"attribute_class" : "custom_taunt_particle_attr"
 		"description_string" : "#Attrib_TauntParticles"
@@ -5158,8 +5158,8 @@ local FromItemsGame = {
 		"is_set_bonus" : "1"
 		"stored_as_integer" : "1"
 	},
-	[534] =
-	{
+	[534] = {
+
 		"name" : "airblast vulnerability multiplier hidden"
 		"attribute_class" : "airblast_vulnerability_multiplier"
 		"description_string" : "#Attrib_AirBlastVulnerabilityMultipier"
@@ -5168,8 +5168,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[535] =
-	{
+	[535] = {
+
 		"name" : "damage force increase hidden"
 		"attribute_class" : "damage_force_reduction"
 		"description_string" : "#Attrib_DamageForceIncrease"
@@ -5178,8 +5178,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[536] =
-	{
+	[536] = {
+
 		"name" : "damage force increase text"
 		"attribute_class" : "damage_force_reduction"
 		"description_string" : "#Attrib_DamageForceIncreaseString"
@@ -5188,8 +5188,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[537] =
-	{
+	[537] = {
+
 		"name" : "SET BONUS: calling card on kill"
 		"attribute_class" : "calling_card_on_kill"
 		"description_string" : "#Attrib_CallingCardOnKill"
@@ -5200,16 +5200,16 @@ local FromItemsGame = {
 		"is_set_bonus" : "1"
 		"stored_as_integer" : "1"
 	},
-	[539] =
-	{
+	[539] = {
+
 		"name" : "set throwable type"
 		"attribute_class" : "set_throwable_type"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[540] =
-	{
+	[540] = {
+
 		"name" : "add head on hit"
 		"attribute_class" : "add_head_on_hit"
 		"description_string" : "#Attrib_AddHeadOnHit"
@@ -5219,44 +5219,44 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[542] =
-	{
+	[542] = {
+
 		"name" : "item style override"
 		"attribute_class" : "item_style_override"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[543] =
-	{
+	[543] = {
+
 		"name" : "paint decal enum"
 		"attribute_class" : "paint_decal_enum"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[544] =
-	{
+	[544] = {
+
 		"name" : "show paint description"
 		"attribute_class" : "show_paint_description"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[545] =
-	{
+	[545] = {
+
 		"name" : "bot medic uber health threshold"
 		"attribute_class" : "bot_medic_uber_health_threshold"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[546] =
-	{
+	[546] = {
+
 		"name" : "bot medic uber deploy delay duration"
 		"attribute_class" : "bot_medic_uber_deploy_delay_duration"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[547] =
-	{
+	[547] = {
+
 		"name" : "single wep deploy time decreased"
 		"attribute_class" : "mult_single_wep_deploy_time"
 		"description_string" : "#Attrib_SingleWepDeployBonus"
@@ -5266,8 +5266,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 	},
 
-	[548] =
-	{
+	[548] = {
+
 		"name" : "halloween reload time decreased"
 		"attribute_class" : "hwn_mult_reload_time"
 		"description_format" : "value_is_inverted_percentage"
@@ -5275,8 +5275,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[549] =
-	{
+	[549] = {
+
 		"name" : "halloween fire rate bonus"
 		"attribute_class" : "hwn_mult_postfiredelay"
 		"description_format" : "value_is_inverted_percentage"
@@ -5284,8 +5284,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[550] =
-	{
+	[550] = {
+
 		"name" : "halloween increased jump height"
 		"attribute_class" : "mod_jump_height"
 		"description_format" : "value_is_percentage"
@@ -5293,8 +5293,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[551] =
-	{
+	[551] = {
+
 		"name" : "special taunt"
 		"attribute_class" : "special_taunt"
 		"description_format" : "value_is_additive"
@@ -5302,8 +5302,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[554] =
-	{
+	[554] = {
+
 		"name" : "revive"
 		"attribute_class" : "revive"
 		"description_string" : "#Attrib_Revive"
@@ -5312,8 +5312,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[556] =
-	{
+	[556] = {
+
 		"name" : "taunt attack name"
 		"attribute_class" : "taunt_attack_name"
 		"attribute_type" : "string"
@@ -5321,8 +5321,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[557] =
-	{
+	[557] = {
+
 		"name" : "taunt attack time"
 		"attribute_class" : "taunt_attack_time"
 		"description_format" : "value_is_additive"
@@ -5330,8 +5330,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[600] =
-	{
+	[600] = {
+
 		"name" : "taunt force move forward"
 		"attribute_class" : "taunt_force_move_forward"
 		"description_format" : "value_is_additive"
@@ -5339,8 +5339,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[602] =
-	{
+	[602] = {
+
 		"name" : "taunt mimic"
 		"attribute_class" : "taunt_mimic"
 		"description_format" : "value_is_additive"
@@ -5348,8 +5348,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[606] =
-	{
+	[606] = {
+
 		"name" : "taunt success sound"
 		"attribute_class" : "taunt_success_sound"
 		"attribute_type" : "string"
@@ -5358,8 +5358,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[607] =
-	{
+	[607] = {
+
 		"name" : "taunt success sound offset"
 		"attribute_class" : "taunt_success_sound_offset"
 		"description_string" : "#Attrib_PhaseCloak"
@@ -5368,8 +5368,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[608] =
-	{
+	[608] = {
+
 		"name" : "taunt success sound loop"
 		"attribute_class" : "taunt_success_sound_loop"
 		"attribute_type" : "string"
@@ -5378,8 +5378,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[609] =
-	{
+	[609] = {
+
 		"name" : "taunt success sound loop offset"
 		"attribute_class" : "taunt_success_sound_loop_offset"
 		"description_string" : "#Attrib_PhaseCloak"
@@ -5388,8 +5388,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[610] =
-	{
+	[610] = {
+
 		"name" : "increased air control"
 		"attribute_class" : "mod_air_control"
 		"description_string" : "#Attrib_AirControl"
@@ -5398,8 +5398,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[612] =
-	{
+	[612] = {
+
 		"name" : "rocket launch impulse"
 		"attribute_class" : "mod_rocket_launch_impulse"
 		"description_string" : "#Attrib_RocketLaunchImpulse"
@@ -5408,8 +5408,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[613] =
-	{
+	[613] = {
+
 		"name" : "minicritboost on kill"
 		"attribute_class" : "add_onkill_minicritboost_time"
 		"description_string" : "#Attrib_MiniCritBoost_OnKill"
@@ -5419,8 +5419,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_kill"
 		"stored_as_integer" : "0"
 	},
-	[614] =
-	{
+	[614] = {
+
 		"name" : "no metal from dispensers while active"
 		"attribute_class" : "no_metal_from_dispensers_while_active"
 		"description_string" : "#Attrib_NoMetalFromDispensersWhileActive"
@@ -5429,8 +5429,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[615] =
-	{
+	[615] = {
+
 		"name" : "projectile entity name"
 		"attribute_class" : "projectile_entity_name"
 		"attribute_type" : "string"
@@ -5438,32 +5438,32 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[616] =
-	{
+	[616] = {
+
 		"name" : "is throwable primable"
 		"attribute_class" : "is_throwable_primable"
 		"description_format" : "value_is_additive"
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[617] =
-	{
+	[617] = {
+
 		"name" : "throwable detonation time"
 		"attribute_class" : "throwable_detonation_time"
 		"description_format" : "value_is_additive"
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[618] =
-	{
+	[618] = {
+
 		"name" : "throwable recharge time"
 		"attribute_class" : "throwable_recharge_time"
 		"description_format" : "value_is_additive"
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[619] =
-	{
+	[619] = {
+
 		"name" : "closerange backattack minicrits"
 		"attribute_class" : "closerange_backattack_minicrits"
 		"description_string" : "#Attrib_BackAttackMinicrits"
@@ -5471,8 +5471,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[620] =
-	{
+	[620] = {
+
 		"name" : "torso scale"
 		"attribute_class" : "torso_scale"
 		"description_format" : "value_is_percentage"
@@ -5481,8 +5481,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[621] =
-	{
+	[621] = {
+
 		"name" : "rocketjump attackrate bonus"
 		"attribute_class" : "rocketjump_attackrate_bonus"
 		"description_string" : "#Attrib_RocketJumpAttackRateBonus"
@@ -5490,16 +5490,16 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[622] =
-	{
+	[622] = {
+
 		"name" : "is throwable chargeable"
 		"attribute_class" : "is_throwable_chargeable"
 		"description_format" : "value_is_additive"
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[630] =
-	{
+	[630] = {
+
 		"name" : "back headshot"
 		"attribute_class" : "back_headshot"
 		"description_string" : "#Attrib_BackHeadshot"
@@ -5507,8 +5507,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[632] =
-	{
+	[632] = {
+
 		"name" : "rj air bombardment"
 		"attribute_class" : "rj_air_bombardment"
 		"description_string" : "#Attrib_AirBombardment"
@@ -5516,8 +5516,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[633] =
-	{
+	[633] = {
+
 		"name" : "projectile particle name"
 		"attribute_class" : "projectile_particle_name"
 		"attribute_type" : "string"
@@ -5525,8 +5525,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[634] =
-	{
+	[634] = {
+
 		"name" : "air jump on attack"
 		"attribute_class" : "air_jump_on_attack"
 		"description_string" : "#Attrib_AirJumpOnAttack"
@@ -5534,8 +5534,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[636] =
-	{
+	[636] = {
+
 		"name" : "sniper crit no scope"
 		"attribute_class" : "sniper_crit_no_scope"
 		"description_string" : "#Attrib_SniperCritNoScope"
@@ -5543,8 +5543,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[637] =
-	{
+	[637] = {
+
 		"name" : "sniper independent zoom DISPLAY ONLY"
 		"attribute_class" : "sniper_independent_zoom_DISPLAY_ONLY"
 		"description_string" : "#Attrib_SniperIndependentZoom"
@@ -5552,8 +5552,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[638] =
-	{
+	[638] = {
+
 		"name" : "axtinguisher properties"
 		"attribute_class" : "axtinguisher_properties"
 		"description_string" : "#Attrib_AxtinguisherProperties"
@@ -5561,8 +5561,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[639] =
-	{
+	[639] = {
+
 		"name" : "full charge turn control"
 		"attribute_class" : "charge_turn_control"
 		"description_string" : "#Attrib_ChargeTurnControlFull"
@@ -5571,16 +5571,16 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[640] =
-	{
+	[640] = {
+
 		"name" : "parachute attribute"
 		"attribute_class" : "parachute_attribute"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[641] =
-	{
+	[641] = {
+
 		"name" : "taunt force weapon slot"
 		"attribute_class" : "taunt_force_weapon_slot"
 		"attribute_type" : "string"
@@ -5588,16 +5588,16 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[642] =
-	{
+	[642] = {
+
 		"name" : "mini rockets"
 		"attribute_class" : "mini_rockets"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[643] =
-	{
+	[643] = {
+
 		"name" : "rocket jump damage reduction HIDDEN"
 		"attribute_class" : "rocket_jump_dmg_reduction"
 		"description_string" : "#Attrib_RocketJumpDmgReduction"
@@ -5605,8 +5605,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[644] =
-	{
+	[644] = {
+
 		"name" : "clipsize increase on kill"
 		"attribute_class" : "clipsize_increase_on_kill"
 		"description_string" : "#Attrib_ExtraRocketsOnKill"
@@ -5614,24 +5614,24 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[645] =
-	{
+	[645] = {
+
 		"name" : "breadgloves properties"
 		"attribute_class" : "breadgloves_properties"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[646] =
-	{
+	[646] = {
+
 		"name" : "taunt turn speed"
 		"attribute_class" : "taunt_turn_speed"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[647] =
-	{
+	[647] = {
+
 		"name" : "sniper fires tracer HIDDEN"
 		"attribute_class" : "sniper_fires_tracer_HIDDEN"
 		"description_string" : "#Attrib_Sniper_FiresTracer"
@@ -5640,8 +5640,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[651] =
-	{
+	[651] = {
+
 		"name" : "fire rate bonus with reduced health"
 		"attribute_class" : "mult_postfiredelay_with_reduced_health"
 		"description_string" : "#Attrib_FireRateBonusWithReducedHealth"
@@ -5649,8 +5649,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[661] =
-	{
+	[661] = {
+
 		"name" : "tag__summer2014"
 		"attribute_class" : "tag__summer2014"
 		"description_string" : "#Attrib_Summer2014Tag"
@@ -5659,8 +5659,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[662] =
-	{
+	[662] = {
+
 		"name" : "crate generation code"
 		"attribute_class" : "crate_generation_code"
 		"attribute_type" : "string"
@@ -5668,8 +5668,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[669] =
-	{
+	[669] = {
+
 		"name" : "stickybomb fizzle time"
 		"attribute_class" : "stickybomb_fizzle_time"
 		"description_string" : "#Attrib_stickybomb_fizzle_time"
@@ -5677,8 +5677,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "negative"
 	},
-	[670] =
-	{
+	[670] = {
+
 		"name" : "stickybomb charge rate"
 		"attribute_class" : "stickybomb_charge_rate"
 		"description_string" : "#Attrib_stickybomb_charge_rate"
@@ -5686,8 +5686,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[671] =
-	{
+	[671] = {
+
 		"name" : "grenade no bounce"
 		"attribute_class" : "grenade_no_bounce"
 		"description_string" : "#Attrib_grenade_no_bounce"
@@ -5695,8 +5695,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[674] =
-	{
+	[674] = {
+
 		"name" : "class select override vcd"
 		"attribute_class" : "class_select_override_vcd"
 		"attribute_type" : "string"
@@ -5705,8 +5705,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[675] =
-	{
+	[675] = {
+
 		"name" : "custom projectile model"
 		"attribute_class" : "custom_projectile_model"
 		"attribute_type" : "string"
@@ -5714,8 +5714,8 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[676] =
-	{
+	[676] = {
+
 		"name" : "lose demo charge on damage when charging"
 		"attribute_class" : "lose_demo_charge_on_damage_when_charging"
 		"description_string" : "#Attrib_LoseDemoChargeOnDamageWhenCharging"
@@ -5723,16 +5723,16 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "negative"
 	},
-	[681] =
-	{
+	[681] = {
+
 		"name" : "grenade no spin"
 		"attribute_class" : "grenade_no_spin"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[684] =
-	{
+	[684] = {
+
 		"name" : "grenade detonation damage penalty"
 		"attribute_class" : "grenade_detonation_damage_penalty"
 		"description_string" : "#Attrib_GrenadeDetonationDamagePenalty"
@@ -5740,32 +5740,32 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "negative"
 	},
-	[687] =
-	{
+	[687] = {
+
 		"name" : "taunt turn acceleration time"
 		"attribute_class" : "taunt_turn_acceleration_time"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[688] =
-	{
+	[688] = {
+
 		"name" : "taunt move acceleration time"
 		"attribute_class" : "taunt_move_acceleration"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[689] =
-	{
+	[689] = {
+
 		"name" : "taunt move speed"
 		"attribute_class" : "taunt_move_speed"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[690] =
-	{
+	[690] = {
+
 		"name" : "shuffle crate item def min"
 		"attribute_class" : "shuffle_crate_item_def_min"
 		"description_format" : "value_is_additive"
@@ -5773,8 +5773,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[691] =
-	{
+	[691] = {
+
 		"name" : "shuffle crate item def max"
 		"attribute_class" : "shuffle_crate_item_def_max"
 		"description_format" : "value_is_additive"
@@ -5782,16 +5782,16 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[692] =
-	{
+	[692] = {
+
 		"name" : "limited quantity item"
 		"attribute_class" : "limited_quantity_item"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[693] =
-	{
+	[693] = {
+
 		"name" : "SET BONUS: alien isolation xeno bonus pos"
 		"attribute_class" : "alien_isolation_xeno_bonus_pos"
 		"description_format" : "value_is_additive"
@@ -5801,8 +5801,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[694] =
-	{
+	[694] = {
+
 		"name" : "SET BONUS: alien isolation xeno bonus neg"
 		"attribute_class" : "alien_isolation_xeno_bonus_neg"
 		"description_format" : "value_is_additive"
@@ -5812,8 +5812,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[695] =
-	{
+	[695] = {
+
 		"name" : "SET BONUS: alien isolation merc bonus pos"
 		"attribute_class" : "alien_isolation_merc_bonus_pos"
 		"description_format" : "value_is_additive"
@@ -5823,8 +5823,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[696] =
-	{
+	[696] = {
+
 		"name" : "SET BONUS: alien isolation merc bonus neg"
 		"attribute_class" : "alien_isolation_merc_bonus_neg"
 		"description_format" : "value_is_additive"
@@ -5834,8 +5834,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[698] =
-	{
+	[698] = {
+
 		"name" : "disable weapon switch"
 		"attribute_class" : "disable_weapon_switch"
 		"description_format" : "value_is_additive"
@@ -5843,8 +5843,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "1"
 	},
-	[699] =
-	{
+	[699] = {
+
 		"name" : "hand scale"
 		"attribute_class" : "hand_scale"
 		"description_format" : "value_is_percentage"
@@ -5853,8 +5853,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[700] =
-	{
+	[700] = {
+
 		"name" : "display duck leaderboard"
 		"attribute_class" : "display_duck_leaderboard"
 		"description_format" : "value_is_additive"
@@ -5862,8 +5862,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[701] =
-	{
+	[701] = {
+
 		"name" : "duck rating"
 		"attribute_class" : "duck_rating"
 		"description_string" : "#Attrib_duck_rating"
@@ -5872,8 +5872,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[702] =
-	{
+	[702] = {
+
 		"name" : "duck badge level"
 		"attribute_class" : "duck_badge_level"
 		"description_string" : "#Attrib_duck_badge_level"
@@ -5882,8 +5882,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[703] =
-	{
+	[703] = {
+
 		"name" : "tag__eotlearlysupport"
 		"attribute_class" : "tag__eotlearlysupport"
 		"description_string" : "#Attrib_eotl_early_supporter"
@@ -5892,8 +5892,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[704] =
-	{
+	[704] = {
+
 		"name" : "unlimited quantity hidden"
 		"attribute_class" : "unlimited_quantity"
 		"description_format" : "value_is_additive"
@@ -5901,8 +5901,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[705] =
-	{
+	[705] = {
+
 		"name" : "duckstreaks active"
 		"attribute_class" : "duckstreaks_active"
 		"description_string" : "#Attrib_duckstreaks"
@@ -5911,8 +5911,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[708] =
-	{
+	[708] = {
+
 		"name" : "panic_attack"
 		"attribute_class" : "panic_attack"
 		"description_string" : "#Attrib_PanicAttack"
@@ -5921,8 +5921,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[709] =
-	{
+	[709] = {
+
 		"name" : "panic_attack_negative"
 		"attribute_class" : "panic_attack_negative"
 		"description_string" : "#Attrib_PanicAttackNegative"
@@ -5931,8 +5931,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[710] =
-	{
+	[710] = {
+
 		"name" : "auto fires full clip penalty"
 		"attribute_class" : "auto_fires_full_clip"
 		"description_string" : "#Attrib_AutoFiresFullClipNegative"
@@ -5941,8 +5941,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[711] =
-	{
+	[711] = {
+
 		"name" : "auto fires when full"
 		"attribute_class" : "auto_fires_when_full"
 		"description_string" : "#Attrib_AutoFiresWhenFull"
@@ -5951,16 +5951,16 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[712] =
-	{
+	[712] = {
+
 		"name" : "force weapon switch"
 		"attribute_class" : "force_weapon_switch"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[719] =
-	{
+	[719] = {
+
 		"name" : "weapon_uses_stattrak_module"
 		"attribute_class" : "weapon_uses_stattrak_module"
 		"attribute_type" : "string"
@@ -5968,23 +5968,23 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "strange"
 	},
-	[723] =
-	{
+	[723] = {
+
 		"name" : "is_operation_pass"
 		"attribute_class" : "is_operation_pass"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[724] =
-	{
+	[724] = {
+
 		"name" : "weapon_stattrak_module_scale"
 		"attribute_class" : "weapon_stattrak_module_scale"
 		"description_format" : "value_is_percentage"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[725] =
-	{
+	[725] = {
+
 		"name" : "set_item_texture_wear"
 		"attribute_class" : "set_item_texture_wear"
 		"description_format" : "value_is_additive"
@@ -5992,8 +5992,8 @@ local FromItemsGame = {
 		"can_affect_market_name" : "1"
 		"stored_as_integer" : "0"
 	},
-	[726] =
-	{
+	[726] = {
+
 		"name" : "cloak_consume_on_feign_death_activate"
 		"attribute_class" : "cloak_consume_on_feign_death_activate"
 		"description_string" : "#Attrib_ConsumeCloakFeignDeath"
@@ -6002,8 +6002,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[727] =
-	{
+	[727] = {
+
 		"name" : "stickybomb_charge_damage_increase"
 		"attribute_class" : "stickybomb_charge_damage_increase"
 		"description_string" : "#Attrib_stickybomb_charge_damage_increase"
@@ -6011,8 +6011,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[728] =
-	{
+	[728] = {
+
 		"name" : "NoCloakWhenCloaked"
 		"attribute_class" : "NoCloakWhenCloaked"
 		"description_string" : "#Attrib_NoCloakWhenCloaked"
@@ -6020,8 +6020,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "negative"
 	},
-	[729] =
-	{
+	[729] = {
+
 		"name" : "ReducedCloakFromAmmo"
 		"attribute_class" : "ReducedCloakFromAmmo"
 		"description_string" : "#Attrib_ReducedCloakFromAmmo"
@@ -6029,8 +6029,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "negative"
 	},
-	[730] =
-	{
+	[730] = {
+
 		"name" : "elevate to unusual if applicable"
 		"attribute_class" : "elevate_to_unusual_if_applicable"
 		"description_string" : "#Attrib_ElevateQuality"
@@ -6039,15 +6039,15 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[731] =
-	{
+	[731] = {
+
 		"name" : "weapon_allow_inspect"
 		"attribute_class" : "weapon_allow_inspect"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[732] =
-	{
+	[732] = {
+
 		"name" : "metal_pickup_decreased"
 		"attribute_class" : "mult_metal_pickup"
 		"description_string" : "#Attrib_metal_pickup_decreased"
@@ -6056,8 +6056,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[733] =
-	{
+	[733] = {
+
 		"name" : "lose hype on take damage"
 		"attribute_class" : "lose_hype_on_take_damage"
 		"description_string" : "#Attrib_losehypeontakedamage"
@@ -6065,8 +6065,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "negative"
 	},
-	[734] =
-	{
+	[734] = {
+
 		"name" : "healing received penalty"
 		"attribute_class" : "mult_healing_received"
 		"description_string" : "#Attrib_HealingReceivedPenalty"
@@ -6075,8 +6075,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[735] =
-	{
+	[735] = {
+
 		"name" : "crit_vs_burning_FLARES_DISPLAY_ONLY"
 		"attribute_class" : "crit_vs_burning_FLARES_DISPLAY_ONLY"
 		"description_string" : "#Attrib_CritVsBurning"
@@ -6085,8 +6085,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[736] =
-	{
+	[736] = {
+
 		"name" : "speed_boost_on_kill"
 		"attribute_class" : "speed_boost_on_kill"
 		"description_string" : "#Attrib_SpeedBoostOnKill"
@@ -6094,8 +6094,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[737] =
-	{
+	[737] = {
+
 		"name" : "speed_boost_on_hit"
 		"attribute_class" : "speed_boost_on_hit"
 		"description_string" : "#Attrib_SpeedBoostOnHit"
@@ -6103,8 +6103,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[738] =
-	{
+	[738] = {
+
 		"name" : "spunup_damage_resistance"
 		"attribute_class" : "spunup_damage_resistance"
 		"description_string" : "#Attrib_spup_damage_resistance"
@@ -6112,8 +6112,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[739] =
-	{
+	[739] = {
+
 		"name" : "ubercharge overheal rate penalty"
 		"attribute_class" : "mult_medigun_overheal_uberchargerate"
 		"description_string" : "#Attrib_OverhealUberchargeRate_Negative"
@@ -6122,8 +6122,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[740] =
-	{
+	[740] = {
+
 		"name" : "reduced_healing_from_medics"
 		"attribute_class" : "mult_healing_from_medics"
 		"description_string" : "#Attrib_HealingFromMedics_Negative"
@@ -6132,8 +6132,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[741] =
-	{
+	[741] = {
+
 		"name" : "health on radius damage"
 		"attribute_class" : "add_health_on_radius_damage"
 		"description_string" : "#Attrib_HealthOnRadiusDamage"
@@ -6143,29 +6143,29 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[742] =
-	{
+	[742] = {
+
 		"name" : "style changes on strange level"
 		"attribute_class" : "style_changes_on_strange_level"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[743] =
-	{
+	[743] = {
+
 		"name" : "cannot restore"
 		"attribute_class" : "cannot_restore"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[744] =
-	{
+	[744] = {
+
 		"name" : "hide crate series number"
 		"attribute_class" : "hide_crate_series_number"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[745] =
-	{
+	[745] = {
+
 		"name" : "has team color paintkit"
 		"attribute_class" : "has_team_color_paintkit"
 		"description_string" : "#Attrib_HasTeamColorPaintkit"
@@ -6173,15 +6173,15 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[746] =
-	{
+	[746] = {
+
 		"name" : "cosmetic_allow_inspect"
 		"attribute_class" : "cosmetic_allow_inspect"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[747] =
-	{
+	[747] = {
+
 		"name" : "hat only unusual effect"
 		"attribute_class" : "hat_only_unusual_effect"
 		"description_format" : "value_is_particle_index"
@@ -6190,8 +6190,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"can_affect_market_name" : "1"
 	},
-	[748] =
-	{
+	[748] = {
+
 		"name" : "items traded in for"
 		"attribute_class" : "items_traded_in_for"
 		"description_string" : "#Attrib_ItemsTradedIn"
@@ -6200,16 +6200,16 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[749] =
-	{
+	[749] = {
+
 		"name" : "texture_wear_default"
 		"attribute_class" : "texture_wear_default"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[750] =
-	{
+	[750] = {
+
 		"name" : "taunt only unusual effect"
 		"attribute_class" : "taunt_only_unusual_effect"
 		"description_format" : "value_is_particle_index"
@@ -6218,8 +6218,8 @@ local FromItemsGame = {
 		"can_affect_market_name" : "1"
 		"stored_as_integer" : "1"
 	},
-	[751] =
-	{
+	[751] = {
+
 		"name" : "deactive date"
 		"attribute_class" : "deactive_date"
 		"description_format" : "value_is_date"
@@ -6227,43 +6227,43 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "1"
 	},
-	[752] =
-	{
+	[752] = {
+
 		"name" : "is giger counter"
 		"attribute_class" : "is_giger_counter"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[753] =
-	{
+	[753] = {
+
 		"name" : "hide_strange_prefix"
 		"attribute_class" : "hide_strange_prefix"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[754] =
-	{
+	[754] = {
+
 		"name" : "always_transmit_so"
 		"attribute_class" : "always_transmit_so"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[760] =
-	{
+	[760] = {
+
 		"name" : "allow_halloween_offering"
 		"attribute_class" : "allow_halloween_offering"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[762] =
-	{
+	[762] = {
+
 		"name" : "cannot_transmute"
 		"attribute_class" : "cannot_transmute"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[772] =
-	{
+	[772] = {
+
 		"name" : "single wep holster time increased"
 		"attribute_class" : "mult_switch_from_wep_deploy_time"
 		"description_string" : "#Attrib_SingleWepHolsterPenalty"
@@ -6272,8 +6272,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[773] =
-	{
+	[773] = {
+
 		"name" : "single wep deploy time increased"
 		"attribute_class" : "mult_single_wep_deploy_time"
 		"description_string" : "#Attrib_SingleWepDeployPenalty"
@@ -6282,8 +6282,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[774] =
-	{
+	[774] = {
+
 		"name" : "charge time decreased"
 		"attribute_class" : "mod_charge_time"
 		"description_string" : "#Attrib_ChargeTime_Decrease"
@@ -6291,16 +6291,16 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"armory_desc" : "on_wearer"
 	},
-	[775] =
-	{
+	[775] = {
+
 		"name" : "dmg penalty vs buildings"
 		"attribute_class" : "mult_dmg_vs_buildings"
 		"description_string" : "#Attrib_DmgVsBuilding_decreased"
 		"description_format" : "value_is_percentage"
 		"effect_type" : "negative"
 	},
-	[776] =
-	{
+	[776] = {
+
 		"name" : "charge impact damage decreased"
 		"attribute_class" : "charge_impact_damage"
 		"description_string" : "#Attrib_ChargeImpactDamageDecreased"
@@ -6308,8 +6308,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[777] =
-	{
+	[777] = {
+
 		"name" : "non economy"
 		"attribute_class" : "non_economy"
 		"description_string" : "#Attrib_NonEconomyItem"
@@ -6318,16 +6318,16 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[778] =
-	{
+	[778] = {
+
 		"name" : "charge meter on hit"
 		"attribute_class" : "charge_meter_on_hit"
 		"description_string" : "#Attrib_HitsRefillMeter"
 		"description_format" : "value_is_additive_percentage"
 		"effect_type" : "positive"
 	},
-	[779] =
-	{
+	[779] = {
+
 		"name" : "minicrit_boost_when_charged"
 		"attribute_class" : "minicrit_boost_when_charged"
 		"description_string" : "#Attrib_MiniCritBoost_WhenCharged"
@@ -6335,8 +6335,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[780] =
-	{
+	[780] = {
+
 		"name" : "minicrit_boost_charge_rate"
 		"attribute_class" : "minicrit_boost_charge_rate"
 		"description_string" : "#Attrib_MiniCritBoost_ChargeRate"
@@ -6345,8 +6345,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[781] =
-	{
+	[781] = {
+
 		"name" : "is_a_sword"
 		"attribute_class" : "is_a_sword"
 		"description_string" : "#Attrib_IsASword"
@@ -6354,8 +6354,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "neutral"
 	},
-	[782] =
-	{
+	[782] = {
+
 		"name" : "ammo gives charge"
 		"attribute_class" : "ammo_gives_charge"
 		"description_string" : "#Attrib_AmmoGivesCharge"
@@ -6364,8 +6364,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[783] =
-	{
+	[783] = {
+
 		"name" : "extinguish restores health"
 		"attribute_class" : "extinguish_restores_health"
 		"description_string" : "#Attrib_ExtinguishRestoresHealth"
@@ -6373,8 +6373,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[784] =
-	{
+	[784] = {
+
 		"name" : "extinguish reduces cooldown"
 		"attribute_class" : "extinguish_reduces_cooldown"
 		"description_string" : "#Attrib_ExtinguishReducesCooldown"
@@ -6382,22 +6382,22 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[785] =
-	{
+	[785] = {
+
 		"name" : "cannot giftwrap"
 		"attribute_class" : "cannot_giftwrap"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[786] =
-	{
+	[786] = {
+
 		"name" : "tool needs giftwrap"
 		"attribute_class" : "tool_needs_giftwrap"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[787] =
-	{
+	[787] = {
+
 		"name" : "fuse bonus"
 		"attribute_class" : "fuse_mult"
 		"description_string" : "#Attrib_Fuse_Bonus"
@@ -6406,8 +6406,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[788] =
-	{
+	[788] = {
+
 		"name" : "move speed bonus shield required"
 		"attribute_class" : "mult_player_movespeed_shieldrequired"
 		"description_string" : "#Attrib_MoveSpeed_Bonus_ShieldRequired"
@@ -6417,8 +6417,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[789] =
-	{
+	[789] = {
+
 		"name" : "damage bonus bullet vs sentry target"
 		"attribute_class" : "mult_dmg_bullet_vs_sentry_target"
 		"description_string" : "#Attrib_DamageBonusAgainstSentryTarget"
@@ -6427,8 +6427,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[790] =
-	{
+	[790] = {
+
 		"name" : "mod teleporter cost"
 		"attribute_class" : "mod_teleporter_cost"
 		"description_string" : "#Attrib_TeleporterBuildCost"
@@ -6437,8 +6437,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[791] =
-	{
+	[791] = {
+
 		"name" : "damage blast push"
 		"attribute_class" : "damage_blast_push"
 		"description_string" : "#Attrib_DamageBlastPush"
@@ -6447,8 +6447,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[792] =
-	{
+	[792] = {
+
 		"name" : "move speed bonus resource level"
 		"attribute_class" : "mult_player_movespeed_resource_level"
 		"description_format" : "value_is_percentage"
@@ -6456,8 +6456,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[793] =
-	{
+	[793] = {
+
 		"name" : "hype on damage"
 		"attribute_class" : "hype_on_damage"
 		"description_string" : "#Attrib_HypeOnDamage"
@@ -6466,8 +6466,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[794] =
-	{
+	[794] = {
+
 		"name" : "dmg taken from fire reduced on active"
 		"attribute_class" : "mult_dmgtaken_from_fire_active"
 		"description_string" : "#Attrib_DmgTaken_From_Fire_ReducedActive"
@@ -6477,8 +6477,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[795] =
-	{
+	[795] = {
+
 		"name" : "damage bonus vs burning"
 		"attribute_class" : "mult_dmg_vs_burning"
 		"description_string" : "#Attrib_DmgBonusVsBurning"
@@ -6487,16 +6487,16 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[796] =
-	{
+	[796] = {
+
 		"name" : "min_viewmodel_offset"
 		"attribute_class" : "min_viewmodel_offset"
 		"attribute_type" : "string"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[797] =
-	{
+	[797] = {
+
 		"name" : "dmg pierces resists absorbs"
 		"attribute_class" : "mod_pierce_resists_absorbs"
 		"description_string" : "#Attrib_PierceResists"
@@ -6505,8 +6505,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[798] =
-	{
+	[798] = {
+
 		"name" : "energy buff dmg taken multiplier"
 		"attribute_class" : "energy_buff_dmg_taken_multiplier"
 		"description_format" : "value_is_percentage"
@@ -6514,8 +6514,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[799] =
-	{
+	[799] = {
+
 		"name" : "lose revenge crits on death DISPLAY ONLY"
 		"attribute_class" : "lose_revenge_crits_on_death_DISPLAY_ONLY"
 		"description_string" : "#Attrib_LoseRevengeCritsOnDeath"
@@ -6524,8 +6524,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[800] =
-	{
+	[800] = {
+
 		"name" : "patient overheal penalty"
 		"attribute_class" : "mult_patient_overheal_penalty"
 		"description_string" : "#Attrib_PatientOverheal_Penalty"
@@ -6535,40 +6535,40 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[801] =
-	{
+	[801] = {
+
 		"name" : "item_meter_charge_rate"
 		"attribute_class" : "item_meter_charge_rate"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[804] =
-	{
+	[804] = {
+
 		"name" : "mult_spread_scale_first_shot"
 		"attribute_class" : "mult_spread_scale_first_shot"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[805] =
-	{
+	[805] = {
+
 		"name" : "unusualifier_attribute_template_name"
 		"attribute_class" : "unusualifier_attribute_template_name"
 		"attribute_type" : "string"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[806] =
-	{
+	[806] = {
+
 		"name" : "tool_target_item_icon_offset"
 		"attribute_class" : "tool_target_item_icon_offset"
 		"attribute_type" : "string"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[807] =
-	{
+	[807] = {
+
 		"name" : "add_head_on_kill"
 		"attribute_class" : "add_head_on_kill"
 		"description_string" : "#Attrib_AddHeadOnKill"
@@ -6578,8 +6578,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[808] =
-	{
+	[808] = {
+
 		"name" : "mult_spread_scales_consecutive"
 		"attribute_class" : "mult_spread_scales_consecutive"
 		"description_string" : "#Attrib_SpreadPenaltyScalesCons"
@@ -6589,8 +6589,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[809] =
-	{
+	[809] = {
+
 		"name" : "fixed_shot_pattern"
 		"attribute_class" : "fixed_shot_pattern"
 		"description_string" : "#Attrib_FixedShotPattern"
@@ -6599,8 +6599,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[810] =
-	{
+	[810] = {
+
 		"name" : "mod_cloak_no_regen_from_items"
 		"attribute_class" : "mod_cloak_no_regen_from_items"
 		"description_string" : "#Attrib_NoCloakFromAmmo"
@@ -6608,8 +6608,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "negative"
 	},
-	[811] =
-	{
+	[811] = {
+
 		"name" : "ubercharge_preserved_on_spawn_max"
 		"attribute_class" : "ubercharge_preserved_on_spawn_max"
 		"description_string" : "#Attrib_UberchargeSavedOnHit"
@@ -6619,8 +6619,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_hit"
 		"stored_as_integer" : "0"
 	},
-	[812] =
-	{
+	[812] = {
+
 		"name" : "mod_air_control_blast_jump"
 		"attribute_class" : "mod_air_control_blast_jump"
 		"description_string" : "#Attrib_AirControlBlastJump"
@@ -6629,8 +6629,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[813] =
-	{
+	[813] = {
+
 		"name" : "spunup_push_force_immunity"
 		"attribute_class" : "spunup_push_force_immunity"
 		"description_string" : "#Attrib_SpunUpPushForceResist"
@@ -6638,24 +6638,24 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[814] =
-	{
+	[814] = {
+
 		"name" : "mod_mark_attacker_for_death"
 		"attribute_class" : "mod_mark_attacker_for_death"
 		"description_format" : "value_is_percentage"
 		"hidden" : "0"
 		"effect_type" : "negative"
 	},
-	[815] =
-	{
+	[815] = {
+
 		"name" : "use_model_cache_icon"
 		"attribute_class" : "use_model_cache_icon"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[816] =
-	{
+	[816] = {
+
 		"name" : "mod_disguise_consumes_cloak"
 		"attribute_class" : "mod_disguise_consumes_cloak"
 		"description_string" : "#Attrib_DisguiseConsumesCloak"
@@ -6664,48 +6664,48 @@ local FromItemsGame = {
 		"stored_as_integer" : "1"
 		"effect_type" : "negative"
 	},
-	[817] =
-	{
+	[817] = {
+
 		"name" : "inspect_viewmodel_offset"
 		"attribute_class" : "inspect_viewmodel_offset"
 		"attribute_type" : "string"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 	},
-	[818] =
-	{
+	[818] = {
+
 		"name" : "is_passive_weapon"
 		"attribute_class" : "is_passive_weapon"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[819] =
-	{
+	[819] = {
+
 		"name" : "no_jump"
 		"attribute_class" : "no_jump"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[820] =
-	{
+	[820] = {
+
 		"name" : "no_duck"
 		"attribute_class" : "no_duck"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[821] =
-	{
+	[821] = {
+
 		"name" : "no_attack"
 		"attribute_class" : "no_attack"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[822] =
-	{
+	[822] = {
+
 		"name" : "airblast_destroy_projectile"
 		"attribute_class" : "airblast_destroy_projectile"
 		"description_string" : "#Attrib_AirblastDestroyProjectile"
@@ -6713,72 +6713,72 @@ local FromItemsGame = {
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[823] =
-	{
+	[823] = {
+
 		"name" : "airblast_pushback_disabled"
 		"attribute_class" : "airblast_pushback_disabled"
 		"description_format" : "value_is_additive"
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[824] =
-	{
+	[824] = {
+
 		"name" : "airblast_pushback_no_stun"
 		"attribute_class" : "airblast_pushback_no_stun"
 		"description_format" : "value_is_additive"
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[825] =
-	{
+	[825] = {
+
 		"name" : "airblast_pushback_no_viewpunch"
 		"attribute_class" : "airblast_pushback_no_viewpunch"
 		"description_format" : "value_is_additive"
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[826] =
-	{
+	[826] = {
+
 		"name" : "airblast_deflect_projectiles_disabled"
 		"attribute_class" : "airblast_deflect_projectiles_disabled"
 		"description_format" : "value_is_additive"
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[827] =
-	{
+	[827] = {
+
 		"name" : "airblast_put_out_teammate_disabled"
 		"attribute_class" : "airblast_put_out_teammate_disabled"
 		"description_format" : "value_is_additive"
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[828] =
-	{
+	[828] = {
+
 		"name" : "afterburn duration penalty"
 		"attribute_class" : "afterburn_duration_mult"
 		"description_format" : "value_is_percentage"
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[829] =
-	{
+	[829] = {
+
 		"name" : "afterburn duration bonus"
 		"attribute_class" : "afterburn_duration_mult"
 		"description_format" : "value_is_percentage"
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[830] =
-	{
+	[830] = {
+
 		"name" : "aoe_deflection"
 		"attribute_class" : "aoe_deflection"
 		"description_format" : "value_is_additive"
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[831] =
-	{
+	[831] = {
+
 		"name" : "mult_end_flame_size"
 		"attribute_class" : "mult_end_flame_size"
 		"description_format" : "value_is_percentage"
@@ -6786,24 +6786,24 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"hidden" : "1"
 	},
-	[832] =
-	{
+	[832] = {
+
 		"name" : "airblast_give_teammate_speed_boost"
 		"attribute_class" : "airblast_give_teammate_speed_boost"
 		"description_format" : "value_is_additive"
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[833] =
-	{
+	[833] = {
+
 		"name" : "airblast_turn_projectile_to_ammo"
 		"attribute_class" : "airblast_turn_projectile_to_ammo"
 		"description_format" : "value_is_additive"
 		"effect_type" : "neutral"
 		"stored_as_integer" : "0"
 	},
-	[834] =
-	{
+	[834] = {
+
 		"name" : "paintkit_proto_def_index"
 		"attribute_class" : "paintkit_proto_def_index"
 		"description_format" : "value_is_additive"
@@ -6811,40 +6811,40 @@ local FromItemsGame = {
 		"stored_as_integer" : "1"
 		"can_affect_market_name" : "1"
 	},
-	[835] =
-	{
+	[835] = {
+
 		"name" : "taunt_attr_player_invis_percent"
 		"attribute_class" : "taunt_attr_player_invis_percent"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[837] =
-	{
+	[837] = {
+
 		"name" : "redirected_flame_size_mult"
 		"attribute_class" : "redirected_flame_size_mult"
 		"description_format" : "value_is_percentage"
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[838] =
-	{
+	[838] = {
+
 		"name" : "flame_reflect_on_collision"
 		"attribute_class" : "flame_reflect_on_collision"
 		"description_format" : "value_is_additive"
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[839] =
-	{
+	[839] = {
+
 		"name" : "flame_spread_degree"
 		"attribute_class" : "flame_spread_degree"
 		"description_format" : "value_is_additive"
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[840] =
-	{
+	[840] = {
+
 		"name" : "holster_anim_time"
 		"attribute_class" : "holster_anim_time"
 		"description_format" : "value_is_additive"
@@ -6852,64 +6852,64 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[841] =
-	{
+	[841] = {
+
 		"name" : "flame_gravity"
 		"attribute_class" : "flame_gravity"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[842] =
-	{
+	[842] = {
+
 		"name" : "flame_ignore_player_velocity"
 		"attribute_class" : "flame_ignore_player_velocity"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[843] =
-	{
+	[843] = {
+
 		"name" : "flame_drag"
 		"attribute_class" : "flame_drag"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[844] =
-	{
+	[844] = {
+
 		"name" : "flame_speed"
 		"attribute_class" : "flame_speed"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[845] =
-	{
+	[845] = {
+
 		"name" : "grenades1_resupply_denied"
 		"attribute_class" : "grenades1_resupply_denied"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[846] =
-	{
+	[846] = {
+
 		"name" : "grenades2_resupply_denied"
 		"attribute_class" : "grenades2_resupply_denied"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[847] =
-	{
+	[847] = {
+
 		"name" : "grenades3_resupply_denied"
 		"attribute_class" : "grenades3_resupply_denied"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[848] =
-	{
+	[848] = {
+
 		"name" : "item_meter_resupply_denied"
 		"attribute_class" : "item_meter_resupply_denied"
 		"description_string" : "#Attrib_MeterResupplyDenied"
@@ -6918,8 +6918,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[851] =
-	{
+	[851] = {
+
 		"name" : "mult_player_movespeed_active"
 		"attribute_class" : "mult_player_movespeed_active"
 		"description_string" : "#Attrib_MoveSpeed_Bonus"
@@ -6929,8 +6929,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_active"
 		"stored_as_integer" : "0"
 	},
-	[852] =
-	{
+	[852] = {
+
 		"name" : "mult_dmgtaken_active"
 		"attribute_class" : "mult_dmgtaken_active"
 		"description_string" : "#Attrib_DmgTaken_Increased"
@@ -6940,8 +6940,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_active"
 		"stored_as_integer" : "0"
 	},
-	[853] =
-	{
+	[853] = {
+
 		"name" : "mult_patient_overheal_penalty_active"
 		"attribute_class" : "mult_patient_overheal_penalty_active"
 		"description_string" : "#Attrib_PatientOverheal_Penalty"
@@ -6951,8 +6951,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_active"
 		"stored_as_integer" : "0"
 	},
-	[854] =
-	{
+	[854] = {
+
 		"name" : "mult_health_fromhealers_penalty_active"
 		"attribute_class" : "mult_health_fromhealers_penalty_active"
 		"description_string" : "#Attrib_HealthFromHealers_Reduced"
@@ -6962,8 +6962,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"stored_as_integer" : "0"
 	},
-	[855] =
-	{
+	[855] = {
+
 		"name" : "mod_maxhealth_drain_rate"
 		"attribute_class" : "mod_maxhealth_drain_rate"
 		"description_string" : "#Attrib_MaxHealthDrain"
@@ -6973,80 +6973,80 @@ local FromItemsGame = {
 		"armory_desc" : "on_active"
 		"stored_as_integer" : "0"
 	},
-	[856] =
-	{
+	[856] = {
+
 		"name" : "item_meter_charge_type"
 		"attribute_class" : "item_meter_charge_type"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[859] =
-	{
+	[859] = {
+
 		"name" : "max_flame_reflection_count"
 		"attribute_class" : "max_flame_reflection_count"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[860] =
-	{
+	[860] = {
+
 		"name" : "flame_reflection_add_life_time"
 		"attribute_class" : "flame_reflection_add_life_time"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[861] =
-	{
+	[861] = {
+
 		"name" : "reflected_flame_dmg_reduction"
 		"attribute_class" : "reflected_flame_dmg_reduction"
 		"description_format" : "value_is_percentage"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[862] =
-	{
+	[862] = {
+
 		"name" : "flame_lifetime"
 		"attribute_class" : "flame_lifetime"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[863] =
-	{
+	[863] = {
+
 		"name" : "flame_random_life_time_offset"
 		"attribute_class" : "flame_random_life_time_offset"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[865] =
-	{
+	[865] = {
+
 		"name" : "flame_up_speed"
 		"attribute_class" : "flame_up_speed"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[866] =
-	{
+	[866] = {
+
 		"name" : "custom_paintkit_seed_lo"
 		"attribute_class" : "custom_paintkit_seed_lo"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[867] =
-	{
+	[867] = {
+
 		"name" : "custom_paintkit_seed_hi"
 		"attribute_class" : "custom_paintkit_seed_hi"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[868] =
-	{
+	[868] = {
+
 		"name" : "crit_dmg_falloff"
 		"attribute_class" : "crit_dmg_falloff"
 		"description_string" : "#Attrib_Dmg_Crit_Falloff"
@@ -7055,8 +7055,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[869] =
-	{
+	[869] = {
+
 		"name" : "crits_become_minicrits"
 		"attribute_class" : "crits_become_minicrits"
 		"description_string" : "#Attrib_CritsBecomeMinicrits"
@@ -7065,8 +7065,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[870] =
-	{
+	[870] = {
+
 		"name" : "falling_impact_radius_pushback"
 		"attribute_class" : "falling_impact_radius_pushback"
 		"description_string" : "#Attrib_ImpactPushback"
@@ -7075,8 +7075,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[871] =
-	{
+	[871] = {
+
 		"name" : "falling_impact_radius_stun"
 		"attribute_class" : "falling_impact_radius_stun"
 		"description_string" : "#Attrib_ImpactStun"
@@ -7085,8 +7085,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[872] =
-	{
+	[872] = {
+
 		"name" : "thermal_thruster_air_launch"
 		"attribute_class" : "thermal_thruster_air_launch"
 		"description_string" : "#Attrib_ThermalThrusterAirLaunch"
@@ -7095,8 +7095,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[873] =
-	{
+	[873] = {
+
 		"name" : "thermal_thruster"
 		"attribute_class" : "thermal_thruster"
 		"description_format" : "value_is_additive"
@@ -7104,8 +7104,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[874] =
-	{
+	[874] = {
+
 		"name" : "mult_item_meter_charge_rate"
 		"attribute_class" : "mult_item_meter_charge_rate"
 		"description_string" : "#Attrib_ChargeMeterRateMult"
@@ -7113,8 +7113,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"stored_as_integer" : "0"
 	},
-	[875] =
-	{
+	[875] = {
+
 		"name" : "explode_on_ignite"
 		"attribute_class" : "explode_on_ignite"
 		"description_string" : "#Attrib_ExplodeOnIgnite"
@@ -7122,8 +7122,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"stored_as_integer" : "0"
 	},
-	[876] =
-	{
+	[876] = {
+
 		"name" : "lunchbox healing decreased"
 		"attribute_class" : "lunchbox_healing_scale"
 		"description_string" : "#Attrib_LunchboxHealingDecreased"
@@ -7132,8 +7132,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[877] =
-	{
+	[877] = {
+
 		"name" : "speed_boost_on_hit_enemy"
 		"attribute_class" : "speed_boost_on_hit_enemy"
 		"description_string" : "#Attrib_SpeedBoostEnemy"
@@ -7142,8 +7142,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[878] =
-	{
+	[878] = {
+
 		"name" : "item_meter_starts_empty_DISPLAY_ONLY"
 		"attribute_class" : "item_meter_starts_empty_DISPLAY_ONLY"
 		"description_string" : "#Attrib_MeterStartsEmpty"
@@ -7152,8 +7152,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[879] =
-	{
+	[879] = {
+
 		"name" : "item_meter_charge_type_3_DISPLAY_ONLY"
 		"attribute_class" : "item_meter_charge_type_3_DISPLAY_ONLY"
 		"description_string" : "#Attrib_MeterChargeType3"
@@ -7162,8 +7162,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[880] =
-	{
+	[880] = {
+
 		"name" : "repair health to metal ratio DISPLAY ONLY"
 		"attribute_class" : "repair_health_to_metal_ratio_DISPLAY_ONLY"
 		"description_string" : "#Attrib_RepairHealthToMetalRatio"
@@ -7172,8 +7172,8 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[881] =
-	{
+	[881] = {
+
 		"name" : "health drain medic"
 		"attribute_class" : "add_health_regen"
 		"description_string" : "#Attrib_HealthDrainMedic"
@@ -7185,8 +7185,8 @@ local FromItemsGame = {
 	},
 
 
-	[1000] =
-	{
+	[1000] = {
+
 		"name" : "CARD: damage bonus"
 		"attribute_class" : "mult_dmg"
 		"description_string" : "#Attrib_DamageDone_Positive"
@@ -7195,8 +7195,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"is_user_generated" : "1"
 	},
-	[1001] =
-	{
+	[1001] = {
+
 		"name" : "CARD: dmg taken from bullets reduced"
 		"attribute_class" : "mult_dmgtaken_from_bullets"
 		"description_string" : "#Attrib_DmgTaken_From_Bullets_Reduced"
@@ -7206,8 +7206,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"is_user_generated" : "1"
 	},
-	[1002] =
-	{
+	[1002] = {
+
 		"name" : "CARD: move speed bonus"
 		"attribute_class" : "mult_player_movespeed"
 		"description_string" : "#Attrib_MoveSpeed_Bonus"
@@ -7217,8 +7217,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"is_user_generated" : "1"
 	},
-	[1003] =
-	{
+	[1003] = {
+
 		"name" : "CARD: health regen"
 		"attribute_class" : "add_health_regen"
 		"description_string" : "#Attrib_HealthRegen"
@@ -7228,8 +7228,8 @@ local FromItemsGame = {
 		"armory_desc" : "on_wearer"
 		"is_user_generated" : "1"
 	},
-	[1004] =
-	{
+	[1004] = {
+
 		"name" : "SPELL: set item tint RGB"
 		"attribute_class" : "set_item_tint_rgb_override"
 		"description_string" : "#Attrib_HalloweenSpell_RGB"
@@ -7239,8 +7239,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"is_user_generated" : "2"
 	},
-	[1005] =
-	{
+	[1005] = {
+
 		"name" : "SPELL: set Halloween footstep type"
 		"attribute_class" : "halloween_footstep_type"
 		"description_string" : "#Attrib_HalloweenSpell_Footstep"
@@ -7250,8 +7250,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"is_user_generated" : "2"
 	},
-	[1006] =
-	{
+	[1006] = {
+
 		"name" : "SPELL: Halloween voice modulation"
 		"attribute_class" : "halloween_voice_modulation"
 		"description_string" : "#Attrib_HalloweenSpell_Voice"
@@ -7261,8 +7261,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"is_user_generated" : "2"
 	},
-	[1007] =
-	{
+	[1007] = {
+
 		"name" : "SPELL: Halloween pumpkin explosions"
 		"attribute_class" : "halloween_pumpkin_explosions"
 		"description_string" : "#Attrib_HalloweenSpell_PumpkinBombs"
@@ -7272,8 +7272,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"is_user_generated" : "2"
 	},
-	[1008] =
-	{
+	[1008] = {
+
 		"name" : "SPELL: Halloween green flames"
 		"attribute_class" : "halloween_green_flames"
 		"description_string" : "#Attrib_HalloweenSpell_GreenFlames"
@@ -7283,8 +7283,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"is_user_generated" : "2"
 	},
-	[1009] =
-	{
+	[1009] = {
+
 		"name" : "SPELL: Halloween death ghosts"
 		"attribute_class" : "halloween_death_ghosts"
 		"description_string" : "#Attrib_HalloweenSpell_DeathGhosts"
@@ -7294,8 +7294,8 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"is_user_generated" : "2"
 	},
-	[1030] =
-	{
+	[1030] = {
+
 		"name" : "Attack not cancel charge"
 		"attribute_class" : "attack_not_cancel_charge"
 		"description_format" : "value_is_additive"
@@ -7304,99 +7304,99 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"is_user_generated" : "1"
 	},
-	[2000] =
-	{
+	[2000] = {
+
 		"name" : "recipe component defined item 1"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2001] =
-	{
+	[2001] = {
+
 		"name" : "recipe component defined item 2"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2002] =
-	{
+	[2002] = {
+
 		"name" : "recipe component defined item 3"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2003] =
-	{
+	[2003] = {
+
 		"name" : "recipe component defined item 4"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2004] =
-	{
+	[2004] = {
+
 		"name" : "recipe component defined item 5"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2005] =
-	{
+	[2005] = {
+
 		"name" : "recipe component defined item 6"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2006] =
-	{
+	[2006] = {
+
 		"name" : "recipe component defined item 7"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2007] =
-	{
+	[2007] = {
+
 		"name" : "recipe component defined item 8"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2008] =
-	{
+	[2008] = {
+
 		"name" : "recipe component defined item 9"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2009] =
-	{
+	[2009] = {
+
 		"name" : "recipe component defined item 10"
 		"attribute_class" : "dynamic_recipe_component_defined_item"
 		"attribute_type" : "dynamic_recipe_component_defined_item"
 		"can_affect_market_name" : "1"
 	},
-	[2010] =
-	{
+	[2010] = {
+
 		"name" : "start drop date"
 		"attribute_class" : "start_drop_date"
 		"attribute_type" : "string"
 		"description_format" : "value_is_date"
 	},
-	[2011] =
-	{
+	[2011] = {
+
 		"name" : "end drop date"
 		"attribute_class" : "end_drop_date"
 		"attribute_type" : "string"
 		"description_format" : "value_is_date"
 	},
-	[2012] =
-	{
+	[2012] = {
+
 		"name" : "tool target item"
 		"attribute_class" : "tool_target_item"
 		"hidden" : "1"
 		"can_affect_market_name" : "1"
 	},
-	[2013] =
-	{
+	[2013] = {
+
 		"name" : "killstreak effect"
 		"attribute_class" : "killstreak_effect"
 		"description_string" : "#Attrib_KillStreakEffect"
@@ -7405,8 +7405,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"can_affect_recipe_component_name" : "1"
 	},
-	[2014] =
-	{
+	[2014] = {
+
 		"name" : "killstreak idleeffect"
 		"attribute_class" : "killstreak_idleeffect"
 		"description_string" : "#Attrib_KillStreakIdleEffect"
@@ -7416,14 +7416,14 @@ local FromItemsGame = {
 		"can_affect_recipe_component_name" : "1"
 	},
 
-	[2015] =
-	{
+	[2015] = {
+
 		"name" : "spellbook page attr id"
 		"attribute_class" : "spellbook_page_attr_id"
 		"hidden" : "1"
 	},
-	[2016] =
-	{
+	[2016] = {
+
 		"name" : "Halloween Spellbook Page: Tumidum"
 		"attribute_class" : "tf_halloween_spell_page"
 		"description_string" : "#Attrib_HalloweenSpellbookPage_A"
@@ -7431,8 +7431,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[2017] =
-	{
+	[2017] = {
+
 		"name" : "Halloween Spellbook Page: Gratanter"
 		"attribute_class" : "tf_halloween_spell_page"
 		"description_string" : "#Attrib_HalloweenSpellbookPage_B"
@@ -7440,8 +7440,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[2018] =
-	{
+	[2018] = {
+
 		"name" : "Halloween Spellbook Page: Audere"
 		"attribute_class" : "tf_halloween_spell_page"
 		"description_string" : "#Attrib_HalloweenSpellbookPage_C"
@@ -7449,8 +7449,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[2019] =
-	{
+	[2019] = {
+
 		"name" : "Halloween Spellbook Page: Congeriae"
 		"attribute_class" : "tf_halloween_spell_page"
 		"description_string" : "#Attrib_HalloweenSpellbookPage_D"
@@ -7458,8 +7458,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[2020] =
-	{
+	[2020] = {
+
 		"name" : "Halloween Spellbook Page: Veteris"
 		"attribute_class" : "tf_halloween_spell_page"
 		"description_string" : "#Attrib_HalloweenSpellbookPage_E"
@@ -7467,8 +7467,8 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "1"
 	},
-	[2021] =
-	{
+	[2021] = {
+
 		"name" : "additional halloween response criteria name"
 		"attribute_class" : "additional_halloween_response_criteria_name"
 		"attribute_type" : "string"
@@ -7476,30 +7476,30 @@ local FromItemsGame = {
 		"hidden" : "1"
 		"effect_type" : "positive"
 	},
-	[2022] =
-	{
+	[2022] = {
+
 		"name" : "loot rarity"
 		"attribute_class" : "loot_rarity"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[2023] =
-	{
+	[2023] = {
+
 		"name" : "quality text override"
 		"attribute_class" : "quality_text_override"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2024] =
-	{
+	[2024] = {
+
 		"name" : "item name text override"
 		"attribute_class" : "item_name_text_override"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2025] =
-	{
+	[2025] = {
+
 		"name" : "killstreak tier"
 		"attribute_class" : "killstreak_tier"
 		"can_affect_market_name" : "1"
@@ -7508,15 +7508,15 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[2026] =
-	{
+	[2026] = {
+
 		"name" : "wide item level"
 		"attribute_class" : "wide_item_level"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[2027] =
-	{
+	[2027] = {
+
 		"name" : "is australium item"
 		"attribute_class" : "is_australium_item"
 		"can_affect_market_name" : "1"
@@ -7524,20 +7524,20 @@ local FromItemsGame = {
 		"description_format" : "value_is_additive"
 		"stored_as_integer" : "1"
 	},
-	[2028] =
-	{
+	[2028] = {
+
 		"name" : "is marketable"
 		"attribute_class" : "is_marketable"
 		"hidden" : "1"
 	},
-	[2029] =
-	{
+	[2029] = {
+
 		"name" : "allowed in medieval mode"
 		"attribute_class" : "allowed_in_medieval_mode"
 		"hidden" : "1"
 	},
-	[2030] =
-	{
+	[2030] = {
+
 		"name" : "crit on hard hit"
 		"attribute_class" : "crit_on_hard_hit"
 		"description_format" : "value_is_additive"
@@ -7545,21 +7545,21 @@ local FromItemsGame = {
 		"effect_type" : "positive"
 		"stored_as_integer" : "0"
 	},
-	[2031] =
-	{
+	[2031] = {
+
 		"name" : "series number"
 		"attribute_class" : "series_number"
 		"hidden" : "1"
 		"can_affect_market_name" : "1"
 	},
-	[2032] =
-	{
+	[2032] = {
+
 		"name" : "recipe no partial complete"
 		"attribute_class" : "recipe_no_partial_complete"
 		"hidden" : "1"
 	},
-	[2034] =
-	{
+	[2034] = {
+
 		"name" : "kill refills meter"
 		"attribute_class" : "kill_refills_meter"
 		"description_string" : "#Attrib_KillsRefillMeter"
@@ -7567,43 +7567,43 @@ local FromItemsGame = {
 		"stored_as_integer" : "0"
 		"effect_type" : "positive"
 	},
-	[2035] =
-	{
+	[2035] = {
+
 		"name" : "random drop line item unusual chance"
 		"hidden" : "1"
 	},
-	[2036] =
-	{
+	[2036] = {
+
 		"name" : "random drop line item unusual list"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2037] =
-	{
+	[2037] = {
+
 		"name" : "random drop line item 0"
 		"stored_as_integer" : "1"
 		"hidden" : "1"
 	},
-	[2038] =
-	{
+	[2038] = {
+
 		"name" : "random drop line item 1"
 		"stored_as_integer" : "1"
 		"hidden" : "1"
 	},
-	[2039] =
-	{
+	[2039] = {
+
 		"name" : "random drop line item 2"
 		"stored_as_integer" : "1"
 		"hidden" : "1"
 	},
-	[2040] =
-	{
+	[2040] = {
+
 		"name" : "random drop line item 3"
 		"stored_as_integer" : "1"
 		"hidden" : "1"
 	},
-	[2041] =
-	{
+	[2041] = {
+
 		"name" : "taunt attach particle index"
 		"hidden" : "0"
 		"description_string" : "#Attrib_AttachedParticle"
@@ -7612,14 +7612,14 @@ local FromItemsGame = {
 		"stored_as_integer" : "1"
 		"can_affect_market_name" : "1"
 	},
-	[2042] =
-	{
+	[2042] = {
+
 		"name" : "loot list name"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2043] =
-	{
+	[2043] = {
+
 		"name" : "upgrade rate decrease"
 		"attribute_class" : "upgrade_rate_mod"
 		"description_string" : "#Attrib_UpgradeRate_Decreased"
@@ -7628,24 +7628,24 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[2044] =
-	{
+	[2044] = {
+
 		"name" : "can shuffle crate contents"
 		"hidden" : "1"
 	},
-	[2045] =
-	{
+	[2045] = {
+
 		"name" : "random drop line item footer desc"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2046] =
-	{
+	[2046] = {
+
 		"name" : "is commodity"
 		"hidden" : "1"
 	},
-	[2048] =
-	{
+	[2048] = {
+
 		"name" : "voice pitch scale"
 		"attribute_class" : "voice_pitch_scale"
 		"description_format" : "value_is_percentage"
@@ -7655,33 +7655,33 @@ local FromItemsGame = {
 		"effect_type" : "negative"
 		"stored_as_integer" : "0"
 	},
-	[2049] =
-	{
+	[2049] = {
+
 		"name" : "gunslinger punch combo"
 		"attribute_class" : "gunslinger_punch_combo"
 		"description_format" : "value_is_additive"
 		"description_string" : "#Attrib_GunslingerPunchCombo"
 		"effect_type" : "positive"
 	},
-	[2050] =
-	{
+	[2050] = {
+
 		"name" : "cannot delete"
 		"hidden" : "1"
 	},
-	[2051] =
-	{
+	[2051] = {
+
 		"name" : "quest loaner id low"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[2052] =
-	{
+	[2052] = {
+
 		"name" : "quest loaner id hi"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[2053] =
-	{
+	[2053] = {
+
 		"name" : "is_festivized"
 		"attribute_class" : "is_festivized"
 		"description_string" : "#Attrib_IsFestivized"
@@ -7690,54 +7690,54 @@ local FromItemsGame = {
 		"effect_type" : "unusual"
 		"can_affect_market_name" : "1"
 	},
-	[2054] =
-	{
+	[2054] = {
+
 		"name" : "fire particle blue"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2055] =
-	{
+	[2055] = {
+
 		"name" : "fire particle red"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2056] =
-	{
+	[2056] = {
+
 		"name" : "fire particle blue crit"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2057] =
-	{
+	[2057] = {
+
 		"name" : "fire particle red crit"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2058] =
-	{
+	[2058] = {
+
 		"name" : "meter_label"
 		"attribute_type" : "string"
 		"hidden" : "1"
 	},
-	[2059] =
-	{
+	[2059] = {
+
 		"name" : "item_meter_damage_for_full_charge"
 		"attribute_class" : "item_meter_damage_for_full_charge"
 		"description_format" : "value_is_additive"
 		"hidden" : "1"
 		"stored_as_integer" : "0"
 	},
-	[2062] =
-	{
+	[2062] = {
+
 		"name" : "airblast cost scale hidden"
 		"attribute_class" : "mult_airblast_cost"
 		"hidden" : "1"
 		"description_format" : "value_is_percentage"
 		"stored_as_integer" : "0"
 	},
-	[2063] =
-	{
+	[2063] = {
+
 		"name" : "dragons fury positive properties"
 		"attribute_class" : "dragons_fury_positive_properties"
 		"description_string" : "#TF_Weapon_DragonsFury_PositiveDesc"
@@ -7745,8 +7745,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[2064] =
-	{
+	[2064] = {
+
 		"name" : "dragons fury negative properties"
 		"attribute_class" : "dragons_fury_negative_properties"
 		"description_string" : "#TF_Weapon_DragonsFury_NegativeDesc"
@@ -7754,8 +7754,8 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "negative"
 	},
-	[2065] =
-	{
+	[2065] = {
+
 		"name" : "dragons fury neutral properties"
 		"attribute_class" : "dragons_fury_neutral_properties"
 		"description_string" : "#TF_Weapon_DragonsFury_NeutralDesc"
@@ -7763,13 +7763,13 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "neutral"
 	},
-	[2066] =
-	{
+	[2066] = {
+
 		"name" : "force center wrap"
 		"hidden" : "1"
 	},
-	[2067] =
-	{
+	[2067] = {
+
 		"name" : "attack_minicrits_and_consumes_burning"
 		"attribute_class" : "attack_minicrits_and_consumes_burning"
 		"description_string" : "#Attrib_ConsumesBurning"
@@ -7777,124 +7777,124 @@ local FromItemsGame = {
 		"hidden" : "0"
 		"effect_type" : "positive"
 	},
-	[2068] =
-	{
+	[2068] = {
+
 		"name" : "is winter case"
 		"hidden" : "1"
 	},
 
-	[3000] =
-	{
+	[3000] = {
+
 		"name" : "item slot criteria 1"
 		"attribute_class" : "item_slot_criteria"
 		"attribute_type" : "item_slot_criteria"
 	},
-	[3001] =
-	{
+	[3001] = {
+
 		"name" : "item in slot 1"
 		"attribute_class" : "item_in_slot"
 		"attribute_type" : "uint64"
 	},
-	[3002] =
-	{
+	[3002] = {
+
 		"name" : "item slot criteria 2"
 		"attribute_class" : "item_slot_criteria"
 		"attribute_type" : "item_slot_criteria"
 	},
-	[3003] =
-	{
+	[3003] = {
+
 		"name" : "item in slot 2"
 		"attribute_class" : "item_in_slot"
 		"attribute_type" : "uint64"
 	},
-	[3004] =
-	{
+	[3004] = {
+
 		"name" : "item slot criteria 3"
 		"attribute_class" : "item_slot_criteria"
 		"attribute_type" : "item_slot_criteria"
 	},
-	[3005] =
-	{
+	[3005] = {
+
 		"name" : "item in slot 3"
 		"attribute_class" : "item_in_slot"
 		"attribute_type" : "uint64"
 	},
-	[3006] =
-	{
+	[3006] = {
+
 		"name" : "item slot criteria 4"
 		"attribute_class" : "item_slot_criteria"
 		"attribute_type" : "item_slot_criteria"
 	},
-	[3007] =
-	{
+	[3007] = {
+
 		"name" : "item in slot 4"
 		"attribute_class" : "item_in_slot"
 		"attribute_type" : "uint64"
 	},
-	[3008] =
-	{
+	[3008] = {
+
 		"name" : "item slot criteria 5"
 		"attribute_class" : "item_slot_criteria"
 		"attribute_type" : "item_slot_criteria"
 	},
-	[3009] =
-	{
+	[3009] = {
+
 		"name" : "item in slot 5"
 		"attribute_class" : "item_in_slot"
 		"attribute_type" : "uint64"
 	},
-	[3010] =
-	{
+	[3010] = {
+
 		"name" : "item slot criteria 6"
 		"attribute_class" : "item_slot_criteria"
 		"attribute_type" : "item_slot_criteria"
 	},
-	[3011] =
-	{
+	[3011] = {
+
 		"name" : "item in slot 6"
 		"attribute_class" : "item_in_slot"
 		"attribute_type" : "uint64"
 	},
-	[3012] =
-	{
+	[3012] = {
+
 		"name" : "item slot criteria 7"
 		"attribute_class" : "item_slot_criteria"
 		"attribute_type" : "item_slot_criteria"
 	},
-	[3013] =
-	{
+	[3013] = {
+
 		"name" : "item in slot 7"
 		"attribute_class" : "item_in_slot"
 		"attribute_type" : "uint64"
 	},
-	[3014] =
-	{
+	[3014] = {
+
 		"name" : "item slot criteria 8"
 		"attribute_class" : "item_slot_criteria"
 		"attribute_type" : "item_slot_criteria"
 	},
-	[3015] =
-	{
+	[3015] = {
+
 		"name" : "item in slot 8"
 		"attribute_class" : "item_in_slot"
 		"attribute_type" : "uint64"
 	},
-	[3016] =
-	{
+	[3016] = {
+
 		"name" : "quest earned standard points"
 		"attribute_class" : "quest_earned_standard_points"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[3017] =
-	{
+	[3017] = {
+
 		"name" : "quest earned bonus points"
 		"attribute_class" : "quest_earned_bonus_points"
 		"hidden" : "1"
 		"stored_as_integer" : "1"
 	},
-	[3018] =
-	{
+	[3018] = {
+
 		"name" : "item drop wave"
 		"attribute_class" : "item_drop_wave"
 		"hidden" : "1"
@@ -7902,26 +7902,26 @@ local FromItemsGame = {
 	},
 }
 
-PopExtItems.GenerateItemAttributeTable <- function()
-{
+PopExtItems.GenerateItemAttributeTable <- function() {
+
 	local x = {}
-	foreach (k, v in FromItemsGame)
-	{
+	foreach ( k, v in FromItemsGame ) {
+
 		v.index <- k.tostring()
 		x[v.name] <- v
 	}
 	local filetable = ""
-	foreach(k, v in x)
-	{
-		filetable = format("%s\n\t\"%s\" : {\n", filetable, k)
+	foreach( k, v in x ) {
+
+		filetable = format( "%s\n\t\"%s\" : {\n", filetable, k )
 		// filetable += "\n\t"+k+" : {\n"
-			foreach(a, b in v)
-				filetable = format("%s\t\t\"%s\" : \"%s\"\n", filetable, a, b)
+			foreach( a, b in v )
+				filetable = format( "%s\t\t\"%s\" : \"%s\"\n", filetable, a, b )
 				// filetable += "\t\t"+a + " : " + b + "\n"
 		filetable += "\t}\n"
 	}
 
-	StringToFile("attribute_map.nut", format("::PopExtItems.Attributes <- {\n%s\n}", filetable))
+	StringToFile( "attribute_map.nut", format( "::PopExtItems.Attributes <- {\n%s\n}", filetable ) )
 }
 
 // PopExtItems.GenerateItemAttributeTable()

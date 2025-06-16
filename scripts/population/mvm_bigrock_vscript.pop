@@ -157,8 +157,8 @@ WaveSchedule
 							`set item tint RGB 2`: 4079424,
 							`item style override`: 1,
 						}
-						`Madness vs Machines Hopeful Heart 2019`: {
-							`set item tint RGB 2`: 9894655,
+						`Madness vs Machines Pinnacle of Ingenuity 2019`: {
+							`set item tint RGB`: 16738816,
 
 						}
 					}

@@ -4,8 +4,8 @@
 
 const EFL_USER = 1048576
 
-local GlobalFixesEntity = FindByName(null, "__popext_globalfixes")
-if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_teleport_destination", { targetname = "__popext_globalfixes" })
+local GlobalFixesEntity = FindByName( null, "__popext_globalfixes" )
+if ( GlobalFixesEntity == null ) GlobalFixesEntity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext_globalfixes" } )
 
 ::GlobalFixes <- {
 
@@ -13,53 +13,53 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 
 		//add think table to all projectiles
 		//there is apparently no better way to do this lol
-		function AddProjectileThink()
-		{
-			for (local projectile; projectile = FindByClassname(projectile, "tf_projectile*");) {
-				if (projectile.GetEFlags() & EFL_USER) continue
+		function AddProjectileThink() {
+
+			for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile*" ); ) {
+				if ( projectile.GetEFlags() & EFL_USER ) continue
 
 				projectile.ValidateScriptScope()
 				local scope = projectile.GetScriptScope()
 				local owner = projectile.GetOwner()
 
-				if (owner && owner.IsValid()) {
+				if ( owner && owner.IsValid() ) {
 
 					local owner_scope = owner.GetScriptScope()
-					if (!owner_scope)
-					{
+					if ( !owner_scope ) {
+
 						owner.ValidateScriptScope()
 						owner_scope = owner.GetScriptScope()
 					}
 
 					// this should not be a thing.  Preserved gets added in player_spawn but we still get does not exist errors
-					if (!("Preserved" in owner_scope))
+					if ( !( "Preserved" in owner_scope ) )
 						owner_scope.Preserved <- {}
 
-					if (!("ActiveProjectiles" in owner_scope.Preserved))
+					if ( !( "ActiveProjectiles" in owner_scope.Preserved ) )
 						owner_scope.Preserved.ActiveProjectiles <- {}
 
 					owner_scope.Preserved.ActiveProjectiles[projectile.entindex()] <- [projectile, Time()]
 
-					PopExtUtil.SetDestroyCallback(projectile, function() {
-						if ("ActiveProjectiles" in owner_scope.Preserved && self.entindex() in owner_scope.Preserved.ActiveProjectiles)
+					PopExtUtil.SetDestroyCallback( projectile, function() {
+						if ( "ActiveProjectiles" in owner_scope.Preserved && self.entindex() in owner_scope.Preserved.ActiveProjectiles )
 							delete owner_scope.Preserved.ActiveProjectiles[self.entindex()]
-					})
+					} )
 				}
 
-				if (!("ProjectileThinkTable" in scope))
+				if ( !( "ProjectileThinkTable" in scope ) )
 					scope.ProjectileThinkTable <- {}
 
-				scope.ProjectileThink <- function ()
-				{
-					foreach (name, func in scope.ProjectileThinkTable)
-						func.call(scope)
+				scope.ProjectileThink <- function () {
+
+					foreach ( name, func in scope.ProjectileThinkTable )
+						func.call( scope )
 
 					return -1
 				}
 
-				_AddThinkToEnt(projectile, "ProjectileThink")
+				_AddThinkToEnt( projectile, "ProjectileThink" )
 
-				projectile.AddEFlags(EFL_USER)
+				projectile.AddEFlags( EFL_USER )
 			}
 		}
 
@@ -90,15 +90,15 @@ if (GlobalFixesEntity == null) GlobalFixesEntity = SpawnEntityFromTable("info_te
 		function NoCreditVelocity() { return }
 	}
 
-	Events = { function GameEvent_mvm_wave_complete(params) { delete GlobalFixes } }
+	Events = { function GameEvent_mvm_wave_complete( params ) { delete GlobalFixes } }
 }
-__CollectGameEventCallbacks(GlobalFixes.Events)
+__CollectGameEventCallbacks( GlobalFixes.Events )
 
 GlobalFixesEntity.ValidateScriptScope()
 
 GlobalFixesEntity.GetScriptScope().GlobalFixesThink <- function() {
-	foreach(func in GlobalFixes.ThinkTable) func()
+	foreach( func in GlobalFixes.ThinkTable ) func()
 	return -1
 }
 
-AddThinkToEnt(GlobalFixesEntity, "GlobalFixesThink")
+AddThinkToEnt( GlobalFixesEntity, "GlobalFixesThink" )

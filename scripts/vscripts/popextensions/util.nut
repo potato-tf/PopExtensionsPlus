@@ -2,8 +2,8 @@
 ::PopExtUtil <- {
 
 	// TODO: these should be tables indexed by player handle instead
-	// simpler code, O(1) access/insertion/deletion
-	// tables could also be used for userid lookups for the value instead of PopExtUtil.GetPlayerUserID(player)
+	// simpler code, O( 1 ) access/insertion/deletion
+	// tables could also be used for userid lookups for the value instead of PopExtUtil.GetPlayerUserID( player )
 	// can be made backwards compatible by mapping HumanTable/BotTable/PlayerTable keys to HumanArray/BotArray/PlayerArray
 
 	HumanArray = []
@@ -200,100 +200,100 @@
 	}
 
 	Worldspawn 		  = First()
-	GameRules 		  = FindByClassname(null, "tf_gamerules")
-	ObjectiveResource = FindByClassname(null, "tf_objective_resource")
-	MonsterResource   = FindByClassname(null, "monster_resource")
-	MvMLogicEnt 	  = FindByClassname(null, "tf_logic_mann_vs_machine")
-	MvMStatsEnt 	  = FindByClassname(null, "tf_mann_vs_machine_stats")
-	PlayerManager 	  = FindByClassname(null, "tf_player_manager")
-	StartRelay 		  = FindByName(null, "wave_start_relay")
-	FinishedRelay 	  = FindByName(null, "wave_finished_relay")
+	GameRules 		  = FindByClassname( null, "tf_gamerules" )
+	ObjectiveResource = FindByClassname( null, "tf_objective_resource" )
+	MonsterResource   = FindByClassname( null, "monster_resource" )
+	MvMLogicEnt 	  = FindByClassname( null, "tf_logic_mann_vs_machine" )
+	MvMStatsEnt 	  = FindByClassname( null, "tf_mann_vs_machine_stats" )
+	PlayerManager 	  = FindByClassname( null, "tf_player_manager" )
+	StartRelay 		  = FindByName( null, "wave_start_relay" )
+	FinishedRelay 	  = FindByName( null, "wave_finished_relay" )
 
-	PopInterface 	  = FindByClassname(null, "point_populator_interface") ?
-						FindByClassname(null, "point_populator_interface") :
-						SpawnEntityFromTable("point_populator_interface", {targetname = "__util_pop_interface"})
+	PopInterface 	  = FindByClassname( null, "point_populator_interface" ) ?
+						FindByClassname( null, "point_populator_interface" ) :
+						SpawnEntityFromTable( "point_populator_interface", {targetname = "__util_pop_interface"} )
 
-	TriggerHurt 	  = CreateByClassname("trigger_hurt")
+	TriggerHurt 	  = CreateByClassname( "trigger_hurt" )
 
-	CurrentWaveNum 	  = GetPropInt(FindByClassname(null, "tf_objective_resource"), "m_nMannVsMachineWaveCount")
+	CurrentWaveNum 	  = GetPropInt( FindByClassname( null, "tf_objective_resource" ), "m_nMannVsMachineWaveCount" )
 
-	ClientCommand	  = SpawnEntityFromTable("point_clientcommand", {targetname = "__util_clientcommand"})
-	GameRoundWin 	  = SpawnEntityFromTable("game_round_win", {targetname = "__util_roundwin", TeamNum = TF_TEAM_PVE_INVADERS, force_map_reset = 1})
-	RespawnOverride   = SpawnEntityFromTable("trigger_player_respawn_override", {targetname = "__util_respawnoverride", spawnflags = SF_TRIGGER_ALLOW_CLIENTS})
+	ClientCommand	  = SpawnEntityFromTable( "point_clientcommand", {targetname = "__util_clientcommand"} )
+	GameRoundWin 	  = SpawnEntityFromTable( "game_round_win", {targetname = "__util_roundwin", TeamNum = TF_TEAM_PVE_INVADERS, force_map_reset = 1} )
+	RespawnOverride   = SpawnEntityFromTable( "trigger_player_respawn_override", {targetname = "__util_respawnoverride", spawnflags = SF_TRIGGER_ALLOW_CLIENTS} )
 
 	// fix delayed starttouch crash
 	// TODO: may be able to automate this
 	// iterate over all triggers, check if InputStart/EndTouch is in scope, if not apply this.
-	TouchCrashFix 	  = @() (activator == null || !activator.IsValid()) ? false : true
+	TouchCrashFix 	  = @() ( activator == null || !activator.IsValid() ) ? false : true
 
 	// This can just be a variable name since RAND_MAX is a pre-defined constant
 	// would not be backwards compatible if anyone's using PopExtUtil.IsLinuxServer() though
 	IsLinuxServer = @() RAND_MAX != 32767
 
-	function ShowMessage(message) {
-		ClientPrint(null, HUD_PRINTCENTER, message)
+	function ShowMessage( message ) {
+		ClientPrint( null, HUD_PRINTCENTER, message )
 	}
 
-	function ForceChangeClass(player, classindex = 1) {
+	function ForceChangeClass( player, classindex = 1 ) {
 
-		player.SetPlayerClass(classindex);
-		SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", classindex);
-		player.ForceRegenerateAndRespawn();
+		player.SetPlayerClass( classindex )
+		SetPropInt( player, "m_Shared.m_iDesiredPlayerClass", classindex )
+		player.ForceRegenerateAndRespawn()
 	}
 
 	function PlayerClassCount() {
 
-		local classes = array(TF_CLASS_COUNT_ALL, 0)
-		foreach (player in HumanArray)
+		local classes = array( TF_CLASS_COUNT_ALL, 0 )
+		foreach ( player in HumanArray )
 			++classes[player.GetPlayerClass()]
 		return classes
 	}
 
-	function ChangePlayerTeamMvM(player, teamnum = TF_TEAM_PVE_INVADERS, forcerespawn = false) {
+	function ChangePlayerTeamMvM( player, teamnum = TF_TEAM_PVE_INVADERS, forcerespawn = false ) {
 
-		if (GameRules) {
-			SetPropBool(GameRules, "m_bPlayingMannVsMachine", false);
-			player.ForceChangeTeam(teamnum, false);
-			SetPropBool(GameRules, "m_bPlayingMannVsMachine", true);
-			if (forcerespawn)
-				EntFireByHandle(player, "RunScriptCode", "self.ForceRespawn()", SINGLE_TICK, null, null)
+		if ( GameRules ) {
+			SetPropBool( GameRules, "m_bPlayingMannVsMachine", false )
+			player.ForceChangeTeam( teamnum, false )
+			SetPropBool( GameRules, "m_bPlayingMannVsMachine", true )
+			if ( forcerespawn )
+				EntFireByHandle( player, "RunScriptCode", "self.ForceRespawn()", SINGLE_TICK, null, null )
 		}
 	}
 
 	// example
-	// ChatPrint(null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT)
-	function ShowChatMessage(target, fmt, ...) {
+	// ChatPrint( null, "{player} {color}guessed the answer first!", player, TF_COLOR_DEFAULT )
+	function ShowChatMessage( target, fmt, ... ) {
 		local result = "\x07FFCC22[Map] "
 		local start = 0
-		local end = fmt.find("{")
+		local end = fmt.find( "{" )
 		local i = 0
-		while (end != null) {
-			result += fmt.slice(start, end)
+		while ( end != null ) {
+			result += fmt.slice( start, end )
 			start = end + 1
-			end = fmt.find("}", start)
-			if (end == null)
+			end = fmt.find( "}", start )
+			if ( end == null )
 				break
-			local word = fmt.slice(start, end)
+			local word = fmt.slice( start, end )
 
-			if (word == "player") {
+			if ( word == "player" ) {
 				local player = vargv[i++]
 
 				local team = player.GetTeam()
-				if (team == TF_TEAM_RED)
+				if ( team == TF_TEAM_RED )
 					result += "\x07" + TF_COLOR_RED
-				else if (team == TF_TEAM_BLUE)
+				else if ( team == TF_TEAM_BLUE )
 					result += "\x07" + TF_COLOR_BLUE
 				else
 					result += "\x07" + TF_COLOR_SPEC
-				result += GetPlayerName(player)
+				result += GetPlayerName( player )
 			}
-			else if (word == "color") {
+			else if ( word == "color" ) {
 				result += "\x07" + vargv[i++]
 			}
-			else if (word == "int" || word == "float") {
+			else if ( word == "int" || word == "float" ) {
 				result += vargv[i++].tostring()
 			}
-			else if (word == "str") {
+			else if ( word == "str" ) {
 				result += vargv[i++]
 			}
 			else {
@@ -301,288 +301,288 @@
 			}
 
 			start = end + 1
-			end = fmt.find("{", start)
+			end = fmt.find( "{", start )
 		}
 
-		result += fmt.slice(start)
+		result += fmt.slice( start )
 
-		ClientPrint(target, HUD_PRINTTALK, result)
+		ClientPrint( target, HUD_PRINTTALK, result )
 	}
 
-	function CopyTable(table, keyfunc = null, valuefunc = null) {
+	function CopyTable( table, keyfunc = null, valuefunc = null ) {
 
-		if (table == null || typeof(table) != "table") return
+		if ( table == null || typeof table != "table" ) return
 
 		local newtable = {}
 
-		foreach (key, value in table)
-		{
-			//run optional functions on the key and value
-			if (keyfunc != null)
-				key = keyfunc(key)
+		foreach ( key, value in table ) {
 
-			if (valuefunc != null)
-				value = valuefunc(value)
+			//run optional functions on the key and value
+			if ( keyfunc != null )
+				key = keyfunc( key )
+
+			if ( valuefunc != null )
+				value = valuefunc( value )
 
 			newtable[key] <- value
-			if (typeof(value) == "table" || typeof(value) == "array")
-			{
-				newtable[key] = CopyTable(value)
+			if ( typeof value == "table" || typeof value == "array" ) {
+
+				newtable[key] = CopyTable( value )
 			}
-			else
-			{
+			else {
+
 				newtable[key] <- value
 			}
 		}
 		return newtable
 	}
 
-	function HexToRgb(hex) {
+	function HexToRgb( hex ) {
 
 		// Extract the RGB values
-		local r = hex.slice(0, 2).tointeger(16)
-		local g = hex.slice(2, 4).tointeger(16)
-		local b = hex.slice(4, 6).tointeger(16)
+		local r = hex.slice( 0, 2 ).tointeger( 16 )
+		local g = hex.slice( 2, 4 ).tointeger( 16 )
+		local b = hex.slice( 4, 6 ).tointeger( 16 )
 
 		// Return the RGB values as an array
 		return [r, g, b]
 	}
 
-	function CountAlivePlayers(countbots = false, printout = false) {
+	function CountAlivePlayers( countbots = false, printout = false ) {
 
-		if (!IsWaveStarted) return
+		if ( !IsWaveStarted ) return
 
 		local playersalive = 0
 
 		local player_array = countbots ? BotArray : HumanArray
 		local players_len = player_array.len() - 1
 
-		for (local i = players_len; i >= 0; i--)
-		{
+		for ( local i = players_len; i >= 0; i-- ) {
+
 			local player = player_array[i]
-			if (!player || !player.IsValid())
-			{
-				player_array.remove(i)
+			if ( !player || !player.IsValid() ) {
+
+				player_array.remove( i )
 				continue
 			}
-			if (!player.IsAlive()) continue
+			if ( !player.IsAlive() ) continue
 
 			playersalive++
 		}
 
-		if (printout)
-		{
-			ClientPrint(null, HUD_PRINTTALK, format("Players Alive: %d", playersalive))
-			printf("Players Alive: %d\n", playersalive)
+		if ( printout ) {
+
+			ClientPrint( null, HUD_PRINTTALK, format( "Players Alive: %d", playersalive ) )
+			printf( "Players Alive: %d\n", playersalive )
 		}
 
 		return playersalive
 	}
 
-	// TODO: add deprecation warning after updating redridge to use PopExtUtil.CountAlivePlayers(true)
-	function CountAliveBots(printout = false) {
+	// TODO: add deprecation warning after updating redridge to use PopExtUtil.CountAlivePlayers( true )
+	function CountAliveBots( printout = false ) {
 
-		// PopExtMain.Error.DeprecationWarning("PopExtUtil.CountAliveBots", "PopExtUtil.CountAlivePlayers(true)")
-		return CountAlivePlayers(true, printout)
+		// PopExtMain.Error.DeprecationWarning( "PopExtUtil.CountAliveBots", "PopExtUtil.CountAlivePlayers( true )" )
+		return CountAlivePlayers( true, printout )
 	}
-	function SetParentLocalOriginDo(child, parent, attachment = null) {
+	function SetParentLocalOriginDo( child, parent, attachment = null ) {
 
-		SetPropEntity(child, "m_hMovePeer", parent.FirstMoveChild())
-		SetPropEntity(parent, "m_hMoveChild", child)
-		SetPropEntity(child, "m_hMoveParent", parent)
+		SetPropEntity( child, "m_hMovePeer", parent.FirstMoveChild() )
+		SetPropEntity( parent, "m_hMoveChild", child )
+		SetPropEntity( child, "m_hMoveParent", parent )
 
 		local origPos = child.GetLocalOrigin()
-		child.SetLocalOrigin(origPos + Vector(0, 0, 1))
-		child.SetLocalOrigin(origPos)
+		child.SetLocalOrigin( origPos + Vector( 0, 0, 1 ) )
+		child.SetLocalOrigin( origPos )
 
 		local origAngles = child.GetLocalAngles()
-		child.SetLocalAngles(origAngles + QAngle(0, 0, 1))
-		child.SetLocalAngles(origAngles)
+		child.SetLocalAngles( origAngles + QAngle( 0, 0, 1 ) )
+		child.SetLocalAngles( origAngles )
 
 		local origVel = child.GetAbsVelocity()
-		child.SetAbsVelocity(origVel + Vector(0, 0, 1))
-		child.SetAbsVelocity(origVel)
+		child.SetAbsVelocity( origVel + Vector( 0, 0, 1 ) )
+		child.SetAbsVelocity( origVel )
 
-		EntFireByHandle(child, "SetParent", "!activator", -1, parent, parent)
-		if (attachment != null) {
-			SetPropEntity(child, "m_iParentAttachment", parent.LookupAttachment(attachment))
-			EntFireByHandle(child, "SetParentAttachmentMaintainOffset", attachment, -1, parent, parent)
+		EntFireByHandle( child, "SetParent", "!activator", -1, parent, parent )
+		if ( attachment != null ) {
+			SetPropEntity( child, "m_iParentAttachment", parent.LookupAttachment( attachment ) )
+			EntFireByHandle( child, "SetParentAttachmentMaintainOffset", attachment, -1, parent, parent )
 		}
 	}
 
 	// Sets parent immediately in a dirty way. Does not retain absolute origin, retains local origin instead.
 	// child parameter may also be an array of entities
-	function SetParentLocalOrigin(child, parent, attachment = null) {
+	function SetParentLocalOrigin( child, parent, attachment = null ) {
 
-		if (typeof child == "array")
-			foreach(i, childIn in child)
-				SetParentLocalOriginDo(childIn, parent, attachment)
+		if ( typeof child == "array" )
+			foreach( i, childIn in child )
+				SetParentLocalOriginDo( childIn, parent, attachment )
 		else
-			SetParentLocalOriginDo(child, parent, attachment)
+			SetParentLocalOriginDo( child, parent, attachment )
 	}
 
 	// Setup collision bounds of a trigger entity
-	function SetupTriggerBounds(trigger, mins = null, maxs = null) {
+	function SetupTriggerBounds( trigger, mins = null, maxs = null ) {
 
-		trigger.SetModel("models/weapons/w_models/w_rocket.mdl")
+		trigger.SetModel( "models/weapons/w_models/w_rocket.mdl" )
 
-		if (mins != null) {
-			SetPropVector(trigger, "m_Collision.m_vecMinsPreScaled", mins)
-			SetPropVector(trigger, "m_Collision.m_vecMins", mins)
+		if ( mins != null ) {
+			SetPropVector( trigger, "m_Collision.m_vecMinsPreScaled", mins )
+			SetPropVector( trigger, "m_Collision.m_vecMins", mins )
 		}
-		if (maxs != null) {
-			SetPropVector(trigger, "m_Collision.m_vecMaxsPreScaled", maxs)
-			SetPropVector(trigger, "m_Collision.m_vecMaxs", maxs)
+		if ( maxs != null ) {
+			SetPropVector( trigger, "m_Collision.m_vecMaxsPreScaled", maxs )
+			SetPropVector( trigger, "m_Collision.m_vecMaxs", maxs )
 		}
 
-		trigger.SetSolid(SOLID_BBOX)
+		trigger.SetSolid( SOLID_BBOX )
 	}
 
-	function PrintTable(table) {
+	function PrintTable( table ) {
 
-		if (table == null) return;
+		if ( table == null ) return
 
-		DoPrintTable(table, 0)
+		DoPrintTable( table, 0 )
 	}
 
-	function DoPrintTable(table, indent) {
+	function DoPrintTable( table, indent ) {
 		local line = ""
-		for (local i = 0; i < indent; i++) {
+		for ( local i = 0; i < indent; i++ ) {
 			line += " "
 		}
-		line += typeof table == "array" ? "[" : "{";
+		line += typeof table == "array" ? "[" : "{"
 
-		ClientPrint(null, 2, line)
+		ClientPrint( null, 2, line )
 
 		indent += 2
-		foreach(k, v in table) {
+		foreach( k, v in table ) {
 			line = ""
-			for (local i = 0; i < indent; i++) {
+			for ( local i = 0; i < indent; i++ ) {
 				line += " "
 			}
 			line += k.tostring()
 			line += " = "
 
-			if (typeof v == "table" || typeof v == "array") {
-				ClientPrint(null, 2, line)
-				DoPrintTable(v, indent)
+			if ( typeof v == "table" || typeof v == "array" ) {
+				ClientPrint( null, 2, line )
+				DoPrintTable( v, indent )
 			}
 			else {
 				try {
 					line += v.tostring()
 				}
-				catch (e) {
+				catch ( e ) {
 					line += typeof v
 				}
 
-				ClientPrint(null, 2, line)
+				ClientPrint( null, 2, line )
 			}
 		}
 		indent -= 2
 
 		line = ""
-		for (local i = 0; i < indent; i++) {
+		for ( local i = 0; i < indent; i++ ) {
 			line += " "
 		}
-		line += typeof table == "array" ? "]" : "}";
+		line += typeof table == "array" ? "]" : "}"
 
-		ClientPrint(null, 2, line)
+		ClientPrint( null, 2, line )
 	}
 
 	// LEGACY: THIS DOES NOT APPLY TO RAGDOLLS! use GiveWearableItem instead
-	function CreatePlayerWearable(player, model, bonemerge = true, attachment = null, autoDestroy = true) {
+	function CreatePlayerWearable( player, model, bonemerge = true, attachment = null, autoDestroy = true ) {
 
-		PopExtMain.Error.DeprecationWarning("PopExtUtil.CreatePlayerWearable", "PopExtUtil.GiveWearableItem")
-		local modelIndex = GetModelIndex(model)
-		if (modelIndex == -1)
-			modelIndex = PrecacheModel(model)
+		PopExtMain.Error.DeprecationWarning( "PopExtUtil.CreatePlayerWearable", "PopExtUtil.GiveWearableItem" )
+		local modelIndex = GetModelIndex( model )
+		if ( modelIndex == -1 )
+			modelIndex = PrecacheModel( model )
 
-		local wearable = CreateByClassname("tf_wearable")
-		SetPropInt(wearable, "m_nModelIndex", modelIndex)
-		wearable.SetSkin(player.GetTeam())
-		wearable.SetTeam(player.GetTeam())
-		wearable.SetSolidFlags(4)
-		wearable.SetCollisionGroup(11)
-		SetPropBool(wearable, STRING_NETPROP_ATTACH, true)
-		SetPropBool(wearable, STRING_NETPROP_INIT, true)
-		SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityQuality", 0)
-		SetPropInt(wearable, "m_AttributeManager.m_Item.m_iEntityLevel", 1)
-		SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDLow", 2048)
-		SetPropInt(wearable, "m_AttributeManager.m_Item.m_iItemIDHigh", 0)
+		local wearable = CreateByClassname( "tf_wearable" )
+		SetPropInt( wearable, "m_nModelIndex", modelIndex )
+		wearable.SetSkin( player.GetTeam() )
+		wearable.SetTeam( player.GetTeam() )
+		wearable.SetSolidFlags( 4 )
+		wearable.SetCollisionGroup( 11 )
+		SetPropBool( wearable, STRING_NETPROP_ATTACH, true )
+		SetPropBool( wearable, STRING_NETPROP_INIT, true )
+		SetPropInt( wearable, "m_AttributeManager.m_Item.m_iEntityQuality", 0 )
+		SetPropInt( wearable, "m_AttributeManager.m_Item.m_iEntityLevel", 1 )
+		SetPropInt( wearable, "m_AttributeManager.m_Item.m_iItemIDLow", 2048 )
+		SetPropInt( wearable, "m_AttributeManager.m_Item.m_iItemIDHigh", 0 )
 
-		wearable.SetOwner(player)
-		DispatchSpawn(wearable)
-		SetPropInt(wearable, "m_fEffects", bonemerge ? EF_BONEMERGE|EF_BONEMERGE_FASTCULL : 0)
-		SetParentLocalOrigin(wearable, player, attachment)
+		wearable.SetOwner( player )
+		DispatchSpawn( wearable )
+		SetPropInt( wearable, "m_fEffects", bonemerge ? EF_BONEMERGE|EF_BONEMERGE_FASTCULL : 0 )
+		SetParentLocalOrigin( wearable, player, attachment )
 
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
-		if (autoDestroy) {
-			if (!("popWearablesToDestroy" in scope))
+		if ( autoDestroy ) {
+			if ( !( "popWearablesToDestroy" in scope ) )
 				scope.popWearablesToDestroy <- []
 
-			scope.popWearablesToDestroy.append(wearable)
+			scope.popWearablesToDestroy.append( wearable )
 		}
 		return wearable
 	}
 
 	// Make a fake wearable that is attached to the player.
 	// The wearable is automatically removed on respawn.
-	function GiveWearableItem(player, item_id, model = false) {
+	function GiveWearableItem( player, item_id, model = false ) {
 
-		local modelindex = GetModelIndex(model)
-		if (modelindex == -1)
-			modelindex = PrecacheModel(model)
+		local modelindex = GetModelIndex( model )
+		if ( modelindex == -1 )
+			modelindex = PrecacheModel( model )
 
-		local dummy = CreateByClassname("tf_weapon_parachute")
-		SetPropInt(dummy, STRING_NETPROP_ITEMDEF, ID_BASE_JUMPER)
-		SetPropBool(dummy, STRING_NETPROP_INIT, true)
-		dummy.SetTeam(player.GetTeam())
-		DispatchSpawn(dummy)
-		player.Weapon_Equip(dummy)
+		local dummy = CreateByClassname( "tf_weapon_parachute" )
+		SetPropInt( dummy, STRING_NETPROP_ITEMDEF, ID_BASE_JUMPER )
+		SetPropBool( dummy, STRING_NETPROP_INIT, true )
+		dummy.SetTeam( player.GetTeam() )
+		DispatchSpawn( dummy )
+		player.Weapon_Equip( dummy )
 
-		local wearable = GetPropEntity(dummy, "m_hExtraWearable")
+		local wearable = GetPropEntity( dummy, "m_hExtraWearable" )
 		dummy.Kill()
 
-		PopExtUtil.InitEconItem(wearable, item_id)
-		DispatchSpawn(wearable)
+		PopExtUtil.InitEconItem( wearable, item_id )
+		DispatchSpawn( wearable )
 
-		if (model)
-			wearable.SetModelSimple(model)
+		if ( model )
+			wearable.SetModelSimple( model )
 
 		// avoid infinite loops from post_inventory_application hooks
-		player.AddEFlags(EFL_CUSTOM_WEARABLE)
+		player.AddEFlags( EFL_CUSTOM_WEARABLE )
 
-		SendGlobalGameEvent("post_inventory_application",  { userid = GetPlayerUserID(player) })
+		SendGlobalGameEvent( "post_inventory_application",  { userid = GetPlayerUserID( player ) } )
 
-		player.RemoveEFlags(EFL_CUSTOM_WEARABLE)
+		player.RemoveEFlags( EFL_CUSTOM_WEARABLE )
 
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
-		if (!("popWearablesToDestroy" in scope))
+		if ( !( "popWearablesToDestroy" in scope ) )
 			scope.popWearablesToDestroy <- []
 
-		scope.popWearablesToDestroy.append(wearable)
+		scope.popWearablesToDestroy.append( wearable )
 
 		return wearable
 	}
 
-	function StripWeapon(player, slot = -1) {
+	function StripWeapon( player, slot = -1 ) {
 
-		if (slot == -1) slot = player.GetActiveWeapon().GetSlot()
+		if ( slot == -1 ) slot = player.GetActiveWeapon().GetSlot()
 
-		for (local i = 0; i < SLOT_COUNT; i++)
-		{
-			local weapon = GetItemInSlot(player, i);
+		for ( local i = 0; i < SLOT_COUNT; i++ ) {
 
-			if (weapon == null || weapon.GetSlot() != slot) continue;
+			local weapon = GetItemInSlot( player, i )
 
-			weapon.Kill();
-			break;
+			if ( weapon == null || weapon.GetSlot() != slot ) continue
+
+			weapon.Kill()
+			break
 		}
 	}
 
-	function SetPlayerAttributes(player, attrib, value, item = null, customwep_force = false) {
+	function SetPlayerAttributes( player, attrib, value, item = null, customwep_force = false ) {
 
 		local items = {}
 
@@ -598,94 +598,94 @@
 		local specialattribs = {
 
 			"paintkit_proto_def_index" : function() {
-				value = casti2f(value.tointeger())
+				value = casti2f( value.tointeger() )
 			}
 		}
 
-		if (attrib in specialattribs)
+		if ( attrib in specialattribs )
 			specialattribs[attrib]()
 
-		local item_handle = HasItemInLoadout(player, item)
+		local item_handle = HasItemInLoadout( player, item )
 		local scope = player.GetScriptScope()
 
-		if ( "CustomWeapons" in scope  && item_handle in scope.CustomWeapons && !customwep_force )
-		{
-			PopExtMain.Error.DebugLog("Ignoring attributes for custom weapon: " + item)
+		if ( "CustomWeapons" in scope  && item_handle in scope.CustomWeapons && !customwep_force ) {
+
+			PopExtMain.Error.DebugLog( "Ignoring attributes for custom weapon: " + item )
 			return
 		}
 
-		if (item_handle && item_handle.IsValid())
+		if ( item_handle && item_handle.IsValid() )
 			items[item_handle] <- [attrib, value]
 		else
-			for (local i = 0; i < GetPropArraySize(player, STRING_NETPROP_MYWEAPONS); i++)
-				if (GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i))
-					items[GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)] <- [attrib, value]
+			for ( local i = 0; i < GetPropArraySize( player, STRING_NETPROP_MYWEAPONS ); i++ )
+				if ( GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i ) )
+					items[GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )] <- [attrib, value]
 
 		//do the customattributes check first, since we replace some vanilla attributes
-		local customattr_function = CustomAttributes.GetAttributeFunctionFromStringName(attrib)
+		local customattr_function = CustomAttributes.GetAttributeFunctionFromStringName( attrib )
 
-		if (customattr_function in CustomAttributes.Attrs)
-		{
+		if ( customattr_function in CustomAttributes.Attrs ) {
+
 			//easy access table in player scope for our items and their attributes
 			scope.CustomAttrItems <- items
 
 			//cleanup any previous attribute functions from these CustomAttributes event hooks
 			local t = ["TakeDamageTable", "TakeDamagePostTable", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable"]
-			foreach (tablename in t)
-				foreach(table, func in CustomAttributes[tablename])
-					if (tablename in CustomAttributes)
-						CustomAttributes.CleanupFunctionTable(player, table, customattr_function)
+			foreach ( tablename in t )
+				foreach( table, func in CustomAttributes[tablename] )
+					if ( tablename in CustomAttributes )
+						CustomAttributes.CleanupFunctionTable( player, table, customattr_function )
 
 			//cleanup item thinks
-			foreach(item, _ in items)
-				CustomAttributes.CleanupFunctionTable(item, "ItemThinkTable", customattr_function)
+			foreach( item, _ in items )
+				CustomAttributes.CleanupFunctionTable( item, "ItemThinkTable", customattr_function )
 
-			if (!("attribinfo" in scope)) scope.attribinfo <- {}
+			if ( !( "attribinfo" in scope ) ) scope.attribinfo <- {}
 
-			foreach(item, attrs in items)
-			{
-				local wep = PopExtUtil.HasItemInLoadout(player, item)
+			foreach( item, attrs in items ) {
 
-				if (wep == null || !(customattr_function in CustomAttributes.Attrs)) return
+				local wep = PopExtUtil.HasItemInLoadout( player, item )
 
-				CustomAttributes.Attrs[customattr_function](player, items, value)
+				if ( wep == null || !( customattr_function in CustomAttributes.Attrs ) ) return
 
-				CustomAttributes.RefreshDescs(player)
+				CustomAttributes.Attrs[customattr_function]( player, items, value )
 
-				if (PopExtMain.DebugText)
-					foreach(attr, value in attrs)
-						PopExtMain.Error.DebugLog(format("Added custom attribute '%s' to player %d (weapon %d)", customattr_function, player.GetScriptScope().userid, item ? item.entindex() : -1))
+				CustomAttributes.RefreshDescs( player )
+
+				if ( PopExtMain.DebugText )
+					foreach( attr, value in attrs )
+						PopExtMain.Error.DebugLog( format( "Added custom attribute '%s' to player %d ( weapon %d )", customattr_function, player.GetScriptScope().userid, item ? item.entindex() : -1 ) )
 			}
 		}
-		else if ("Attributes" in PopExtItems && attrib in PopExtItems.Attributes)
-		{
-			if ("attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string")
-				PopExtMain.Error.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
-			else
-			{
+		else if ( "Attributes" in PopExtItems && attrib in PopExtItems.Attributes ) {
+
+			if ( "attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string" )
+				PopExtMain.Error.RaiseValueError( "PlayerAttributes", attrib, "Cannot set string attributes!" )
+			else {
+
 				//player attributes
-				if (!item_handle || !(item_handle instanceof CEconEntity))
-					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %.2f, -1)", attrib, value.tofloat()), -1, null, null)
-				else
-				{
+				if ( !item_handle || !( item_handle instanceof CEconEntity ) )
+					EntFireByHandle( player, "RunScriptCode", format( "self.AddCustomAttribute( `%s`, %.2f, -1 )", attrib, value.tofloat() ), -1, null, null )
+				else {
+
 					//custom weapons need their attributes applied immediately
-					if ("CustomWeapons" in scope && item_handle in scope.CustomWeapons)
-					{
-						item_handle.AddAttribute(attrib, value.tofloat(), -1)
+					if ( "CustomWeapons" in scope && item_handle in scope.CustomWeapons ) {
+
+						item_handle.AddAttribute( attrib, value.tofloat(), -1 )
 						item_handle.ReapplyProvision()
 					}
-					else
-					{
+					else {
+
 						// warpaint attributes need the full float value, rest can be truncated for cleaner printouts
 						local formatstr = attrib in specialattribs ?
-							format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()) :
-							format("self.AddAttribute(`%s`, %.2f, -1); self.ReapplyProvision()", attrib, value.tofloat())
-						EntFireByHandle(item_handle, "RunScriptCode", formatstr, -1, null, null)
+							format( "self.AddAttribute( `%s`, %1.8e, -1 ); self.ReapplyProvision()", attrib, value.tofloat() ) :
+							format( "self.AddAttribute( `%s`, %.2f, -1 ); self.ReapplyProvision()", attrib, value.tofloat() )
+						EntFireByHandle( item_handle, "RunScriptCode", formatstr, -1, null, null )
 					}
 				}
 
-				if (attrib in healthattribs)
-					EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
+				if ( attrib in healthattribs )
+					EntFireByHandle( player, "RunScriptCode", "self.SetHealth( self.GetMaxHealth() )", -1, null, null )
 			}
 			//add hidden attributes to our custom attribute display
 			if (
@@ -694,14 +694,14 @@
 				&& "ShowHiddenAttributes" in MissionAttributes.CurAttrs
 				&& MissionAttributes.CurAttrs.ShowHiddenAttributes
 			) {
-				if (!("attribinfo" in scope)) scope.attribinfo <- {}
+				if ( !( "attribinfo" in scope ) ) scope.attribinfo <- {}
 
-				scope.attribinfo[attrib] <- format("%s: %s" attrib, value.tostring())
-				CustomAttributes.RefreshDescs(player)
+				scope.attribinfo[attrib] <- format( "%s: %s" attrib, value.tostring() )
+				CustomAttributes.RefreshDescs( player )
 			}
 		}
 	}
-	function SetPlayerAttributesNoLoop(player, attrib, value, item = null, customwep_force = false) {
+	function SetPlayerAttributesNoLoop( player, attrib, value, item = null, customwep_force = false ) {
 
 		local items = {}
 
@@ -717,89 +717,90 @@
 		local specialattribs = {
 
 			"paintkit_proto_def_index" : function() {
-				value = casti2f(value.tointeger())
+				value = casti2f( value.tointeger() )
 			}
 		}
 
-		if (attrib in specialattribs)
+		if ( attrib in specialattribs )
 			specialattribs[attrib]()
 
-		local item_handle = HasItemInLoadout(player, item)
+		local item_handle = HasItemInLoadout( player, item )
 		local scope = player.GetScriptScope()
 
-		if ( "CustomWeapons" in scope && item_handle in scope.CustomWeapons && !customwep_force )
-		{
-			PopExtMain.Error.DebugLog("Ignoring attributes for custom weapon: " + item)
+		if ( "CustomWeapons" in scope && item_handle in scope.CustomWeapons && !customwep_force ) {
+
+			PopExtMain.Error.DebugLog( "Ignoring attributes for custom weapon: " + item )
 			return
 		}
 
-		if (item_handle && item_handle.IsValid())
+		if ( item_handle && item_handle.IsValid() )
 			items[item_handle] <- [attrib, value]
 		else
-			for (local i = 0; i < GetPropArraySize(player, STRING_NETPROP_MYWEAPONS); i++)
-				if (GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i))
-					items[GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)] <- [attrib, value]
+			for ( local i = 0; i < GetPropArraySize( player, STRING_NETPROP_MYWEAPONS ); i++ )
+				if ( GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i ) )
+					items[GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )] <- [attrib, value]
 
 		//do the customattributes check first, since we replace some vanilla attributes
-		local customattr_function = CustomAttributes.GetAttributeFunctionFromStringName(attrib)
+		local customattr_function = CustomAttributes.GetAttributeFunctionFromStringName( attrib )
 
-		if (customattr_function in CustomAttributes.Attrs)
-		{
+		if ( customattr_function in CustomAttributes.Attrs ) {
+
 			//easy access table in player scope for our items and their attributes
 			scope.CustomAttrItems <- items
 
-			PopExtEvents.AddRemoveEventHook("*", format("%s_%d_*", customattr_function, GetPlayerUserID(player)), null)
+			// wipe out old event hooks
+			PopExtEvents.AddRemoveEventHook( "*", format( "%s_%d_*", customattr_function, GetPlayerUserID( player ) ), null )
 
 			//cleanup item thinks
-			foreach(item, _ in items)
-				CustomAttributes.CleanupFunctionTable(item, "ItemThinkTable", customattr_function)
+			foreach( item, _ in items )
+				CustomAttributes.CleanupFunctionTable( item, "ItemThinkTable", customattr_function )
 
-			if (!("attribinfo" in scope)) scope.attribinfo <- {}
+			if ( !( "attribinfo" in scope ) ) scope.attribinfo <- {}
 
-			foreach(item, attrs in items)
-			{
-				local wep = HasItemInLoadout(player, item)
+			foreach( item, attrs in items ) {
 
-				if (wep == null || !(customattr_function in CustomAttributes.Attrs)) return
+				local wep = HasItemInLoadout( player, item )
 
-				CustomAttributes.Attrs[customattr_function](player, wep, value)
+				if ( wep == null || !( customattr_function in CustomAttributes.Attrs ) ) return
 
-				CustomAttributes.RefreshDescs(player)
+				CustomAttributes.Attrs[customattr_function]( player, wep, value )
 
-				if (PopExtMain.DebugText)
-					foreach(attr, value in attrs)
-						PopExtMain.Error.DebugLog(format("Added custom attribute '%s' to player %d (weapon %d)", customattr_function, player.GetScriptScope().userid, item ? item.entindex() : -1))
+				CustomAttributes.RefreshDescs( player )
+
+				if ( PopExtMain.DebugText )
+					foreach( attr, value in attrs )
+						PopExtMain.Error.DebugLog( format( "Added custom attribute '%s' to player %d ( weapon %d )", customattr_function, player.GetScriptScope().userid, item ? item.entindex() : -1 ) )
 			}
 		}
-		else if ("Attributes" in PopExtItems && attrib in PopExtItems.Attributes)
-		{
-			if ("attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string")
-				PopExtMain.Error.RaiseValueError("PlayerAttributes", attrib, "Cannot set string attributes!")
-			else
-			{
+		else if ( "Attributes" in PopExtItems && attrib in PopExtItems.Attributes ) {
+
+			if ( "attribute_type" in PopExtItems.Attributes[attrib] && PopExtItems.Attributes[attrib]["attribute_type"] == "string" )
+				PopExtMain.Error.RaiseValueError( "PlayerAttributes", attrib, "Cannot set string attributes!" )
+			else {
+
 				//player attributes
-				if (!item_handle || !(item_handle instanceof CEconEntity))
-					EntFireByHandle(player, "RunScriptCode", format("self.AddCustomAttribute(`%s`, %.2f, -1)", attrib, value.tofloat()), -1, null, null)
-				else
-				{
+				if ( !item_handle || !( item_handle instanceof CEconEntity ) )
+					EntFireByHandle( player, "RunScriptCode", format( "self.AddCustomAttribute( `%s`, %.2f, -1 )", attrib, value.tofloat() ), -1, null, null )
+				else {
+
 					//custom weapons need their attributes applied immediately
-					if ( "CustomWeapons" in scope && item_handle in scope.CustomWeapons )
-					{
-						item_handle.AddAttribute(attrib, value.tofloat(), -1)
+					if ( "CustomWeapons" in scope && item_handle in scope.CustomWeapons ) {
+
+						item_handle.AddAttribute( attrib, value.tofloat(), -1 )
 						item_handle.ReapplyProvision()
 					}
-					else
-					{
+					else {
+
 						// warpaint attributes need the full float value, rest can be truncated for cleaner printouts
 						local formatstr = attrib in specialattribs ?
-							format("self.AddAttribute(`%s`, %1.8e, -1); self.ReapplyProvision()", attrib, value.tofloat()) :
-							format("self.AddAttribute(`%s`, %.2f, -1); self.ReapplyProvision()", attrib, value.tofloat())
-						EntFireByHandle(item_handle, "RunScriptCode", formatstr, -1, null, null)
+							format( "self.AddAttribute( `%s`, %1.8e, -1 ); self.ReapplyProvision()", attrib, value.tofloat() ) :
+							format( "self.AddAttribute( `%s`, %.2f, -1 ); self.ReapplyProvision()", attrib, value.tofloat() )
+						EntFireByHandle( item_handle, "RunScriptCode", formatstr, -1, null, null )
 					}
 				}
 
-				if (attrib in healthattribs)
-					EntFireByHandle(player, "RunScriptCode", "self.SetHealth(self.GetMaxHealth())", -1, null, null)
+				if ( attrib in healthattribs )
+					EntFireByHandle( player, "RunScriptCode", "self.SetHealth( self.GetMaxHealth() )", -1, null, null )
 			}
 			//add hidden attributes to our custom attribute display
 			if (
@@ -808,26 +809,26 @@
 				&& "ShowHiddenAttributes" in MissionAttributes.CurAttrs
 				&& MissionAttributes.CurAttrs.ShowHiddenAttributes
 			) {
-				if (!("attribinfo" in scope)) scope.attribinfo <- {}
+				if ( !( "attribinfo" in scope ) ) scope.attribinfo <- {}
 
-				scope.attribinfo[attrib] <- format("%s: %s" attrib, value.tostring())
-				CustomAttributes.RefreshDescs(player)
+				scope.attribinfo[attrib] <- format( "%s: %s" attrib, value.tostring() )
+				CustomAttributes.RefreshDescs( player )
 			}
 		}
 	}
 
-	function WeaponSwitchSlot(player, slot) {
+	function WeaponSwitchSlot( player, slot ) {
 
-		EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player)
+		EntFireByHandle( ClientCommand, "Command", format( "slot%d", slot + 1 ), -1, player, player )
 	}
 
-	function DoExplanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
+	function DoExplanation( message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02 ) {
 
-		local rgb = HexToRgb("FFFF66")
-		local txtent = SpawnEntityFromTable("game_text", {
+		local rgb = HexToRgb( "FFFF66" )
+		local txtent = SpawnEntityFromTable( "game_text", {
 			effect = 2,
 			spawnflags = SF_ENVTEXT_ALLPLAYERS,
-			color = format("%d %d %d", rgb[0], rgb[1], rgb[2]),
+			color = format( "%d %d %d", rgb[0], rgb[1], rgb[2] ),
 			color2 = "255 254 255",
 			fxtime = textScanTime,
 			// holdtime = 5,
@@ -836,83 +837,83 @@
 			channel = 3,
 			x = 0.3,
 			y = 0.3
-		})
-		SetPropBool(txtent, STRING_NETPROP_PURGESTRINGS, true)
-		SetTargetname(txtent, format("__utilExplanationText%d",txtent.entindex()))
+		} )
+		SetPropBool( txtent, STRING_NETPROP_PURGESTRINGS, true )
+		SetTargetname( txtent, format( "__utilExplanationText%d",txtent.entindex() ) )
 		local strarray = []
 
 		//avoid needing to do a ton of function calls for multiple announcements.
-		local newlines = split(message, "|")
+		local newlines = split( message, "|" )
 
-		foreach (n in newlines)
-			if (n.len() > 0) {
-				strarray.append(n)
-				if (!startswith(n, "PAUSE") && !syncChatWithGameText)
-					ClientPrint(null, 3, format("\x07%s %s\x07%s %s", printColor, messagePrefix, TF_COLOR_DEFAULT, n))
+		foreach ( n in newlines )
+			if ( n.len() > 0 ) {
+				strarray.append( n )
+				if ( !startswith( n, "PAUSE" ) && !syncChatWithGameText )
+					ClientPrint( null, 3, format( "\x07%s %s\x07%s %s", printColor, messagePrefix, TF_COLOR_DEFAULT, n ) )
 			}
 
 		local i = -1
 		local textcooldown = 0
 		function ExplanationTextThink() {
-			if (textcooldown > Time()) return
+			if ( textcooldown > Time() ) return
 
 			i++
-			if (i == strarray.len()) {
-				SetPropString(txtent, "m_iszScriptThinkFunction", "")
+			if ( i == strarray.len() ) {
+				SetPropString( txtent, "m_iszScriptThinkFunction", "" )
 
-			//	  DoEntFire("!activator", "SetScriptOverlayMaterial", "", -1, player, player)
+			//	  DoEntFire( "!activator", "SetScriptOverlayMaterial", "", -1, player, player )
 
-				// foreach (player in HumanArray) DoEntFire("command", "Command", "r_screenoverlay vgui/pauling_text", -1, player, player)
+				// foreach ( player in HumanArray ) DoEntFire( "command", "Command", "r_screenoverlay vgui/pauling_text", -1, player, player )
 
-				SetPropString(txtent, "m_iszMessage", "")
-				EntFireByHandle(txtent, "Display", "", -1, null, null)
-				EntFireByHandle(txtent, "Kill", "", 0.1, null, null)
+				SetPropString( txtent, "m_iszMessage", "" )
+				EntFireByHandle( txtent, "Display", "", -1, null, null )
+				EntFireByHandle( txtent, "Kill", "", 0.1, null, null )
 				return
 			}
 			local s = strarray[i]
 
 			//make text display slightly longer depending on string length
 			local delaybetweendisplays = textPrintTime
-			if (delaybetweendisplays == -1) {
+			if ( delaybetweendisplays == -1 ) {
 				delaybetweendisplays = s.len() / 10
-				if (delaybetweendisplays < 2) delaybetweendisplays = 2; else if (delaybetweendisplays > 12) delaybetweendisplays = 12
+				if ( delaybetweendisplays < 2 ) delaybetweendisplays = 2; else if ( delaybetweendisplays > 12 ) delaybetweendisplays = 12
 			}
 
 			//allow for pauses in the announcement
-			if (startswith(s, "PAUSE")) {
-				local pause = split(s, " ")[1].tofloat()
-			//	  DoEntFire("player", "SetScriptOverlayMaterial", "", -1, player, player)
-				SetPropString(txtent, "m_iszMessage", "")
+			if ( startswith( s, "PAUSE" ) ) {
+				local pause = split( s, " " )[1].tofloat()
+			//	  DoEntFire( "player", "SetScriptOverlayMaterial", "", -1, player, player )
+				SetPropString( txtent, "m_iszMessage", "" )
 
-				SetPropInt(txtent, "m_textParms.holdTime", pause)
-				txtent.KeyValueFromInt("holdtime", pause)
+				SetPropInt( txtent, "m_textParms.holdTime", pause )
+				txtent.KeyValueFromInt( "holdtime", pause )
 
-				EntFireByHandle(txtent, "Display", "", -1, null, null)
+				EntFireByHandle( txtent, "Display", "", -1, null, null )
 
 				textcooldown = Time() + pause
 				return 0.033
 			}
 
 			//shits fucked
-			function calculate_x(str) {
+			function calculate_x( str ) {
 				local len = str.len()
-				local t = 1 - (len.tofloat() / 48)
-				local x = 1 * (1 - t)
-				x = (1 - (x / 3)) / 2.1
-				// if (x > 0.5) x = 0.5 else if (x < 0.28) x = 0.28
+				local t = 1 - ( len.tofloat() / 48 )
+				local x = 1 * ( 1 - t )
+				x = ( 1 - ( x / 3 ) ) / 2.1
+				// if ( x > 0.5 ) x = 0.5 else if ( x < 0.28 ) x = 0.28
 				return x
 			}
 
-			SetPropFloat(txtent, "m_textParms.x", calculate_x(s))
-			txtent.KeyValueFromFloat("x", calculate_x(s))
+			SetPropFloat( txtent, "m_textParms.x", calculate_x( s ) )
+			txtent.KeyValueFromFloat( "x", calculate_x( s ) )
 
-			SetPropString(txtent, "m_iszMessage", s)
+			SetPropString( txtent, "m_iszMessage", s )
 
-			SetPropInt(txtent, "m_textParms.holdTime", delaybetweendisplays)
-			txtent.KeyValueFromInt("holdtime", delaybetweendisplays)
+			SetPropInt( txtent, "m_textParms.holdTime", delaybetweendisplays )
+			txtent.KeyValueFromInt( "holdtime", delaybetweendisplays )
 
-			EntFireByHandle(txtent, "Display", "", -1, null, null)
-			if (syncChatWithGameText) ClientPrint(null, 3, format("\x07%s %s\x07%s %s", COLOR_YELLOW, messagePrefix, TF_COLOR_DEFAULT, s))
+			EntFireByHandle( txtent, "Display", "", -1, null, null )
+			if ( syncChatWithGameText ) ClientPrint( null, 3, format( "\x07%s %s\x07%s %s", COLOR_YELLOW, messagePrefix, TF_COLOR_DEFAULT, s ) )
 
 			textcooldown = Time() + delaybetweendisplays
 
@@ -920,35 +921,35 @@
 	   }
 	   txtent.ValidateScriptScope()
 	   txtent.GetScriptScope().ExplanationTextThink <- ExplanationTextThink
-	   AddThinkToEnt(txtent, "ExplanationTextThink")
+	   AddThinkToEnt( txtent, "ExplanationTextThink" )
 	}
 
 	// LEGACY: keeping this around since some archive missions use it
-	function IsAlive(player) {
-		PopExtMain.Error.DeprecationWarning("PopExtUtil.IsAlive(player)", "player.IsAlive()")
+	function IsAlive( player ) {
+		PopExtMain.Error.DeprecationWarning( "PopExtUtil.IsAlive( player )", "player.IsAlive()" )
 		return player.IsAlive()
 	}
 
-	function IsDucking(player) {
+	function IsDucking( player ) {
 		return player.GetFlags() & FL_DUCKING
 	}
 
-	function IsOnGround(player) {
+	function IsOnGround( player ) {
 		return player.GetFlags() & FL_ONGROUND
 	}
 
-	function RemoveAmmo(player) {
+	function RemoveAmmo( player ) {
 		for ( local i = 0; i < 32; i++ ) {
-			SetPropIntArray(player, "m_iAmmo", 0, i)
+			SetPropIntArray( player, "m_iAmmo", 0, i )
 		}
 	}
 	function GetAllEnts() {
 		local entlist = []
 		local numents = 0
 
-		for (local i = MAX_CLIENTS, ent; i <= MAX_EDICTS; i++) {
-			if (ent = EntIndexToHScript(i)) {
-				entlist.append(ent)
+		for ( local i = MAX_CLIENTS, ent; i <= MAX_EDICTS; i++ ) {
+			if ( ent = EntIndexToHScript( i ) ) {
+				entlist.append( ent )
 				numents++
 			}
 		}
@@ -957,18 +958,18 @@
 	}
 
 	//sets m_hOwnerEntity and m_hOwner to the same value
-	function _SetOwner(ent, owner) {
+	function _SetOwner( ent, owner ) {
 		//incase we run into an ent that for some reason uses both of these netprops for two different entities
-		if (ent.GetOwner() != null && GetPropEntity(ent, "m_hOwnerEntity") != null && ent.GetOwner() != GetPropEntity(ent, "m_hOwner"))
-		{
-			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
-			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
-			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
-			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
-			PopExtMain.Error.GenericWarning("m_hOwnerEntity is "+GetPropEntity(ent, "m_hOwnerEntity")+" but m_hOwner is "+ent.GetOwner())
+		if ( ent.GetOwner() != null && GetPropEntity( ent, "m_hOwnerEntity" ) != null && ent.GetOwner() != GetPropEntity( ent, "m_hOwner" ) ) {
+
+			PopExtMain.Error.GenericWarning( "m_hOwnerEntity is "+GetPropEntity( ent, "m_hOwnerEntity" )+" but m_hOwner is "+ent.GetOwner() )
+			PopExtMain.Error.GenericWarning( "m_hOwnerEntity is "+GetPropEntity( ent, "m_hOwnerEntity" )+" but m_hOwner is "+ent.GetOwner() )
+			PopExtMain.Error.GenericWarning( "m_hOwnerEntity is "+GetPropEntity( ent, "m_hOwnerEntity" )+" but m_hOwner is "+ent.GetOwner() )
+			PopExtMain.Error.GenericWarning( "m_hOwnerEntity is "+GetPropEntity( ent, "m_hOwnerEntity" )+" but m_hOwner is "+ent.GetOwner() )
+			PopExtMain.Error.GenericWarning( "m_hOwnerEntity is "+GetPropEntity( ent, "m_hOwnerEntity" )+" but m_hOwner is "+ent.GetOwner() )
 		}
-		ent.SetOwner(owner)
-		SetPropEntity(ent, "m_hOwner", owner)
+		ent.SetOwner( owner )
+		SetPropEntity( ent, "m_hOwner", owner )
 	}
 
 	/**
@@ -977,88 +978,88 @@
 	 * @param table args        Annotation settings.
 	 *
 	 * Example usage:
-	 *  PopExtUtil.ShowAnnotation({
+	 *  PopExtUtil.ShowAnnotation( {
 	 *      text = `Defend the hatch!`
-	 *      entity = Entities.FindByModel(null, `models/props_mvm/mann_hatch.mdl`)
-	 *      //pos = Vector(-64.0, -1984.0, 446.5)
+	 *      entity = Entities.FindByModel( null, `models/props_mvm/mann_hatch.mdl` )
+	 *      //pos = Vector( -64.0, -1984.0, 446.5 )
 	 *      lifetime = 5.0
 	 *      distance = true
 	 *      sound = `ui/hint.wav`
 	 *      players = [GetListenServerHost()]
-	 *  })
+	 *  } )
 	 *
 	 * ALL AVAILABLE ARGUMENTS:
-	 *  text    (string): Annotation message to display.
+	 *  text    ( string ): Annotation message to display.
 	 *    Defaults to "This is an annotation."
 	 *
-	 *  lifetime (float): Duration to display the annotation for in seconds.
+	 *  lifetime ( float ): Duration to display the annotation for in seconds.
 	 *    Defaults to 10 seconds.
 	 *    Pass -1.0 to make the annotation fade in and display forever.
 	 *
-	 *  sound   (string): Sound to play when the annotation is shown.
+	 *  sound   ( string ): Sound to play when the annotation is shown.
 	 *    Must be a raw sound, SoundScripts will not work.
 	 *    Defaults to no sound.
 	 *
-	 *  distance  (bool): Display the distance between the player and the annotation.
+	 *  distance  ( bool ): Display the distance between the player and the annotation.
 	 *    Defaults to false.
 	 *
-	 *  id     (integer): Annotation ID.
+	 *  id     ( integer ): Annotation ID.
 	 *    Annotations must have a unique ID to display multiple simultaneously.
 	 *    Defaults to 0.
 	 *
-	 *  entity  (handle): Entity this annotation should follow. (Default: None)
+	 *  entity  ( handle ): Entity this annotation should follow. ( Default: None )
 	 *    Overrides "pos" and "normal" arguments.
 	 *    Note that the entity must be networked to the client for this argument to work.a
 	 *
-	 *  pos     (Vector): Annotation position in the world.
-	 *    Defaults to the world origin (Vector(0, 0, 0)).
+	 *  pos     ( Vector ): Annotation position in the world.
+	 *    Defaults to the world origin ( Vector( 0, 0, 0 ) ).
 	 *
-	 *  ping      (bool): Display a green in-world ping under the annotation as it appears.
+	 *  ping      ( bool ): Display a green in-world ping under the annotation as it appears.
 	 *    Defaults to false.
 	 *
-	 *  normal  (Vector): Relative ping effect offset from the animation.
+	 *  normal  ( Vector ): Relative ping effect offset from the animation.
 	 *    Requires "ping" to be set to true.
 	 *    Defaults to no offset.
 	 *
-	 *  players  (array): Players handles that are allowed to see the annotation.
+	 *  players  ( array ): Players handles that are allowed to see the annotation.
 	 *    Overrides "visbit" argument.
 	 *    Defaults visibility to all players when left empty.
 	 *
-	 *  visbit (integer): Bitfield that controls which players can see the annotation.
+	 *  visbit ( integer ): Bitfield that controls which players can see the annotation.
 	 *    Can be used for manual bitfield input instead of using the "players" array.
 	 *    Defaults visibility to all players.
 	 *    Note that it is only possible to filter annotations to the first 32/64 players depending on the server's _intsize_.
 	 *      TODO: This is untested; it may be the case that only the first 32 players may be targeted even on a 64-bit server.
 	 **/
-	function ShowAnnotation(args = {}) {
+	function ShowAnnotation( args = {} ) {
 
-		if (!("pos" in args))
+		if ( !( "pos" in args ) )
 			args.pos <- Vector()
 
-		if (!("normal" in args))
+		if ( !( "normal" in args ) )
 			args.normal <- Vector()
 		else
 			// Normal offset is normally 20x the input value, so we correct it here.
 			args.normal *= 0.05
 
-		if ("players" in args && args.players.len() > 0) {
+		if ( "players" in args && args.players.len() > 0 ) {
 			// Create visibility bitfield from passed player handles.
 			args.visbit <- 0
 
-			foreach (p in args.players)
-				if (p && p.IsValid())
-					args.visbit = args.visbit | (1 << p.entindex())
+			foreach ( p in args.players )
+				if ( p && p.IsValid() )
+					args.visbit = args.visbit | ( 1 << p.entindex() )
 
 			// visibilityBitfield == 0 causes the annotation to show to everyone, we override that
 			//  here otherwise "players = [<nullptr>]" would show to everyone.
-			if (args.visbit == 0) return
+			if ( args.visbit == 0 ) return
 		}
 
 		// "entindex" and "effect" arguments are only supported for legacy compatiability.
-		if ("entity" in args) args.entindex <- args.entity.entindex()
-		if ("ping" in args) args.effect <- args.ping
+		if ( "entity" in args ) args.entindex <- args.entity.entindex()
+		if ( "ping" in args ) args.effect <- args.ping
 
-		SendGlobalGameEvent("show_annotation", {
+		SendGlobalGameEvent( "show_annotation", {
 			text 			   = "text" in args ? args.text : "This is an annotation."
 			lifetime 		   = "lifetime" in args ? args.lifetime : 10.0
 			worldPosX 		   = args.pos.x
@@ -1073,45 +1074,45 @@
 			worldNormalX 	   = args.normal.x
 			worldNormalY 	   = args.normal.y
 			worldNormalZ 	   = args.normal.z
-		})
+		} )
 	}
 
 	// Hides a currently displaying training annotation by ID.
-	function HideAnnotation(id = 0) {
-		SendGlobalGameEvent("hide_annotation", {id = id})
+	function HideAnnotation( id = 0 ) {
+		SendGlobalGameEvent( "hide_annotation", {id = id} )
 	}
 
-	function TrainingHUD(title, text, duration = 5.0) {
+	function TrainingHUD( title, text, duration = 5.0 ) {
 
-		EntFire("func_upgradestation", "Disable")
+		EntFire( "func_upgradestation", "Disable" )
 
-		local tutorial_text = CreateByClassname("tf_logic_training_mode")
+		local tutorial_text = CreateByClassname( "tf_logic_training_mode" )
 
-		SetPropBool(GameRules, "m_bIsInTraining", true)
-		SetPropBool(GameRules, "m_bAllowTrainingAchievements", true)
+		SetPropBool( GameRules, "m_bIsInTraining", true )
+		SetPropBool( GameRules, "m_bAllowTrainingAchievements", true )
 
-		tutorial_text.AcceptInput("ShowTrainingHUD","", null, null)
-		tutorial_text.AcceptInput("ShowTrainingObjective", title, null, null)
-		tutorial_text.AcceptInput("ShowTrainingMsg", text, null, null)
+		tutorial_text.AcceptInput( "ShowTrainingHUD","", null, null )
+		tutorial_text.AcceptInput( "ShowTrainingObjective", title, null, null )
+		tutorial_text.AcceptInput( "ShowTrainingMsg", text, null, null )
 		tutorial_text.Kill()
 
-		Convars.SetValue("hide_server", 0)
+		Convars.SetValue( "hide_server", 0 )
 
-		EntFireByHandle(GameRules, "RunScriptCode", "SetPropBool(self, `m_bIsInTraining`, false)", duration, null, null)
+		EntFireByHandle( GameRules, "RunScriptCode", "SetPropBool( self, `m_bIsInTraining`, false )", duration, null, null )
 
-		EntFire("func_upgradestation", "Enable", "", duration)
+		EntFire( "func_upgradestation", "Enable", "", duration )
 	}
 
-	function GetPlayerName(player) {
-		return GetPropString(player, "m_szNetname")
+	function GetPlayerName( player ) {
+		return GetPropString( player, "m_szNetname" )
 	}
 
-	function SetPlayerName(player,	name) {
-		return SetPropString(player, "m_szNetname", name)
+	function SetPlayerName( player,	name ) {
+		return SetPropString( player, "m_szNetname", name )
 	}
 
-	function GetPlayerUserID(player) {
-		return GetPropIntArray(PlayerManager, "m_iUserID", player.entindex()) //TODO replace PlayerManager with the actual entity name
+	function GetPlayerUserID( player ) {
+		return GetPropIntArray( PlayerManager, "m_iUserID", player.entindex() ) //TODO replace PlayerManager with the actual entity name
 	}
 
 	// why
@@ -1119,102 +1120,102 @@
 		self.ForceRegenerateAndRespawn()
 	}
 
-	function DisableCloak(player) {
+	function DisableCloak( player ) {
 		// High Number to Prevent Player from Cloaking
-		SetPropFloat(player, "m_Shared.m_flStealthNextChangeTime", Time() * INT_MAX)
+		SetPropFloat( player, "m_Shared.m_flStealthNextChangeTime", Time() * INT_MAX )
 	}
 
-	function InUpgradeZone(player) {
-		return GetPropBool(player, "m_Shared.m_bInUpgradeZone")
+	function InUpgradeZone( player ) {
+		return GetPropBool( player, "m_Shared.m_bInUpgradeZone" )
 	}
 
-	function InButton(player, button) {
-		return (GetPropInt(player, "m_nButtons") & button)
+	function InButton( player, button ) {
+		return ( GetPropInt( player, "m_nButtons" ) & button )
 	}
 
-	function PressButton(player, button, duration = -1) {
-		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") | button)
-		SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") | button)
+	function PressButton( player, button, duration = -1 ) {
+		SetPropInt( player, "m_afButtonForced", GetPropInt( player, "m_afButtonForced" ) | button )
+		SetPropInt( player, "m_nButtons", GetPropInt( player, "m_nButtons" ) | button )
 
-		if (duration != -1)
-			PlayerScriptEntFire(player, format("PopExtUtil.ReleaseButton(self, %d)", button), duration)
+		if ( duration != -1 )
+			PlayerScriptEntFire( player, format( "PopExtUtil.ReleaseButton( self, %d )", button ), duration )
 	}
-	function ReleaseButton(player, button) {
-		SetPropInt(player, "m_afButtonForced", GetPropInt(player, "m_afButtonForced") & ~button)
-		SetPropInt(player, "m_nButtons", GetPropInt(player, "m_nButtons") & ~button)
+	function ReleaseButton( player, button ) {
+		SetPropInt( player, "m_afButtonForced", GetPropInt( player, "m_afButtonForced" ) & ~button )
+		SetPropInt( player, "m_nButtons", GetPropInt( player, "m_nButtons" ) & ~button )
 	}
 
 	//LEGACY: use IsPointInTrigger instead
-	function IsPointInRespawnRoom(point) {
+	function IsPointInRespawnRoom( point ) {
 
-		PopExtMain.Error.DeprecationWarning("PopExtUtil.IsPointInRespawnRoom", "PopExtUtil.IsPointInTrigger")
+		PopExtMain.Error.DeprecationWarning( "PopExtUtil.IsPointInRespawnRoom", "PopExtUtil.IsPointInTrigger" )
 
 		local triggers = []
-		for (local trigger; trigger = FindByClassname(trigger, "func_respawnroom");)
-		{
-			trigger.SetCollisionGroup(0)
-			trigger.RemoveSolidFlags(4) // FSOLID_NOT_SOLID
-			triggers.append(trigger)
+		for ( local trigger; trigger = FindByClassname( trigger, "func_respawnroom" ); ) {
+
+			trigger.SetCollisionGroup( 0 )
+			trigger.RemoveSolidFlags( 4 ) // FSOLID_NOT_SOLID
+			triggers.append( trigger )
 		}
 
-		local trace =
-		{
+		local trace = {
+
 			start = point,
 			end = point,
 			mask = 0
 		}
-		TraceLineEx(trace)
+		TraceLineEx( trace )
 
-		foreach (trigger in triggers)
-		{
-			trigger.SetCollisionGroup(25) // special collision group used by respawnrooms only
-			trigger.AddSolidFlags(4) // FSOLID_NOT_SOLID
+		foreach ( trigger in triggers ) {
+
+			trigger.SetCollisionGroup( 25 ) // special collision group used by respawnrooms only
+			trigger.AddSolidFlags( 4 ) // FSOLID_NOT_SOLID
 		}
 
 		return trace.hit && trace.enthit.GetClassname() == "func_respawnroom"
 	}
 
-	function IsPointInTrigger(point, classname = "func_respawnroom") {
+	function IsPointInTrigger( point, classname = "func_respawnroom" ) {
 
 		local triggers = []
-		for (local trigger; trigger = FindByClassname(trigger, classname);)
-		{
-			if (classname == "func_respawnroom")
-				trigger.SetCollisionGroup(COLLISION_GROUP_NONE)
+		for ( local trigger; trigger = FindByClassname( trigger, classname ); ) {
 
-			trigger.RemoveSolidFlags(4) // FSOLID_NOT_SOLID
-			triggers.append(trigger)
+			if ( classname == "func_respawnroom" )
+				trigger.SetCollisionGroup( COLLISION_GROUP_NONE )
+
+			trigger.RemoveSolidFlags( 4 ) // FSOLID_NOT_SOLID
+			triggers.append( trigger )
 		}
 
-		local trace =
-		{
+		local trace = {
+
 			start = point,
 			end = point,
 			mask = 0
 		}
-		TraceLineEx(trace)
+		TraceLineEx( trace )
 
-		foreach (trigger in triggers)
-		{
-			if (classname == "func_respawnroom")
-				trigger.SetCollisionGroup(TFCOLLISION_GROUP_RESPAWNROOMS)
+		foreach ( trigger in triggers ) {
 
-			trigger.AddSolidFlags(FSOLID_NOT_SOLID) // FSOLID_NOT_SOLID
+			if ( classname == "func_respawnroom" )
+				trigger.SetCollisionGroup( TFCOLLISION_GROUP_RESPAWNROOMS )
+
+			trigger.AddSolidFlags( FSOLID_NOT_SOLID ) // FSOLID_NOT_SOLID
 		}
 
 		return trace.hit && trace.enthit.GetClassname() == classname
 	}
 
-	function SwitchWeaponSlot(player, slot) {
-		EntFireByHandle(ClientCommand, "Command", format("slot%d", slot + 1), -1, player, player)
+	function SwitchWeaponSlot( player, slot ) {
+		EntFireByHandle( ClientCommand, "Command", format( "slot%d", slot + 1 ), -1, player, player )
 	}
 
-	function GetItemInSlot(player, slot) {
+	function GetItemInSlot( player, slot ) {
 
 		local item
-		for (local i = 0; i < SLOT_COUNT; i++) {
-			local wep = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)
-			if ( wep == null || wep.GetSlot() != slot) continue
+		for ( local i = 0; i < SLOT_COUNT; i++ ) {
+			local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
+			if ( wep == null || wep.GetSlot() != slot ) continue
 
 			item = wep
 			break
@@ -1222,184 +1223,184 @@
 		return item
 	}
 
-	function SwitchToFirstValidWeapon(player) {
+	function SwitchToFirstValidWeapon( player ) {
 
-		for (local i = 0; i < SLOT_COUNT; i++) {
-			local wep = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)
+		for ( local i = 0; i < SLOT_COUNT; i++ ) {
+			local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
 			if ( wep == null ) continue
 
-			player.Weapon_Switch(wep)
+			player.Weapon_Switch( wep )
 			return wep
 		}
 	}
 
-	function HasEffect(ent, value) {
-		return GetPropInt(ent, "m_fEffects") == value
+	function HasEffect( ent, value ) {
+		return GetPropInt( ent, "m_fEffects" ) == value
 	}
 
-	function SetEffect(ent, value) {
-		SetPropInt(ent, "m_fEffects", value)
+	function SetEffect( ent, value ) {
+		SetPropInt( ent, "m_fEffects", value )
 	}
 
 	// OBSOLETE: Use PlayerBonemergeModel instead
 	// misleading name, this can accept any model
 	// previously was only used for popext_usehumananimations
-	function PlayerRobotModel(player, model) {
+	function PlayerRobotModel( player, model ) {
 
-		PopExtMain.Error.DeprecationWarning("PopExtUtil.PlayerRobotModel", "PopExtUtil.PlayerBonemergeModel")
+		PopExtMain.Error.DeprecationWarning( "PopExtUtil.PlayerRobotModel", "PopExtUtil.PlayerBonemergeModel" )
 
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
-		local wearable = CreateByClassname("tf_wearable")
-		SetPropString(wearable, "m_iName", "__util_bonemerge_model")
-		SetPropInt(wearable, "m_nModelIndex", PrecacheModel(model))
-		SetPropBool(wearable, STRING_NETPROP_ATTACH, true)
-		SetPropEntity(wearable, "m_hOwnerEntity", player)
-		wearable.SetTeam(player.GetTeam())
-		wearable.SetOwner(player)
-		DispatchSpawn(wearable)
-		EntFireByHandle(wearable, "SetParent", "!activator", -1, player, player)
-		SetPropInt(wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL)
+		local wearable = CreateByClassname( "tf_wearable" )
+		SetPropString( wearable, "m_iName", "__util_bonemerge_model" )
+		SetPropInt( wearable, "m_nModelIndex", PrecacheModel( model ) )
+		SetPropBool( wearable, STRING_NETPROP_ATTACH, true )
+		SetPropEntity( wearable, "m_hOwnerEntity", player )
+		wearable.SetTeam( player.GetTeam() )
+		wearable.SetOwner( player )
+		DispatchSpawn( wearable )
+		EntFireByHandle( wearable, "SetParent", "!activator", -1, player, player )
+		SetPropInt( wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL )
 		scope.wearable <- wearable
 
-		SetPropInt(player, "m_nRenderMode", kRenderTransColor)
-		SetPropInt(player, "m_clrRender", 0)
+		SetPropInt( player, "m_nRenderMode", kRenderTransColor )
+		SetPropInt( player, "m_clrRender", 0 )
 
 		scope.PlayerThinkTable.BotModelThink <- function() {
-			if (wearable.IsValid() && (player.IsTaunting() || wearable.GetMoveParent() != player))
-				wearable.AcceptInput("SetParent", "!activator", player, player)
+			if ( wearable.IsValid() && ( player.IsTaunting() || wearable.GetMoveParent() != player ) )
+				wearable.AcceptInput( "SetParent", "!activator", player, player )
 			return -1
 		}
 	}
 
-	function PlayerBonemergeModel(player, model) {
+	function PlayerBonemergeModel( player, model ) {
 
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
-		if ("bonemerge_model" in scope && scope.bonemerge_model && scope.bonemerge_model.IsValid())
+		if ( "bonemerge_model" in scope && scope.bonemerge_model && scope.bonemerge_model.IsValid() )
 			scope.bonemerge_model.Kill()
 
-		local bonemerge_model = CreateByClassname("tf_wearable")
-		SetPropString(bonemerge_model, "m_iName", "__util_bonemerge_model")
-		SetPropInt(bonemerge_model, "m_nModelIndex", PrecacheModel(model))
-		SetPropBool(bonemerge_model, STRING_NETPROP_ATTACH, true)
-		SetPropEntity(bonemerge_model, "m_hOwner", player)
-		bonemerge_model.SetTeam(player.GetTeam())
-		bonemerge_model.SetOwner(player)
-		DispatchSpawn(bonemerge_model)
-		EntFireByHandle(bonemerge_model, "SetParent", "!activator", -1, player, player)
-		SetPropInt(bonemerge_model, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL)
+		local bonemerge_model = CreateByClassname( "tf_wearable" )
+		SetPropString( bonemerge_model, "m_iName", "__util_bonemerge_model" )
+		SetPropInt( bonemerge_model, "m_nModelIndex", PrecacheModel( model ) )
+		SetPropBool( bonemerge_model, STRING_NETPROP_ATTACH, true )
+		SetPropEntity( bonemerge_model, "m_hOwner", player )
+		bonemerge_model.SetTeam( player.GetTeam() )
+		bonemerge_model.SetOwner( player )
+		DispatchSpawn( bonemerge_model )
+		EntFireByHandle( bonemerge_model, "SetParent", "!activator", -1, player, player )
+		SetPropInt( bonemerge_model, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL )
 		scope.bonemerge_model <- bonemerge_model
 
-		SetPropInt(player, "m_nRenderMode", kRenderTransColor)
-		SetPropInt(player, "m_clrRender", 0)
+		SetPropInt( player, "m_nRenderMode", kRenderTransColor )
+		SetPropInt( player, "m_clrRender", 0 )
 
 		scope.PlayerThinkTable.BonemergeModelThink <- function() {
 
-			if (bonemerge_model.IsValid() && (player.IsTaunting() || bonemerge_model.GetMoveParent() != player))
-				bonemerge_model.AcceptInput("SetParent", "!activator", player, player)
+			if ( bonemerge_model.IsValid() && ( player.IsTaunting() || bonemerge_model.GetMoveParent() != player ) )
+				bonemerge_model.AcceptInput( "SetParent", "!activator", player, player )
 			return -1
 		}
 	}
 
-	function PlayerSequence(player, sequence, model_override = "", playbackrate = 1.0, freeze_player = false, thirdperson = false) {
+	function PlayerSequence( player, sequence, model_override = "", playbackrate = 1.0, freeze_player = false, thirdperson = false ) {
 
-		SetPropInt(player, "m_nRenderMode", kRenderTransColor)
-		SetPropInt(player, "m_clrRender", 0)
+		SetPropInt( player, "m_nRenderMode", kRenderTransColor )
+		SetPropInt( player, "m_clrRender", 0 )
 		local scope = player.GetScriptScope()
 
 		local has_bonemerge_model = "bonemerge_model" in scope && scope.bonemerge_model && scope.bonemerge_model.IsValid()
 
-		local dummy = CreateByClassname("funCBaseFlex")
-		dummy.KeyValueFromString("targetname", format("__util_sequence_dummy%d", player.entindex()))
+		local dummy = CreateByClassname( "funCBaseFlex" )
+		dummy.KeyValueFromString( "targetname", format( "__util_sequence_dummy%d", player.entindex() ) )
 
 		// SetModelSimple is more expensive but handles precaching and refreshes bone cache automatically
-		if (model_override != "")
-			dummy.SetModelSimple(model_override)
+		if ( model_override != "" )
+			dummy.SetModelSimple( model_override )
 		else
-			dummy.SetModel(has_bonemerge_model ? scope.bonemerge_model.GetModelName() : player.GetModelName())
+			dummy.SetModel( has_bonemerge_model ? scope.bonemerge_model.GetModelName() : player.GetModelName() )
 
-		dummy.SetAbsOrigin(player.GetOrigin())
-		dummy.SetSkin(player.GetSkin())
-		dummy.SetAbsAngles(QAngle(0, player.EyeAngles().y, 0))
+		dummy.SetAbsOrigin( player.GetOrigin() )
+		dummy.SetSkin( player.GetSkin() )
+		dummy.SetAbsAngles( QAngle( 0, player.EyeAngles().y, 0 ) )
 
-		DispatchSpawn(dummy)
-		dummy.AcceptInput("SetParent", "!activator", player, player)
+		DispatchSpawn( dummy )
+		dummy.AcceptInput( "SetParent", "!activator", player, player )
 
-		dummy.ResetSequence(typeof(sequence) == "string" ? dummy.LookupSequence(sequence) : sequence)
-		dummy.SetPlaybackRate(playbackrate)
+		dummy.ResetSequence( typeof sequence == "string" ? dummy.LookupSequence( sequence ) : sequence )
+		dummy.SetPlaybackRate( playbackrate )
 
 		dummy.ValidateScriptScope()
 		dummy.GetScriptScope().PlaySequenceThink <- function() {
 
 			// kv origin/angles are smoothly interpolated, SetOrigin/SetAngles may look choppy in comparison
-			dummy.KeyValueFromVector("origin", player.GetOrigin())
-			dummy.KeyValueFromString("angles", player.GetAbsAngles().ToKVString())
+			dummy.KeyValueFromVector( "origin", player.GetOrigin() )
+			dummy.KeyValueFromString( "angles", player.GetAbsAngles().ToKVString() )
 
-			if (GetPropFloat(dummy, "m_flCycle") >= 0.99)
-			{
-				SetPropInt(player, "m_clrRender", 0xFFFFFFFF)
-				if (freeze_player) LockInPlace(player, false)
-				if (thirdperson) player.AcceptInput("SetForcedTauntCam", "0", null, null)
-				if (dummy.IsValid()) dummy.Kill()
+			if ( GetPropFloat( dummy, "m_flCycle" ) >= 0.99 ) {
+
+				SetPropInt( player, "m_clrRender", 0xFFFFFFFF )
+				if ( freeze_player ) LockInPlace( player, false )
+				if ( thirdperson ) player.AcceptInput( "SetForcedTauntCam", "0", null, null )
+				if ( dummy.IsValid() ) dummy.Kill()
 				return // no -1 think to avoid null instance errors
 			}
 			dummy.StudioFrameAdvance()
 			return -1
 		}
-		AddThinkToEnt(dummy, "PlaySequenceThink")
-		if (freeze_player) LockInPlace(player)
-		if (thirdperson) player.AcceptInput("SetForcedTauntCam", "1", null, null)
+		AddThinkToEnt( dummy, "PlaySequenceThink" )
+		if ( freeze_player ) LockInPlace( player )
+		if ( thirdperson ) player.AcceptInput( "SetForcedTauntCam", "1", null, null )
 	}
 
-	function HasItemInLoadout(player, index) {
+	function HasItemInLoadout( player, index ) {
 
 		local t = null
 
-		for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer()) {
+		for ( local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer() ) {
 			if (
 				child == index
 				|| child.GetClassname() == index
-				|| GetItemIndex(child) == index
-				|| (index in PopExtItems && GetItemIndex(child) == PopExtItems[index].id)
+				|| GetItemIndex( child ) == index
+				|| ( index in PopExtItems && GetItemIndex( child ) == PopExtItems[index].id )
 			) {
 				t = child
 				break
 			}
 		}
 
-		if (t != null) return t
+		if ( t != null ) return t
 
 		//didn't find weapon in children, go through m_hMyWeapons instead
-		for (local i = 0; i < SLOT_COUNT; i++) {
-			local wep = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)
+		for ( local i = 0; i < SLOT_COUNT; i++ ) {
+			local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
 
-			if (!wep || !wep.IsValid()) continue
+			if ( !wep || !wep.IsValid() ) continue
 
 			if (
 				wep == index
 				|| wep.GetClassname() == index
-				|| GetItemIndex(wep) == index
-				|| (index in PopExtItems && GetItemIndex(wep) == PopExtItems[index].id)
+				|| GetItemIndex( wep ) == index
+				|| ( index in PopExtItems && GetItemIndex( wep ) == PopExtItems[index].id )
 			) {
 				t = wep
 				break
 			}
 		}
-		if (t != null) return t
+		if ( t != null ) return t
 
 		// check for custom weapons
 		// only accepts weapon handle or weapon string name
 		local scope = player.GetScriptScope()
-		if ("CustomWeapons" in scope) {
-			foreach (wep, v in scope.CustomWeapons)
-			{
-				if (wep == "worldmodel") continue
+		if ( "CustomWeapons" in scope ) {
+			foreach ( wep, v in scope.CustomWeapons ) {
 
-				if (wep == index || v.name == index)
-				{
+				if ( wep == "worldmodel" ) continue
+
+				if ( wep == index || v.name == index ) {
+
 					t = wep
 					break
 				}
@@ -1408,467 +1409,467 @@
 		return t
 	}
 	// This was made before StunPlayer was exposed, however StunPlayer doesn't control m_bStunEffects like this does.
-	function StunPlayer(player, duration = 5, type = 1, delay = 0, speedreduce = 0.5, scared = false) {
+	function StunPlayer( player, duration = 5, type = 1, delay = 0, speedreduce = 0.5, scared = false ) {
 
-		local utilstun = CreateByClassname("trigger_stun")
+		local utilstun = CreateByClassname( "trigger_stun" )
 
-		utilstun.KeyValueFromString("targetname", "__utilstun")
-		utilstun.KeyValueFromInt("stun_type", type)
-		utilstun.KeyValueFromInt("stun_effects", scared.tointeger())
-		utilstun.KeyValueFromFloat("stun_duration", duration.tofloat())
-		utilstun.KeyValueFromFloat("move_speed_reduction", speedreduce.tofloat())
-		utilstun.KeyValueFromFloat("trigger_delay", delay.tofloat())
-		utilstun.KeyValueFromInt("spawnflags", SF_TRIGGER_ALLOW_CLIENTS)
+		utilstun.KeyValueFromString( "targetname", "__utilstun" )
+		utilstun.KeyValueFromInt( "stun_type", type )
+		utilstun.KeyValueFromInt( "stun_effects", scared.tointeger() )
+		utilstun.KeyValueFromFloat( "stun_duration", duration.tofloat() )
+		utilstun.KeyValueFromFloat( "move_speed_reduction", speedreduce.tofloat() )
+		utilstun.KeyValueFromFloat( "trigger_delay", delay.tofloat() )
+		utilstun.KeyValueFromInt( "spawnflags", SF_TRIGGER_ALLOW_CLIENTS )
 
-		DispatchSpawn(utilstun)
+		DispatchSpawn( utilstun )
 
-		utilstun.AcceptInput("EndTouch", "", player, player)
+		utilstun.AcceptInput( "EndTouch", "", player, player )
 		utilstun.Kill()
 	}
 
-	function Ignite(player, duration = 10.0, damage = 1) {
+	function Ignite( player, duration = 10.0, damage = 1 ) {
 
-		local utilignite = FindByName(null, "__utilignite")
-		if (utilignite == null)
-		{
-			utilignite = SpawnEntityFromTable("trigger_ignite", {
+		local utilignite = FindByName( null, "__utilignite" )
+		if ( utilignite == null ) {
+
+			utilignite = SpawnEntityFromTable( "trigger_ignite", {
 				targetname = "__utilignite"
 				burn_duration = duration
 				damage = damage
 				spawnflags = SF_TRIGGER_ALLOW_CLIENTS
-			})
+			} )
 		}
-		EntFireByHandle(utilignite, "StartTouch", "", -1, player, player)
-		EntFireByHandle(utilignite, "EndTouch", "", SINGLE_TICK, player, player)
+		EntFireByHandle( utilignite, "StartTouch", "", -1, player, player )
+		EntFireByHandle( utilignite, "EndTouch", "", SINGLE_TICK, player, player )
 	}
 
-	function ShowHudHint(text = "This is a hud hint", player = null, duration = 5.0) {
+	function ShowHudHint( text = "This is a hud hint", player = null, duration = 5.0 ) {
 
-		local hudhint = FindByName(null, "__utilhudhint")
+		local hudhint = FindByName( null, "__utilhudhint" )
 
 		local flags = player == null ? 1 : 0
 
-		if (!hudhint) hudhint = SpawnEntityFromTable("env_hudhint", { targetname = "__utilhudhint", spawnflags = flags, message = text })
+		if ( !hudhint ) hudhint = SpawnEntityFromTable( "env_hudhint", { targetname = "__utilhudhint", spawnflags = flags, message = text } )
 
-		hudhint.KeyValueFromString("message", text)
+		hudhint.KeyValueFromString( "message", text )
 
-		EntFireByHandle(hudhint, "ShowHudHint", "", -1, player, player)
-		EntFireByHandle(hudhint, "HideHudHint", "", duration, player, player)
+		EntFireByHandle( hudhint, "ShowHudHint", "", -1, player, player )
+		EntFireByHandle( hudhint, "HideHudHint", "", duration, player, player )
 	}
 
-	function ShowHintMessage(message) {
-		SendGlobalGameEvent("player_hintmessage", {hintmessage = message})
+	function ShowHintMessage( message ) {
+		SendGlobalGameEvent( "player_hintmessage", {hintmessage = message} )
 	}
 
-	function SetEntityColor(entity, r, g, b, a) {
-		local color = (r) | (g << 8) | (b << 16) | (a << 24)
-		SetPropInt(entity, "m_clrRender", color)
+	function SetEntityColor( entity, r, g, b, a ) {
+		local color = ( r ) | ( g << 8 ) | ( b << 16 ) | ( a << 24 )
+		SetPropInt( entity, "m_clrRender", color )
 	}
 
-	function GetEntityColor(entity) {
-		local color = GetPropInt(entity, "m_clrRender")
+	function GetEntityColor( entity ) {
+		local color = GetPropInt( entity, "m_clrRender" )
 		local clr = {}
 		clr.r <- color & 0xFF
-		clr.g <- (color >> 8) & 0xFF
-		clr.b <- (color >> 16) & 0xFF
-		clr.a <- (color >> 24) & 0xFF
+		clr.g <- ( color >> 8 ) & 0xFF
+		clr.b <- ( color >> 16 ) & 0xFF
+		clr.a <- ( color >> 24 ) & 0xFF
 		return clr
 	}
 
-	function AddAttributeToLoadout(player, attribute, value, duration = -1) {
+	function AddAttributeToLoadout( player, attribute, value, duration = -1 ) {
 
-		for (local i = 0; i < SLOT_COUNT; i++) {
+		for ( local i = 0; i < SLOT_COUNT; i++ ) {
 
-			local wep = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)
+			local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
 
-			if (wep == null) continue
+			if ( wep == null ) continue
 
-			wep.AddAttribute(attribute, value, duration)
+			wep.AddAttribute( attribute, value, duration )
 			wep.ReapplyProvision()
 		}
 	}
 
-	function ShowModelToPlayer(player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = INT_MAX, bodygroup = null) {
+	function ShowModelToPlayer( player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = INT_MAX, bodygroup = null ) {
 
-		PrecacheModel(model[0])
-		local proxy_entity = CreateByClassname("obj_teleporter") // use obj_teleporter to set bodygroups.  not using SpawnEntityFromTable as that creates spawning noises
-		proxy_entity.SetAbsOrigin(pos)
-		proxy_entity.SetAbsAngles(ang)
-		DispatchSpawn(proxy_entity)
+		PrecacheModel( model[0] )
+		local proxy_entity = CreateByClassname( "obj_teleporter" ) // use obj_teleporter to set bodygroups.  not using SpawnEntityFromTable as that creates spawning noises
+		proxy_entity.SetAbsOrigin( pos )
+		proxy_entity.SetAbsAngles( ang )
+		DispatchSpawn( proxy_entity )
 
-		proxy_entity.SetModel(model[0])
-		proxy_entity.SetSkin(model[1])
-		proxy_entity.AddEFlags(EFL_NO_THINK_FUNCTION) // EFL_NO_THINK_function prevents the entity from disappearing
-		proxy_entity.SetSolid(SOLID_NONE)
+		proxy_entity.SetModel( model[0] )
+		proxy_entity.SetSkin( model[1] )
+		proxy_entity.AddEFlags( EFL_NO_THINK_FUNCTION ) // EFL_NO_THINK_function prevents the entity from disappearing
+		proxy_entity.SetSolid( SOLID_NONE )
 
-		SetPropBool(proxy_entity, "m_bPlacing", true)
-		SetPropInt(proxy_entity, "m_fObjectFlags", OF_MUST_BE_BUILT_ON_ATTACHMENT) // sets "attachment" flag, prevents entity being snapped to player feet
+		SetPropBool( proxy_entity, "m_bPlacing", true )
+		SetPropInt( proxy_entity, "m_fObjectFlags", OF_MUST_BE_BUILT_ON_ATTACHMENT ) // sets "attachment" flag, prevents entity being snapped to player feet
 
 		// m_hBuilder is the player who the entity will be networked to only
-		SetPropEntity(proxy_entity, "m_hBuilder", player)
-		EntFireByHandle(proxy_entity, "Kill", "", duration, player, player)
+		SetPropEntity( proxy_entity, "m_hBuilder", player )
+		EntFireByHandle( proxy_entity, "Kill", "", duration, player, player )
 		return proxy_entity
 	}
 
 
-	function LockInPlace(player, enable = true) {
+	function LockInPlace( player, enable = true ) {
 
-		if (enable) {
-			player.AddFlag(FL_ATCONTROLS)
-			player.AddCustomAttribute("no_jump", 1, -1)
-			player.AddCustomAttribute("no_duck", 1, -1)
-			player.AddCustomAttribute("no_attack", 1, -1)
-			player.AddCustomAttribute("disable weapon switch", 1, -1)
+		if ( enable ) {
+			player.AddFlag( FL_ATCONTROLS )
+			player.AddCustomAttribute( "no_jump", 1, -1 )
+			player.AddCustomAttribute( "no_duck", 1, -1 )
+			player.AddCustomAttribute( "no_attack", 1, -1 )
+			player.AddCustomAttribute( "disable weapon switch", 1, -1 )
 			return
 
 		}
 
-		player.RemoveFlag(FL_ATCONTROLS)
-		player.RemoveCustomAttribute("no_jump")
-		player.RemoveCustomAttribute("no_duck")
-		player.RemoveCustomAttribute("no_attack")
-		player.RemoveCustomAttribute("disable weapon switch")
+		player.RemoveFlag( FL_ATCONTROLS )
+		player.RemoveCustomAttribute( "no_jump" )
+		player.RemoveCustomAttribute( "no_duck" )
+		player.RemoveCustomAttribute( "no_attack" )
+		player.RemoveCustomAttribute( "disable weapon switch" )
 	}
 
-	function InitEconItem(item, index) {
+	function InitEconItem( item, index ) {
 
-		SetPropInt(item, STRING_NETPROP_ITEMDEF, index)
-		SetPropBool(item, STRING_NETPROP_INIT, true)
-		SetPropBool(item, STRING_NETPROP_ATTACH, true)
+		SetPropInt( item, STRING_NETPROP_ITEMDEF, index )
+		SetPropBool( item, STRING_NETPROP_INIT, true )
+		SetPropBool( item, STRING_NETPROP_ATTACH, true )
 	}
 
-	function GetItemIndex(item) {
-		return GetPropInt(item, STRING_NETPROP_ITEMDEF)
+	function GetItemIndex( item ) {
+		return GetPropInt( item, STRING_NETPROP_ITEMDEF )
 	}
 
-	function SetItemIndex(item, index) {
-		SetPropInt(item, STRING_NETPROP_ITEMDEF, index)
+	function SetItemIndex( item, index ) {
+		SetPropInt( item, STRING_NETPROP_ITEMDEF, index )
 	}
 
-	function SetTargetname(ent, name) {
-		SetPropString(ent, "m_iName", name)
+	function SetTargetname( ent, name ) {
+		SetPropString( ent, "m_iName", name )
 	}
 
-	function GetPlayerSteamID(player) {
-		return GetPropString(player, "m_szNetworkIDString")
+	function GetPlayerSteamID( player ) {
+		return GetPropString( player, "m_szNetworkIDString" )
 	}
 
-	function GetHammerID(ent) {
-		return GetPropInt(ent, "m_iHammerID")
+	function GetHammerID( ent ) {
+		return GetPropInt( ent, "m_iHammerID" )
 	}
 
-	function GetSpawnFlags(ent) {
-		return GetPropInt(self, "m_spawnflags")
+	function GetSpawnFlags( ent ) {
+		return GetPropInt( self, "m_spawnflags" )
 	}
 
 	function GetPopfileName() {
-		return GetPropString(ObjectiveResource, "m_iszMvMPopfileName")
+		return GetPropString( ObjectiveResource, "m_iszMvMPopfileName" )
 	}
 
-	function PrecacheParticle(name) {
-		PrecacheEntityFromTable({ classname = "info_particle_system", effect_name = name })
+	function PrecacheParticle( name ) {
+		PrecacheEntityFromTable( { classname = "info_particle_system", effect_name = name } )
 	}
 
 
-	function SpawnEffect(player,  effect) {
+	function SpawnEffect( player,  effect ) {
 		local player_angle	   =  player.GetLocalAngles()
-		local player_angle_vec =  Vector( player_angle.x, player_angle.y, player_angle.z)
+		local player_angle_vec =  Vector( player_angle.x, player_angle.y, player_angle.z )
 
-		DispatchParticleEffect(effect, player.GetLocalOrigin(), player_angle_vec)
+		DispatchParticleEffect( effect, player.GetLocalOrigin(), player_angle_vec )
 		return
 	}
 
-	function RemoveOutputAll(ent, output) {
+	function RemoveOutputAll( ent, output ) {
 		local outputs = []
-		for (local i = GetNumElements(ent, output); i >= 0; i--) {
+		for ( local i = GetNumElements( ent, output ); i >= 0; i-- ) {
 			local t = {}
-			GetOutputTable(ent, output, t, i)
-			outputs.append(t)
+			GetOutputTable( ent, output, t, i )
+			outputs.append( t )
 		}
-		foreach (o in outputs) foreach(_ in o) RemoveOutput(ent, output, o.target, o.input, o.parameter)
+		foreach ( o in outputs ) foreach( _ in o ) RemoveOutput( ent, output, o.target, o.input, o.parameter )
 	}
 
-	function GetAllOutputs(ent, output) {
+	function GetAllOutputs( ent, output ) {
 		local outputs = []
-		for (local i = GetNumElements(ent, output); i >= 0; i--) {
+		for ( local i = GetNumElements( ent, output ); i >= 0; i-- ) {
 			local t = {}
-			GetOutputTable(ent, output, t, i)
-			outputs.append(t)
+			GetOutputTable( ent, output, t, i )
+			outputs.append( t )
 		}
 		return outputs
 	}
 
-	function GetPropAny(ent, prop, i = 0) {
-		local type = GetPropType(ent, prop)
+	function GetPropAny( ent, prop, i = 0 ) {
+		local type = GetPropType( ent, prop )
 
-		if (type == "instance")
-			return GetPropEntityArray(ent, prop, i)
-		else if (type == "integer")
-			return GetPropIntArray(ent, prop, i)
-		else
-		{
-			local funcname = format("GetProp%sArray", type.slice(0, 1).toupper() + type.slice(1))
-			return ROOT[funcname](ent, prop, i)
+		if ( type == "instance" )
+			return GetPropEntityArray( ent, prop, i )
+		else if ( type == "integer" )
+			return GetPropIntArray( ent, prop, i )
+		else {
+
+			local funcname = format( "GetProp%sArray", type.slice( 0, 1 ).toupper() + type.slice( 1 ) )
+			return ROOT[funcname]( ent, prop, i )
 		}
 	}
 
-	function SetPropAny(ent, prop, value, i = 0) {
-		local type = GetPropType(ent, prop)
-		if (type == "instance")
-			SetPropEntityArray(ent, prop, value, i)
-		else if (type == "integer")
-			SetPropIntArray(ent, prop, value, i)
-		else
-		{
-			local funcname = format("SetProp%sArray", type.slice(0, 1).toupper() + type.slice(1))
-			ROOT[funcname](ent, prop, value, i)
+	function SetPropAny( ent, prop, value, i = 0 ) {
+		local type = GetPropType( ent, prop )
+		if ( type == "instance" )
+			SetPropEntityArray( ent, prop, value, i )
+		else if ( type == "integer" )
+			SetPropIntArray( ent, prop, value, i )
+		else {
+
+			local funcname = format( "SetProp%sArray", type.slice( 0, 1 ).toupper() + type.slice( 1 ) )
+			ROOT[funcname]( ent, prop, value, i )
 		}
 	}
 
-	function RemovePlayerWearables(player) {
-		for (local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer()) {
-			if (wearable.GetClassname() == "tf_wearable")
+	function RemovePlayerWearables( player ) {
+		for ( local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer() ) {
+			if ( wearable.GetClassname() == "tf_wearable" )
 				wearable.Destroy()
 		}
 		return
 	}
 
-	function GiveWeapon(player, className, itemID) {
+	function GiveWeapon( player, className, itemID ) {
 
-		if (typeof itemID == "string" && className == "tf_wearable")
-		{
-			CTFBot.GenerateAndWearItem.call(player, itemID)
+		if ( typeof itemID == "string" && className == "tf_wearable" ) {
+
+			CTFBot.GenerateAndWearItem.call( player, itemID )
 			return
 		}
-		local weapon = CreateByClassname(className)
-		InitEconItem(weapon, itemID)
-		weapon.SetTeam(player.GetTeam())
-		DispatchSpawn(weapon)
+		local weapon = CreateByClassname( className )
+		InitEconItem( weapon, itemID )
+		weapon.SetTeam( player.GetTeam() )
+		DispatchSpawn( weapon )
 
 		// remove existing weapon in same slot
-		for (local i = 0; i < SLOT_COUNT; i++)
-		{
-			local heldWeapon = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)
-			if (heldWeapon == null || heldWeapon.GetSlot() != weapon.GetSlot())
+		for ( local i = 0; i < SLOT_COUNT; i++ ) {
+
+			local heldWeapon = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
+			if ( heldWeapon == null || heldWeapon.GetSlot() != weapon.GetSlot() )
 				continue
 			heldWeapon.Destroy()
-			SetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, null, i)
+			SetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, null, i )
 			break
 		}
 
-		player.Weapon_Equip(weapon)
-		player.Weapon_Switch(weapon)
+		player.Weapon_Equip( weapon )
+		player.Weapon_Switch( weapon )
 
 		return weapon
 	}
 
-	function IsEntityClassnameInList(entity, list) {
+	function IsEntityClassnameInList( entity, list ) {
 		local classname = entity.GetClassname()
-		local listType = typeof(list)
+		local listType = typeof list
 
-		switch (listType) {
+		switch ( listType ) {
 			case "table":
-				return (classname in list)
+				return ( classname in list )
 
 			case "array":
-				return (list.find(classname) != null)
+				return ( list.find( classname ) != null )
 
 			default:
-				PopExtMain.Error.RaiseTypeError("list", "array or table")
+				PopExtMain.Error.RaiseTypeError( "list", "array or table" )
 				return false
 		}
 	}
 
-	function SetPlayerClassRespawnAndTeleport(player, playerclass, location_set = null) {
+	function SetPlayerClassRespawnAndTeleport( player, playerclass, location_set = null ) {
 		local teleport_origin, teleport_angles, teleport_velocity
 
-		if (!location_set)
+		if ( !location_set )
 			teleport_origin = player.GetOrigin()
 		else
 			teleport_origin = location_set
 		teleport_angles = player.EyeAngles()
 		teleport_velocity = player.GetAbsVelocity()
-		SetPropInt(player, "m_Shared.m_iDesiredPlayerClass", playerclass)
+		SetPropInt( player, "m_Shared.m_iDesiredPlayerClass", playerclass )
 
 		player.ForceRegenerateAndRespawn()
 
-		player.Teleport(true, teleport_origin, true, teleport_angles, true, teleport_velocity)
+		player.Teleport( true, teleport_origin, true, teleport_angles, true, teleport_velocity )
 	}
 
-	function PlaySoundOnClient(player, name, volume = 1.0, pitch = 100) {
+	function PlaySoundOnClient( player, name, volume = 1.0, pitch = 100 ) {
 		EmitSoundEx( {
 			sound_name = name,
 			volume = volume
 			pitch = pitch,
 			entity = player,
 			filter_type = RECIPIENT_FILTER_SINGLE_PLAYER
-		})
+		} )
 	}
 
-	function PlaySoundOnAllClients(name) {
+	function PlaySoundOnAllClients( name ) {
 		EmitSoundEx( {
 			sound_name = name,
 			filter_type = RECIPIENT_FILTER_GLOBAL
-		})
+		} )
 	}
 
 
 
 	// MATH
 
-	function Min(a, b) {
-		return (a <= b) ? a : b
+	function Min( a, b ) {
+		return ( a <= b ) ? a : b
 	}
 
-	function Max(a, b) {
-		return (a >= b) ? a : b
+	function Max( a, b ) {
+		return ( a >= b ) ? a : b
 	}
 
-	function Round(num, decimals=0) {
-		if (decimals <= 0)
-			return floor(num + 0.5)
+	function Round( num, decimals=0 ) {
+		if ( decimals <= 0 )
+			return floor( num + 0.5 )
 
-		local mod = pow(10, decimals)
-		return floor((num * mod) + 0.5) / mod
+		local mod = pow( 10, decimals )
+		return floor( ( num * mod ) + 0.5 ) / mod
 	}
 
-	function Clamp(x, a, b) {
-		return Min(b, Max(a, x))
+	function Clamp( x, a, b ) {
+		return Min( b, Max( a, x ) )
 	}
 
-	function RemapVal(v, A, B, C, D) {
-		if (A == B) {
-			if (v >= B)
+	function RemapVal( v, A, B, C, D ) {
+		if ( A == B ) {
+			if ( v >= B )
 				return D
 			return C
 		}
-		return C + (D - C) * (v - A) / (B - A)
+		return C + ( D - C ) * ( v - A ) / ( B - A )
 	}
 
-	function RemapValClamped(v, A, B, C, D) {
-		if (A == B) {
-			if (v >= B)
+	function RemapValClamped( v, A, B, C, D ) {
+		if ( A == B ) {
+			if ( v >= B )
 				return D
 			return C
 		}
-		local cv = (v - A) / (B - A)
-		if (cv <= 0.0)
+		local cv = ( v - A ) / ( B - A )
+		if ( cv <= 0.0 )
 			return C
-		if (cv >= 1.0)
+		if ( cv >= 1.0 )
 			return D
-		return C + (D - C) * cv
+		return C + ( D - C ) * cv
 	}
 
-	function IntersectionPointBox(pos, mins, maxs) {
-		if (pos.x < mins.x || pos.x > maxs.x ||
+	function IntersectionPointBox( pos, mins, maxs ) {
+		if ( pos.x < mins.x || pos.x > maxs.x ||
 			pos.y < mins.y || pos.y > maxs.y ||
-			pos.z < mins.z || pos.z > maxs.z)
+			pos.z < mins.z || pos.z > maxs.z )
 			return false
 
 		return true
 	}
 
-	function NormalizeAngle(target) {
+	function NormalizeAngle( target ) {
 		target %= 360.0
-		if (target > 180.0)
+		if ( target > 180.0 )
 			target -= 360.0
-		else if (target < -180.0)
+		else if ( target < -180.0 )
 			target += 360.0
 		return target
 	}
 
-	function ApproachAngle(target, value, speed) {
-		target = NormalizeAngle(target)
-		value = NormalizeAngle(value)
-		local delta = NormalizeAngle(target - value)
-		if (delta > speed)
+	function ApproachAngle( target, value, speed ) {
+		target = NormalizeAngle( target )
+		value = NormalizeAngle( value )
+		local delta = NormalizeAngle( target - value )
+		if ( delta > speed )
 			return value + speed
-		else if (delta < -speed)
+		else if ( delta < -speed )
 			return value - speed
 		return target
 	}
 
-	function VectorAngles(forward) {
+	function VectorAngles( forward ) {
 		local yaw, pitch
 		if ( forward.y == 0.0 && forward.x == 0.0 ) {
 			yaw = 0.0
-			if (forward.z > 0.0)
+			if ( forward.z > 0.0 )
 				pitch = 270.0
 			else
 				pitch = 90.0
 		}
 		else {
-			yaw = (atan2(forward.y, forward.x) * 180.0 / Pi)
-			if (yaw < 0.0)
+			yaw = ( atan2( forward.y, forward.x ) * 180.0 / Pi )
+			if ( yaw < 0.0 )
 				yaw += 360.0
-			pitch = (atan2(-forward.z, forward.Length2D()) * 180.0 / Pi)
-			if (pitch < 0.0)
+			pitch = ( atan2( -forward.z, forward.Length2D() ) * 180.0 / Pi )
+			if ( pitch < 0.0 )
 				pitch += 360.0
 		}
 
-		return QAngle(pitch, yaw, 0.0)
+		return QAngle( pitch, yaw, 0.0 )
 	}
 
-	function AnglesToVector(angles) {
+	function AnglesToVector( angles ) {
 		local pitch = angles.x * Pi / 180.0
 		local yaw = angles.y * Pi / 180.0
-		local x = cos(pitch) * cos(yaw)
-		local y = cos(pitch) * sin(yaw)
-		local z = sin(pitch)
-		return Vector(x, y, z)
+		local x = cos( pitch ) * cos( yaw )
+		local y = cos( pitch ) * sin( yaw )
+		local z = sin( pitch )
+		return Vector( x, y, z )
 	}
 
-	function QAngleDistance(a, b) {
+	function QAngleDistance( a, b ) {
 	  local dx = a.x - b.x
 	  local dy = a.y - b.y
 	  local dz = a.z - b.z
-	  return sqrt(dx*dx + dy*dy + dz*dz)
+	  return sqrt( dx*dx + dy*dy + dz*dz )
 	}
 
-	function CheckBitwise(num) {
-		return (num != 0 && ((num & (num - 1)) == 0))
+	function CheckBitwise( num ) {
+		return ( num != 0 && ( ( num & ( num - 1 ) ) == 0 ) )
 	}
 
-	function StopAndPlayMVMSound(player, soundscript, delay) {
+	function StopAndPlayMVMSound( player, soundscript, delay ) {
 		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 		scope.sound <- soundscript
 
-		EntFireByHandle(player, "RunScriptCode", "self.StopSound(sound);", delay, null, null)
+		EntFireByHandle( player, "RunScriptCode", "self.StopSound( sound );", delay, null, null )
 
 		local sound	   =  scope.sound
-		local dotindex =  sound.find(".")
-		if (dotindex == null) return
+		local dotindex =  sound.find( "." )
+		if ( dotindex == null ) return
 
-		scope.mvmsound <- sound.slice(0, dotindex+1) + "MVM_" + sound.slice(dotindex+1)
+		scope.mvmsound <- sound.slice( 0, dotindex+1 ) + "MVM_" + sound.slice( dotindex+1 )
 
-		EntFireByHandle(player, "RunScriptCode", "self.EmitSound(mvmsound);", delay + SINGLE_TICK, null, null)
+		EntFireByHandle( player, "RunScriptCode", "self.EmitSound( mvmsound );", delay + SINGLE_TICK, null, null )
 	}
 
-	function StringReplace(str, findwhat, replace) {
+	function StringReplace( str, findwhat, replace ) {
 		local returnstring = ""
 		local findwhatlen  = findwhat.len()
-		local splitlist	   = [];
+		local splitlist	   = []
 
 		local start = 0
 		local previndex = 0
-		while (start < str.len()) {
-			local index = str.find(findwhat, start)
-			if (index == null) {
-				if (start < str.len() - 1)
-					splitlist.append(str.slice(start))
+		while ( start < str.len() ) {
+			local index = str.find( findwhat, start )
+			if ( index == null ) {
+				if ( start < str.len() - 1 )
+					splitlist.append( str.slice( start ) )
 				break
 			}
 
-			splitlist.append(str.slice(previndex, index))
+			splitlist.append( str.slice( previndex, index ) )
 
 			start = index + findwhatlen
 			previndex = start
 		}
 
-		foreach (index, s in splitlist) {
-			if (index < splitlist.len() - 1)
-				returnstring += s + replace;
+		foreach ( index, s in splitlist ) {
+			if ( index < splitlist.len() - 1 )
+				returnstring += s + replace
 			else
 				returnstring += s
 		}
@@ -1877,127 +1878,127 @@
 	}
 
 	// Python's string.capwords()
-	function capwords(s, sep = null) {
-		if (sep == null) sep = " ";
-		local words = [];
-		local start = 0;
-		local end = s.find(sep);
-		while (end != null) {
-			words.push(s.slice(start, end));
-			start = end + sep.len();
-			end = s.find(sep, start);
+	function capwords( s, sep = null ) {
+		if ( sep == null ) sep = " "
+		local words = []
+		local start = 0
+		local end = s.find( sep )
+		while ( end != null ) {
+			words.push( s.slice( start, end ) )
+			start = end + sep.len()
+			end = s.find( sep, start )
 		}
-		words.push(s.slice(start));
+		words.push( s.slice( start ) )
 
-		local result = [];
-		foreach (word in words) {
-			local firstChar = word.slice(0, 1).toupper();
-			local restOfWord = word.slice(1);
-			result.push(firstChar + restOfWord);
+		local result = []
+		foreach ( word in words ) {
+			local firstChar = word.slice( 0, 1 ).toupper()
+			local restOfWord = word.slice( 1 )
+			result.push( firstChar + restOfWord )
 		}
 
-		local finalResult = "";
-		foreach (i, word in result) {
-			if (i > 0) finalResult += sep;
-			finalResult += word;
+		local finalResult = ""
+		foreach ( i, word in result ) {
+			if ( i > 0 ) finalResult += sep
+			finalResult += word
 		}
-		return finalResult;
+		return finalResult
 	}
 
 	// Python's string.partition(), except the separator itself is not returned
-	// Basically like calling python's string.split(sep, 1), notice the 1 meaning to only split once
-	function splitonce(s, sep = null) {
+	// Basically like calling python's string.split( sep, 1 ), notice the 1 meaning to only split once
+	function splitonce( s, sep = null ) {
 
-		if (sep == null) return [s, null]
+		if ( sep == null ) return [s, null]
 
-		local pos = s.find(sep)
-		local result_left = pos == 0 ? null : s.slice(0, pos)
-		local result_right = pos == s.len() - 1 ? null : s.slice(pos + 1)
+		local pos = s.find( sep )
+		local result_left = pos == 0 ? null : s.slice( 0, pos )
+		local result_right = pos == s.len() - 1 ? null : s.slice( pos + 1 )
 
 		return [result_left, result_right]
 	}
 
-	function EndWaveReverse(doteamswitch = true) {
+	function EndWaveReverse( doteamswitch = true ) {
 
-		local temp = CreateByClassname("info_teleport_destination")
+		local temp = CreateByClassname( "info_teleport_destination" )
 
-		if (!IsWaveStarted) return
+		if ( !IsWaveStarted ) return
 
 		//move to red
-		if (doteamswitch)
-			foreach (player in HumanArray)
-				ChangePlayerTeamMvM(player, TF_TEAM_PVE_DEFENDERS)
+		if ( doteamswitch )
+			foreach ( player in HumanArray )
+				ChangePlayerTeamMvM( player, TF_TEAM_PVE_DEFENDERS )
 
 		temp.ValidateScriptScope()
 		temp.GetScriptScope().ClearWave <- function() {
 
-			if (!PopExtUtil.IsWaveStarted) {
+			if ( !PopExtUtil.IsWaveStarted ) {
 
-				if (doteamswitch)
-					foreach (player in PopExtUtil.HumanArray)
-						PopExtUtil.ChangePlayerTeamMvM(player, TF_TEAM_PVE_INVADERS)
+				if ( doteamswitch )
+					foreach ( player in PopExtUtil.HumanArray )
+						PopExtUtil.ChangePlayerTeamMvM( player, TF_TEAM_PVE_INVADERS )
 
 				self.Kill()
 				return 1
 			}
 			//kill all bots
-			foreach (bot in PopExtUtil.BotArray)
-				if (bot.IsAlive() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS)
-					PopExtUtil.KillPlayer(bot);
+			foreach ( bot in PopExtUtil.BotArray )
+				if ( bot.IsAlive() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
+					PopExtUtil.KillPlayer( bot )
 		}
 
-		AddThinkToEnt(temp, "ClearWave")
+		AddThinkToEnt( temp, "ClearWave" )
 	}
 
-	function AddThinkToEnt(ent, func) {
+	function AddThinkToEnt( ent, func ) {
 
 		local scope = ent.GetScriptScope()
 		local thinktable = ""
 
-		if (ent.IsPlayer())
+		if ( ent.IsPlayer() )
 			thinktable = "PlayerThinkTable"
 
-		else if ((ent.GetClassname() == "tank_boss"))
+		else if ( ( ent.GetClassname() == "tank_boss" ) )
 			thinktable = "TankThinkTable"
 
-		else if (startswith(ent.GetClassname(), "tf_projectile"))
+		else if ( startswith( ent.GetClassname(), "tf_projectile" ) )
 			thinktable = "ProjectileThinkTable"
 
-		else if (HasProp(ent, STRING_NETPROP_ATTACH))
+		else if ( HasProp( ent, STRING_NETPROP_ATTACH ) )
 			thinktable = "ItemThinkTable"
 		else
-			_AddThinkToEnt(ent, func)
+			_AddThinkToEnt( ent, func )
 
-		if (thinktable == "") return
+		if ( thinktable == "" ) return
 
 		local thinkfunc
-		if(func != null)
-		{
-			if (func in scope)
+		if( func != null ) {
+
+			if ( func in scope )
 				thinkfunc = scope[func]
-			else if (func in ROOT)
+			else if ( func in ROOT )
 				thinkfunc = ROOT[func]
 			else
 				return
 		}
 
-		if (!(thinktable in scope)) scope[thinktable] <- {}
+		if ( !( thinktable in scope ) ) scope[thinktable] <- {}
 
-		func == null ? scope[thinktable].clear() : scope[format("%s", thinktable)][func] <- thinkfunc
+		func == null ? scope[thinktable].clear() : scope[format( "%s", thinktable )][func] <- thinkfunc
 	}
 
 
-	function SilentDisguise(player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT) {
+	function SilentDisguise( player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT ) {
 
-		if (player == null || !player.IsPlayer()) return
+		if ( player == null || !player.IsPlayer() ) return
 
-		function FindTargetPlayer(passcond) {
+		function FindTargetPlayer( passcond ) {
 			local target = null
-			for (local i = 1; i <= MAX_CLIENTS; i++) {
-				local potentialtarget = PlayerInstanceFromIndex(i)
-				if (potentialtarget == null || potentialtarget == player) continue
+			for ( local i = 1; i <= MAX_CLIENTS; i++ ) {
+				local potentialtarget = PlayerInstanceFromIndex( i )
+				if ( potentialtarget == null || potentialtarget == player ) continue
 
-				if (passcond(potentialtarget)) {
+				if ( passcond( potentialtarget ) ) {
 					target = potentialtarget
 					break
 				}
@@ -2005,63 +2006,63 @@
 			return target
 		}
 
-		if (target == null) {
+		if ( target == null ) {
 			// Find disguise target
-			target = FindTargetPlayer(@(p) p.GetTeam() == tfteam && p.GetPlayerClass() == tfclass)
+			target = FindTargetPlayer( @( p ) p.GetTeam() == tfteam && p.GetPlayerClass() == tfclass )
 			// Couldn't find any targets of tfclass, look for any class this time
-			if (target == null)
-				target = FindTargetPlayer(@(p) p.GetTeam() == tfteam)
+			if ( target == null )
+				target = FindTargetPlayer( @( p ) p.GetTeam() == tfteam )
 		}
 
 		// Disguise as this player
-		if (target != null) {
-			SetPropInt(player, "m_Shared.m_nDisguiseTeam", target.GetTeam())
-			SetPropInt(player, "m_Shared.m_nDisguiseClass", target.GetPlayerClass())
-			SetPropInt(player, "m_Shared.m_iDisguiseHealth", target.GetHealth())
-			SetPropEntity(player, "m_Shared.m_hDisguiseTarget", target)
+		if ( target != null ) {
+			SetPropInt( player, "m_Shared.m_nDisguiseTeam", target.GetTeam() )
+			SetPropInt( player, "m_Shared.m_nDisguiseClass", target.GetPlayerClass() )
+			SetPropInt( player, "m_Shared.m_iDisguiseHealth", target.GetHealth() )
+			SetPropEntity( player, "m_Shared.m_hDisguiseTarget", target )
 			// When we drop our disguise, the player we disguised as gets this weapon removed for some reason
-			//SetPropEntity(player, "m_Shared.m_hDisguiseWeapon", target.GetActiveWeapon())
+			//SetPropEntity( player, "m_Shared.m_hDisguiseWeapon", target.GetActiveWeapon() )
 		}
 		// No valid targets, just give us a generic disguise
 		else {
-			SetPropInt(player, "m_Shared.m_nDisguiseTeam", tfteam)
-			SetPropInt(player, "m_Shared.m_nDisguiseClass", tfclass)
+			SetPropInt( player, "m_Shared.m_nDisguiseTeam", tfteam )
+			SetPropInt( player, "m_Shared.m_nDisguiseClass", tfclass )
 		}
 
-		player.AddCond(TF_COND_DISGUISED)
+		player.AddCond( TF_COND_DISGUISED )
 
 		// Hack to get our movespeed set correctly for our disguise
-		player.AddCond(TF_COND_SPEED_BOOST)
-		player.RemoveCond(TF_COND_SPEED_BOOST)
+		player.AddCond( TF_COND_SPEED_BOOST )
+		player.RemoveCond( TF_COND_SPEED_BOOST )
 	}
 
 	function GetPlayerReadyCount() {
-		local roundtime = GetPropFloat(GameRules, "m_flRestartRoundTime")
-		if (IsWaveStarted) return 0
+		local roundtime = GetPropFloat( GameRules, "m_flRestartRoundTime" )
+		if ( IsWaveStarted ) return 0
 		local ready = 0
 
-		for (local i = 0; i < GetPropArraySize(GameRules, "m_bPlayerReady"); ++i) {
-			if (!GetPropBoolArray(GameRules, "m_bPlayerReady", i)) continue
+		for ( local i = 0; i < GetPropArraySize( GameRules, "m_bPlayerReady" ); ++i ) {
+			if ( !GetPropBoolArray( GameRules, "m_bPlayerReady", i ) ) continue
 			++ready
 		}
 
 		return ready
 	}
 
-	function GetWeaponMaxAmmo(player, wep) {
+	function GetWeaponMaxAmmo( player, wep ) {
 
-		if (wep == null) return
+		if ( wep == null ) return
 
 		local slot      = wep.GetSlot()
 		local classname = wep.GetClassname()
-		local itemid    = GetItemIndex(wep)
+		local itemid    = GetItemIndex( wep )
 
 		local table = MaxAmmoTable[player.GetPlayerClass()]
 
-		if (!(itemid in table) && !(classname in table))
+		if ( !( itemid in table ) && !( classname in table ) )
 			return -1
 
-		local base_max = (itemid in table) ? table[itemid] : table[classname]
+		local base_max = ( itemid in table ) ? table[itemid] : table[classname]
 
 		/*
 		local mod = 1.0
@@ -2069,15 +2070,15 @@
 		local incr
 		local decr
 		local hid
-		if (slot == SLOT_PRIMARY) {
-			incr = wep.GetAttribute("maxammo primary increased", 1.0)
-			decr = wep.GetAttribute("maxammo primary reduced", 1.0)
-			hid  = wep.GetAttribute("hidden primary max ammo bonus", 1.0)
+		if ( slot == SLOT_PRIMARY ) {
+			incr = wep.GetAttribute( "maxammo primary increased", 1.0 )
+			decr = wep.GetAttribute( "maxammo primary reduced", 1.0 )
+			hid  = wep.GetAttribute( "hidden primary max ammo bonus", 1.0 )
 		}
-		else if (slot == SLOT_SECONDARY) {
-			incr = wep.GetAttribute("maxammo secondary increased", 1.0)
-			decr = wep.GetAttribute("maxammo secondary reduced", 1.0)
-			hid  = wep.GetAttribute("hidden secondary max ammo penalty", 1.0)
+		else if ( slot == SLOT_SECONDARY ) {
+			incr = wep.GetAttribute( "maxammo secondary increased", 1.0 )
+			decr = wep.GetAttribute( "maxammo secondary reduced", 1.0 )
+			hid  = wep.GetAttribute( "hidden secondary max ammo penalty", 1.0 )
 		}
 
 		mod *= incr * decr * hid
@@ -2087,45 +2088,45 @@
 		return base_max
 	}
 
-	function TeleportNearVictim(ent, victim, attempt) {
+	function TeleportNearVictim( ent, victim, attempt ) {
 
-		if (victim == null)
+		if ( victim == null )
 			return false
 
-		if (victim.GetLastKnownArea() == null)
+		if ( victim.GetLastKnownArea() == null )
 			return
 
 		const max_surround_travel_range = 6000.0
 
 		local surround_travel_range = 1500.0 + 500.0 * attempt
-		surround_travel_range = Max(surround_travel_range, max_surround_travel_range)
+		surround_travel_range = Max( surround_travel_range, max_surround_travel_range )
 
 		local areas = {}
-		GetNavAreasInRadius(victim.GetLastKnownArea().GetCenter(), surround_travel_range, areas)
+		GetNavAreasInRadius( victim.GetLastKnownArea().GetCenter(), surround_travel_range, areas )
 
 		local ambush_areas = []
 
-		foreach (name, area in areas) {
-			if (!area.IsValidForWanderingPopulation())
+		foreach ( name, area in areas ) {
+			if ( !area.IsValidForWanderingPopulation() )
 				continue
 
-			if (area.IsPotentiallyVisibleToTeam(victim.GetTeam()))
+			if ( area.IsPotentiallyVisibleToTeam( victim.GetTeam() ) )
 				continue
 
-			ambush_areas.push(area)
+			ambush_areas.push( area )
 		}
 
-		if (ambush_areas.len() == 0)
+		if ( ambush_areas.len() == 0 )
 			return false
 
-		local max_tries = Min(10, ambush_areas.len())
+		local max_tries = Min( 10, ambush_areas.len() )
 
-		for (local retry = 0; retry < max_tries; ++retry) {
-			local which = RandomInt(0, ambush_areas.len() - 1)
-			local where = ambush_areas[which].GetCenter() + Vector(0, 0, STEP_HEIGHT)
+		for ( local retry = 0; retry < max_tries; ++retry ) {
+			local which = RandomInt( 0, ambush_areas.len() - 1 )
+			local where = ambush_areas[which].GetCenter() + Vector( 0, 0, STEP_HEIGHT )
 
-			if (IsSpaceToSpawnHere(where, ent.GetBoundingMins(), ent.GetBoundingMaxs())) {
-				ent.SetAbsOrigin(where)
+			if ( IsSpaceToSpawnHere( where, ent.GetBoundingMins(), ent.GetBoundingMaxs() ) ) {
+				ent.SetAbsOrigin( where )
 				return true
 			}
 		}
@@ -2133,7 +2134,7 @@
 		return false
 	}
 
-	function IsSpaceToSpawnHere(where, hullmin, hullmax) {
+	function IsSpaceToSpawnHere( where, hullmin, hullmax ) {
 
 		local trace = {
 			start = where,
@@ -2142,113 +2143,113 @@
 			hullmax = hullmax,
 			mask = MASK_PLAYERSOLID
 		}
-		TraceHull(trace)
+		TraceHull( trace )
 
 		return trace.fraction >= 1.0
 	}
 
-	function ClearLastKnownArea(bot) {
+	function ClearLastKnownArea( bot ) {
 
-		local trigger = SpawnEntityFromTable("trigger_remove_tf_player_condition", {
+		local trigger = SpawnEntityFromTable( "trigger_remove_tf_player_condition", {
 			spawnflags = SF_TRIGGER_ALLOW_CLIENTS,
 			condition = TF_COND_TMPDAMAGEBONUS,
-		})
-		EntFireByHandle(trigger, "StartTouch", "!activator", -1, bot, bot)
-		EntFireByHandle(trigger, "Kill", "", -1, null, null)
+		} )
+		EntFireByHandle( trigger, "StartTouch", "!activator", -1, bot, bot )
+		EntFireByHandle( trigger, "Kill", "", -1, null, null )
 	}
 
-	function KillPlayer(player) {
-		player.TakeDamage(INT_MAX, 0, TriggerHurt);
+	function KillPlayer( player ) {
+		player.TakeDamage( INT_MAX, 0, TriggerHurt )
 	}
 
 	function KillAllBots() {
-		foreach (bot in BotArray)
-			if (bot.IsAlive())
-				KillPlayer(bot)
+		foreach ( bot in BotArray )
+			if ( bot.IsAlive() )
+				KillPlayer( bot )
 	}
 
 	// wrapper for handling dead players without putting isalive checks everywhere
-	function PlayerScriptEntFire(player, param, delay = -1, activator = null, caller = null) {
+	function PlayerScriptEntFire( player, param, delay = -1, activator = null, caller = null ) {
 
-		local entfirefunc = typeof(player) == "string" ? DoEntFire : EntFireByHandle
-		entfirefunc(player, "RunScriptCode", format(@"if(self.IsAlive()) %s", param), delay, activator, caller)
+		local entfirefunc = typeof player == "string" ? DoEntFire : EntFireByHandle
+		entfirefunc( player, "RunScriptCode", format( @"if( self.IsAlive() ) %s", param ), delay, activator, caller )
 	}
 
-	function SetDestroyCallback(entity, callback) {
+	function SetDestroyCallback( entity, callback ) {
 
-		entity.ValidateScriptScope();
-		local scope = entity.GetScriptScope();
-		scope.setdelegate({}.setdelegate({
+		entity.ValidateScriptScope()
+		local scope = entity.GetScriptScope()
+		scope.setdelegate( {}.setdelegate( {
 				parent   = scope.getdelegate()
 				id       = entity.GetScriptId()
 				index    = entity.entindex()
 				callback = callback
-				_get = function(k) {
-					return parent[k];
+				_get = function( k ) {
+					return parent[k]
 				}
-				_delslot = function(k) {
-					if (k == id)
-					{
-						entity = EntIndexToHScript(index);
-						local scope = entity.GetScriptScope();
-						scope.self <- entity;
-						callback.pcall(scope);
+				_delslot = function( k ) {
+					if ( k == id ) {
+
+						entity = EntIndexToHScript( index )
+						local scope = entity.GetScriptScope()
+						scope.self <- entity
+						callback.pcall( scope )
 					}
-					delete parent[k];
+					delete parent[k]
 				}
-			})
-		);
+			} )
+		)
 	}
 
-	function OnWeaponFire(wep, func) {
+	function OnWeaponFire( wep, func ) {
 
-		if (wep == null) return
+		if ( wep == null ) return
 
 		wep.ValidateScriptScope()
 		local scope = wep.GetScriptScope()
 
 		scope.last_fire_time <- 0.0
 
-		scope.ItemThinkTable[format("OnWeaponFire_%d_%d", wep.GetOwner().GetScriptScope().userid, wep.entindex())] <- function() {
-			local fire_time = GetPropFloat(self, "m_flLastFireTime")
-			if (fire_time > last_fire_time) {
-				func.call(scope)
+		scope.ItemThinkTable[format( "OnWeaponFire_%d_%d", wep.GetOwner().GetScriptScope().userid, wep.entindex() )] <- function() {
+			local fire_time = GetPropFloat( self, "m_flLastFireTime" )
+			if ( fire_time > last_fire_time ) {
+				func.call( scope )
 				last_fire_time = fire_time
 			}
 			return
 		}
 	}
 
-	function IsProjectileWeapon(wep) {
+	function IsProjectileWeapon( wep ) {
 
 		local wep_classname = wep.GetClassname()
-		local override_projectile = wep.GetAttribute("override projectile type", 0.0)
+		local override_projectile = wep.GetAttribute( "override projectile type", 0.0 )
 
-		return (wep_classname in PROJECTILE_WEAPONS && override_projectile != 1) || override_projectile > 1
+		return ( wep_classname in PROJECTILE_WEAPONS && override_projectile != 1 ) || override_projectile > 1
 	}
 
-	function GetLastFiredProjectile(player) {
+	function GetLastFiredProjectile( player ) {
 
-		if (!("ActiveProjectiles" in player.GetScriptScope()))
+		if ( !( "ActiveProjectiles" in player.GetScriptScope() ) )
 			return null
 
 		local active_projectiles = player.GetScriptScope().ActiveProjectiles
 		local projectiles = []
 
-		foreach (projectile, info in active_projectiles)
-			projectiles.append(info)
+		foreach ( projectile, info in active_projectiles )
+			projectiles.append( info )
 
-		projectiles.sort(@(a, b) a[1] <=> b[1])
+		projectiles.sort( @( a, b ) a[1] <=> b[1] )
 
 		local projectiles_len = projectiles.len()
 		return projectiles_len ? projectiles[projectiles_len - 1 ][0] : null
 
 	}
 
-	function ChangeLevel(mapname = "", delay = 1.0, mvm_cyclemissionfile = false) {
+	function ChangeLevel( mapname = "", delay = 1.0, mvm_cyclemissionfile = false ) {
 
-		if (mapname != "")
-		{
+		if ( mapname != "" ) {
+
 			// listen servers can just do this
 			if ( !IsDedicatedServer() )
 				SendToConsole( format( "nextlevel %s", mapname ) )
@@ -2275,60 +2276,60 @@
 		local intermission = Entities.CreateByClassname( "point_intermission" )
 
 		// for mvm, otherwise it'll ignore delay and switch to the next map in the missioncycle file
-		if (!mvm_cyclemissionfile)
+		if ( !mvm_cyclemissionfile )
 			EntFire( "info_populator", "Kill" )
 
 		// don't use acceptinput so we execute after info_populator kill
 		EntFireByHandle( intermission, "Activate", "", -1, null, null )
 	}
 
-	function ToStrictNum(str, float = false) {
+	function ToStrictNum( str, float = false ) {
 
-		if (typeof str == "string") {
-			local rex = regexp(@"-?[0-9]+(\.[0-9]+)?")
-	
-			if (!rex.match(str)) return
+		if ( typeof str == "string" ) {
+			local rex = regexp( @"-?[0-9]+( \.[0-9]+ )?" )
+
+			if ( !rex.match( str ) ) return
 		}
 
 		try
 			return float ? str.tofloat() : str.tointeger()
-		catch (_)
+		catch ( _ )
 			return
 	}
 
 	Events = {
 
-		function OnGameEvent_mvm_wave_complete(params) { PopExtUtil.IsWaveStarted = false }
-		function OnGameEvent_mvm_wave_failed(params) { PopExtUtil.IsWaveStarted = false }
-		function OnGameEvent_mvm_begin_wave(params) { PopExtUtil.IsWaveStarted = true }
-		function OnGameEvent_mvm_reset_stats(params) { PopExtUtil.IsWaveStarted = true } //used for manually jumping waves
+		function OnGameEvent_mvm_wave_complete( params ) { PopExtUtil.IsWaveStarted = false }
+		function OnGameEvent_mvm_wave_failed( params ) { PopExtUtil.IsWaveStarted = false }
+		function OnGameEvent_mvm_begin_wave( params ) { PopExtUtil.IsWaveStarted = true }
+		function OnGameEvent_mvm_reset_stats( params ) { PopExtUtil.IsWaveStarted = true } //used for manually jumping waves
 
-		function OnGameEvent_teamplay_round_start(params) {
+		function OnGameEvent_teamplay_round_start( params ) {
 
-			SetPropBool(PopExtUtil.GameRules, "m_bIsInTraining", false)
+			SetPropBool( PopExtUtil.GameRules, "m_bIsInTraining", false )
 
-			for (local i = 1; i <= MAX_CLIENTS; i++) {
+			for ( local i = 1; i <= MAX_CLIENTS; i++ ) {
 
-				local player = PlayerInstanceFromIndex(i)
+				local player = PlayerInstanceFromIndex( i )
 
-				if (player != null && player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.BotArray.find(player) == null)
-					PopExtUtil.BotArray.append(player)
+				if ( player != null && player.IsBotOfType( TF_BOT_TYPE ) && PopExtUtil.BotArray.find( player ) == null )
+					PopExtUtil.BotArray.append( player )
 
-				else if (player != null && !player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.HumanArray.find(player) == null)
-					PopExtUtil.HumanArray.append(player)
+				else if ( player != null && !player.IsBotOfType( TF_BOT_TYPE ) && PopExtUtil.HumanArray.find( player ) == null )
+					PopExtUtil.HumanArray.append( player )
 
-				if (player != null && PopExtUtil.PlayerArray.find(player) == null)
-					PopExtUtil.PlayerArray.append(player)
+				if ( player != null && PopExtUtil.PlayerArray.find( player ) == null )
+					PopExtUtil.PlayerArray.append( player )
 			}
 		}
 
-		function OnGameEvent_post_inventory_application(params) {
+		function OnGameEvent_post_inventory_application( params ) {
 
-			if (GetRoundState() == GR_STATE_PREROUND) return
+			if ( GetRoundState() == GR_STATE_PREROUND ) return
 
-			local player = GetPlayerFromUserID(params.userid)
+			local player = GetPlayerFromUserID( params.userid )
 
-			if (player.IsEFlagSet(EFL_CUSTOM_WEARABLE))
+			if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
 				return
 
 			player.ValidateScriptScope()
@@ -2336,10 +2337,10 @@
 
 			//sort weapons by slot
 			local myweapons = {}
-			for (local i = 0; i < SLOT_COUNT; i++) {
+			for ( local i = 0; i < SLOT_COUNT; i++ ) {
 
-				local wep = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, i)
-				if (wep == null) continue
+				local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
+				if ( wep == null ) continue
 
 				myweapons[wep.GetSlot()] <- wep
 
@@ -2350,96 +2351,96 @@
 
 				scope.ItemThinkTable <- {}
 
-				scope.ItemThinks <- function() { foreach (name, func in scope.ItemThinkTable) func.call(scope); return -1 }
+				scope.ItemThinks <- function() { foreach ( name, func in scope.ItemThinkTable ) func.call( scope ); return -1 }
 
-				_AddThinkToEnt(wep, "ItemThinks")
+				_AddThinkToEnt( wep, "ItemThinks" )
 			}
 
-			for (local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer())
-			{
+			for ( local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer() ) {
+
 				child.ValidateScriptScope()
 				local scope = child.GetScriptScope()
-				if (!("ItemThinkTable" in scope)) scope.ItemThinkTable <- {}
+				if ( !( "ItemThinkTable" in scope ) ) scope.ItemThinkTable <- {}
 
-				if(child.GetClassname() == "tf_wearable")
-				{
-					scope.ItemThinks <- function() { foreach (name, func in scope.ItemThinkTable) func.call(scope); return -1 }
-					_AddThinkToEnt(child, "ItemThinks")
+				if( child.GetClassname() == "tf_wearable" ) {
+
+					scope.ItemThinks <- function() { foreach ( name, func in scope.ItemThinkTable ) func.call( scope ); return -1 }
+					_AddThinkToEnt( child, "ItemThinks" )
 				}
 			}
-			foreach(slot, wep in myweapons)
-			{
-				local wep = GetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, slot)
+			foreach( slot, wep in myweapons ) {
 
-				SetPropEntityArray(player, STRING_NETPROP_MYWEAPONS, wep, slot)
+				local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, slot )
+
+				SetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, wep, slot )
 			}
 
-			if (player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.BotArray.find(player) == null)
-				PopExtUtil.BotArray.append(player)
+			if ( player.IsBotOfType( TF_BOT_TYPE ) && PopExtUtil.BotArray.find( player ) == null )
+				PopExtUtil.BotArray.append( player )
 
-			else if (!player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.HumanArray.find(player) == null)
-				PopExtUtil.HumanArray.append(player)
+			else if ( !player.IsBotOfType( TF_BOT_TYPE ) && PopExtUtil.HumanArray.find( player ) == null )
+				PopExtUtil.HumanArray.append( player )
 
-			if (PopExtUtil.PlayerArray.find(player) == null)
-				PopExtUtil.PlayerArray.append(player)
+			if ( PopExtUtil.PlayerArray.find( player ) == null )
+				PopExtUtil.PlayerArray.append( player )
 
 		}
 
-		function OnGameEvent_player_activate(params) {
+		function OnGameEvent_player_activate( params ) {
 
-			local player = GetPlayerFromUserID(params.userid)
+			local player = GetPlayerFromUserID( params.userid )
 
-			if (!player.IsBotOfType(TF_BOT_TYPE) && PopExtUtil.HumanArray.find(player) == null)
-				PopExtUtil.HumanArray.append(player)
+			if ( !player.IsBotOfType( TF_BOT_TYPE ) && PopExtUtil.HumanArray.find( player ) == null )
+				PopExtUtil.HumanArray.append( player )
 
-			else if (PopExtUtil.PlayerArray.find(player) == null)
-				PopExtUtil.PlayerArray.append(player)
+			else if ( PopExtUtil.PlayerArray.find( player ) == null )
+				PopExtUtil.PlayerArray.append( player )
 		}
 
-		function OnGameEvent_player_disconnect(params) {
+		function OnGameEvent_player_disconnect( params ) {
 
-			local player = GetPlayerFromUserID(params.userid)
+			local player = GetPlayerFromUserID( params.userid )
 
 			local human_array = PopExtUtil.HumanArray
 			local bot_array = PopExtUtil.BotArray
 			local player_array = PopExtUtil.PlayerArray
 
-			for (local i = human_array.len() - 1; i >= 0; i--)
-				if (human_array[i] == null || !human_array[i].IsValid() || human_array[i] == player)
-					human_array.remove(i)
+			for ( local i = human_array.len() - 1; i >= 0; i-- )
+				if ( human_array[i] == null || !human_array[i].IsValid() || human_array[i] == player )
+					human_array.remove( i )
 
-			// this is normally not needed, but certain missions (red ridge) will kick bots instead of moving them to spectator
-			for (local i = bot_array.len() - 1; i >= 0; i--)
-				if (bot_array[i] == null || !bot_array[i].IsValid() || bot_array[i] == player)
-					bot_array.remove(i)
+			// this is normally not needed, but certain missions ( red ridge ) will kick bots instead of moving them to spectator
+			for ( local i = bot_array.len() - 1; i >= 0; i-- )
+				if ( bot_array[i] == null || !bot_array[i].IsValid() || bot_array[i] == player )
+					bot_array.remove( i )
 
-			for (local i = player_array.len() - 1; i >= 0; i--)
-				if (player_array[i] == null || !player_array[i].IsValid() || player_array[i] == player)
-					player_array.remove(i)
+			for ( local i = player_array.len() - 1; i >= 0; i-- )
+				if ( player_array[i] == null || !player_array[i].IsValid() || player_array[i] == player )
+					player_array.remove( i )
 		}
 	}
 }
 
-//shorter syntax in popfiles (Info(message) vs PopExtUtil.Info(message))
-function Explanation(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
-	PopExtUtil.DoExplanation(message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
+//shorter syntax in popfiles ( Info( message ) vs PopExtUtil.Info( message ) )
+function Explanation( message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02 ) {
+	PopExtUtil.DoExplanation( message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime )
 }
 
-function Info(message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02) {
-	PopExtUtil.DoExplanation(message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime)
+function Info( message, printColor = COLOR_YELLOW, messagePrefix = "Explanation: ", syncChatWithGameText = false, textPrintTime = -1, textScanTime = 0.02 ) {
+	PopExtUtil.DoExplanation( message, printColor, messagePrefix, syncChatWithGameText, textPrintTime, textScanTime )
 }
 
 PopExtUtil.TriggerHurt.DispatchSpawn()
 
-NavMesh.GetAllAreas(PopExtUtil.AllNavAreas)
+NavMesh.GetAllAreas( PopExtUtil.AllNavAreas )
 
-__CollectGameEventCallbacks(PopExtUtil.Events)
+__CollectGameEventCallbacks( PopExtUtil.Events )
 
-PopExtUtil.RespawnOverride.SetSolid(2);
-PopExtUtil.RespawnOverride.SetSize(Vector(), Vector(1, 1, 1))
+PopExtUtil.RespawnOverride.SetSolid( 2 )
+PopExtUtil.RespawnOverride.SetSize( Vector(), Vector( 1, 1, 1 ) )
 
-PopExtUtil.RespawnOverride.ValidateScriptScope();
-PopExtUtil.RespawnOverride.GetScriptScope().InputStartTouch <- PopExtUtil.TouchCrashFix;
-PopExtUtil.RespawnOverride.GetScriptScope().Inputstarttouch <- PopExtUtil.TouchCrashFix;
-PopExtUtil.RespawnOverride.GetScriptScope().InputEndTouch <- PopExtUtil.TouchCrashFix;
-PopExtUtil.RespawnOverride.GetScriptScope().Inputendtouch <- PopExtUtil.TouchCrashFix;
+PopExtUtil.RespawnOverride.ValidateScriptScope()
+PopExtUtil.RespawnOverride.GetScriptScope().InputStartTouch <- PopExtUtil.TouchCrashFix
+PopExtUtil.RespawnOverride.GetScriptScope().Inputstarttouch <- PopExtUtil.TouchCrashFix
+PopExtUtil.RespawnOverride.GetScriptScope().InputEndTouch <- PopExtUtil.TouchCrashFix
+PopExtUtil.RespawnOverride.GetScriptScope().Inputendtouch <- PopExtUtil.TouchCrashFix

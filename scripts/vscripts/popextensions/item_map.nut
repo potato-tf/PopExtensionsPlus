@@ -646,7 +646,7 @@
         item_class = "tf_wearable",
         model_player = "",
         item_slot = "misc",
-        item_name_english = "Congratulations! Your Honesty has been rewarded with a new hat!\n\n(Some other players were less scrupulous, and have been less fortunate)"
+        item_name_english = "Congratulations! Your Honesty has been rewarded with a new hat!\n\n( Some other players were less scrupulous, and have been less fortunate )"
     },
     "Honest Halo" : {
         id = 125,
@@ -2875,7 +2875,7 @@
         item_slot = "misc",
         item_name_english = "Summer Shades"
     },
-    "Power Up Canteen (MvM)" : {
+    "Power Up Canteen ( MvM )" : {
         id = 489,
         item_class = "tf_powerup_bottle",
         model_player = "models/player/items/mvm_loot/all_class/mvm_flask_generic.mdl",
@@ -3439,7 +3439,7 @@
         item_slot = "head",
         item_name_english = "Spine-Chilling Skull 2011"
     },
-    "Halloween Giveaway Package 2011 (Cauldron)" : {
+    "Halloween Giveaway Package 2011 ( Cauldron )" : {
         id = 577,
         item_class = "tf_wearable",
         item_slot = "action",
@@ -5896,12 +5896,12 @@
         item_slot = "misc",
         item_name_english = "Dead Little Buddy"
     },
-    "The Voodoo Juju (Slight Return)" : {
+    "The Voodoo Juju ( Slight Return )" : {
         id = 935,
         item_class = "tf_wearable",
         model_player = "models/player/items/demo/demo_bonehat.mdl",
         item_slot = "head",
-        item_name_english = "Voodoo JuJu (Slight Return)"
+        item_name_english = "Voodoo JuJu ( Slight Return )"
     },
     "The Exorcizor" : {
         id = 936,
@@ -7357,7 +7357,7 @@
         item_slot = "taunt",
         item_name_english = "Taunt: Mannrobics"
     },
-    "Default Power Up Canteen (MvM)" : {
+    "Default Power Up Canteen ( MvM )" : {
         id = 1163,
         item_class = "tf_powerup_bottle",
         model_player = "models/player/items/mvm_loot/all_class/mvm_flask_generic.mdl",
@@ -9394,12 +9394,12 @@
         item_class = "tool",
         item_name_english = "Mann Co. Supply Crate Key"
     },
-    "Something Special For Someone Special (Tool)" : {
+    "Something Special For Someone Special ( Tool )" : {
         id = 5074,
         item_class = "tool",
         item_name_english = "Something Special For Someone Special"
     },
-    "Something Special For Someone Special (Wearable)" : {
+    "Something Special For Someone Special ( Wearable )" : {
         id = 5075,
         item_class = "tf_wearable",
         item_slot = "misc",
@@ -9517,7 +9517,7 @@
         item_slot = "action",
         item_name_english = "Pile of Ash"
     },
-    "Voodoo-Cursed Item (Armory)" : {
+    "Voodoo-Cursed Item ( Armory )" : {
         id = 5608,
         item_class = "craft_item",
         item_name_english = "Voodoo-Cursed Object"
@@ -9557,7 +9557,7 @@
         item_class = "craft_item",
         item_name_english = "Voodoo-Cursed Nail"
     },
-    "Voodoo-Cursed Soul (Armory)" : {
+    "Voodoo-Cursed Soul ( Armory )" : {
         id = 5616,
         item_class = "tf_wearable",
         item_slot = "misc",
@@ -10180,13 +10180,13 @@
         item_slot = "action",
         item_name_english = "Unlocked Creepy Demo Crate"
     },
-    "Halloween Giveaway Cauldron 2014 (Base)" : {
+    "Halloween Giveaway Cauldron 2014 ( Base )" : {
         id = 5772,
         item_class = "tf_wearable",
         item_slot = "action",
         item_name_english = "Halloween Gift Cauldron"
     },
-    "Halloween Giveaway Cauldron 2014 (Achievement)" : {
+    "Halloween Giveaway Cauldron 2014 ( Achievement )" : {
         id = 5773,
         item_class = "tf_wearable",
         item_slot = "action",
@@ -11158,7 +11158,7 @@
         model_player = "models/player/items/crafting/cosmetic_case_ribbon.mdl",
         item_name_english = "Winter 2023 Cosmetic Case"
     },
-    "Strange Part (Armory)" : {
+    "Strange Part ( Armory )" : {
         id = 5999,
         item_class = "tool",
         item_name_english = "Strange Part"
@@ -11423,110 +11423,110 @@
         item_class = "tool",
         item_name_english = "Strange Cosmetic Part: Assists"
     },
-    "Strange Filter: Coldfront (Community)" : {
+    "Strange Filter: Coldfront ( Community )" : {
         id = 6500,
         item_class = "tool",
-        item_name_english = "Strange Filter: Coldfront (Community)"
+        item_name_english = "Strange Filter: Coldfront ( Community )"
     },
-    "Strange Filter: Egypt (Community)" : {
+    "Strange Filter: Egypt ( Community )" : {
         id = 6502,
         item_class = "tool",
-        item_name_english = "Strange Filter: Egypt (Community)"
+        item_name_english = "Strange Filter: Egypt ( Community )"
     },
-    "Strange Filter: Junction (Community)" : {
+    "Strange Filter: Junction ( Community )" : {
         id = 6503,
         item_class = "tool",
-        item_name_english = "Strange Filter: Junction (Community)"
+        item_name_english = "Strange Filter: Junction ( Community )"
     },
-    "Strange Filter: Mountain Lab (Community)" : {
+    "Strange Filter: Mountain Lab ( Community )" : {
         id = 6504,
         item_class = "tool",
-        item_name_english = "Strange Filter: Mountain Lab (Community)"
+        item_name_english = "Strange Filter: Mountain Lab ( Community )"
     },
-    "Strange Filter: Steel (Community)" : {
+    "Strange Filter: Steel ( Community )" : {
         id = 6505,
         item_class = "tool",
-        item_name_english = "Strange Filter: Steel (Community)"
+        item_name_english = "Strange Filter: Steel ( Community )"
     },
-    "Strange Filter: Gullywash (Community)" : {
+    "Strange Filter: Gullywash ( Community )" : {
         id = 6506,
         item_class = "tool",
-        item_name_english = "Strange Filter: Gullywash (Community)"
+        item_name_english = "Strange Filter: Gullywash ( Community )"
     },
-    "Strange Filter: Turbine (Community)" : {
+    "Strange Filter: Turbine ( Community )" : {
         id = 6507,
         item_class = "tool",
-        item_name_english = "Strange Filter: Turbine (Community)"
+        item_name_english = "Strange Filter: Turbine ( Community )"
     },
-    "Strange Filter: Fastlane (Community)" : {
+    "Strange Filter: Fastlane ( Community )" : {
         id = 6508,
         item_class = "tool",
-        item_name_english = "Strange Filter: Fastlane (Community)"
+        item_name_english = "Strange Filter: Fastlane ( Community )"
     },
-    "Strange Filter: Freight (Community)" : {
+    "Strange Filter: Freight ( Community )" : {
         id = 6509,
         item_class = "tool",
-        item_name_english = "Strange Filter: Freight (Community)"
+        item_name_english = "Strange Filter: Freight ( Community )"
     },
-    "Strange Filter: Yukon (Community)" : {
+    "Strange Filter: Yukon ( Community )" : {
         id = 6510,
         item_class = "tool",
-        item_name_english = "Strange Filter: Yukon (Community)"
+        item_name_english = "Strange Filter: Yukon ( Community )"
     },
-    "Strange Filter: Harvest (Community)" : {
+    "Strange Filter: Harvest ( Community )" : {
         id = 6511,
         item_class = "tool",
-        item_name_english = "Strange Filter: Harvest (Community)"
+        item_name_english = "Strange Filter: Harvest ( Community )"
     },
-    "Strange Filter: Lakeside (Community)" : {
+    "Strange Filter: Lakeside ( Community )" : {
         id = 6512,
         item_class = "tool",
-        item_name_english = "Strange Filter: Lakeside (Community)"
+        item_name_english = "Strange Filter: Lakeside ( Community )"
     },
-    "Strange Filter: Kong King (Community)" : {
+    "Strange Filter: Kong King ( Community )" : {
         id = 6513,
         item_class = "tool",
-        item_name_english = "Strange Filter: Kong King (Community)"
+        item_name_english = "Strange Filter: Kong King ( Community )"
     },
-    "Strange Filter: Frontier (Community)" : {
+    "Strange Filter: Frontier ( Community )" : {
         id = 6514,
         item_class = "tool",
-        item_name_english = "Strange Filter: Frontier (Community)"
+        item_name_english = "Strange Filter: Frontier ( Community )"
     },
-    "Strange Filter: Hoodoo (Community)" : {
+    "Strange Filter: Hoodoo ( Community )" : {
         id = 6515,
         item_class = "tool",
-        item_name_english = "Strange Filter: Hoodoo (Community)"
+        item_name_english = "Strange Filter: Hoodoo ( Community )"
     },
-    "Strange Filter: Nightfall (Community)" : {
+    "Strange Filter: Nightfall ( Community )" : {
         id = 6516,
         item_class = "tool",
-        item_name_english = "Strange Filter: Nightfall (Community)"
+        item_name_english = "Strange Filter: Nightfall ( Community )"
     },
-    "Strange Filter: Watchtower (Community)" : {
+    "Strange Filter: Watchtower ( Community )" : {
         id = 6517,
         item_class = "tool",
-        item_name_english = "Strange Filter: Watchtower (Community)"
+        item_name_english = "Strange Filter: Watchtower ( Community )"
     },
-    "Strange Filter: Offblast (Community)" : {
+    "Strange Filter: Offblast ( Community )" : {
         id = 6518,
         item_class = "tool",
-        item_name_english = "Strange Filter: Offblast (Community)"
+        item_name_english = "Strange Filter: Offblast ( Community )"
     },
-    "Strange Filter: Mann Manor (Community)" : {
+    "Strange Filter: Mann Manor ( Community )" : {
         id = 6519,
         item_class = "tool",
-        item_name_english = "Strange Filter: Mann Manor (Community)"
+        item_name_english = "Strange Filter: Mann Manor ( Community )"
     },
-    "Strange Filter: Process (Community)" : {
+    "Strange Filter: Process ( Community )" : {
         id = 6520,
         item_class = "tool",
-        item_name_english = "Strange Filter: Process (Community)"
+        item_name_english = "Strange Filter: Process ( Community )"
     },
-    "Strange Filter: Standin (Community)" : {
+    "Strange Filter: Standin ( Community )" : {
         id = 6521,
         item_class = "tool",
-        item_name_english = "Strange Filter: Standin (Community)"
+        item_name_english = "Strange Filter: Standin ( Community )"
     },
     "Strangifier" : {
         id = 6522,
@@ -11538,10 +11538,10 @@
         item_class = "tool",
         item_name_english = "Kit"
     },
-    "Strange Filter: Snakewater (Community)" : {
+    "Strange Filter: Snakewater ( Community )" : {
         id = 6524,
         item_class = "tool",
-        item_name_english = "Strange Filter: Snakewater (Community)"
+        item_name_english = "Strange Filter: Snakewater ( Community )"
     },
     "Killstreakifier Rare" : {
         id = 6526,
@@ -11553,135 +11553,135 @@
         item_class = "tool",
         item_name_english = "Kit"
     },
-    "Strange Filter: Snowplow (Community)" : {
+    "Strange Filter: Snowplow ( Community )" : {
         id = 6528,
         item_class = "tool",
-        item_name_english = "Strange Filter: Snowplow (Community)"
+        item_name_english = "Strange Filter: Snowplow ( Community )"
     },
-    "Strange Filter: Borneo (Community)" : {
+    "Strange Filter: Borneo ( Community )" : {
         id = 6529,
         item_class = "tool",
-        item_name_english = "Strange Filter: Borneo (Community)"
+        item_name_english = "Strange Filter: Borneo ( Community )"
     },
-    "Strange Filter: Suijin (Community)" : {
+    "Strange Filter: Suijin ( Community )" : {
         id = 6530,
         item_class = "tool",
-        item_name_english = "Strange Filter: Suijin (Community)"
+        item_name_english = "Strange Filter: Suijin ( Community )"
     },
-    "Strange Filter: 2Fort Invasion (Community)" : {
+    "Strange Filter: 2Fort Invasion ( Community )" : {
         id = 6531,
         item_class = "tool",
-        item_name_english = "Strange Filter: 2Fort Invasion (Community)"
+        item_name_english = "Strange Filter: 2Fort Invasion ( Community )"
     },
-    "Strange Filter: Probed (Community)" : {
+    "Strange Filter: Probed ( Community )" : {
         id = 6532,
         item_class = "tool",
-        item_name_english = "Strange Filter: Probed (Community)"
+        item_name_english = "Strange Filter: Probed ( Community )"
     },
-    "Strange Filter: Watergate (Community)" : {
+    "Strange Filter: Watergate ( Community )" : {
         id = 6533,
         item_class = "tool",
-        item_name_english = "Strange Filter: Watergate (Community)"
+        item_name_english = "Strange Filter: Watergate ( Community )"
     },
-    "Strange Filter: Byre (Community)" : {
+    "Strange Filter: Byre ( Community )" : {
         id = 6534,
         item_class = "tool",
-        item_name_english = "Strange Filter: Byre (Community)"
+        item_name_english = "Strange Filter: Byre ( Community )"
     },
-    "Strange Filter: Gorge Event (Community)" : {
+    "Strange Filter: Gorge Event ( Community )" : {
         id = 6535,
         item_class = "tool",
-        item_name_english = "Strange Filter: Gorge Event (Community)"
+        item_name_english = "Strange Filter: Gorge Event ( Community )"
     },
-    "Strange Filter: Sunshine Event (Community)" : {
+    "Strange Filter: Sunshine Event ( Community )" : {
         id = 6536,
         item_class = "tool",
-        item_name_english = "Strange Filter: Sinshine (Community)"
+        item_name_english = "Strange Filter: Sinshine ( Community )"
     },
-    "Strange Filter: Moonshine Event (Community)" : {
+    "Strange Filter: Moonshine Event ( Community )" : {
         id = 6537,
         item_class = "tool",
-        item_name_english = "Strange Filter: Moonshine Event (Community)"
+        item_name_english = "Strange Filter: Moonshine Event ( Community )"
     },
-    "Strange Filter: Millstone Event (Community)" : {
+    "Strange Filter: Millstone Event ( Community )" : {
         id = 6538,
         item_class = "tool",
-        item_name_english = "Strange Filter: Hellstone (Community)"
+        item_name_english = "Strange Filter: Hellstone ( Community )"
     },
-    "Strange Filter: Snowycoast (Community)" : {
+    "Strange Filter: Snowycoast ( Community )" : {
         id = 6539,
         item_class = "tool",
-        item_name_english = "Strange Filter: Snowycoast (Community)"
+        item_name_english = "Strange Filter: Snowycoast ( Community )"
     },
-    "Strange Filter: Vanguard (Community)" : {
+    "Strange Filter: Vanguard ( Community )" : {
         id = 6540,
         item_class = "tool",
-        item_name_english = "Strange Filter: Vanguard (Community)"
+        item_name_english = "Strange Filter: Vanguard ( Community )"
     },
-    "Strange Filter: Landfall (Community)" : {
+    "Strange Filter: Landfall ( Community )" : {
         id = 6541,
         item_class = "tool",
-        item_name_english = "Strange Filter: Landfall (Community)"
+        item_name_english = "Strange Filter: Landfall ( Community )"
     },
-    "Strange Filter: Highpass (Community)" : {
+    "Strange Filter: Highpass ( Community )" : {
         id = 6542,
         item_class = "tool",
-        item_name_english = "Strange Filter: Highpass (Community)"
+        item_name_english = "Strange Filter: Highpass ( Community )"
     },
     "Strange Filter: Competitive" : {
         id = 6543,
         item_class = "tool",
         item_name_english = "Strange Filter: Competitive"
     },
-    "Strange Filter: Sunshine (Community)" : {
+    "Strange Filter: Sunshine ( Community )" : {
         id = 6544,
         item_class = "tool",
-        item_name_english = "Strange Filter: Sunshine (Community)"
+        item_name_english = "Strange Filter: Sunshine ( Community )"
     },
-    "Strange Filter: Metalworks (Community)" : {
+    "Strange Filter: Metalworks ( Community )" : {
         id = 6545,
         item_class = "tool",
-        item_name_english = "Strange Filter: Metalworks (Community)"
+        item_name_english = "Strange Filter: Metalworks ( Community )"
     },
-    "Strange Filter: Swiftwater (Community)" : {
+    "Strange Filter: Swiftwater ( Community )" : {
         id = 6546,
         item_class = "tool",
-        item_name_english = "Strange Filter: Swiftwater (Community)"
+        item_name_english = "Strange Filter: Swiftwater ( Community )"
     },
-    "Strange Filter: Maple Ridge Event (Community)" : {
+    "Strange Filter: Maple Ridge Event ( Community )" : {
         id = 6547,
         item_class = "tool",
-        item_name_english = "Strange Filter: Maple Ridge Event (Community)"
+        item_name_english = "Strange Filter: Maple Ridge Event ( Community )"
     },
-    "Strange Filter: Fifth Curve Event (Community)" : {
+    "Strange Filter: Fifth Curve Event ( Community )" : {
         id = 6548,
         item_class = "tool",
-        item_name_english = "Strange Filter: Brimstone (Community)"
+        item_name_english = "Strange Filter: Brimstone ( Community )"
     },
-    "Strange Filter: Pit of Death (Community)" : {
+    "Strange Filter: Pit of Death ( Community )" : {
         id = 6549,
         item_class = "tool",
-        item_name_english = "Strange Filter: Pit of Death (Community)"
+        item_name_english = "Strange Filter: Pit of Death ( Community )"
     },
-    "Strange Filter: Mossrock (Community)" : {
+    "Strange Filter: Mossrock ( Community )" : {
         id = 6550,
         item_class = "tool",
-        item_name_english = "Strange Filter: Mossrock (Community)"
+        item_name_english = "Strange Filter: Mossrock ( Community )"
     },
-    "Strange Filter: Lazarus (Community)" : {
+    "Strange Filter: Lazarus ( Community )" : {
         id = 6551,
         item_class = "tool",
-        item_name_english = "Strange Filter: Lazarus (Community)"
+        item_name_english = "Strange Filter: Lazarus ( Community )"
     },
-    "Strange Filter: Banana Bay (Community)" : {
+    "Strange Filter: Banana Bay ( Community )" : {
         id = 6552,
         item_class = "tool",
-        item_name_english = "Strange Filter: Banana Bay (Community)"
+        item_name_english = "Strange Filter: Banana Bay ( Community )"
     },
-    "Strange Filter: Enclosure (Community)" : {
+    "Strange Filter: Enclosure ( Community )" : {
         id = 6553,
         item_class = "tool",
-        item_name_english = "Strange Filter: Enclosure (Community)"
+        item_name_english = "Strange Filter: Enclosure ( Community )"
     },
     "Strange Filter: 2Fort" : {
         id = 6554,
@@ -11733,380 +11733,380 @@
         item_class = "tool",
         item_name_english = "Strange Filter: Mannhattan"
     },
-    "Strange Filter: Brazil (Community)" : {
+    "Strange Filter: Brazil ( Community )" : {
         id = 6564,
         item_class = "tool",
-        item_name_english = "Strange Filter: Brazil (Community)"
+        item_name_english = "Strange Filter: Brazil ( Community )"
     },
-    "Strange Filter: Bagel Event (Community)" : {
+    "Strange Filter: Bagel Event ( Community )" : {
         id = 6565,
         item_class = "tool",
-        item_name_english = "Strange Filter: Cauldron (Community)"
+        item_name_english = "Strange Filter: Cauldron ( Community )"
     },
-    "Strange Filter: Rumble Event (Community)" : {
+    "Strange Filter: Rumble Event ( Community )" : {
         id = 6566,
         item_class = "tool",
-        item_name_english = "Strange Filter: Gravestone (Community)"
+        item_name_english = "Strange Filter: Gravestone ( Community )"
     },
-    "Strange Filter: Monster Bash (Community)" : {
+    "Strange Filter: Monster Bash ( Community )" : {
         id = 6567,
         item_class = "tool",
-        item_name_english = "Strange Filter: Monster Bash (Community)"
+        item_name_english = "Strange Filter: Monster Bash ( Community )"
     },
-    "Strange Filter: Slasher (Community)" : {
+    "Strange Filter: Slasher ( Community )" : {
         id = 6568,
         item_class = "tool",
-        item_name_english = "Strange Filter: Slasher (Community)"
+        item_name_english = "Strange Filter: Slasher ( Community )"
     },
-    "Strange Filter: Cursed Cove (Community)" : {
+    "Strange Filter: Cursed Cove ( Community )" : {
         id = 6569,
         item_class = "tool",
-        item_name_english = "Strange Filter: Cursed Cove (Community)"
+        item_name_english = "Strange Filter: Cursed Cove ( Community )"
     },
-    "Strange Filter: Laughter (Community)" : {
+    "Strange Filter: Laughter ( Community )" : {
         id = 6570,
         item_class = "tool",
-        item_name_english = "Strange Filter: Laughter (Community)"
+        item_name_english = "Strange Filter: Laughter ( Community )"
     },
-    "Strange Filter: Precipice (Community)" : {
+    "Strange Filter: Precipice ( Community )" : {
         id = 6571,
         item_class = "tool",
-        item_name_english = "Strange Filter: Precipice (Community)"
+        item_name_english = "Strange Filter: Precipice ( Community )"
     },
-    "Strange Filter: Megalo (Community)" : {
+    "Strange Filter: Megalo ( Community )" : {
         id = 6572,
         item_class = "tool",
-        item_name_english = "Strange Filter: Megalo (Community)"
+        item_name_english = "Strange Filter: Megalo ( Community )"
     },
-    "Strange Filter: Hassle Castle (Community)" : {
+    "Strange Filter: Hassle Castle ( Community )" : {
         id = 6573,
         item_class = "tool",
-        item_name_english = "Strange Filter: Hassle Castle (Community)"
+        item_name_english = "Strange Filter: Hassle Castle ( Community )"
     },
-    "Strange Filter: Bloodwater (Community)" : {
+    "Strange Filter: Bloodwater ( Community )" : {
         id = 6574,
         item_class = "tool",
-        item_name_english = "Strange Filter: Bloodwater (Community)"
+        item_name_english = "Strange Filter: Bloodwater ( Community )"
     },
-    "Strange Filter: Undergrove Event (Community)" : {
+    "Strange Filter: Undergrove Event ( Community )" : {
         id = 6575,
         item_class = "tool",
-        item_name_english = "Strange Filter: Moldergrove (Community)"
+        item_name_english = "Strange Filter: Moldergrove ( Community )"
     },
-    "Strange Filter: Pier (Community)" : {
+    "Strange Filter: Pier ( Community )" : {
         id = 6576,
         item_class = "tool",
-        item_name_english = "Strange Filter: Pier (Community)"
+        item_name_english = "Strange Filter: Pier ( Community )"
     },
-    "Strange Filter: SnowVille (Community)" : {
+    "Strange Filter: SnowVille ( Community )" : {
         id = 6577,
         item_class = "tool",
-        item_name_english = "Strange Filter: SnowVille (Community)"
+        item_name_english = "Strange Filter: SnowVille ( Community )"
     },
-    "Strange Filter: Snowfall (Community)" : {
+    "Strange Filter: Snowfall ( Community )" : {
         id = 6578,
         item_class = "tool",
-        item_name_english = "Strange Filter: Snowfall (Community)"
+        item_name_english = "Strange Filter: Snowfall ( Community )"
     },
-    "Strange Filter: Wutville (Community)" : {
+    "Strange Filter: Wutville ( Community )" : {
         id = 6579,
         item_class = "tool",
-        item_name_english = "Strange Filter: Wutville (Community)"
+        item_name_english = "Strange Filter: Wutville ( Community )"
     },
-    "Strange Filter: Farmageddon (Community)" : {
+    "Strange Filter: Farmageddon ( Community )" : {
         id = 6580,
         item_class = "tool",
-        item_name_english = "Strange Filter: Farmageddon (Community)"
+        item_name_english = "Strange Filter: Farmageddon ( Community )"
     },
-    "Strange Filter: Los Muertos (Community)" : {
+    "Strange Filter: Los Muertos ( Community )" : {
         id = 6581,
         item_class = "tool",
-        item_name_english = "Strange Filter: Los Muertos (Community)"
+        item_name_english = "Strange Filter: Los Muertos ( Community )"
     },
-    "Strange Filter: Erebus (Community)" : {
+    "Strange Filter: Erebus ( Community )" : {
         id = 6582,
         item_class = "tool",
-        item_name_english = "Strange Filter: Erebus (Community)"
+        item_name_english = "Strange Filter: Erebus ( Community )"
     },
-    "Strange Filter: Terror (Community)" : {
+    "Strange Filter: Terror ( Community )" : {
         id = 6583,
         item_class = "tool",
-        item_name_english = "Strange Filter: Terror (Community)"
+        item_name_english = "Strange Filter: Terror ( Community )"
     },
-    "Strange Filter: Graveyard (Community)" : {
+    "Strange Filter: Graveyard ( Community )" : {
         id = 6584,
         item_class = "tool",
-        item_name_english = "Strange Filter: Graveyard (Community)"
+        item_name_english = "Strange Filter: Graveyard ( Community )"
     },
-    "Strange Filter: Sinthetic (Community)" : {
+    "Strange Filter: Sinthetic ( Community )" : {
         id = 6585,
         item_class = "tool",
-        item_name_english = "Strange Filter: Sinthetic (Community)"
+        item_name_english = "Strange Filter: Sinthetic ( Community )"
     },
-    "Strange Filter: Polar (Community)" : {
+    "Strange Filter: Polar ( Community )" : {
         id = 6586,
         item_class = "tool",
-        item_name_english = "Strange Filter: Polar (Community)"
+        item_name_english = "Strange Filter: Polar ( Community )"
     },
-    "Strange Filter: Bread Space (Community)" : {
+    "Strange Filter: Bread Space ( Community )" : {
         id = 6587,
         item_class = "tool",
-        item_name_english = "Strange Filter: Bread Space (Community)"
+        item_name_english = "Strange Filter: Bread Space ( Community )"
     },
-    "Strange Filter: Chilly (Community)" : {
+    "Strange Filter: Chilly ( Community )" : {
         id = 6588,
         item_class = "tool",
-        item_name_english = "Strange Filter: Chilly (Community)"
+        item_name_english = "Strange Filter: Chilly ( Community )"
     },
-    "Strange Filter: Cascade (Community)" : {
+    "Strange Filter: Cascade ( Community )" : {
         id = 6589,
         item_class = "tool",
-        item_name_english = "Strange Filter: Cascade (Community)"
+        item_name_english = "Strange Filter: Cascade ( Community )"
     },
-    "Strange Filter: Altitude (Community)" : {
+    "Strange Filter: Altitude ( Community )" : {
         id = 6590,
         item_class = "tool",
-        item_name_english = "Strange Filter: Altitude (Community)"
+        item_name_english = "Strange Filter: Altitude ( Community )"
     },
-    "Strange Filter: Doublefrost (Community)" : {
+    "Strange Filter: Doublefrost ( Community )" : {
         id = 6591,
         item_class = "tool",
-        item_name_english = "Strange Filter: Doublefrost (Community)"
+        item_name_english = "Strange Filter: Doublefrost ( Community )"
     },
-    "Strange Filter: Soul Mill (Community)" : {
+    "Strange Filter: Soul Mill ( Community )" : {
         id = 6592,
         item_class = "tool",
-        item_name_english = "Strange Filter: Soul-Mill (Community)"
+        item_name_english = "Strange Filter: Soul-Mill ( Community )"
     },
-    "Strange Filter: Helltrain (Community)" : {
+    "Strange Filter: Helltrain ( Community )" : {
         id = 6593,
         item_class = "tool",
-        item_name_english = "Strange Filter: Helltrain (Community)"
+        item_name_english = "Strange Filter: Helltrain ( Community )"
     },
-    "Strange Filter: Bonesaw (Community)" : {
+    "Strange Filter: Bonesaw ( Community )" : {
         id = 6594,
         item_class = "tool",
-        item_name_english = "Strange Filter: Bonesaw (Community)"
+        item_name_english = "Strange Filter: Bonesaw ( Community )"
     },
-    "Strange Filter: Crasher (Community)" : {
+    "Strange Filter: Crasher ( Community )" : {
         id = 6595,
         item_class = "tool",
-        item_name_english = "Strange Filter: Crasher (Community)"
+        item_name_english = "Strange Filter: Crasher ( Community )"
     },
-    "Strange Filter: Ghoulpit (Community)" : {
+    "Strange Filter: Ghoulpit ( Community )" : {
         id = 6596,
         item_class = "tool",
-        item_name_english = "Strange Filter: Ghoulpit (Community)"
+        item_name_english = "Strange Filter: Ghoulpit ( Community )"
     },
-    "Strange Filter: Spookeyridge (Community)" : {
+    "Strange Filter: Spookeyridge ( Community )" : {
         id = 6597,
         item_class = "tool",
-        item_name_english = "Strange Filter: Spookeyridge (Community)"
+        item_name_english = "Strange Filter: Spookeyridge ( Community )"
     },
-    "Strange Filter: Frostwatch (Community)" : {
+    "Strange Filter: Frostwatch ( Community )" : {
         id = 6598,
         item_class = "tool",
-        item_name_english = "Strange Filter: Frostwatch (Community)"
+        item_name_english = "Strange Filter: Frostwatch ( Community )"
     },
-    "Strange Filter: Frostcliff (Community)" : {
+    "Strange Filter: Frostcliff ( Community )" : {
         id = 6599,
         item_class = "tool",
-        item_name_english = "Strange Filter: Frostcliff (Community)"
+        item_name_english = "Strange Filter: Frostcliff ( Community )"
     },
-    "Strange Filter: Rumford (Community)" : {
+    "Strange Filter: Rumford ( Community )" : {
         id = 6600,
         item_class = "tool",
-        item_name_english = "Strange Filter: Rumford (Community)"
+        item_name_english = "Strange Filter: Rumford ( Community )"
     },
-    "Strange Filter: Frosty (Community)" : {
+    "Strange Filter: Frosty ( Community )" : {
         id = 6601,
         item_class = "tool",
-        item_name_english = "Strange Filter: Frosty (Community)"
+        item_name_english = "Strange Filter: Frosty ( Community )"
     },
-    "Strange Filter: Coal Pit (Community)" : {
+    "Strange Filter: Coal Pit ( Community )" : {
         id = 6602,
         item_class = "tool",
-        item_name_english = "Strange Filter: Coal Pit (Community)"
+        item_name_english = "Strange Filter: Coal Pit ( Community )"
     },
-    "Strange Filter: Sharkbay (Community)" : {
+    "Strange Filter: Sharkbay ( Community )" : {
         id = 6603,
         item_class = "tool",
-        item_name_english = "Strange Filter: Sharkbay (Community)"
+        item_name_english = "Strange Filter: Sharkbay ( Community )"
     },
-    "Strange Filter: Rotunda (Community)" : {
+    "Strange Filter: Rotunda ( Community )" : {
         id = 6604,
         item_class = "tool",
-        item_name_english = "Strange Filter: Rotunda (Community)"
+        item_name_english = "Strange Filter: Rotunda ( Community )"
     },
-    "Strange Filter: Phoenix (Community)" : {
+    "Strange Filter: Phoenix ( Community )" : {
         id = 6605,
         item_class = "tool",
-        item_name_english = "Strange Filter: Phoenix (Community)"
+        item_name_english = "Strange Filter: Phoenix ( Community )"
     },
-    "Strange Filter: Cashworks (Community)" : {
+    "Strange Filter: Cashworks ( Community )" : {
         id = 6606,
         item_class = "tool",
-        item_name_english = "Strange Filter: Cashworks (Community)"
+        item_name_english = "Strange Filter: Cashworks ( Community )"
     },
-    "Strange Filter: Venice (Community)" : {
+    "Strange Filter: Venice ( Community )" : {
         id = 6607,
         item_class = "tool",
-        item_name_english = "Strange Filter: Venice (Community)"
+        item_name_english = "Strange Filter: Venice ( Community )"
     },
-    "Strange Filter: Reckoner (Community)" : {
+    "Strange Filter: Reckoner ( Community )" : {
         id = 6608,
         item_class = "tool",
-        item_name_english = "Strange Filter: Reckoner (Community)"
+        item_name_english = "Strange Filter: Reckoner ( Community )"
     },
-    "Strange Filter: Sulfur (Community)" : {
+    "Strange Filter: Sulfur ( Community )" : {
         id = 6609,
         item_class = "tool",
-        item_name_english = "Strange Filter: Sulfur (Community)"
+        item_name_english = "Strange Filter: Sulfur ( Community )"
     },
-    "Strange Filter: Hardwood (Community)" : {
+    "Strange Filter: Hardwood ( Community )" : {
         id = 6610,
         item_class = "tool",
-        item_name_english = "Strange Filter: Hardwood (Community)"
+        item_name_english = "Strange Filter: Hardwood ( Community )"
     },
-    "Strange Filter: Pelican Peak (Community)" : {
+    "Strange Filter: Pelican Peak ( Community )" : {
         id = 6611,
         item_class = "tool",
-        item_name_english = "Strange Filter: Pelican Peak (Community)"
+        item_name_english = "Strange Filter: Pelican Peak ( Community )"
     },
-    "Strange Filter: Selbyen (Community)" : {
+    "Strange Filter: Selbyen ( Community )" : {
         id = 6612,
         item_class = "tool",
-        item_name_english = "Strange Filter: Selbyen (Community)"
+        item_name_english = "Strange Filter: Selbyen ( Community )"
     },
-    "Strange Filter: VSH Tiny Rock (Community)" : {
+    "Strange Filter: VSH Tiny Rock ( Community )" : {
         id = 6613,
         item_class = "tool",
-        item_name_english = "Strange Filter: Tiny Rock (Community)"
+        item_name_english = "Strange Filter: Tiny Rock ( Community )"
     },
-    "Strange Filter: VSH Distillery (Community)" : {
+    "Strange Filter: VSH Distillery ( Community )" : {
         id = 6614,
         item_class = "tool",
-        item_name_english = "Strange Filter: Distillery (Community)"
+        item_name_english = "Strange Filter: Distillery ( Community )"
     },
-    "Strange Filter: VSH Skirmish (Community)" : {
+    "Strange Filter: VSH Skirmish ( Community )" : {
         id = 6615,
         item_class = "tool",
-        item_name_english = "Strange Filter: Skirmish (Community)"
+        item_name_english = "Strange Filter: Skirmish ( Community )"
     },
-    "Strange Filter: VSH Nucleus (Community)" : {
+    "Strange Filter: VSH Nucleus ( Community )" : {
         id = 6616,
         item_class = "tool",
-        item_name_english = "Strange Filter: Nucleus VSH (Community)"
+        item_name_english = "Strange Filter: Nucleus VSH ( Community )"
     },
-    "Strange Filter: Perks (Community)" : {
+    "Strange Filter: Perks ( Community )" : {
         id = 6617,
         item_class = "tool",
-        item_name_english = "Strange Filter: Perks (Community)"
+        item_name_english = "Strange Filter: Perks ( Community )"
     },
-    "Strange Filter: Slime (Community)" : {
+    "Strange Filter: Slime ( Community )" : {
         id = 6618,
         item_class = "tool",
-        item_name_english = "Strange Filter: Slime (Community)"
+        item_name_english = "Strange Filter: Slime ( Community )"
     },
-    "Strange Filter: Lava Pit (Community)" : {
+    "Strange Filter: Lava Pit ( Community )" : {
         id = 6619,
         item_class = "tool",
-        item_name_english = "Strange Filter: Lava Pit (Community)"
+        item_name_english = "Strange Filter: Lava Pit ( Community )"
     },
-    "Strange Filter: Mannsylvania (Community)" : {
+    "Strange Filter: Mannsylvania ( Community )" : {
         id = 6620,
         item_class = "tool",
-        item_name_english = "Strange Filter: Mannsylvania (Community)"
+        item_name_english = "Strange Filter: Mannsylvania ( Community )"
     },
-    "Strange Filter: Sandcastle (Community)" : {
+    "Strange Filter: Sandcastle ( Community )" : {
         id = 6621,
         item_class = "tool",
-        item_name_english = "Strange Filter: Sandcastle (Community)"
+        item_name_english = "Strange Filter: Sandcastle ( Community )"
     },
-    "Strange Filter: Spineyard (Community)" : {
+    "Strange Filter: Spineyard ( Community )" : {
         id = 6622,
         item_class = "tool",
-        item_name_english = "Strange Filter: Spineyard (Community)"
+        item_name_english = "Strange Filter: Spineyard ( Community )"
     },
-    "Strange Filter: Corruption (Community)" : {
+    "Strange Filter: Corruption ( Community )" : {
         id = 6623,
         item_class = "tool",
-        item_name_english = "Strange Filter: Corruption (Community)"
+        item_name_english = "Strange Filter: Corruption ( Community )"
     },
-    "Strange Filter: Murky (Community)" : {
+    "Strange Filter: Murky ( Community )" : {
         id = 6624,
         item_class = "tool",
-        item_name_english = "Strange Filter: Murky (Community)"
+        item_name_english = "Strange Filter: Murky ( Community )"
     },
-    "Strange Filter: Atoll (Community)" : {
+    "Strange Filter: Atoll ( Community )" : {
         id = 6625,
         item_class = "tool",
-        item_name_english = "Strange Filter: Atoll (Community)"
+        item_name_english = "Strange Filter: Atoll ( Community )"
     },
-    "Strange Filter: Woods (Community)" : {
+    "Strange Filter: Woods ( Community )" : {
         id = 6626,
         item_class = "tool",
-        item_name_english = "Strange Filter: Woods (Community)"
+        item_name_english = "Strange Filter: Woods ( Community )"
     },
-    "Strange Filter: Sanitarium (Community)" : {
+    "Strange Filter: Sanitarium ( Community )" : {
         id = 6627,
         item_class = "tool",
-        item_name_english = "Strange Filter: Sanitarium (Community)"
+        item_name_english = "Strange Filter: Sanitarium ( Community )"
     },
-    "Strange Filter: Devastation (Community)" : {
+    "Strange Filter: Devastation ( Community )" : {
         id = 6628,
         item_class = "tool",
-        item_name_english = "Strange Filter: Devastation (Community)"
+        item_name_english = "Strange Filter: Devastation ( Community )"
     },
-    "Strange Filter: Snowtower (Community)" : {
+    "Strange Filter: Snowtower ( Community )" : {
         id = 6629,
         item_class = "tool",
-        item_name_english = "Strange Filter: Snowtower (Community)"
+        item_name_english = "Strange Filter: Snowtower ( Community )"
     },
-    "Strange Filter: Krampus (Community)" : {
+    "Strange Filter: Krampus ( Community )" : {
         id = 6630,
         item_class = "tool",
-        item_name_english = "Strange Filter: Krampus (Community)"
+        item_name_english = "Strange Filter: Krampus ( Community )"
     },
-    "Strange Filter: Haarp (Community)" : {
+    "Strange Filter: Haarp ( Community )" : {
         id = 6631,
         item_class = "tool",
-        item_name_english = "Strange Filter: Haarp (Community)"
+        item_name_english = "Strange Filter: Haarp ( Community )"
     },
-    "Strange Filter: Brew (Community)" : {
+    "Strange Filter: Brew ( Community )" : {
         id = 6632,
         item_class = "tool",
-        item_name_english = "Strange Filter: Brew (Community)"
+        item_name_english = "Strange Filter: Brew ( Community )"
     },
-    "Strange Filter: Hacksaw (Community)" : {
+    "Strange Filter: Hacksaw ( Community )" : {
         id = 6633,
         item_class = "tool",
-        item_name_english = "Strange Filter: Hacksaw (Community)"
+        item_name_english = "Strange Filter: Hacksaw ( Community )"
     },
-    "Strange Filter: Turbine Event (Community)" : {
+    "Strange Filter: Turbine Event ( Community )" : {
         id = 6634,
         item_class = "tool",
-        item_name_english = "Strange Filter: Turbine Center (Community)"
+        item_name_english = "Strange Filter: Turbine Center ( Community )"
     },
-    "Strange Filter: Carrier (Community)" : {
+    "Strange Filter: Carrier ( Community )" : {
         id = 6635,
         item_class = "tool",
-        item_name_english = "Strange Filter: Carrier (Community)"
+        item_name_english = "Strange Filter: Carrier ( Community )"
     },
-    "Strange Filter: Galleria (Community)" : {
+    "Strange Filter: Galleria ( Community )" : {
         id = 6636,
         item_class = "tool",
-        item_name_english = "Strange Filter: Galleria (Community)"
+        item_name_english = "Strange Filter: Galleria ( Community )"
     },
-    "Strange Filter: Emerge (Community)" : {
+    "Strange Filter: Emerge ( Community )" : {
         id = 6637,
         item_class = "tool",
-        item_name_english = "Strange Filter: Emerge (Community)"
+        item_name_english = "Strange Filter: Emerge ( Community )"
     },
-    "Strange Filter: Camber (Community)" : {
+    "Strange Filter: Camber ( Community )" : {
         id = 6638,
         item_class = "tool",
-        item_name_english = "Strange Filter: Camber (Community)"
+        item_name_english = "Strange Filter: Camber ( Community )"
     },
     "UGC Highlander 1st Place North American Platinum Season 6" : {
         id = 8000,
@@ -13669,7 +13669,7 @@
         item_slot = "misc",
         item_name_english = "ESH Ultiduo #7 Gold Medal"
     },
-    "Tournament Medal (Armory)" : {
+    "Tournament Medal ( Armory )" : {
         id = 8223,
         item_class = "tf_wearable",
         item_slot = "misc",
@@ -18323,7 +18323,7 @@
         item_class = "tool",
         item_name_english = "Spellbook Page"
     },
-    "Halloween Spellbook Page (Achievement)" : {
+    "Halloween Spellbook Page ( Achievement )" : {
         id = 8936,
         item_class = "tool",
         item_name_english = "Spellbook Page"

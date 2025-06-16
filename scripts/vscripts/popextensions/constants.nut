@@ -5,34 +5,34 @@
 ::ROOT  <- getroottable()
 ::CONST <- getconsttable()
 
-if (!("ConstantNamingConvention" in ROOT)) {
+if ( !( "ConstantNamingConvention" in ROOT ) ) {
 
-	foreach(a, b in Constants)
-		foreach(k, v in b)
-		{
+	foreach( a, b in Constants )
+		foreach( k, v in b ) {
+
 			CONST[k] <- v != null ? v : 0
 			ROOT[k] <- v != null ? v : 0
 		}
 }
 
-CONST.setdelegate({ _newslot = @(k, v) compilestring("const " + k + "=" + (typeof(v) == "string" ? ("\"" + v + "\"") : v))() })
+CONST.setdelegate( { _newslot = @( k, v ) compilestring( "const " + k + "=" + ( typeof v == "string" ? ( "\"" + v + "\"" ) : v ) )() } )
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
-foreach(k, v in ::NetProps.getclass())
-	if (k != "IsValid" && !(k in ROOT))
-		ROOT[k] <- ::NetProps[k].bindenv(::NetProps)
+foreach( k, v in ::NetProps.getclass() )
+	if ( k != "IsValid" && !( k in ROOT ) )
+		ROOT[k] <- ::NetProps[k].bindenv( ::NetProps )
 
-foreach(k, v in ::Entities.getclass())
-	if (k != "IsValid" && !(k in ROOT))
-		ROOT[k] <- ::Entities[k].bindenv(::Entities)
+foreach( k, v in ::Entities.getclass() )
+	if ( k != "IsValid" && !( k in ROOT ) )
+		ROOT[k] <- ::Entities[k].bindenv( ::Entities )
 
-foreach(k, v in ::EntityOutputs.getclass())
-	if (k != "IsValid" && !(k in ROOT))
-		ROOT[k] <- ::EntityOutputs[k].bindenv(::EntityOutputs)
+foreach( k, v in ::EntityOutputs.getclass() )
+	if ( k != "IsValid" && !( k in ROOT ) )
+		ROOT[k] <- ::EntityOutputs[k].bindenv( ::EntityOutputs )
 
-foreach(k, v in ::NavMesh.getclass())
-	if (k != "IsValid" && !(k in ROOT))
-		ROOT[k] <- ::NavMesh[k].bindenv(::NavMesh)
+foreach( k, v in ::NavMesh.getclass() )
+	if ( k != "IsValid" && !( k in ROOT ) )
+		ROOT[k] <- ::NavMesh[k].bindenv( ::NavMesh )
 
 const STRING_NETPROP_ITEMDEF 	  = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
 const STRING_NETPROP_INIT 	 	  = "m_AttributeManager.m_Item.m_bInitialized"
@@ -111,13 +111,13 @@ const SLOT_PDA       = 5
 const SLOT_PDA2      = 6
 const SLOT_COUNT     = 7
 
-// Cosmetic slots (UNTESTED)
+// Cosmetic slots ( UNTESTED )
 const LOADOUT_POSITION_HEAD   = 8
 const LOADOUT_POSITION_MISC   = 9
 const LOADOUT_POSITION_ACTION = 10
 const LOADOUT_POSITION_MISC2  = 11
 
-// Taunt slots (UNTESTED)
+// Taunt slots ( UNTESTED )
 const LOADOUT_POSITION_TAUNT  = 12
 const LOADOUT_POSITION_TAUNT2 = 13
 const LOADOUT_POSITION_TAUNT3 = 14
@@ -282,7 +282,7 @@ const TTYPE_EXIT     = 2
 
 const NO_MISSION 			   = 0
 const MISSION_SEEK_AND_DESTROY = 1 // focus on finding and killing enemy players
-const MISSION_DESTROY_SENTRIES = 2 // focus on finding and destroying enemy sentry guns (and buildings)
+const MISSION_DESTROY_SENTRIES = 2 // focus on finding and destroying enemy sentry guns ( and buildings )
 const MISSION_SNIPER 		   = 3 // maintain teams of snipers harassing the enemy
 const MISSION_SPY 			   = 4 // maintain teams of spies harassing the enemy
 const MISSION_ENGINEER 		   = 5 // maintain engineer nests for harassing the enemy
@@ -638,9 +638,9 @@ const TFCOLLISION_GROUP_PUMPKIN_BOMB 						= 26
 const TFCOLLISION_GROUP_ROCKET_BUT_NOT_WITH_OTHER_ROCKETS 	= 27
 
 // Content masks
-CONST.MASK_OPAQUE      <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_OPAQUE)
-CONST.MASK_PLAYERSOLID <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE)
-CONST.MASK_SOLID_BRUSHONLY <- (CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE)
+CONST.MASK_OPAQUE      <- ( CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_OPAQUE )
+CONST.MASK_PLAYERSOLID <- ( CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE )
+CONST.MASK_SOLID_BRUSHONLY <- ( CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE )
 
 // NavMesh related
 const STEP_HEIGHT = 18
