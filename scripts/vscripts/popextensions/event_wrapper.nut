@@ -51,10 +51,11 @@
 
                 foreach( e, event_table in EventsPreCollect )
 
-                    if ( funcname in event_table[ index ] )
+                    if ( index in event_table && funcname in event_table[ index ] )
+
                         delete EventsPreCollect[ e ][ index ][ funcname ]
 
-                    else if ( endswith( funcname, "*" ) )
+                    else if ( index in event_table && endswith( funcname, "*" ) )
 
                         foreach( name, func in event_table[ index ] )
 
@@ -90,7 +91,8 @@
         foreach ( event, new_table in EventsPreCollect ) {
 
             // __DumpScope( 0, new_table )
-            local call_order = array( new_table.len() )
+            local call_order = array( MAX_EVENTS )
+            // PopExtUtil.PrintTable( call_order )
 
             foreach ( index, func_table in new_table )
 
@@ -104,7 +106,7 @@
 
             foreach ( tbl in call_order )
 
-                foreach ( name, func in tbl )
+                foreach ( name, func in tbl || {} )
 
                     if ( name in old_table && !( name in new_table ) )
 
@@ -114,11 +116,14 @@
 
             old_table[ format( "%s%s", event_string, event ) ] <- function( params ) {
 
-                foreach( tbl in call_order )
+                foreach( i, tbl in call_order )
 
-                    foreach( name, func in tbl )
+                    foreach( name, func in tbl || {} )
+                    
+                        if ( func )
 
-                        func( params )
+                            func( params )
+
             }
         }
         // copy table to new ID, remove old table

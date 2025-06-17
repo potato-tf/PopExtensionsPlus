@@ -3,6 +3,7 @@
 
 // This is an example mission with vscript and popextensions
 // Functions provided by popextensions are defined at the end of the file
+// Documentation: https://github.com/potato-tf/PopExtensionsPlus/blob/main/documentation.md
 WaveSchedule
 {
 
@@ -25,7 +26,7 @@ WaveSchedule
 		{
 			// Template T_TFBot_Engineer_Sentry_Teleporter
 			Template T_TFBot_Engineer_Sentry_Tele_Battle
-			Tag "popext_dispenseroverride{type = OBJ_SENTRYGUN}"
+			Tag "popext_dispenseroverride{ type = OBJ_SENTRYGUN }"
 			// Attributes AlwaysFireWeapon
 		}
 	}
@@ -42,10 +43,13 @@ WaveSchedule
 				IncludeScript(`popextensions_main.nut`, getroottable())
 
 				//parameters: text, prefix color, prefix text, sync with game_text true/false
-				Info(`This is an explanation text example|PAUSE 2|Explanation text can support pauses, and optionally syncing chat prints with the game_text|By default, text lifetime is determined by the length of the sentence|See DoExplanation in util.nut for more info`, `FFFF66`, `Explanation: `, true)
+				Info(@`This is an explanation text example
+				|PAUSE 2
+				|Explanation text can support pauses, and optionally syncing chat prints with the game_text
+				|By default, text lifetime is determined by the length of the sentence
+				|See DoExplanation in util.nut for more info`, `FFFF66`, `Explanation: `, true)
 
-				::ExtraItems <-	// Example, make your own script and use ::ExtraItems to set up custom weapon list
-				{
+				::ExtraItems <- {
 					`Wasp Launcher`:
 					{
 						OriginalItemName = `Upgradeable TF_WEAPON_ROCKETLAUNCHER`
@@ -54,6 +58,7 @@ WaveSchedule
 						`max health additive bonus` : 100
 						`reloads full clip at once` : 1
 						`is miniboss` : 1
+						`min respawn time`: 500
 						`provide on active` : 1
 						`move speed bonus` : 0.4
 						`override footstep sound set` : 6
@@ -67,7 +72,6 @@ WaveSchedule
 					ForceHoliday = 2
 					NoRome = 2
 					BotHeadshots = 1
-					// NoUpgrades = 2
 					NoCrumpkins = 1
 					BotsAreHumans = 2
 					WaveStartCountdown = 3
@@ -126,7 +130,6 @@ WaveSchedule
 						`damage bonus`: 10,
 						`can breathe under water`: 1,
 						`mult swim speed`: 3,
-						`teleport instead of die`: 1,
 						`crit when health below`: 75,
 						`last shot crits`: 0.2,
 						`mult dmg vs same class`: 2,
@@ -212,8 +215,8 @@ WaveSchedule
 				// Tag "popext_homingprojectile|1.0|1.0"
 				// Tag "popext_improvedairblast"
 				// Tag "popext_usehumananims"
-				// Tag "popext_spell|11|5|2"
-				// Tag "popext_ringoffire|20|2"
+				Tag "popext_spell{type = SPELL_SKELETON, duration = 5, cooldown = 2}"
+				Tag "popext_ringoffire{damage = 20, interval = 2}"
 				// Tag "popext_meleeai"
 				// Tag "popext_reprogrammed"
 				// Tag "popext_spawnhere|-779.491150 3302.379883 312.992340|3"
@@ -223,7 +226,7 @@ WaveSchedule
 				Class Pyro
 				Skill Hard
 				// Item "The Thermal Thruster"
-				// Item "TF_WEAPON_SPELLBOOK"
+				Item "TF_WEAPON_SPELLBOOK"
 				// Attributes IgnoreEnemies
 				// WeaponRestrictions SecondaryOnly
 				// ItemAttributes {
@@ -700,68 +703,3 @@ WaveSchedule
 		}
 	}
 }
-
-
-
-
-// Functions provided by popextensions:
-
-// Sets parent immediately in a dirty way. Does not retain absolute origin, retains local origin instead
-// child parameter may also be an array of entities
-// void SetParentLocalOrigin(handle|array child, handle parent, string attachment = null)
-
-// Make a wearable prop that is attached to the player. The wearable is automatically removed when the owner is killed or respawned
-// handle CreatePlayerWearable(handle player, string model, bool bonemerge = true, string attachment = null, bool autoDestroy = true)
-
-// Setup collision bounds of a trigger entity
-// handle SetupTriggerBounds(handle trigger, Vector mins = null, Vector maxs = null)
-
-// Prints a table to client console
-// void PrintTable(table|array table)
-
-// Adds hooks to robots with specified Tag
-// void AddRobotTag(string tag, table hooks)
-
-// Adds hooks to tanks with specified Name. Wildcard * suffix is supported
-// void AddTankName(string name, table hooks)
-
-// ALERT! Functions that change wavebar icons will crash linux servers!
-// Add custom tank icon to the wavebar, should be called in WaveInitOutput
-// void AddCustomTankIcon(string name, int count, bool isCrit = false, bool isBoss = true, bool isSupport = false, bool isSupportLimited = false)
-
-// Add custom icon to the wavebar, should be called in WaveInitOutput
-// void AddCustomIcon(string name, int count, bool isCrit = false, bool isBoss = false, bool isSupport = false, bool isSupportLimited = false)
-
-// If you want to use IncrementWaveIconSpawnCount functions to add icons to the wavebar, use this function
-// void SetWaveIconsFunction(function func)
-
-// Flags for use in wavebar functions below. Joinable with | operator
-// MVM_CLASS_FLAG_NONE 				0;
-// MVM_CLASS_FLAG_NORMAL 			1 << 0; // Non support or mission icon
-// MVM_CLASS_FLAG_SUPPORT 			1 << 1; // Support icon flag. Mission icon does not have this flag
-// MVM_CLASS_FLAG_MISSION 			1 << 2; // Mission icon flag. Support icon does not have this flag
-// MVM_CLASS_FLAG_MINIBOSS 			1 << 3; // Giant icon flag. Support and mission icons do not display red background when set
-// MVM_CLASS_FLAG_ALWAYSCRIT 		1 << 4; // Crit icon flag. Support and mission icons do not display crit outline when set
-// MVM_CLASS_FLAG_SUPPORT_LIMITED 	1 << 5; // Support limited flag. Game uses it together with support flag
-
-// Get wavebar spawn count of an icon with specified name and flags
-// int GetWaveIconSpawnCount(string name, int flags)
-
-// Set wavebar spawn count of an icon with specified name and flags
-// If count is set to 0, removes the icon from the wavebar
-// Can be used to put custom icons on a wavebar
-// void SetWaveIconSpawnCount(string name, int flags, int count = 1, bool changeMaxEnemyCount = true)
-
-// Increment wavebar spawn count of an icon with specified name and flags
-// Can be used to put custom icons on a wavebar
-// void IncrementWaveIconSpawnCount(string name, int flags, int count = 1, bool changeMaxEnemyCount = true)
-
-// Increment wavebar spawn count of an icon with specified name and flags
-// Use it to decrement the spawn count when the enemy is killed. Should not be used for support type icons
-// void DecrementWaveIconSpawnCount(string name, int flags, int count = 1, bool changeMaxEnemyCount = false)
-
-// Used for mission and support limited bots to display them on a wavebar during the wave, set by the game automatically when an enemy with this icon spawn
-// void SetWaveIconActive(string name, int flags, bool active)
-
-// Used for mission and support limited bots to display them on a wavebar during the wave, set by the game automatically when an enemy with this icon spawn
-// bool GetWaveIconActive(string name, int flags)

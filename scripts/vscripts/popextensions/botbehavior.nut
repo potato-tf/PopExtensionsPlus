@@ -38,7 +38,7 @@ class PopExtBotBehavior {
 		this.path_goalpoint = null
 		this.path_recompute_time = 0.0
 
-		this.botLevel = bot.GetDifficulty()
+		this.bot_level = bot.GetDifficulty()
 
 		this.navdebug = false
 	}
@@ -88,27 +88,27 @@ class PopExtBotBehavior {
 	}
 
 	function FindClosestThreat( min_dist_sqr, must_be_visible = true ) {
-		local closestThreat = null
-		local closestThreatDist = min_dist_sqr
+		local closest_threat = null
+		local closest_threat_dist = min_dist_sqr
 
-		foreach ( player in PopExtUtil.PlayerArray ) {
+		foreach ( player in PopExtUtil.PlayerTable.keys() ) {
 
 			if ( player == bot || !player.IsAlive() || player.GetTeam() == team || ( must_be_visible && !IsThreatVisible( player ) ) )
 				continue
 
 			local dist = GetThreatDistanceSqr( player )
-			if ( dist < closestThreatDist ) {
-				closestThreat = player
-				closestThreatDist = dist
+			if ( dist < closest_threat_dist ) {
+				closest_threat = player
+				closest_threat_dist = dist
 			}
 		}
-		return closestThreat
+		return closest_threat
 	}
 
 	function CollectThreats( maxdist = INT_MAX, disguised = false, invisible = false, alive = true ) {
 
 		local threatarray = []
-		foreach ( player in PopExtUtil.PlayerArray ) {
+		foreach ( player in PopExtUtil.PlayerTable.keys() ) {
 
 			if ( player == bot ||
 				player.GetTeam() == bot.GetTeam() ||
@@ -143,7 +143,7 @@ class PopExtBotBehavior {
 			local dist = GetThreatDistanceSqr( projectile )
 			if ( dist <= 67000 && IsVisible( projectile ) ) {
 
-				switch ( botLevel ) {
+				switch ( bot_level ) {
 				case 1: // Normal Skill, only deflect if in FOV
 					if ( !IsInFieldOfView( projectile ) )
 						return
@@ -334,7 +334,7 @@ class PopExtBotBehavior {
 				local area_count = path_areas.len()
 
 				// Initial run grabbing area center
-				for ( local i = 0; i < area_count && area; ++i ) {
+				for ( local i = 0; i < area_count && area; i++ ) {
 					// Don't add a point for the end area
 					if ( i > 0 )
 						path_points.append( PopExtPathPoint( area, area.GetCenter(), area.GetParentHow() ) )
@@ -347,7 +347,7 @@ class PopExtBotBehavior {
 
 				// Go through again and replace center with border point of next area
 				local path_count = path_points.len()
-				for ( local i = 0; i < path_count; ++i ) {
+				for ( local i = 0; i < path_count; i++ ) {
 					local path_from = path_points[i]
 					local path_to = ( i < path_count - 1 ) ? path_points[i + 1] : null
 
@@ -406,13 +406,13 @@ class PopExtBotBehavior {
 		}
 
 		if ( navdebug ) {
-			for ( local i = 0; i < path_points.len(); ++i ) {
+			for ( local i = 0; i < path_points.len(); i++ ) {
 				DebugDrawLine( path_points[i].pos, path_points[i].pos + Vector( 0, 0, 32 ), 0, 0, 255, false, 0.075 )
 			}
 			local area = path_areas["area0"]
 			local area_count = path_areas.len()
 
-			for ( local i = 0; i < area_count && area; ++i ) {
+			for ( local i = 0; i < area_count && area; i++ ) {
 				local x = ( ( area_count - i - 0.0 ) / area_count ) * 255.0
 				area.DebugDrawFilled( 0, x, 0, 50, 0.075, true, 0.0 )
 
@@ -424,7 +424,7 @@ class PopExtBotBehavior {
 			path_index = 0
 
 		if ( ( path_points[path_index].pos - bot.GetOrigin() ).Length() < 64.0 ) {
-			++path_index
+			path_index++
 			if ( path_index >= path_points.len() ) {
 				ResetPath()
 				return
@@ -456,7 +456,7 @@ class PopExtBotBehavior {
 	team  = null
 	time  = null
 
-	botLevel   = null
+	bot_level   = null
 	locomotion = null
 
 	cur_pos     = null

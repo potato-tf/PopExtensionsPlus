@@ -1,18 +1,23 @@
 - Anything in the existing code that breaks these formatting rules was done before these rules became a thing.
 - Offending lines of code that already exist are not a pass to break them yourself.
 
+## General
+- Use PopExtUtil functions as much as possible, all generic re-usable functions go here
+- Use PopExtMain.Error for parse errors and warnings, do not use error() or other print functions
+- Always use constants defined in constants.nut/itemdef_constants.nut, avoid magic numbers
+    - many netprop strings are cached as constants for performance + ease of writing
+- Only popextensions_main.nut is allowed to break these rules due to being included before any other files
+
 ## Formatting
 - no trailing semicolons, only use in for-loops and one-liners
+- snake_case variable names, PascalCase function names, ALL_UPPERCASE constant names, no camelCase
+    - "constant-like" values (e.g. ROBOT_ARM_PATH in util.nut) are the only exception
 - K&R syntax (inline opening braces, newline after)
 - Valve-style argument formatting (spaces between opening/closing parentheses)
 - Trim whitespace (Ctrl+M then Ctrl+X in VSCode)
 - No inline comments, comments should always be above the code they are meant to explain
 - Use ternaries and lambda functions where appropriate
     - simple yes/no conditional checks, simple functions that return a value and do nothing else, do not look at ExtraTankPath xd
-- Use PopExtUtil functions as much as possible, all generic re-usable functions go here
-- Use PopExtMain.Error for parse errors and warnings, do not use error() or other print functions
-- Always use constants defined in constants.nut/itemdef_constants.nut, avoid magic numbers
-- Only popextensions_main.nut is allowed to break these rules due to being included before any other files
 
 ### Single-line control flow:
 - This is fine:

@@ -74,7 +74,7 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 			SetPropBool( PopExtUtil.GameRules, "m_bShowMatchSummary", false )
 
 			// Loop through our human players
-			foreach ( player in PopExtUtil.HumanArray ) {
+			foreach ( player in PopExtUtil.HumanTable.keys() ) {
 
 				player.ValidateScriptScope()
 				local scope = player.GetScriptScope()
@@ -85,15 +85,15 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 
 				// Cleanup player
 				EntFireByHandle( player, "RunScriptCode", "self.SetForceLocalDraw( false );", -1, null, null )
-				local fadeparams = { target = player, r = 20, g = 20, b = 20, a = 255, fadeTime = 0.5, fadeHold = 0.5, flags = 1 }
+				local fadeparams = { target = player, r = 20, g = 20, b = 20, a = 255, fade_time = 0.5, fadeHold = 0.5, flags = 1 }
 
 				if ( fadeargs.len() ) fadeparams = fadeargs
 
-				ScreenFade( player, fadeparams.r, fadeparams.g, fadeparams.b, fadeparams.a, fadeparams.fadeTime, fadeparams.fadeHold, fadeparams.flags )
+				ScreenFade( player, fadeparams.r, fadeparams.g, fadeparams.b, fadeparams.a, fadeparams.fade_time, fadeparams.fadeHold, fadeparams.flags )
 				EmitSoundEx( {
 					sound_name = "replay/exitperformancemode.wav",
 					entity	   = player,
-				} )
+				})
 				player.RemoveCond( TF_COND_TAUNTING )
 				player.AddCustomAttribute( "move speed penalty", 1, -1 )
 			}
@@ -105,7 +105,7 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 		}
 
 		// Loop through our human players
-		foreach ( player in PopExtUtil.HumanArray ) {
+		foreach ( player in PopExtUtil.HumanTable.keys() ) {
 
 			player.ValidateScriptScope()
 			player.GetScriptScope().__position <- player.GetOrigin()
@@ -118,7 +118,7 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 			EmitSoundEx( {
 				sound_name = "replay/enterperformancemode.wav",
 				entity	   = player,
-			} )
+			})
 			player.AddCustomAttribute( "move speed penalty", 0.01, -1 )
 
 			// Start viewcontrol
@@ -149,7 +149,7 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 
 			// Gay babyjail our human players to prevent them from moving with things like conga
 
-			foreach ( player in PopExtUtil.HumanArray ) {
+			foreach ( player in PopExtUtil.HumanTable.keys() ) {
 
 
 				player.ValidateScriptScope()

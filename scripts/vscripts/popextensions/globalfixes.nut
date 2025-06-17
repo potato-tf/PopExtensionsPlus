@@ -43,7 +43,7 @@ if ( GlobalFixesEntity == null ) GlobalFixesEntity = SpawnEntityFromTable( "info
 					PopExtUtil.SetDestroyCallback( projectile, function() {
 						if ( "ActiveProjectiles" in owner_scope.Preserved && self.entindex() in owner_scope.Preserved.ActiveProjectiles )
 							delete owner_scope.Preserved.ActiveProjectiles[self.entindex()]
-					} )
+					})
 				}
 
 				if ( !( "ProjectileThinkTable" in scope ) )
@@ -62,37 +62,8 @@ if ( GlobalFixesEntity == null ) GlobalFixesEntity = SpawnEntityFromTable( "info
 				projectile.AddEFlags( EFL_USER )
 			}
 		}
-
-		function DragonsFuryFix() { return }
-		function FastNPCUpdate() { return }
 	}
-
-	SpawnHookTable = {
-
-		function ScoutBetterMoneyCollection() { return }
-		function RemoveYERAttribute() { return }
-		function HoldFireUntilFullReloadFix() { return }
-		function EngineerBuildingPushbackFix() { return }
-	}
-
-	InitWaveTable = {}
-
-	TakeDamageTable = {
-		function YERDisguiseFix() { return }
-		function LooseCannonFix() { return }
-		function BotGibFix() { return }
-		function HolidayPunchFix() { return }
-	}
-
-	DisconnectTable = {}
-
-	DeathHookTable = {
-		function NoCreditVelocity() { return }
-	}
-
-	Events = { function GameEvent_mvm_wave_complete( params ) { delete GlobalFixes } }
 }
-__CollectGameEventCallbacks( GlobalFixes.Events )
 
 GlobalFixesEntity.ValidateScriptScope()
 

@@ -34,12 +34,29 @@ foreach( k, v in ::NavMesh.getclass() )
 	if ( k != "IsValid" && !( k in ROOT ) )
 		ROOT[k] <- ::NavMesh[k].bindenv( ::NavMesh )
 
+// event wrapper limit
+const MAX_EVENTS 				  = 32
+
+// event call ordering
+const EVENT_WRAPPER_MAIN  	    = 0 // main script
+const EVENT_WRAPPER_UTIL 	    = 1 // util script
+const EVENT_WRAPPER_CUSTOMATTR  = 2 // custom attributes script
+const EVENT_WRAPPER_MISSIONATTR = 3 // mission attributes script
+
+// String caches
 const STRING_NETPROP_ITEMDEF 	  = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
 const STRING_NETPROP_INIT 	 	  = "m_AttributeManager.m_Item.m_bInitialized"
 const STRING_NETPROP_ATTACH  	  = "m_bValidatedAttachedEntity"
 const STRING_NETPROP_PURGESTRINGS = "m_bForcePurgeFixedupStrings"
 const STRING_NETPROP_MYWEAPONS    = "m_hMyWeapons"
+const STRING_NETPROP_AMMO		  = "m_iAmmo"
 
+// Logging
+const POPEXT_ERROR   = "POPEXT ERROR: "
+const POPEXT_WARNING = "POPEXT WARNING: "
+const POPEXT_DEBUG   = "POPEXT DEBUG: "
+
+// Single tick interval
 const SINGLE_TICK = 0.015
 
 // Clientprint chat colors

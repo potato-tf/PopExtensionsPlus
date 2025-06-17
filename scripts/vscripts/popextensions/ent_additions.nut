@@ -280,6 +280,7 @@ if ( !( "EntAdditions" in ROOT ) ) {
             }
         }
         Events = {
+
             function OnGameEvent_recalculate_holidays( _ ) {
 
                 if ( GetRoundState() == GR_STATE_GAME_OVER )

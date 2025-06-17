@@ -69,36 +69,6 @@
 		"engineer" : 200,	//Engineer
 	}
 
-	//regenerating players by default will clear custom weapons
-	//give all weapons in the player's class's extraloadout and set hp
-	SpawnHookTable = {
-		function RegenerateCustomWeapons( params ) {
-			local player = GetPlayerFromUserID( params.userid )
-			if ( ( "ExtraLoadout" in player.GetScriptScope() ) ) {
-
-				if ( player.GetScriptScope().ExtraLoadout.len() > 10 ) {
-
-					foreach ( entity in player.GetScriptScope().ExtraLoadout ) {
-
-						if ( ( typeof entity == "instance" ) && entity.IsValid() )
-						entity.Kill()
-					}
-					player.GetScriptScope().ExtraLoadout.resize( 10 )
-				}
-				local playerclass = player.GetPlayerClass()
-				if ( player.GetScriptScope().ExtraLoadout[playerclass] != null )
-					foreach ( item in player.GetScriptScope().ExtraLoadout[playerclass] )
-						CustomWeapons.GiveItem( item, player )
-					player.SetHealth( player.GetMaxHealth() )
-
-				SetPropIntArray( player, "m_iAmmo", CustomWeapons.GetMaxAmmo( player, 1 ), 1 )
-				SetPropIntArray( player, "m_iAmmo", CustomWeapons.GetMaxAmmo( player, 2 ), 2 )
-				SetPropIntArray( player, "m_iAmmo", CustomWeapons.GetMaxAmmo( player, 3 ), 3 )
-				SetPropIntArray( player, "m_iAmmo", CustomWeapons.GetMaxAmmo( player, 4 ), 4 )
-			}
-		}
-	}
-
 	// give item to specified player
 	// itemname accepts strings
 	// player accepts player entities
@@ -169,7 +139,7 @@
 		PopExtUtil.InitEconItem( item, id )
 		item.SetTeam( player.GetTeam() )
 		DispatchSpawn( item )
-		local reservedKeywords = {
+		local reserved_keywords = {
 			"OriginalItemName" : null
 			"ItemClass" : null
 			"Name" : null
@@ -185,7 +155,13 @@
 		item.ValidateScriptScope()
 		local scope = item.GetScriptScope()
 		scope.ItemThinkTable <- {}
-		scope.ItemThinks <- function() { foreach ( name, func in scope.ItemThinkTable ) func.call( scope ); return -1 }
+		scope.ItemThinks <- function() {
+	
+			foreach ( name, func in scope.ItemThinkTable )
+				if ( self && self.IsValid() )
+					func.call( scope );
+			return -1
+		}
 		_AddThinkToEnt( item, "ItemThinks" )
 
 		//if max ammo needs to be changed, create a tf_wearable and assign attributes to it
@@ -212,7 +188,7 @@
 				}
 				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute( "hidden primary max ammo bonus", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0 )
 				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
-				SetPropIntArray( player, "m_iAmmo", GetMaxAmmo( player, 1 ), 1 )
+				SetPropIntArray( player, STRING_NETPROP_AMMO, GetMaxAmmo( player, 1 ), 1 )
 			}
 		}
 
@@ -239,7 +215,7 @@
 				}
 				player.GetScriptScope().CustomWeapons.ammofix.AddAttribute( "hidden secondary max ammo penalty", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0 )
 				player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
-				SetPropIntArray( player, "m_iAmmo", GetMaxAmmo( player, 2 ), 2 )
+				SetPropIntArray( player, STRING_NETPROP_AMMO, GetMaxAmmo( player, 2 ), 2 )
 			}
 		}
 
@@ -269,7 +245,7 @@
 			// Normal attributes can work for owner-less items, custom attributes cannot.
 			if ( extraitem != null )
 				foreach ( attribute, value in extraitem )
-					if ( !( attribute in reservedKeywords ) )
+					if ( !( attribute in reserved_keywords ) )
 						PopExtUtil.SetPlayerAttributes( player, attribute, value, item, true )
 
 			// copied from ficool2 mw2_highrise
@@ -289,22 +265,22 @@
 			player.GetScriptScope().PlayerThinkTable.CustomWeaponWorldmodel <- UpdateWorldmodel
 			if ( !( "worldmodel" in player.GetScriptScope().CustomWeapons ) ) {
 
-				local tpWearable = CreateByClassname( "tf_wearable" )
-				SetPropInt( tpWearable, "m_nModelIndex", modelindex )
-				SetPropBool( tpWearable, STRING_NETPROP_INIT, true )
-				SetPropBool( tpWearable, STRING_NETPROP_ATTACH, true )
-				SetPropEntity( tpWearable, "m_hOwnerEntity", player )
-				tpWearable.SetOwner( player )
-				tpWearable.DispatchSpawn()
-				tpWearable.AcceptInput( "SetParent", "!activator", player, player )
-				SetPropInt( tpWearable, "m_fEffects", 129 ) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
-				player.GetScriptScope().CustomWeapons.worldmodel <- tpWearable
+				local tp_wearable = CreateByClassname( "tf_wearable" )
+				SetPropInt( tp_wearable, "m_nModelIndex", modelindex )
+				SetPropBool( tp_wearable, STRING_NETPROP_INIT, true )
+				SetPropBool( tp_wearable, STRING_NETPROP_ATTACH, true )
+				SetPropEntity( tp_wearable, "m_hOwnerEntity", player )
+				tp_wearable.SetOwner( player )
+				tp_wearable.DispatchSpawn()
+				tp_wearable.AcceptInput( "SetParent", "!activator", player, player )
+				SetPropInt( tp_wearable, "m_fEffects", 129 ) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
+				player.GetScriptScope().CustomWeapons.worldmodel <- tp_wearable
 				if ( !( "ExtraLoadout" in player.GetScriptScope() ) ) {
 
 					local ExtraLoadout = array( 10 )
 					player.GetScriptScope().ExtraLoadout <- ExtraLoadout
 				}
-				player.GetScriptScope().ExtraLoadout.append( tpWearable ) //for clean up
+				player.GetScriptScope().ExtraLoadout.append( tp_wearable ) //for clean up
 			}
 
 			// copied from LizardOfOz open fortress dm_crossfire
@@ -314,13 +290,13 @@
 
 			local hands = SpawnEntityFromTable( "tf_wearable_vm", {
 				modelindex = PrecacheModel( format( "models/weapons/c_models/c_%s_arms.mdl", playerclass ) )
-			} )
+			})
 			SetPropBool( hands, STRING_NETPROP_PURGESTRINGS, true )
 			player.EquipWearableViewModel( hands )
 
 			local hands2 = SpawnEntityFromTable( "tf_wearable_vm", {
 				modelindex = PrecacheModel( model )
-			} )
+			})
 			SetPropBool( hands2, STRING_NETPROP_PURGESTRINGS, true )
 			player.EquipWearableViewModel( hands2 )
 
@@ -412,24 +388,24 @@
 						if ( self.GetScriptScope().CustomWeapons.worldmodel.IsValid() ) self.GetScriptScope().CustomWeapons.worldmodel.Kill()
 
 						local modelindex = self.GetScriptScope().CustomWeapons[activeweapon].modelidx
-						local tpWearable = CreateByClassname( "tf_wearable" )
-						SetPropInt( tpWearable, "m_iTeamNum", self.GetTeam() )
-						SetPropInt( tpWearable, "m_nModelIndex", modelindex )
-						SetPropBool( tpWearable, STRING_NETPROP_INIT, true )
-						SetPropBool( tpWearable, STRING_NETPROP_ATTACH, true )
-						SetPropEntity( tpWearable, "m_hOwnerEntity", self )
-						tpWearable.SetOwner( self )
-						tpWearable.SetSkin( self.GetTeam()-2 )
-						tpWearable.DispatchSpawn()
-						tpWearable.AcceptInput( "SetParent", "!activator", self, self )
-						SetPropInt( tpWearable, "m_fEffects", 129 ) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
-						self.GetScriptScope().CustomWeapons.worldmodel <- tpWearable
+						local tp_wearable = CreateByClassname( "tf_wearable" )
+						SetPropInt( tp_wearable, "m_iTeamNum", self.GetTeam() )
+						SetPropInt( tp_wearable, "m_nModelIndex", modelindex )
+						SetPropBool( tp_wearable, STRING_NETPROP_INIT, true )
+						SetPropBool( tp_wearable, STRING_NETPROP_ATTACH, true )
+						SetPropEntity( tp_wearable, "m_hOwnerEntity", self )
+						tp_wearable.SetOwner( self )
+						tp_wearable.SetSkin( self.GetTeam()-2 )
+						tp_wearable.DispatchSpawn()
+						tp_wearable.AcceptInput( "SetParent", "!activator", self, self )
+						SetPropInt( tp_wearable, "m_fEffects", 129 ) // EF_BONEMERGE|EF_BONEMERGE_FASTCULL
+						self.GetScriptScope().CustomWeapons.worldmodel <- tp_wearable
 						if ( !( "ExtraLoadout" in self.GetScriptScope() ) ) {
 
 							local ExtraLoadout = array( 10 )
 							self.GetScriptScope().ExtraLoadout <- ExtraLoadout
 						}
-						self.GetScriptScope().ExtraLoadout.append( tpWearable ) //for clean up
+						self.GetScriptScope().ExtraLoadout.append( tp_wearable ) //for clean up
 					}
 				}
 				else {
@@ -499,6 +475,39 @@
 		return multiplier * slottable[PopExtUtil.Classes[player.GetPlayerClass()]]
 	}
 }
+
+//regenerating players by default will clear custom weapons
+//give all weapons in the player's class's extraloadout and set hp
+PopExtEvents.AddRemoveEventHook("post_inventory_application", "RegenerateCustomWeapons", function( params ) {
+
+	local player = GetPlayerFromUserID( params.userid )
+
+	if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
+		return
+
+	if ( ( "ExtraLoadout" in player.GetScriptScope() ) ) {
+
+		if ( player.GetScriptScope().ExtraLoadout.len() > 10 ) {
+
+			foreach ( entity in player.GetScriptScope().ExtraLoadout ) {
+
+				if ( ( typeof entity == "instance" ) && entity.IsValid() )
+				entity.Kill()
+			}
+			player.GetScriptScope().ExtraLoadout.resize( 10 )
+		}
+		local playerclass = player.GetPlayerClass()
+		if ( player.GetScriptScope().ExtraLoadout[playerclass] != null )
+			foreach ( item in player.GetScriptScope().ExtraLoadout[playerclass] )
+				CustomWeapons.GiveItem( item, player )
+			player.SetHealth( player.GetMaxHealth() )
+
+		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 1 ), 1 )
+		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 2 ), 2 )
+		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 3 ), 3 )
+		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 4 ), 4 )
+	}
+})
 
 // TODO: deprecate the old namespace
 ::PopExtWeapons <- CustomWeapons

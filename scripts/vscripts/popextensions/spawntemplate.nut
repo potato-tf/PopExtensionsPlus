@@ -36,7 +36,7 @@ PopExt.globalTemplateSpawnCount   <- 0
 		_newslot = function( _, value ) {
 			entities.append( value )
 		}
-	} )
+	})
 
 	scope.PostSpawn <- function( named_entities ) {
 
@@ -112,10 +112,10 @@ PopExt.globalTemplateSpawnCount   <- 0
 						local scope = parent.GetScriptScope()
 
 						// reused from CreatePlayerWearable function
-						if ( !( "PointTemplatesToKill" in scope ) )
-							scope.PointTemplatesToKill <- []
+						if ( !( "templates_to_kill" in scope ) )
+							scope.templates_to_kill <- []
 
-						scope.PointTemplatesToKill.append( entity )
+						scope.templates_to_kill.append( entity )
 					}
 				}
 			}
@@ -157,9 +157,9 @@ PopExt.globalTemplateSpawnCount   <- 0
 
 					playerscope.popHooks.OnDeath.append( FireOnParentKilledOutputs )
 
-					if ( !( "PointTemplatesToKill" in playerscope ) )
-						playerscope.PointTemplatesToKill <- []
-					playerscope.PointTemplatesToKill.append( FireOnParentKilledOutputs )
+					if ( !( "templates_to_kill" in playerscope ) )
+						playerscope.templates_to_kill <- []
+					playerscope.templates_to_kill.append( FireOnParentKilledOutputs )
 				}
 			}
 			//use own think instead of parent's think
@@ -374,47 +374,41 @@ PopExt.globalTemplateSpawnCount   <- 0
 }
 
 ::SpawnTemplates <- {
-	//hook to both of these events to emulate OnWaveInit
-	Events = {
-
-		function OnGameEvent_mvm_wave_complete( params ) {
-
-			foreach( entity in PopExt.wavePointTemplates )
-				if ( entity.IsValid() )
-					entity.Kill()
-
-			PopExt.wavePointTemplates.clear()
-		}
-
-		//despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
-		function OnGameEvent_mvm_wave_failed( params ) {
-
-			foreach( entity in PopExt.wavePointTemplates )
-				if ( entity.IsValid() )
-					entity.Kill()
-			//messy
-			foreach( param in PopExt.waveSchedulePointTemplates ) {
-				SpawnTemplate( param[0], null, param[1], param[2] )
-			}
-		}
-
-		function OnGameEvent_player_death( params ) {
-
-			local player = GetPlayerFromUserID( params.userid )
-			local scope = player.GetScriptScope()
-
-			if ( "PointTemplatesToKill" in scope )
-				foreach ( item in scope.PointTemplatesToKill )
-					typeof item == "function" ? item() : item.Kill()
-
-
-			player.RemoveEFlags( EFL_SPAWNTEMPLATE )
-		}
-	}
-
 	// alternative version that accepts a table of arguments
 	function DoSpawnTemplate( args = { pointtemplate = null, parent = null, origin = "", angles = "", forceparent = false, parentabsorigin = false, nonsolidchildren = false } ) {
 		SpawnTemplate( args.pointtemplate, args.parent, args.origin, args.angles, args.forceparent, args.parentabsorigin, args.nonsolidchildren )
 	}
 }
-__CollectGameEventCallbacks( SpawnTemplates.Events )
+
+
+PopExtEvents.AddRemoveEventHook("mvm_wave_complete", "SpawnTemplateWaveComplete", function( params ) {
+
+	foreach( entity in PopExt.wavePointTemplates )
+		if ( entity.IsValid() )
+			entity.Kill()
+
+	PopExt.wavePointTemplates.clear()
+})
+
+//despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
+PopExtEvents.AddRemoveEventHook("mvm_wave_failed", "SpawnTemplateWaveFailed", function( params ) {
+
+	foreach( entity in PopExt.wavePointTemplates )
+		if ( entity.IsValid() )
+			entity.Kill()
+
+	foreach( param in PopExt.waveSchedulePointTemplates )
+		SpawnTemplate( param[0], null, param[1], param[2] )
+})
+
+PopExtEvents.AddRemoveEventHook("player_death", "SpawnTemplatePlayerDeath", function( params ) {
+
+	local player = GetPlayerFromUserID( params.userid )
+	local scope = player.GetScriptScope()
+
+	if ( "templates_to_kill" in scope )
+		foreach ( item in scope.templates_to_kill )
+			typeof item == "function" ? item() : item.Kill()
+
+	player.RemoveEFlags( EFL_SPAWNTEMPLATE )
+})

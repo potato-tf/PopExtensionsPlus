@@ -109,7 +109,7 @@ local popext_funcs = {
 				filter_type = filter_type
 				filter_param = filter_param
 
-			} )
+			})
 
 			// EmitSoundEx( {sound_name = "sound" in args ? args.sound : args.type, entity = victim} )
 		}
@@ -167,7 +167,7 @@ local popext_funcs = {
 					filter_type = filter_type
 					filter_param = filter_param
 
-				} )
+				})
 
 			scope.stepside = GetPropInt( bot, "m_Local.m_nStepside" )
 		}
@@ -564,7 +564,7 @@ local popext_funcs = {
 
 			local origin = bot.GetOrigin()
 
-			if ( !hide_particle_effect ) DispatchParticleEffect( "heavy_ring_of_fire", origin, bot.GetAngles() )
+			if ( !hide_particle_effect ) DispatchParticleEffect( "heavy_ring_of_fire", origin, PopExtUtil.AnglesToVector( bot.GetAbsAngles() ) )
 
 
 			for ( local player; player = FindByClassnameWithin( player, "player", origin, radius ); ) {
@@ -787,7 +787,7 @@ local popext_funcs = {
 
 						local entfirefunc = typeof target == "string" ? DoEntFire : EntFireByHandle
 						entfirefunc( target, action, param, delay, activator, caller )
-					} )
+					})
 			}
 
 			DispatchSpawn( new_action_point )
@@ -1074,11 +1074,14 @@ local popext_funcs = {
 			if ( !alwaysfire ) bot.PressFireButton( 0.0 )
 
 			if ( obj == args.type ) {
+
+
 				if ( obj == OBJ_SENTRYGUN )
 					bot.AddCustomAttribute( "engy sentry radius increased", FLT_SMALL, -1 )
 
 				bot.AddCustomAttribute( "upgrade rate decrease", 8, -1 )
 				local building = EntIndexToHScript( params.index )
+
 				if ( obj != OBJ_DISPENSER ) {
 
 					building.ValidateScriptScope()
@@ -1317,15 +1320,15 @@ local popext_funcs = {
 		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
 		local turn_power = "turn_power" in args ? args.turn_power : args.type
 		local speed_mult = "speed_mult" in args ? args.speed_mult : args.cooldown
-		local ignoreStealthedSpies = "ignoreStealted" in args ? args.ignoreStealthed : args.duration
-		local ignoreDisguisedSpies = "ignoreDisguise" in args ? args.ignoreDisguise : args.delay
+		local ignore_stealthed_spies = "ignoreStealted" in args ? args.ignoreStealthed : args.duration
+		local ignore_disguised_spies = "ignoreDisguise" in args ? args.ignoreDisguise : args.delay
 
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
 
 			for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile_*" ); ) {
 				if ( projectile.GetOwner() != bot || !Homing.IsValidProjectile( projectile, PopExtUtil.HomingProjectiles ) ) continue
 				// Any other parameters needed by the projectile thinker can be set here
-				Homing.AttachProjectileThinker( projectile, speed_mult, turn_power, ignoreDisguisedSpies, ignoreStealthedSpies )
+				Homing.AttachProjectileThinker( projectile, speed_mult, turn_power, ignore_disguised_spies, ignore_stealthed_spies )
 			}
 		}
 
@@ -1527,7 +1530,7 @@ local popext_funcs = {
 	popext_aimat = function( bot, args ) {
 		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- function() {
 
-			foreach ( player in PopExtUtil.HumanArray ) {
+			foreach ( player in PopExtUtil.HumanTable.keys() ) {
 
 				if ( aibot.IsInFieldOfView( player ) ) {
 
@@ -1587,7 +1590,7 @@ local popext_funcs = {
 		// Get the weapon in the slot provided.
 		local weapon = null
 		local notfound = true
-		for ( local i = 0; i < SLOT_COUNT; ++i ) {
+		for ( local i = 0; i < SLOT_COUNT; i++ ) {
 			weapon = GetPropEntityArray( bot, STRING_NETPROP_MYWEAPONS, i )
 			if ( weapon == null || weapon.GetSlot() != slot ) continue
 			notfound = false
@@ -1640,11 +1643,11 @@ local popext_funcs = {
 				local strlen = seed.len()
 				local digitstore = array( strlen, 0 )
 
-				for ( local i = 0; i < strlen; ++i ) {
+				for ( local i = 0; i < strlen; i++ ) {
 					local carry = seed[i] - 48
 					local tmp = 0
 
-					for ( local i = ( strlen - 1 ); ( i >= 0 ); --i ) {
+					for ( local i = ( strlen - 1 ); ( i >= 0 ); i-- ) {
 						tmp = ( digitstore[i] * 10 ) + carry
 						digitstore[i] = tmp & 0xFFFF
 						carry = tmp >> 16
@@ -1816,7 +1819,7 @@ local popext_funcs = {
 				local victim = null
 				local players = []
 
-				foreach ( player in PopExtUtil.HumanArray )
+				foreach ( player in PopExtUtil.HumanTable.keys() )
 					if ( player.IsAlive() )
 						players.push( player )
 
@@ -1840,7 +1843,7 @@ local popext_funcs = {
 
 				if ( victim == null ) {
 					bot_scope.NextTeleportTime = Time() + 1.0
-					++bot_scope.TeleportAttempt
+					bot_scope.TeleportAttempt++
 					return
 				}
 
@@ -1974,9 +1977,9 @@ local popext_funcs = {
 		local icon  = "icon" in args ? args.icon : args.type
 		local count = "count" in args ? args.count : 0
 		local flags = "flags" in args ? args.flags : 0
-		local changeMaxEnemyCount = "changeMaxEnemyCount" in args ? args.changeMaxEnemyCount : true
+		local change_max_enemy_count = "changeMaxEnemyCount" in args ? args.changeMaxEnemyCount : true
 
-		PopExt.SetWaveIconSpawnCount( icon, flags, count, changeMaxEnemyCount )
+		PopExt.SetWaveIconSpawnCount( icon, flags, count, change_max_enemy_count )
 	}
 
 	/***********************************************************************************************************************
@@ -2124,7 +2127,7 @@ local popext_funcs = {
 }
 ::Homing <- {
 	// Modify the AttachProjectileThinker function to accept projectile speed adjustment if needed
-	function AttachProjectileThinker( projectile, speed_mult, turn_power, ignoreDisguisedSpies = true, ignoreStealthedSpies = true ) {
+	function AttachProjectileThinker( projectile, speed_mult, turn_power, ignore_disguised_spies = true, ignore_stealthed_spies = true ) {
 
 		projectile.ValidateScriptScope()
 		local projectile_scope = projectile.GetScriptScope()
@@ -2139,8 +2142,8 @@ local popext_funcs = {
 
 		projectile_scope.turn_power			  <- turn_power
 		projectile_scope.projectile_speed	  <- projectile_speed
-		projectile_scope.ignoreDisguisedSpies <- ignoreDisguisedSpies
-		projectile_scope.ignoreStealthedSpies <- ignoreStealthedSpies
+		projectile_scope.ignore_disguised_spies <- ignore_disguised_spies
+		projectile_scope.ignore_stealthed_spies <- ignore_stealthed_spies
 
 		//this should be added in globalfixes.nut but sometimes this code tries to run before the table is created
 		if ( !( "ProjectileThinkTable" in projectile_scope ) ) projectile_scope.ProjectileThinkTable <- {}
@@ -2157,7 +2160,7 @@ local popext_funcs = {
 	function SelectVictim( projectile ) {
 		local target
 		local min_distance = 32768.0
-		foreach ( player in PopExtUtil.HumanArray ) {
+		foreach ( player in PopExtUtil.HumanTable.keys() ) {
 
 			local distance = ( projectile.GetOrigin() - player.GetOrigin() ).Length()
 
@@ -2184,10 +2187,10 @@ local popext_funcs = {
 			}
 
 			// Check for stealth and disguise conditions if not ignored
-			if ( !projectile_scope.ignoreStealthedSpies && ( victim.IsStealthed() || victim.IsFullyInvisible() ) ) {
+			if ( !projectile_scope.ignore_stealthed_spies && ( victim.IsStealthed() || victim.IsFullyInvisible() ) ) {
 				return false
 			}
-			if ( !projectile_scope.ignoreDisguisedSpies && victim.GetDisguiseTarget() != null ) {
+			if ( !projectile_scope.ignore_disguised_spies && victim.GetDisguiseTarget() != null ) {
 				return false
 			}
 		}
@@ -2276,6 +2279,8 @@ local popext_funcs = {
 
 	function ParseTagArguments( bot, tag ) {
 
+		local newtags = {}
+
 		if ( !tag.find( "{" ) && !tag.find( "|" ) ) return {}
 
 		//these ones aren't as re-usable as other kv's
@@ -2360,14 +2365,17 @@ local popext_funcs = {
 			} else {
 				compilestring( format( @"::__popexttagstemp <- { %s", splittag[1] ) )()
 			}
+			foreach( k, v in ::__popexttagstemp ) newtags[k] <- v
 
-			foreach( k, v in ::__popexttagstemp ) tagtable[k] <- v
+			// tagtable = newtags
 
 			delete ::__popexttagstemp
 		}
-		if ( !splittag.len() ) return tagtable
+		foreach(k, v in tagtable)
+			if (!(k in newtags))
+				newtags[k] <- v
 
-		return tagtable
+		return newtags
 	}
 
 	function EvaluateTags( bot, changeattributes = false ) {
@@ -2389,7 +2397,7 @@ local popext_funcs = {
 
 			if ( PopExtMain.DebugText )
 				foreach ( k, v in args )
-					PopExtMain.Error.DebugLog( format( "( %s ) EvaluateTags ( %s ): {%s = %s}", Convars.GetClientConvarValue( "name", bot.entindex() ), func, k.tostring(), v ? v.tostring() : "null" ) )
+					PopExtMain.Error.DebugLog( format( "( %s [%d] ) EvaluateTags ( %s ): {%s = %s}", Convars.GetClientConvarValue( "name", bot.entindex() ), PopExtUtil.BotTable[bot], func, k.tostring(), v ? v.tostring() : "null" ) )
 
 			if ( func in popext_funcs )
 				popext_funcs[func].call( bot.GetScriptScope(), bot, args )
@@ -2443,7 +2451,7 @@ local popext_funcs = {
 
 	function OnGameEvent_teamplay_round_start( params ) {
 
-		foreach ( bot in PopExtUtil.BotArray )
+		foreach ( bot in PopExtUtil.BotTable.keys() )
 			if ( bot.IsValid() && bot.GetTeam() != TEAM_SPECTATOR )
 				bot.ForceChangeTeam( TEAM_SPECTATOR, true )
 	}
