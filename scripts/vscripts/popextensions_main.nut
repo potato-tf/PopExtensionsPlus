@@ -67,7 +67,7 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
 ::PopExtMain <- {
 
-	DebugText = true
+	DebugText = false
 
 	// manual cleanup flag, set to true for missions that are created for a specific map.
 	// automated unloading is meant for multiple missions on one map, purpose-built map/mission combos ( like mvm_redridge ) don't need this.
