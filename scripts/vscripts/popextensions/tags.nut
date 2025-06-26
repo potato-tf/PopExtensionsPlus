@@ -1,4 +1,11 @@
-//behavior tags
+// behavior tags
+
+// NOTE: some tags will reuse generic key names (cooldown/duration/etc) in place of other args
+// This is for some backwards compatibility with the old pipe syntax 
+// Pipe syntax is not fully supported by newer tags and may be haphazardly broken by updates
+// These backwards compatibility efforts come from old tags that existed prior to the new table syntax
+// Anyone interested in creating new tags should not waste time trying to support this deprecated behavior
+
 PopExtUtil.PlayerManager.ValidateScriptScope()
 
 local popext_funcs = {
