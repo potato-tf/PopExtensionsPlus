@@ -41,8 +41,8 @@ jobs:
           mapfile -t servers < <(curl -s https://raw.githubusercontent.com/potato-tf/deploy/refs/heads/main/serverlist.json | jq -r '.servers[]')
           for i in "${servers[@]}"; do a=( $i );
           {
-              rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/vscripts/ ${a[1]}:/var/tf2testingserver/tf/download/scripts/vscripts/
-              rsync -a -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/population/mvm_bigrock_vscript.pop ${a[1]}:/var/tf2testingserver/tf/download/scripts/population/mvm_bigrock_vscript.pop
+              rsync -a --mkpath -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/vscripts/ ${a[1]}:/var/tf2testingserver/tf/download/scripts/vscripts/
+              rsync -a --mkpath -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/population/mvm_bigrock_vscript.pop ${a[1]}:/var/tf2testingserver/tf/download/scripts/population/mvm_bigrock_vscript.pop
           } &
           done
           wait
