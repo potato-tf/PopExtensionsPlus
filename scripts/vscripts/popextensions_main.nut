@@ -153,7 +153,7 @@ PopExtEvents.AddRemoveEventHook( "player_spawn", "MainPlayerSpawn", function( pa
 
 PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventoryApplication", function( params ) {
 
-	if ( GetRoundState() == CONST.GR_STATE_PREROUND ) return
+	if ( GetRoundState() == 3 ) return
 
 	local player = GetPlayerFromUserID( params.userid )
 
