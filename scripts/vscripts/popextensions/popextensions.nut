@@ -1,7 +1,5 @@
-local root = getroottable()
-
-PopExt.robot_tags         <- {}
-PopExt.tank_names         <- {}
+PopExt.robot_tags          <- {}
+PopExt.tank_names          <- {}
 PopExt.tank_names_wildcard <- {}
 
 pop_ext_think_func_set <- false
@@ -10,6 +8,7 @@ AddThinkToEnt( pop_ext_entity, null )
 PrecacheModel( "models/weapons/w_models/w_rocket.mdl" )
 
 function PopExt::AddRobotTag( tag, table ) {
+
 	if ( !pop_ext_think_func_set ) {
 		AddThinkToEnt( pop_ext_entity, "PopExtGlobalThink" )
 		pop_ext_think_func_set = true
@@ -49,7 +48,7 @@ function PopExt::AddTankName( name, table ) {
 		PopExt.tank_names[name] <- table
 }
 
-// wrapper with more intuitive name
+// alias with more intuitive name
 PopExt.CustomTank <- PopExt.AddTankName
 
 function PopExt::_PopIncrementTankIcon( icon ) {

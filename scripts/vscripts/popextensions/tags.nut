@@ -86,7 +86,7 @@ local popext_funcs = {
 		local filter_type = "filter_type" in args ? args.filter_type : 0
 		local filter_param = "filter_param" in args ? args.filter_param : -1
 
-		bot.GetScriptScope().DeathHookTable.DeathSound <- function( params ) {
+		PopExtEvents.AddRemoveEventHook( "player_death", format( "DeathSound%d", bot.entindex() ), function( params ) {
 
 			local victim = GetPlayerFromUserID( params.userid )
 
@@ -112,7 +112,7 @@ local popext_funcs = {
 			})
 
 			// EmitSoundEx( {sound_name = "sound" in args ? args.sound : args.type, entity = victim} )
-		}
+		}, EVENT_WRAPPER_TAGS)
 	}
 
     /*******************************************************************************************************
@@ -243,13 +243,15 @@ local popext_funcs = {
 
 		if ( apply_to_ragdoll ) {
 
-			bot.GetScriptScope().TakeDamageTable.BonemergeDeathModel <- function( params ) {
+			PopExtEvents.AddRemoveEventHook( "player_death", format( "BonemergeDeathModel_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
-				local victim = params.const_entity
-				if ( victim == bot && victim.GetHealth() - params.damage <= 0 )
-					EntFireByHandle( bot, "SetCustomModelWithClassAnimations", bonemerge_model, -1, null, null )
-					// bot.AcceptInput( "SetCustomModelWithClassAnimations", bonemerge_model, null, null )
-			}
+				local _bot = GetPlayerFromUserID( params.userid )
+
+				if ( _bot != bot ) return
+
+				b.SetCustomModelWithClassAnimations( bonemerge_model )
+
+			}, EVENT_WRAPPER_TAGS)
 		}
 	}
 
@@ -455,7 +457,9 @@ local popext_funcs = {
 		local origin 	 = "origin" in args ? args.origin : bot.GetOrigin()
 		local angles 	 = "angles" in args ? args.angles : bot.EyeAngles()
 		local attachment = "attachment" in args ? args.attachment : null
-		SpawnTemplate( template, parent, origin, angles, true, attachment, true, true )
+		local nonsolid   = "nonsolid" in args ? args.nonsolid : true
+
+		SpawnTemplate( template, parent, origin, angles, true, attachment, true, nonsolid )
 	}
 
     /**********************************************************
@@ -485,7 +489,7 @@ local popext_funcs = {
 				// figure out a way to apply cosmetics to ragdolls on death without this
 				// local wearable = PopExtUtil.CreatePlayerWearable( bot, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2] )
 				local wearable = PopExtUtil.GiveWearableItem( bot, 9911, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2] )
-				SetPropString( wearable, "m_iName", "__bot_romevision_model" )
+				SetPropString( wearable, "m_iName", "__popext_romevision_model" )
 				return
 			}
 			foreach ( i, cosmetic in cosmetics ) {
@@ -494,7 +498,7 @@ local popext_funcs = {
 				// figure out a way to apply cosmetics to ragdolls on death without this
 				// local wearable = PopExtUtil.CreatePlayerWearable( bot, cosmetic )
 				local wearable = PopExtUtil.GiveWearableItem( bot, 9911, cosmetic )
-				SetPropString( wearable, "m_iName", "__bot_romevision_model" )
+				SetPropString( wearable, "m_iName", "__popext_romevision_model" )
 			}
 	}
 
@@ -837,11 +841,16 @@ local popext_funcs = {
 			cooldowntime = Time() + ( duration + repeat_cooldown )
 		}
 
-		bot.GetScriptScope().DeathHookTable.ActionPointDeath <- function( params ) {
-			local action_point = bot.GetActionPoint()
+		PopExtEvents.AddRemoveEventHook( "player_death", format( "ActionPointDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+
+			local _bot = GetPlayerFromUserID( params.userid )
+
+			if ( _bot != bot ) return
+
+			local action_point = _bot.GetActionPoint()
 			if ( action_point && action_point.IsValid() )
 				action_point.Kill()
-		}
+		}, EVENT_WRAPPER_TAGS)
 
 		if ( aimtarget ) {
 
@@ -982,7 +991,7 @@ local popext_funcs = {
 		local weapon = args.weapon ? args.weapon : args.type
 		local amount = ( "amount" in args ) ? args.amount.tofloat() : args.cooldown.tofloat()
 
-		bot.GetScriptScope().TakeDamageTable.WeaponResistTakeDamage <- function( params ) {
+		PopExtEvents.AddRemoveEventHook( "OnScriptHook_OnTakeDamage", format( "WeaponResistTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local player = params.attacker
 
@@ -990,12 +999,11 @@ local popext_funcs = {
 
 			weapon = PopExtUtil.HasItemInLoadout( player, weapon )
 
-			if ( params.const_entity != bot || params.weapon == null || params.weapon != weapon )
-				return
-
-			// if ( params.damage * amount < player.GetHealth() )
+			if ( params.const_entity != bot || params.weapon == null || params.weapon != weapon ) return
+	
 			params.damage *= amount
-		}
+
+		}, EVENT_WRAPPER_TAGS)
 	}
     /****************************************
      *                                      *
@@ -1011,28 +1019,17 @@ local popext_funcs = {
 		SetPropBool( bot, "m_bForcedSkin", true )
 		SetPropInt( bot, "m_nForcedSkin", "skin" in args ? args.skin.tointeger() : args.type.tointeger() )
 
-		bot.GetScriptScope().TakeDamageTable.ResetSkin <- function( params ) {
+		PopExtEvents.AddRemoveEventHook( "player_team", format( "ResetBotSkin_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
-			local victim = params.const_entity
+			local _bot = GetPlayerFromUserID( params.userid )
 
-			if ( victim == bot && params.damage > victim.GetHealth() ) {
+			if ( _bot == bot && params.team == TEAM_SPECTATOR ) {
 
-				SetPropBool( bot, "m_bForcedSkin", true )
-				SetPropInt( bot, "m_nForcedSkin", 1 )
-				SetPropInt( bot, "m_iPlayerSkinOverride", 1 )
+				SetPropBool( _bot, "m_bForcedSkin", true )
+				SetPropInt( _bot, "m_nForcedSkin", 1 )
+				SetPropInt( _bot, "m_iPlayerSkinOverride", 1 )
 			}
-		}
-		bot.GetScriptScope().TeamSwitchTable.ResetSkin <- function( params ) {
-
-			local b = GetPlayerFromUserID( params.userid )
-
-			if ( b == bot && params.team == TEAM_SPECTATOR ) {
-
-				SetPropBool( bot, "m_bForcedSkin", true )
-				SetPropInt( bot, "m_nForcedSkin", 1 )
-				SetPropInt( bot, "m_iPlayerSkinOverride", 1 )
-			}
-		}
+		}, EVENT_WRAPPER_TAGS)
 	}
 
 	//UNFINIHSED
@@ -1052,6 +1049,8 @@ local popext_funcs = {
      * Example: popext_dispenseroverride{ type = OBJ_SENTRYGUN }      *
      ******************************************************************/
 
+	// TODO: handle hauling/moving to new hints better for sentry override
+	// Engi-bots will try to haul their sentry to the next hint and this confuses them a lot
 	popext_dispenseroverride = function( bot, args ) {
 
 		local alwaysfire = bot.HasBotAttribute( ALWAYS_FIRE_WEAPON )
@@ -1066,20 +1065,21 @@ local popext_funcs = {
 			if ( hint && !alwaysfire ) bot.PressFireButton( 0.0 )
 		}
 
-		bot.GetScriptScope().BuiltObjectTable.DispenserBuildOverride <- function( params ) {
+		PopExtEvents.AddRemoveEventHook( "player_builtobject", format( "DispenserBuildOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local obj = params.object
 
+			local _bot = GetPlayerFromUserID( params.userid )
+
 			//dispenser built, stop force firing
-			if ( !alwaysfire ) bot.PressFireButton( 0.0 )
+			if ( !alwaysfire ) _bot.PressFireButton( 0.0 )
 
 			if ( obj == args.type ) {
 
-
 				if ( obj == OBJ_SENTRYGUN )
-					bot.AddCustomAttribute( "engy sentry radius increased", FLT_SMALL, -1 )
+					_bot.AddCustomAttribute( "engy sentry radius increased", FLT_SMALL, -1 )
 
-				bot.AddCustomAttribute( "upgrade rate decrease", 8, -1 )
+				_bot.AddCustomAttribute( "upgrade rate decrease", 8, -1 )
 				local building = EntIndexToHScript( params.index )
 
 				if ( obj != OBJ_DISPENSER ) {
@@ -1115,12 +1115,12 @@ local popext_funcs = {
 				//create a dispenser
 				local dispenser = CreateByClassname( "obj_dispenser" )
 
-				SetPropEntity( dispenser, "m_hBuilder", bot )
+				SetPropEntity( dispenser, "m_hBuilder", _bot )
 
 				PopExtUtil.SetTargetname( dispenser, format( "dispenser%d", dispenser.entindex() ) )
 
-				dispenser.SetTeam( bot.GetTeam() )
-				dispenser.SetSkin( bot.GetSkin() )
+				dispenser.SetTeam( _bot.GetTeam() )
+				dispenser.SetSkin( _bot.GetSkin() )
 
 				dispenser.DispatchSpawn()
 
@@ -1128,7 +1128,7 @@ local popext_funcs = {
 
 				// SetPropInt( dispenser, "m_iHighestUpgradeLevel", 2 ) //doesn't work
 
-				local builder = PopExtUtil.GetItemInSlot( bot, SLOT_PDA )
+				local builder = PopExtUtil.GetItemInSlot( _bot, SLOT_PDA )
 
 				local builtobj = GetPropEntity( builder, "m_hObjectBeingBuilt" )
 				SetPropInt( builder, "m_iObjectType", 0 )
@@ -1136,12 +1136,12 @@ local popext_funcs = {
 				// if ( builtobj && builtobj.GetClassname() != "obj_dispenser" ) builtobj.Kill()
 				SetPropEntity( builder, "m_hObjectBeingBuilt", dispenser ) //makes dispenser a null reference
 
-				bot.Weapon_Switch( builder )
+				_bot.Weapon_Switch( builder )
 				builder.PrimaryAttack()
 
 				//m_hObjectBeingBuilt messes with our dispenser reference, do radius check to grab it again
 				for ( local d; d = FindByClassnameWithin( d, "obj_dispenser", building.GetOrigin(), 128 ); )
-					if ( GetPropEntity( d, "m_hBuilder" ) == bot )
+					if ( GetPropEntity( d, "m_hBuilder" ) == _bot )
 						dispenser = d
 
 				dispenser.SetLocalOrigin( building.GetLocalOrigin() )
@@ -1150,7 +1150,7 @@ local popext_funcs = {
 				AddOutput( dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1 ) //kill it to avoid showing up in killfeed
 				AddOutput( building, "OnDestroyed", dispenser.GetName(), "Destroy", "", -1, -1 ) //always destroy the dispenser
 			}
-		}
+		}, EVENT_WRAPPER_TAGS)
 	}
 
     /********************************************************************************************************************************************************
@@ -1211,6 +1211,7 @@ local popext_funcs = {
 		local previouswep = bot.GetActiveWeapon().entindex()
 
 		bot.GetScriptScope().PlayerThinkTable.MeleeWhenClose <- function() {
+
 			if ( bot.IsEFlagSet( EFL_BOT ) ) return
 			for ( local p; p = FindByClassnameWithin( p, "player", bot.GetOrigin(), dist ); ) {
 
@@ -1332,16 +1333,17 @@ local popext_funcs = {
 			}
 		}
 
-		bot.GetScriptScope().TakeDamageTable.HomingTakeDamage <- function( params ) {
+		PopExtEvents.AddRemoveEventHook( "OnScriptHook_OnTakeDamage", format( "HomingTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			if ( !params.const_entity.IsPlayer() ) return
 
 			local inflictor = params.inflictor
 			local classname = inflictor.GetClassname()
+
 			if ( classname != "tf_projectile_flare" && classname != "tf_projectile_energy_ring" ) return
 
-			EntFireByHandle( inflictor, "Kill", null, 0.5, null, null )
-		}
+			EntFireByHandle( inflictor, "Kill", "", 0.5, null, null )
+		}, EVENT_WRAPPER_TAGS)
 	}
 
     /*******************************************************************
@@ -1675,7 +1677,7 @@ local popext_funcs = {
 
 	popext_dropweapon = function( bot, args ) {
 
-		bot.GetScriptScope().DeathHookTable.DropWeaponDeath <- function( params ) {
+		PopExtEvents.AddRemoveEventHook( "player_death", format( "DropWeaponDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local slot = args.type ? args.type.tointeger() : -1
 			local wep  = ( slot == -1 ) ? bot.GetActiveWeapon() : PopExtUtil.GetItemInSlot( bot, slot )
@@ -1684,7 +1686,7 @@ local popext_funcs = {
 			local itemid = PopExtUtil.GetItemIndex( wep )
 			local wearable = CreateByClassname( "tf_wearable" )
 
-			SetPropBool( wearable, "m_AttributeManager.m_Item.m_bInitialized", true )
+			SetPropBool( wearable, STRING_NETPROP_INIT, true )
 			SetPropInt( wearable, STRING_NETPROP_ITEMDEF, itemid )
 
 			wearable.DispatchSpawn()
@@ -1705,7 +1707,7 @@ local popext_funcs = {
 
 			// Store attributes in scope, when it gets picked up add the attributes to the real weapon
 
-		}
+		}, EVENT_WRAPPER_TAGS)
 	}
 
     /*****************************************************************************************************************************************************************
@@ -2119,10 +2121,10 @@ local popext_funcs = {
 		local icon  	 = "icon" in args ? args.icon : args.type
 		local count 	 = "count" in args ? args.count : -1
 
-		bot.GetScriptScope().DeathHookTable.IconOverride <- function( params ) {
+		PopExtEvents.AddRemoveEventHook( "player_death", format( "IconOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			PopExt.SetWaveIconSlot( icon, icon, 0, count, PopExt.GetWaveIconSlot( icon, 0 ),  true )
-		}
+		}, EVENT_WRAPPER_TAGS)
 	}
 }
 ::Homing <- {
@@ -2243,10 +2245,6 @@ local popext_funcs = {
 }
 
 ::PopExtTags <- {
-
-	// TakeDamageTable = {}
-	// DeathHookTable = {} // do this per bot
-	// TeamSwitchTable = {}
 
 		//table of all possible keyvalues for all tags
 		//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
@@ -2404,71 +2402,58 @@ local popext_funcs = {
 
 		}
 	}
-
-	function OnScriptHook_OnTakeDamage( params ) {
-
-		local bot = params.const_entity
-
-		if ( !bot.IsPlayer() || !bot.IsBotOfType( TF_BOT_TYPE ) ) return
-
-		local scope = bot.GetScriptScope()
-
-		if ( "TakeDamageTable" in scope )
-			foreach ( func in scope.TakeDamageTable ) { func( params ) }
-	}
-
-	function OnGameEvent_player_team( params ) {
-
-		local bot = GetPlayerFromUserID( params.userid )
-
-		if ( !bot || !bot.IsValid() || !bot.IsBotOfType( TF_BOT_TYPE ) ) return
-
-		//this can fire before we are spawned
-		local scope = bot.GetScriptScope()
-		if ( !scope ) {
-
-			bot.ValidateScriptScope()
-			scope = bot.GetScriptScope()
-		}
-		if ( !( "TeamSwitchTable" in scope ) ) scope.TeamSwitchTable <- {}
-
-		if ( params.team == TEAM_SPECTATOR ) _AddThinkToEnt( bot, null )
-
-		foreach ( func in scope.TeamSwitchTable ) func( params )
-	}
-
-	function OnGameEvent_player_death( params ) {
-
-		local bot = GetPlayerFromUserID( params.userid )
-		if ( !bot.IsBotOfType( TF_BOT_TYPE ) ) return
-
-		local scope = bot.GetScriptScope()
-		bot.ClearAllBotTags()
-		foreach ( func in scope.DeathHookTable ) func( params )
-
-		_AddThinkToEnt( bot, null )
-	}
-
-	function OnGameEvent_teamplay_round_start( params ) {
-
-		foreach ( bot in PopExtUtil.BotTable.keys() )
-			if ( bot.IsValid() && bot.GetTeam() != TEAM_SPECTATOR )
-				bot.ForceChangeTeam( TEAM_SPECTATOR, true )
-	}
-
-	function OnGameEvent_player_builtobject( params ) {
-
-		local bot = GetPlayerFromUserID( params.userid )
-
-		if ( !bot.IsBotOfType( TF_BOT_TYPE ) ) return
-
-		local scope = bot.GetScriptScope()
-		if ( "BuiltObjectTable" in scope )
-			foreach ( func in scope.BuiltObjectTable ) func( params )
-	}
-
-	function OnGameEvent_halloween_boss_killed( params ) {
-		::__popext_bosskiller <- GetPlayerFromUserID( params.killer )
-	}
 }
-__CollectGameEventCallbacks( PopExtTags )
+
+PopExtEvents.AddRemoveEventHook( "player_team", "TagsPlayerTeam", function( params ) {
+
+	local bot = GetPlayerFromUserID( params.userid )
+
+	if ( !bot || !bot.IsValid() || !bot.IsBotOfType( TF_BOT_TYPE ) ) return
+
+	//this can fire before we are spawned
+	local scope = bot.GetScriptScope()
+	if ( !scope ) {
+
+		bot.ValidateScriptScope()
+		scope = bot.GetScriptScope()
+	}
+
+	if ( params.team == TEAM_SPECTATOR ) _AddThinkToEnt( bot, null )
+
+}, EVENT_WRAPPER_TAGS)
+
+PopExtEvents.AddRemoveEventHook("player_spawn", "TagsPlayerSpawn", function( params ) {
+
+	local player = GetPlayerFromUserID( params.userid )
+
+	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
+
+	PopExtEvents.AddRemoveEventHook( "*", format( "TagsPlayerSpawn_%d*", params.userid ), null, EVENT_WRAPPER_TAGS )
+
+	EntFireByHandle( player, "RunScriptCode", "PopExtTags.EvaluateTags( self )", SINGLE_TICK, player, player )
+
+}, EVENT_WRAPPER_TAGS)
+
+PopExtEvents.AddRemoveEventHook( "player_death", "TagsPlayerDeath", function( params ) {
+
+	local bot = GetPlayerFromUserID( params.userid )
+
+	if ( !bot.IsBotOfType( TF_BOT_TYPE ) ) return
+
+	local scope = bot.GetScriptScope()
+	bot.ClearAllBotTags()
+
+	_AddThinkToEnt( bot, null )
+
+}, EVENT_WRAPPER_TAGS)
+
+PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "TagsTeamplayRoundStart", function( params ) {
+
+	foreach ( bot in PopExtUtil.BotTable.keys() )
+		if ( bot.IsValid() && bot.GetTeam() != TEAM_SPECTATOR )
+			bot.ForceChangeTeam( TEAM_SPECTATOR, true )
+}, EVENT_WRAPPER_TAGS)
+
+PopExtEvents.AddRemoveEventHook( "halloween_boss_killed", "TagsHalloweenBossKilled", function( params ) {
+	::__popext_bosskiller <- GetPlayerFromUserID( params.killer )
+}, EVENT_WRAPPER_TAGS)

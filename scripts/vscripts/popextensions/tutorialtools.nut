@@ -76,7 +76,6 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 			// Loop through our human players
 			foreach ( player in PopExtUtil.HumanTable.keys() ) {
 
-				player.ValidateScriptScope()
 				local scope = player.GetScriptScope()
 
 				// Disable camera
@@ -107,7 +106,6 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 		// Loop through our human players
 		foreach ( player in PopExtUtil.HumanTable.keys() ) {
 
-			player.ValidateScriptScope()
 			player.GetScriptScope().__position <- player.GetOrigin()
 
 			// Allow us to see ourselves while in viewcontrol
@@ -150,9 +148,6 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 			// Gay babyjail our human players to prevent them from moving with things like conga
 
 			foreach ( player in PopExtUtil.HumanTable.keys() ) {
-
-
-				player.ValidateScriptScope()
 
 				SetPropInt( player, "movetype", MOVETYPE_WALK )
 				player.SetAbsOrigin( player.GetScriptScope().__position )

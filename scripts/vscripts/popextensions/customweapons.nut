@@ -74,8 +74,6 @@
 	// player accepts player entities
 	function GiveItem( itemname, player ) {
 
-		player.ValidateScriptScope()
-
 		if ( !player || player.GetPlayerClass() < 1 ) return
 		local playerclass = PopExtUtil.Classes[player.GetPlayerClass()]
 
@@ -345,7 +343,7 @@
 	function EquipItem( itemname, player, playerclass = null ) {
 
 		if ( playerclass == null ) playerclass = player.GetPlayerClass()
-		player.ValidateScriptScope()
+
 		if ( !( "ExtraLoadout" in player.GetScriptScope() ) ) {
 
 			local ExtraLoadout = array( 10 )
@@ -365,7 +363,7 @@
 	function UnequipItem( itemname, player, playerclass = null ) {
 
 		if ( playerclass == null ) playerclass = player.GetPlayerClass()
-		player.ValidateScriptScope()
+
 		if ( "ExtraLoadout" in player.GetScriptScope() )
 			if ( player.GetScriptScope().ExtraLoadout[playerclass] != null )
 				if ( player.GetScriptScope().ExtraLoadout[playerclass].find( itemname ) != null )
@@ -507,7 +505,7 @@ PopExtEvents.AddRemoveEventHook("post_inventory_application", "RegenerateCustomW
 		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 3 ), 3 )
 		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 4 ), 4 )
 	}
-})
+}, EVENT_WRAPPER_CUSTOMWEP)
 
 // TODO: deprecate the old namespace
 ::PopExtWeapons <- CustomWeapons

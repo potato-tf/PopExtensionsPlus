@@ -406,9 +406,13 @@ PopExtEvents.AddRemoveEventHook("player_death", "SpawnTemplatePlayerDeath", func
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
 
-	if ( "templates_to_kill" in scope )
+	if ( "templates_to_kill" in scope ) {
+
 		foreach ( item in scope.templates_to_kill )
 			typeof item == "function" ? item() : item.Kill()
+			
+		scope.templates_to_kill.clear()
+	}
 
 	player.RemoveEFlags( EFL_SPAWNTEMPLATE )
 })

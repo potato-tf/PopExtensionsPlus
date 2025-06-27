@@ -148,8 +148,6 @@ if (
 ## Cleanup
 - all entity targetnames prefixed with these will be wiped out on wave/mission change:
     - `__popext`
-    - `__util`
-    - `__bot`
     - `extratankpath`
 - See the `teamplay_round_start` event in popextensions_main.nut for dealing with global variable cleanup
     - You should scope your variables to an existing table where possible instead of adding it to the cleanup array.

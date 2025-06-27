@@ -1,7 +1,6 @@
 // All Global Utility Functions go here
 
 ::PopExtUtil <- {
-
 	HumanTable 	  = {}
 	BotTable 	  = {}
 	PlayerTable   = {}
@@ -212,43 +211,45 @@
 
 	PopInterface 	  = FindByClassname( null, "point_populator_interface" ) ?
 						FindByClassname( null, "point_populator_interface" ) :
-						SpawnEntityFromTable( "point_populator_interface", {targetname = "__util_pop_interface"} )
+						SpawnEntityFromTable( "point_populator_interface", {targetname = "__popext_pop_interface"} )
 
 	TriggerHurt 	  = CreateByClassname( "trigger_hurt" )
 
 	CurrentWaveNum 	  = GetPropInt( FindByClassname( null, "tf_objective_resource" ), "m_nMannVsMachineWaveCount" )
 
-	ClientCommand	  = SpawnEntityFromTable( "point_clientcommand", {targetname = "__util_clientcommand"} )
-	GameRoundWin 	  = SpawnEntityFromTable( "game_round_win", {targetname = "__util_roundwin", TeamNum = TF_TEAM_PVE_INVADERS, force_map_reset = 1} )
-	RespawnOverride   = SpawnEntityFromTable( "trigger_player_respawn_override", {targetname = "__util_respawnoverride", spawnflags = SF_TRIGGER_ALLOW_CLIENTS} )
+	ClientCommand	  = SpawnEntityFromTable( "point_clientcommand", {targetname = "__popext_clientcommand"} )
+	GameRoundWin 	  = SpawnEntityFromTable( "game_round_win", {targetname = "__popext_roundwin", TeamNum = TF_TEAM_PVE_INVADERS, force_map_reset = 1} )
+	RespawnOverride   = SpawnEntityFromTable( "trigger_player_respawn_override", {targetname = "__popext_respawnoverride", spawnflags = SF_TRIGGER_ALLOW_CLIENTS} )
+
+	IsLinux 		  = RAND_MAX != 32767
 
 	// all the one-liners
-	TouchCrashFix 	  = @() ( activator == null || !activator.IsValid() ) ? false : true
-	IsLinuxServer 	  = @() RAND_MAX != 32767
-	ShowMessage   	  = @( message ) ClientPrint( null, HUD_PRINTCENTER, message )
-	IsDucking 		  = @( player ) player.GetFlags() & FL_DUCKING
-	IsOnGround 		  = @( player ) player.GetFlags() & FL_ONGROUND
-	WeaponSwitchSlot  = @( player, slot ) EntFireByHandle( ClientCommand, "Command", format( "slot%d", slot + 1 ), -1, player, player )
-	HideAnnotation 	  = @( id = 0 ) SendGlobalGameEvent( "hide_annotation", {id = id} )
-	GetItemIndex 	  = @( item ) GetPropInt( item, STRING_NETPROP_ITEMDEF )
-	SetItemIndex 	  = @( item, index ) SetPropInt( item, STRING_NETPROP_ITEMDEF, index )
-	SetTargetname	  = @( ent, name ) SetPropString( ent, "m_iName", name )
-	GetPlayerSteamID  = @( player ) GetPropString( player, "m_szNetworkIDString" )
-	GetHammerID 	  = @( ent ) GetPropInt( ent, "m_iHammerID" )
-	GetSpawnFlags 	  = @( ent ) GetPropInt( ent, "m_spawnflags" )
-	GetPopfileName 	  = @() GetPropString( ObjectiveResource, "m_iszMvMPopfileName" )
-	PrecacheParticle  = @( name ) PrecacheEntityFromTable( { classname = "info_particle_system", effect_name = name } )
-	GetPlayerName     = @( player ) GetPropString( player, "m_szNetname" )
-	SetPlayerName     = @( player, name ) SetPropString( player, "m_szNetname", name )
-	GetPlayerUserID   = @( player ) GetPropIntArray( PlayerManager, "m_iUserID", player.entindex() )
-	PlayerRespawn     = @() self.ForceRegenerateAndRespawn()
-	DisableCloak      = @( player ) SetPropFloat( player, "m_Shared.m_flStealthNextChangeTime", Time() * INT_MAX )
-	InUpgradeZone     = @( player ) GetPropBool( player, "m_Shared.m_bInUpgradeZone" )
-	InButton 		  = @( player, button ) ( GetPropInt( player, "m_nButtons" ) & button )
-	SwitchWeaponSlot  = @( player, slot ) EntFireByHandle( ClientCommand, "Command", format( "slot%d", slot + 1 ), -1, player, player )
-	HasEffect 		  = @( ent, value ) GetPropInt( ent, "m_fEffects" ) == value
-	SetEffect 		  = @( ent, value ) SetPropInt( ent, "m_fEffects", value )
-	ShowHintMessage   = @( message ) SendGlobalGameEvent( "player_hintmessage", {hintmessage = message} )
+	TouchCrashFix 	  = @() 				( activator == null || !activator.IsValid() ) ? false : true
+	IsLinuxServer 	  = @() 				RAND_MAX != 32767 // backwards compatibility
+	ShowMessage   	  = @( message ) 		ClientPrint( null, HUD_PRINTCENTER, message )
+	IsDucking 		  = @( player ) 		player.GetFlags() & FL_DUCKING
+	IsOnGround 		  = @( player ) 		player.GetFlags() & FL_ONGROUND
+	WeaponSwitchSlot  = @( player, slot ) 	EntFire( "__popext_clientcommand", "Command", format( "slot%d", slot + 1 ), -1, player )
+	SwitchWeaponSlot  = @( player, slot ) 	EntFire( "__popext_clientcommand", "Command", format( "slot%d", slot + 1 ), -1, player )
+	HideAnnotation 	  = @( id = 0 ) 		SendGlobalGameEvent( "hide_annotation", {id = id} )
+	GetItemIndex 	  = @( item ) 			GetPropInt( item, STRING_NETPROP_ITEMDEF )
+	SetItemIndex 	  = @( item, index ) 	SetPropInt( item, STRING_NETPROP_ITEMDEF, index )
+	SetTargetname	  = @( ent, name ) 		SetPropString( ent, "m_iName", name )
+	GetPlayerSteamID  = @( player ) 		GetPropString( player, "m_szNetworkIDString" )
+	GetHammerID 	  = @( ent ) 			GetPropInt( ent, "m_iHammerID" )
+	GetSpawnFlags 	  = @( ent ) 			GetPropInt( ent, "m_spawnflags" )
+	GetPopfileName 	  = @() 	 			GetPropString( ObjectiveResource, "m_iszMvMPopfileName" )
+	PrecacheParticle  = @( name ) 			PrecacheEntityFromTable( { classname = "info_particle_system", effect_name = name } )
+	GetPlayerName     = @( player ) 		GetPropString( player, "m_szNetname" )
+	SetPlayerName     = @( player, name ) 	SetPropString( player, "m_szNetname", name )
+	GetPlayerUserID   = @( player ) 		GetPropIntArray( PlayerManager, "m_iUserID", player.entindex() )
+	PlayerRespawn     = @() 				self.ForceRegenerateAndRespawn()
+	DisableCloak      = @( player ) 		SetPropFloat( player, "m_Shared.m_flStealthNextChangeTime", Time() * INT_MAX )
+	InUpgradeZone     = @( player ) 		GetPropBool( player, "m_Shared.m_bInUpgradeZone" )
+	InButton 		  = @( player, button ) GetPropInt( player, "m_nButtons" ) & button
+	HasEffect 		  = @( ent, value ) 	GetPropInt( ent, "m_fEffects" ) == value
+	SetEffect 		  = @( ent, value ) 	SetPropInt( ent, "m_fEffects", value )
+	ShowHintMessage   = @( message ) 		SendGlobalGameEvent( "player_hintmessage", {hintmessage = message} )
 
 	function ForceChangeClass( player, classindex = 1 ) {
 
@@ -370,22 +371,13 @@
 
 		local playersalive = 0
 
-		local player_table = countbots ? BotTable : HumanTable
-		local players_len = player_table.len() - 1
-		local player_array = player_table.keys()
+		PopExtUtil.ValidatePlayerTables()
 
-		for ( local i = players_len; i >= 0; i-- ) {
+		local player_array = countbots ? BotTable.keys() : HumanTable.keys()
 
-			local player = player_array[i]
-			if ( !player || !player.IsValid() ) {
-
-				delete player_table[player]
-				continue
-			}
-			if ( !player.IsAlive() ) continue
-
-			playersalive++
-		}
+		foreach ( player in player_array )
+			if ( player.IsAlive() )
+				playersalive++
 
 		if ( printout ) {
 
@@ -401,6 +393,7 @@
 		PopExtMain.Error.DeprecationWarning( "PopExtUtil.CountAliveBots", "PopExtUtil.CountAlivePlayers( true )" )
 		return CountAlivePlayers( true, printout )
 	}
+
 	function SetParentLocalOriginDo( child, parent, attachment = null ) {
 
 		SetPropEntity( child, "m_hMovePeer", parent.FirstMoveChild() )
@@ -438,6 +431,7 @@
 	}
 
 	// Setup collision bounds of a trigger entity
+	// TODO: probably obsolete? what does this do that SetSize doesn't?
 	function SetupTriggerBounds( trigger, mins = null, maxs = null ) {
 
 		trigger.SetModel( "models/weapons/w_models/w_rocket.mdl" )
@@ -531,20 +525,19 @@
 		SetPropInt( wearable, "m_fEffects", bonemerge ? EF_BONEMERGE|EF_BONEMERGE_FASTCULL : 0 )
 		SetParentLocalOrigin( wearable, player, attachment )
 
-		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 		if ( auto_destroy ) {
-			if ( !( "pop_wearables_to_destroy" in scope ) )
-				scope.pop_wearables_to_destroy <- []
+			if ( !( "wearables_to_kill" in scope ) )
+				scope.wearables_to_kill <- []
 
-			scope.pop_wearables_to_destroy.append( wearable )
+			scope.wearables_to_kill.append( wearable )
 		}
 		return wearable
 	}
 
 	// Make a fake wearable that is attached to the player.
 	// The wearable is automatically removed on respawn.
-	function GiveWearableItem( player, item_id, model = false ) {
+	function GiveWearableItem( player, item_id, model = null ) {
 
 		local model_index = GetModelIndex( model )
 		if ( model_index == -1 )
@@ -563,22 +556,20 @@
 		PopExtUtil.InitEconItem( wearable, item_id )
 		DispatchSpawn( wearable )
 
-		if ( model )
-			wearable.SetModelSimple( model )
+		if ( model ) wearable.SetModelSimple( model )
 
 		// avoid infinite loops from post_inventory_application hooks
 		player.AddEFlags( EFL_CUSTOM_WEARABLE )
 
-		SendGlobalGameEvent( "post_inventory_application",  { userid = PopExtUtil.PlayerTable[player] } )
+		SendGlobalGameEvent( "post_inventory_application",  { userid = PopExtUtil.PlayerTable[ player ] } )
 
 		player.RemoveEFlags( EFL_CUSTOM_WEARABLE )
 
-		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
-		if ( !( "pop_wearables_to_destroy" in scope ) )
-			scope.pop_wearables_to_destroy <- []
+		if ( !( "wearables_to_kill" in scope ) )
+			scope.wearables_to_kill <- []
 
-		scope.pop_wearables_to_destroy.append( wearable )
+		scope.wearables_to_kill.append( wearable )
 
 		return wearable
 	}
@@ -654,7 +645,7 @@
 			scope.CustomAttrItems <- items
 
 			// wipe out old event hooks
-			PopExtEvents.AddRemoveEventHook( "*", format( "%s_%d_*", customattr_function, PlayerTable[ player ] ), null, 1 )
+			PopExtEvents.AddRemoveEventHook( "*", format( "%s_%d_*", customattr_function, PlayerTable[ player ] ), null, EVENT_WRAPPER_CUSTOMATTR )
 
 			//cleanup item thinks
 			foreach( item, _ in items )
@@ -791,7 +782,7 @@
 			y = 0.3
 		})
 		SetPropBool( txtent, STRING_NETPROP_PURGESTRINGS, true )
-		SetTargetname( txtent, format( "__utilExplanationText%d",txtent.entindex() ) )
+		SetTargetname( txtent, format( "__popext_explanation_text%d",txtent.entindex() ) )
 		local strarray = []
 
 		//avoid needing to do a ton of function calls for multiple announcements.
@@ -1148,11 +1139,10 @@
 
 		PopExtMain.Error.DeprecationWarning( "PopExtUtil.PlayerRobotModel", "PopExtUtil.PlayerBonemergeModel" )
 
-		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
 		local wearable = CreateByClassname( "tf_wearable" )
-		SetPropString( wearable, "m_iName", "__util_bonemerge_model" )
+		SetPropString( wearable, "m_iName", "__popext_bonemerge_model" )
 		SetPropInt( wearable, "m_nModelIndex", PrecacheModel( model ) )
 		SetPropBool( wearable, STRING_NETPROP_ATTACH, true )
 		SetPropEntity( wearable, "m_hOwnerEntity", player )
@@ -1175,14 +1165,13 @@
 
 	function PlayerBonemergeModel( player, model ) {
 
-		player.ValidateScriptScope()
 		local scope = player.GetScriptScope()
 
 		if ( "bonemerge_model" in scope && scope.bonemerge_model && scope.bonemerge_model.IsValid() )
 			scope.bonemerge_model.Kill()
 
 		local bonemerge_model = CreateByClassname( "tf_wearable" )
-		SetPropString( bonemerge_model, "m_iName", "__util_bonemerge_model" )
+		SetPropString( bonemerge_model, "m_iName", "__popext_bonemerge_model" )
 		SetPropInt( bonemerge_model, "m_nModelIndex", PrecacheModel( model ) )
 		SetPropBool( bonemerge_model, STRING_NETPROP_ATTACH, true )
 		SetPropEntity( bonemerge_model, "m_hOwner", player )
@@ -1213,7 +1202,7 @@
 		local has_bonemerge_model = "bonemerge_model" in scope && scope.bonemerge_model && scope.bonemerge_model.IsValid()
 
 		local dummy = CreateByClassname( "funCBaseFlex" )
-		dummy.KeyValueFromString( "targetname", format( "__util_sequence_dummy%d", player.entindex() ) )
+		dummy.KeyValueFromString( "targetname", format( "__popext_sequence_dummy%d", player.entindex() ) )
 
 		// SetModelSimple is more expensive but handles precaching and refreshes bone cache automatically
 		if ( model_override != "" )
@@ -1313,7 +1302,7 @@
 
 		local utilstun = CreateByClassname( "trigger_stun" )
 
-		utilstun.KeyValueFromString( "targetname", "__utilstun" )
+		utilstun.KeyValueFromString( "targetname", "__popext_stun" )
 		utilstun.KeyValueFromInt( "stun_type", type )
 		utilstun.KeyValueFromInt( "stun_effects", scared.tointeger() )
 		utilstun.KeyValueFromFloat( "stun_duration", duration.tofloat() )
@@ -1329,11 +1318,11 @@
 
 	function Ignite( player, duration = 10.0, damage = 1 ) {
 
-		local utilignite = FindByName( null, "__utilignite" )
+		local utilignite = FindByName( null, "__popext_ignite" )
 		if ( utilignite == null ) {
 
 			utilignite = SpawnEntityFromTable( "trigger_ignite", {
-				targetname = "__utilignite"
+				targetname = "__popext_ignite"
 				burn_duration = duration
 				damage = damage
 				spawnflags = SF_TRIGGER_ALLOW_CLIENTS
@@ -1345,11 +1334,11 @@
 
 	function ShowHudHint( text = "This is a hud hint", player = null, duration = 5.0 ) {
 
-		local hudhint = FindByName( null, "__utilhudhint" )
+		local hudhint = FindByName( null, "__popext_hudhint" )
 
 		local flags = player == null ? 1 : 0
 
-		if ( !hudhint ) hudhint = SpawnEntityFromTable( "env_hudhint", { targetname = "__utilhudhint", spawnflags = flags, message = text } )
+		if ( !hudhint ) hudhint = SpawnEntityFromTable( "env_hudhint", { targetname = "__popext_hudhint", spawnflags = flags, message = text } )
 
 		hudhint.KeyValueFromString( "message", text )
 
@@ -1700,7 +1689,7 @@
 	}
 
 	function StopAndPlayMVMSound( player, soundscript, delay ) {
-		player.ValidateScriptScope()
+
 		local scope = player.GetScriptScope()
 		scope.sound <- soundscript
 
@@ -2079,7 +2068,7 @@
 
 		scope.last_fire_time <- 0.0
 
-		scope.ItemThinkTable[format( "OnWeaponFire_%d_%d", PlayerTable[wep.GetOwner()], wep.entindex() )] <- function() {
+		scope.ItemThinkTable[format( "OnWeaponFire_%d_%d", PlayerTable[ wep.GetOwner()], wep.entindex() ) ] <- function() {
 
 			local fire_time = GetPropFloat( self, "m_flLastFireTime" )
 			if ( fire_time > last_fire_time ) {
@@ -2300,7 +2289,7 @@
 				invalid.append( player )
 
 		foreach( player in invalid ) {
-			printl( player )
+
 			delete PlayerTable[ player ]
 
 			if ( player in HumanTable )
@@ -2311,9 +2300,9 @@
 		}
 
 		// copy data to backwards compatible arrays
-		HumanArray  <- HumanTable.keys()
-		BotArray    <- BotTable.keys()
-		PlayerArray <- PlayerTable.keys()
+		HumanArray  = HumanTable.keys()
+		BotArray    = BotTable.keys()
+		PlayerArray = PlayerTable.keys()
 	}
 }
 
@@ -2321,36 +2310,7 @@ PopExtEvents.AddRemoveEventHook("mvm_wave_complete", "UtilWaveStatus", function 
 PopExtEvents.AddRemoveEventHook("mvm_wave_failed", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = false }, EVENT_WRAPPER_UTIL)
 PopExtEvents.AddRemoveEventHook("mvm_begin_wave", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = true }, EVENT_WRAPPER_UTIL)
 PopExtEvents.AddRemoveEventHook("mvm_reset_stats", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = true }, EVENT_WRAPPER_UTIL)
-
-PopExtEvents.AddRemoveEventHook("teamplay_round_start", "UtilRoundStart", function ( params ) {
-
-	SetPropBool( PopExtUtil.GameRules, "m_bIsInTraining", false )
-
-	// local test = CreateByClassname("move_rope")
-	// test.ValidateScriptScope()
-	// test.GetScriptScope().test <- function() {
-	// 	if (PopExtUtil.BotTable.len() > 0)
-	// 		PopExtUtil.PrintTable(PopExtUtil.BotTable)
-	// 	return -1
-	// }
-	// AddThinkToEnt( test, "test" )
-
-	for ( local i = 1; i <= MAX_CLIENTS; i++ ) {
-
-		local player = PlayerInstanceFromIndex( i )
-
-		if ( !player ) continue
-	
-		local userid = PopExtUtil.GetPlayerUserID( player )
-		if ( player.IsBotOfType( TF_BOT_TYPE ) )
-			PopExtUtil.BotTable[ player ] <- userid
-		else
-			PopExtUtil.HumanTable[ player ] <- userid
-
-		PopExtUtil.PlayerTable[ player ] <- userid
-	}
-	PopExtUtil.ValidatePlayerTables()
-}, EVENT_WRAPPER_UTIL)
+PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "UtilRoundStart", function ( params ) { SetPropBool( PopExtUtil.GameRules, "m_bIsInTraining", false ) }, EVENT_WRAPPER_UTIL)
 
 PopExtEvents.AddRemoveEventHook("player_activate", "UtilPlayerActivate", function ( params ) {
 
@@ -2363,14 +2323,15 @@ PopExtEvents.AddRemoveEventHook("player_activate", "UtilPlayerActivate", functio
 		PopExtUtil.PlayerTable[ player ] <- params.userid
 
 	PopExtUtil.ValidatePlayerTables()
+
 }, EVENT_WRAPPER_UTIL)
 
 PopExtEvents.AddRemoveEventHook("player_disconnect", "UtilPlayerDisconnect", function ( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
-	local human_table = PopExtUtil.HumanTable
-	local bot_table = PopExtUtil.BotTable
+	local human_table  = PopExtUtil.HumanTable
+	local bot_table    = PopExtUtil.BotTable
 	local player_table = PopExtUtil.PlayerTable
 
 	if ( player in human_table )
@@ -2396,7 +2357,6 @@ PopExtEvents.AddRemoveEventHook("post_inventory_application", "UtilPostInventory
 	if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
 		return
 
-	player.ValidateScriptScope()
 	local scope = player.GetScriptScope()
 
 	//sort weapons by slot
@@ -2446,14 +2406,56 @@ PopExtEvents.AddRemoveEventHook("post_inventory_application", "UtilPostInventory
 		SetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, wep, slot )
 	}
 
+	local player_table = PopExtUtil.PlayerTable
+	local bot_table = PopExtUtil.BotTable
+	local human_table = PopExtUtil.HumanTable
+
+	if ( !player_table.len() ) {
+
+		for ( local i = 1; i <= MAX_CLIENTS; i++ ) {
+
+			local player = PlayerInstanceFromIndex( i )
+
+			if ( !player ) continue
+
+			local scope = player.GetScriptScope()
+
+			if ( !scope ) {
+
+				player.ValidateScriptScope()
+				scope = player.GetScriptScope()
+			}
+
+			if ( !( "Preserved" in scope ) )
+				scope.Preserved <- {}
+
+			local userid = PopExtUtil.GetPlayerUserID( player )
+
+			if ( player.IsBotOfType( TF_BOT_TYPE ) )
+				bot_table[ player ] <- userid
+			else
+				human_table[ player ] <- userid
+
+			player_table[ player ] <- userid
+		}
+
+		PopExtUtil.ValidatePlayerTables()
+
+		return
+	}
+
 	if ( player.IsBotOfType( TF_BOT_TYPE ) )
-		PopExtUtil.BotTable[ player ] <- params.userid
+		bot_table[ player ] <- params.userid
 
-	else if ( !( player in PopExtUtil.HumanTable ) )
-		PopExtUtil.HumanTable[ player ] <- params.userid
+	else if ( !( player in human_table ) )
+		human_table[ player ] <- params.userid
 
-	if ( !( player in PopExtUtil.PlayerTable ) )
-		PopExtUtil.PlayerTable[ player ] <- params.userid
+	if ( !( player in player_table ) )
+		player_table[ player ] <- params.userid
+
+	PopExtUtil.HumanArray  = human_table.keys()
+	PopExtUtil.BotArray    = bot_table.keys()
+	PopExtUtil.PlayerArray = player_table.keys()
 
 }, EVENT_WRAPPER_UTIL)
 

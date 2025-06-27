@@ -61,7 +61,6 @@ WaveSchedule
 						`min respawn time`: 500
 						`provide on active` : 1
 						`move speed bonus` : 0.4
-						`override footstep sound set` : 6
 					}
 				}
 
@@ -82,6 +81,7 @@ WaveSchedule
 					StandableHeads = 1
 					MultiSapper = 1
 					TeamWipeWaveLoss = 1
+					UnusedGiantFootsteps = 2
 					GiantSentryKillCountOffset = -4
 					ClassLimits = {
 						[TF_CLASS_SCOUT]   = 1,      // Limit class to 1
@@ -136,7 +136,6 @@ WaveSchedule
 						`reloads full clip at once`: 1,
 						`passive reload`: 1,
 						// `fires milk bolt` : 1,
-						// `is miniboss`: 1,
 						`max health additive bonus` : 100,
 
 						[TF_CLASS_SCOUT] = {
@@ -185,7 +184,7 @@ WaveSchedule
 			TotalCount 10
 			MaxActive 5
 			SpawnCount 5
-			// WaitBeforeStarting 999
+			WaitBeforeStarting 999
 			TotalCurrency 200
 			TFBot
 			{
@@ -247,7 +246,7 @@ WaveSchedule
 			TotalCount 9999
 			MaxActive 1
 			SpawnCount 1
-			WaitBeforeStarting 1999
+			WaitBeforeStarting 0
 			WaitBetweenSpawns 5
 			TFBot
 			{
@@ -255,11 +254,11 @@ WaveSchedule
 				Attributes HoldFireUntilFullReload // now works with every clip-based weapon with EnableGlobalFixes mission attribute
 				// Attributes IgnoreFlag
 				Item "The Cow Mangler 5000"
-				// Tag "popext_homingprojectile|0.5|1.0"
+				Tag "popext_homingprojectile{turn_power = 0.5, speed_mult = 1.0}"
 				// Tag "popext_reprogrammed"
-				// Tag "popext_usehumanmodel"
+				Tag "popext_usehumanmodel"
 				// Tag "popext_meleeai"
-				// Tag "popext_spawnhere|-779.491150 3302.379883 312.992340|3" //custom spawn origin
+				Tag "popext_spawnhere{where = `-779.491150 3302.379883 312.992340`, spawn_uber_duration = 3}" //custom spawn origin
 				Tag "popext_customattr{attr = `wet immunity`, value = 1}"
 				// Tag "popext_weaponresist|298|20" //20x damage from iron curtain
 				// Tag "popext_weaponresist{type = 298, amount = 20}"
@@ -267,7 +266,7 @@ WaveSchedule
 				// Tag "popext_setskin{skin = 0}"
 				// Tag "popext_mobber"
 				// Tag "popext_fireweapon|2048"
-				// Tag "popext_rocketcustomtrail|eyeboss_projectile"
+				Tag "popext_rocketcustomtrail|eyeboss_projectile"
 			}
 		}
 		WaveSpawn
@@ -696,8 +695,8 @@ WaveSchedule
 				Tag "popext_customattr{attr = `custom projectile model`, value = `models/player/heavy.mdl`}"
 				Tag "popext_weaponresist{weapon = ID_IRON_CURTAIN, amount = 20}" //20x damage from iron curtain
 				Tag "popext_mobber"
-				Tag "popext_setskin{skin = 0}" //red skin
-				// Tag "popext_fireweapon|2048"
+				Tag "popext_setskin{ skin = 0 }" //red skin
+				Tag "popext_fireweapon{ button = IN_ATTACK2 }"
 				Tag "popext_rocketcustomtrail{name = `eyeboss_projectile`}"
 			}
 		}

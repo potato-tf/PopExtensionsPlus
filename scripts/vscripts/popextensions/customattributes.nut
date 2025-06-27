@@ -840,11 +840,11 @@
 
 		function IsMiniboss( player, item, value = null ) {
 
-			local event_hook_string = format( "OldSandmanStun_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
+			local event_hook_string = format( "IsMiniboss_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
 			item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- function() {
 
-				if ( player.GetActiveWeapon() == item ) {
+				if ( player.GetActiveWeapon() == item  || value == 2 ) {
 
 					player.SetIsMiniBoss( true )
 					player.SetModelScale( 1.75, -1 )
@@ -1688,7 +1688,7 @@
 
 		function MinRespawnTime( player, item, value ) {
 
-			PopExtEvents.AddRemoveEventHook("post_inventory_application", "MinRespawnTime", function( params ) {
+			PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MinRespawnTime", function( params ) {
 
 				if (!PopExtUtil.IsWaveStarted) return
 

@@ -34,14 +34,22 @@ foreach( k, v in ::NavMesh.getclass() )
 	if ( k != "IsValid" && !( k in ROOT ) )
 		ROOT[k] <- ::NavMesh[k].bindenv( ::NavMesh )
 
-// event wrapper limit
-const MAX_EVENTS 				  = 32
+// event wrapper call order limit per event
+// This allows +1 unordered.
+// This was 32 before and seemingly didn't cause much perf hit 
+// but I'll take +1 extra iteration instead of +26 since we aren't using them
+const MAX_EVENT_FUNCTABLES 		= 8
 
 // event call ordering
-const EVENT_WRAPPER_MAIN  	    = 0 // main script
-const EVENT_WRAPPER_UTIL 	    = 1 // util script
-const EVENT_WRAPPER_CUSTOMATTR  = 2 // custom attributes script
-const EVENT_WRAPPER_MISSIONATTR = 3 // mission attributes script
+// these ensure the core library has a consistent call ordering before any other external scripts.
+const EVENT_WRAPPER_MAIN  	    = 0
+const EVENT_WRAPPER_UTIL 	    = 1
+const EVENT_WRAPPER_CUSTOMATTR  = 2
+const EVENT_WRAPPER_CUSTOMWEP 	= 3
+const EVENT_WRAPPER_MISSIONATTR = 4
+const EVENT_WRAPPER_TAGS        = 5
+const EVENT_WRAPPER_HOOKS       = 6
+const EVENT_WRAPPER_POPULATOR   = 7
 
 // String caches
 const STRING_NETPROP_ITEMDEF 	  = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"

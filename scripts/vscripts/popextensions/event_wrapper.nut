@@ -1,13 +1,24 @@
+// Event hook/callback wrapper
+// - SM-style event hooking
+// - Dynamically adding/removing hooks at runtime, automatically handles re-collection
+// - Configurable call ordering of events regardless of file include order
+
+// __CollectEventCallbacks internally does something similar, appending functions to an array and then calling them in order.
+// This effectively stuffs an array of popextension hook functions into the first available cell for a given event hook array.
+// Call order for popext events is handled by this script instead of vscript_server.nut.
+
+// TODO: Performance benchmarks.
+// We use this to dynamically add/remove events at potentially critical times (large piles of bot spawns mostly)
+// So far I haven't seen any PERF WARNINGS in console using this, some bot tags/custom attributes may yell on bot/player spawn.
+
 ::PopExtEvents <- {
 
     EventsPreCollect = {}
     TableId = UniqueString( "_Compiled" )
-    // global_event_table = ::GameEventCallbacks
-    // global_scripthook_table = ::ScriptHookCallbacks
 
-    AddRemoveEventHook = function( event, funcname, func = null, index = "unordered" ) {
+    AddRemoveEventHook = function( event, funcname, func = null, index = "unordered", manual_collect = false ) {
 
-        //remove hook
+        // remove hook
         if ( !func ) {
 
             if ( event in EventsPreCollect ) {
@@ -75,12 +86,15 @@
 
         EventsPreCollect[ event ][ index ][ funcname ] <- func
 
+        // we don't need this internally, feature for external scripts
+        // only here if someone wants to register events then collect them manually at a later time
+        if ( manual_collect ) return
+
         CollectEvents()
     }
 
     CollectEvents = function() {
 
-        // add EventsPreCollect to the old table
         local old_table = {}
         local old_table_name = format( "PopExtEvents_%s", TableId )
 
@@ -90,20 +104,21 @@
 
         foreach ( event, new_table in EventsPreCollect ) {
 
-            // __DumpScope( 0, new_table )
-            local call_order = array( MAX_EVENTS )
-            // PopExtUtil.PrintTable( call_order )
+            local call_order = array( MAX_EVENT_FUNCTABLES )
 
+            // set up call order
             foreach ( index, func_table in new_table )
 
                 if ( index != "unordered" )
 
                     call_order[ index ] = func_table
 
+            // add unordered events to the end of the call order
             if ( "unordered" in new_table )
 
                 call_order[ call_order.len() - 1 ] = new_table[ "unordered" ]
 
+            // remove deleted events from the existing table
             foreach ( tbl in call_order )
 
                 foreach ( name, func in tbl || {} )
@@ -114,32 +129,34 @@
 
             local event_string = event == "OnTakeDamage" ? "OnScriptHook_" : "OnGameEvent_"
 
+            // set up hook table
             old_table[ format( "%s%s", event_string, event ) ] <- function( params ) {
 
                 foreach( i, tbl in call_order )
 
                     foreach( name, func in tbl || {} )
-                    
+
                         if ( func )
 
                             func( params )
-
             }
         }
-        // copy table to new ID, remove old table
+
+        // copy table to new ID
         local new_id = UniqueString( "_Compiled" )
         local new_table_name = format( "PopExtEvents_%s", new_id )
 
-        // new event layout is copied to old_table to preserve existing event hooks
+        // old events are copied to new table to preserve existing event hooks
         PopExtEvents[ new_table_name ] <- old_table
 
         // remove old table
         if ( old_table_name in PopExtEvents )
             delete PopExtEvents[ old_table_name ]
 
+        // update table ID
         TableId = new_id
 
-        // collect EventsPreCollect
+        // collect new events
         __CollectGameEventCallbacks( PopExtEvents[ new_table_name ] )
     }
 }

@@ -33,130 +33,6 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 
 	WaveArray = []
 
-	SpawnHookTable = {
-
-		function SetSpawner( params ) {
-
-			local player = GetPlayerFromUserID( params.userid )
-
-			if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
-
-			local scope = player.GetScriptScope()
-
-			local spawner = FindByClassnameNearest( "bot_generator", player.GetOrigin(), 256 )
-
-			scope.spawner <- spawner.GetName()
-			scope.bot_attributes <- BECOME_SPECTATOR_ON_DEATH
-
-			local additional_attributes = 0
-
-			//MVM hack: these keyvalues get removed by mvm logic from bot_generator spawned bots
-			local spawner_keyvalues = {
-				m_bDisableDodge = DISABLE_DODGE,
-				m_bSuppressFire = SUPPRESS_FIRE,
-				m_bRetainBuildings = RETAIN_BUILDINGS,
-				m_iOnDeathAction = REMOVE_ON_DEATH //1 = remove
-			}
-
-			foreach ( key, value in spawner_keyvalues )
-				if ( NetProps.GetPropInt( spawner, key ) ) {
-
-					if ( key == "m_iOnDeathAction" && NetProps.GetPropInt( spawner, key ) == 1 )
-						scope.bot_attributes = scope.bot_attributes |~ BECOME_SPECTATOR_ON_DEATH
-
-					additional_attributes = additional_attributes | value
-				}
-
-
-			scope.bot_attributes = scope.bot_attributes | additional_attributes
-
-			EntFireByHandle( player, "RunScriptCode", "self.AddBotAttribute( self.GetScriptScope().bot_attributes )", -1, null, null )
-		}
-
-		function WaitBetweenSpawnsAfterDeath( params ) {
-
-			local player = GetPlayerFromUserID( params.userid )
-
-			if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
-
-			//disable our spawner if we have WaitBetweenSpawnsAfterDeath
-			EntFireByHandle( player, "RunScriptCode", @"
-
-				local spawner = FindByName( null, self.GetScriptScope().spawner )
-
-				if ( `WaitBetweenSpawnsAfterDeath` in spawner.GetScriptScope().WaveSpawn )
-					EntFire( self.GetScriptScope().spawner.tostring(), `Disable` )
-
-			", SINGLE_TICK, null, null )
-		}
-	}
-
-	DeathHookTable = {
-
-		function RemoveIcon( params ) {
-
-			local player = GetPlayerFromUserID( params.userid )
-
-			if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
-
-			local scope = player.GetScriptScope()
-			PopExtUtil.PrintTable( scope )
-			local spawner = FindByName( null, scope.spawner )
-
-			PopExt.DecrementWaveIconSpawnCount( spawner.GetScriptScope().WaveSpawn.TFBot.ClassIcon, 0, 1 )
-		}
-
-		function WaitBetweenSpawnsAfterDeath( params ) {
-
-			local player = GetPlayerFromUserID( params.userid )
-
-			if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
-
-			local spawner = FindByName( null, player.GetScriptScope().spawner )
-
-			if ( "WaitBetweenSpawnsAfterDeath" in spawner.GetScriptScope().WaveSpawn ) {
-
-				EntFireByHandle( spawner, "Enable", "", float delay, handle activator, handle caller )
-				EntFireByHandle( spawner, "SpawnBot", "", float delay, handle activator, handle caller )
-			}
-		}
-	}
-
-	Events = {
-
-		function OnGameEvent_player_death( params ) {
-
-			local player = GetPlayerFromUserID( params.userid )
-			local scope = player.GetScriptScope()
-
-			foreach ( name, func in PopExtPopulator.DeathHookTable ) func( params )
-		}
-
-		function OnGameEvent_teamplay_round_start( params ) {
-
-			PopExtPopulator.InitializeWave()
-
-			PopExtPopulator.DoEntityIO( "InitWaveOutput" )
-
-		}
-
-		function OnGameEvent_mvm_begin_wave( params ) {
-
-			//grab the first spawner and enable it on wave start
-			local firstspawner = PopExtPopulator.WaveArray[PopExtUtil.CurrentWaveNum][0].keys()[0]
-			EntFireByHandle( firstspawner, "Enable", "", -1, null, null )
-
-			PopExtPopulator.DoEntityIO( "StartWaveOutput" )
-
-		}
-
-		function OnGameEvent_mvm_wave_complete( params ) {
-
-			PopExtPopulator.DoEntityIO( "DoneOutput" )
-
-		}
-	}
-
 	PopulatorFunctions = {
 
 		function Mission() {
@@ -175,14 +51,14 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 		if ( "Param" in WaveSchedule[PopExtUtil.CurrentWaveNum][type] ) param = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Param
 		if ( "Delay" in WaveSchedule[PopExtUtil.CurrentWaveNum][type] ) delay = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Delay
 		if ( "Activator" in WaveSchedule[PopExtUtil.CurrentWaveNum][type] ) activator = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Activator
-		if( "Caller" in WaveSchedule[PopExtUtil.CurrentWaveNum][type] ) caller = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Caller
+		if ( "Caller" in WaveSchedule[PopExtUtil.CurrentWaveNum][type] ) caller = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Caller
 
 		typeof target == "instance" ? EntFireByHandle( target, action, param, delay, activator, caller ) : DoEntFire( target, action, param, delay, activator, caller )
 	}
 
 	function InitializeWave() {
 
-		//PopulatorEnt is a null instance when this is initially called, it is valid by the time another teamplay_round_start event fires, so this works reliably
+		//PopulatorEnt is a null instance when this is initially called, it is valid by the time another recalculate_holidays event fires, so this works reliably
 		if ( !( "WaveSchedule" in getroottable() ) || PopulatorEnt.IsValid() ) return
 
 		WaveArray = "CustomWaveOrder" in WaveSchedule ? WaveSchedule.CustomWaveOrder : array( WaveSchedule.len() )
@@ -362,7 +238,7 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 			// Create an array with each element being another MAX_WAVESPAWNS_PER_WAVE-length array.
 			// If your mission has >MAX_WAVESPAWNS_PER_WAVE wavespawns on a single wave may god help you
 
-			local allwaves = array( GetPropInt( PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount" ), array( MAX_WAVESPAWNS_PER_WAVE,0 ) )
+			local allwaves = array( GetPropInt( PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount" ), array( MAX_WAVESPAWNS_PER_WAVE, 0 ) )
 
 			foreach( i, wave in allwaves ) {
 
@@ -379,6 +255,115 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 		}
 	}
 }
+
+
+
+PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "InitializeWave", function( params ) {
+
+	PopExtPopulator.InitializeWave()
+
+	PopExtPopulator.DoEntityIO( "InitWaveOutput" )
+
+}, EVENT_WRAPPER_POPULATOR)
+
+PopExtEvents.AddRemoveEventHook( "mvm_begin_wave", "StartWave", function( params ) {
+
+	//grab the first spawner and enable it on wave start
+	local firstspawner = PopExtPopulator.WaveArray[PopExtUtil.CurrentWaveNum][0].keys()[0]
+	EntFireByHandle( firstspawner, "Enable", "", -1, null, null )
+
+	PopExtPopulator.DoEntityIO( "StartWaveOutput" )
+
+}, EVENT_WRAPPER_POPULATOR)
+
+PopExtEvents.AddRemoveEventHook( "mvm_wave_complete", "DoneOutput", function( params ) {
+
+	PopExtPopulator.DoEntityIO( "DoneOutput" )
+
+}, EVENT_WRAPPER_POPULATOR)
+
+PopExtEvents.AddRemoveEventHook( "player_death", "RemoveIcon", function( params ) {
+
+	local player = GetPlayerFromUserID( params.userid )
+
+	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
+
+	local scope = player.GetScriptScope()
+	PopExtUtil.PrintTable( scope )
+	local spawner = FindByName( null, scope.spawner )
+
+	PopExt.DecrementWaveIconSpawnCount( spawner.GetScriptScope().WaveSpawn.TFBot.ClassIcon, 0, 1 )
+})
+
+PopExtEvents.AddRemoveEventHook( "player_death", "WaitBetweenSpawnsAfterDeath", function( params ) {
+
+	local player = GetPlayerFromUserID( params.userid )
+
+	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
+
+	local spawner = FindByName( null, player.GetScriptScope().spawner )
+
+	if ( "WaitBetweenSpawnsAfterDeath" in spawner.GetScriptScope().WaveSpawn ) {
+
+		EntFireByHandle( spawner, "Enable", "", float delay, handle activator, handle caller )
+		EntFireByHandle( spawner, "SpawnBot", "", float delay, handle activator, handle caller )
+	}
+})
+
+PopExtEvents.AddRemoveEventHook( "player_spawn", "WaitBetweenSpawnsAfterDeath", function( params ) {
+
+	local player = GetPlayerFromUserID( params.userid )
+
+	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
+
+	//disable our spawner if we have WaitBetweenSpawnsAfterDeath
+	EntFireByHandle( player, "RunScriptCode", @"
+
+		local spawner = FindByName( null, self.GetScriptScope().spawner )
+
+		if ( `WaitBetweenSpawnsAfterDeath` in spawner.GetScriptScope().WaveSpawn )
+			EntFireByHandle(spawner, `Disable`, ``, -1, null, null )
+
+	", SINGLE_TICK, null, null )
+})
+
+PopExtEvents.AddRemoveEventHook( "player_spawn", "SetSpawner", function( params ) {
+
+		local player = GetPlayerFromUserID( params.userid )
+
+		if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
+
+		local scope = player.GetScriptScope()
+
+		local spawner = FindByClassnameNearest( "bot_generator", player.GetOrigin(), 256 )
+
+		scope.spawner <- spawner.GetName()
+		scope.bot_attributes <- BECOME_SPECTATOR_ON_DEATH
+
+		local additional_attributes = 0
+
+		//MVM hack: these keyvalues get removed by mvm logic from bot_generator spawned bots
+		local spawner_keyvalues = {
+			m_bDisableDodge = DISABLE_DODGE,
+			m_bSuppressFire = SUPPRESS_FIRE,
+			m_bRetainBuildings = RETAIN_BUILDINGS,
+			m_iOnDeathAction = REMOVE_ON_DEATH //1 = remove
+		}
+
+		foreach ( key, value in spawner_keyvalues )
+			if ( NetProps.GetPropInt( spawner, key ) ) {
+
+				if ( key == "m_iOnDeathAction" && NetProps.GetPropInt( spawner, key ) == 1 )
+					scope.bot_attributes = scope.bot_attributes |~ BECOME_SPECTATOR_ON_DEATH
+
+				additional_attributes = additional_attributes | value
+			}
+
+
+		scope.bot_attributes = scope.bot_attributes | additional_attributes
+
+		EntFireByHandle( player, "RunScriptCode", "self.AddBotAttribute( self.GetScriptScope().bot_attributes )", -1, null, null )
+})
 
 ::WaveSchedule <- {
 
@@ -470,5 +455,4 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 		}
 	}
 }
-__CollectGameEventCallbacks( PopExtPopulator.Events )
 PopExtPopulator.InitializeWave()

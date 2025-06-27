@@ -1,5 +1,7 @@
 class PopExtPathPoint {
+
 	constructor( area, pos, how ) {
+
 		this.area = area
 		this.pos  = pos
 		this.how  = how
@@ -11,6 +13,7 @@ class PopExtPathPoint {
 }
 
 class PopExtBotBehavior {
+
 	function constructor( bot ) {
 		this.bot       = bot
 		this.scope     = bot.GetScriptScope()

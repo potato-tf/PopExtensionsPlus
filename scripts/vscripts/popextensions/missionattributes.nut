@@ -895,7 +895,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 			PopExtEvents.AddRemoveEventHook("player_death", "TeamWipeWaveLoss", function( params ) {
 				if ( !PopExtUtil.IsWaveStarted ) return
-				EntFire( "tf_gamerules", "RunScriptCode", "if ( PopExtUtil.CountAlivePlayers() == 0 ) EntFire( `__util_roundwin`, `RoundWin` )" )
+				EntFire( "bignet", "RunScriptCode", "if ( PopExtUtil.CountAlivePlayers() == 0 ) EntFire( `__popext_roundwin`, `RoundWin` )" )
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
 
@@ -1655,7 +1655,6 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					PopExtUtil.SetPlayerAttributesMulti( player, item, attributes, false, showhidden )
 
 			}, EVENT_WRAPPER_MISSIONATTR )
-
 		}
 
 		// ============================================================
@@ -1676,6 +1675,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				function DoLoadoutControl( item, replacement ) {
 
 					local wep = PopExtUtil.HasItemInLoadout( player, item )
+
 					if ( wep == null ) return
 
 					if ( GetPropEntity( wep, "m_hExtraWearable" ) != null ) {
@@ -1689,16 +1689,35 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					if ( replacement == null ) return
 
 					try
+
 						if ( "ExtraItems" in ROOT && replacement in ExtraItems )
+
 							CustomWeapons.GiveItem( replacement, player )
 						else
+
 							PopExtUtil.GiveWeapon( player, PopExtItems[replacement].item_class, PopExtItems[replacement].id )
+
 					catch( _ )
+
 						if ( typeof replacement == "table" )
+
 							foreach ( classname, itemid in replacement )
+
 								PopExtUtil.GiveWeapon( player, classname, itemid )
+
+						else if ( typeof replacement == "string" )
+
+							if ( "ExtraItems" in ROOT && replacement in ExtraItems )
+
+								CustomWeapons.GiveItem( replacement, player )
+
+							else if ( replacement in PopExtItems )
+
+								PopExtUtil.GiveWeapon( player, PopExtItems[replacement].item_class, PopExtItems[replacement].id )
+
 						else
-							PopExtMain.Error.RaiseTypeError( "LoadoutControl", "table" )
+
+							PopExtMain.Error.RaiseTypeError( format( "LoadoutControl: %s", replacement.tostring() ), "table or item_map string" )
 				}
 
 				foreach ( item, replacement in value ) {
@@ -1932,7 +1951,6 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 						( value & 4 && player.GetTeam() == TF_TEAM_PVE_DEFENDERS && player.IsBotOfType( TF_BOT_TYPE ) ) ) )
 						continue
 
-					player.ValidateScriptScope()
 					local scope = player.GetScriptScope()
 					if ( !( "crit_weapon" in scope ) )
 						scope.crit_weapon <- null
@@ -2364,7 +2382,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 							self.ExtinguishPlayerBurning()
 
 							SendGlobalGameEvent( "player_healed", {
-								patient = PopExtUtil.PlayerTable[self]
+								patient = PopExtUtil.PlayerTable[ self ]
 								healer  = 0
 								amount  = setvalue - hp
 							})
@@ -2605,7 +2623,8 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 									SetPropIntArray( player, STRING_NETPROP_AMMO, curmetal - 130, TF_AMMO_METAL )
 							break
 						}
-						if ( GetPropIntArray( player, STRING_NETPROP_AMMO, TF_AMMO_METAL ) < 0 ) EntFireByHandle( player, "RunScriptCode", "SetPropIntArray( player, `m_iAmmo`, 0, TF_AMMO_METAL )", -1, null, null )
+						if ( GetPropIntArray( player, STRING_NETPROP_AMMO, TF_AMMO_METAL ) < 0 )
+							EntFireByHandle( player, "RunScriptCode", "SetPropIntArray( self, STRING_NETPROP_AMMO, 0, TF_AMMO_METAL )", -1, null, null )
 					}
 
 				}
@@ -2936,12 +2955,11 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 				local player = GetPlayerFromUserID( params.userid )
 
-				if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
-					return
-
-				if ( ( !player.IsBotOfType( TF_BOT_TYPE ) && value != 2 ) || !player.IsMiniBoss() ) return
-
-				if ( !( player.GetPlayerClass() in validclasses ) ) return
+				if ( 
+					player.IsEFlagSet( EFL_CUSTOM_WEARABLE )
+					|| ( !player.IsBotOfType( TF_BOT_TYPE ) && !(value & 2) )
+					|| !( player.GetPlayerClass() in validclasses )
+				) return
 
 				player.AddCustomAttribute( "override footstep sound set", 0, -1 )
 
@@ -2951,27 +2969,48 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 				scope.stepside <- GetPropInt( player, "m_Local.m_nStepside" )
 				scope.stepcount <- 1
+
+				for (local i = 1; i < 5; i++) {
+
+					local footstepsound = format( "^mvm/giant_%s/giant_%s_step_0%d.wav", cstring, cstring, i )
+
+					if ( player.GetPlayerClass() == TF_CLASS_DEMOMAN )
+						footstepsound = format( "^mvm/giant_demoman/giant_demoman_step_0%d.wav", i )
+
+					else if ( player.GetPlayerClass() == TF_CLASS_SOLDIER || player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS )
+						footstepsound = format( "^mvm/giant_%s/giant_%s_step0%d.wav", cstring, cstring, i )
+
+					PrecacheSound( footstepsound )
+				}
+
 				scope.PlayerThinkTable.UnusedGiantFootsteps <- function() {
 
-					if ( GetPropInt( player, "m_Local.m_nStepside" ) == scope.stepside ) return
+					local _player = self
+
+					if ( !_player.IsMiniBoss() ) return
+
+					if ( !"stepside" in scope )
+						stepside <- GetPropInt( _player, "m_Local.m_nStepside" )
+
+					if ( !("stepcount" in scope) )
+						stepcount <- 1
+
+					if ( GetPropInt( _player, "m_Local.m_nStepside" ) == stepside ) return
 
 					local footstepsound = format( "^mvm/giant_%s/giant_%s_step_0%d.wav", cstring, cstring, RandomInt( 1, 4 ) )
 
-					if ( player.GetPlayerClass() == TF_CLASS_DEMOMAN )
+					if ( _player.GetPlayerClass() == TF_CLASS_DEMOMAN )
 						footstepsound = format( "^mvm/giant_demoman/giant_demoman_step_0%d.wav", RandomInt( 1, 4 ) )
 
-					else if ( player.GetPlayerClass() == TF_CLASS_SOLDIER || player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS )
+					else if ( _player.GetPlayerClass() == TF_CLASS_SOLDIER || _player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS )
 						footstepsound = format( "^mvm/giant_%s/giant_%s_step0%d.wav", cstring, cstring, RandomInt( 1, 4 ) )
 
-					if ( !IsSoundPrecached( footstepsound ) )
-						PrecacheSound( footstepsound )
-
 					// play sound every other step, otherwise it's spammy
-					if ( scope.stepcount % 2 == 0 )
-						player.EmitSound( footstepsound )
+					if ( value & 4 || stepcount % 2 == 0 )
+						_player.EmitSound( footstepsound )
 
-					scope.stepcount++
-					scope.stepside = ( GetPropInt( player, "m_Local.m_nStepside" ) )
+					stepcount++
+					stepside = ( GetPropInt( _player, "m_Local.m_nStepside" ) )
 				}
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
