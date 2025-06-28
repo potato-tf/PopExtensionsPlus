@@ -256,7 +256,7 @@ local popext_funcs = {
 
 				if ( _bot != bot ) return
 
-				b.SetCustomModelWithClassAnimations( bonemerge_model )
+				_bot.SetCustomModelWithClassAnimations( bonemerge_model )
 
 			}, EVENT_WRAPPER_TAGS)
 		}
