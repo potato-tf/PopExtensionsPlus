@@ -1074,9 +1074,11 @@ local popext_funcs = {
 
 		PopExtEvents.AddRemoveEventHook( "player_builtobject", format( "DispenserBuildOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
-			local obj = params.object
-
 			local _bot = GetPlayerFromUserID( params.userid )
+
+			if ( _bot != bot ) return
+
+			local obj = params.object
 
 			//dispenser built, stop force firing
 			if ( !alwaysfire ) _bot.PressFireButton( 0.0 )
@@ -1686,8 +1688,12 @@ local popext_funcs = {
 
 		PopExtEvents.AddRemoveEventHook( "player_death", format( "DropWeaponDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
+			local _bot = GetPlayerFromUserID( params.userid )
+			
+			if ( _bot != bot ) return
+
 			local slot = args.type ? args.type.tointeger() : -1
-			local wep  = ( slot == -1 ) ? bot.GetActiveWeapon() : PopExtUtil.GetItemInSlot( bot, slot )
+			local wep  = ( slot == -1 ) ? _bot.GetActiveWeapon() : PopExtUtil.GetItemInSlot( _bot, slot )
 			if ( wep == null ) return
 
 			local itemid = PopExtUtil.GetItemIndex( wep )
@@ -1708,7 +1714,7 @@ local popext_funcs = {
 			SetPropInt( droppedweapon, "m_Item.m_iEntityQuality", 6 )
 			SetPropBool( droppedweapon, "m_Item.m_bInitialized", true )
 			droppedweapon.SetModelSimple( modelname )
-			droppedweapon.SetAbsOrigin( bot.GetOrigin() )
+			droppedweapon.SetAbsOrigin( _bot.GetOrigin() )
 
 			droppedweapon.DispatchSpawn()
 
@@ -2435,8 +2441,10 @@ PopExtEvents.AddRemoveEventHook("player_spawn", "TagsPlayerSpawn", function( par
 
 	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
+	// kill any existing tag hooks for this bot
 	PopExtEvents.AddRemoveEventHook( "*", format( "TagsPlayerSpawn_%d*", params.userid ), null, EVENT_WRAPPER_TAGS )
 
+	// new tags
 	EntFireByHandle( player, "RunScriptCode", "PopExtTags.EvaluateTags( self )", SINGLE_TICK, player, player )
 
 }, EVENT_WRAPPER_TAGS)
