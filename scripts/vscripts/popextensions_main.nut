@@ -2,7 +2,7 @@
 
 local ROOT = getroottable()
 
-function Include( path ) {
+local function Include( path ) {
 	// try IncludeScript( format( "popextensions/%s", path ), ROOT ) catch( e ) error( e )
 	IncludeScript( format( "popextensions/%s", path ), ROOT )
 }
@@ -392,9 +392,8 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 })
 
 //HACK: forces post_inventory_application to fire on pop load
-local maxclients = MaxClients().tointeger()
-for ( local i = 1; i <= maxclients; i++ )
-	if ( PlayerInstanceFromIndex( i ) != null )
+for ( local i = MaxClients().tointeger(); i > 0; --i )
+	if ( PlayerInstanceFromIndex( i ) )
 		EntFireByHandle( PlayerInstanceFromIndex( i ), "RunScriptCode", "self.Regenerate( true )", CONST.SINGLE_TICK, null, null )
 
 Include( "itemdef_constants" ) //constants must include first
