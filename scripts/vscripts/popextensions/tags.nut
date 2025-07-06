@@ -22,7 +22,7 @@ local popext_funcs = {
 
 	popext_addcond = function( bot, args ) {
 
-		local cond = "cond" in args ? args.cond.tointeger() : args.type.tointeger()
+		local cond 	   = "cond" in args 	? args.cond.tointeger() : args.type.tointeger()
 		local duration = "duration" in args ? args.duration.tointeger() : INT_MAX
 		if ( cond == TF_COND_REPROGRAMMED ) {
 
@@ -78,20 +78,20 @@ local popext_funcs = {
 
 	popext_deathsound = function( bot, args ) {
 
-		local sound = "sound" in args ? args.sound : args.type
-		local volume = "volume" in args ? args.volume : 1
-		local channel = "channel" in args ? args.channel : CHAN_AUTO
-		local sound_level = "sound_level" in args ? args.sound_level : 0
-		local flags = "flags" in args ? args.flags : SND_NOFLAGS
-		local pitch = "pitch" in args ? args.pitch : 100
-		local special_dsp = "special_dsp" in args ? args.special_dsp : 0
-		local origin = "origin" in args ? args.origin : bot.GetOrigin()
-		local delay = "delay" in args ? args.delay : 1 //does nothing with any positive value
-		local sound_time = "sound_time" in args ? args.sound_time : 0.0 //maybe this should be Time()?
-		local entity = "entity" in args ? args.entity : bot
+		local sound 		 = "sound" in args 			? args.sound : args.type
+		local volume 		 = "volume" in args 		? args.volume : 1
+		local channel 		 = "channel" in args 		? args.channel : CHAN_AUTO
+		local sound_level 	 = "sound_level" in args 	? args.sound_level : 0
+		local flags 		 = "flags" in args 			? args.flags : SND_NOFLAGS
+		local pitch 		 = "pitch" in args 			? args.pitch : 100
+		local special_dsp	 = "special_dsp" in args 	? args.special_dsp : 0
+		local origin 		 = "origin" in args 		? args.origin : bot.GetOrigin()
+		local delay 		 = "delay" in args 			? args.delay : 1 //does nothing with any positive value
+		local sound_time 	 = "sound_time" in args 	? args.sound_time : 0.0 //maybe this should be Time()?
+		local entity 		 = "entity" in args 		? args.entity : bot
 		local speaker_entity = "speaker_entity" in args ? args.speaker_entity : null
-		local filter_type = "filter_type" in args ? args.filter_type : 0
-		local filter_param = "filter_param" in args ? args.filter_param : -1
+		local filter_type  	 = "filter_type" in args 	? args.filter_type : 0
+		local filter_param 	 = "filter_param" in args 	? args.filter_param : -1
 
 		PopExtEvents.AddRemoveEventHook( "player_death", format( "DeathSound%d", bot.entindex() ), function( params ) {
 
@@ -101,20 +101,20 @@ local popext_funcs = {
 
 			EmitSoundEx( {
 
-				sound_name = sound
-				volume = volume
-				channel = channel
-				sound_level = sound_level
-				flags = flags
-				pitch = pitch
-				special_dsp = special_dsp
-				origin = origin
-				delay = delay
-				sound_time = sound_time
-				entity = entity
-				speaker_entity = speaker_entity
-				filter_type = filter_type
-				filter_param = filter_param
+				sound_name 		= sound
+				volume 			= volume
+				channel 		= channel
+				sound_level 	= sound_level
+				flags 			= flags
+				pitch 			= pitch
+				special_dsp 	= special_dsp
+				origin 			= origin
+				delay 			= delay
+				sound_time 		= sound_time
+				entity 			= entity
+				speaker_entity 	= speaker_entity
+				filter_type 	= filter_type
+				filter_param 	= filter_param
 
 			})
 
@@ -136,20 +136,20 @@ local popext_funcs = {
 
 	popext_stepsound = function( bot, args ) {
 
-		local sound = "sound" in args ? args.sound : args.type
-		local volume = "volume" in args ? args.volume : 1
-		local channel = "channel" in args ? args.channel : CHAN_AUTO
-		local sound_level = "sound_level" in args ? args.sound_level : 0
-		local flags = "flags" in args ? args.flags : SND_NOFLAGS
-		local pitch = "pitch" in args ? args.pitch : 100
-		local special_dsp = "special_dsp" in args ? args.special_dsp : 0
-		local origin = "origin" in args ? args.origin : bot.GetOrigin()
-		local delay = "delay" in args ? args.delay : 1 //does nothing with any positive value
-		local sound_time = "sound_time" in args ? args.sound_time : 0.0 //maybe this should be Time()?
-		local entity = "entity" in args ? args.entity : bot
+		local sound 		 = "sound" in args 			? args.sound : args.type
+		local volume 		 = "volume" in args 		? args.volume : 1
+		local channel 		 = "channel" in args 		? args.channel : CHAN_AUTO
+		local sound_level 	 = "sound_level" in args 	? args.sound_level : 0
+		local flags 		 = "flags" in args 			? args.flags : SND_NOFLAGS
+		local pitch 		 = "pitch" in args 			? args.pitch : 100
+		local special_dsp 	 = "special_dsp" in args 	? args.special_dsp : 0
+		local origin 		 = "origin" in args 		? args.origin : bot.GetOrigin()
+		local delay 		 = "delay" in args 			? args.delay : 1 //does nothing with any positive value
+		local sound_time 	 = "sound_time" in args 	? args.sound_time : 0.0 //maybe this should be Time()?
+		local entity 		 = "entity" in args 		? args.entity : bot
 		local speaker_entity = "speaker_entity" in args ? args.speaker_entity : null
-		local filter_type = "filter_type" in args ? args.filter_type : 0
-		local filter_param = "filter_param" in args ? args.filter_param : -1
+		local filter_type 	 = "filter_type" in args 	? args.filter_type : 0
+		local filter_param 	 = "filter_param" in args 	? args.filter_param : -1
 
 		scope.stepside <- GetPropInt( bot, "m_Local.m_nStepside" )
 
@@ -159,20 +159,20 @@ local popext_funcs = {
 
 				EmitSoundEx( {
 
-					sound_name = sound
-					volume = volume
-					channel = channel
-					sound_level = sound_level
-					flags = flags
-					pitch = pitch
-					special_dsp = special_dsp
-					origin = origin
-					delay = delay
-					sound_time = sound_time
-					entity = entity
-					speaker_entity = speaker_entity
-					filter_type = filter_type
-					filter_param = filter_param
+					sound_name 		= sound
+					volume 			= volume
+					channel 		= channel
+					sound_level 	= sound_level
+					flags 			= flags
+					pitch 			= pitch
+					special_dsp 	= special_dsp
+					origin 			= origin
+					delay 			= delay
+					sound_time 		= sound_time
+					entity 			= entity
+					speaker_entity 	= speaker_entity
+					filter_type 	= filter_type
+					filter_param 	= filter_param
 
 				})
 
@@ -200,7 +200,9 @@ local popext_funcs = {
      *********************************************************************/
 
 	popext_usecustommodel = function( bot, args ) {
+
 		local model = "model" in args ? args.model : args.type
+
 		if ( !IsModelPrecached( model ) ) PrecacheModel( model )
 		EntFireByHandle( bot, "SetCustomModelWithClassAnimations", model, -1, null, null )
 		bot.GetScriptScope().usingcustommodel <- true
@@ -239,10 +241,10 @@ local popext_funcs = {
      **************************************************************************************************************************/
 	popext_bonemergemodel = function( bot, args ) {
 
-		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
-		local anim_set = "anim_set" in args ? args.anim_set : format( "models/player/%s.mdl", class_string )
-		local bonemerge_model = "bonemerge_model" in args ? args.bonemerge_model : format( "models/bots/%s/bot_%s.mdl", class_string, class_string )
-		local apply_to_ragdoll = "apply_to_ragdoll" in args ? args.apply_to_ragdoll : true
+		local class_string 		= PopExtUtil.Classes[bot.GetPlayerClass()]
+		local anim_set 			= "anim_set" in args 		 ? args.anim_set : format( "models/player/%s.mdl", class_string )
+		local bonemerge_model 	= "bonemerge_model" in args  ? args.bonemerge_model : format( "models/bots/%s/bot_%s.mdl", class_string, class_string )
+		local apply_to_ragdoll 	= "apply_to_ragdoll" in args ? args.apply_to_ragdoll : true
 
 		EntFireByHandle( bot, "SetCustomModelWithClassAnimations", anim_set, SINGLE_TICK, null, null )
 		PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.PlayerBonemergeModel( self, `%s` )", bonemerge_model ), SINGLE_TICK )
