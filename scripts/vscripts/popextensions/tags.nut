@@ -300,13 +300,13 @@ local popext_funcs = {
      *****************************************************************************************************************************/
 	popext_fireweapon = function( bot, args ) {
 
-		local button = "button" in args ? args.button.tointeger() : args.type.tointeger()
-		local cooldown = args.cooldown.tointeger()
-		local duration = args.duration.tointeger()
-		local delay = args.delay.tointeger()
-		local repeats = args.repeats.tointeger()
+		local button 		= "button" in args ? args.button.tointeger() : args.type.tointeger()
+		local cooldown 		= args.cooldown.tointeger()
+		local duration 		= args.duration.tointeger()
+		local delay		 	= args.delay.tointeger()
+		local repeats 		= args.repeats.tointeger()
 		local ifhealthbelow = args.ifhealthbelow.tointeger()
-		local ifseetarget = args.ifseetarget.tointeger()
+		local ifseetarget 	= args.ifseetarget.tointeger()
 
 		local maxrepeats = 0
 		local cooldowntime = Time() + cooldown
@@ -343,13 +343,13 @@ local popext_funcs = {
 
 	popext_weaponswitch = function( bot, args ) {
 
-		local slot = "slot" in args ? args.slot.tointeger() : args.type.tointeger()
-		local cooldown = args.cooldown.tointeger()
-		local duration = args.duration.tointeger()
-		local delay = args.delay.tointeger()
-		local repeats = args.repeats.tointeger()
+		local slot 			= "slot" in args ? args.slot.tointeger() : args.type.tointeger()
+		local cooldown 		= args.cooldown.tointeger()
+		local duration 		= args.duration.tointeger()
+		local delay 		= args.delay.tointeger()
+		local repeats 		= args.repeats.tointeger()
 		local ifhealthbelow = args.ifhealthbelow.tointeger()
-		local ifseetarget = args.ifseetarget.tointeger()
+		local ifseetarget 	= args.ifseetarget.tointeger()
 
 		local maxrepeats = 0
 		local cooldowntime = Time() + cooldown
@@ -388,14 +388,14 @@ local popext_funcs = {
 
 	popext_spell = function( bot, args ) {
 
-		local type = args.type.tointeger()
-		local cooldown = args.cooldown.tointeger()
-		local duration = args.duration.tointeger()
-		local delay = args.delay.tointeger()
-		local repeats = args.repeats.tointeger()
+		local type 			= args.type.tointeger()
+		local cooldown 		= args.cooldown.tointeger()
+		local duration 		= args.duration.tointeger()
+		local delay 		= args.delay.tointeger()
+		local repeats 		= args.repeats.tointeger()
 		local ifhealthbelow = args.ifhealthbelow.tointeger()
-		local ifseetarget = args.ifseetarget.tointeger()
-		local charges = args.charges.tointeger()
+		local ifseetarget 	= args.ifseetarget.tointeger()
+		local charges 		= args.charges.tointeger()
 
 
 		local spellbook = PopExtUtil.GetItemInSlot( bot, SLOT_PDA )
@@ -530,9 +530,9 @@ local popext_funcs = {
 
 	popext_customattr = function( bot, args ) {
 
-		local attr = "attr" in args ? args.attr : args.attribute
+		local attr  = "attr" in args ? args.attr : args.attribute
 		local value = args.value
-		local wep = "weapon" in args ? args.weapon : -1
+		local wep   = "weapon" in args ? args.weapon : -1
 		local delay = "delay" in args ? args.delay : 0.0
 
 		local weapon = PopExtUtil.HasItemInLoadout( bot, wep )
@@ -564,9 +564,9 @@ local popext_funcs = {
 
 	popext_ringoffire = function( bot, args ) {
 
-		local damage = args.damage.tointeger()
-		local interval = args.interval.tointeger()
-		local radius = args.radius.tointeger()
+		local damage   			   = args.damage.tointeger()
+		local interval 			   = args.interval.tointeger()
+		local radius   			   = args.radius.tointeger()
 		local hide_particle_effect = "hide_particle_effect" in args ? args.hide_particle_effect.tointeger() : false
 
 		local cooldown = Time() + interval
@@ -623,8 +623,9 @@ local popext_funcs = {
 
 		local threat_type = "threat_type" in args ? args.threat_type : "closest"
 		local threat_dist = "threat_dist" in args ? args.threat_dist : 256.0
-		local lookat = "lookat" in args ? args.lookat : false
-		local turnrate = "turnrate" in args ? args.turnrate : 150
+		local lookat 	  = "lookat" in args ? args.lookat : false
+		local turnrate 	  = "turnrate" in args ? args.turnrate : 150
+
 		if ( !bot.HasBotAttribute( IGNORE_FLAG ) )
 			bot.AddBotAttribute( IGNORE_FLAG )
 
@@ -782,13 +783,13 @@ local popext_funcs = {
 
 			if ( "output" in args && args.output.len() > 1 ) {
 
-				local target  = args.output.target
-				local action  =  args.output.action
-				local param   = "param" in args.output ? args.output.param : ""
-				local delay   = "delay" in args.output ? args.output.delay : -1
+				local target  	= args.output.target
+				local action  	=  args.output.action
+				local param   	= "param" in args.output ? args.output.param : ""
+				local delay   	= "delay" in args.output ? args.output.delay : -1
 				local activator = "activator" in args.output ? args.output.activator : null
-				local caller = "caller" in args.output ? args.output.caller : null
-				local repeats = "repeats" in args.output ? args.output.repeats : -1
+				local caller    = "caller" in args.output ? args.output.caller : null
+				local repeats   = "repeats" in args.output ? args.output.repeats : -1
 
 				if ( bot.HasBotTag( "popext_generatorbot" ) )
 					AddOutput( new_action_point, "OnBotReached", target, action, param, delay, repeats )
@@ -1329,9 +1330,8 @@ local popext_funcs = {
 
 	popext_homingprojectile = function( bot, args ) {
 
-		// Tag homingprojectile |turnpower|speedmult|ignoreStealthedSpies|ignoreDisguisedSpies
-		local turn_power = "turn_power" in args ? args.turn_power : args.type
-		local speed_mult = "speed_mult" in args ? args.speed_mult : args.cooldown
+		local turn_power 			 = "turn_power" in args ? args.turn_power : args.type
+		local speed_mult 			 = "speed_mult" in args ? args.speed_mult : args.cooldown
 		local ignore_stealthed_spies = "ignoreStealted" in args ? args.ignoreStealthed : args.duration
 		local ignore_disguised_spies = "ignoreDisguise" in args ? args.ignoreDisguise : args.delay
 
@@ -1421,8 +1421,8 @@ local popext_funcs = {
 
 		local where = args.where
 		local spawn_uber_duration = "spawn_uber_duration" in args ? args.spawn_uber_duration.tofloat() : "cooldown" in args ? args.cooldown.tofloat() : 0.0
-		local viewangle = "viewangle" in args ? args.viewangle : bot.EyeAngles()
-		local velocity = "velocity" in args ? args.velocity : bot.GetAbsVelocity()
+		local viewangle 		  = "viewangle" in args ? args.viewangle : bot.EyeAngles()
+		local velocity 			  = "velocity" in args ? args.velocity : bot.GetAbsVelocity()
 
 		local where_type = typeof where
 		local spawn_point = null
@@ -1826,9 +1826,9 @@ local popext_funcs = {
 	popext_teleportnearvictim = function( bot, args ) {
 
 		local bot_scope = bot.GetScriptScope()
-		bot_scope.TeleportAttempt <- 0
+		bot_scope.TeleportAttempt  <- 0
 		bot_scope.NextTeleportTime <- Time()
-		bot_scope.Teleported <- false
+		bot_scope.Teleported 	   <- false
 
 		bot_scope.PlayerThinkTable.TeleportNearVictimThink <- function() {
 
@@ -1911,8 +1911,8 @@ local popext_funcs = {
 
 	popext_mission = function( bot, args ) {
 
-		local mission = "mission" in args ? args.mission : args.type
-		local target = "target" in args ? args.target : "__POPEXT_MISSION_NO_TARGET"
+		local mission 		 = "mission" in args ? args.mission : args.type
+		local target 		 = "target" in args ? args.target : "__POPEXT_MISSION_NO_TARGET"
 		local suicide_bomber = "suicide_bomber" in args ? args.suicide_bomber : false
 
 		if ( mission != NO_MISSION ) {
@@ -1991,9 +1991,9 @@ local popext_funcs = {
 
 	popext_iconcount = function( bot, args ) {
 
-		local icon  = "icon" in args ? args.icon : args.type
-		local count = "count" in args ? args.count : 0
-		local flags = "flags" in args ? args.flags : 0
+		local icon  				 = "icon" in args ? args.icon : args.type
+		local count 				 = "count" in args ? args.count : 0
+		local flags 				 = "flags" in args ? args.flags : 0
 		local change_max_enemy_count = "changeMaxEnemyCount" in args ? args.changeMaxEnemyCount : true
 
 		PopExt.SetWaveIconSpawnCount( icon, flags, count, change_max_enemy_count )
@@ -2133,8 +2133,8 @@ local popext_funcs = {
 
 	popext_iconoverride = function( bot, args ) {
 
-		local icon  	 = "icon" in args ? args.icon : args.type
-		local count 	 = "count" in args ? args.count : -1
+		local icon  = "icon" in args ? args.icon : args.type
+		local count = "count" in args ? args.count : -1
 
 		PopExtEvents.AddRemoveEventHook( "player_death", format( "IconOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
