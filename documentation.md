@@ -2875,15 +2875,26 @@ ItemAttributes = {
 }
 ```
 
-Add/modify item attributes, can be filtered by item index or classname
+Replace or blacklist weapons when the player spawns.  Accepts custom weapons.
+
+> [!NOTE]
+> Wearable replacements are handled differently and will ONLY accept the string name for the item, not an item index.
 
 ---
 
 <a name="MissionAttributes.LoadoutControl"></a>
 
-> [!WARNING]
-> This attribute is still WIP
+```js
+LoadoutControl = {
 
+	`Mad Milk`: `Pretty Boy's Pocket Pistol`, // accepts string name
+	[812] = {`tf_weapon_pistol`: 23}, // accepts item ids
+	tf_weapon_sniperrifle = null, // accepts classname, null to blacklist
+	[10442] = {`tf_wearable` : `Memes vs Machines Player 2019`}, // for wearable replacements
+	`18, 102, 205, 658, 15006, 15014, 15129, 15130, 15150`: {`tf_weapon_minigun`: 23} // comma-separated string of item ids
+	`tf_weapon_rocketlauncher_directhit`: `Wasp Launcher`, // accepts custom weapons as well
+},
+```
 ---
 
 <a name="MissionAttributes.SoundOverrides"></a>
