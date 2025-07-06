@@ -156,7 +156,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					victim.GetScriptScope().PlayerThinkTable.BotModelThink <- function() {
 
 						if ( Time() > victim.GetTauntRemoveTime() ) {
-							if ( wearable != null ) wearable.Destroy()
+							if ( wearable != null ) wearable.Kill()
 
 							SetPropInt( self, "m_clrRender", 0xFFFFFF )
 							SetPropInt( self, "m_nRenderMode", kRenderNormal )
@@ -389,7 +389,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			MissionAttributes.ThinkTable.NoCrumpkins <- function() {
 
 				for ( local pumpkin; pumpkin = FindByClassname( pumpkin, "tf_ammo_pack" ); )
-					if ( GetPropInt( pumpkin, "m_nModelIndex" ) == pumpkin_index )
+					if ( GetPropInt( pumpkin, STRING_NETPROP_MODELINDEX ) == pumpkin_index )
 						EntFireByHandle( pumpkin, "Kill", "", -1, null, null ) //should't do .Kill() in the loop, entfire kill is delayed to the end of the frame.
 
 				foreach ( player in PopExtUtil.PlayerTable.keys() )
@@ -1009,7 +1009,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				local scope = player.GetScriptScope()
 
 				if ( "wearable" in scope && scope.wearable != null ) {
-					scope.wearable.Destroy()
+					scope.wearable.Kill()
 					scope.wearable <- null
 				}
 
@@ -1228,7 +1228,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 					for ( local props; props = FindByClassname( props, "prop_dynamic" ); ) {
 
-						if ( GetPropInt( props, "m_nModelIndex" ) != carrier_parts_index ) continue
+						if ( GetPropInt( props, STRING_NETPROP_MODELINDEX ) != carrier_parts_index ) continue
 
 						carrier = props
 						break
@@ -2208,7 +2208,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				EntFireByHandle( player, "RunScriptCode", @"
 					for ( local ent; ent = FindByClassname( ent, `env_laserdot` ); )
 						if ( ent.GetOwner() == self )
-							ent.Destroy()
+							ent.Kill()
 				", 0.5, null, null )
 
 				// Temporary solution for engie wrangler laser
@@ -2264,7 +2264,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					}
 
 					if ( !handled_laser && laser != null )
-						laser.Destroy()
+						laser.Kill()
 				}
 
 				// Allow money collection
@@ -2892,7 +2892,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 				local trigger = CreateByClassname( "trigger_multiple" )
 				trigger.KeyValueFromString( "model", GetPropString( upgradestation, "m_ModelName" ) )
-				trigger.KeyValueFromString( "targetname", "__popext_upgradestop" )
+				PopExtUtil.SetTargetname( trigger, "__popext_upgradestop" )
 				trigger.KeyValueFromInt( "spawnflags", SF_TRIGGER_ALLOW_CLIENTS )
 				AddOutput( trigger, "OnStartTouch", "!activator", "RunScriptCode", "ClientPrint( self, HUD_PRINTCENTER, `The upgrade station is disabled for this wave.` )", -1, 0 )
 				trigger.SetAbsOrigin( upgradestation.GetOrigin() )

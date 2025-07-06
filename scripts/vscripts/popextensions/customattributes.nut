@@ -902,7 +902,7 @@
 						}
 						// GetLastFiredProjectile must be called in an EntFire delay
 						// projectiles are added to the ActiveProjectile array after weapon fire
-						PopExtUtil.PlayerScriptEntFire( player, format( @"
+						PopExtUtil.ScriptEntFireSafe( player, format( @"
 							local scope = self.GetScriptScope()
 							local projectile = PopExtUtil.GetLastFiredProjectile( self )
 
@@ -1761,7 +1761,7 @@
 					return
 
 				for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile*" ); )
-					if ( projectile.GetOwner() == player && GetPropInt( projectile, "m_nModelIndex" ) != projmodel )
+					if ( projectile.GetOwner() == player && GetPropInt( projectile, STRING_NETPROP_MODELINDEX ) != projmodel )
 						projectile.SetModel( value )
 			}
 

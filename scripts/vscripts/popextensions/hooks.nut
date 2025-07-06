@@ -207,7 +207,7 @@ PopExtEvents.AddRemoveEventHook( "npc_hurt", "PopHooksNPCHurt", function( params
 				local has_explode_sound = "SoundOverrides" in pop_property && "Explodes" in pop_property.SoundOverrides && pop_property.SoundOverrides.Explodes
 
 				local temp = CreateByClassname( "info_teleport_destination" )
-				temp.KeyValueFromString( "targetname", "__popext_temp_nodeathfx" )
+				PopExtUtil.SetTargetname( temp, "__popext_temp_nodeathfx" )
 				temp.SetAbsOrigin( victim.GetOrigin() )
 				temp.ValidateScriptScope()
 				temp.GetScriptScope().FindTankDestructionEnt <- function() {

@@ -1,4 +1,4 @@
-::POPEXT_VERSION <- "06.26.2025.1"
+::POPEXT_VERSION <- "07.06.2025.1"
 
 local ROOT = getroottable()
 
@@ -352,7 +352,6 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 		"__popname"
 		"ExtraItems"
 		"Homing"
-		"Include"
 		"MAtr"
 		"MAtrs"
 		"MissionAttr"

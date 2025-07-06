@@ -230,7 +230,7 @@
 
 				if ( FindSlot( itemreplace ) == slot ) {
 
-					itemreplace.Destroy()
+					itemreplace.Kill()
 					break
 				}
 				itemreplace = itemreplace.NextMovePeer()
@@ -264,7 +264,7 @@
 			if ( !( "worldmodel" in player.GetScriptScope().CustomWeapons ) ) {
 
 				local tp_wearable = CreateByClassname( "tf_wearable" )
-				SetPropInt( tp_wearable, "m_nModelIndex", modelindex )
+				SetPropInt( tp_wearable, STRING_NETPROP_MODELINDEX, modelindex )
 				SetPropBool( tp_wearable, STRING_NETPROP_INIT, true )
 				SetPropBool( tp_wearable, STRING_NETPROP_ATTACH, true )
 				SetPropEntity( tp_wearable, "m_hOwnerEntity", player )
@@ -381,14 +381,14 @@
 				local activeweapon = self.GetActiveWeapon()
 				if ( activeweapon in self.GetScriptScope().CustomWeapons ) {
 
-					if ( ( "worldmodel" in self.GetScriptScope().CustomWeapons ) && ( GetPropInt( self.GetScriptScope().CustomWeapons.worldmodel, "m_nModelIndex" ) != self.GetScriptScope().CustomWeapons[activeweapon].modelidx ) ) {
+					if ( ( "worldmodel" in self.GetScriptScope().CustomWeapons ) && ( GetPropInt( self.GetScriptScope().CustomWeapons.worldmodel, STRING_NETPROP_MODELINDEX ) != self.GetScriptScope().CustomWeapons[activeweapon].modelidx ) ) {
 
 						if ( self.GetScriptScope().CustomWeapons.worldmodel.IsValid() ) self.GetScriptScope().CustomWeapons.worldmodel.Kill()
 
 						local modelindex = self.GetScriptScope().CustomWeapons[activeweapon].modelidx
 						local tp_wearable = CreateByClassname( "tf_wearable" )
 						SetPropInt( tp_wearable, "m_iTeamNum", self.GetTeam() )
-						SetPropInt( tp_wearable, "m_nModelIndex", modelindex )
+						SetPropInt( tp_wearable, STRING_NETPROP_MODELINDEX, modelindex )
 						SetPropBool( tp_wearable, STRING_NETPROP_INIT, true )
 						SetPropBool( tp_wearable, STRING_NETPROP_ATTACH, true )
 						SetPropEntity( tp_wearable, "m_hOwnerEntity", self )

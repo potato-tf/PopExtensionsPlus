@@ -508,7 +508,7 @@
 			model_index = PrecacheModel( model )
 
 		local wearable = CreateByClassname( "tf_wearable" )
-		SetPropInt( wearable, "m_nModelIndex", model_index )
+		SetPropInt( wearable, STRING_NETPROP_MODELINDEX, model_index )
 		wearable.SetSkin( player.GetTeam() )
 		wearable.SetTeam( player.GetTeam() )
 		wearable.SetSolidFlags( 4 )
@@ -1040,7 +1040,7 @@
 		SetPropInt( player, "m_nButtons", GetPropInt( player, "m_nButtons" ) | button )
 
 		if ( duration != -1 )
-			PlayerScriptEntFire( player, format( "PopExtUtil.ReleaseButton( self, %d )", button ), duration )
+			ScriptEntFireSafe( player, format( "PopExtUtil.ReleaseButton( self, %d )", button ), duration )
 	}
 	function ReleaseButton( player, button ) {
 		SetPropInt( player, "m_afButtonForced", GetPropInt( player, "m_afButtonForced" ) & ~button )
@@ -1143,7 +1143,7 @@
 
 		local wearable = CreateByClassname( "tf_wearable" )
 		SetPropString( wearable, "m_iName", "__popext_bonemerge_model" )
-		SetPropInt( wearable, "m_nModelIndex", PrecacheModel( model ) )
+		SetPropInt( wearable, STRING_NETPROP_MODELINDEX, PrecacheModel( model ) )
 		SetPropBool( wearable, STRING_NETPROP_ATTACH, true )
 		SetPropEntity( wearable, "m_hOwnerEntity", player )
 		wearable.SetTeam( player.GetTeam() )
@@ -1172,7 +1172,7 @@
 
 		local bonemerge_model = CreateByClassname( "tf_wearable" )
 		SetPropString( bonemerge_model, "m_iName", "__popext_bonemerge_model" )
-		SetPropInt( bonemerge_model, "m_nModelIndex", PrecacheModel( model ) )
+		SetPropInt( bonemerge_model, STRING_NETPROP_MODELINDEX, PrecacheModel( model ) )
 		SetPropBool( bonemerge_model, STRING_NETPROP_ATTACH, true )
 		SetPropEntity( bonemerge_model, "m_hOwner", player )
 		bonemerge_model.SetTeam( player.GetTeam() )
@@ -1202,7 +1202,7 @@
 		local has_bonemerge_model = "bonemerge_model" in scope && scope.bonemerge_model && scope.bonemerge_model.IsValid()
 
 		local dummy = CreateByClassname( "funCBaseFlex" )
-		dummy.KeyValueFromString( "targetname", format( "__popext_sequence_dummy%d", player.entindex() ) )
+		SetTargetname( dummy, format( "__popext_sequence_dummy%d", player.entindex() ) )
 
 		// SetModelSimple is more expensive but handles precaching and refreshes bone cache automatically
 		if ( model_override != "" )
@@ -1302,7 +1302,7 @@
 
 		local utilstun = CreateByClassname( "trigger_stun" )
 
-		utilstun.KeyValueFromString( "targetname", "__popext_stun" )
+		SetTargetname( utilstun, "__popext_stun" )
 		utilstun.KeyValueFromInt( "stun_type", type )
 		utilstun.KeyValueFromInt( "stun_effects", scared.tointeger() )
 		utilstun.KeyValueFromFloat( "stun_duration", duration.tofloat() )
@@ -1487,7 +1487,7 @@
 	function RemovePlayerWearables( player ) {
 		for ( local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer() ) {
 			if ( wearable.GetClassname() == "tf_wearable" )
-				wearable.Destroy()
+				wearable.Kill()
 		}
 		return
 	}
@@ -1510,7 +1510,7 @@
 			local held_weapon = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
 			if ( held_weapon == null || held_weapon.GetSlot() != weapon.GetSlot() )
 				continue
-			held_weapon.Destroy()
+			held_weapon.Kill()
 			SetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, null, i )
 			break
 		}
@@ -2027,10 +2027,37 @@
 	}
 
 	// wrapper for handling dead players without putting isalive checks everywhere
-	function PlayerScriptEntFire( player, param, delay = -1, activator = null, caller = null ) {
+	function ScriptEntFireSafe( target, code, delay = -1, activator = null, caller = null, allow_dead = false ) {
 
-		local entfirefunc = typeof player == "string" ? DoEntFire : EntFireByHandle
-		entfirefunc( player, "RunScriptCode", format( @"if( self.IsAlive() ) %s", param ), delay, activator, caller )
+		local entfirefunc = typeof target == "string" ? DoEntFire : EntFireByHandle
+
+		entfirefunc( target, "RunScriptCode", format( @"
+
+			if ( self && self.IsValid() ) {
+
+				if ( self.IsPlayer() && !self.IsAlive() && !%d ) {
+
+					PopExtMain.Error.DebugLog( `Ignoring dead player in ScriptEntFireSafe: ` + self )
+					return
+				}
+
+				// code passed to ScriptEntFireSafe
+				%s
+
+				return
+			}
+			PopExtMain.Error.DebugLog( `Invalid target passed to ScriptEntFireSafe: ` + self )
+		", allow_dead, code ), delay, activator, caller )
+
+		PurgeGameString( code )
+	}
+
+	function PurgeGameString( str ) {
+
+		local dummy = CreateByClassname( "info_target" )
+		SetTargetname( dummy, str )
+		SetPropBool( dummy, "m_bForcePurgeFixedupStrings", true )
+		dummy.Kill()
 	}
 
 	function SetDestroyCallback( entity, callback ) {

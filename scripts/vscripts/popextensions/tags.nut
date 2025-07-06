@@ -224,7 +224,7 @@ local popext_funcs = {
 
 		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
 		EntFireByHandle( bot, "SetCustomModelWithClassAnimations", format( "models/player/%s.mdl", class_string ), SINGLE_TICK, null, null )
-		PopExtUtil.PlayerScriptEntFire( bot, format( "PopExtUtil.PlayerBonemergeModel( self, `%s` )", model ), SINGLE_TICK )
+		PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.PlayerBonemergeModel( self, `%s` )", model ), SINGLE_TICK )
 		bot.GetScriptScope().usingcustommodel <- true
 	}
 
@@ -245,7 +245,7 @@ local popext_funcs = {
 		local apply_to_ragdoll = "apply_to_ragdoll" in args ? args.apply_to_ragdoll : true
 
 		EntFireByHandle( bot, "SetCustomModelWithClassAnimations", anim_set, SINGLE_TICK, null, null )
-		PopExtUtil.PlayerScriptEntFire( bot, format( "PopExtUtil.PlayerBonemergeModel( self, `%s` )", bonemerge_model ), SINGLE_TICK )
+		PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.PlayerBonemergeModel( self, `%s` )", bonemerge_model ), SINGLE_TICK )
 		bot.GetScriptScope().usingcustommodel <- true
 
 		if ( apply_to_ragdoll ) {
@@ -323,7 +323,7 @@ local popext_funcs = {
 			maxrepeats++
 
 			PopExtUtil.PressButton( bot, button )
-			PopExtUtil.PlayerScriptEntFire( bot, format( "PopExtUtil.ReleaseButton( self, %d )", button ), duration )
+			PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.ReleaseButton( self, %d )", button ), duration )
 			cooldowntime = Time() + cooldown
 		}
 	}
@@ -367,8 +367,8 @@ local popext_funcs = {
 
 			bot.Weapon_Switch( PopExtUtil.GetItemInSlot( bot, slot ) )
 			bot.AddCustomAttribute( "disable weapon switch", 1, duration )
-			PopExtUtil.PlayerScriptEntFire( bot, "self.RemoveCustomAttribute( `disable weapon switch` )", duration )
-			PopExtUtil.PlayerScriptEntFire( bot, format( "self.Weapon_Switch( PopExtUtil.GetItemInSlot( self, %d ) )", slot ), duration+SINGLE_TICK )
+			PopExtUtil.ScriptEntFireSafe( bot, "self.RemoveCustomAttribute( `disable weapon switch` )", duration )
+			PopExtUtil.ScriptEntFireSafe( bot, format( "self.Weapon_Switch( PopExtUtil.GetItemInSlot( self, %d ) )", slot ), duration+SINGLE_TICK )
 			cooldowntime = Time() + cooldown
 		}
 	}
@@ -547,7 +547,7 @@ local popext_funcs = {
 			return
 		}
 		if ( typeof value == "string" ) value = format( "`%s`", value )
-		PopExtUtil.PlayerScriptEntFire( bot, format( "PopExtUtil.SetPlayerAttributes( self, `%s`, "+value+", %d )", attr, PopExtUtil.GetItemIndex( weapon ) ), delay )
+		PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.SetPlayerAttributes( self, `%s`, "+value+", %d )", attr, PopExtUtil.GetItemIndex( weapon ) ), delay )
 	}
 
     /**********************************************************************************************************************************************
@@ -764,7 +764,7 @@ local popext_funcs = {
 			// spawn an action point
 			local new_action_point = CreateByClassname( "bot_action_point" )
 
-			new_action_point.KeyValueFromString( "targetname", format( "__popext_actionpoint_%d", bot.entindex() ) )
+			PopExtUtil.SetTargetname( new_action_point, format( "__popext_actionpoint_%d", bot.entindex() ) )
 			new_action_point.KeyValueFromString( "next_action_point", next_action_point )
 			new_action_point.KeyValueFromString( "command", command )
 
@@ -822,17 +822,17 @@ local popext_funcs = {
 				new_action_point.SetAbsOrigin( pos )
 			}
 
-			PopExtUtil.PlayerScriptEntFire( bot, format( "self.SetActionPoint( FindByName( null, `%s` ) )", new_action_point.GetName() ), delay )
+			PopExtUtil.ScriptEntFireSafe( bot, format( "self.SetActionPoint( FindByName( null, `%s` ) )", new_action_point.GetName() ), delay )
 
 			if ( !waituntildone )
-				PopExtUtil.PlayerScriptEntFire( bot, format( "self.SetActionPoint( null ); EntFire( `__popext_actionpoint_%d`, `Kill` )", bot.entindex() ), duration )
+				PopExtUtil.ScriptEntFireSafe( bot, format( "self.SetActionPoint( null ); EntFire( `__popext_actionpoint_%d`, `Kill` )", bot.entindex() ), duration )
 			else
 				bot.GetScriptScope().PlayerThinkTable.ActionPointWaitUntilDone <- function() {
 
 					if ( new_action_point && new_action_point.IsValid() && ( bot.GetOrigin() - new_action_point.GetOrigin() ).Length() > distance )
 						return
 
-					PopExtUtil.PlayerScriptEntFire( bot, format( "self.SetActionPoint( null ); EntFire( `__popext_actionpoint_%d`, `Kill` )", bot.entindex() ), duration )
+					PopExtUtil.ScriptEntFireSafe( bot, format( "self.SetActionPoint( null ); EntFire( `__popext_actionpoint_%d`, `Kill` )", bot.entindex() ), duration )
 					delete PlayerThinkTable.ActionPointWaitUntilDone
 				}
 			repeats--
@@ -1188,7 +1188,7 @@ local popext_funcs = {
 		weapon.SetTeam( bot.GetTeam() )
 		DispatchSpawn( weapon )
 
-		PopExtUtil.GetItemInSlot( bot, weapon.GetSlot() ).Destroy()
+		PopExtUtil.GetItemInSlot( bot, weapon.GetSlot() ).Kill()
 
 		bot.Weapon_Equip( weapon )
 
@@ -1551,7 +1551,7 @@ local popext_funcs = {
 			}
 		}
 		if ( "duration" in args )
-			PopExtUtil.PlayerScriptEntFire( bot, "delete self.GetScriptScope().PlayerThinkTable.AimAtThink", args.duration.tofloat() )
+			PopExtUtil.ScriptEntFireSafe( bot, "delete self.GetScriptScope().PlayerThinkTable.AimAtThink", args.duration.tofloat() )
 
 	}
 
@@ -1706,7 +1706,7 @@ local popext_funcs = {
 
 			local modelname = wearable.GetModelName()
 
-			wearable.Destroy()
+			wearable.Kill()
 
 			local droppedweapon = CreateByClassname( "tf_dropped_weapon" )
 			SetPropInt( droppedweapon, "m_Item.m_iItemDefinitionIndex", itemid )
@@ -1880,7 +1880,7 @@ local popext_funcs = {
 		local delay = "delay" in args ? args.delay : args.type
 
 		if ( bot.IsInASquad() )
-			PopExtUtil.PlayerScriptEntFire( bot, "self.DisbandCurrentSquad()", delay )
+			PopExtUtil.ScriptEntFireSafe( bot, "self.DisbandCurrentSquad()", delay )
 	}
 
 
@@ -1896,7 +1896,7 @@ local popext_funcs = {
 		local delay = "delay" in args ? args.delay : args.type
 
 		if ( bot.IsInASquad() )
-			PopExtUtil.PlayerScriptEntFire( bot, "self.LeaveSquad()", delay )
+			PopExtUtil.ScriptEntFireSafe( bot, "self.LeaveSquad()", delay )
 	}
 
 	/******************************************************************************************
@@ -1978,7 +1978,7 @@ local popext_funcs = {
 			cooldowntime = Time() + interval
 		}
 		if ( duration )
-			PopExtUtil.PlayerScriptEntFire( bot, "delete self.GetScriptScope().PlayerThinkTable.SuicideCounterThink", duration )
+			PopExtUtil.ScriptEntFireSafe( bot, "delete self.GetScriptScope().PlayerThinkTable.SuicideCounterThink", duration )
 	}
 
 	/***********************************************************************************************************************
@@ -2011,7 +2011,7 @@ local popext_funcs = {
 		local ifhealthbelow = "ifhealthbelow" in args ? args.ifhealthbelow : INT_MAX
 
 		if ( !repeats && ifhealthbelow == INT_MAX && !ifseetarget )
-			PopExtUtil.PlayerScriptEntFire( bot, format( "PopExtUtil.PopInterface.AcceptInput( `ChangeBotAttributes`, `%s`, null, null )", name ), delay, bot, bot )
+			PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.PopInterface.AcceptInput( `ChangeBotAttributes`, `%s`, null, null )", name ), delay, bot, bot )
 		else {
 
 			local cooldowntime = 0.0
@@ -2021,7 +2021,7 @@ local popext_funcs = {
 
 				if ( bot.GetHealth() < ifhealthbelow || ( ifseetarget && aibot.IsThreatVisible( aibot.FindClosestThreat( INT_MAX, false ) ) ) ) {
 
-					PopExtUtil.PlayerScriptEntFire( bot, format( "PopExtUtil.PopInterface.AcceptInput( `ChangeBotAttributes`, `%s`, null, null )", name ), delay, bot, bot )
+					PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.PopInterface.AcceptInput( `ChangeBotAttributes`, `%s`, null, null )", name ), delay, bot, bot )
 
 				repeats--
 
@@ -2049,7 +2049,7 @@ local popext_funcs = {
 
 			if ( cooldowntime > Time() ) return
 
-			PopExtUtil.PlayerScriptEntFire( bot, @"
+			PopExtUtil.ScriptEntFireSafe( bot, @"
 				local weapon = CreateByClassname( `tf_weapon_bat` )
 				local active_weapon = bot.GetActiveWeapon()
 				bot.StopTaunt( true )
@@ -2096,7 +2096,7 @@ local popext_funcs = {
 			if ( bot.GetHealth() < ifhealthbelow ) return
 			if ( ifseetarget && !aibot.IsThreatVisible( aibot.FindClosestThreat( INT_MAX, false ) ) ) return
 
-			PopExtUtil.PlayerScriptEntFire( bot, format( @"PopExtUtil.PlayerSequence( self, `%s`, %f )", sequence.tostring(), playback_rate ), delay, null, null )
+			PopExtUtil.ScriptEntFireSafe( bot, format( @"PopExtUtil.PlayerSequence( self, `%s`, %f )", sequence.tostring(), playback_rate ), delay, null, null )
 
 
 			repeats--

@@ -38,7 +38,7 @@ foreach( k, v in ::NavMesh.getclass() )
 // This allows +1 unordered.
 // This was 32 before and seemingly didn't cause much perf hit 
 // but I'll take +1 extra iteration instead of +26 since we aren't using them
-const MAX_EVENT_FUNCTABLES 		= 8
+const MAX_EVENT_FUNCTABLES 		= 9
 
 // event call ordering
 // these ensure the core library has a consistent call ordering before any other external scripts.
@@ -58,6 +58,7 @@ const STRING_NETPROP_ATTACH  	  = "m_bValidatedAttachedEntity"
 const STRING_NETPROP_PURGESTRINGS = "m_bForcePurgeFixedupStrings"
 const STRING_NETPROP_MYWEAPONS    = "m_hMyWeapons"
 const STRING_NETPROP_AMMO		  = "m_iAmmo"
+const STRING_NETPROP_MODELINDEX   = "m_nModelIndex"
 
 // Logging
 const POPEXT_ERROR   = "POPEXT ERROR: "
