@@ -64,7 +64,7 @@ local popext_funcs = {
 
 	popext_altfire = function( bot, args ) {
 
-		bot.PressAltFireButton( args.duration.tointeger() )
+		bot.PressAltFireButton( "duration" in args ? args.duration.tofloat() : INT_MAX )
 	}
 
     /*******************************************************************************************************

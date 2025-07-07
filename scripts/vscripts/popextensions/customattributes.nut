@@ -1709,6 +1709,60 @@
 			player.GetScriptScope().attribinfo[ "min respawn time" ] <- format( "Respawn time: %d", value.tointeger() )
 		}
 
+		function EffectCondOverride( player, item, value ) {
+
+			local buff_conds = [ -1, TF_COND_OFFENSEBUFF, TF_COND_DEFENSEBUFF, TF_COND_REGENONDAMAGEBUFF, -1, TF_COND_CRITBOOSTED_RAGE_BUFF, TF_COND_SNIPERCHARGE_RAGE_BUFF, TF_COND_ENERGY_BUFF, TF_COND_ENERGY_BUFF ]
+			local buff_type = item.GetAttribute( "mod soldier buff type", 0.0 )
+
+			if ( startswith( item.GetClassname(), "tf_weapon_lunchbox" ) || item.GetClassname() == "tf_weapon_charged_smg" )
+				buff_type = PopExtUtil.GetItemIndex( item ) == ID_BUFFALO_STEAK_SANDVICH ? 8 : 7
+
+			switch( buff_type ) {
+
+				case 1:
+				case 2:
+				case 3:
+
+					item.AddAttribute( "mod soldier buff type", 4, -1 ) // dummy buff type, does nothing
+
+					PopExtEvents.AddRemoveEventHook( "deploy_buff_banner", format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
+
+						if ( params.buff_owner == PopExtUtil.PlayerTable[ player ] ) {
+							// player.RemoveCondEx( buff_conds[ buff_type ], true )
+							player.AddCondEx( value, item.GetAttribute( "increase buff duration", 1.0 ) * 10.0, self )
+						}
+					}, EVENT_WRAPPER_CUSTOMATTR )
+				break
+				case 5:
+				case 6:
+				case 7: // these two aren't actually valid buff types, just reusing the same logic for the buffs
+				case 8:
+
+					item.GetScriptScope().ItemThinkTable[ format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ) ] <- function() {
+
+						if ( ( player.GetActiveWeapon() != item && buff_type != 7 ) || !player.InCond( buff_conds[ buff_type ] ) )
+							return
+
+						player.RemoveCondEx( buff_conds[ buff_type ], true )
+						player.AddCondEx( value, 0.33, self )
+
+						if ( buff_type == 8 )
+							player.RemoveCondEx( TF_COND_CANNOT_SWITCH_FROM_MELEE, true )
+					}
+				break
+			}
+
+			if ( item.GetClassname() == "tf_weapon_medigun" ) {
+				PopExtEvents.AddRemoveEventHook( "player_chargedeployed", format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
+
+					if ( params.buff_owner == PopExtUtil.PlayerTable[ player ] ) {
+						player.RemoveCondEx( TF_COND_ENERGY_BUFF, true )
+						player.AddCondEx( value, 0.33, self )
+					}
+				}, EVENT_WRAPPER_CUSTOMATTR )
+			}
+		}
+
 		function SpecialItemDescription( player, item, value ) {
 
 			player.GetScriptScope().attribinfo[ "special item description" ] <- format( "%s", value )
