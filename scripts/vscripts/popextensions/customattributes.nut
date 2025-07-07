@@ -1753,14 +1753,41 @@
 			}
 
 			if ( item.GetClassname() == "tf_weapon_medigun" ) {
+
 				PopExtEvents.AddRemoveEventHook( "player_chargedeployed", format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
 
-					if ( params.buff_owner == PopExtUtil.PlayerTable[ player ] ) {
-						player.RemoveCondEx( TF_COND_ENERGY_BUFF, true )
-						player.AddCondEx( value, 0.33, self )
+					if ( params.userid != PopExtUtil.PlayerTable[ player ] )
+						return
+	
+					local uberconds = [ TF_COND_INVULNERABLE, TF_COND_CRITBOOSTED, TF_COND_MEGAHEAL, TF_COND_MEDIGUN_UBER_BULLET_RESIST, TF_COND_MEDIGUN_UBER_BLAST_RESIST, TF_COND_MEDIGUN_UBER_FIRE_RESIST ]
+
+					item.GetScriptScope().ItemThinkTable[ format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ) ] <- function() {
+
+						if ( player.GetActiveWeapon() != item )
+							return
+
+						foreach ( cond in uberconds ) {
+
+							if ( player.InCond( cond ) ) {
+
+								player.RemoveCondEx( cond, true )
+								player.AddCondEx( value, 0.33, self )
+								local heal_target = player.GetHealTarget()
+
+								if ( heal_target != null ) {
+
+									heal_target.RemoveCondEx( cond, true )
+									heal_target.AddCondEx( value, 0.33, self )
+								}
+								break
+							}
+						}
 					}
+
 				}, EVENT_WRAPPER_CUSTOMATTR )
 			}
+
+			player.GetScriptScope().attribinfo[ "effect cond override" ] <- format( "effect cond override: %s", value )
 		}
 
 		function SpecialItemDescription( player, item, value ) {
