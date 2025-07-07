@@ -806,9 +806,9 @@
 
 				local attacker = params.attacker
 				local victim = params.const_entity
-
-				if ( params.damage_stats == TF_DMG_CUSTOM_BASEBALL && params.weapon == item )
+				if ( params.damage_stats == TF_DMG_CUSTOM_BASEBALL && params.weapon == item && ( !victim.IsMiniBoss() || value == 2 ) )
 					PopExtUtil.StunPlayer( victim, 5, TF_STUN_CONTROLS )
+
 			}, EVENT_WRAPPER_CUSTOMATTR )
 
 			player.GetScriptScope().attribinfo[ "old sandman stun" ] <- "Uses pre-JI stun mechanics"
@@ -818,9 +818,9 @@
 
 			local scope = item.GetScriptScope()
 
-			local duration = "duration" in value ? value.duration : 5
-			local type = "type" in value ? value.type : 2
-			local speedmult = "speedmult" in value ? value.speedmult : 0.2
+			local duration   = "duration" in value ? value.duration : 5
+			local type 		 = "type" in value ? value.type : 2
+			local speedmult  = "speedmult" in value ? value.speedmult : 0.2
 			local stungiants = "stungiants" in value ? value.stungiants : true
 
 			// `stun on hit`: { duration = 4 type = 2 speedmult = 0.2 stungiants = false } //in order: stun duration in seconds, stun type, stun movespeed multiplier, can stun giants true/false

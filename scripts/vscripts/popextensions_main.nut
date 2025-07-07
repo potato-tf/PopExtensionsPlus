@@ -1,4 +1,4 @@
-::POPEXT_VERSION <- "07.06.2025.1"
+::POPEXT_VERSION <- "07.06.2025.2"
 
 local ROOT = getroottable()
 
@@ -71,7 +71,7 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
 	DebugFiles = {
 		"missionattributes" : null,
-		// "util" 				: null,
+		"util" 				: null,
 		"tags" 				: null,
 	}
 
@@ -113,11 +113,11 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
 		function DebugLog( LogMsg ) {
 			if ( !PopExtMain.DebugText || !( getstackinfos(2).src.slice(0, -4) in PopExtMain.DebugFiles ) ) return
-			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", CONST.POPEXT_DEBUG, LogMsg ) )
+			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", "POPEXT_DEBUG:", LogMsg ) )
 		}
 		// warnings
-		GenericWarning = @( msg ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", CONST.POPEXT_WARNING, msg ) )
-		DeprecationWarning = @( old, new ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s is DEPRECATED. Use %s instead.", CONST.POPEXT_WARNING, old, new ) )
+		GenericWarning = @( msg ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", "POPEXT_WARNING:", msg ) )
+		DeprecationWarning = @( old, new ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s is DEPRECATED. Use %s instead.", "POPEXT_WARNING:", old, new ) )
 
 		// errors
 		RaiseIndexError = @( key, max = [0, 1] ) ParseError( format( "Index out of range for '%s', value range: %d - %d", key, max[0], max[1] ) )
@@ -132,13 +132,13 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 				RaisedParseError = true
 				ClientPrint( null, HUD_PRINTTALK, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details." )
 			}
-			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.\n", CONST.POPEXT_ERROR, ErrorMsg ) )
+			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.\n", "POPEXT_ERROR:", ErrorMsg ) )
 
-			printf( "%s %s.\n", CONST.POPEXT_ERROR, ErrorMsg )
+			printf( "%s %s.\n", "POPEXT_ERROR:", ErrorMsg )
 		}
 
 		// generic exception
-		RaiseException = @( ExceptionMsg ) Assert( false, format( "%s: %s.", CONST.POPEXT_ERROR, ExceptionMsg ) )
+		RaiseException = @( ExceptionMsg ) Assert( false, format( "%s: %s.", "POPEXT_ERROR:", ExceptionMsg ) )
 	}
 
 	GlobalThinks = {
@@ -148,7 +148,7 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
 			for ( local projectile; projectile = Entities.FindByClassname( projectile, "tf_projectile*" ); ) {
 
-				if ( projectile.GetEFlags() & CONST.EFL_USER ) continue
+				if ( projectile.GetEFlags() & 1048576 ) continue
 
 				projectile.ValidateScriptScope()
 				local scope = projectile.GetScriptScope()
@@ -191,7 +191,7 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
 				_AddThinkToEnt( projectile, "ProjectileThink" )
 
-				projectile.AddEFlags( CONST.EFL_USER )
+				projectile.AddEFlags( 1048576 )
 			}
 		}
 	}
@@ -237,7 +237,7 @@ PopExtEvents.AddRemoveEventHook( "player_spawn", "MainPlayerSpawn", function( pa
 	if ( !( "Preserved" in scope ) )
 		scope.Preserved <- {}
 
-}, CONST.EVENT_WRAPPER_MAIN)
+}, 0)
 
 PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventoryApplication", function( params ) {
 
@@ -245,7 +245,7 @@ PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventor
 
 	local player = GetPlayerFromUserID( params.userid )
 
-	if ( player.IsEFlagSet( CONST.EFL_CUSTOM_WEARABLE ) ) return
+	if ( player.IsEFlagSet( 1073741824 ) ) return
 
 	PopExtMain.PlayerCleanup( player )
 
@@ -265,7 +265,7 @@ PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventor
 	if ( !( "PlayerThinkTable" in scope ) ) 
 		scope.PlayerThinkTable <- {}
 
-	if ( player.IsBotOfType( CONST.TF_BOT_TYPE ) ) {
+	if ( player.IsBotOfType( 1337 ) ) {
 
 		scope.aibot <- PopExtBotBehavior( player )
 
@@ -284,13 +284,13 @@ PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventor
 
 	_AddThinkToEnt( player, "PlayerThinks" )
 
-	if ( player.GetPlayerClass() > CONST.TF_CLASS_PYRO && !( "BuiltObjectTable" in scope ) ) {
+	if ( player.GetPlayerClass() > 7 && !( "BuiltObjectTable" in scope ) ) {
 
 		scope.BuiltObjectTable <- {}
 		scope.buildings <- []
 	}
 
-}, CONST.EVENT_WRAPPER_MAIN)
+}, 0)
 
 PopExtEvents.AddRemoveEventHook( "player_changeclass", "MainChangeClassCleanup", function( params ) {
 
@@ -299,24 +299,24 @@ PopExtEvents.AddRemoveEventHook( "player_changeclass", "MainChangeClassCleanup",
 	for ( local model; model = FindByName( model, "__popext_bonemerge_model" ); )
 		if ( model.GetMoveParent() == player )
 			EntFireByHandle( model, "Kill", "", -1, null, null )
-}, CONST.EVENT_WRAPPER_MAIN)
+}, 0)
 
 //clean up bot scope on death
 PopExtEvents.AddRemoveEventHook( "player_death", "MainDeathCleanup", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
-	if ( !player.IsBotOfType( CONST.TF_BOT_TYPE ) ) return
+	if ( !player.IsBotOfType( 1337 ) ) return
 
 	PopExtMain.PlayerCleanup( player )
-}, CONST.EVENT_WRAPPER_MAIN)
+}, 0)
 
 // final cleanup step, must run last
 PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
 
 	// clean up lingering wearables
 	for ( local wearable; wearable = FindByClassname( wearable, "tf_wearable*" ); )
-		if ( wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType( CONST.TF_BOT_TYPE ) )
+		if ( wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType( 1337 ) )
 			EntFireByHandle( wearable, "Kill", "", -1, null, null )
 
 	//same pop or manual cleanup flag set, don't run
@@ -393,7 +393,7 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 //HACK: forces post_inventory_application to fire on pop load
 for ( local i = MaxClients().tointeger(); i > 0; --i )
 	if ( PlayerInstanceFromIndex( i ) )
-		EntFireByHandle( PlayerInstanceFromIndex( i ), "RunScriptCode", "self.Regenerate( true )", CONST.SINGLE_TICK, null, null )
+		EntFireByHandle( PlayerInstanceFromIndex( i ), "RunScriptCode", "self.Regenerate( true )", 0.015, null, null )
 
 Include( "itemdef_constants" ) //constants must include first
 Include( "item_map" ) //must include second

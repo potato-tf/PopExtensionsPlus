@@ -542,13 +542,16 @@ local popext_funcs = {
 
 		if ( weapon == null )
 			weapon = -1
+
 		if ( ( typeof value == "array" || typeof value == "table" ) && delay > 0.0 ) {
 
 			PopExtMain.Error.GenericWarning( "popext_customattr: Cannot set delay on array or table values" )
 			PopExtUtil.SetPlayerAttributes( bot, attr, value, PopExtUtil.GetItemIndex( weapon ) )
 			return
 		}
-		if ( typeof value == "string" ) value = format( "`%s`", value )
+		if ( typeof value == "string" ) 
+			value = format( "`%s`", value )
+
 		PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.SetPlayerAttributes( self, `%s`, "+value+", %d )", attr, PopExtUtil.GetItemIndex( weapon ) ), delay )
 	}
 

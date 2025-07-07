@@ -1251,7 +1251,7 @@
 			if (
 				child == index
 				|| child.GetClassname() == index
-				|| GetItemIndex( child ) == index
+				|| ( index != -1 && GetItemIndex( child ) == index )
 				|| ( index in PopExtItems && GetItemIndex( child ) == PopExtItems[index].id )
 			) {
 				t = child
