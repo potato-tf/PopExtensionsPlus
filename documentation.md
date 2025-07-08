@@ -44,66 +44,66 @@ The [example pop](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scrip
 
 ## [Custom Attributes](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/customattributes.nut)
 
-- [`fires milk bolt`](#CustomAttributes.FiresMilkBolt)
-- [`mod teleporter speed boost`](#CustomAttributes.ModTeleporterSpeedBoost)
-- [`set turn to ice`](#CustomAttributes.SetTurnToIce)
-- [`mult teleporter recharge rate`](#CustomAttributes.MultTeleporterRechargeTime)
-- [`melee cleave attack`](#CustomAttributes.MeleeCleaveAttack)
-- [`last shot crits`](#CustomAttributes.LastShotCrits)
-- [`wet immunity`](#CustomAttributes.WetImmunity)
-- [`can breathe under water`](#CustomAttributes.CanBreatheUnderWater)
-- [`mult swim speed`](#CustomAttributes.MultSwimSpeed)
-- [`teleport instead of die`](#CustomAttributes.TeleportInsteadOfDie)
-- [`mult dmg vs same class`](#CustomAttributes.MultDmgVsSameClass)
-- [`uber on damage taken`](#CustomAttributes.UberOnDamageTaken)
-- [`build small sentries`](#CustomAttributes.BuildSmallSentries)
-- [`crit when health below`](#CustomAttributes.CritWhenHealthBelow)
-- [`mvm sentry ammo`](#CustomAttributes.MvmSentryAmmo)
-- [`radius sleeper`](#CustomAttributes.RadiusSleeper)
-- [`explosive bullets`](#CustomAttributes.ExplosiveBullets)
-- [`old sandman stun`](#CustomAttributes.OldSandmanStun)
-- [`stun on hit`](#CustomAttributes.StunOnHit)
-- [`is miniboss`](#CustomAttributes.IsMiniboss)
-- [`replace weapon fire sound`](#CustomAttributes.ReplaceWeaponFireSound)
-- [`is invisible`](#CustomAttributes.IsInvisible)
-- [`cannot upgrade`](#CustomAttributes.CannotUpgrade)
-- [`always crit`](#CustomAttributes.AlwaysCrit)
-- [`dont count damage towards crit rate`](#CustomAttributes.DontCountDamageTowardsCritRate)
-- [`no damage falloff`](#CustomAttributes.NoDamageFalloff)
-- [`can headshot`](#CustomAttributes.CanHeadshot)
-- [`cannot headshot`](#CustomAttributes.CannotHeadshot)
-- [`cannot be headshot`](#CustomAttributes.CannotBeHeadshot)
-- [`projectile lifetime`](#CustomAttributes.ProjectileLifetime)
-- [`mult dmg vs tanks`](#CustomAttributes.MultDmgVsTanks)
-- [`mult dmg vs giants`](#CustomAttributes.MultDmgVsGiants)
-- [`mult dmg vs airborne`](#CustomAttributes.MultDmgVsAirborne)
-- [`set damage type`](#CustomAttributes.SetDamageType)
-- [`set damage type custom`](#CustomAttributes.SetDamageTypeCustom)
-- [`reloads full clip at once`](#CustomAttributes.ReloadsFullClipAtOnce)
-- [`fire full clip at once`](#CustomAttributes.FireFullClipAtOnce)
-- [`passive reload`](#CustomAttributes.PassiveReload)
-- [`mult projectile scale`](#CustomAttributes.MultProjectileScale)
-- [`mult building scale`](#CustomAttributes.MultBuildingScale)
-- [`mult crit dmg`](#CustomAttributes.MultCritDmg)
-- [`arrow ignite`](#CustomAttributes.ArrowIgnite)
-- [`add cond on hit`](#CustomAttributes.AddCondOnHit)
-- [`remove cond on hit`](#CustomAttributes.RemoveCondOnHit)
-- [`self add cond on hit`](#CustomAttributes.SelfAddCondOnHit)
-- [`add cond on kill`](#CustomAttributes.SelfAddCondOnKill)
-- [`add cond when active`](#CustomAttributes.AddCondWhenActive)
-- [`fire input on hit`](#CustomAttributes.FireInputOnHit)
-- [`fire input on kill`](#CustomAttributes.FireInputOnKill)
-- [`rocket penetration`](#CustomAttributes.RocketPenetration)
-- [`collect currency on kill`](#CustomAttributes.CollectCurrencyOnKill)
-- [`noclip projectile`](#CustomAttributes.NoclipProjectile)
-- [`projectile gravity`](#CustomAttributes.ProjectileGravity)
-- [`immune to cond`](#CustomAttributes.ImmuneToCond)
-- [`mult max health`](#CustomAttributes.MultMaxHealth)
-- [`special item description`](#CustomAttributes.SpecialItemDescription)
-- [`alt-fire disabled`](#CustomAttributes.AltFireDisabled)
-- [`custom projectile model`](#CustomAttributes.CustomProjectileModel)
-- [`dmg bonus while half dead`](#CustomAttributes.DmgBonusWhileHalfDead)
-- [`dmg penalty while half alive`](#CustomAttributes.DmgPenaltyWhileHalfAlive)
+- [`fires milk bolt`](#PopExtAttributes.FiresMilkBolt)
+- [`mod teleporter speed boost`](#PopExtAttributes.ModTeleporterSpeedBoost)
+- [`set turn to ice`](#PopExtAttributes.SetTurnToIce)
+- [`mult teleporter recharge rate`](#PopExtAttributes.MultTeleporterRechargeTime)
+- [`melee cleave attack`](#PopExtAttributes.MeleeCleaveAttack)
+- [`last shot crits`](#PopExtAttributes.LastShotCrits)
+- [`wet immunity`](#PopExtAttributes.WetImmunity)
+- [`can breathe under water`](#PopExtAttributes.CanBreatheUnderWater)
+- [`mult swim speed`](#PopExtAttributes.MultSwimSpeed)
+- [`teleport instead of die`](#PopExtAttributes.TeleportInsteadOfDie)
+- [`mult dmg vs same class`](#PopExtAttributes.MultDmgVsSameClass)
+- [`uber on damage taken`](#PopExtAttributes.UberOnDamageTaken)
+- [`build small sentries`](#PopExtAttributes.BuildSmallSentries)
+- [`crit when health below`](#PopExtAttributes.CritWhenHealthBelow)
+- [`mvm sentry ammo`](#PopExtAttributes.MvmSentryAmmo)
+- [`radius sleeper`](#PopExtAttributes.RadiusSleeper)
+- [`explosive bullets`](#PopExtAttributes.ExplosiveBullets)
+- [`old sandman stun`](#PopExtAttributes.OldSandmanStun)
+- [`stun on hit`](#PopExtAttributes.StunOnHit)
+- [`is miniboss`](#PopExtAttributes.IsMiniboss)
+- [`replace weapon fire sound`](#PopExtAttributes.ReplaceWeaponFireSound)
+- [`is invisible`](#PopExtAttributes.IsInvisible)
+- [`cannot upgrade`](#PopExtAttributes.CannotUpgrade)
+- [`always crit`](#PopExtAttributes.AlwaysCrit)
+- [`dont count damage towards crit rate`](#PopExtAttributes.DontCountDamageTowardsCritRate)
+- [`no damage falloff`](#PopExtAttributes.NoDamageFalloff)
+- [`can headshot`](#PopExtAttributes.CanHeadshot)
+- [`cannot headshot`](#PopExtAttributes.CannotHeadshot)
+- [`cannot be headshot`](#PopExtAttributes.CannotBeHeadshot)
+- [`projectile lifetime`](#PopExtAttributes.ProjectileLifetime)
+- [`mult dmg vs tanks`](#PopExtAttributes.MultDmgVsTanks)
+- [`mult dmg vs giants`](#PopExtAttributes.MultDmgVsGiants)
+- [`mult dmg vs airborne`](#PopExtAttributes.MultDmgVsAirborne)
+- [`set damage type`](#PopExtAttributes.SetDamageType)
+- [`set damage type custom`](#PopExtAttributes.SetDamageTypeCustom)
+- [`reloads full clip at once`](#PopExtAttributes.ReloadsFullClipAtOnce)
+- [`fire full clip at once`](#PopExtAttributes.FireFullClipAtOnce)
+- [`passive reload`](#PopExtAttributes.PassiveReload)
+- [`mult projectile scale`](#PopExtAttributes.MultProjectileScale)
+- [`mult building scale`](#PopExtAttributes.MultBuildingScale)
+- [`mult crit dmg`](#PopExtAttributes.MultCritDmg)
+- [`arrow ignite`](#PopExtAttributes.ArrowIgnite)
+- [`add cond on hit`](#PopExtAttributes.AddCondOnHit)
+- [`remove cond on hit`](#PopExtAttributes.RemoveCondOnHit)
+- [`self add cond on hit`](#PopExtAttributes.SelfAddCondOnHit)
+- [`add cond on kill`](#PopExtAttributes.SelfAddCondOnKill)
+- [`add cond when active`](#PopExtAttributes.AddCondWhenActive)
+- [`fire input on hit`](#PopExtAttributes.FireInputOnHit)
+- [`fire input on kill`](#PopExtAttributes.FireInputOnKill)
+- [`rocket penetration`](#PopExtAttributes.RocketPenetration)
+- [`collect currency on kill`](#PopExtAttributes.CollectCurrencyOnKill)
+- [`noclip projectile`](#PopExtAttributes.NoclipProjectile)
+- [`projectile gravity`](#PopExtAttributes.ProjectileGravity)
+- [`immune to cond`](#PopExtAttributes.ImmuneToCond)
+- [`mult max health`](#PopExtAttributes.MultMaxHealth)
+- [`special item description`](#PopExtAttributes.SpecialItemDescription)
+- [`alt-fire disabled`](#PopExtAttributes.AltFireDisabled)
+- [`custom projectile model`](#PopExtAttributes.CustomProjectileModel)
+- [`dmg bonus while half dead`](#PopExtAttributes.DmgBonusWhileHalfDead)
+- [`dmg penalty while half alive`](#PopExtAttributes.DmgPenaltyWhileHalfAlive)
 
 ## [Mission Attributes](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/missionattributes.nut)
 
@@ -1105,7 +1105,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ## [customattributes](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/customattributes.nut) references
 
-<a name="CustomAttributes.FiresMilkBolt"></a>
+<a name="PopExtAttributes.FiresMilkBolt"></a>
 
 ```js
 // hud hint text on inspection
@@ -1117,7 +1117,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.ModTeleporterSpeedBoost"></a>
+<a name="PopExtAttributes.ModTeleporterSpeedBoost"></a>
 
 ```js
 // hud hint text on inspection
@@ -1129,7 +1129,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.SetTurnToIce"></a>
+<a name="PopExtAttributes.SetTurnToIce"></a>
 
 ```js
 // hud hint text on inspection
@@ -1141,7 +1141,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultTeleporterRechargeTime"></a>
+<a name="PopExtAttributes.MultTeleporterRechargeTime"></a>
 
 ```js
 // hud hint text on inspection
@@ -1156,7 +1156,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MeleeCleaveAttack"></a>
+<a name="PopExtAttributes.MeleeCleaveAttack"></a>
 
 ```js
 // hud hint text on inspection
@@ -1168,7 +1168,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.LastShotCrits"></a>
+<a name="PopExtAttributes.LastShotCrits"></a>
 
 ```js
 // hud hint text on inspection
@@ -1180,7 +1180,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.WetImmunity"></a>
+<a name="PopExtAttributes.WetImmunity"></a>
 
 ```js
 // hud hint text on inspection
@@ -1192,7 +1192,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.CanBreatheUnderWater"></a>
+<a name="PopExtAttributes.CanBreatheUnderWater"></a>
 
 ```js
 // hud hint text on inspection
@@ -1204,7 +1204,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultSwimSpeed"></a>
+<a name="PopExtAttributes.MultSwimSpeed"></a>
 
 ```js
 // hud hint text on inspection
@@ -1216,7 +1216,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.TeleportInsteadOfDie"></a>
+<a name="PopExtAttributes.TeleportInsteadOfDie"></a>
 
 ```js
 // hud hint text on inspection
@@ -1228,7 +1228,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultDmgVsSameClass"></a>
+<a name="PopExtAttributes.MultDmgVsSameClass"></a>
 
 ```js
 // hud hint text on inspection
@@ -1240,7 +1240,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.UberOnDamageTaken"></a>
+<a name="PopExtAttributes.UberOnDamageTaken"></a>
 
 ```js
 // hud hint text on inspection
@@ -1252,7 +1252,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.BuildSmallSentries"></a>
+<a name="PopExtAttributes.BuildSmallSentries"></a>
 
 ```js
 // hud hint text on inspection
@@ -1264,7 +1264,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.CritWhenHealthBelow"></a>
+<a name="PopExtAttributes.CritWhenHealthBelow"></a>
 
 ```js
 // hud hint text on inspection
@@ -1276,7 +1276,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MvmSentryAmmo"></a>
+<a name="PopExtAttributes.MvmSentryAmmo"></a>
 
 ```js
 // hud hint text on inspection
@@ -1288,7 +1288,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.RadiusSleeper"></a>
+<a name="PopExtAttributes.RadiusSleeper"></a>
 
 ```js
 // hud hint text on inspection
@@ -1300,7 +1300,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.ExplosiveBullets"></a>
+<a name="PopExtAttributes.ExplosiveBullets"></a>
 
 ```js
 // hud hint text on inspection
@@ -1312,7 +1312,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.OldSandmanStun"></a>
+<a name="PopExtAttributes.OldSandmanStun"></a>
 
 ```js
 // hud hint text on inspection
@@ -1324,7 +1324,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.StunOnHit"></a>
+<a name="PopExtAttributes.StunOnHit"></a>
 
 ```js
 // hud hint text on inspection
@@ -1336,7 +1336,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.IsMiniboss"></a>
+<a name="PopExtAttributes.IsMiniboss"></a>
 
 ```js
 // hud hint text on inspection
@@ -1348,7 +1348,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.ReplaceWeaponFireSound"></a>
+<a name="PopExtAttributes.ReplaceWeaponFireSound"></a>
 
 ```js
 // hud hint text on inspection
@@ -1363,7 +1363,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.IsInvisible"></a>
+<a name="PopExtAttributes.IsInvisible"></a>
 
 ```js
 // hud hint text on inspection
@@ -1375,7 +1375,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.CannotUpgrade"></a>
+<a name="PopExtAttributes.CannotUpgrade"></a>
 
 ```js
 // hud hint text on inspection
@@ -1387,7 +1387,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.AlwaysCrit"></a>
+<a name="PopExtAttributes.AlwaysCrit"></a>
 
 ```js
 // hud hint text on inspection
@@ -1399,7 +1399,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.DontCountDamageTowardsCritRate"></a>
+<a name="PopExtAttributes.DontCountDamageTowardsCritRate"></a>
 
 ```js
 // hud hint text on inspection
@@ -1411,7 +1411,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.NoDamageFalloff"></a>
+<a name="PopExtAttributes.NoDamageFalloff"></a>
 
 ```js
 // hud hint text on inspection
@@ -1423,7 +1423,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.CanHeadshot"></a>
+<a name="PopExtAttributes.CanHeadshot"></a>
 
 ```js
 // hud hint text on inspection
@@ -1435,7 +1435,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.CannotHeadshot"></a>
+<a name="PopExtAttributes.CannotHeadshot"></a>
 
 ```js
 // hud hint text on inspection
@@ -1447,7 +1447,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.CannotBeHeadshot"></a>
+<a name="PopExtAttributes.CannotBeHeadshot"></a>
 
 ```js
 // hud hint text on inspection
@@ -1459,7 +1459,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.ProjectileLifetime"></a>
+<a name="PopExtAttributes.ProjectileLifetime"></a>
 
 ```js
 // hud hint text on inspection
@@ -1471,7 +1471,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultDmgVsTanks"></a>
+<a name="PopExtAttributes.MultDmgVsTanks"></a>
 
 ```js
 // hud hint text on inspection
@@ -1483,7 +1483,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultDmgVsGiants"></a>
+<a name="PopExtAttributes.MultDmgVsGiants"></a>
 
 ```js
 // hud hint text on inspection
@@ -1495,7 +1495,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultDmgVsAirborne"></a>
+<a name="PopExtAttributes.MultDmgVsAirborne"></a>
 
 ```js
 // hud hint text on inspection
@@ -1507,7 +1507,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.SetDamageType"></a>
+<a name="PopExtAttributes.SetDamageType"></a>
 
 ```js
 // hud hint text on inspection
@@ -1519,7 +1519,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.SetDamageTypeCustom"></a>
+<a name="PopExtAttributes.SetDamageTypeCustom"></a>
 
 ```js
 // hud hint text on inspection
@@ -1531,7 +1531,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.ReloadsFullClipAtOnce"></a>
+<a name="PopExtAttributes.ReloadsFullClipAtOnce"></a>
 
 ```js
 // hud hint text on inspection
@@ -1543,7 +1543,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.FireFullClipAtOnce"></a>
+<a name="PopExtAttributes.FireFullClipAtOnce"></a>
 
 ```js
 // hud hint text on inspection
@@ -1555,7 +1555,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.PassiveReload"></a>
+<a name="PopExtAttributes.PassiveReload"></a>
 
 ```js
 // hud hint text on inspection
@@ -1567,7 +1567,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultProjectileScale"></a>
+<a name="PopExtAttributes.MultProjectileScale"></a>
 
 ```js
 // hud hint text on inspection
@@ -1579,7 +1579,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultBuildingScale"></a>
+<a name="PopExtAttributes.MultBuildingScale"></a>
 
 ```js
 // hud hint text on inspection
@@ -1591,7 +1591,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultCritDmg"></a>
+<a name="PopExtAttributes.MultCritDmg"></a>
 
 ```js
 // hud hint text on inspection
@@ -1603,7 +1603,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.ArrowIgnite"></a>
+<a name="PopExtAttributes.ArrowIgnite"></a>
 
 ```js
 // hud hint text on inspection
@@ -1615,7 +1615,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.AddCondOnHit"></a>
+<a name="PopExtAttributes.AddCondOnHit"></a>
 
 ```js
 // hud hint text on inspection
@@ -1628,7 +1628,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.RemoveCondOnHit"></a>
+<a name="PopExtAttributes.RemoveCondOnHit"></a>
 
 ```js
 // hud hint text on inspection
@@ -1640,7 +1640,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.SelfAddCondOnHit"></a>
+<a name="PopExtAttributes.SelfAddCondOnHit"></a>
 
 ```js
 // hud hint text on inspection
@@ -1653,7 +1653,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.SelfAddCondOnKill"></a>
+<a name="PopExtAttributes.SelfAddCondOnKill"></a>
 
 ```js
 // hud hint text on inspection
@@ -1666,7 +1666,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.AddCondWhenActive"></a>
+<a name="PopExtAttributes.AddCondWhenActive"></a>
 
 ```js
 // hud hint text on inspection
@@ -1678,7 +1678,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.FireInputOnHit"></a>
+<a name="PopExtAttributes.FireInputOnHit"></a>
 
 ```js
 // hud hint text on inspection
@@ -1697,7 +1697,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.FireInputOnKill"></a>
+<a name="PopExtAttributes.FireInputOnKill"></a>
 
 ```js
 // hud hint text on inspection
@@ -1716,7 +1716,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.RocketPenetration"></a>
+<a name="PopExtAttributes.RocketPenetration"></a>
 
 ```js
 // hud hint text on inspection
@@ -1728,7 +1728,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.CollectCurrencyOnKill"></a>
+<a name="PopExtAttributes.CollectCurrencyOnKill"></a>
 
 ```js
 // hud hint text on inspection
@@ -1740,7 +1740,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.NoclipProjectile"></a>
+<a name="PopExtAttributes.NoclipProjectile"></a>
 
 ```js
 // hud hint text on inspection
@@ -1752,7 +1752,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.ProjectileGravity"></a>
+<a name="PopExtAttributes.ProjectileGravity"></a>
 
 ```js
 // hud hint text on inspection
@@ -1764,7 +1764,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.ImmuneToCond"></a>
+<a name="PopExtAttributes.ImmuneToCond"></a>
 
 ```js
 // hud hint text on inspection
@@ -1777,7 +1777,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.MultMaxHealth"></a>
+<a name="PopExtAttributes.MultMaxHealth"></a>
 
 ```js
 // hud hint text on inspection
@@ -1789,7 +1789,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.SpecialItemDescription"></a>
+<a name="PopExtAttributes.SpecialItemDescription"></a>
 
 ```js
 // hud hint text on inspection
@@ -1801,7 +1801,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.AltFireDisabled"></a>
+<a name="PopExtAttributes.AltFireDisabled"></a>
 
 ```js
 // hud hint text on inspection
@@ -1813,7 +1813,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.CustomProjectileModel"></a>
+<a name="PopExtAttributes.CustomProjectileModel"></a>
 
 ```js
 // hud hint text on inspection
@@ -1825,7 +1825,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.DmgBonusWhileHalfDead"></a>
+<a name="PopExtAttributes.DmgBonusWhileHalfDead"></a>
 
 ```js
 // hud hint text on inspection
@@ -1837,7 +1837,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 
 ---
 
-<a name="CustomAttributes.DmgPenaltyWhileHalfAlive"></a>
+<a name="PopExtAttributes.DmgPenaltyWhileHalfAlive"></a>
 
 ```js
 // hud hint text on inspection
@@ -2909,7 +2909,7 @@ SoundOverrides = { //overrides teamplay_broadcast_audio sounds
 }
 ```
 
-Hardcoded to only be able to replace specific sounds, because spamming stopsound in a think function is very laggy. See [replace weapon fire sound](#CustomAttributes.ReplaceWeaponFireSound) and more in `customattributes.nut` for weapon sounds. See the tank sound overrides in `hooks.nut` for disabling tank explosions.
+Hardcoded to only be able to replace specific sounds, because spamming stopsound in a think function is very laggy. See [replace weapon fire sound](#PopExtAttributes.ReplaceWeaponFireSound) and more in `customattributes.nut` for weapon sounds. See the tank sound overrides in `hooks.nut` for disabling tank explosions.
 
 ---
 

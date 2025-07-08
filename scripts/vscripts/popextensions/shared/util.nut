@@ -272,8 +272,9 @@
 			SetPropBool( GameRules, "m_bPlayingMannVsMachine", false )
 			player.ForceChangeTeam( teamnum, false )
 			SetPropBool( GameRules, "m_bPlayingMannVsMachine", true )
+
 			if ( forcerespawn )
-				EntFireByHandle( player, "RunScriptCode", "self.ForceRespawn()", SINGLE_TICK, null, null )
+				ScriptEntFireSafe( player, "self.ForceRespawn()", SINGLE_TICK )
 		}
 	}
 
@@ -637,9 +638,9 @@
 					items[GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )] <- [attrib, value]
 
 		//do the customattributes check first, since we replace some vanilla attributes
-		local customattr_function = CustomAttributes.GetAttributeFunctionFromStringName( attrib )
+		local customattr_function = PopExtAttributes.GetAttributeFunctionFromStringName( attrib )
 
-		if ( customattr_function in CustomAttributes.Attrs ) {
+		if ( "PopExtAttributes" in ROOT && customattr_function in PopExtAttributes.Attrs ) {
 
 			//easy access table in player scope for our items and their attributes
 			scope.CustomAttrItems <- items
@@ -649,7 +650,7 @@
 
 			//cleanup item thinks
 			foreach( item, _ in items )
-				CustomAttributes.CleanupFunctionTable( item, "ItemThinkTable", customattr_function )
+				PopExtAttributes.CleanupFunctionTable( item, "ItemThinkTable", customattr_function )
 
 			if ( !( "attribinfo" in scope ) ) scope.attribinfo <- {}
 
@@ -657,15 +658,15 @@
 
 				local wep = HasItemInLoadout( player, item )
 
-				if ( wep == null || !( customattr_function in CustomAttributes.Attrs ) ) return
+				if ( wep == null || !( customattr_function in PopExtAttributes.Attrs ) ) return
 
 				wep.ValidateScriptScope()
 				if ( !( "ItemThinkTable" in wep.GetScriptScope() ) )
 					wep.GetScriptScope().ItemThinkTable <- {}
 
-				CustomAttributes.Attrs[customattr_function]( player, wep, value )
+				PopExtAttributes.Attrs[customattr_function]( player, wep, value )
 
-				CustomAttributes.RefreshDescs( player )
+				PopExtAttributes.RefreshDescs( player )
 
 				if ( PopExtMain.DebugText )
 					foreach( attr, value in attrs )
@@ -681,7 +682,7 @@
 				// player attributes
 				// TODO: does this need to be delayed?
 				if ( !item_handle || !( item_handle instanceof CEconEntity ) )
-					EntFireByHandle( player, "RunScriptCode", format( "self.AddCustomAttribute( `%s`, %.2f, -1 )", attrib, value.tofloat() ), -1, null, null )
+					ScriptEntFireSafe( player, format( "self.AddCustomAttribute( `%s`, %.2f, -1 )", attrib, value.tofloat() ), -1 )
 				else {
 
 					// custom weapons need their attributes applied immediately
@@ -696,12 +697,12 @@
 						local formatstr = attrib in specialattribs ?
 							format( "self.AddAttribute( `%s`, %1.8e, -1 ); self.ReapplyProvision()", attrib, value.tofloat() ) :
 							format( "self.AddAttribute( `%s`, %.2f, -1 ); self.ReapplyProvision()", attrib, value.tofloat() )
-						EntFireByHandle( item_handle, "RunScriptCode", formatstr, -1, null, null )
+						ScriptEntFireSafe( item_handle, formatstr, -1 )
 					}
 				}
 
 				if ( attrib in healthattribs )
-					EntFireByHandle( player, "RunScriptCode", "self.SetHealth( self.GetMaxHealth() )", -1, null, null )
+					ScriptEntFireSafe( player, "self.SetHealth( self.GetMaxHealth() )", -1 )
 			}
 			// add hidden attributes to our custom attribute display
 			if (
@@ -712,8 +713,17 @@
 				if ( !( "attribinfo" in scope ) ) scope.attribinfo <- {}
 
 				scope.attribinfo[attrib] <- format( "%s: %s" attrib, value.tostring() )
-				CustomAttributes.RefreshDescs( player )
+				PopExtAttributes.RefreshDescs( player )
 			}
+		}
+		else {
+
+			local errorstr = format( "Unknown attribute: '%s'", attrib )
+
+			if ( !("PopExtAttributes" in ROOT) )
+				errorstr += ".  'customattributes' module not found."
+
+			PopExtMain.Error.GenericWarning( errorstr )
 		}
 	}
 
@@ -1028,9 +1038,9 @@
 		tutorial_text.AcceptInput( "ShowTrainingMsg", text, null, null )
 		tutorial_text.Kill()
 
-		Convars.SetValue( "hide_server", 0 )
+		SetValue( "hide_server", 0 )
 
-		EntFireByHandle( GameRules, "RunScriptCode", "SetPropBool( self, `m_bIsInTraining`, false )", duration, null, null )
+		ScriptEntFireSafe( GameRules, "SetPropBool( self, `m_bIsInTraining`, false )", duration )
 
 		EntFire( "func_upgradestation", "Enable", "", duration )
 	}
@@ -1693,7 +1703,7 @@
 		local scope = player.GetScriptScope()
 		scope.sound <- soundscript
 
-		EntFireByHandle( player, "RunScriptCode", "self.StopSound( sound );", delay, null, null )
+		ScriptEntFireSafe( player, "self.StopSound( sound );", delay )
 
 		local sound	   =  scope.sound
 		local dotindex =  sound.find( "." )
@@ -1701,7 +1711,7 @@
 
 		scope.mvmsound <- sound.slice( 0, dotindex+1 ) + "MVM_" + sound.slice( dotindex+1 )
 
-		EntFireByHandle( player, "RunScriptCode", "self.EmitSound( mvmsound );", delay + SINGLE_TICK, null, null )
+		ScriptEntFireSafe( player, "self.EmitSound( mvmsound );", delay + SINGLE_TICK )
 	}
 
 	function StringReplace( str, findwhat, replace ) {
@@ -2047,7 +2057,7 @@
 				return
 			}
 			PopExtMain.Error.DebugLog( `Invalid target passed to ScriptEntFireSafe: ` + self )
-		", allow_dead, code ), delay, activator, caller )
+		", allow_dead.tointeger(), code ), delay, activator, caller )
 
 		PurgeGameString( code )
 	}
@@ -2141,12 +2151,12 @@
 				SendToConsole( format( "nextlevel %s", mapname ) )
 
 			// check for allow point_servercommand
-			else if ( Convars.GetStr( "sv_allow_point_servercommand" ) == "always" )
+			else if ( GetStr( "sv_allow_point_servercommand" ) == "always" )
 				SendToServerConsole( format( "nextlevel %s", mapname ) )
 
 			// check the allowlist
-			else if ( Convars.IsConVarOnAllowList( "nextlevel" ) )
-				Convars.SetValue( "nextlevel", mapname )
+			else if ( IsConVarOnAllowList( "nextlevel" ) )
+				SetValue( "nextlevel", mapname )
 
 			// can't set it, just load the next map in the mapcycle file or hope the server sets nextlevel for us
 			else
@@ -2154,10 +2164,10 @@
 		}
 
 		// required for GoToIntermission
-		Convars.SetValue( "mp_tournament", 0 )
+		SetValue( "mp_tournament", 0 )
 
 		// wait at scoreboard for this many seconds
-		Convars.SetValue( "mp_chattime", delay )
+		SetValue( "mp_chattime", delay )
 
 		local intermission = Entities.CreateByClassname( "point_intermission" )
 
@@ -2330,6 +2340,35 @@
 		HumanArray  = HumanTable.keys()
 		BotArray    = BotTable.keys()
 		PlayerArray = PlayerTable.keys()
+	}
+	function KVStringToVectorOrQAngle( str, angles = false, startidx = 0 ) {
+
+		if (typeof str == "Vector" || typeof str == "QAngle")
+			return str
+
+		local split = (str.find(",") ? split(str, ",", true) : split(str, " ", true)).apply(@(str) PopExtUtil.ToStrictNum(str, true))
+
+		local errorstr = "KVString CONVERSION ERROR: %s"
+		if (!(2 in split))
+		{
+			PopExtMain.Error.RaiseError(format(errorstr, "Not enough values (need at least 3)"))
+			return angles ? QAngle() : Vector()
+		}
+		local invalid = split.find(null)
+		if (invalid != null)
+		{
+			local invalid_kvstringidx = invalid
+			if (invalid)
+			{
+				local invalid_mod = invalid % 3
+				invalid_kvstringidx = !invalid_mod ? 2 : invalid_mod - 1
+			}
+
+			local kvstringvalue = angles ? ["yaw", "pitch", "roll"] : ["x", "y", "z"]
+			PopExtMain.Error.RaiseError(format(errorstr, "Could not convert string to number for KVString %s (index %d)", kvstringvalue[invalid_kvstringidx], invalid))
+			return angles ? QAngle() : Vector()
+		}
+		return angles ? QAngle(split[startidx], split[startidx + 1], split[startidx + 2]) : Vector(split[startidx], split[startidx + 1], split[startidx + 2])
 	}
 }
 

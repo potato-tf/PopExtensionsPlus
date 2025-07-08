@@ -87,7 +87,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					( PopExtUtil.GetItemIndex( params.weapon ) == ID_YOUR_ETERNAL_REWARD || PopExtUtil.GetItemIndex( params.weapon ) == ID_WANGA_PRICK )
 				) {
 					attacker.GetScriptScope().stabvictim <- victim
-					EntFireByHandle( attacker, "RunScriptCode", "PopExtUtil.SilentDisguise( self, stabvictim )", -1, null, null )
+					PopExtUtil.ScriptEntFireSafe( attacker, "PopExtUtil.SilentDisguise( self, stabvictim )", -1 )
 				}
 			}, EVENT_WRAPPER_MISSIONATTR )
 			PopExtEvents.AddRemoveEventHook("post_inventory_application", "RemoveYERAttribute", function( params ) {
@@ -469,7 +469,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				SetPropInt( PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", 0 )
 			}, EVENT_WRAPPER_MISSIONATTR )
 			// needs to be delayed for the hud to load properly
-			EntFireByHandle( PopExtUtil.ObjectiveResource, "RunScriptCode", format( "SetPropInt( self, `m_nMvMEventPopfileType`, %d )", value ), SINGLE_TICK, null, null )
+			PopExtUtil.ScriptEntFireSafe( PopExtUtil.ObjectiveResource, format( "SetPropInt( self, `m_nMvMEventPopfileType`, %d )", value ), SINGLE_TICK )
 		}
 
 		// ===================================
@@ -483,7 +483,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				SetPropInt( PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value )
 			}, EVENT_WRAPPER_MISSIONATTR )
 			// needs to be delayed for the hud to load properly
-			EntFireByHandle( PopExtUtil.ObjectiveResource, "RunScriptCode", format( "SetPropInt( self, `m_nMannVsMachineWaveCount`, %d )", value ), SINGLE_TICK, null, null )
+			PopExtUtil.ScriptEntFireSafe( PopExtUtil.ObjectiveResource, format( "SetPropInt( self, `m_nMannVsMachineWaveCount`, %d )", value ), SINGLE_TICK )
 		}
 
 		// =======================================
@@ -495,7 +495,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			PopExtEvents.AddRemoveEventHook("mvm_begin_wave", "SetMaxWaveNum", function( params ) {
 				SetPropInt( PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value )
 			}, EVENT_WRAPPER_MISSIONATTR )
-			EntFireByHandle( PopExtUtil.ObjectiveResource, "RunScriptCode", format( "SetPropInt( self, `m_nMannVsMachineMaxWaveCount`, %d )", value ), SINGLE_TICK, null, null )
+			PopExtUtil.ScriptEntFireSafe( PopExtUtil.ObjectiveResource, format( "SetPropInt( self, `m_nMannVsMachineMaxWaveCount`, %d )", value ), SINGLE_TICK )
 		}
 
 		// ========
@@ -831,7 +831,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 		RobotLimit = function( value ) {
 
-			if ( value > ( MAX_CLIENTS - Convars.GetInt( "tf_mvm_defenders_team_size" ) ) ) {
+			if ( value > ( MAX_CLIENTS - GetInt( "tf_mvm_defenders_team_size" ) ) ) {
 
 				PopExtMain.Error.RaiseValueError( "RobotLimit", value, "MAX INVADERS > MAX PLAYERS! Update your servers maxplayers!" )
 				return false
@@ -895,7 +895,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 			PopExtEvents.AddRemoveEventHook("player_death", "TeamWipeWaveLoss", function( params ) {
 				if ( !PopExtUtil.IsWaveStarted ) return
-				EntFire( "bignet", "RunScriptCode", "if ( PopExtUtil.CountAlivePlayers() == 0 ) EntFire( `__popext_roundwin`, `RoundWin` )" )
+				PopExtUtil.ScriptEntFireSafe( "BigNet", "if ( PopExtUtil.CountAlivePlayers() == 0 ) EntFire( `__popext_roundwin`, `RoundWin` )" )
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
 
@@ -1056,6 +1056,12 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				} else if ( "StepThink" in scope.PlayerThinkTable ) delete scope.PlayerThinkTable.StepThink
 
 				if ( value & 8 ) {
+
+					if ( !"VCD_SOUNDSCRIPT_MAP" in ROOT ) {
+						PopExtMain.Error.RaiseModuleError( "robotvoicelines", "missionattributes (PlayersAreRobots)", true )
+						return false
+					}
+
 					MissionAttributes.ThinkTable.RobotVOThink <- function() {
 
 						for ( local ent; ent = FindByClassname( ent, "instanced_scripted_scene" ); ) {
@@ -1102,7 +1108,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				if ( value & 16 ) {
 
 					//run this with a delay for LoadoutControl
-					EntFireByHandle( player, "RunScriptCode", @"
+					PopExtUtil.ScriptEntFireSafe( player, @"	
 
 						if ( `HandModelOverride` in MissionAttributes.CurAttrs ) return
 
@@ -1124,7 +1130,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 							wep.SetCustomViewModel( vmodel )
 						}
 
-					", SINGLE_TICK, null, null )
+					", SINGLE_TICK )
 
 				}
 			}, EVENT_WRAPPER_MISSIONATTR )
@@ -1206,7 +1212,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				if ( bot.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
 					return
 
-				EntFireByHandle( bot, "RunScriptCode", @"
+				PopExtUtil.ScriptEntFireSafe( bot, @"
 
 					if ( !self.IsBotOfType( TF_BOT_TYPE ) ) return
 
@@ -1217,7 +1223,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 						if ( child.GetClassname() == `tf_wearable` && startswith( child.GetModelName(), armor_model ) )
 
 							EntFireByHandle( child, `Kill`, ``, -1, null, null )
-				", -1, null, null )
+				", -1 )
 
 				if ( value < 2 || MissionAttributes.noromecarrier ) return
 
@@ -1507,6 +1513,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				}
 			}
 			spawner.AcceptInput( "ForceSpawn", "", null, null )
+			spawner.Kill()
 		}
 
 
@@ -1583,12 +1590,12 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				if ( typeof value == "array" ) {
 
 					player.RemoveCondEx( value[0], true )
-					EntFireByHandle( player, "RunScriptCode", format( "self.AddCondEx( %d, %f, null )", value[0], value[1] ), -1, null, null )
+					PopExtUtil.ScriptEntFireSafe( player, format( "self.AddCondEx( %d, %f, null )", value[0], value[1] ), -1 )
 				}
 				else if ( typeof value == "integer" ) {
 
 					player.RemoveCond( value )
-					EntFireByHandle( player, "RunScriptCode", format( "self.AddCond( %d )", value ), -1, null, null )
+					PopExtUtil.ScriptEntFireSafe( player, format( "self.AddCond( %d )", value ), -1 )
 				}
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
@@ -1692,7 +1699,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 						if ( "ExtraItems" in ROOT && replacement in ExtraItems )
 
-							CustomWeapons.GiveItem( replacement, player )
+							PopExtWeapons.GiveItem( replacement, player )
 						else
 
 							PopExtUtil.GiveWeapon( player, PopExtItems[replacement].item_class, PopExtItems[replacement].id )
@@ -1709,7 +1716,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 							if ( "ExtraItems" in ROOT && replacement in ExtraItems )
 
-								CustomWeapons.GiveItem( replacement, player )
+								PopExtWeapons.GiveItem( replacement, player )
 
 							else if ( replacement in PopExtItems )
 
@@ -1737,7 +1744,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 						DoLoadoutControl( item, replacement )
 				}
 
-				EntFireByHandle( player, "RunScriptCode", "PopExtUtil.SwitchToFirstValidWeapon( self )", SINGLE_TICK, null, null )
+				PopExtUtil.ScriptEntFireSafe( player, "PopExtUtil.SwitchToFirstValidWeapon( self )", SINGLE_TICK )
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
 
@@ -1845,8 +1852,8 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 								EmitSoundEx( {sound_name = override[0], entity = victim} )
 						}
 
-						EntFireByHandle( victim, "RunScriptCode", format( "StopSoundOn( `%s`, self )", sound ), -1, null, null )
-						EntFireByHandle( victim, "RunScriptCode", "MissionAttributes.EmitSoundFunc()", -1, null, null )
+						PopExtUtil.ScriptEntFireSafe( victim, format( "StopSoundOn( `%s`, self )", sound ), -1 )
+						PopExtUtil.ScriptEntFireSafe( victim, "MissionAttributes.EmitSoundFunc()", -1 )
 					}
 				}
 
@@ -2008,7 +2015,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 								if ( classname in timed_crit_weapons ) {
 
 									owner.AddCondEx( TF_COND_CRITBOOSTED_CTF_CAPTURE, 2, null )
-									EntFireByHandle( owner, "RunScriptCode", format( "crit_weapon <- null; ranged_crit_chance <- %f", base_ranged_crit_chance ), 2, null, null )
+									PopExtUtil.ScriptEntFireSafe( owner, format( "crit_weapon <- null; ranged_crit_chance <- %f", base_ranged_crit_chance ), 2 )
 								}
 								else {
 
@@ -2071,7 +2078,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				if ( RandomFloat( 0, 1 ) < scope.melee_crit_chance ) {
 					params.damage_type = params.damage_type | DMG_CRITICAL
 					// We delay here to allow death code to run so the reset doesn't get overriden
-					EntFireByHandle( attacker, "RunScriptCode", format( "melee_crit_chance <- %f", base_melee_crit_chance ), SINGLE_TICK, null, null )
+					PopExtUtil.ScriptEntFireSafe( attacker, format( "melee_crit_chance <- %f", base_melee_crit_chance ), SINGLE_TICK )
 				}
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
@@ -2095,7 +2102,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			// TODO: Needs testing
 			// also need to reset it
 			// MissionAttributes.SetConvar( "tf_mvm_defenders_team_size", 999 )
-			local max_team_size = Convars.GetInt( "tf_mvm_defenders_team_size" )
+			local max_team_size = GetInt( "tf_mvm_defenders_team_size" )
 			MissionAttributes.DeployBombStart <- function( player ) {
 
 				//do this so we can do CancelPending
@@ -2159,11 +2166,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				local player_count  = 0
 				foreach ( player in PopExtUtil.HumanTable.keys() ) {
 
-					if (
-						player_count + 1 > max_team_size
-						&& player.GetTeam() != TEAM_SPECTATOR
-						&& !player.IsBotOfType( TF_BOT_TYPE )
-					) {
+					if ( player_count + 1 > max_team_size && player.GetTeam() != TEAM_SPECTATOR ) {
 						player.ForceChangeTeam( TEAM_SPECTATOR, false )
 						continue
 					}
@@ -2201,15 +2204,15 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 				// Switch to blue team
 				if ( player.GetTeam() != TF_TEAM_PVE_INVADERS ) {
-					EntFireByHandle( player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_INVADERS, true )", SINGLE_TICK, null, null )
+					PopExtUtil.ScriptEntFireSafe( player, "PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_INVADERS, true )", SINGLE_TICK )
 				}
 
 				// Kill any phantom lasers from respawning as engie ( yes this is real )
-				EntFireByHandle( player, "RunScriptCode", @"
+				PopExtUtil.ScriptEntFireSafe( player, @"
 					for ( local ent; ent = FindByClassname( ent, `env_laserdot` ); )
 						if ( ent.GetOwner() == self )
 							ent.Kill()
-				", 0.5, null, null )
+				", 0.5 )
 
 				// Temporary solution for engie wrangler laser
 				scope.handled_laser   <- false
@@ -2256,8 +2259,8 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 						self.SetAbsOrigin( ent.GetOrigin() + Vector( 0, 0, -32 ) )
 						self.SetAbsVelocity( Vector() )
 						self.SetMoveType( MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT )
-						EntFireByHandle( laser, "RunScriptCode", "self.SetTeam( TF_TEAM_PVE_DEFENDERS )", SINGLE_TICK, null, null )
-						EntFireByHandle( self, "RunScriptCode", "self.SetAbsOrigin( originalposition ); self.SetAbsVelocity( originalvelocity ); self.SetMoveType( originalmovetype, MOVECOLLIDE_DEFAULT )", SINGLE_TICK, null, null )
+						PopExtUtil.ScriptEntFireSafe( laser, "self.SetTeam( TF_TEAM_PVE_DEFENDERS )", SINGLE_TICK )
+						PopExtUtil.ScriptEntFireSafe( self, "self.SetAbsOrigin( originalposition ); self.SetAbsVelocity( originalvelocity ); self.SetMoveType( originalmovetype, MOVECOLLIDE_DEFAULT )", SINGLE_TICK )
 
 						handled_laser = true
 						return
@@ -2406,7 +2409,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 							EntFireByHandle( ent, "Disable", "", -1, null, null )
 
 							EntFireByHandle( ent, "Enable", "", 10, null, null )
-							EntFireByHandle( ent, "RunScriptCode", "self.RemoveEFlags( EFL_USER )", 10, null, null )
+							PopExtUtil.ScriptEntFireSafe( ent, "self.RemoveEFlags( EFL_USER )", 10 )
 						}
 					}
 				}
@@ -2624,7 +2627,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 							break
 						}
 						if ( GetPropIntArray( player, STRING_NETPROP_AMMO, TF_AMMO_METAL ) < 0 )
-							EntFireByHandle( player, "RunScriptCode", "SetPropIntArray( self, STRING_NETPROP_AMMO, 0, TF_AMMO_METAL )", -1, null, null )
+							PopExtUtil.ScriptEntFireSafe( player, "SetPropIntArray( self, STRING_NETPROP_AMMO, 0, TF_AMMO_METAL )", -1 )
 					}
 
 				}
@@ -2691,7 +2694,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					&& params.team == TEAM_SPECTATOR
 					&& params.oldteam == TF_TEAM_PVE_INVADERS
 				) {
-					EntFireByHandle( player, "RunScriptCode", "PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_INVADERS, true )", -1, null, null )
+					PopExtUtil.ScriptEntFireSafe( player, "PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_INVADERS, true )", -1 )
 				}
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
@@ -2750,7 +2753,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			MissionAttributes.ClassLimits <- value
 
 			// Dump overflow players to free classes on wave init.
-			EntFireByHandle( PopExtUtil.GameRules, "RunScriptCode", @"
+			PopExtUtil.ScriptEntFireSafe( "BigNet", @"
 
 				local initcounts = PopExtUtil.PlayerClassCount()
 				local classes = array( TF_CLASS_COUNT_ALL, 0 )
@@ -2780,7 +2783,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 							break
 						}
 					}
-				}", SINGLE_TICK, null, null )
+				}", SINGLE_TICK )
 
 		}
 
@@ -2908,7 +2911,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 				if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
-				EntFireByHandle( player, "RunScriptCode", "self.ForceChangeTeam( TEAM_SPECTATOR, true )", value.tofloat(), null, null )
+				PopExtUtil.ScriptEntFireSafe( player, "self.ForceChangeTeam( TEAM_SPECTATOR, true )", value.tofloat() )
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
 
@@ -3099,11 +3102,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			if ( bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
 				bot.ForceChangeTeam( TEAM_SPECTATOR, true )
 
-		for ( local wearable; wearable = FindByClassname( wearable, "tf_wearable" ); )
-			if ( wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType( TF_BOT_TYPE ) )
-				EntFireByHandle( wearable, "Kill", "", -1, null, null )
-
-		EntFire( "func_upgradestation", "Enable" )
+		// EntFire( "func_upgradestation", "Enable" )
 
 		PopExtMain.Error.DebugLog( format( "Cleaned up mission attributes" ) )
 	}
@@ -3120,14 +3119,14 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			hide_fcvar_notify = SpawnEntityFromTable( "point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"} )
 
 		// save original values to restore later
-		if ( !( convar in MissionAttributes.ConVars ) ) MissionAttributes.ConVars[convar] <- Convars.GetStr( convar )
+		if ( !( convar in MissionAttributes.ConVars ) ) MissionAttributes.ConVars[convar] <- GetStr( convar )
 
 		// delay to ensure its set after any server configs
-		if ( Convars.GetStr( convar ) != value )
-			EntFire( "bignet", "runscriptcode", format( "Convars.SetValue( `%s`, `%s` )", convar, value.tostring() ) )
+		if ( GetStr( convar ) != value )
+			PopExtUtil.ScriptEntFireSafe( "BigNet", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
 
 		if ( duration > 0 )
-			EntFire( "bignet", "RunScriptCode", format( "MissionAttributes.SetConvar( `%s`,`%s` )", convar, MissionAttributes.ConVars[convar].tostring() ), duration )
+			PopExtUtil.ScriptEntFireSafe( "BigNet", format( "MissionAttributes.SetConvar( `%s`,`%s` )", convar, MissionAttributes.ConVars[convar].tostring() ), duration )
 
 		if ( hide_fcvar_notify != null )
 			EntFireByHandle( hide_fcvar_notify, "Kill", "", 1, null, null )
@@ -3138,8 +3137,8 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 		local hide_fcvar_notify = FindByClassname( null, "point_commentary_node" )
 		if ( hide_fcvar_notify == null && hide_chat_message ) hide_fcvar_notify = SpawnEntityFromTable( "point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"} )
 
-		foreach ( convar, value in MissionAttributes.ConVars ) Convars.SetValue( convar, value )
-		MissionAttributes.ConVars.clear()
+		foreach ( convar, value in MissionAttributes.ConVars ) SetValue( convar, value )
+		MissionAttributes.clear()
 
 		if ( hide_fcvar_notify != null )
 			EntFireByHandle( hide_fcvar_notify, "Kill", "", -1, null, null )
@@ -3197,15 +3196,15 @@ PopExtEvents.AddRemoveEventHook("teamplay_broadcast_audio", "SoundOverrides", fu
 	}
 }, EVENT_WRAPPER_MISSIONATTR )
 
-PopExtEvents.AddRemoveEventHook("teamplay_round_start", "MissionAttributesCleanup", function( params ) {
+// PopExtEvents.AddRemoveEventHook("teamplay_round_start", "MissionAttributesCleanup", function( params ) {
 
 	// TODO, already handled in main, not necessary?
 	// foreach ( player in PopExtUtil.PlayerTable.keys() )
 		// if ( player.IsValid() )
 			// PopExtMain.PlayerCleanup( player )
 
-	MissionAttributes.Cleanup()
-}, EVENT_WRAPPER_MISSIONATTR )
+	// MissionAttributes.Cleanup()
+// }, EVENT_WRAPPER_MISSIONATTR )
 
 PopExtEvents.AddRemoveEventHook("mvm_wave_complete", "MissionAttributesCleanup", function( params ) {
 

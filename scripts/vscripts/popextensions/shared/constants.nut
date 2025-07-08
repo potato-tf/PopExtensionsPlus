@@ -1,42 +1,52 @@
-//"reminder that constants are resolved at preprocessor level and not runtime"
-//"if you add them dynamically to the table they wont show up until you execute a new script as the preprocessor isnt aware yet"
-//fold into both const and root table to work around this.
-
 ::ROOT  <- getroottable()
 ::CONST <- getconsttable()
-
-if ( !( "ConstantNamingConvention" in ROOT ) ) {
-
-	foreach( a, b in Constants )
-		foreach( k, v in b ) {
-
-			CONST[k] <- v != null ? v : 0
-			ROOT[k] <- v != null ? v : 0
-		}
-}
 
 CONST.setdelegate( { _newslot = @( k, v ) compilestring( "const " + k + "=" + ( typeof v == "string" ? ( "\"" + v + "\"" ) : v ) )() } )
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
-foreach( k, v in ::NetProps.getclass() )
-	if ( k != "IsValid" && !( k in ROOT ) )
-		ROOT[k] <- ::NetProps[k].bindenv( ::NetProps )
+local tofold = [ "NetProps", "Entities", "EntityOutputs", "NavMesh", "Convars" ]
 
-foreach( k, v in ::Entities.getclass() )
-	if ( k != "IsValid" && !( k in ROOT ) )
-		ROOT[k] <- ::Entities[k].bindenv( ::Entities )
+// these are defined multiple times in other classes, skip to avoid conflicts
+// realistically "IsValid" is the only problematic one, but just in case
+local foldblacklist = {
+	IsValid   = true
+	GetName   = true
+	GetCenter = true
+}
 
-foreach( k, v in ::EntityOutputs.getclass() )
-	if ( k != "IsValid" && !( k in ROOT ) )
-		ROOT[k] <- ::EntityOutputs[k].bindenv( ::EntityOutputs )
+// fold every class into the root table for performance
+foreach( _class in tofold)
+	foreach( k, v in ROOT[_class].getclass() )
+		if ( !( k in foldblacklist ) && !( k in ROOT ) )
+			ROOT[k] <- ROOT[_class][k].bindenv( ROOT[_class] )
 
-foreach( k, v in ::NavMesh.getclass() )
-	if ( k != "IsValid" && !( k in ROOT ) )
-		ROOT[k] <- ::NavMesh[k].bindenv( ::NavMesh )
+
+// fold every pre-defined constant into the const table
+if ( !( "ConstantNamingConvention" in ROOT ) )
+	foreach( a, b in Constants )
+		foreach( k, v in b )
+			CONST[k] <- v != null ? v : 0
+
+
+// foreach( k, v in ::NetProps.getclass() )
+// 	if ( k != "IsValid" && !( k in ROOT ) )
+// 		ROOT[k] <- ::NetProps[k].bindenv( ::NetProps )
+
+// foreach( k, v in ::Entities.getclass() )
+// 	if ( k != "IsValid" && !( k in ROOT ) )
+// 		ROOT[k] <- ::Entities[k].bindenv( ::Entities )
+
+// foreach( k, v in ::EntityOutputs.getclass() )
+// 	if ( k != "IsValid" && !( k in ROOT ) )
+// 		ROOT[k] <- ::EntityOutputs[k].bindenv( ::EntityOutputs )
+
+// foreach( k, v in ::NavMesh.getclass() )
+// 	if ( k != "IsValid" && !( k in ROOT ) )
+// 		ROOT[k] <- ::NavMesh[k].bindenv( ::NavMesh )
 
 // event wrapper call order limit per event
 // This allows +1 unordered.
-// This was 32 before and seemingly didn't cause much perf hit 
+// This was 32 before and seemingly didn't cause much perf hit
 // but I'll take +1 extra iteration instead of +26 since we aren't using them
 const MAX_EVENT_FUNCTABLES 		= 9
 
@@ -664,9 +674,9 @@ const TFCOLLISION_GROUP_PUMPKIN_BOMB 						= 26
 const TFCOLLISION_GROUP_ROCKET_BUT_NOT_WITH_OTHER_ROCKETS 	= 27
 
 // Content masks
-CONST.MASK_OPAQUE      <- ( CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_OPAQUE )
-CONST.MASK_PLAYERSOLID <- ( CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE )
-CONST.MASK_SOLID_BRUSHONLY <- ( CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE )
+CONST.MASK_OPAQUE      	   <- ( CONST.CONTENTS_SOLID|CONST.CONTENTS_MOVEABLE|CONST.CONTENTS_OPAQUE )
+CONST.MASK_PLAYERSOLID 	   <- ( CONST.CONTENTS_SOLID|CONST.CONTENTS_MOVEABLE|CONST.CONTENTS_PLAYERCLIP|CONST.CONTENTS_WINDOW|CONST.CONTENTS_MONSTER|CONST.CONTENTS_GRATE )
+CONST.MASK_SOLID_BRUSHONLY <- ( CONST.CONTENTS_SOLID|CONST.CONTENTS_MOVEABLE|CONST.CONTENTS_WINDOW|CONST.CONTENTS_GRATE )
 
 // NavMesh related
 const STEP_HEIGHT = 18
@@ -679,3 +689,10 @@ const FLT_MIN   = 1.175494e-38
 const FLT_MAX   = 3.402823466e+38
 const INT_MIN   = -2147483648
 const INT_MAX   = 2147483647
+
+// now re-fold the entire constant table into the root table
+// this is done in a separate loop so our custom constants are also available in the root table
+// check a random constant to see if we've already re-scoped them to root
+if ( !( "STEP_HEIGHT" in ROOT ) )
+	foreach( k, v in CONST )
+		ROOT[k] <- v

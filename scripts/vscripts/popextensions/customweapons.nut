@@ -40,7 +40,7 @@
 //	}
 //}
 
-::CustomWeapons <- {
+::PopExtWeapons <- {
 
 	//arrays copied from Yaki's gtfw
 	//Order based on internal constants of ETFClass
@@ -495,17 +495,19 @@ PopExtEvents.AddRemoveEventHook("post_inventory_application", "RegenerateCustomW
 			player.GetScriptScope().ExtraLoadout.resize( 10 )
 		}
 		local playerclass = player.GetPlayerClass()
+
 		if ( player.GetScriptScope().ExtraLoadout[playerclass] != null )
 			foreach ( item in player.GetScriptScope().ExtraLoadout[playerclass] )
-				CustomWeapons.GiveItem( item, player )
-			player.SetHealth( player.GetMaxHealth() )
+				PopExtWeapons.GiveItem( item, player )
 
-		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 1 ), 1 )
-		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 2 ), 2 )
-		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 3 ), 3 )
-		SetPropIntArray( player, STRING_NETPROP_AMMO, CustomWeapons.GetMaxAmmo( player, 4 ), 4 )
+		player.SetHealth( player.GetMaxHealth() )
+
+		SetPropIntArray( player, STRING_NETPROP_AMMO, PopExtWeapons.GetMaxAmmo( player, 1 ), 1 )
+		SetPropIntArray( player, STRING_NETPROP_AMMO, PopExtWeapons.GetMaxAmmo( player, 2 ), 2 )
+		SetPropIntArray( player, STRING_NETPROP_AMMO, PopExtWeapons.GetMaxAmmo( player, 3 ), 3 )
+		SetPropIntArray( player, STRING_NETPROP_AMMO, PopExtWeapons.GetMaxAmmo( player, 4 ), 4 )
 	}
 }, EVENT_WRAPPER_CUSTOMWEP)
 
 // TODO: deprecate the old namespace
-::PopExtWeapons <- CustomWeapons
+::CustomWeapons <- PopExtWeapons

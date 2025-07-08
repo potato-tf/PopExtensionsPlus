@@ -386,7 +386,7 @@ PopExtEvents.AddRemoveEventHook( "player_spawn", "SetSpawner", function( params 
 		AutoRelay = true, //set to true to automatically call wave_start_relay and wave_finished_relay without needing to define them
 
 		InitWaveOutput = {
-			Target = "bignet"
+			Target = "BigNet"
 			Action = "RunScriptCode"
 			Param = "Info( `Wave 1 loaded` )"
 		},

@@ -222,9 +222,10 @@ local popext_funcs = {
      **************************************************************************************************************************/
 	popext_usehumananims = function( bot, args ) {
 
+		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
+
 		local model = "model" in args ? args.model : format( "models/bots/%s/bot_%s.mdl", class_string, class_string )
 
-		local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
 		EntFireByHandle( bot, "SetCustomModelWithClassAnimations", format( "models/player/%s.mdl", class_string ), SINGLE_TICK, null, null )
 		PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.PlayerBonemergeModel( self, `%s` )", model ), SINGLE_TICK )
 		bot.GetScriptScope().usingcustommodel <- true
@@ -398,7 +399,7 @@ local popext_funcs = {
 		local charges 		= args.charges.tointeger()
 
 
-		local spellbook = PopExtUtil.GetItemInSlot( bot, SLOT_PDA )
+		local spellbook = PopExtUtil.HasItemInLoadout( bot, "tf_weapon_spellbook" )
 
 		//equip a spellbook if the bot doesn't have one
 		if ( spellbook == null ) {
@@ -412,8 +413,7 @@ local popext_funcs = {
 
 			bot.Weapon_Equip( book )
 
-			//try again next think
-			return
+			spellbook = PopExtUtil.HasItemInLoadout( bot, "tf_weapon_spellbook" )
 		}
 
 		local cooldowntime = Time() + cooldown
@@ -443,8 +443,8 @@ local popext_funcs = {
 				PopExtMain.Error.DebugLog( format( "popext_spell: Can't find spellbook!\n %s", e ) )
 			}
 
-			EntFireByHandle( spellbook, "RunScriptCode", "self.RemoveAttribute( `disable weapon switch` )", 1, null, null )
-			EntFireByHandle( spellbook, "RunScriptCode", "self.ReapplyProvision()", 1, null, null )
+			PopExtUtil.ScriptEntFireSafe( spellbook, "self.RemoveAttribute( `disable weapon switch` )", 1 )
+			PopExtUtil.ScriptEntFireSafe( spellbook, "self.ReapplyProvision()", 1 )
 
 			cooldowntime = Time() + cooldown
 		}
@@ -460,6 +460,11 @@ local popext_funcs = {
      ******************************************************************************************/
 
 	popext_spawntemplate = function( bot, args ) {
+
+		if ( !("SpawnTemplate" in ROOT) ) {
+			PopExtMain.Error.RaiseModuleError( "SpawnTemplate", "popext_spawntemplate", true )
+			return
+		}
 
 		local template   = "template" in args ? args.template : args.type
 		local parent 	 = "parent" in args ? args.parent : bot
@@ -614,8 +619,6 @@ local popext_funcs = {
 				aibot.LookAt( t.EyePosition(), turnrate, turnrate )
 				bot.SetAttentionFocus( t )
 			}
-			// if ( bot.hasbotattrEntFireByHandle( bot, "RunScriptCode", "self.RemoveBotAttribute( SUPPRESS_FIRE )", -1, null, null )
-			// bot.RemoveBotAttribute( SUPPRESS_FIRE )
 
 			if ( !bot.HasBotTag( "popext_mobber" ) )
 				aibot.UpdatePathAndMove( t.GetOrigin() )
@@ -1241,7 +1244,7 @@ local popext_funcs = {
 				melee.AddAttribute( "disable weapon switch", 1, 1 )
 				melee.ReapplyProvision()
 				bot.AddEFlags( EFL_BOT )
-				EntFireByHandle( melee, "RunScriptCode", "self.RemoveAttribute( `disable weapon switch` ); self.ReapplyProvision(); self.GetOwner().RemoveEFlags( EFL_BOT )", 1.1, null, null )
+				PopExtUtil.ScriptEntFireSafe( melee, "self.RemoveAttribute( `disable weapon switch` ); self.ReapplyProvision(); self.GetOwner().RemoveEFlags( EFL_BOT )", 1.1 )
 			}
 		}
 	}
@@ -1548,6 +1551,7 @@ local popext_funcs = {
      ************************************************************/
 
 	popext_aimat = function( bot, args ) {
+
 		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- function() {
 
 			foreach ( player in PopExtUtil.HumanTable.keys() ) {
@@ -1621,11 +1625,11 @@ local popext_funcs = {
 		if ( notfound ) {
 			local e = format( "popext_warpaint: Bot '%%s' does not have a weapon in slot %i.", slot )
 			// We must delay the error message by 1 tick in order to get the proper bot name.
-			EntFireByHandle( bot, "RunScriptCode",
+			PopExtUtil.ScriptEntFireSafe( bot,
 				format( @"local e = format( `%s`, GetPropString( self, `m_szNetname` ) )
 				ClientPrint( null, HUD_PRINTCONSOLE, e )
 				if ( !GetListenServerHost() ) printl( e )", e )
-			, SINGLE_TICK, null, null )
+			, SINGLE_TICK )
 			return
 		}
 
@@ -1786,7 +1790,7 @@ local popext_funcs = {
 			SendGlobalGameEvent( eventname, {time_remaining 	= args.duration.tointeger()} )
 		}
 		else
-			EntFireByHandle( boss, "RunScriptCode", "self.TakeDamage( INT_MAX, DMG_GENERIC, self )", args.duration.tointeger(), null, null )
+			PopExtUtil.ScriptEntFireSafe( boss, "self.TakeDamage( INT_MAX, DMG_GENERIC, self )", args.duration.tointeger() )
 
 		PopExtUtil.MonsterResource.ValidateScriptScope()
 
@@ -2274,27 +2278,27 @@ local popext_funcs = {
 	tagtable = {
 
 		//required tags
-		type = null
+		type   = null
 		button = null
-		slot = null
+		slot   = null
 		weapon = null
-		where = null
+		where  = null
 
 		//default values
-		health = 0.0
-		delay = 0.0
-		duration = INT_MAX
-		cooldown = 3.0
-		delay = 0.0
-		repeats = INT_MAX
+		health 		  = 0.0
+		delay 		  = 0.0
+		duration 	  = INT_MAX
+		cooldown 	  = 3.0
+		delay 		  = 0.0
+		repeats 	  = INT_MAX
 		ifhealthbelow = INT_MAX
-		charges = INT_MAX
-		ifseetarget = 1
-		damage = 7.5
-		radius = 135.0
-		amount = 0.0
-		interval = 0.5
-		uber = 0.0
+		charges 	  = INT_MAX
+		ifseetarget   = 1
+		damage 		  = 7.5
+		radius 		  = 135.0
+		amount 		  = 0.0
+		interval 	  = 0.5
+		uber 		  = 0.0
 	}
 
 	function ParseTagArguments( bot, tag ) {
@@ -2417,7 +2421,7 @@ local popext_funcs = {
 
 			if ( PopExtMain.DebugText )
 				foreach ( k, v in args )
-					PopExtMain.Error.DebugLog( format( "( %s [%d] ) EvaluateTags ( %s ): {%s = %s}", Convars.GetClientConvarValue( "name", bot.entindex() ), PopExtUtil.BotTable[bot], func, k.tostring(), v ? v.tostring() : "null" ) )
+					PopExtMain.Error.DebugLog( format( "( %s [%d] ) EvaluateTags ( %s ): {%s = %s}", GetClientConvarValue( "name", bot.entindex() ), PopExtUtil.BotTable[bot], func, k.tostring(), v ? v.tostring() : "null" ) )
 
 			if ( func in popext_funcs )
 				popext_funcs[func].call( bot.GetScriptScope(), bot, args )
@@ -2454,7 +2458,7 @@ PopExtEvents.AddRemoveEventHook("player_spawn", "TagsPlayerSpawn", function( par
 	PopExtEvents.AddRemoveEventHook( "*", format( "TagsPlayerSpawn_%d*", params.userid ), null, EVENT_WRAPPER_TAGS )
 
 	// new tags
-	EntFireByHandle( player, "RunScriptCode", "PopExtTags.EvaluateTags( self )", SINGLE_TICK, player, player )
+	PopExtUtil.ScriptEntFireSafe( player, "PopExtTags.EvaluateTags( self )", SINGLE_TICK )
 
 }, EVENT_WRAPPER_TAGS)
 

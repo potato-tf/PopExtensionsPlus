@@ -1,14 +1,22 @@
-::POPEXT_VERSION <- "07.06.2025.2"
+// Core popextensions script
+// Error handling, think table management, cleanup management, etc.
 
-local ROOT = getroottable()
+::POPEXT_VERSION <- "07.08.2025.1"
 
 local function Include( path ) {
-	// try IncludeScript( format( "popextensions/%s", path ), ROOT ) catch( e ) error( e )
-	IncludeScript( format( "popextensions/%s", path ), ROOT )
+	try IncludeScript( format( "popextensions/%s", path ), getroottable() ) catch( e ) error( e )
 }
 
-Include( "constants" ) // constants must include first
-Include( "event_wrapper" ) // must include second
+// INCLUDE ORDER IS IMPORTANT
+// These are required regardless of the modules you use
+
+Include( "shared/constants" )          // Generic constants used by all scripts
+Include( "shared/itemdef_constants" )  // Item definitions
+Include( "shared/item_map" ) 		   // Item map for english name item look-ups
+Include( "shared/attribute_map" ) 	   // Attribute map for attribute info look-ups
+
+Include( "shared/event_wrapper" ) 	   // Event wrapper for all events
+Include( "shared/util" ) 			   // misc utils/entities
 
 // these get defined here so we can use them
 local objres = Entities.FindByClassname( null, "tf_objective_resource" )
@@ -67,6 +75,8 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
 ::PopExtMain <- {
 
+	IncludeAllModules = true
+
 	DebugText = false
 
 	DebugFiles = {
@@ -79,6 +89,8 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 	// automated unloading is meant for multiple missions on one map, purpose-built map/mission combos ( like mvm_redridge ) don't need this.
 	// this should also be used if you change the popfile name mid-mission.
 	ManualCleanup = false
+
+	ActiveModules = {}
 
 
 	// ignore these variables when cleaning up
@@ -107,38 +119,56 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 					delete scope[k]
 	}
 
+	function IncludeModules( ... ) {
+
+		foreach ( module in vargv ) {
+
+			if ( !( module in ActiveModules ) ) {
+
+				ActiveModules[module] <- true
+				Include( module )
+			}
+		}
+	}
+
 	Error = {
 
 		RaisedParseError = false
 
 		function DebugLog( LogMsg ) {
 			if ( !PopExtMain.DebugText || !( getstackinfos(2).src.slice(0, -4) in PopExtMain.DebugFiles ) ) return
-			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", "POPEXT_DEBUG:", LogMsg ) )
+			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", POPEXT_DEBUG, LogMsg ) )
 		}
+
 		// warnings
-		GenericWarning = @( msg ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", "POPEXT_WARNING:", msg ) )
-		DeprecationWarning = @( old, new ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s is DEPRECATED. Use %s instead.", "POPEXT_WARNING:", old, new ) )
+		GenericWarning 	   = @( msg ) 	   ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", POPEXT_WARNING, msg ) )
+		DeprecationWarning = @( old, new ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s is DEPRECATED. Use %s instead.", POPEXT_WARNING, old, new ) )
 
 		// errors
-		RaiseIndexError = @( key, max = [0, 1] ) ParseError( format( "Index out of range for '%s', value range: %d - %d", key, max[0], max[1] ) )
-		RaiseTypeError = @( key, type ) ParseError( format( "Bad type for '%s' ( should be %s )", key, type ) )
-		RaiseValueError = @( key, value, extra = "" ) ParseError( format( "Bad value '%s' passed to %s. %s", value.tostring(), key, extra ) )
+		RaiseIndexError  = @( key, max = [0, 1], assert = false ) 	   ParseError( format( "Index out of range for '%s', value range: %d - %d", key, max[0], max[1] ), assert )
+		RaiseTypeError   = @( key, type, assert = false ) 			   ParseError( format( "Bad type for '%s' ( should be %s )", key, type ), assert )
+		RaiseValueError  = @( key, value, extra = "", assert = false ) ParseError( format( "Bad value '%s' passed to %s. %s", value.tostring(), key, extra ), assert )
+		RaiseModuleError = @( module, module_user, assert = false )    ParseError( format( "Missing module or incorrect include order: '%s' (%s).", module, module_user ), assert )
 
 		// generic template parsing error
-		function ParseError( ErrorMsg ) {
+		function ParseError( ErrorMsg, assert = false ) {
 
 			if ( !RaisedParseError ) {
 
 				RaisedParseError = true
 				ClientPrint( null, HUD_PRINTTALK, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details." )
 			}
-			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.\n", "POPEXT_ERROR:", ErrorMsg ) )
-
-			printf( "%s %s.\n", "POPEXT_ERROR:", ErrorMsg )
+			if ( assert ) {
+				RaiseException( format( "%s %s.\n", POPEXT_ERROR, ErrorMsg ) )
+			}
+			else {
+				ClientPrint( null, HUD_PRINTTALK, format( "%s %s.\n", POPEXT_ERROR, ErrorMsg ) )
+				printf( "%s %s.\n", POPEXT_ERROR, ErrorMsg )
+			}
 		}
 
 		// generic exception
-		RaiseException = @( ExceptionMsg ) Assert( false, format( "%s: %s.", "POPEXT_ERROR:", ExceptionMsg ) )
+		RaiseException = @( ExceptionMsg ) Assert( false, format( "%s: %s.", POPEXT_ERROR, ExceptionMsg ) )
 	}
 
 	GlobalThinks = {
@@ -148,7 +178,7 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
 			for ( local projectile; projectile = Entities.FindByClassname( projectile, "tf_projectile*" ); ) {
 
-				if ( projectile.GetEFlags() & 1048576 ) continue
+				if ( projectile.GetEFlags() & EFL_USER ) continue
 
 				projectile.ValidateScriptScope()
 				local scope = projectile.GetScriptScope()
@@ -191,7 +221,7 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
 				_AddThinkToEnt( projectile, "ProjectileThink" )
 
-				projectile.AddEFlags( 1048576 )
+				projectile.AddEFlags( EFL_USER )
 			}
 		}
 	}
@@ -245,7 +275,7 @@ PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventor
 
 	local player = GetPlayerFromUserID( params.userid )
 
-	if ( player.IsEFlagSet( 1073741824 ) ) return
+	if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) ) return
 
 	PopExtMain.PlayerCleanup( player )
 
@@ -265,7 +295,7 @@ PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventor
 	if ( !( "PlayerThinkTable" in scope ) ) 
 		scope.PlayerThinkTable <- {}
 
-	if ( player.IsBotOfType( 1337 ) ) {
+	if ( player.IsBotOfType( TF_BOT_TYPE ) ) {
 
 		scope.aibot <- PopExtBotBehavior( player )
 
@@ -306,7 +336,7 @@ PopExtEvents.AddRemoveEventHook( "player_death", "MainDeathCleanup", function( p
 
 	local player = GetPlayerFromUserID( params.userid )
 
-	if ( !player.IsBotOfType( 1337 ) ) return
+	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
 	PopExtMain.PlayerCleanup( player )
 }, 0)
@@ -316,7 +346,7 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 
 	// clean up lingering wearables
 	for ( local wearable; wearable = FindByClassname( wearable, "tf_wearable*" ); )
-		if ( wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType( 1337 ) )
+		if ( wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType( TF_BOT_TYPE ) )
 			EntFireByHandle( wearable, "Kill", "", -1, null, null )
 
 	//same pop or manual cleanup flag set, don't run
@@ -334,9 +364,6 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 
 		PopExtMain.PlayerCleanup( player )
 	}
-
-	//clean up missionattributes
-	MissionAttributes.Cleanup()
 
 	//nuke it all
 	local cleanup = [
@@ -393,25 +420,8 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 //HACK: forces post_inventory_application to fire on pop load
 for ( local i = MaxClients().tointeger(); i > 0; --i )
 	if ( PlayerInstanceFromIndex( i ) )
-		EntFireByHandle( PlayerInstanceFromIndex( i ), "RunScriptCode", "self.Regenerate( true )", 0.015, null, null )
+		PopExtUtil.ScriptEntFireSafe( PlayerInstanceFromIndex( i ), "self.Regenerate( true )", SINGLE_TICK )
 
-Include( "itemdef_constants" ) //constants must include first
-Include( "item_map" ) //must include second
-Include( "attribute_map" ) //must include third ( after item_map )
-Include( "util" ) //must include fourth
+if ( PopExtMain.IncludeAllModules )
+	PopExtMain.IncludeModules( "hooks", "popextensions", "robotvoicelines", "customattributes", "missionattributes", "customweapons", "botbehavior", "tags", "spawntemplate" )
 
-Include( "hooks" ) //must include before popextensions
-Include( "popextensions" )
-
-Include( "robotvoicelines" ) //must include before missionattributes
-Include( "customattributes" ) //must include before missionattributes
-Include( "missionattributes" )
-Include( "customweapons" )
-
-Include( "botbehavior" ) //must include before tags
-Include( "tags" )
-
-Include( "spawntemplate" )
-
-// Include( "tutorialtools" )
-// Include( "populator" )

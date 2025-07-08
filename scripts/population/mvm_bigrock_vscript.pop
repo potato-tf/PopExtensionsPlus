@@ -17,7 +17,7 @@ WaveSchedule
 
 		InitialCooldown 0
 		Where spawnbot
-		BeginAtWave 1
+		BeginAtWave 2
 		RunForThisManyWaves 1
 		CooldownTime 1
 		DesiredCount 1
@@ -184,7 +184,7 @@ WaveSchedule
 			TotalCount 10
 			MaxActive 5
 			SpawnCount 5
-			WaitBeforeStarting 999
+			WaitBeforeStarting 1
 			TotalCurrency 200
 			TFBot
 			{
@@ -210,22 +210,16 @@ WaveSchedule
 						killaimtarget = 2048
 						aimtarget = `RandomEnemy`
 				}"
-				// Tag "popext_giveweapon|tf_weapon_shotgun_pyro|425" //family business
-				// Tag "popext_homingprojectile|1.0|1.0"
 				// Tag "popext_improvedairblast"
 				// Tag "popext_usehumananims"
-				Tag "popext_spell{type = SPELL_SKELETON, duration = 5, cooldown = 2}"
+				Tag "popext_spell{type = SPELL_SKELETON, cooldown = 5, charges = 5}"
 				Tag "popext_ringoffire{damage = 20, interval = 2}"
 				// Tag "popext_meleeai"
 				// Tag "popext_reprogrammed"
-				// Tag "popext_spawnhere|-779.491150 3302.379883 312.992340|3"
-				// Tag "popext_weaponswitch|2"
-				// Tag "popext_weaponresist|tf_weapon_minigun|99999"
-				// Tag "popext_weaponresist|11|0.01" //stock heavy shotgun
 				Class Pyro
 				Skill Hard
 				// Item "The Thermal Thruster"
-				Item "TF_WEAPON_SPELLBOOK"
+				// Item "Fancy Spellbook"
 				// Attributes IgnoreEnemies
 				// WeaponRestrictions SecondaryOnly
 				// ItemAttributes {
@@ -260,13 +254,13 @@ WaveSchedule
 				// Tag "popext_meleeai"
 				Tag "popext_spawnhere{where = `-779.491150 3302.379883 312.992340`, spawn_uber_duration = 3}" //custom spawn origin
 				Tag "popext_customattr{attr = `wet immunity`, value = 1}"
-				// Tag "popext_weaponresist|298|20" //20x damage from iron curtain
+				Tag "popext_weaponresist{weapon = ID_IRON_CURTAIN, amount = 20}" //20x damage from iron curtain
 				// Tag "popext_weaponresist{type = 298, amount = 20}"
 				// Tag "popext_setskin|0" //red skin
 				// Tag "popext_setskin{skin = 0}"
 				// Tag "popext_mobber"
 				// Tag "popext_fireweapon|2048"
-				Tag "popext_rocketcustomtrail|eyeboss_projectile"
+				Tag "popext_rocketcustomtrail{name = `eyeboss_projectile`}"
 			}
 		}
 		WaveSpawn

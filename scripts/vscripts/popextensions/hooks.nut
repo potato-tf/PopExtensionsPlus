@@ -261,8 +261,8 @@ PopExtEvents.AddRemoveEventHook( "npc_hurt", "PopHooksNPCHurt", function( params
 
 PopExtEvents.AddRemoveEventHook( "mvm_begin_wave", "PopHooksWaveStarts", function( params ) {
 
-	if ( "waveIconsFunction" in PopExt )
-		PopExt.waveIconsFunction()
+	if ( "wave_icons_function" in PopExt )
+		PopExt.wave_icons_function()
 
 	foreach( v in PopExtHooks.tank_icons )
 		PopExt._PopIncrementTankIcon( v )
@@ -273,8 +273,8 @@ PopExtEvents.AddRemoveEventHook( "mvm_begin_wave", "PopHooksWaveStarts", functio
 
 PopExtEvents.AddRemoveEventHook( "recalculate_holidays", "PopHooksRecalculateHolidays", function( params ) {
 
-	if ( "waveIconsFunction" in PopExt )
-		delete PopExt.waveIconsFunction
+	if ( "wave_icons_function" in PopExt )
+		delete PopExt.wave_icons_function
 
 	PopExtHooks.tank_icons <- []
 	PopExtHooks.icons     <- []
@@ -292,14 +292,14 @@ function PopExtGlobalThink() {
 
 		if ( !( "created" in scope ) ) {
 
-			scope.created         <- true
-			scope.TankThinkTable  <- {}
-			scope.max_health       <- tank.GetMaxHealth()
-			scope.team            <- tank.GetTeam()
-			scope.teamchanged     <- false
+			scope.created         	 <- true
+			scope.TankThinkTable  	 <- {}
+			scope.max_health         <- tank.GetMaxHealth()
+			scope.team            	 <- tank.GetTeam()
+			scope.teamchanged     	 <- false
 			scope.engineloopreplaced <- false
 
-			scope.cur_health       <- tank.GetHealth()
+			scope.cur_health        <- tank.GetHealth()
 			scope.last_health_stage <- 0
 			scope.TankThinkTable.Updates <- function() {
 				cur_pos            <- self.GetOrigin()
@@ -345,6 +345,7 @@ function PopExtGlobalThink() {
 					if ( "Ping" in sound_overrides ) {
 
 						scope.TankThinkTable.PingSound <- function() {
+
 							StopSoundOn( "MVM.TankPing", self )
 
 							if ( Time() < cooldowntime ) return
@@ -357,12 +358,20 @@ function PopExtGlobalThink() {
 					if ( "EngineLoop" in sound_overrides && !scope.engineloopreplaced ) {
 
 						StopSoundOn( "MVM.TankEngineLoop", tank )
-						EmitSoundEx( {sound_name = sound_overrides.EngineLoop, entity = tank} )
+						EmitSoundEx({ 
+							sound_name = sound_overrides.EngineLoop
+							entity = tank
+							filter_type = RECIPIENT_FILTER_GLOBAL
+							sound_level = 100
+						})
 
 						PopExtUtil.SetDestroyCallback( tank, function() {
-							// needs both of these?
-							self.StopSound( sound_overrides.EngineLoop )
-							EmitSoundEx( {sound_name = sound_overrides.EngineLoop, entity = self, flags = SND_STOP} )
+							EmitSoundEx({
+								sound_name = sound_overrides.EngineLoop
+								entity = self
+								flags = SND_STOP
+								filter_type = RECIPIENT_FILTER_GLOBAL
+							})
 						})
 
 						scope.engineloopreplaced = true
@@ -386,9 +395,9 @@ function PopExtGlobalThink() {
 							StopSoundOn( "MVM.TankDeploy", self )
 
 							if ( "EngineLoop" in sound_overrides )
-								EmitSoundEx( {sound_name = sound_overrides.EngineLoop, entity = tank, flags = SND_STOP} )
+								EmitSoundEx({ sound_name = sound_overrides.EngineLoop, entity = tank, flags = SND_STOP })
 
-							EmitSoundEx( {sound_name = deploysound, entity = tank} )
+							EmitSoundEx({ sound_name = deploysound, entity = tank })
 
 							if ( tank == null ) {
 
@@ -489,6 +498,12 @@ function PopExtGlobalThink() {
 					SetPropInt( tank, "m_nSkin", scope.pop_property.Skin )
 
 				if ( "SpawnTemplate" in scope.pop_property ) {
+
+					if ( !("SpawnTemplate" in ROOT) ) {
+						PopExtMain.Error.RaiseModuleError( "SpawnTemplate", "AddTankName/CustomTank", true )
+						return
+					}
+
 					SpawnTemplate( scope.pop_property.SpawnTemplate, tank )
 					delete scope.pop_property.SpawnTemplate
 				}
@@ -514,6 +529,11 @@ function PopExtGlobalThink() {
 
 				if ( "Scale" in scope.pop_property )
 					EntFireByHandle( tank, "SetModelScale", scope.pop_property.Scale.tostring(), -1, null, null )
+				
+				if ( "AngleOverride" in scope.pop_property )
+					scope.TankThinkTable.AngleOverride <- function() {
+						self.SetAbsAngles( PopExtUtil.KVStringToVectorOrQAngle( pop_property.AngleOverride, true ) )
+					}
 
 				if ( "Model" in scope.pop_property ) {
 					if ( !( "ModelVisionOnly" in scope.pop_property && scope.pop_property.ModelVisionOnly ) )
@@ -607,7 +627,7 @@ function PopExtGlobalThink() {
 					health_stage = floor( ( scope.max_health - tank.GetHealth() )/scope.max_health.tofloat() * 4 )
 
 				if ( scope.last_health_stage != health_stage && "pop_property" in scope && "Model" in scope.pop_property ) {
-					local name = health_stage == 0 ? "Default" : "Damage" + health_stage
+					local name = health_stage == 0 ? "Default" : format( "Damage%d", health_stage )
 
 					if ( !( "ModelVisionOnly" in scope.pop_property && scope.pop_property.ModelVisionOnly ) )
 						tank.SetModelSimple( scope.pop_property.Model[name] )

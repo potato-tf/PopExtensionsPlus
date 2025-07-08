@@ -1,7 +1,7 @@
-::CustomAttributes <- {
+::PopExtAttributes <- {
 
-	ROCKET_LAUNCHER_CLASSNAMES =
-	[
+	ROCKET_LAUNCHER_CLASSNAMES = [
+
 		"tf_weapon_rocketlauncher",
 		"tf_weapon_rocketlauncher_airstrike",
 		"tf_weapon_rocketlauncher_directhit",
@@ -276,7 +276,7 @@
 				params.early_out = true
 
 				player.ForceRespawn()
-				EntFireByHandle( player, "RunScriptCode", "self.SetHealth( 1 )", -1, null, null )
+				PopExtUtil.ScriptEntFireSafe( player, "self.SetHealth( 1 )", -1 )
 			}, EVENT_WRAPPER_CUSTOMATTR )
 
 			player.GetScriptScope().attribinfo[ "teleport instead of die" ] <- format( "%d⁒ chance of teleporting to spawn with 1 health instead of dying", ( value.tofloat() * 100 ).tointeger() )
@@ -589,7 +589,7 @@
 				}
 
 				scope.previousBuiltSentry = sentry
-				EntFireByHandle( sentry, "RunScriptCode", @"
+				PopExtUtil.ScriptEntFireSafe( sentry, @"
 					local maxhealth = self.GetMaxHealth() * 0.66
 					self.SetMaxHealth( maxhealth )
 					if ( self.GetHealth() > self.GetMaxHealth() )
@@ -598,7 +598,7 @@
 					self.SetModelScale( 0.8, -1 )
 
 					SetPropInt( self, `m_iUpgradeMetalRequired`, 150 )
-				", SINGLE_TICK, null, null )
+				", SINGLE_TICK )
 			}, EVENT_WRAPPER_CUSTOMATTR )
 
 			PopExtEvents.AddRemoveEventHook( "player_upgradedobject", event_hook_string, function( params ) {
@@ -610,14 +610,14 @@
 
 				local sentry = EntIndexToHScript( params.index )
 
-				EntFireByHandle( sentry, "RunScriptCode", @"
+				PopExtUtil.ScriptEntFireSafe( sentry, @"
 					local maxhealth = self.GetMaxHealth() * 0.66
 					self.SetMaxHealth( maxhealth )
 					if ( self.GetHealth() > self.GetMaxHealth() )
 						self.SetHealth( maxhealth )
 
 					SetPropInt( self, `m_iUpgradeMetalRequired`, 150 )
-				", SINGLE_TICK, null, null )
+				", SINGLE_TICK )
 			}, EVENT_WRAPPER_CUSTOMATTR )
 
 			PopExtEvents.AddRemoveEventHook( "mvm_quick_sentry_upgrade", event_hook_string, function( params ) {
@@ -626,12 +626,12 @@
 
 					if ( GetPropEntity( sentry, "m_hBuilder" ) == player ) {
 
-						EntFireByHandle( sentry, "RunScriptCode", @"
+						PopExtUtil.ScriptEntFireSafe( sentry, @"
 							local maxhealth = self.GetMaxHealth() * 0.66
 							self.SetMaxHealth( maxhealth )
 							if ( self.GetHealth() > self.GetMaxHealth() )
 								self.SetHealth( maxhealth )
-						", SINGLE_TICK, null, null )
+						", SINGLE_TICK )
 					}
 				}
 			}, EVENT_WRAPPER_CUSTOMATTR )
@@ -1923,13 +1923,13 @@
 		// cleanup any previous attribute functions from these CustomAttributes event hooks
 		local t = [ "TakeDamageTable", "TakeDamagePostTable", "SpawnHookTable", "DeathHookTable", "PlayerTeleportTable" ]
 		foreach ( tablename in t )
-			foreach ( table, func in CustomAttributes[ tablename ] )
-				if ( tablename in CustomAttributes )
-					CustomAttributes.CleanupFunctionTable( player, table, attr )
+			foreach ( table, func in PopExtAttributes[ tablename ] )
+				if ( tablename in PopExtAttributes )
+					PopExtAttributes.CleanupFunctionTable( player, table, attr )
 
 		// cleanup item thinks
 		foreach ( item, _ in item_table )
-			CustomAttributes.CleanupFunctionTable( item, "ItemThinkTable", attr )
+			PopExtAttributes.CleanupFunctionTable( item, "ItemThinkTable", attr )
 
 		local scope = player.GetScriptScope()
 		if ( !( "attribinfo" in scope ) )
@@ -1939,12 +1939,12 @@
 
 			local item = PopExtUtil.HasItemInLoadout( player, item )
 
-			if ( item == null || !( attr in CustomAttributes.Attrs ) )
+			if ( item == null || !( attr in PopExtAttributes.Attrs ) )
 				continue
 
-			CustomAttributes.Attrs[ attr ]( player, item, value )
+			PopExtAttributes.Attrs[ attr ]( player, item, value )
 
-			CustomAttributes.RefreshDescs( player )
+			PopExtAttributes.RefreshDescs( player )
 		}
 	}
 
@@ -2005,4 +2005,4 @@
 }
 
 // TODO: deprecate the old namespace.
-::PopExtAttributes <- CustomAttributes
+::CustomAttributes <- PopExtAttributes

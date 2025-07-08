@@ -18,6 +18,7 @@
 - No inline comments, comments should always be above the code they are meant to explain
 - Use ternaries and lambda functions where appropriate
     - simple yes/no conditional checks, simple functions that return a value and do nothing else, do not look at ExtraTankPath xd
+- format() > string concatenation
 
 ### Single-line control flow:
 - This is fine:
@@ -141,8 +142,8 @@ if (
 - We will be migrating away from using the currently existing hook table setup
 
 ## Think functions
-- Use `PopExtUtil.AddThinkToEnt(ent, "funcname")`
-- You can directly add your function to the correct think table for the entity, but this is not recommended since it's more verbose.
+- Use `PopExtUtil.AddThinkToEnt( ent, "funcname" )`
+- Alternatively, you can directly add your function to the correct think table for the entity (see tags/customattributes/missionattributes).
 - You should almost never use `_AddThinkToEnt`, this will break other think functions on certain entities if you don't know what you are doing.
 
 ## Cleanup
