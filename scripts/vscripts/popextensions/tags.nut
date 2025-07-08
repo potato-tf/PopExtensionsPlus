@@ -969,9 +969,13 @@ local popext_funcs = {
 			target = bot
 		}
 		local cooldowntime = 0.0
+
 		if ( !refire )
+
 			entfirefunc( target, action, param, delay, activator, caller )
+
 		else
+
 			bot.GetScriptScope().PlayerThinkTable.EntFireRepeats <- function() {
 
 				if ( Time() < cooldowntime ) return
