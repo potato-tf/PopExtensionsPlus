@@ -27,7 +27,9 @@ local popext_funcs = {
 		if ( cond == TF_COND_REPROGRAMMED ) {
 
 			bot.ForceChangeTeam( TF_TEAM_PVE_DEFENDERS, true )
-			aibot.team = TF_TEAM_PVE_DEFENDERS
+
+			if ( "aibot" in bot.GetScriptScope() )
+				aibot.team = TF_TEAM_PVE_DEFENDERS
 		}
 		else
 			bot.AddCondEx( cond, duration, null )
@@ -45,7 +47,9 @@ local popext_funcs = {
 		bot.ForceChangeTeam( TF_TEAM_PVE_DEFENDERS, false )
 		bot.AddCustomAttribute( "ammo regen", 999.0, -1 )
 		bot.AddCustomAttribute( "cannot pick up intelligence", 1.0, -1 )
-		aibot.team = TF_TEAM_PVE_DEFENDERS
+
+		if ( "aibot" in bot.GetScriptScope() )
+			aibot.team = TF_TEAM_PVE_DEFENDERS
 	}
 
 	// popext_reprogrammed_neutral = function( bot, args ) {
@@ -603,6 +607,11 @@ local popext_funcs = {
 
 	popext_meleeai = function( bot, args ) {
 
+		if ( !( "PopExtBotBehavior" in ROOT ) ) {
+			PopExtMain.Error.RaiseModuleError( "botbehavior", "popext_meleeai" )
+			return
+		}
+
 		local turnrate = "turnrate" in args ? args.turnrate : 1500
 		local visionoverride = bot.GetMaxVisionRangeOverride() == -1 ? INT_MAX : bot.GetMaxVisionRangeOverride()
 
@@ -626,6 +635,11 @@ local popext_funcs = {
 	}
 
 	popext_mobber = function( bot, args ) {
+
+		if ( !( "PopExtBotBehavior" in ROOT ) ) {
+			PopExtMain.Error.RaiseModuleError( "botbehavior", "popext_mobber" )
+			return
+		}
 
 		local threat_type = "threat_type" in args ? args.threat_type : "closest"
 		local threat_dist = "threat_dist" in args ? args.threat_dist : 256.0
@@ -693,6 +707,11 @@ local popext_funcs = {
 		local pos = Vector()
 		local point = "target" in args ? args.target : args.type
 
+		if ( !( "PopExtBotBehavior" in ROOT ) ) {
+			PopExtMain.Error.RaiseModuleError( "botbehavior", "popext_movetopoint" )
+			return
+		}
+
 		if ( FindByName( null, point ) != null )
 			pos = FindByName( null, point ).GetOrigin()
 		else {
@@ -730,6 +749,11 @@ local popext_funcs = {
 	 // TODO:
 	 // allow for chaining multiple next_action_points together and dynamically spawn them
 	popext_actionpoint = function( bot, args ) {
+
+		if ( !( "PopExtBotBehavior" in ROOT ) ) {
+			PopExtMain.Error.RaiseModuleError( "botbehavior", "popext_actionpoint" )
+			return
+		}
 
 		local point			    = "target" in args ? args.target : args.type
 		local aimtarget			= "aimtarget" in args ? args.aimtarget : null
@@ -1483,6 +1507,11 @@ local popext_funcs = {
 
 	popext_improvedairblast = function ( bot, args ) {
 
+		if ( !( "PopExtBotBehavior" in ROOT ) ) {
+			PopExtMain.Error.RaiseModuleError( "botbehavior", "popext_improvedairblast" )
+			return
+		}
+
 		local airblast_level = "level" in args ? args.level.tointeger() : bot.GetDifficulty()
 
 		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- function() {
@@ -1551,6 +1580,11 @@ local popext_funcs = {
      ************************************************************/
 
 	popext_aimat = function( bot, args ) {
+
+		if ( !( "PopExtBotBehavior" in ROOT ) ) {
+			PopExtMain.Error.RaiseModuleError( "botbehavior", "popext_aimat" )
+			return
+		}
 
 		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- function() {
 
@@ -2023,6 +2057,11 @@ local popext_funcs = {
 		local ifseetarget 	= "ifseetarget" in args ? args.ifseetarget : false
 		local ifhealthbelow = "ifhealthbelow" in args ? args.ifhealthbelow : INT_MAX
 
+		if ( ifseetarget && !( "PopExtBotBehavior" in ROOT ) ) {
+			PopExtMain.Error.RaiseModuleError( "botbehavior", "popext_changeattributes" )
+			ifseetarget = false
+		}
+
 		if ( !repeats && ifhealthbelow == INT_MAX && !ifseetarget )
 			PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.PopInterface.AcceptInput( `ChangeBotAttributes`, `%s`, null, null )", name ), delay, bot, bot )
 		else {
@@ -2100,6 +2139,11 @@ local popext_funcs = {
 		local duration 		= "duration" in args ? args.duration : INT_MAX
 		local ifseetarget 	= "ifseetarget" in args ? args.ifseetarget : false
 		local ifhealthbelow = "ifhealthbelow" in args ? args.ifhealthbelow : INT_MAX
+		
+		if ( ifseetarget && !( "PopExtBotBehavior" in ROOT ) ) {
+			PopExtMain.Error.RaiseModuleError( "botbehavior", "popext_playsequence" )
+			ifseetarget = false
+		}
 
 		local cooldowntime = Time() + delay
 		bot.GetScriptScope().PlayerThinkTable.PlaySequenceThink <- function() {

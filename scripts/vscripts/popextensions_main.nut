@@ -295,7 +295,7 @@ PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventor
 	if ( !( "PlayerThinkTable" in scope ) ) 
 		scope.PlayerThinkTable <- {}
 
-	if ( player.IsBotOfType( TF_BOT_TYPE ) ) {
+	if ( player.IsBotOfType( TF_BOT_TYPE ) && "PopExtBotBehavior" in ROOT ) {
 
 		scope.aibot <- PopExtBotBehavior( player )
 
