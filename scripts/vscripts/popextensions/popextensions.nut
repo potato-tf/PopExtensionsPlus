@@ -235,7 +235,7 @@ function PopExt::SetWaveIconSlot( name, slot = null, flags = null, count = null,
 					indices[i][3] = true
 			}
 
-			if ( name_slot == name ) {
+			if ( name_slot == name && flags_slot == flags ) {
 
 				local pre_count = count_slot
 
@@ -252,6 +252,7 @@ function PopExt::SetWaveIconSlot( name, slot = null, flags = null, count = null,
 				}
 
 				else if ( incrementer ) {
+
 					count = count_slot + count
 					SetPropIntArray( resource, format( "%s%s", netprop_counts, suffix ), count, i )
 
@@ -283,8 +284,6 @@ function PopExt::SetWaveIconSlot( name, slot = null, flags = null, count = null,
 					SetPropInt( resource, netprop_enemycount, GetPropInt( resource, netprop_enemycount ) + count - pre_count )
 				return
 			}
-			if ( name_slot == name )
-				break
 		}
 	}
 }
@@ -301,12 +300,32 @@ function PopExt::GetWaveIconSlot( name, flags ) {
 			local name_slot = GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i )
 			local flags_slot = GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i )
 
-			if ( name_slot == name && ( flags == 0 || flags_slot == flags ) ) {
+			if ( name_slot == name && flags_slot == flags ) {
 				return i
 			}
 		}
 	}
 	return -1
+}
+function PopExt::GetAllWaveIconSlots( name, flags ) {
+
+	local size_array = GetPropArraySize( resource, "m_nMannVsMachineWaveClassCounts" )
+	local slots = []
+	for ( local a = 0; a < 2; a++ ) {
+
+		local suffix = a == 0 ? "" : "2"
+
+		for ( local i = 0; i < size_array; i++ ) {
+
+			local name_slot = GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i )
+			local flags_slot = GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i )
+
+			if ( name_slot == name && ( flags == 0 || flags_slot == flags ) ) {
+				slots.append( i )
+			}
+		}
+	}
+	return slots
 }
 // Increment wavebar spawn count of an icon with specified name and flags
 // Can be used to put custom icons on a wavebar
@@ -331,6 +350,25 @@ function PopExt::GetWaveIconFlags( name ) {
 		}
 	}
 	return 0
+}
+
+function PopExt::GetAllWaveIconFlags( name ) {
+
+	local size_array = GetPropArraySize( resource, "m_nMannVsMachineWaveClassCounts" )
+	local flags = []
+	for ( local a = 0; a < 2; a++ ) {
+
+		local suffix = a == 0 ? "" : "2"
+
+		for ( local i = 0; i < size_array; i++ ) {
+
+			local name_slot = GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i )
+
+			if ( name_slot == name )
+				flags.append( GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i ) )
+		}
+	}
+	return flags
 }
 
 function PopExt::SetWaveIconFlags( name, flags ) {

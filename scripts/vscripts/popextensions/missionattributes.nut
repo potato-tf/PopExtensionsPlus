@@ -2874,7 +2874,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					local flags   	   = "flags" in params ? params.flags : -1
 					local index   	   = "index" in params ? params.index : -1
 
-					PopExt.SetWaveIconSlot( icon, replace, flags, count, index )
+					PopExt.SetWaveIconSlot( icon, replace, flags, count, index, false, flags > 0 && !( flags & MVM_CLASS_FLAG_SUPPORT_LIMITED || flags & MVM_CLASS_FLAG_SUPPORT ) )
 
 				}
 			})
@@ -3174,7 +3174,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			return
 		}
 
-		PopExtMain.Error.ParseError( format( "Could not find mission attribute %s", attr ) )
+		PopExtMain.Error.ParseError( format( "Could not find mission attribute %s", attr.tostring() ) )
 	}
 }
 

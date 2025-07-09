@@ -1933,7 +1933,7 @@ local popext_funcs = {
 
 			local bomb = GetPropEntity( bot, "m_hItem" )
 			if ( bomb )
-				bomb.AcceptInput( "ForceResetSilent", "", null, null )
+				bomb.AcceptInput( "ForceDrop", "", null, null )
 		}
 
 		bot.SetMission( mission, true )

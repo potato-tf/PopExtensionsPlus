@@ -1,7 +1,7 @@
 // Core popextensions script
 // Error handling, think table management, cleanup management, etc.
 
-::POPEXT_VERSION <- "07.08.2025.1"
+::POPEXT_VERSION <- "07.08.2025.2"
 
 local function Include( path ) {
 	try IncludeScript( format( "popextensions/%s", path ), getroottable() ) catch( e ) error( e )
