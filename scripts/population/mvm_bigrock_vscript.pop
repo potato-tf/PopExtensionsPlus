@@ -54,7 +54,7 @@ WaveSchedule
 					{
 						OriginalItemName = `Upgradeable TF_WEAPON_ROCKETLAUNCHER`
 						Model = `models/weapons/c_models/c_wasp_launcher/c_wasp_launcher.mdl`
-						`blast radius increased` : 1.5
+						`Blast radius increased` : 1.5
 						`max health additive bonus` : 100
 						`reloads full clip at once` : 1
 						`is miniboss` : 1
@@ -95,20 +95,16 @@ WaveSchedule
 					}
 					IconOverride = {
 
-						heavy_mittens = {
-							wave = 2
-							flags = 0 // see constants.nut for flags
-							count = 2
-						}
-
 						scout = { //remove from current wave
-							count = 0, //remove
+							count = 0
+							flags = MVM_CLASS_FLAG_NORMAL
 						}
 
 						pyro = { //replace with a new icon
 							replace = `scout_bat`
 							count = 20
-							flags = MVM_CLASS_FLAG_ALWAYSCRIT|MVM_CLASS_FLAG_MINIBOSS // see constants.nut for flags
+							flags = MVM_CLASS_FLAG_NORMAL
+							newflags = MVM_CLASS_FLAG_ALWAYSCRIT|MVM_CLASS_FLAG_MINIBOSS // see constants.nut for flags
 							index = 4
 						}
 					}
@@ -198,7 +194,7 @@ WaveSchedule
 				// remove 2 scout_bats per death, positive values will add icons on death
 				Tag "popext_iconoverride{
 					icon = `scout_bat`
-					count = -2
+					count = 1
 				}"
 				Tag "popext_actionpoint{
 						target = `-648 4802 234`

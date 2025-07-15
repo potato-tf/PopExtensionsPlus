@@ -1,8 +1,8 @@
-pop_ext_entity <- FindByName( null, "__popext" )
-if ( pop_ext_entity == null ) pop_ext_entity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext" } )
+popext_entity <- FindByName( null, "__popext" )
+if ( popext_entity == null ) popext_entity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext" } )
 
-pop_ext_entity.ValidateScriptScope()
-PopExt <- pop_ext_entity.GetScriptScope()
+popext_entity.ValidateScriptScope()
+PopExt <- popext_entity.GetScriptScope()
 
 ::PopExtHooks <- {
 
@@ -61,7 +61,7 @@ PopExt <- pop_ext_entity.GetScriptScope()
 	}
 }
 
-PopExtEvents.AddRemoveEventHook( "OnScriptHook_OnTakeDamage", "PopHooksTakeDamage", function( params ) {
+PopExtEvents.AddRemoveEventHook( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 
 	local victim = params.const_entity
 	local attacker = params.attacker
@@ -146,6 +146,7 @@ PopExtEvents.AddRemoveEventHook( "player_team", "PopHooksPlayerTeam", function( 
 
 	if ( "popHooks" in scope )
 		delete scope.popHooks
+
 }, EVENT_WRAPPER_HOOKS)
 
 PopExtEvents.AddRemoveEventHook( "player_hurt", "PopHooksPlayerHurt", function( params ) {

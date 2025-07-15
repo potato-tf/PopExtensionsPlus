@@ -206,6 +206,56 @@ back-and-forth links
 
 ## [Tags](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/tags.nut)
 
+- [`popext_addcond`](#Tag-popext_addcond)
+- [`popext_reprogrammed`](#Tag-popext_reprogrammed)
+- [`popext_altfire`](#Tag-popext_altfire)
+- [`popext_deathsound`](#Tag-popext_deathsound)
+- [`popext_stepsound`](#Tag-popext_stepsound)
+- [`popext_usehumanmodel`](#Tag-popext_usehumanmodel)
+- [`popext_usecustommodel`](#Tag-popext_usecustommodel)
+- [`popext_usehumananims`](#Tag-popext_usehumananims)
+- [`popext_bonemergemodel`](#Tag-popext_bonemergemodel)
+- [`popext_alwaysglow`](#Tag-popext_alwaysglow)
+- [`popext_stripslot`](#Tag-popext_stripslot)
+- [`popext_fireweapon`](#Tag-popext_fireweapon)
+- [`popext_weaponswitch`](#Tag-popext_weaponswitch)
+- [`popext_spell`](#Tag-popext_spell)
+- [`popext_spawntemplate`](#Tag-popext_spawntemplate)
+- [`popext_forceromevision`](#Tag-popext_forceromevision)
+- [`popext_customattr`](#Tag-popext_customattr)
+- [`popext_ringoffire`](#Tag-popext_ringoffire)
+- [`popext_meleeai`](#Tag-popext_meleeai)
+- [`popext_mobber`](#Tag-popext_mobber)
+- [`popext_movetopoint`](#Tag-popext_movetopoint)
+- [`popext_actionpoint`](#Tag-popext_actionpoint)
+- [`popext_fireinput`](#Tag-popext_fireinput)
+- [`popext_weaponresist`](#Tag-popext_weaponresist)
+- [`popext_setskin`](#Tag-popext_setskin)
+- [`popext_doubledonk`](#Tag-popext_doubledonk)
+- [`popext_dispenseroverride`](#Tag-popext_dispenseroverride)
+- [`popext_giveweapon`](#Tag-popext_giveweapon)
+- [`popext_meleewhenclose`](#Tag-popext_meleewhenclose)
+- [`popext_usebestweapon`](#Tag-popext_usebestweapon)
+- [`popext_homingprojectile`](#Tag-popext_homingprojectile)
+- [`popext_rocketcustomtrail`](#Tag-popext_rocketcustomtrail)
+- [`popext_customweaponmodel`](#Tag-popext_customweaponmodel)
+- [`popext_spawnhere`](#Tag-popext_spawnhere)
+- [`popext_improvedairblast`](#Tag-popext_improvedairblast)
+- [`popext_aimat`](#Tag-popext_aimat)
+- [`popext_warpaint`](#Tag-popext_warpaint)
+- [`popext_halloweenboss`](#Tag-popext_halloweenboss)
+- [`popext_teleportnearvictim`](#Tag-popext_teleportnearvictim)
+- [`popext_disbandsquadafter`](#Tag-popext_disbandsquadafter)
+- [`popext_leavesquadafter`](#Tag-popext_leavesquadafter)
+- [`popext_mission`](#Tag-popext_mission)
+- [`popext_suicidecounter`](#Tag-popext_suicidecounter)
+- [`popext_iconcount`](#Tag-popext_iconcount)
+- [`popext_changeattributes`](#Tag-popext_changeattributes)
+- [`popext_taunt`](#Tag-popext_taunt)
+- [`popext_playsequence`](#Tag-popext_playsequence)
+- [`popext_ignore`](#Tag-popext_ignore)
+- [`popext_iconoverride`](#Tag-popext_iconoverride)
+
 popext_ Tags allow you to add special behaviors to bots in your popfiles. The syntax for using tags is:
 
 ```
@@ -250,56 +300,9 @@ Tag "popext_actionpoint{
 > The older pipe syntax is DEPRECATED and will not be supported going forward, many of the more recently added tags already do not support it.
 > - `popext_addcond|32|10` for example would instead become `popext_addcond{cond = 32 duration = 10}`.
 > - Simpler, older tags such as `popext_addcond` may still work for the time being, but this will likely change in the future.  You should migrate to the new syntax as soon as possible
-
-- [`popext_addcond`](#popext_addcond)
-- [`popext_reprogrammed`](#popext_reprogrammed)
-- [`popext_altfire`](#popext_altfire)
-- [`popext_deathsound`](#popext_deathsound)
-- [`popext_stepsound`](#popext_stepsound)
-- [`popext_usehumanmodel`](#popext_usehumanmodel)
-- [`popext_usecustommodel`](#popext_usecustommodel)
-- [`popext_usehumananims`](#popext_usehumananims)
-- [`popext_alwaysglow`](#popext_alwaysglow)
-- [`popext_stripslot`](#popext_stripslot)
-- [`popext_fireweapon`](#popext_fireweapon)
-- [`popext_weaponswitch`](#popext_weaponswitch)
-- [`popext_spell`](#popext_spell)
-- [`popext_spawntemplate`](#popext_spawntemplate)
-- [`popext_forceromevision`](#popext_forceromevision)
-- [`popext_customattr`](#popext_customattr)
-- [`popext_ringoffire`](#popext_ringoffire)
-- [`popext_meleeai`](#popext_meleeai)
-- [`popext_mobber`](#popext_mobber)
-- [`popext_movetopoint`](#popext_movetopoint)
-- [`popext_actionpoint`](#popext_actionpoint)
-- [`popext_fireinput`](#popext_fireinput)
-- [`popext_weaponresist`](#popext_weaponresist)
-- [`popext_setskin`](#popext_setskin)
-- [`popext_dispenseroverride`](#popext_dispenseroverride)
-- [`popext_giveweapon`](#popext_giveweapon)
-- [`popext_meleewhenclose`](#popext_meleewhenclose)
-- [`popext_usebestweapon`](#popext_usebestweapon)
-- [`popext_homingprojectile`](#popext_homingprojectile)
-- [`popext_rocketcustomtrail`](#popext_rocketcustomtrail)
-- [`popext_customweaponmodel`](#popext_customweaponmodel)
-- [`popext_spawnhere`](#popext_spawnhere)
-- [`popext_improvedairblast`](#popext_improvedairblast)
-- [`popext_aimat`](#popext_aimat)
-- [`popext_warpaint`](#popext_warpaint)
-- [`popext_halloweenboss`](#popext_halloweenboss)
-- [`popext_teleportnearvictim`](#popext_teleportnearvictim)
-- [`popext_disbandsquadafter`](#popext_disbandsquadafter)
-- [`popext_leavesquadafter`](#popext_leavesquadafter)
-- [`popext_mission`](#popext_mission)
-- [`popext_suicidecounter`](#popext_suicidecounter)
-- [`popext_iconcount`](#popext_iconcount)
-- [`popext_changeattributes`](#popext_changeattributes)
-- [`popext_taunt`](#popext_taunt)
-- [`popext_playsequence`](#popext_playsequence)
-
 ---
 
-<a name="popext_addcond"></a>
+<a name="Tag popext_addcond"></a>
 
 ### popext_addcond
 
@@ -312,7 +315,7 @@ Tag "popext_addcond{cond = TF_COND_SPEED_BOOST, duration = 15}"
 
 ---
 
-<a name="popext_reprogrammed"></a>
+<a name="Tag popext_reprogrammed"></a>
 
 ### popext_reprogrammed
 
@@ -332,7 +335,7 @@ Tag "popext_reprogrammed"
 
 ---
 
-<a name="popext_altfire"></a>
+<a name="Tag popext_altfire"></a>
 
 ### popext_altfire
 
@@ -347,7 +350,7 @@ Tag "popext_altfire{duration = 30}" // hold for 30 seconds after spawning
 
 ---
 
-<a name="popext_deathsound"></a>
+<a name="Tag popext_deathsound"></a>
 
 ### popext_deathsound
 
@@ -360,7 +363,7 @@ Tag "popext_deathsound{sound = `ui/chime_rd_2base_neg.wav`}"
 
 ---
 
-<a name="popext_stepsound"></a>
+<a name="Tag popext_stepsound"></a>
 
 ### popext_stepsound
 
@@ -376,7 +379,7 @@ Tag "popext_stepsound{sound = `ui/chime_rd_2base_pos.wav`}"
 
 ---
 
-<a name="popext_usehumanmodel"></a>
+<a name="Tag popext_usehumanmodel"></a>
 
 ### popext_usehumanmodel
 
@@ -389,7 +392,7 @@ Tag "popext_usehumanmodel"
 
 ---
 
-<a name="popext_usecustommodel"></a>
+<a name="Tag popext_usecustommodel"></a>
 
 ### popext_usecustommodel
 
@@ -401,7 +404,7 @@ Tag "popext_usecustommodel{model = `models/player/heavy.mdl`}"
 
 ---
 
-<a name="popext_usehumananims"></a>
+<a name="Tag popext_usehumananims"></a>
 
 ### popext_usehumananims
 
@@ -417,22 +420,44 @@ Tag "popext_usehumananims"
 
 ---
 
-<a name="popext_alwaysglow"></a>
+<a name="Tag popext_bonemergemodel"></a>
+
+### popext_bonemergemodel
+
+Expanded version of popext_usehumananims and popext_usecustommodel, accepts a custom animation base on any model.
+`apply_to_ragdoll` is optional, defaults to true.
+
+> [!NOTE]
+> By default, the bots ragdoll will be set to the `bonemerge_model` parameter.  Set `apply_to_ragdoll` to false to disable this.
+
+```js
+// bot will play sniper animations on a bot heavy model
+Tag "popext_bonemergemodel{anim_set = `models/player/sniper.mdl`, bonemerge_model = `models/bots/heavy/bot_heavy.mdl`, apply_to_ragdoll = true}"
+```
+
+---
+
+<a name="Tag popext_alwaysglow"></a>
 
 ### popext_alwaysglow
 
 Makes the bot permanently glow.
-No parameters required.
+If no color is specified, uses default team-colored glow.
 
 ```js
+// bot will always show glow outline
 Tag "popext_alwaysglow"
+
+// bot will always show glow outline in red
+Tag "popext_alwaysglow{color = `FF0000`}"
 ```
 > [!NOTE]
-> This is the same effect as tank/bomb carrier outlines and is affected by the `glow_outline_effect_enable` client command.
+> - This is the same effect as tank/bomb carrier outlines and is affected by the `glow_outline_effect_enable` client command.
+> - Accepts hex or integer color values.
 
 ---
 
-<a name="popext_stripslot"></a>
+<a name="Tag popext_stripslot"></a>
 
 ### popext_stripslot
 
@@ -444,12 +469,12 @@ Tag "popext_stripslot{slot = SLOT_MELEE}"
 
 ---
 
-<a name="popext_fireweapon"></a>
+<a name="Tag popext_fireweapon"></a>
 
 ### popext_fireweapon
 
 Makes the bot press a button with various conditions.
-Only button parameter is required, others are optional.
+Only the button parameter is required, others are optional.
 
 ```js
 Tag "popext_fireweapon{button = IN_RELOAD, cooldown = 3, delay = 10, repeats = 5, ifhealthbelow = 100, duration = 2}"
@@ -460,7 +485,7 @@ Tag "popext_fireweapon{button = IN_RELOAD, cooldown = 3, delay = 10, repeats = 5
 
 ---
 
-<a name="popext_weaponswitch"></a>
+<a name="Tag popext_weaponswitch"></a>
 
 ### popext_weaponswitch
 
@@ -473,7 +498,7 @@ Tag "popext_weaponswitch{slot = SLOT_SECONDARY, cooldown = 3, delay = 10, repeat
 
 ---
 
-<a name="popext_spell"></a>
+<a name="Tag popext_spell"></a>
 
 ### popext_spell
 
@@ -487,7 +512,7 @@ Tag "popext_spell{type = SPELL_SKELETON, cooldown = 3, delay = 10, repeats = 5, 
 
 ---
 
-<a name="popext_spawntemplate"></a>
+<a name="Tag popext_spawntemplate"></a>
 
 ### popext_spawntemplate
 
@@ -500,7 +525,7 @@ Tag "popext_spawntemplate{template = `MyTemplateName`}"
 
 ---
 
-<a name="popext_forceromevision"></a>
+<a name="Tag popext_forceromevision"></a>
 
 ### popext_forceromevision
 
@@ -515,7 +540,7 @@ Tag "popext_forceromevision"
 
 ---
 
-<a name="popext_customattr"></a>
+<a name="Tag popext_customattr"></a>
 
 ### popext_customattr
 
@@ -538,7 +563,7 @@ Tag "popext_customattr{weapon = `tf_weapon_scattergun`, attribute = `last shot c
 > - `custom projectile model` must be applied with this tag if you intend to use it for anything except for Grenade or Sticky launchers.  Applying it normally through the bots `ItemAttributes` block will use vanilla behavior.
 ---
 
-<a name="popext_ringoffire"></a>
+<a name="Tag popext_ringoffire"></a>
 
 ### popext_ringoffire
 
@@ -555,7 +580,7 @@ Tag "popext_ringoffire{damage = 20, interval = 3, radius = 150, hide_particle_ef
 
 ---
 
-<a name="popext_meleeai"></a>
+<a name="Tag popext_meleeai"></a>
 
 ### popext_meleeai
 
@@ -567,7 +592,7 @@ Tag "popext_meleeai{turnrate = 1500}"
 
 ---
 
-<a name="popext_mobber"></a>
+<a name="Tag popext_mobber"></a>
 
 ### popext_mobber
 
@@ -580,7 +605,7 @@ Valid threat types are `closest` and `random`.  Default is `closest`.  `random` 
 
 ---
 
-<a name="popext_movetopoint"></a>
+<a name="Tag popext_movetopoint"></a>
 
 ### popext_movetopoint
 
@@ -595,7 +620,7 @@ Tag "popext_movetopoint{target = `500 500 500`}"
 
 ---
 
-<a name="popext_actionpoint"></a>
+<a name="Tag popext_actionpoint"></a>
 
 ### popext_actionpoint
 
@@ -633,7 +658,7 @@ Accepts entity handle, targetnames or x y z string coordinates for the target pa
 
 ---
 
-<a name="popext_fireinput"></a>
+<a name="Tag popext_fireinput"></a>
 
 ### popext_fireinput
 
@@ -654,7 +679,7 @@ Tag "popext_fireinput{target = `bignet`, action = `RunScriptCode`, param = `Clie
 
 ---
 
-<a name="popext_weaponresist"></a>
+<a name="Tag popext_weaponresist"></a>
 
 ### popext_weaponresist
 
@@ -670,7 +695,7 @@ Tag "popext_weaponresist{weapon = `tf_weapon_minigun`, amount = 0.5}"
 
 ---
 
-<a name="popext_setskin"></a>
+<a name="Tag popext_setskin"></a>
 
 ### popext_setskin
 
@@ -683,7 +708,7 @@ Tag "popext_setskin{skin = 2}"
 
 ---
 
-<a name="popext_dispenseroverride"></a>
+<a name="Tag popext_dispenseroverride"></a>
 
 ### popext_dispenseroverride
 
@@ -696,7 +721,7 @@ Tag "popext_dispenseroverride{type = OBJ_SENTRYGUN}"
 
 ---
 
-<a name="popext_giveweapon"></a>
+<a name="Tag popext_giveweapon"></a>
 
 ### popext_giveweapon
 
@@ -715,7 +740,7 @@ Tag "popext_giveweapon{weapon = `tf_weapon_drg_pomson`, id = ID_POMSON_6000, att
 
 ---
 
-<a name="popext_meleewhenclose"></a>
+<a name="Tag popext_meleewhenclose"></a>
 
 ### popext_meleewhenclose
 
@@ -728,7 +753,7 @@ Tag "popext_meleewhenclose{distance = 250}"
 
 ---
 
-<a name="popext_usebestweapon"></a>
+<a name="Tag popext_usebestweapon"></a>
 
 ### popext_usebestweapon
 
@@ -744,7 +769,7 @@ Tag "popext_usebestweapon"
 
 ---
 
-<a name="popext_homingprojectile"></a>
+<a name="Tag popext_homingprojectile"></a>
 
 ### popext_homingprojectile
 
@@ -760,7 +785,7 @@ Tag "popext_homingprojectile{turn_power = 1.0, speed_mult = 1.0, ignoreStealthed
 
 ---
 
-<a name="popext_rocketcustomtrail"></a>
+<a name="Tag popext_rocketcustomtrail"></a>
 
 ### popext_rocketcustomtrail
 
@@ -773,7 +798,7 @@ Tag "popext_rocketcustomtrail{name = `eyeboss_projectile`}"
 
 ---
 
-<a name="popext_customweaponmodel"></a>
+<a name="Tag popext_customweaponmodel"></a>
 
 ### popext_customweaponmodel
 
@@ -786,7 +811,7 @@ Tag "popext_customweaponmodel{model = `models/player/heavy.mdl`, slot = SLOT_SEC
 
 ---
 
-<a name="popext_spawnhere"></a>
+<a name="Tag popext_spawnhere"></a>
 
 ### popext_spawnhere
 
@@ -800,7 +825,7 @@ Tag "popext_spawnhere{where = `500 500 500`}"
 
 ---
 
-<a name="popext_improvedairblast"></a>
+<a name="Tag popext_improvedairblast"></a>
 
 ### popext_improvedairblast
 
@@ -821,7 +846,7 @@ Tag "popext_improvedairblast"
 
 ---
 
-<a name="popext_aimat"></a>
+<a name="Tag popext_aimat"></a>
 
 ### popext_aimat
 
@@ -834,7 +859,7 @@ Tag "popext_aimat{target = `foot_L`}"
 
 ---
 
-<a name="popext_warpaint"></a>
+<a name="Tag popext_warpaint"></a>
 
 ### popext_warpaint
 
@@ -850,7 +875,7 @@ Tag "popext_warpaint{idx = 303, slot = 0, wear = 1.0, seed = `8873643875`}"
 
 ---
 
-<a name="popext_halloweenboss"></a>
+<a name="Tag popext_halloweenboss"></a>
 
 ### popext_halloweenboss
 
@@ -864,7 +889,7 @@ Tag "popext_halloweenboss{type = `merasmus`, where = `500 500 500`, health = `BO
 
 ---
 
-<a name="popext_teleportnearvictim"></a>
+<a name="Tag popext_teleportnearvictim"></a>
 
 ### popext_teleportnearvictim
 
@@ -877,7 +902,7 @@ Tag "popext_teleportnearvictim"
 
 ---
 
-<a name="popext_disbandsquadafter"></a>
+<a name="Tag popext_disbandsquadafter"></a>
 
 ### popext_disbandsquadafter
 
@@ -890,7 +915,7 @@ Tag "popext_disbandsquadafter{delay = 20}"
 
 ---
 
-<a name="popext_leavesquadafter"></a>
+<a name="Tag popext_leavesquadafter"></a>
 
 ### popext_leavesquadafter
 
@@ -903,7 +928,7 @@ Tag "popext_leavesquadafter{delay = 20}"
 
 ---
 
-<a name="popext_mission"></a>
+<a name="Tag popext_mission"></a>
 
 ### popext_mission
 
@@ -916,7 +941,7 @@ Tag "popext_mission{mission = MISSION_DESTROY_SENTRIES, target = `sentry_1`}"
 
 ---
 
-<a name="popext_suicidecounter"></a>
+<a name="Tag popext_suicidecounter"></a>
 
 ### popext_suicidecounter
 
@@ -929,7 +954,7 @@ Tag "popext_suicidecounter{interval = 0.5, amount = 2.0, damage_type = DMG_BURN,
 
 ---
 
-<a name="popext_iconcount"></a>
+<a name="Tag popext_iconcount"></a>
 
 ### popext_iconcount
 
@@ -942,7 +967,7 @@ Tag "popext_iconcount{icon = `scout`, count = 5}"
 
 ---
 
-<a name="popext_changeattributes"></a>
+<a name="Tag popext_changeattributes"></a>
 
 ### popext_changeattributes
 
@@ -955,7 +980,7 @@ Tag "popext_changeattributes{name = `AttribSetName`, delay = 10, cooldown = 10.0
 
 ---
 
-<a name="popext_taunt"></a>
+<a name="Tag popext_taunt"></a>
 
 ### popext_taunt
 
@@ -968,7 +993,7 @@ Tag "popext_taunt{id = 1015, delay = 1, cooldown = 10.0, repeats = 1, duration =
 
 ---
 
-<a name="popext_playsequence"></a>
+<a name="Tag popext_playsequence"></a>
 
 ### popext_playsequence
 
@@ -1918,7 +1943,13 @@ Make robots laugh with correct animations when hit with a crit Holiday Punch
 EnableGlobalFixes = 1
 ```
 
-Enables, all at once, the mission attributes [`DragonsFuryFix`](#MissionAttributes.DragonsFuryFix), [`FastNPCUpdate`](#MissionAttributes.FastNPCUpdate), [`NoCreditVelocity`](#MissionAttributes.NoCreditVelocity), [`ScoutBetterMoneyCollection`](#MissionAttributes.ScoutBetterMoneyCollection), [`HoldFireUntilFullReloadFix`](#MissionAttributes.HoldFireUntilFullReloadFix), [`EngineerBuildingPushbackFix`](#MissionAttributes.EngineerBuildingPushbackFix)
+Enables the following mission attributes:
+- [`DragonsFuryFix`](#MissionAttributes.DragonsFuryFix)
+- [`FastNPCUpdate`](#MissionAttributes.FastNPCUpdate)
+- [`NoCreditVelocity`](#MissionAttributes.NoCreditVelocity)
+- [`ScoutBetterMoneyCollection`](#MissionAttributes.ScoutBetterMoneyCollection)
+- [`HoldFireUntilFullReloadFix`](#MissionAttributes.HoldFireUntilFullReloadFix)
+- [`EngineerBuildingPushbackFix`](#MissionAttributes.EngineerBuildingPushbackFix)
 
 ---
 
@@ -2954,7 +2985,7 @@ Forces red money (like those dropped from sniper kills) to drop always
 
 ```js
 // example usage
-ReverseMVM = 1
+ReverseMVM = 1|4|8|16|32
 ```
 
 Accepts bitflags to modify behaviour.
@@ -2968,7 +2999,7 @@ Accepts bitflags to modify behaviour.
 - 64 - remove blu footsteps
 
 > [!CAUTION]
-> This attribute is very much under heavy development right now. Use this with great caution.
+> the `remove blu footsteps` bitflag may not work correctly.
 
 ---
 
@@ -2990,7 +3021,7 @@ Sets a class limit in the mission
 <a name="MissionAttributes.ShowHiddenAttributes"></a>
 
 ```js
-// usage
+// example usage
 ShowHiddenAttributes = 1
 ```
 
@@ -3012,6 +3043,38 @@ Hides the "Respawn in: # seconds" text. Accepts these inputs:
 - 2 - show only "Prepare to Respawn"
 
 ---
+
+<a name="MissionAttributes.IconOverride"></a>
+
+```js
+// example usage
+IconOverride = {
+
+	scout = {
+		count = 0 //remove from current wave
+		flags = MVM_CLASS_FLAG_NORMAL // see constants.nut for flags
+	}
+
+	pyro = { //replace with a new icon
+		replace = `scout_bat`
+		count = 20 //set count to 20 for current wave
+		flags = MVM_CLASS_FLAG_NORMAL // see constants.nut for flags
+		newflags = MVM_CLASS_FLAG_ALWAYSCRIT|MVM_CLASS_FLAG_MINIBOSS // see constants.nut for flags
+		// index is required if you want to preserve the icon order on the wavebar
+		// the bigrock pop pyro icon index is normally 0, but gets changed to 4 by IconOverride
+		// this will change if you update your wave with more bots
+		// use PopExt.GetWaveIconSlot( "pyro", <flags or MVM_CLASS_FLAG_NONE> ) to find the index
+
+		index = 4
+	}
+}
+```
+
+Override or remove icons from the specified wave.
+if no wave specified it will override the current wave.
+
+> [!WARNING]
+> Bots must have an associated popext_iconoverride tag for decrementing/incrementing on death.
 
 ## [util](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/util.nut) references
 

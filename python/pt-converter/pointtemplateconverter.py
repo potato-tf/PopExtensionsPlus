@@ -1,6 +1,5 @@
-import sys
 from r2v_dicts import itemdefs, propdict, offset
-
+from time import sleep
 COLOR = {
 	'CYAN': '\033[96m',
 	'HEADER': '\033[95m',
@@ -50,6 +49,18 @@ textcolors = {
 	'grey': 'cccccc',
 	'newline': '\\n'
 }
+
+def print_debug(message, type = 'info'):
+
+	if type == 'info':
+		print(COLOR['GREEN'], f'INFO: {message}', COLOR['ENDC'])
+	elif type == 'warning':
+		print(COLOR['YELLOW'], f'WARNING: {message}', COLOR['ENDC'])
+		sleep(0.2)
+	elif type == 'error':
+		print(COLOR['RED'], f'ERROR: {message}', COLOR['ENDC'])
+		sleep(0.2)
+
 # a recursive function that returns keyvalue pairs in a list
 def ParseTree(popfile, index):
 	indexnumber = index
@@ -148,10 +159,11 @@ def convert_proptype(prop, propval, arrayval):
 	if proptype.startswith('i'):
 		# if manualset: proptype = 'Int'
 		try:
-			test = int(propval)
+			propval = int(propval)
 			proptype = 'Int'
 		except Exception as e:
-				proptype = 'Entity'
+			print_debug(f'Assuming "Entity" for {COLOR["CYAN"]}{prop}{COLOR["YELLOW"]} (value: {COLOR["CYAN"]}{propval}{COLOR["YELLOW"]}), this may be incorrect!', 'warning')
+			proptype = 'Entity'
 
 	elif proptype.startswith('s'): proptype = 'String'
 	elif proptype.startswith('f'): proptype = 'Float'
@@ -159,16 +171,16 @@ def convert_proptype(prop, propval, arrayval):
 	elif proptype.startswith('b'): proptype = 'Bool'
 	elif proptype.startswith('v'): proptype = 'Vector'
 	else:
-		print(COLOR['RED'],f'ERROR: Invalid Property Type! Search for SetPropINVALID in generated .nut',COLOR['ENDC'])
+		print_debug(f'Invalid Property Type! Search for SetPropINVALID in generated .nut', 'error')
 		proptype = 'INVALID'
 
-	print(COLOR['CYAN'],f'Proptype for {prop} set to',COLOR['ENDC'],COLOR['GREEN'],proptype,COLOR['ENDC'])
+	print_debug(f'Prop type for {COLOR["CYAN"]}{prop}{COLOR["GREEN"]} set to {COLOR["CYAN"]}{proptype}{COLOR["GREEN"]}', 'info')
 
 	if proptype == "String":
 		propval = f'`{propval}`'
 
 	if prop == 'm_iszMvMPopfileName':
-		print(COLOR['YELLOW'],f'WARNING: Changing m_iszMvMPopfileName can break map rotation on potato servers! Change back to default on mission complete',COLOR['ENDC'])
+		print_debug(f'Changing m_iszMvMPopfileName can break map rotation on potato servers! Change back to default on mission complete', 'warning')
 
 	if not arrayval == -1:
 		proptype = f'{proptype}Array'
@@ -190,20 +202,33 @@ def convert_proptype(prop, propval, arrayval):
 			# return f'NetProps.SetProp{proptype}(self, `{prop}`, {propval})'
 
 customweapons = {}
-def convert_raf_keyvalues(value):
+def convert_raf_keyvalues(value, manual = { 'target' : None, 'action' : None, 'param' : None }):
 
 	global switchslot, changeattribs, stripweps, customweapons
-	splitval_addoutput = []
-	if 'addoutput' in value.lower() and ':' in value.lower():
-		splitval = value.split(':')
-		splitval_addoutput = value.split(':')
-		splitval[0] = splitval_addoutput[0].split(' ')[1]
+	splitval = ['', '', '']
+	splitval_addoutput = ['', '', '']
 
-	elif len(value.split('')) > 1:
-		splitval = value.split('')
+	if manual['target'] != None:
+		splitval[0] = manual['target']
+		splitval[1] = manual['action']
+	if manual['param'] != None:
+		splitval[2] = manual['param']
 
-	else:
-		splitval = value.split(',')
+	if splitval[0] == '':
+
+		if 'addoutput' in value.lower() and ':' in value.lower():
+
+			splitval = value.split(':')
+			splitval_addoutput = value.split(':')
+			splitval[0] = splitval_addoutput[0].split(' ')[1]
+
+		elif len(value.split('')) > 1:
+
+			splitval = value.split('')
+
+		else:
+
+			splitval = value.split(',')
 
 	try:
 		entinput = splitval[1].lower().strip()
@@ -213,20 +238,23 @@ def convert_raf_keyvalues(value):
 
 	# convert global $PlaySoundToSelf inputs to tf_gamerules PlayVO
 	if 'player' in splitval[0].lower() and '$playsoundtoself' in entinput:
-		print(COLOR['GREEN'],f'Converting global {splitval[1]} input to PlayVO',COLOR['ENDC'])
+
+		print_debug(f'Converting global {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} input to PlayVO', 'info')
 		splitval[0] = 'tf_gamerules'
 		splitval[1] = 'PlayVO'
 		splitval[2] = splitval[2].replace('\\', '/')
 
 		if '|' in splitval[2]:
+
 			splitval[2] = splitval[2].split('|')[1]
-			print(COLOR['YELLOW'],f'WARNING: ignoring pipe separator in {splitval[2]} for $playsoundtoself',COLOR['ENDC'])
+			print_debug(f'ignoring pipe separator in {COLOR["CYAN"]}{splitval[2]}{COLOR["YELLOW"]} for $playsoundtoself', 'warning')
 		splitval[-1] = splitval[-1].split('"')[0]
 
 
 	# convert tf_gamerules StopVO to VScript stopsound on every player
 	elif '$stopvo' in splitval[1].lower():
-		print(COLOR['GREEN'],f'Converting {splitval[1]} input to StopSound',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} input to StopSound', 'info')
 		splitval[0] = 'player'
 		splitval[1] = 'RunScriptCode'
 		filetype = splitval[2].split('.')[-1]
@@ -236,25 +264,29 @@ def convert_raf_keyvalues(value):
 			splitval[2] = f'self.StopSound(`{splitval[2]}`)'
 
 	elif '$displaytexthint' in splitval[1].lower():
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to VScript alternative',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to VScript alternative', 'info')
 		splitval[0] = 'bignet'
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'SendGlobalGameEvent(`player_hintmessage`, {{hintmessage = `{splitval[2]}`}})'
 
 	# use emitsoundex vscript function instead
 	elif not 'player' in splitval[0].lower() and '$playsoundtoself' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} input to EmitSoundEx',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} input to EmitSoundEx', 'info')
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'EmitSoundEx({{sound_name = `{splitval[2]}`, channel = 0, volume = 1, pitch = 1, entity = self, filter_type = 4 }})'
 
 	# NOTE: this requires spawnflags 256 on your point_viewcontrol to work
 	elif '$enableall' in splitval[1].lower() or '$disableall' in splitval[1].lower():
-		print(COLOR['YELLOW'],f'WARNING: converted {splitval[1]} to Enable/Disable, this will not work until you add spawnflags 256 to your point_viewcontrol',COLOR['ENDC'])
+
+		print_debug(f'converted {COLOR["CYAN"]}{splitval[1]}{COLOR["YELLOW"]} to Enable/Disable.  Add spawnflag 256 and "vscripts popextensions/ent_additions" to your point_viewcontrol', 'warning')
 		splitval[1] = 'Enable' if '$enableall' in splitval[1].lower() else 'Disable'
 
 	# convert $SetProp and $SetClientProp to vscript alternative
 	elif '$setclientprop' in entinput or '$setprop' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to vscript alternative',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to vscript alternative', 'info')
 		splitprop = splitval[1].split('$')
 		if len(splitprop) == 4:
 			arrayval = splitprop[3]
@@ -265,11 +297,12 @@ def convert_raf_keyvalues(value):
 
 	#convert $DisplayText to ClientPrint
 	elif '$displaytextchat' in entinput or '$displaytextcenter' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to ClientPrint',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to ClientPrint', 'info')
 		if splitval[2].startswith('{') and '$displaytextchat' in entinput:
 			splitcolor = splitval[2].split('{')
 			removebracket = splitcolor[1].split('}')
-			removebracket[0] = textcolors[removebracket[0]]
+			removebracket[0] = textcolors[removebracket[0]] if removebracket[0] in textcolors else removebracket[0]
 			color = r'\x07' + ''.join(removebracket)
 			splitval[1] = 'RunScriptCode'
 			if splitval[0] == 'player':
@@ -289,13 +322,15 @@ def convert_raf_keyvalues(value):
 
 	#convert $SetKey to KeyValueFromX
 	elif '$setkey' in entinput:
+
 		splitkey = splitval[1].split('$')
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to KeyValueFromString',COLOR['ENDC'])
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to KeyValueFromString', 'info')
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'self.KeyValueFromString(`{splitkey[2]}`, `{splitval[2]}`)'
 
 	elif '$addcond' in entinput or '$removecond' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to vscript alternative',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to vscript alternative', 'info')
 		if '$addcond' in entinput:
 			splitval[1] = 'RunScriptCode'
 			splitval[2] = f'self.AddCond({splitval[2]})'
@@ -304,7 +339,8 @@ def convert_raf_keyvalues(value):
 			splitval[2] = f'self.RemoveCond({splitval[2]})'
 
 	elif '$addplayerattribute' in entinput or '$removeplayerattribute' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to vscript alternative',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to vscript alternative', 'info')
 		if '$addplayerattribute' in entinput:
 			splitattrib = splitval[2].split('|')
 			# print(splitattrib)
@@ -315,27 +351,32 @@ def convert_raf_keyvalues(value):
 			splitval[2] = f'self.RemoveCustomAttribute(`{splitval[2]}`)'
 
 	elif '$teleporttoentity' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to vscript alternative',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to vscript alternative', 'info')
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'self.Teleport(true, {splitval[2]}.GetOrigin(), true,  {splitval[2]}.GetAbsAngles, true, {splitval[2]}.GetAbsVelocity())'
 	# 	print(splitval)
 
 	elif '$setmodeloverride' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to SetCustomModelWithClassAnimations',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to SetCustomModelWithClassAnimations', 'info')
 		splitval[1] = 'SetCustomModelWithClassAnimations'
 
 	elif '$removeoutput' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to SetCustomModelWithClassAnimations',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to SetCustomModelWithClassAnimations', 'info')
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'PopExtUtil.RemoveOutputAll(self, `{splitval[2]}`)'
 
 	elif '$takedamage' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to self.TakeDamage()',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to self.TakeDamage()', 'info')
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'self.TakeDamage({splitval[2]}, 0, null)'
 
 	elif '$giveitem' in entinput or '$awardandgiveextraitem' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to PopExt alternative',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to PopExt alternative', 'info')
 
 		stringval = splitval[2].strip().lower()
 
@@ -388,7 +429,7 @@ def convert_raf_keyvalues(value):
 			formatsplit.append('null')
 
 		if len(formatsplit) != 3:
-			print(COLOR['RED'],'ERROR: Invalid GiveWeapon input, search for `INVALID` in the generated .nut file',COLOR['ENDC'])
+			print_debug('Invalid GiveWeapon input, search for `INVALID` in the generated .nut file', 'error')
 			formatsplit = ['INVALID', '-1', 'null']
 
 		splitval[1] = 'RunScriptCode'
@@ -396,11 +437,12 @@ def convert_raf_keyvalues(value):
 		try:
 			splitval[2] = f'PopExtUtil.{funcname}(self,`{formatsplit[0].strip()}`,{int(formatsplit[1])})'
 		except Exception as ValueError:
-			print(COLOR['RED'],'ERROR: Invalid GiveWeapon input, search for `INVALID` in the generated .nut file',COLOR['ENDC'])
+			print_debug('Invalid GiveWeapon input, search for `INVALID` in the generated .nut file', 'error')
 			splitval[2] = f'PopExtUtil.{funcname}(self,`{formatsplit[0].strip()}`,{-1})'
 
 	elif '$addcurrency' in entinput or '$removecurrency' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to vscript alternative',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to vscript alternative', 'info')
 
 		if '$addcurrency' in entinput:
 			splitval[1] = 'RunScriptCode'
@@ -410,42 +452,49 @@ def convert_raf_keyvalues(value):
 			splitval[2] = f'self.RemoveCurrency({splitval[2]})'
 
 	elif '$weaponswitchslot' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to vscript alternative',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to vscript alternative', 'info')
 		switchslot = True
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'PopExtUtil.WeaponSwitchSlot(self, {splitval[2]})'
 
 	elif '$changeattributes' in entinput:
-		print(COLOR['YELLOW'],f'WARNING: converted {splitval[1]} to ChangeBotAttributes.  This will cause issues with multiple events under the same name!',COLOR['ENDC'])
+
+		print_debug(f'converted {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to ChangeBotAttributes.  This will cause issues with multiple events under the same name!', 'warning')
 		changeattribs = True
 		splitval[0] = 'point_populator_interface'
 		splitval[1] = 'ChangeBotAttributes'
 		splitval[-1] = splitval[-1].split('"')[0]
 
 	elif '$setowner' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to self.SetOwner()',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to self.SetOwner()', 'info')
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'self.SetOwner({splitval[2]})'
 
 	elif '$weaponstripslot' in entinput:
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to PopExtUtil.StripWeapon()',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["GREEN"]}{splitval[1]}{COLOR["GREEN"]} to PopExtUtil.StripWeapon()', 'info')
 		stripweps = True
 		splitval[1] = 'RunScriptCode'
 		splitval[2] = f'PopExtUtil.StripWeapon(self, {splitval[2]})'
 
 	elif '$changelevel' in splitval[1].lower():
-		print(COLOR['GREEN'],f'Converting {splitval[1]} to PopExtUtil.ChangeLevel()',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["GREEN"]}{splitval[1]}{COLOR["GREEN"]} to PopExtUtil.ChangeLevel()', 'info')
 		splitval[1] = 'RunScriptCode'
 		splitkey = splitval[2].split('|')
 		if len(splitkey) > 1:
-			print(COLOR['YELLOW'],f'WARNING: {splitkey[1]} will not be loaded automatically!',COLOR['ENDC'])
+			print_debug(f'mission {COLOR["CYAN"]}{splitkey[1]}{COLOR["YELLOW"]} will not be loaded automatically!', 'warning')
 		splitval[2] = f'PopExtUtil.ChangeLevel(`{splitkey[0]}`)'
 
 	elif '$pausewavespawn' in splitval[1].lower() or '$resumewavespawn' in splitval[1].lower():
-		print(COLOR['RED'],f'ERROR: {splitval[1]} is not supported!\nSpawn bots at unique spawn points and enable/disable the spawns instead.',COLOR['ENDC'])
+
+		print_debug(f'{COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} is not supported!\nSpawn bots at unique spawn points and enable/disable the spawns instead.', 'error')
 
 	if '@p@' in splitval[0] and 'self' in splitval[2]:
-		print(COLOR['GREEN'],f'Converting {splitval[0]} and {splitval[1]} to self.GetMoveParent()',COLOR['ENDC'])
+
+		print_debug(f'Converting {COLOR["CYAN"]}{splitval[0]}{COLOR["GREEN"]} and {COLOR["CYAN"]}{splitval[1]}{COLOR["GREEN"]} to self.GetMoveParent()', 'info')
 		splitval[2] = splitval[2].replace('self', 'self.GetMoveParent()')
 		splitval[0] = splitval[0].replace('"@p@', '"')
 
@@ -553,7 +602,10 @@ def convertpointtemplates(pop, indentationnumber, depth):
 					if newoutput[4] == '':
 						newoutput[4] = "-1"
 
-				print('"' + separator.join(newoutput) + '",', file=output)
+				try:
+					print('"' + separator.join(newoutput) + '",', file=output)
+				except UnicodeEncodeError as e:
+					print_debug(f'ERROR: {e}\n{newoutput}', 'error')
 
 			else:
 				if (key == 'mins' or key == 'maxs') and not valid_minmax:
@@ -565,8 +617,8 @@ def convertpointtemplates(pop, indentationnumber, depth):
 					maxsum = sum(float(i) for i in minmax_check['maxs'])
 
 					if minsum > maxsum:
-						print(COLOR['RED'],f'ERROR: mins ({minsum}) > maxs ({maxsum})!\nINVERT THIS IN THE OUTPUT FILE TO AVOID A SERVER CRASH!\n',COLOR['ENDC'])
-						print(COLOR['RED'],pop,COLOR['ENDC'])
+						print_debug(f'mins ({minmax_check["mins"]}) > maxs ({minmax_check["maxs"]})!\nINVERT THIS IN THE OUTPUT FILE TO AVOID A SERVER CRASH!\n', 'error')
+						print_debug(pop, 'error')
 					minmax_check.clear()
 
 				print(key, end = '', file=output)
@@ -631,7 +683,7 @@ def convertspawntemplates(pop):
 		funcs.append(func)
 
 	for f in list(set(funcs)):
-		with open(pop[:-4] + "_point_templates.nut", 'a') as file:
+		with open(pop[:-4] + "_point_templates.nut", 'a', encoding = 'utf-8') as file:
 			file.write(f'\n{f}')
 
 pop = None
@@ -674,7 +726,7 @@ parsed = ParseTree(popfile, 0)
 
 keylist = getpointtemplates(parsed, [])
 
-output = open(f'{pop[:-4]}_point_templates.nut', 'a+')
+output = open(f'{pop[:-4]}_point_templates.nut', 'a+', encoding = 'utf-8')
 
 convertpointtemplates(keylist, 0, 0)
 

@@ -52,10 +52,6 @@ local popext_funcs = {
 			aibot.team = TF_TEAM_PVE_DEFENDERS
 	}
 
-	// popext_reprogrammed_neutral = function( bot, args ) {
-		// bot.ForceChangeTeam( TEAM_UNASSIGNED, true )
-	// }
-
     /*********************************************************************************
      * PRESS SECONDARY FIRE                                                          *
      *                                                                               *
@@ -276,7 +272,31 @@ local popext_funcs = {
      **********************************************************/
 	popext_alwaysglow = function( bot, args ) {
 
-		SetPropBool( bot, "m_bGlowEnabled", true )
+		if ( !("color" in args) ) {
+
+			SetPropBool( bot, "m_bGlowEnabled", true )
+			return
+		}
+
+		local color = PopExtUtil.HexOrIntToRgb( args.color, "enable_alpha" in args ? args.enable_alpha : false )
+
+		local glow = SpawnEntityFromTable("tf_glow", {
+
+			targetname = format( "__popext_alwaysglow_%d", bot.entindex() ) 
+			target = "BigNet" 
+			GlowColor = format( "%d %d %d %d", color[0], color[1], color[2], color[3] ) 
+		})
+
+		SetPropEntity( glow, "m_hTarget", bot )
+
+		PopExtEvents.AddRemoveEventHook( "player_death", format( "AlwaysGlowDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+
+			local _bot = GetPlayerFromUserID( params.userid )
+			if ( _bot != bot ) return
+
+			EntFire(format( "__popext_alwaysglow_%d", bot.entindex()), "Kill")
+
+		}, EVENT_WRAPPER_TAGS)
 	}
 
     /**************************************************
@@ -1035,7 +1055,7 @@ local popext_funcs = {
 		local weapon = args.weapon ? args.weapon : args.type
 		local amount = ( "amount" in args ) ? args.amount.tofloat() : args.cooldown.tofloat()
 
-		PopExtEvents.AddRemoveEventHook( "OnScriptHook_OnTakeDamage", format( "WeaponResistTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		PopExtEvents.AddRemoveEventHook( "OnTakeDamage", format( "WeaponResistTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local player = params.attacker
 
@@ -1378,7 +1398,7 @@ local popext_funcs = {
 			}
 		}
 
-		PopExtEvents.AddRemoveEventHook( "OnScriptHook_OnTakeDamage", format( "HomingTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		PopExtEvents.AddRemoveEventHook( "OnTakeDamage", format( "HomingTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			if ( !params.const_entity.IsPlayer() ) return
 
@@ -2189,11 +2209,13 @@ local popext_funcs = {
 	popext_iconoverride = function( bot, args ) {
 
 		local icon  = "icon" in args ? args.icon : args.type
-		local count = "count" in args ? args.count : -1
+		local flags = "flags" in args ? args.flags : 0
+		local count = "count" in args ? args.count : 1
 
 		PopExtEvents.AddRemoveEventHook( "player_death", format( "IconOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
-			PopExt.SetWaveIconSlot( icon, icon, 0, count, PopExt.GetWaveIconSlot( icon, 0 ),  true )
+			PopExt.DecrementWaveIconSpawnCount( icon, flags, count )
+
 		}, EVENT_WRAPPER_TAGS)
 	}
 }
@@ -2316,9 +2338,11 @@ local popext_funcs = {
 
 ::PopExtTags <- {
 
-		//table of all possible keyvalues for all tags
-		//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
-		//any newly added tags should similarly ensure any required keyvalues do not silently fail.
+	popext_custom_tags = {}
+
+	//table of all possible keyvalues for all tags
+	//required table values will still be filled in for efficiency sake, but given a null value to throw a type error
+	//any newly added tags should similarly ensure any required keyvalues do not silently fail.
 	tagtable = {
 
 		//required tags
@@ -2362,7 +2386,7 @@ local popext_funcs = {
 
 		local separator = tag.find( "{" ) ? "{" : "|"
 
-		local splittag = separator == "{" ? PopExtUtil.splitonce( tag, separator ) : split( tag, separator )
+		local splittag = separator == "{" ? PopExtUtil.SplitOnce( tag, separator ) : split( tag, separator )
 
 		// ugly compatibility stuff for the older pipe syntax
 		// if someone has issues when using pipe syntax tell them to use brackets instead
@@ -2448,14 +2472,14 @@ local popext_funcs = {
 
 	function EvaluateTags( bot, changeattributes = false ) {
 
-		local bottags = {}
+		local bot_tags = {}
 
-		bot.GetAllBotTags( bottags )
+		bot.GetAllBotTags( bot_tags )
 
 		//bot has no tags
-		if ( !bottags.len() ) return
+		if ( !bot_tags.len() ) return
 
-		foreach( i, tag in bottags ) {
+		foreach( i, tag in bot_tags ) {
 
 			// local args = split( tag, "|" )
 			// local func = args.remove( 0 )
@@ -2470,7 +2494,24 @@ local popext_funcs = {
 			if ( func in popext_funcs )
 				popext_funcs[func].call( bot.GetScriptScope(), bot, args )
 
+			if ( tag in popext_custom_tags ) {
+
+				local table = popext_custom_tags[ tag ]
+				local scope = bot.GetScriptScope()
+
+				scope.popFiredDeathHook <- false
+				PopExtHooks.AddHooksToScope( tag, table, scope )
+
+				if ( "OnSpawn" in table )
+					table.OnSpawn( player, tag )
+			}
+
 		}
+	}
+
+	function AddRobotTag( tag, table ) {
+
+		PopExtTags.popext_custom_tags[ tag ] <- table
 	}
 }
 
@@ -2524,6 +2565,7 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "TagsTeamplayRoundStart
 	foreach ( bot in PopExtUtil.BotTable.keys() )
 		if ( bot.IsValid() && bot.GetTeam() != TEAM_SPECTATOR )
 			bot.ForceChangeTeam( TEAM_SPECTATOR, true )
+
 }, EVENT_WRAPPER_TAGS)
 
 PopExtEvents.AddRemoveEventHook( "halloween_boss_killed", "TagsHalloweenBossKilled", function( params ) {

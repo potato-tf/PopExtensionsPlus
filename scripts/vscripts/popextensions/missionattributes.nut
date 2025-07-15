@@ -41,7 +41,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			}
 
 			// Set Holiday logic
-			MissionAttributes.SetConvar( "tf_forced_holiday", value )
+			PopExtUtil.SetConvar( "tf_forced_holiday", value )
 
 			if ( value == kHoliday_None ) return
 
@@ -422,9 +422,9 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 			if ( value < 1 ) return
 
-			MissionAttributes.SetConvar( "tf_bot_escort_range", INT_MAX )
-			MissionAttributes.SetConvar( "tf_bot_flag_escort_range", INT_MAX )
-			MissionAttributes.SetConvar( "tf_bot_flag_escort_max_count", 0 )
+			PopExtUtil.SetConvar( "tf_bot_escort_range", INT_MAX )
+			PopExtUtil.SetConvar( "tf_bot_flag_escort_range", INT_MAX )
+			PopExtUtil.SetConvar( "tf_bot_flag_escort_max_count", 0 )
 
 		}
 
@@ -588,58 +588,58 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 		// =========================================================
 
 		NoRefunds = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_respec_enabled", 0 )
+			PopExtUtil.SetConvar( "tf_mvm_respec_enabled", 0 )
 		}
 
 		// =========================================================
 
 		RefundLimit = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_respec_enabled", 1 )
-			MissionAttributes.SetConvar( "tf_mvm_respec_limit", value )
+			PopExtUtil.SetConvar( "tf_mvm_respec_enabled", 1 )
+			PopExtUtil.SetConvar( "tf_mvm_respec_limit", value )
 		}
 
 		// =========================================================
 
 		RefundGoal = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_respec_enabled", 1 )
-			MissionAttributes.SetConvar( "tf_mvm_respec_credit_goal", value )
+			PopExtUtil.SetConvar( "tf_mvm_respec_enabled", 1 )
+			PopExtUtil.SetConvar( "tf_mvm_respec_credit_goal", value )
 		}
 
 		// =========================================================
 
 		FixedBuybacks = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_buybacks_method", 1 )
+			PopExtUtil.SetConvar( "tf_mvm_buybacks_method", 1 )
 		}
 
 		// =========================================================
 
 		BuybacksPerWave = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_buybacks_per_wave", value )
+			PopExtUtil.SetConvar( "tf_mvm_buybacks_per_wave", value )
 		}
 
 		// =========================================================
 
 		NoBuybacks = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_buybacks_method", value )
-			MissionAttributes.SetConvar( "tf_mvm_buybacks_per_wave", 0 )
+			PopExtUtil.SetConvar( "tf_mvm_buybacks_method", value )
+			PopExtUtil.SetConvar( "tf_mvm_buybacks_per_wave", 0 )
 		}
 
 		// =========================================================
 
 		DeathPenalty = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_death_penalty", value )
+			PopExtUtil.SetConvar( "tf_mvm_death_penalty", value )
 		}
 
 		// =========================================================
 
 		BonusRatioHalf = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_currency_bonus_ratio_min", value )
+			PopExtUtil.SetConvar( "tf_mvm_currency_bonus_ratio_min", value )
 		}
 
 		// =========================================================
 
 		BonusRatioFull = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_currency_bonus_ratio_max", value )
+			PopExtUtil.SetConvar( "tf_mvm_currency_bonus_ratio_max", value )
 		}
 
 		// =========================================================
@@ -651,169 +651,169 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 		// =========================================================
 
 		FlagEscortCount = function( value ) {
-			MissionAttributes.SetConvar( "tf_bot_flag_escort_max_count", value )
+			PopExtUtil.SetConvar( "tf_bot_flag_escort_max_count", value )
 		}
 
 		// =========================================================
 
 		BombMovementPenalty = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_bot_flag_carrier_movement_penalty", value )
+			PopExtUtil.SetConvar( "tf_mvm_bot_flag_carrier_movement_penalty", value )
 		}
 
 		// =========================================================
 
 		MaxSkeletons = function( value ) {
-			MissionAttributes.SetConvar( "tf_max_active_zombie", value )
+			PopExtUtil.SetConvar( "tf_max_active_zombie", value )
 		}
 
 		// =========================================================
 
 		TurboPhysics = function( value ) {
-			MissionAttributes.SetConvar( "sv_turbophysics", value )
+			PopExtUtil.SetConvar( "sv_turbophysics", value )
 		}
 
 		// =========================================================
 
 		Accelerate = function( value ) {
-			MissionAttributes.SetConvar( "sv_accelerate", value )
+			PopExtUtil.SetConvar( "sv_accelerate", value )
 		}
 
 		// =========================================================
 
 		AirAccelerate = function( value ) {
-			MissionAttributes.SetConvar( "sv_airaccelerate", value )
+			PopExtUtil.SetConvar( "sv_airaccelerate", value )
 		}
 
 		// =========================================================
 
 		BotPushaway = function( value ) {
-			MissionAttributes.SetConvar( "tf_avoidteammates_pushaway", value )
+			PopExtUtil.SetConvar( "tf_avoidteammates_pushaway", value )
 		}
 
 		// =========================================================
 
 		TeleUberDuration = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_engineer_teleporter_uber_duration", value )
+			PopExtUtil.SetConvar( "tf_mvm_engineer_teleporter_uber_duration", value )
 		}
 
 		// =========================================================
 
 		RedMaxPlayers = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_defenders_team_size", value )
+			PopExtUtil.SetConvar( "tf_mvm_defenders_team_size", value )
 		}
 
 		// =========================================================
 
 		MaxVelocity = function( value ) {
-			MissionAttributes.SetConvar( "sv_maxvelocity", value )
+			PopExtUtil.SetConvar( "sv_maxvelocity", value )
 		}
 
 		// =========================================================
 
 		ConchHealthOnHitRegen = function( value ) {
-			MissionAttributes.SetConvar( "tf_dev_health_on_damage_recover_percentage", value )
+			PopExtUtil.SetConvar( "tf_dev_health_on_damage_recover_percentage", value )
 		}
 
 		// =========================================================
 
 		MarkForDeathLifetime = function( value ) {
-			MissionAttributes.SetConvar( "tf_dev_marked_for_death_lifetime", value )
+			PopExtUtil.SetConvar( "tf_dev_marked_for_death_lifetime", value )
 		}
 
 		// =========================================================
 
 		GrapplingHookEnable = function( value ) {
-			MissionAttributes.SetConvar( "tf_grapplinghook_enable", value )
+			PopExtUtil.SetConvar( "tf_grapplinghook_enable", value )
 		}
 
 		// =========================================================
 
 		GiantScale = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_miniboss_scale", value )
+			PopExtUtil.SetConvar( "tf_mvm_miniboss_scale", value )
 		}
 
 		// =========================================================
 
 		VacNumCharges = function( value ) {
-			MissionAttributes.SetConvar( "weapon_medigun_resist_num_chunks", value )
+			PopExtUtil.SetConvar( "weapon_medigun_resist_num_chunks", value )
 		}
 
 		// =========================================================
 
 		DoubleDonkWindow = function( value ) {
-			MissionAttributes.SetConvar( "tf_double_donk_window", value )
+			PopExtUtil.SetConvar( "tf_double_donk_window", value )
 		}
 
 		// =========================================================
 
 		ConchSpeedBoost = function( value ) {
-			MissionAttributes.SetConvar( "tf_whip_speed_increase", value )
+			PopExtUtil.SetConvar( "tf_whip_speed_increase", value )
 		}
 
 		// =========================================================
 
 		StealthDmgReduction = function( value ) {
-			MissionAttributes.SetConvar( "tf_stealth_damage_reduction", value )
+			PopExtUtil.SetConvar( "tf_stealth_damage_reduction", value )
 		}
 
 		// =========================================================
 
 		FlagCarrierCanFight = function( value ) {
-			MissionAttributes.SetConvar( "tf_mvm_bot_allow_flag_carrier_to_fight", value )
+			PopExtUtil.SetConvar( "tf_mvm_bot_allow_flag_carrier_to_fight", value )
 		}
 
 		// =========================================================
 
 		HHHChaseRange = function( value ) {
-			MissionAttributes.SetConvar( "tf_halloween_bot_chase_range", value )
+			PopExtUtil.SetConvar( "tf_halloween_bot_chase_range", value )
 		}
 
 		// =========================================================
 
 		HHHAttackRange = function( value ) {
-			MissionAttributes.SetConvar( "tf_halloween_bot_attack_range", value )
+			PopExtUtil.SetConvar( "tf_halloween_bot_attack_range", value )
 		}
 
 		// =========================================================
 
 		HHHQuitRange = function( value ) {
-			MissionAttributes.SetConvar( "tf_halloween_bot_quit_range", value )
+			PopExtUtil.SetConvar( "tf_halloween_bot_quit_range", value )
 		}
 
 		// =========================================================
 
 		HHHTerrifyRange = function( value ) {
-			MissionAttributes.SetConvar( "tf_halloween_bot_terrify_radius", value )
+			PopExtUtil.SetConvar( "tf_halloween_bot_terrify_radius", value )
 		}
 
 		// =========================================================
 
 		HHHHealthBase = function( value ) {
-			MissionAttributes.SetConvar( "tf_halloween_bot_health_base", value )
+			PopExtUtil.SetConvar( "tf_halloween_bot_health_base", value )
 		}
 
 		// =========================================================
 
 		HHHHealthPerPlayer = function( value ) {
-			MissionAttributes.SetConvar( "tf_halloween_bot_health_per_player", value )
+			PopExtUtil.SetConvar( "tf_halloween_bot_health_per_player", value )
 		}
 
 		// =========================================================
 
 		SentryHintBombForwardRange = function( value ) {
-			MissionAttributes.SetConvar( "tf_bot_engineer_mvm_sentry_hint_bomb_forward_range", value )
+			PopExtUtil.SetConvar( "tf_bot_engineer_mvm_sentry_hint_bomb_forward_range", value )
 		}
 
 		// =========================================================
 
 		SentryHintBombBackwardRange = function( value ) {
-			MissionAttributes.SetConvar( "tf_bot_engineer_mvm_sentry_hint_bomb_backward_range", value )
+			PopExtUtil.SetConvar( "tf_bot_engineer_mvm_sentry_hint_bomb_backward_range", value )
 		}
 
 		// =========================================================
 
 		SentryHintMinDistanceFromBomb = function( value ) {
-			MissionAttributes.SetConvar( "tf_bot_engineer_mvm_hint_min_distance_from_bomb", value )
+			PopExtUtil.SetConvar( "tf_bot_engineer_mvm_hint_min_distance_from_bomb", value )
 		}
 
 		// =========================================================
@@ -824,7 +824,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				return false
 			}
 
-			MissionAttributes.SetConvar( "tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1 )
+			PopExtUtil.SetConvar( "tf_bot_suicide_bomb_friendly_fire", value = 1 ? 0 : 1 )
 		}
 
 		// =========================================================
@@ -840,7 +840,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 				PopExtMain.Error.RaiseValueError( "RobotLimit", value, "tf_mvm_max_invaders is not on the allow list!" )
 				return false
 
-			MissionAttributes.SetConvar( "tf_mvm_max_invaders", value )
+			PopExtUtil.SetConvar( "tf_mvm_max_invaders", value )
 		}
 
 		// =========================================================
@@ -1250,7 +1250,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 		SpellRateCommon = function( value ) {
 
-			MissionAttributes.SetConvar( "tf_spells_enabled", 1 )
+			PopExtUtil.SetConvar( "tf_spells_enabled", 1 )
 
 			PopExtEvents.AddRemoveEventHook("player_death", "SpellRateCommon", function( params ) {
 
@@ -1274,7 +1274,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 		SpellRateGiant = function( value ) {
 
-			MissionAttributes.SetConvar( "tf_spells_enabled", 1 )
+			PopExtUtil.SetConvar( "tf_spells_enabled", 1 )
 
 			PopExtEvents.AddRemoveEventHook("player_death", "SpellRateGiant", function( params ) {
 
@@ -1300,7 +1300,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 		RareSpellRateCommon = function( value ) {
 
-			MissionAttributes.SetConvar( "tf_spells_enabled", 1 )
+			PopExtUtil.SetConvar( "tf_spells_enabled", 1 )
 
 			PopExtEvents.AddRemoveEventHook("player_death", "RareSpellRateCommon", function( params ) {
 
@@ -1324,7 +1324,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 		RareSpellRateGiant = function( value ) {
 
-			MissionAttributes.SetConvar( "tf_spells_enabled", 1 )
+			PopExtUtil.SetConvar( "tf_spells_enabled", 1 )
 
 			PopExtEvents.AddRemoveEventHook("player_death", "RareSpellRateGiant", function( params ) {
 
@@ -2101,7 +2101,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			// Prevent bots on red team from hogging slots so players can always join and get switched to blue
 			// TODO: Needs testing
 			// also need to reset it
-			// MissionAttributes.SetConvar( "tf_mvm_defenders_team_size", 999 )
+			// PopExtUtil.SetConvar( "tf_mvm_defenders_team_size", 999 )
 			local max_team_size = GetInt( "tf_mvm_defenders_team_size" )
 			MissionAttributes.DeployBombStart <- function( player ) {
 
@@ -2164,9 +2164,11 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			MissionAttributes.ThinkTable.ReverseMVMThink <- function() {
 				// Enforce max team size
 				local player_count  = 0
+
 				foreach ( player in PopExtUtil.HumanTable.keys() ) {
 
 					if ( player_count + 1 > max_team_size && player.GetTeam() != TEAM_SPECTATOR ) {
+
 						player.ForceChangeTeam( TEAM_SPECTATOR, false )
 						continue
 					}
@@ -2684,6 +2686,7 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					}
 				}
 			}, EVENT_WRAPPER_MISSIONATTR )
+
 			PopExtEvents.AddRemoveEventHook("player_team", "BlockSpectator", function( params ) {
 
 				local player = GetPlayerFromUserID( params.userid )
@@ -2694,13 +2697,13 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					&& params.team == TEAM_SPECTATOR
 					&& params.oldteam == TF_TEAM_PVE_INVADERS
 				) {
-					PopExtUtil.ScriptEntFireSafe( player, "PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_INVADERS, true )", -1 )
+					PopExtUtil.ScriptEntFireSafe( player, "PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_INVADERS, true )", SINGLE_TICK )
 				}
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
 
 		HumansMustJoinTeam = function( value ) {
-			MissionAttributes.SetConvar( "mp_humans_must_join_team", value )
+			PopExtUtil.SetConvar( "mp_humans_must_join_team", value )
 		}
 
 		// =========================================================
@@ -2865,17 +2868,21 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			local wave = PopExtUtil.CurrentWaveNum
 
 			PopExt.SetWaveIconsFunction( function() {
+
 				foreach ( icon, params in value ) {
 
 					if ( typeof params != "table" || ( "wave" in params && params.wave != wave ) ) continue
 
 					local replace 	   = "replace" in params ? params.replace : icon
-					local count   	   = "count" in params ? params.count : -1
-					local flags   	   = "flags" in params ? params.flags : -1
+					local count   	   = "count" in params ? params.count : null
+					local flags   	   = "flags" in params ? params.flags : null
 					local index   	   = "index" in params ? params.index : -1
 
-					PopExt.SetWaveIconSlot( icon, replace, flags, count, index, false, flags > 0 && !( flags & MVM_CLASS_FLAG_SUPPORT_LIMITED || flags & MVM_CLASS_FLAG_SUPPORT ) )
+					PopExt.SetWaveIconSlot( icon, replace, flags, count, index, false, flags != null && !( flags & MVM_CLASS_FLAG_SUPPORT_LIMITED || flags & MVM_CLASS_FLAG_SUPPORT ) )
 
+					if ( "newflags" in params ) {
+						PopExt.SetWaveIconFlags( replace, params.newflags )
+					}
 				}
 			})
 		}
@@ -3093,56 +3100,12 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 	PathNum 			= 0
 	RedMoneyValue 		= 0
 
-	function Cleanup() {
-
-		ResetConvars()
-		PathNum = 0
-
-		foreach ( bot in PopExtUtil.BotTable.keys() )
-			if ( bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
-				bot.ForceChangeTeam( TEAM_SPECTATOR, true )
-
-		// EntFire( "func_upgradestation", "Enable" )
-
-		PopExtMain.Error.DebugLog( format( "Cleaned up mission attributes" ) )
-	}
-
 	// Mission Attribute Functions
 	// =========================================================
 	// Function is called in popfile by mission maker to modify mission attributes.
 
-	function SetConvar( convar, value, duration = 0, hide_chat_message = true ) {
-
-		// TODO: this hack doesn't seem to work.
-		local hide_fcvar_notify
-		if ( hide_chat_message )
-			hide_fcvar_notify = SpawnEntityFromTable( "point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"} )
-
-		// save original values to restore later
-		if ( !( convar in MissionAttributes.ConVars ) ) MissionAttributes.ConVars[convar] <- GetStr( convar )
-
-		// delay to ensure its set after any server configs
-		if ( GetStr( convar ) != value )
-			PopExtUtil.ScriptEntFireSafe( "BigNet", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
-
-		if ( duration > 0 )
-			PopExtUtil.ScriptEntFireSafe( "BigNet", format( "MissionAttributes.SetConvar( `%s`,`%s` )", convar, MissionAttributes.ConVars[convar].tostring() ), duration )
-
-		if ( hide_fcvar_notify != null )
-			EntFireByHandle( hide_fcvar_notify, "Kill", "", 1, null, null )
-	}
-
-	function ResetConvars( hide_chat_message = true ) {
-
-		local hide_fcvar_notify = FindByClassname( null, "point_commentary_node" )
-		if ( hide_fcvar_notify == null && hide_chat_message ) hide_fcvar_notify = SpawnEntityFromTable( "point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"} )
-
-		foreach ( convar, value in MissionAttributes.ConVars ) SetValue( convar, value )
-		MissionAttributes.clear()
-
-		if ( hide_fcvar_notify != null )
-			EntFireByHandle( hide_fcvar_notify, "Kill", "", -1, null, null )
-	}
+	SetConvar = PopExtUtil.SetConvar // legacy compatibility, people should use PopExtUtil.SetConvar instead
+	ResetConvars = PopExtUtil.ResetConvars // legacy compatibility, people should use PopExtUtil.ResetConvars instead
 
 	function MissionAttr( ... ) {
 
@@ -3178,6 +3141,14 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 	}
 }
 
+PopExtEvents.AddRemoveEventHook("teamplay_round_start", "MissionAttributesCleanup", function( params ) {
+
+	foreach ( bot in PopExtUtil.BotTable.keys() )
+		if ( bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
+			bot.ForceChangeTeam( TEAM_SPECTATOR, true )
+
+}, EVENT_WRAPPER_MISSIONATTR )
+
 PopExtEvents.AddRemoveEventHook("teamplay_broadcast_audio", "SoundOverrides", function( params ) {
 
 	if ( !MissionAttributes.SoundsToReplace.len() ) return
@@ -3194,21 +3165,6 @@ PopExtEvents.AddRemoveEventHook("teamplay_broadcast_audio", "SoundOverrides", fu
 
 		EmitSoundEx( {sound_name = MissionAttributes.SoundsToReplace[params.sound]} )
 	}
-}, EVENT_WRAPPER_MISSIONATTR )
-
-// PopExtEvents.AddRemoveEventHook("teamplay_round_start", "MissionAttributesCleanup", function( params ) {
-
-	// TODO, already handled in main, not necessary?
-	// foreach ( player in PopExtUtil.PlayerTable.keys() )
-		// if ( player.IsValid() )
-			// PopExtMain.PlayerCleanup( player )
-
-	// MissionAttributes.Cleanup()
-// }, EVENT_WRAPPER_MISSIONATTR )
-
-PopExtEvents.AddRemoveEventHook("mvm_wave_complete", "MissionAttributesCleanup", function( params ) {
-
-	MissionAttributes.Cleanup()
 }, EVENT_WRAPPER_MISSIONATTR )
 
 PopExtEvents.AddRemoveEventHook("mvm_mission_complete", "MissionAttributeFireUnload", function( params ) {

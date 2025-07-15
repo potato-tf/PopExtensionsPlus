@@ -16,8 +16,11 @@ local foldblacklist = {
 
 // fold every class into the root table for performance
 foreach( _class in tofold)
+
 	foreach( k, v in ROOT[_class].getclass() )
+
 		if ( !( k in foldblacklist ) && !( k in ROOT ) )
+
 			ROOT[k] <- ROOT[_class][k].bindenv( ROOT[_class] )
 
 
@@ -27,23 +30,6 @@ if ( !( "ConstantNamingConvention" in ROOT ) )
 		foreach( k, v in b )
 			CONST[k] <- v != null ? v : 0
 
-
-// foreach( k, v in ::NetProps.getclass() )
-// 	if ( k != "IsValid" && !( k in ROOT ) )
-// 		ROOT[k] <- ::NetProps[k].bindenv( ::NetProps )
-
-// foreach( k, v in ::Entities.getclass() )
-// 	if ( k != "IsValid" && !( k in ROOT ) )
-// 		ROOT[k] <- ::Entities[k].bindenv( ::Entities )
-
-// foreach( k, v in ::EntityOutputs.getclass() )
-// 	if ( k != "IsValid" && !( k in ROOT ) )
-// 		ROOT[k] <- ::EntityOutputs[k].bindenv( ::EntityOutputs )
-
-// foreach( k, v in ::NavMesh.getclass() )
-// 	if ( k != "IsValid" && !( k in ROOT ) )
-// 		ROOT[k] <- ::NavMesh[k].bindenv( ::NavMesh )
-
 // event wrapper call order limit per event
 // This allows +1 unordered.
 // This was 32 before and seemingly didn't cause much perf hit
@@ -51,7 +37,7 @@ if ( !( "ConstantNamingConvention" in ROOT ) )
 const MAX_EVENT_FUNCTABLES 		= 9
 
 // event call ordering
-// these ensure the core library has a consistent call ordering before any other external scripts.
+// these ensure the core library has a consistent call ordering, regardless of include order.
 const EVENT_WRAPPER_MAIN  	    = 0
 const EVENT_WRAPPER_UTIL 	    = 1
 const EVENT_WRAPPER_CUSTOMATTR  = 2

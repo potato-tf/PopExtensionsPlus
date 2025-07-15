@@ -1,7 +1,7 @@
 // Core popextensions script
 // Error handling, think table management, cleanup management, etc.
 
-::POPEXT_VERSION <- "07.08.2025.2"
+::POPEXT_VERSION <- "07.14.2025.1"
 
 local function Include( path ) {
 	try IncludeScript( format( "popextensions/%s", path ), getroottable() ) catch( e ) error( e )
@@ -106,16 +106,27 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 		"wearables_to_kill"    : null
 	}
 
-	function PlayerCleanup( player ) {
+	function PlayerCleanup( player, full_cleanup = false ) {
 
 		NetProps.SetPropInt( player, "m_nRenderMode", kRenderNormal )
 		NetProps.SetPropInt( player, "m_clrRender", 0xFFFFFF )
 
+		if ( full_cleanup ) {
+
+			player.TerminateScriptScope()
+			return
+		}
+
 		local scope = player.GetScriptScope()
 
-		if ( scope.len() > IgnoreTable.len() )
-			foreach ( k, v in scope )
+		local scope_keys = scope.keys()
+
+		if ( scope_keys.len() > IgnoreTable.len() )
+
+			foreach ( k in scope_keys )
+
 				if ( !( k in IgnoreTable ) )
+
 					delete scope[k]
 	}
 
@@ -136,13 +147,16 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 		RaisedParseError = false
 
 		function DebugLog( LogMsg ) {
-			if ( !PopExtMain.DebugText || !( getstackinfos(2).src.slice(0, -4) in PopExtMain.DebugFiles ) ) return
+
+			local src = getstackinfos(2).src
+
+			if ( !PopExtMain.DebugText || !( src in PopExtMain.DebugFiles ) || !( src.slice(0, -4) in PopExtMain.DebugFiles ) ) return
 			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", POPEXT_DEBUG, LogMsg ) )
 		}
 
 		// warnings
 		GenericWarning 	   = @( msg ) 	   ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", POPEXT_WARNING, msg ) )
-		DeprecationWarning = @( old, new ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s is DEPRECATED. Use %s instead.", POPEXT_WARNING, old, new ) )
+		DeprecationWarning = @( old, new ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s is DEPRECATED and may be removed in a future update. Use %s instead.", POPEXT_WARNING, old, new ) )
 
 		// errors
 		RaiseIndexError  = @( key, max = [0, 1], assert = false ) 	   ParseError( format( "Index out of range for '%s', value range: %d - %d", key, max[0], max[1] ), assert )
@@ -341,13 +355,17 @@ PopExtEvents.AddRemoveEventHook( "player_death", "MainDeathCleanup", function( p
 	PopExtMain.PlayerCleanup( player )
 }, 0)
 
-// final cleanup step, must run last
+// FINAL CLEANUP STEP, MUST RUN LAST
 PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
 
-	// clean up lingering wearables
-	for ( local wearable; wearable = FindByClassname( wearable, "tf_wearable*" ); )
+	// clean up lingering wearables/weapons
+	for ( local wearable; wearable = FindByClassname( wearable, "tf_wea*" ); )
 		if ( wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType( TF_BOT_TYPE ) )
 			EntFireByHandle( wearable, "Kill", "", -1, null, null )
+
+	foreach ( bot in PopExtUtil.BotTable.keys() )
+		if ( bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
+			bot.ForceChangeTeam( TEAM_SPECTATOR, true )
 
 	//same pop or manual cleanup flag set, don't run
 	if ( __popname == GetPropString( objres, "m_iszMvMPopfileName" ) || PopExtMain.ManualCleanup ) 
@@ -362,7 +380,7 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 
 		if ( player == null ) continue
 
-		PopExtMain.PlayerCleanup( player )
+		PopExtMain.PlayerCleanup( player, true )
 	}
 
 	//nuke it all
@@ -406,9 +424,9 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 		"PopExtTutorial"
 
 		// clear these last
-		"PopExtMain"
 		"PopExtEvents"
 		"PopExtUtil"
+		"PopExtMain"
 	]
 
 	foreach( c in cleanup ) if ( c in ROOT ) delete ROOT[c]

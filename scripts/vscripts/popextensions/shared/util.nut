@@ -14,6 +14,7 @@
 	Slots   	  = ["slot_primary", "slot_secondary", "slot_melee", "slot_utility", "slot_building", "slot_pda", "slot_pda2"]
 	IsWaveStarted = false // check a global variable instead of accessing a netprop every time to check if we are between waves.
 	AllNavAreas   = {} // gets filled by GetAllAreas at the end of this file
+	ConVars       = {}
 
 	ROBOT_ARM_PATHS = [
 		"", // Dummy
@@ -355,7 +356,28 @@
 		return newtable
 	}
 
+	function HexOrIntToRgb( hex_or_int, alpha = false ) {
+
+		local r = 0, g = 0, b = 0
+		if ( typeof hex_or_int == "string" ) {
+
+			r = hex_or_int.slice( 0, 2 ).tointeger( 16 )
+			g = hex_or_int.slice( 2, 4 ).tointeger( 16 )
+			b = hex_or_int.slice( 4, 6 ).tointeger( 16 )
+
+			return [r, g, b, alpha ? ( hex_or_int.slice( 6, 8 ).tointeger( 16 ) ) : 255]
+		}
+
+		r = hex_or_int & 0xFF
+		g = ( hex_or_int >> 8 ) & 0xFF
+		b = ( hex_or_int >> 16 ) & 0xFF
+
+		return [r, g, b, alpha ? ( hex_or_int >> 24 ) & 0xFF : 255]
+	}
+
 	function HexToRgb( hex ) {
+
+		PopExtMain.Error.DeprecationWarning( "PopExtUtil.HexToRgb", "PopExtUtil.HexOrIntToRgb" )
 
 		// Extract the RGB values
 		local r = hex.slice( 0, 2 ).tointeger( 16 )
@@ -451,12 +473,13 @@
 
 	function PrintTable( table ) {
 
-		if ( table == null ) return
+		if ( table == null || ( typeof table != "table" && typeof table != "array" ) ) return
 
 		DoPrintTable( table, 0 )
 	}
 
 	function DoPrintTable( table, indent ) {
+
 		local line = ""
 		for ( local i = 0; i < indent; i++ ) {
 			line += " "
@@ -777,7 +800,7 @@
 
 	function DoExplanation( message, print_color = COLOR_YELLOW, message_prefix = "Explanation: ", sync_chat_with_game_text = false, text_print_time = -1, text_scan_time = 0.02 ) {
 
-		local rgb = HexToRgb( "FFFF66" )
+		local rgb = HexOrIntToRgb( "FFFF66" )
 		local txtent = SpawnEntityFromTable( "game_text", {
 			effect = 2,
 			spawnflags = SF_ENVTEXT_ALLPLAYERS,
@@ -1775,7 +1798,7 @@
 
 	// Python's string.partition(), except the separator itself is not returned
 	// Basically like calling python's string.split( sep, 1 ), notice the 1 meaning to only split once
-	function splitonce( s, sep = null ) {
+	function SplitOnce( s, sep = null ) {
 
 		if ( sep == null ) return [s, null]
 
@@ -1840,7 +1863,8 @@
 		if ( thinktable == "" ) return
 
 		local thinkfunc
-		if( func != null ) {
+
+		if ( func != null ) {
 
 			if ( func in scope )
 				thinkfunc = scope[func]
@@ -2036,7 +2060,10 @@
 				KillPlayer( bot )
 	}
 
-	// wrapper for handling dead players without putting isalive checks everywhere
+	// EntFire wrapper for:
+	// - Purging game strings to avoid CUtlRBTree Overflow crashes
+	// - Logging for invalid targets when debug mode is enabled
+	// - Handling dead players without putting isalive checks everywhere
 	function ScriptEntFireSafe( target, code, delay = -1, activator = null, caller = null, allow_dead = false ) {
 
 		local entfirefunc = typeof target == "string" ? DoEntFire : EntFireByHandle
@@ -2056,7 +2083,9 @@
 
 				return
 			}
+
 			PopExtMain.Error.DebugLog( `Invalid target passed to ScriptEntFireSafe: ` + self )
+
 		", allow_dead.tointeger(), code ), delay, activator, caller )
 
 		PurgeGameString( code )
@@ -2074,15 +2103,19 @@
 
 		entity.ValidateScriptScope()
 		local scope = entity.GetScriptScope()
-		scope.setdelegate( {}.setdelegate( {
+
+		scope.setdelegate({}.setdelegate({
+
 				parent   = scope.getdelegate()
 				id       = entity.GetScriptId()
 				index    = entity.entindex()
 				callback = callback
-				_get = function( k ) {
+
+				function _get( k ) {
 					return parent[k]
 				}
-				_delslot = function( k ) {
+
+				function _delslot( k ) {
 					if ( k == id ) {
 
 						entity = EntIndexToHScript( index )
@@ -2315,6 +2348,44 @@
 
 		}, EVENT_WRAPPER_UTIL )
 	}
+	
+	function SetConvar( convar, value, duration = 0, hide_chat_message = true ) {
+
+		// TODO: this hack doesn't seem to work.
+		local hide_fcvar_notify
+
+		if ( hide_chat_message )
+			hide_fcvar_notify = SpawnEntityFromTable( "point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"} )
+
+		// save original values to restore later
+		if ( !( convar in ConVars ) ) ConVars[convar] <- GetStr( convar )
+
+		// delay to ensure its set after any server configs
+		if ( GetStr( convar ) != value )
+			ScriptEntFireSafe( "BigNet", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
+
+		if ( duration > 0 )
+			ScriptEntFireSafe( "BigNet", format( "PopExtUtil.SetConvar( `%s`,`%s` )", convar, ConVars[convar].tostring() ), duration )
+
+		if ( hide_fcvar_notify != null )
+			EntFireByHandle( hide_fcvar_notify, "Kill", "", 1, null, null )
+	}
+
+	function ResetConvars( hide_chat_message = true ) {
+
+		local hide_fcvar_notify = FindByClassname( null, "point_commentary_node" )
+
+		if ( hide_fcvar_notify == null && hide_chat_message )
+			hide_fcvar_notify = SpawnEntityFromTable( "point_commentary_node", { targetname = "  IGNORE THIS ERROR \r" } )
+
+		foreach ( convar, value in ConVars ) 
+			SetValue( convar, value )
+
+		ConVars.clear()
+
+		if ( hide_fcvar_notify != null )
+			EntFireByHandle( hide_fcvar_notify, "Kill", "", -1, null, null )
+	}
 
 	function ValidatePlayerTables() {
 
@@ -2343,42 +2414,57 @@
 	}
 	function KVStringToVectorOrQAngle( str, angles = false, startidx = 0 ) {
 
-		if (typeof str == "Vector" || typeof str == "QAngle")
+		if ( typeof str == "Vector" || typeof str == "QAngle" )
 			return str
 
-		local split = (str.find(",") ? split(str, ",", true) : split(str, " ", true)).apply(@(str) PopExtUtil.ToStrictNum(str, true))
+		local split = ( str.find( "," ) ? split( str, ",", true ) : split( str, " ", true ) ).apply( @( str ) PopExtUtil.ToStrictNum( str, true ) )
 
 		local errorstr = "KVString CONVERSION ERROR: %s"
-		if (!(2 in split))
-		{
-			PopExtMain.Error.RaiseError(format(errorstr, "Not enough values (need at least 3)"))
+
+		if ( !( 2 in split ) ) {
+
+			PopExtMain.Error.ParseError( format( errorstr, "Not enough values (need at least 3)" ), true )
 			return angles ? QAngle() : Vector()
 		}
+
 		local invalid = split.find(null)
-		if (invalid != null)
-		{
+
+		if (invalid != null) {
+
 			local invalid_kvstringidx = invalid
-			if (invalid)
-			{
+			if ( invalid ) {
+
 				local invalid_mod = invalid % 3
 				invalid_kvstringidx = !invalid_mod ? 2 : invalid_mod - 1
 			}
 
 			local kvstringvalue = angles ? ["yaw", "pitch", "roll"] : ["x", "y", "z"]
-			PopExtMain.Error.RaiseError(format(errorstr, "Could not convert string to number for KVString %s (index %d)", kvstringvalue[invalid_kvstringidx], invalid))
+			PopExtMain.Error.ParseError( format( errorstr, "Could not convert string to number for KVString %s (index %d)", kvstringvalue[ invalid_kvstringidx ], invalid ), true )
 			return angles ? QAngle() : Vector()
 		}
-		return angles ? QAngle(split[startidx], split[startidx + 1], split[startidx + 2]) : Vector(split[startidx], split[startidx + 1], split[startidx + 2])
+
+		return angles ? QAngle( split[ startidx ], split[ startidx + 1 ], split[ startidx + 2 ] ) : Vector( split[ startidx ], split[ startidx + 1 ], split[ startidx + 2 ] )
 	}
 }
 
-PopExtEvents.AddRemoveEventHook("mvm_wave_complete", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = false }, EVENT_WRAPPER_UTIL)
-PopExtEvents.AddRemoveEventHook("mvm_wave_failed", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = false }, EVENT_WRAPPER_UTIL)
-PopExtEvents.AddRemoveEventHook("mvm_begin_wave", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = true }, EVENT_WRAPPER_UTIL)
-PopExtEvents.AddRemoveEventHook("mvm_reset_stats", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = true }, EVENT_WRAPPER_UTIL)
-PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "UtilRoundStart", function ( params ) { SetPropBool( PopExtUtil.GameRules, "m_bIsInTraining", false ) }, EVENT_WRAPPER_UTIL)
+PopExtEvents.AddRemoveEventHook( "mvm_wave_complete", "UtilWaveStatus", function ( params ) {
 
-PopExtEvents.AddRemoveEventHook("player_activate", "UtilPlayerActivate", function ( params ) {
+	PopExtUtil.IsWaveStarted = false 
+	PopExtUtil.ResetConvars()
+
+}, EVENT_WRAPPER_UTIL )
+
+PopExtEvents.AddRemoveEventHook( "mvm_wave_failed", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = false }, EVENT_WRAPPER_UTIL )
+PopExtEvents.AddRemoveEventHook( "mvm_begin_wave", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = true }, EVENT_WRAPPER_UTIL )
+PopExtEvents.AddRemoveEventHook( "mvm_reset_stats", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = true }, EVENT_WRAPPER_UTIL )
+PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "UtilRoundStart", function ( params ) {
+
+	SetPropBool( PopExtUtil.GameRules, "m_bIsInTraining", false )
+	PopExtUtil.ResetConvars()
+
+}, EVENT_WRAPPER_UTIL )
+
+PopExtEvents.AddRemoveEventHook( "player_activate", "UtilPlayerActivate", function ( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 

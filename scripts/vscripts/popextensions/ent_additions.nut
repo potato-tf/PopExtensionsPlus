@@ -1,4 +1,4 @@
-//fold constants/functions again here so this can be standalone
+// fold constants/functions again here so this can be standalone
 if ( !( "CONST" in getroottable() ) ) {
 
     ::CONST <- getconsttable()
@@ -7,21 +7,24 @@ if ( !( "CONST" in getroottable() ) ) {
     CONST.setdelegate( { _newslot = @( k, v ) compilestring( "const " + k + "=" + ( typeof v == "string" ? ( "\"" + v + "\"" ) : v ) )() } )
     CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
-    foreach( k, v in ::NetProps.getclass() )
-        if ( k != "IsValid" && !( k in ROOT ) )
-            ROOT[k] <- ::NetProps[k].bindenv( ::NetProps )
+    local tofold = [ "NetProps", "Entities", "EntityOutputs", "NavMesh", "Convars" ]
 
-    foreach( k, v in ::Entities.getclass() )
-        if ( k != "IsValid" && !( k in ROOT ) )
-            ROOT[k] <- ::Entities[k].bindenv( ::Entities )
+    // these are defined multiple times in other classes, skip to avoid conflicts
+    // realistically "IsValid" is the only problematic one, but just in case
+    local foldblacklist = {
+        IsValid   = true
+        GetName   = true
+        GetCenter = true
+    }
 
-    foreach( k, v in ::EntityOutputs.getclass() )
-        if ( k != "IsValid" && !( k in ROOT ) )
-            ROOT[k] <- ::EntityOutputs[k].bindenv( ::EntityOutputs )
+    // fold every class into the root table for performance
+    foreach( _class in tofold)
 
-    foreach( k, v in ::NavMesh.getclass() )
-        if ( k != "IsValid" && !( k in ROOT ) )
-            ROOT[k] <- ::NavMesh[k].bindenv( ::NavMesh )
+        foreach( k, v in ROOT[_class].getclass() )
+
+            if ( !( k in foldblacklist ) && !( k in ROOT ) )
+
+                ROOT[k] <- ROOT[_class][k].bindenv( ROOT[_class] )
 
     if ( !( "ConstantNamingConvention" in ROOT ) ) {
 

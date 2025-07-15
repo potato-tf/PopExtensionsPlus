@@ -3,14 +3,14 @@ PopExt.tank_names          <- {}
 PopExt.tank_names_wildcard <- {}
 
 pop_ext_think_func_set <- false
-AddThinkToEnt( pop_ext_entity, null )
+AddThinkToEnt( popext_entity, null )
 
 PrecacheModel( "models/weapons/w_models/w_rocket.mdl" )
 
 function PopExt::AddRobotTag( tag, table ) {
 
 	if ( !pop_ext_think_func_set ) {
-		AddThinkToEnt( pop_ext_entity, "PopExtGlobalThink" )
+		AddThinkToEnt( popext_entity, "PopExtGlobalThink" )
 		pop_ext_think_func_set = true
 	}
 	PopExt.robot_tags[tag] <- table
@@ -19,7 +19,7 @@ function PopExt::AddRobotTag( tag, table ) {
 function PopExt::AddTankName( name, table ) {
 
 	if ( !pop_ext_think_func_set ) {
-		AddThinkToEnt( pop_ext_entity, "PopExtGlobalThink" )
+		AddThinkToEnt( popext_entity, "PopExtGlobalThink" )
 		pop_ext_think_func_set = true
 	}
 
@@ -134,7 +134,7 @@ function PopExt::GetWaveIconSpawnCount( name, flags ) {
 
 		for ( local i = 0; i < size_array * 2; i++ ) {
 
-			if ( GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i ) == name && ( flags == 0 || GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i ) == flags ) ) {
+			if ( GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i ) == name && ( flags == MVM_CLASS_FLAG_NONE || GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i ) == flags ) ) {
 
 				return GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassCounts%s", suffix ), i )
 			}
@@ -178,7 +178,7 @@ function PopExt::SetWaveIconSpawnCount( name, flags, count, change_max_enemy_cou
 				return
 			}
 
-			if ( name_slot == name && ( flags == 0 || flags_slot == flags ) ) {
+			if ( name_slot == name && ( flags == MVM_CLASS_FLAG_NONE || flags_slot == flags ) ) {
 
 				local pre_count = count_slot
 				SetPropIntArray( resource, format( "m_nMannVsMachineWaveClassCounts%s", suffix ), count, i )
@@ -200,8 +200,8 @@ function PopExt::SetWaveIconSpawnCount( name, flags, count, change_max_enemy_cou
 }
 
 // Replace/update a specific icon on the wavebar
-// index override can be used to preserve slot order
-// more concise version of the above function
+// index override can be used to preserve wavebar order
+// more robust version of the above function
 // setting incrementer to true will add/subtract the current count instead of replacing it
 function PopExt::SetWaveIconSlot( name, slot = null, flags = null, count = null, index_override = -1, incrementer = false, change_max_enemy_count = true ) {
 
@@ -235,7 +235,7 @@ function PopExt::SetWaveIconSlot( name, slot = null, flags = null, count = null,
 					indices[i][3] = true
 			}
 
-			if ( name_slot == name && flags_slot == flags ) {
+			if ( name_slot == name && ( flags == MVM_CLASS_FLAG_NONE || flags_slot == flags ) ) {
 
 				local pre_count = count_slot
 
@@ -280,7 +280,7 @@ function PopExt::SetWaveIconSlot( name, slot = null, flags = null, count = null,
 				SetPropStringArray( resource, format( "%s%s", netprop_classnames, suffix ), slot, index_override )
 				SetPropIntArray( resource, format( "%s%s", netprop_flags, suffix ), flags, index_override )
 
-				if ( change_max_enemy_count && ( flags & ( MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS ) ) )
+				if ( change_max_enemy_count && flags & MVM_CLASS_FLAG_NORMAL )
 					SetPropInt( resource, netprop_enemycount, GetPropInt( resource, netprop_enemycount ) + count - pre_count )
 				return
 			}
@@ -300,7 +300,7 @@ function PopExt::GetWaveIconSlot( name, flags ) {
 			local name_slot = GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i )
 			local flags_slot = GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i )
 
-			if ( name_slot == name && flags_slot == flags ) {
+			if ( name_slot == name && ( flags == MVM_CLASS_FLAG_NONE || flags_slot == flags ) ) {
 				return i
 			}
 		}
@@ -320,7 +320,7 @@ function PopExt::GetAllWaveIconSlots( name, flags ) {
 			local name_slot = GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i )
 			local flags_slot = GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i )
 
-			if ( name_slot == name && ( flags == 0 || flags_slot == flags ) ) {
+			if ( name_slot == name && ( flags == MVM_CLASS_FLAG_NONE || flags_slot == flags ) ) {
 				slots.append( i )
 			}
 		}
@@ -402,7 +402,7 @@ function PopExt::DecrementWaveIconSpawnCount( name, flags, count = 1, change_max
 
 			local name_slot = GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i )
 
-			if ( name_slot == name && ( flags == 0 || GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i ) == flags ) ) {
+			if ( name_slot == name && ( flags == MVM_CLASS_FLAG_NONE || GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i ) == flags ) ) {
 
 				local pre_count = GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassCounts%s", suffix ), i )
 
@@ -439,7 +439,7 @@ function PopExt::SetWaveIconActive( name, flags, active ) {
 
 			local name_slot = GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i )
 
-			if ( name_slot == name && ( flags == 0 || GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i ) == flags ) ) {
+			if ( name_slot == name && ( flags == MVM_CLASS_FLAG_NONE || GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i ) == flags ) ) {
 
 				SetPropBoolArray( resource, format( "m_bMannVsMachineWaveClassActive%s", suffix ), active, i )
 				return
@@ -461,7 +461,7 @@ function PopExt::GetWaveIconActive( name, flags ) {
 
 			local name_slot = GetPropStringArray( resource, format( "m_iszMannVsMachineWaveClassNames%s", suffix ), i )
 
-			if ( name_slot == name && ( flags == 0 || GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i ) == flags ) ) {
+			if ( name_slot == name && ( flags == MVM_CLASS_FLAG_NONE || GetPropIntArray( resource, format( "m_nMannVsMachineWaveClassFlags%s", suffix ), i ) == flags ) ) {
 
 				return GetPropBoolArray( resource, format( "m_bMannVsMachineWaveClassActive%s", suffix ), i )
 			}
