@@ -2620,7 +2620,7 @@ function Info( message, print_color = COLOR_YELLOW, message_prefix = "Explanatio
 	PopExtUtil.DoExplanation( message, print_color, message_prefix, sync_chat_with_game_text, text_print_time, text_scan_time )
 }
 
-PopExtUtil.TriggerHurt.DispatchSpawn()
+DispatchSpawn( PopExtUtil.TriggerHurt )
 
 NavMesh.GetAllAreas( PopExtUtil.AllNavAreas )
 
