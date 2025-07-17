@@ -12,16 +12,17 @@ PopExt <- popext_entity.GetScriptScope()
 	function AddHooksToScope( name, table, scope ) {
 
 		foreach( hook_name, func in table ) {
+
 			// Entries in hook table must begin with 'On' to be considered hooks
 			if ( hook_name.slice( 0,2 ) == "On" ) {
 
-				if ( !( "popHooks" in scope ) )
-					scope.popHooks <- {}
+				if ( !( "popext_hooks" in scope ) )
+					scope.popext_hooks <- {}
 
-				if ( !( hook_name in scope.popHooks ) )
-					scope.popHooks[hook_name] <- []
+				if ( !( hook_name in scope.popext_hooks ) )
+					scope.popext_hooks[hook_name] <- []
 
-				scope.popHooks[hook_name].append( func )
+				scope.popext_hooks[hook_name].append( func )
 			}
 			else {
 				if ( !( "pop_property" in scope ) )
@@ -29,17 +30,20 @@ PopExt <- popext_entity.GetScriptScope()
 
 				scope.pop_property[hook_name] <- func
 			}
+			// legacy backwards compatibility, some missions still use the old camelCase names
+			scope.popHooks 	  <- scope_popext_hooks
+			scope.popProperty <- scope_pop_property
 		}
 	}
 
 	function FireHooks( entity, scope, name ) {
-		if ( scope != null && "popHooks" in scope && name in scope.popHooks )
-			foreach( index, func in scope.popHooks[name] )
+		if ( scope != null && "popext_hooks" in scope && name in scope.popext_hooks )
+			foreach( index, func in scope.popext_hooks[name] )
 				func( entity )
 	}
 	function FireHooksParam( entity, scope, name, param ) {
-		if ( scope != null && "popHooks" in scope && name in scope.popHooks )
-			foreach( index, func in scope.popHooks[name] )
+		if ( scope != null && "popext_hooks" in scope && name in scope.popext_hooks )
+			foreach( index, func in scope.popext_hooks[name] )
 				func( entity, param )
 	}
 }
@@ -95,8 +99,8 @@ PopExtEvents.AddRemoveEventHook( "player_spawn", "PopHooksPlayerSpawn", function
 	if ( "botCreated" in scope )
 		delete scope.botCreated
 
-	if ( "popHooks" in scope )
-		delete scope.popHooks
+	if ( "popext_hooks" in scope )
+		delete scope.popext_hooks
 
 }, EVENT_WRAPPER_HOOKS)
 
@@ -127,8 +131,8 @@ PopExtEvents.AddRemoveEventHook( "player_team", "PopHooksPlayerTeam", function( 
 	if ( "botCreated" in scope )
 		delete scope.botCreated
 
-	if ( "popHooks" in scope )
-		delete scope.popHooks
+	if ( "popext_hooks" in scope )
+		delete scope.popext_hooks
 
 }, EVENT_WRAPPER_HOOKS)
 

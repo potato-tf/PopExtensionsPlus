@@ -1,22 +1,32 @@
 // Core popextensions script
 // Error handling, think table management, cleanup management, etc.
 
-::POPEXT_VERSION <- "07.14.2025.1"
+Include( "shared/constants" ) // Generic constants used by all scripts, including main
 
-local function Include( path ) {
-	try IncludeScript( format( "popextensions/%s", path ), getroottable() ) catch( e ) error( e )
+local function Include( path, include_only_if_scope_missing = null, scope_to_check = ROOT ) {
+
+	if ( scope_to_check != ROOT )
+		scope_to_check = ROOT[scope_to_check]
+
+	if ( include_only_if_scope_missing && !( include_only_if_scope_missing in scope_to_check ) ) {
+
+		PopExtMain.Error.DebugLog( format( "%s already included, skipping", include_only_if_scope_missing ) )
+		return
+	}
+
+	try 
+		IncludeScript( format( "popextensions/%s", path ), getroottable() ) 
+	catch( e ) 
+		error( e )
 }
 
 // INCLUDE ORDER IS IMPORTANT
 // These are required regardless of the modules you use
-
-Include( "shared/constants" )          // Generic constants used by all scripts
-Include( "shared/itemdef_constants" )  // Item definitions
-Include( "shared/item_map" ) 		   // Item map for english name item look-ups
-Include( "shared/attribute_map" ) 	   // Attribute map for attribute info look-ups
-
-Include( "shared/event_wrapper" ) 	   // Event wrapper for all events
-Include( "shared/util" ) 			   // misc utils/entities
+Include( "shared/itemdef_constants", "ID_SNUG_SHARPSHOOTER" )   // Item definitions.  check if a random constant was already folded to root to avoid re-including
+Include( "shared/item_map", "PopExtItems" ) 		   		    // Item map for english name item look-ups
+Include( "shared/attribute_map", "PopExtItems", "PopExtItems" ) // Attribute map for attribute info look-ups.
+Include( "shared/event_wrapper", "PopExtEvents" ) 	   		    // Event wrapper for all events
+Include( "shared/util", "PopExtUtil" )						    // misc utils/entities
 
 // these get defined here so we can use them
 local objres = Entities.FindByClassname( null, "tf_objective_resource" )

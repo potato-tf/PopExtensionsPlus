@@ -1,6 +1,9 @@
 ::ROOT  <- getroottable()
 ::CONST <- getconsttable()
 
+
+const POPEXT_VERSION = "07.17.2025.1"
+
 CONST.setdelegate( { _newslot = @( k, v ) compilestring( "const " + k + "=" + ( typeof v == "string" ? ( "\"" + v + "\"" ) : v ) )() } )
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
@@ -9,6 +12,7 @@ local tofold = [ "NetProps", "Entities", "EntityOutputs", "NavMesh", "Convars" ]
 // these are defined multiple times in other classes, skip to avoid conflicts
 // realistically "IsValid" is the only problematic one, but just in case
 local foldblacklist = {
+
 	IsValid   = true
 	GetName   = true
 	GetCenter = true
