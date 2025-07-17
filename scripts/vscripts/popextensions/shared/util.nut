@@ -1118,7 +1118,7 @@
 			if ( classname == "func_respawnroom" )
 				trigger.SetCollisionGroup( COLLISION_GROUP_NONE )
 
-			trigger.RemoveSolidFlags( 4 ) // FSOLID_NOT_SOLID
+			trigger.RemoveSolidFlags( FSOLID_NOT_SOLID )
 			triggers.append( trigger )
 		}
 
@@ -1135,7 +1135,7 @@
 			if ( classname == "func_respawnroom" )
 				trigger.SetCollisionGroup( TFCOLLISION_GROUP_RESPAWNROOMS )
 
-			trigger.AddSolidFlags( FSOLID_NOT_SOLID ) // FSOLID_NOT_SOLID
+			trigger.AddSolidFlags( FSOLID_NOT_SOLID )
 		}
 
 		return trace.hit && trace.enthit.GetClassname() == classname
