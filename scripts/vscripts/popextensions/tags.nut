@@ -1199,7 +1199,6 @@ local popext_funcs = {
 				local builtobj = GetPropEntity( builder, "m_hObjectBeingBuilt" )
 				SetPropInt( builder, "m_iObjectType", 0 )
 				SetPropInt( builder, "m_iBuildState", 2 )
-				// if ( builtobj && builtobj.GetClassname() != "obj_dispenser" ) builtobj.Kill()
 				SetPropEntity( builder, "m_hObjectBeingBuilt", dispenser ) //makes dispenser a null reference
 
 				_bot.Weapon_Switch( builder )
@@ -1216,6 +1215,48 @@ local popext_funcs = {
 				AddOutput( dispenser, "OnDestroyed", building.GetName(), "Kill", "", -1, -1 ) //kill it to avoid showing up in killfeed
 				AddOutput( building, "OnDestroyed", dispenser.GetName(), "Destroy", "", -1, -1 ) //always destroy the dispenser
 			}
+		}, EVENT_WRAPPER_TAGS)
+	}
+
+	popext_minisentry = function( bot, args ) {
+		
+		PopExtEvents.AddRemoveEventHook( "player_builtobject", format( "MinisentryBuildOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+
+			local _bot = GetPlayerFromUserID( params.userid )
+
+			if ( _bot != bot ) return
+
+			local sentry = EntIndexToHScript( params.index )
+
+			if ( params.index == OBJ_SENTRYGUN && GetPropBool( sentry, "m_bMiniBuilding" ) ) {
+
+				sentry.ValidateScriptScope()
+				sentry.GetScriptScope().CheckBuiltThink <- function() {
+
+					if ( GetPropBool( sentry, "m_bBuilding" ) ) return
+
+					// create a minisentry
+
+					local minisentry = SpawnEntityFromTable( "obj_sentrygun", {
+
+						origin     	   = sentry.GetOrigin()
+						angles     	   = sentry.GetAbsAngles()
+						defaultupgrade = 1
+						TeamNum    	   = sentry.GetTeam()
+						vscripts   	   = "popextensions/ent_additions"
+						spawnflags 	   = 64
+					})
+
+					minisentry.AcceptInput( "SetBuilder", "!activator", _bot, _bot )
+					FindByClassnameNearest( "bot_hint_sentrygun", sentry.GetOrigin(), 16 ).SetOwner( minisentry )
+					sentry.Kill()
+
+					return -1
+				}
+
+				AddThinkToEnt( sentry, "CheckBuiltThink" )
+			}
+
 		}, EVENT_WRAPPER_TAGS)
 	}
 
