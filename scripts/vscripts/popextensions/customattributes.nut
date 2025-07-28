@@ -1758,7 +1758,7 @@
 
 					if ( params.userid != PopExtUtil.PlayerTable[ player ] )
 						return
-	
+
 					local uberconds = [ TF_COND_INVULNERABLE, TF_COND_CRITBOOSTED, TF_COND_MEGAHEAL, TF_COND_MEDIGUN_UBER_BULLET_RESIST, TF_COND_MEDIGUN_UBER_BLAST_RESIST, TF_COND_MEDIGUN_UBER_FIRE_RESIST ]
 
 					item.GetScriptScope().ItemThinkTable[ format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ) ] <- function() {
@@ -1793,6 +1793,13 @@
 		function SpecialItemDescription( player, item, value ) {
 
 			player.GetScriptScope().attribinfo[ "special item description" ] <- format( "%s", value )
+		}
+
+		function MultPlayerModelScale( player, item, value ) {
+
+			player.SetModelScale( value, 0.0 )
+
+			player.GetScriptScope().attribinfo[ "mult player model scale" ] <- format( "Player model scale multiplied by %.2f", value )
 		}
 
 
