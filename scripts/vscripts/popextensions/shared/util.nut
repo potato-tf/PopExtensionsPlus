@@ -2450,7 +2450,7 @@
 PopExtEvents.AddRemoveEventHook( "mvm_wave_complete", "UtilWaveStatus", function ( params ) {
 
 	PopExtUtil.IsWaveStarted = false 
-	PopExtUtil.ResetConvars()
+	PopExtUtil.ResetConvars( false )
 
 }, EVENT_WRAPPER_UTIL )
 
@@ -2460,7 +2460,7 @@ PopExtEvents.AddRemoveEventHook( "mvm_reset_stats", "UtilWaveStatus", function (
 PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "UtilRoundStart", function ( params ) {
 
 	SetPropBool( PopExtUtil.GameRules, "m_bIsInTraining", false )
-	PopExtUtil.ResetConvars()
+	PopExtUtil.ResetConvars( false )
 
 }, EVENT_WRAPPER_UTIL )
 
