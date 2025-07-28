@@ -913,22 +913,21 @@
 			SetPropIntArray( player, STRING_NETPROP_AMMO, 0, i )
 	}
 
-	function GetAllEnts(callback = null) {
-		local entlist = []
-		local numents = 0
+	function GetAllEnts( count_players = false, callback = null ) {
 
-		for ( local i = MAX_CLIENTS, ent; i <= MAX_EDICTS; i++ ) {
-			if ( ent = EntIndexToHScript( i ) ) {
+		local entlist = []
+
+		local start = count_players ? 1 : MAX_CLIENTS
+
+		for ( local i = start, ent; i <= MAX_EDICTS; i++ )
+			if ( ent = EntIndexToHScript( i ) )
 				entlist.append( ent )
-				numents++
-			}
-		}
 
 		if (callback != null)
 			foreach (ent in entlist)
 				callback(ent)
 
-		return { "entlist": entlist, "numents": numents }
+		return { "entlist": entlist, "numents": entlist.len() }
 	}
 
 	//sets m_hOwnerEntity and m_hOwner to the same value
@@ -1069,6 +1068,7 @@
 	}
 
 	function PressButton( player, button, duration = -1 ) {
+
 		SetPropInt( player, "m_afButtonForced", GetPropInt( player, "m_afButtonForced" ) | button )
 		SetPropInt( player, "m_nButtons", GetPropInt( player, "m_nButtons" ) | button )
 
@@ -1076,6 +1076,7 @@
 			ScriptEntFireSafe( player, format( "PopExtUtil.ReleaseButton( self, %d )", button ), duration )
 	}
 	function ReleaseButton( player, button ) {
+
 		SetPropInt( player, "m_afButtonForced", GetPropInt( player, "m_afButtonForced" ) & ~button )
 		SetPropInt( player, "m_nButtons", GetPropInt( player, "m_nButtons" ) & ~button )
 	}
@@ -1738,6 +1739,7 @@
 	}
 
 	function StringReplace( str, findwhat, replace ) {
+
 		local returnstring = ""
 		local findwhatlen  = findwhat.len()
 		local splitlist	   = []
@@ -2171,7 +2173,7 @@
 		projectiles.sort( @( a, b ) a[1] <=> b[1] )
 
 		local projectiles_len = projectiles.len()
-		return projectiles_len ? projectiles[projectiles_len - 1 ][0] : null
+		return projectiles_len ? projectiles[ projectiles_len - 1 ][ 0 ] : null
 
 	}
 

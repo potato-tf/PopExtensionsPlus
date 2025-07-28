@@ -2781,6 +2781,20 @@ Sets countdown time when everyone has F4'd. Values below 9 will disable starting
 
 ---
 
+<a name="MissionAttributes.OptimizePathTracks"></a>
+
+```js
+// example usage
+OptimizePathTracks = 1
+```
+
+Incrementally spawn and delete path_tracks to save edicts.
+
+>[!CAUTION]
+> Not yet implemented.
+
+---
+
 <a name="MissionAttributes.ExtraTankPath"></a>
 
 ```js
@@ -3076,7 +3090,138 @@ if no wave specified it will override the current wave.
 > [!WARNING]
 > Bots must have an associated popext_iconoverride tag for decrementing/incrementing on death.
 
+---
+
+<a name="MissionAttributes.NoUpgrades"></a>
+
+```js
+// example usage
+NoUpgrades = 1
+```
+
+Disables the upgrade station and prints a message to the screen.
+
+- 1 - print a message to the screen
+- 2 - silently disable the upgrade station
+
+---
+
+<a name="MissionAttributes.BotSpectateTime"></a>
+
+```js
+// example usage
+BotSpectateTime = 1.0
+```
+
+Moves bots to spectator after a specified time.
+
+>[!WARNING]
+> Durations greater than 5s will likely cause problems.  This is exclusively meant to *shorten* the spectate timer.
+
+---
+
+<a name="MissionAttributes.FastEntityNameLookup"></a>
+
+```js
+// example usage
+FastEntityNameLookup = 1
+```
+
+Lower-cases all entity targetnames for slightly faster entity I/O calls.
+
+---
+
+<a name="MissionAttributes.RemoveBotViewmodels"></a>
+
+```js
+// example usage
+RemoveBotViewmodels = 1
+```
+
+Removes all viewmodels from bots to save edicts.
+
+---
+
+<a name="MissionAttributes.UnusedGiantFootsteps"></a>
+
+```js
+// example usage
+UnusedGiantFootsteps = 1
+```
+
+- 1 - Enable unused giant footstep sfx
+- 2 - Enable for giant players too
+- 4 - Use default footstep sound timing (faster, more spammy)
+
+Enables unused class-specific giant footstep sounds.
+
+---
+
+<a name="MissionAttributes.MissionUnloadOutput"></a>
+
+```js
+// example usage
+MissionUnloadOutput = {
+	target = "bignet"
+	action = "runscriptcode"
+	param = "ClientPrint(null, HUD_PRINTTALK, \"Mission complete!\")"
+	delay = 1.0
+	activator = null
+	caller = null
+}
+```
+
+Fire an Entity output on mission complete.
+
 ## [util](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/util.nut) references
+
+<a name="PopExtUtil.HumanTable"></a>
+<a name="PopExtUtil.BotTable"></a>
+<a name="PopExtUtil.PlayerTable"></a>
+
+```cpp
+table PopExtUtil::HumanTable
+table PopExtUtil::BotTable
+table PopExtUtil::PlayerTable
+```
+Pre-collected/managed tables of player handles and their userid's. Automatically updated.
+
+> [!NOTE]
+> Array forms also exist as `PopExtUtil.HumanArray`, `PopExtUtil.BotArray`, and `PopExtUtil.PlayerArray`.
+
+---
+
+<a name="PopExtUtil.Classes"></a>
+<a name="PopExtUtil.ClassesCaps"></a>
+
+```cpp
+array PopExtUtil::Classes // ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer", "civilian"]
+array PopExtUtil::ClassesCaps // ["", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer", "Civilian"]
+```
+
+Arrays of player class names for `GetPlayerClass()` lookups.
+
+---
+
+<a name="PopExtUtil.IsWaveStarted"></a>
+
+```cpp
+bool PopExtUtil::IsWaveStarted
+```
+
+Global variable to check if the current wave has started.
+
+---
+
+<a name="PopExtUtil.IsWaveFinished"></a>
+
+```cpp
+table PopExtUtil::MaxAmmoTable
+```
+
+Table of default max ammo values for every weapon.  `PopExtUtil.MaxAmmoTable[ player.GetPlayerClass() ][ player.GetActiveWeapon().GetClassname() ]` will return the max ammo for the player's active weapon.
+
+---
 
 <a name="PopExtUtil.IsLinuxServer"></a>
 
@@ -3084,7 +3229,7 @@ if no wave specified it will override the current wave.
 bool PopExtUtil::IsLinuxServer()
 ```
 
-Is the current server on linux?
+Returns true if the current server is running on Linux.
 
 ---
 
@@ -3094,7 +3239,7 @@ Is the current server on linux?
 void PopExtUtil::ShowMessage(string message)
 ```
 
-ClientPrints everyone a message to the centre of the screen
+Prints a message to everyone in the centre of the screen.
 
 ---
 
@@ -3335,10 +3480,12 @@ Removes all ammo of all weapons of the player
 <a name="PopExtUtil.GetAllEnts"></a>
 
 ```cpp
-table PopExtUtil::GetAllEnts()
+table PopExtUtil::GetAllEnts(bool count_players = false, function callback = null)
 ```
 
-Returns a table of two kv pairs. First pair is "entlist", which contains an array of all the ents. Second pair is "numents", which is the number of total ents.
+Returns a table of two kv pairs: An array of entity handles (`entlist`), and the number of entities (`numents`).  Use `count_players` to ignore/include players (default is false).
+
+Accepts an optional callback function to be called for each entity.  See `FastEntityNameLookup` in [`missionattributes.nut`](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/missionattributes.nut) for an example.
 
 ---
 
@@ -3367,7 +3514,7 @@ void PopExtUtil::ShowAnnotation(table args = {
 	bool effect = true})
 ```
 
-Sends the `show_annotation` game event with the specified arguments
+`show_annotation` game event wrapper.  Accepts vector arguments for origin, an array of player handles for per-player visibility, and more.  Check the [source](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/shared/util.nut#L947) for more details.
 
 ---
 
@@ -3378,6 +3525,21 @@ void PopExtUtil::HideAnnotation(int id)
 ```
 
 Hides the annotation with a given id
+
+>[!NOTE]
+> This is just a wrapper for the `hide_annotation` game event.  No functional difference.
+
+---
+<a name="PopExtUtil.TrainingHUD"></a>
+
+```cpp
+void PopExtUtil::TrainingHUD(string title, string text, float duration = 5.0)
+```
+
+Displays a training mode HUD element with the given title and text for a specified duration.
+
+>[!WARNING]
+> Training HUD elements have some important limitations.  See [the VDC page](https://developer.valvesoftware.com/wiki/Tf_logic_training_mode) for more details.
 
 ---
 
@@ -3874,6 +4036,110 @@ void PopExtUtil::OnWeaponFire(handle wep, function() func)
 ```
 
 Sets a thing to be done when the weapon fires.
+
+
+---
+
+<a name="PopExtUtil.IsProjectileWeapon"></a>
+
+```cpp
+bool PopExtUtil::IsProjectileWeapon(handle wep)
+```
+
+Returns true if the weapon is a projectile weapon.  See [`PROJECTILE_WEAPONS`](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/shared/util.nut#L111) for a list of projectile weapons.
+
+---
+
+<a name="PopExtUtil.GetLastFiredProjectile"></a>
+
+```cpp
+handle PopExtUtil::GetLastFiredProjectile(handle player)
+```
+
+Returns the last fired projectile for a player.
+
+>[!NOTE]
+> This function must be called after the weapon has fired to correctly detect the last projectile.  See [`replace weapon fire sound`](https://github.com/potato-tf/PopExtensionsPlus/blob/main/scripts/vscripts/popextensions/customattributes.nut#L905) for an example.
+
+---
+
+<a name="PopExtUtil.ChangeLevel"></a>
+
+```cpp
+void PopExtUtil::ChangeLevel(string mapname = "", float delay = 1.0, bool mvm_cyclemissionfile = false)
+```
+
+Changes the level to the specified map.  If `mvm_cyclemissionfile` is true, the next map in the missioncycle file will be loaded immediately with no delay.
+
+>[!NOTE]
+> For the default `mvm_cyclemissionfile = false` behavior to work, dedicated servers must add `nextlevel` to their vscript convar allowlist, or set `sv_allow_point_servercommand` to `always`.
+
+---
+
+<a name="PopExtUtil.ToStrictNum"></a>
+
+```cpp
+float/int PopExtUtil::ToStrictNum(string str, bool float = false)
+```
+
+Converts a string to a float or integer.  Returns `null` if the string cannot be converted.
+
+---
+
+<a name="PopExtUtil.SetRedMoney"></a>
+
+```cpp
+void PopExtUtil::SetRedMoney(int value)
+```
+
+Toggles red money drops (auto-collected money) when a player kills a bot.
+
+---
+
+<a name="PopExtUtil.SetConvar"></a>
+
+```cpp
+void PopExtUtil::SetConvar(string convar, string value, float duration = 0, bool hide_chat_message = true)
+```
+
+Sets a whitelisted convar that will be automatically reset to its default value on the next wave, or after a specified duration.
+
+---
+
+<a name="PopExtUtil.ResetConvars"></a>
+
+```cpp
+void PopExtUtil::ResetConvars(bool hide_chat_message = true)
+```
+
+Resets all convars set by `PopExtUtil.SetConvar()` to their default values.
+
+>[!NOTE]
+> This will not reset convars set directly by `Convars.SetValue()`.
+
+---
+
+<a name="PopExtUtil.KVStringToVectorOrQAngle"></a>
+
+```cpp
+Vector/QAngle PopExtUtil::KVStringToVectorOrQAngle(string str, bool angles = false, int startidx = 0)
+```
+
+Converts a string to a Vector or QAngle.  `startidx` will start at a given character for handling combined vector/angle strings such as `"100 100 100 90 0 0"`.
+
+---
+
+<a name="PopExtUtil.ValidatePlayerTables"></a>
+
+```cpp
+void PopExtUtil::ValidatePlayerTables()
+```
+
+
+Validates the player tables.  Removes invalid players from the table.
+
+>[!NOTE]
+> This is handled internally when player tables are updated, and `PopExtUtil.CountAlivePlayers()` is called.
 
 ---
 

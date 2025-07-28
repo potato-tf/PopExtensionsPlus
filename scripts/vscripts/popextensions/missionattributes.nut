@@ -2924,16 +2924,14 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 		FastEntityNameLookup = function( value ) {
 
-			local ents = PopExtUtil.GetAllEnts()
-
-			foreach ( ent in ents.entlist ) {
+			PopExtUtil.GetAllEnts(false, function( ent ) {
 
 				local entname = ent.GetName()
 
-				if ( entname == "" ) continue
+				if ( entname == "" ) return
 
 				SetPropString( ent, "m_iName", entname.tolower() )
-			}
+			})
 		}
 
 		RemoveBotViewmodels = function( value ) {
@@ -3090,7 +3088,6 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 	}
 	CurAttrs			= {} // table storing currently modified attributes.
-	ConVars  			= {} // table storing original convar values
 	SoundsToReplace 	= {}
 	OptimizedTracks		= {}
 
