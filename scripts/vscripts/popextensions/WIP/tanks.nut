@@ -25,10 +25,10 @@ popext_tanks_entity.ValidateScriptScope()
                 local is_support 	     = "is_support" in table.Icon ? table.Icon.is_support : false
                 local is_support_limited = "is_support_limited" in table.Icon ? table.Icon.is_support_limited : false
 
-                PopExt.AddCustomTankIcon( icon, count, is_crit, is_boss, is_support, is_support_limited )
+                PopExtWavebar.AddCustomTankIcon( icon, count, is_crit, is_boss, is_support, is_support_limited )
             }
             else
-                PopExt.AddCustomTankIcon( table.Icon, 1 )
+                PopExtWavebar.AddCustomTankIcon( table.Icon, 1 )
         }
 
         name = name.tolower()
@@ -533,11 +533,11 @@ PopExtEvents.AddRemoveEventHook( "npc_hurt", "PopExtTankHurt", function( params 
 
 				// Compensate for the decreasing of normal tank icon
 				local icon_name = typeof icon == "string" ? icon : icon.name
-				if ( PopExt.GetWaveIconSpawnCount( "tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL ) > 0 && PopExt.GetWaveIconSpawnCount( icon_name, flags ) > 0 )
-					PopExt.IncrementWaveIconSpawnCount( "tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1, false )
+				if ( PopExtWavebar.GetWaveIcon( "tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL ) > 0 && PopExtWavebar.GetWaveIcon( icon_name, flags ) > 0 )
+					PopExtWavebar.IncrementWaveIcon( "tank", MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1, false )
 
 				// Decrement custom tank icon when killed.
-				PopExt.DecrementWaveIconSpawnCount( icon_name, flags, 1, false )
+				PopExtWavebar.DecrementWaveIcon( icon_name, flags, 1, false )
 			}
 
 			PopExtHooks.FireHooksParam( victim, scope, "OnDeath", params )

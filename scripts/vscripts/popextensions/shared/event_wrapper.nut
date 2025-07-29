@@ -11,12 +11,13 @@
 // We use this to dynamically add/remove events at potentially critical times (large piles of bot spawns mostly)
 // So far I haven't seen any PERF WARNINGS in console using this, some bot tags/custom attributes may yell on bot/player spawn.
 
-::PopExtEvents <- {
+class PopExtEvents{
 
     EventsPreCollect = {}
-    TableId = UniqueString( "_Compiled" )
+    CollectedEvents  = {}
+    TableId          = UniqueString( "_Compiled" )
 
-    AddRemoveEventHook = function( event, funcname, func = null, index = "unordered", manual_collect = false ) {
+    function AddRemoveEventHook( event, funcname, func = null, index = "unordered", manual_collect = false ) {
 
         // remove hook
         if ( !func ) {
@@ -93,14 +94,14 @@
         CollectEvents()
     }
 
-    CollectEvents = function() {
+    function CollectEvents() {
 
         local old_table = {}
         local old_table_name = format( "PopExtEvents_%s", TableId )
 
-        if ( old_table_name in PopExtEvents )
+        if ( old_table_name in CollectedEvents )
 
-            old_table = PopExtEvents[ old_table_name ]
+            old_table = CollectedEvents[ old_table_name ]
 
         foreach ( event, new_table in EventsPreCollect ) {
 
@@ -147,17 +148,17 @@
         local new_table_name = format( "PopExtEvents_%s", new_id )
 
         // old events are copied to new table to preserve existing event hooks
-        PopExtEvents[ new_table_name ] <- old_table
+        CollectedEvents[ new_table_name ] <- old_table
 
         // remove old table
-        if ( old_table_name in PopExtEvents )
-            delete PopExtEvents[ old_table_name ]
+        if ( old_table_name in CollectedEvents )
+            delete CollectedEvents[ old_table_name ]
 
         // update table ID
         TableId = new_id
 
         // collect new events
-        __CollectGameEventCallbacks( PopExtEvents[ new_table_name ] )
+        __CollectGameEventCallbacks( CollectedEvents[ new_table_name ] )
     }
 }
 

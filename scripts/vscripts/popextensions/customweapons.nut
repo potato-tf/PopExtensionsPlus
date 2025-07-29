@@ -40,7 +40,7 @@
 //	}
 //}
 
-::PopExtWeapons <- {
+class PopExtWeapons {
 
 	//arrays copied from Yaki's gtfw
 	//Order based on internal constants of ETFClass

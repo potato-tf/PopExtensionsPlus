@@ -2,45 +2,57 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
+::POPEXT_VERSION <- "07.29.2025.1"
 
-local function Include( path, include_only_if_scope_missing = null, scope_to_check = ROOT ) {
+local function Include( path, include_only_if_missing = null, scope_to_check = ROOT ) {
 
 	if ( scope_to_check != ROOT && scope_to_check in ROOT )
 		scope_to_check = ROOT[scope_to_check]
 
-	if ( include_only_if_scope_missing && include_only_if_scope_missing in scope_to_check )
-		return
+	if ( include_only_if_missing && include_only_if_missing in scope_to_check )
+		return true
 
-	try 
+	try {
+
 		IncludeScript( format( "popextensions/%s", path ), getroottable() ) 
-	catch( e ) 
+		return true
+	}
+	catch( e ) {
+
 		error( e )
+		return false
+	}
 }
 
 // INCLUDE ORDER IS IMPORTANT
 // These are required regardless of the modules you use
-Include( "shared/constants" ) // Generic constants used by all scripts, including main
+Include( "shared/constants" ) 									// Generic constants used by all scripts, including main
 Include( "shared/itemdef_constants", "ID_SNUG_SHARPSHOOTER" )   // Item definitions.  check if a random constant was already folded to root to avoid re-including
 Include( "shared/item_map", "PopExtItems" ) 		   		    // Item map for english name item look-ups
-Include( "shared/attribute_map", "PopExtItems", "PopExtItems" ) // Attribute map for attribute info look-ups.
+Include( "shared/attribute_map", "PopExtItems", "PopExtItems" ) // Attribute map for attribute info look-ups
 Include( "shared/event_wrapper", "PopExtEvents" ) 	   		    // Event wrapper for all events
 Include( "shared/util", "PopExtUtil" )						    // misc utils/entities
+// Include( "shared/gamestrings" )								    // prevent string leaks
 
 // these get defined here so we can use them
 local objres = Entities.FindByClassname( null, "tf_objective_resource" )
 
-//save popfile name in global scope when we first initialize
-//if the popfile name changed, a new pop has loaded, clean everything up.
+/**************************************************************************************************************
+ * Save popfile name in global scope when we first initialize                                                 *
+ * If the popfile name changed, a new pop has loaded, clean everything up.                                    *
+ * TODO: this will break if the popfile name is changed mid-mission and not reverted back.  Find a better way *
+ *************************************************************************************************************/
 ::__popname <- NetProps.GetPropString( objres, "m_iszMvMPopfileName" )
 
-// ::commentaryNode <- SpawnEntityFromTable( "point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"} )
-
-// overwrite AddThinkToEnt
-// certain entity types use think tables, meaning any external scripts will conflict with this and break everything
-// don't want to confuse new scripters by allowing adding multiple thinks with AddThinkToEnt in our library and our library only
-// spew a big fat warning below so they know what's going on
+/*********************************************************************************************************************************
+ * overwrite AddThinkToEnt                                                                                                       *
+ * certain entity types use think tables, meaning any external scripts will conflict with this and break everything              *
+ * don't want to confuse new scripters by allowing adding multiple thinks with AddThinkToEnt in our library and our library only *
+ * spew a big fat warning below so they know what's going on                                                                     *
+ *********************************************************************************************************************************/
 
 local banned_think_classnames = {
+
 	player 			= "PlayerThinkTable"
 	tank_boss 		= "TankThinkTable"
 	tf_projectile_ 	= "ProjectileThinkTable"
@@ -50,9 +62,11 @@ local banned_think_classnames = {
 
 if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
-	//rename so we can still use it elsewhere
-	//this also allows people to override the think restriction by using _AddThinkToEnt( ent, "FuncNameHere" ) instead
-	//I'm not including this in the warning, only the people that know what they're doing already and can find it here should know about it.
+    /******************************************************************************************************************************************
+     * rename so we can still use it elsewhere                                                                                                *
+     * this also allows people to override the think restriction by using _AddThinkToEnt( ent, "FuncNameHere" ) instead                       *
+     * I'm not including this in the warning, only the people that know what they're doing already and can find it here should know about it. *
+     ******************************************************************************************************************************************/
 	::_AddThinkToEnt <- AddThinkToEnt
 
 	::AddThinkToEnt <- function( ent, func ) {
@@ -81,7 +95,53 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 	}
 }
 
-::PopExtMain <- {
+// Global variable cleanup
+local cleanup = [
+
+	"MissionAttributes"
+	"CustomAttributes"
+	"SpawnTemplate"
+	"SpawnTemplateWaveSchedule"
+	"SpawnTemplates"
+	"VCD_SOUNDSCRIPT_MAP"
+	"PointTemplates"
+	"CustomWeapons"
+	"__popname"
+	"ExtraItems"
+	"Homing"
+	"MAtr"
+	"MAtrs"
+	"MissionAttr"
+	"MissionAttrs"
+	"MissionAttrThink"
+
+	"pop_ext_think_func_set"
+	"POPEXT_VERSION"
+
+	"ScriptLoadTable"
+	"ScriptUnloadTable"
+	"EntAdditions"
+	"Explanation"
+	"Info"
+
+	"PopExt"
+	"PopExtTags"
+	"PopExtHooks"
+	"PopExtPathPoint"
+	"PopExtBotBehavior"
+	"PopExtWeapons"
+	"PopExtAttributes"
+	"PopExtItems"
+	"PopExtGlobalThink"
+	"PopExtTutorial"
+
+	// clear these last
+	"PopExtEvents"
+	"PopExtUtil"
+	"PopExtMain"
+]
+
+class PopExtMain {
 
 	IncludeAllModules = true
 
@@ -93,17 +153,21 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 		"tags" 				: null,
 	}
 
-	// manual cleanup flag, set to true for missions that are created for a specific map.
-	// automated unloading is meant for multiple missions on one map, purpose-built map/mission combos ( like mvm_redridge ) don't need this.
-	// this should also be used if you change the popfile name mid-mission.
+    /******************************************************************************************************************************************
+     * manual cleanup flag, set to true for missions that are created for a specific map.                                                     *
+     * automated unloading is meant for multiple missions on one map, purpose-built map/mission combos ( like mvm_redridge ) don't need this. *
+     * this should also be used if you change the popfile name mid-mission.                                                                   *
+     *****************************************************************************************************************************************/
 	ManualCleanup = false
 
 	ActiveModules = {}
 
 
-	// ignore these variables when cleaning up
-	// "Preserved" is a special table that will persist through the cleanup process
-	// any player scoped variables you want to use across multiple waves should be added here
+    /*************************************************************************************************************
+     * ignore these variables when cleaning up player scope                                                      *
+     * "Preserved" is a special table that will persist through the cleanup process unless full_cleanup is true. *
+     * any player scoped variables you want to use across multiple waves should be added here                    *
+     *************************************************************************************************************/
 	IgnoreTable = {
 		"self"         		   : null
 		"__vname"      		   : null
@@ -140,14 +204,24 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
 	function IncludeModules( ... ) {
 
+		local failed_modules = {}
+
 		foreach ( module in vargv ) {
 
 			if ( !( module in ActiveModules ) ) {
 
+				if ( !Include( module ) ) {
+
+					failed_modules[module] <- true
+					Error.RaiseModuleError( module, format( "file: %s, func: %s", getstackinfos(2).src, getstackinfos(2).func ), true )
+					continue
+				}
+
 				ActiveModules[module] <- true
-				Include( module )
 			}
 		}
+
+		return failed_modules.len() == 0
 	}
 
 	Error = {
@@ -178,10 +252,10 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 			if ( !RaisedParseError ) {
 
 				RaisedParseError = true
-				ClientPrint( null, HUD_PRINTTALK, "\x08FFB4B4FFIt is possible that a parsing error has occured. Check console for details." )
+				ClientPrint( null, HUD_PRINTTALK, POPEXT_PARSE_ERROR )
 			}
 			if ( assert ) {
-				RaiseException( format( "%s %s.\n", POPEXT_ERROR, ErrorMsg ) )
+				RaiseException( format( "%s.\n", ErrorMsg ) )
 			}
 			else {
 				ClientPrint( null, HUD_PRINTTALK, format( "%s %s.\n", POPEXT_ERROR, ErrorMsg ) )
@@ -392,52 +466,9 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 	}
 
 	//nuke it all
-	local cleanup = [
-
-		"MissionAttributes"
-		"CustomAttributes"
-		"SpawnTemplate"
-		"SpawnTemplateWaveSchedule"
-		"SpawnTemplates"
-		"VCD_SOUNDSCRIPT_MAP"
-		"PointTemplates"
-		"CustomWeapons"
-		"__popname"
-		"ExtraItems"
-		"Homing"
-		"MAtr"
-		"MAtrs"
-		"MissionAttr"
-		"MissionAttrs"
-		"MissionAttrThink"
-
-		"pop_ext_think_func_set"
-		"POPEXT_VERSION"
-
-		"ScriptLoadTable"
-		"ScriptUnloadTable"
-		"EntAdditions"
-		"Explanation"
-		"Info"
-
-		"PopExt"
-		"PopExtTags"
-		"PopExtHooks"
-		"PopExtPathPoint"
-		"PopExtBotBehavior"
-		"PopExtWeapons"
-		"PopExtAttributes"
-		"PopExtItems"
-		"PopExtGlobalThink"
-		"PopExtTutorial"
-
-		// clear these last
-		"PopExtEvents"
-		"PopExtUtil"
-		"PopExtMain"
-	]
-
-	foreach( c in cleanup ) if ( c in ROOT ) delete ROOT[c]
+	foreach( c in cleanup ) 
+		if ( c in ROOT ) 
+			delete ROOT[c]
 
 	EntFire( "__popext*", "Kill" )
 	EntFire( "extratankpath*", "Kill" )
@@ -448,6 +479,8 @@ for ( local i = MaxClients().tointeger(); i > 0; --i )
 	if ( PlayerInstanceFromIndex( i ) )
 		PopExtUtil.ScriptEntFireSafe( PlayerInstanceFromIndex( i ), "self.Regenerate( true )", SINGLE_TICK )
 
-if ( PopExtMain.IncludeAllModules )
-	PopExtMain.IncludeModules( "hooks", "popextensions", "robotvoicelines", "customattributes", "missionattributes", "customweapons", "botbehavior", "tags", "spawntemplate" )
+// populator.nut and tutorialtools.nut are unfinished and not included by default
+// They can be manually included in the popfile using PopExtMain.IncludeModules( "populator", "tutorialtools" )
 
+if ( PopExtMain.IncludeAllModules )
+	PopExtMain.IncludeModules( "hooks", "popextensions", "wavebar", "robotvoicelines", "customattributes", "missionattributes", "customweapons", "botbehavior", "tags", "spawntemplate" )

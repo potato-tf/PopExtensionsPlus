@@ -17,6 +17,7 @@
 	ConVars       = {}
 
 	ROBOT_ARM_PATHS = [
+
 		"", // Dummy
 		"models/weapons/c_models/c_scout_bot_arms.mdl",
 		"models/weapons/c_models/c_sniper_bot_arms.mdl",
@@ -29,8 +30,8 @@
 		"models/weapons/c_models/c_engineer_bot_arms.mdl",
 		"", // Civilian
 	]
-	HUMAN_ARM_PATHS =
-	[
+	HUMAN_ARM_PATHS = [
+
 		"models/weapons/c_models/c_medic_arms.mdl", //dummy
 		"models/weapons/c_models/c_scout_arms.mdl",
 		"models/weapons/c_models/c_sniper_arms.mdl",
@@ -473,7 +474,10 @@
 
 	function PrintTable( table ) {
 
-		if ( table == null || ( typeof table != "table" && typeof table != "array" ) ) return
+		if ( table == null || ( typeof table != "table" && typeof table != "array" ) ) {
+			ClientPrint( null, 2, ""+table )
+			return
+		}
 
 		DoPrintTable( table, 0 )
 	}
@@ -2095,10 +2099,8 @@
 
 	function PurgeGameString( str ) {
 
-		local dummy = CreateByClassname( "info_target" )
+		local dummy = CreateByClassname( "info_null" )
 		SetTargetname( dummy, str )
-		SetPropBool( dummy, "m_bForcePurgeFixedupStrings", true )
-		dummy.Kill()
 	}
 
 	function SetDestroyCallback( entity, callback ) {
@@ -2217,8 +2219,9 @@
 	function ToStrictNum( str, float = false ) {
 
 		if ( typeof str == "string" ) {
-			local rex = regexp( @"-?[0-9]+( \.[0-9]+ )?" )
 
+			str = strip(str)
+			local rex = regexp( @"-?[0-9]+(\.[0-9]+)?" )
 			if ( !rex.match( str ) ) return
 		}
 
@@ -2381,7 +2384,7 @@
 			hide_fcvar_notify = SpawnEntityFromTable( "point_commentary_node", { targetname = "  IGNORE THIS ERROR \r" } )
 
 		foreach ( convar, value in ConVars ) 
-			SetValue( convar, value )
+			ScriptEntFireSafe( "BigNet", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
 
 		ConVars.clear()
 
@@ -2419,7 +2422,9 @@
 		if ( typeof str == "Vector" || typeof str == "QAngle" )
 			return str
 
-		local split = ( str.find( "," ) ? split( str, ",", true ) : split( str, " ", true ) ).apply( @( str ) PopExtUtil.ToStrictNum( str, true ) )
+		local separator = str.find( "," ) ? "," : " "
+
+		local split = split( str, separator, true ).apply( @( v ) PopExtUtil.ToStrictNum( v, true ) )
 
 		local errorstr = "KVString CONVERSION ERROR: %s"
 
@@ -2429,7 +2434,7 @@
 			return angles ? QAngle() : Vector()
 		}
 
-		local invalid = split.find(null)
+		local invalid = split.find( null )
 
 		if (invalid != null) {
 
@@ -2440,8 +2445,8 @@
 				invalid_kvstringidx = !invalid_mod ? 2 : invalid_mod - 1
 			}
 
-			local kvstringvalue = angles ? ["yaw", "pitch", "roll"] : ["x", "y", "z"]
-			PopExtMain.Error.ParseError( format( errorstr, "Could not convert string to number for KVString %s (index %d)", kvstringvalue[ invalid_kvstringidx ], invalid ), true )
+			local kvstringvalue = angles ? ["yaw", "pitch", "roll"] : ["X", "Y", "Z"]
+			PopExtMain.Error.ParseError( format( errorstr, format("Could not convert string to number for KVString %s (index %d)", kvstringvalue[ invalid_kvstringidx ], invalid ) ), true )
 			return angles ? QAngle() : Vector()
 		}
 

@@ -1,4 +1,4 @@
-::PopExtAttributes <- {
+class PopExtAttributes {
 
 	ROCKET_LAUNCHER_CLASSNAMES = [
 
@@ -326,9 +326,7 @@
 		// unfinished attribute
 		function TeleporterRechargeTime( player, item, value = 1.0 ) {
 
-			ClientPrint( player, HUD_PRINTTALK, "DONT USE ME! Teleporter recharge time is not finished!" )
-			// not finished
-			return
+			PopExtMain.Error.GenericWarning( "custom attribute TeleporterRechargeTime is not finished!" )
 
 			local scope = item.GetScriptScope()
 			scope.teleporterrechargetimemult <- value

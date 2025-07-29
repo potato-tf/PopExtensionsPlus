@@ -1,9 +1,6 @@
 ::ROOT  <- getroottable()
 ::CONST <- getconsttable()
 
-
-const POPEXT_VERSION = "07.18.2025.1"
-
 CONST.setdelegate( { _newslot = @( k, v ) compilestring( "const " + k + "=" + ( typeof v == "string" ? ( "\"" + v + "\"" ) : v ) )() } )
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
@@ -19,13 +16,16 @@ local foldblacklist = {
 }
 
 // fold every class into the root table for performance
-foreach( _class in tofold)
+foreach( _class in tofold ) {
 
-	foreach( k, v in ROOT[_class].getclass() )
+	foreach( k, v in ROOT[_class].getclass() ) {
 
-		if ( !( k in foldblacklist ) && !( k in ROOT ) )
+		if ( !( k in foldblacklist ) && !( k in ROOT ) ) {
 
 			ROOT[k] <- ROOT[_class][k].bindenv( ROOT[_class] )
+		}
+	}
+}
 
 
 // fold every pre-defined constant into the const table
@@ -64,6 +64,8 @@ const STRING_NETPROP_MODELINDEX   = "m_nModelIndex"
 const POPEXT_ERROR   = "POPEXT ERROR: "
 const POPEXT_WARNING = "POPEXT WARNING: "
 const POPEXT_DEBUG   = "POPEXT DEBUG: "
+
+CONST.POPEXT_PARSE_ERROR <- format( "\x08FFB4B4FF%s A parsing error has occured. Check console for details.", POPEXT_ERROR )
 
 // Single tick interval
 const SINGLE_TICK = 0.015
@@ -663,11 +665,6 @@ const TFCOLLISION_GROUP_RESPAWNROOMS 						= 25
 const TFCOLLISION_GROUP_PUMPKIN_BOMB 						= 26
 const TFCOLLISION_GROUP_ROCKET_BUT_NOT_WITH_OTHER_ROCKETS 	= 27
 
-// Content masks
-CONST.MASK_OPAQUE      	   <- ( CONST.CONTENTS_SOLID|CONST.CONTENTS_MOVEABLE|CONST.CONTENTS_OPAQUE )
-CONST.MASK_PLAYERSOLID 	   <- ( CONST.CONTENTS_SOLID|CONST.CONTENTS_MOVEABLE|CONST.CONTENTS_PLAYERCLIP|CONST.CONTENTS_WINDOW|CONST.CONTENTS_MONSTER|CONST.CONTENTS_GRATE )
-CONST.MASK_SOLID_BRUSHONLY <- ( CONST.CONTENTS_SOLID|CONST.CONTENTS_MOVEABLE|CONST.CONTENTS_WINDOW|CONST.CONTENTS_GRATE )
-
 // NavMesh related
 const STEP_HEIGHT = 18
 
@@ -686,3 +683,13 @@ const INT_MAX   = 2147483647
 if ( !( "STEP_HEIGHT" in ROOT ) )
 	foreach( k, v in CONST )
 		ROOT[k] <- v
+
+// Content masks
+// These are defined after the folding step so we can use the constants we just defined
+CONST.MASK_OPAQUE      	   <- ( CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_OPAQUE )
+CONST.MASK_PLAYERSOLID 	   <- ( CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_PLAYERCLIP|CONTENTS_WINDOW|CONTENTS_MONSTER|CONTENTS_GRATE )
+CONST.MASK_SOLID_BRUSHONLY <- ( CONTENTS_SOLID|CONTENTS_MOVEABLE|CONTENTS_WINDOW|CONTENTS_GRATE )
+
+::MASK_OPAQUE 		   <- CONST.MASK_OPAQUE
+::MASK_PLAYERSOLID 	   <- CONST.MASK_PLAYERSOLID
+::MASK_SOLID_BRUSHONLY <- CONST.MASK_SOLID_BRUSHONLY

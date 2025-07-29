@@ -6,9 +6,6 @@ PopExt <- popext_entity.GetScriptScope()
 
 ::PopExtHooks <- {
 
-	tank_icons = []
-	icons 	   = []
-
 	function AddHooksToScope( name, table, scope ) {
 
 		foreach( hook_name, func in table ) {
@@ -164,27 +161,6 @@ PopExtEvents.AddRemoveEventHook( "player_death", "PopHooksPlayerDeath", function
 		local scope = attacker.GetScriptScope()
 		PopExtHooks.FireHooksParam( attacker, scope, "OnKill", params )
 	}
-}, EVENT_WRAPPER_HOOKS)
-
-PopExtEvents.AddRemoveEventHook( "mvm_begin_wave", "PopHooksWaveStarts", function( params ) {
-
-	if ( "wave_icons_function" in PopExt )
-		PopExt.wave_icons_function()
-
-	foreach( v in PopExtHooks.tank_icons )
-		PopExt._PopIncrementTankIcon( v )
-
-	foreach( v in PopExtHooks.icons )
-		PopExt._PopIncrementIcon( v )
-}, EVENT_WRAPPER_HOOKS)
-
-PopExtEvents.AddRemoveEventHook( "recalculate_holidays", "PopHooksRecalculateHolidays", function( params ) {
-
-	if ( "wave_icons_function" in PopExt )
-		delete PopExt.wave_icons_function
-
-	PopExtHooks.tank_icons <- []
-	PopExtHooks.icons     <- []
 }, EVENT_WRAPPER_HOOKS)
 
 function PopExtGlobalThink() {

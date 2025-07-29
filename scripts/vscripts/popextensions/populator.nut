@@ -27,9 +27,14 @@ const EFL_SPAWNER_ACTIVE = 1073741824 //EFL_NO_PHYSCANNON_INTERACTION
 const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 const MAX_WAVESPAWNS_PER_WAVE = 128
 
-local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
+local PopulatorEnt = FindByName( null, "__popext_populator" )
 
-::PopExtPopulator <- {
+if (!PopulatorEnt) {
+	PopulatorEnt = CreateByClassname( "move_rope" )
+	PopExtUtil.SetTargetname( PopulatorEnt, "__popext_populator" )
+}
+
+class PopExtPopulator {
 
 	WaveArray = []
 
@@ -40,7 +45,7 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 		}
 	}
 
-	function DoEntityIO( type ) {
+	function DoEntityIO( type, WaveSchedule = ::WaveSchedule ) {
 
 		if ( !( type in WaveSchedule[PopExtUtil.CurrentWaveNum] ) ) return
 
@@ -56,18 +61,22 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 		typeof target == "instance" ? EntFireByHandle( target, action, param, delay, activator, caller ) : DoEntFire( target, action, param, delay, activator, caller )
 	}
 
-	function InitializeWave() {
+	function InitializeWave( WaveSchedule = ::WaveSchedule ) {
 
 		//PopulatorEnt is a null instance when this is initially called, it is valid by the time another recalculate_holidays event fires, so this works reliably
-		if ( !( "WaveSchedule" in getroottable() ) || PopulatorEnt.IsValid() ) return
+		printl( "PopulatorEnt: " + PopulatorEnt )
+		if ( !( "WaveSchedule" in getroottable() ) || !PopulatorEnt.IsValid() ) return
+
+		PopExtWavebar.RemoveWaveIcon( "*", 0 )
 
 		WaveArray = "CustomWaveOrder" in WaveSchedule ? WaveSchedule.CustomWaveOrder : array( WaveSchedule.len() )
 
 		foreach( wave, wavespawns in WaveSchedule ) {
 
-			printl( "Wave: " + wave )
+			// printl( "Wave: " + wave )
 
-			if ( !( "CustomWaveOrder" in WaveSchedule ) && typeof wave == "integer" ) WaveArray[wave] = array( wavespawns.len() )
+			if ( !( "CustomWaveOrder" in WaveSchedule ) && typeof wave == "integer" ) 
+				WaveArray[wave] = array( wavespawns.len() )
 
 			if ( wave == "MissionAttrs" ) {
 
@@ -81,13 +90,13 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 
 			foreach ( wavespawn, keyvalues in wavespawns ) {
 
-				printl( "\tWaveSpawn: " + wavespawn )
+				// printl( "\tWaveSpawn: " + wavespawn )
 
 				foreach( k, v in keyvalues ) {
-					printl( "\t\t" + k + " : " + v )
+					// printl( "\t\t" + k + " : " + v )
 					if ( k.tolower() == "tfbot" ) {
 
-						foreach( a, b in v ) printl( "\t\t\t" + a + " : " + b )
+						// foreach( a, b in v ) printl( "\t\t\t" + a + " : " + b )
 						local icon = ""
 						local playerclass = ""
 
@@ -95,7 +104,7 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 
 						"ClassIcon" in v ? icon = v.ClassIcon : icon = playerclass
 
-						PopExt.AddCustomIcon(
+						PopExtWavebar.AddCustomIcon(
 							icon,
 							keyvalues.TotalCount,
 							( "Attributes" in v && v.Attributes.find( ALWAYS_CRIT ) ) ? true : false,
@@ -256,8 +265,6 @@ local PopulatorEnt = CreateByClassname( "info_teleport_destination" )
 	}
 }
 
-
-
 PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "InitializeWave", function( params ) {
 
 	PopExtPopulator.InitializeWave()
@@ -269,7 +276,7 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "InitializeWave", funct
 PopExtEvents.AddRemoveEventHook( "mvm_begin_wave", "StartWave", function( params ) {
 
 	//grab the first spawner and enable it on wave start
-	local firstspawner = PopExtPopulator.WaveArray[PopExtUtil.CurrentWaveNum][0].keys()[0]
+	local firstspawner = PopExtPopulator.WaveArray[PopExtUtil.CurrentWaveNum][1].keys()[0]
 	EntFireByHandle( firstspawner, "Enable", "", -1, null, null )
 
 	PopExtPopulator.DoEntityIO( "StartWaveOutput" )
@@ -292,8 +299,8 @@ PopExtEvents.AddRemoveEventHook( "player_death", "RemoveIcon", function( params 
 	PopExtUtil.PrintTable( scope )
 	local spawner = FindByName( null, scope.spawner )
 
-	PopExt.DecrementWaveIconSpawnCount( spawner.GetScriptScope().WaveSpawn.TFBot.ClassIcon, 0, 1 )
-})
+	PopExtWavebar.DecrementWaveIcon( spawner.GetScriptScope().WaveSpawn.TFBot.ClassIcon, 0, 1 )
+}, EVENT_WRAPPER_POPULATOR)
 
 PopExtEvents.AddRemoveEventHook( "player_death", "WaitBetweenSpawnsAfterDeath", function( params ) {
 
@@ -305,10 +312,22 @@ PopExtEvents.AddRemoveEventHook( "player_death", "WaitBetweenSpawnsAfterDeath", 
 
 	if ( "WaitBetweenSpawnsAfterDeath" in spawner.GetScriptScope().WaveSpawn ) {
 
-		EntFireByHandle( spawner, "Enable", "", float delay, handle activator, handle caller )
-		EntFireByHandle( spawner, "SpawnBot", "", float delay, handle activator, handle caller )
+		EntFireByHandle( spawner, "Enable", "", -1, null, null )
+		EntFireByHandle( spawner, "SpawnBot", "", -1, null, null )
 	}
-})
+}, EVENT_WRAPPER_POPULATOR)
+
+PopExtEvents.AddRemoveEventHook( "player_death", "DoneOutput", function( params ) {
+
+	local player = GetPlayerFromUserID( params.userid )
+
+	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
+
+	local spawner = FindByName( null, player.GetScriptScope().spawner )
+
+	PopExtPopulator.DoEntityIO( "DoneOutput" )
+
+}, EVENT_WRAPPER_POPULATOR)
 
 PopExtEvents.AddRemoveEventHook( "player_spawn", "WaitBetweenSpawnsAfterDeath", function( params ) {
 
@@ -317,15 +336,14 @@ PopExtEvents.AddRemoveEventHook( "player_spawn", "WaitBetweenSpawnsAfterDeath", 
 	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
 	//disable our spawner if we have WaitBetweenSpawnsAfterDeath
-	EntFireByHandle( player, "RunScriptCode", @"
-
-		local spawner = FindByName( null, self.GetScriptScope().spawner )
+	PopExtUtil.ScriptEntFireSafe( player, @"
 
 		if ( `WaitBetweenSpawnsAfterDeath` in spawner.GetScriptScope().WaveSpawn )
 			EntFireByHandle(spawner, `Disable`, ``, -1, null, null )
 
-	", SINGLE_TICK, null, null )
-})
+	", SINGLE_TICK )
+
+}, EVENT_WRAPPER_POPULATOR)
 
 PopExtEvents.AddRemoveEventHook( "player_spawn", "SetSpawner", function( params ) {
 
@@ -362,97 +380,97 @@ PopExtEvents.AddRemoveEventHook( "player_spawn", "SetSpawner", function( params 
 
 		scope.bot_attributes = scope.bot_attributes | additional_attributes
 
-		EntFireByHandle( player, "RunScriptCode", "self.AddBotAttribute( self.GetScriptScope().bot_attributes )", -1, null, null )
+		PopExtUtil.ScriptEntFireSafe( player, "self.AddBotAttribute( self.GetScriptScope().bot_attributes )" )
 })
 
-::WaveSchedule <- {
+// ::WaveSchedule <- {
 
-	// CustomWaveOrder = [1,5,2,6,3]
+// 	// CustomWaveOrder = [1,5,2,6,3]
 
-	MissionAttrs = {
-		WaveStartCountdown = 1
-	}
+// 	MissionAttrs = {
+// 		WaveStartCountdown = 1
+// 	}
 
-	Mission = {
-		CooldownTime = 10
-		WaitBetweenSpawns = 5
-		TFBot = {
+// 	Mission = {
+// 		CooldownTime = 10
+// 		WaitBetweenSpawns = 5
+// 		TFBot = {
 
-		}
-	},
+// 		}
+// 	},
 
-	[1] = { //wave number
+// 	[1] = { //wave number
 
-		AutoRelay = true, //set to true to automatically call wave_start_relay and wave_finished_relay without needing to define them
+// 		AutoRelay = true, //set to true to automatically call wave_start_relay and wave_finished_relay without needing to define them
 
-		InitWaveOutput = {
-			Target = "BigNet"
-			Action = "RunScriptCode"
-			Param = "Info( `Wave 1 loaded` )"
-		},
-		// StartWaveOutput = { //not necessary with AutoRelay
-		// 	Target = "wave_start_relay"
-		// 	Action = "Trigger"
-		// },
-		// DoneOutput = {
-		// 	Target = "wave_finished_relay"
-		// 	Action = "Trigger"
-		// },
-		[1] = { //wavespawn
-			Name = "wave1a"
-			Where = "-198.163635 4760.567871 291.313049" //accepts KVString
-			TotalCount = 15
-			MaxActive = 5
-			WaitBetweenSpawns = 3
-			Team = 3
-			TFBot = {
-				Class = TF_CLASS_SCOUT
-				Health = 150
-				ClassIcon = "scout_bat"
-				Name = "Scout"
-				Items = ["The Shortstop", "Bonk! Atomic Punch"]
-				Tags = ["popext_addcond|11"]
-			}
-		},
-		[2] = { //wavespawn
+// 		InitWaveOutput = {
+// 			Target = "BigNet"
+// 			Action = "RunScriptCode"
+// 			Param = "Info( `Wave 1 loaded` )"
+// 		},
+// 		// StartWaveOutput = { //not necessary with AutoRelay
+// 		// 	Target = "wave_start_relay"
+// 		// 	Action = "Trigger"
+// 		// },
+// 		// DoneOutput = {
+// 		// 	Target = "wave_finished_relay"
+// 		// 	Action = "Trigger"
+// 		// },
+// 		[1] = { //wavespawn
+// 			Name = "wave1a"
+// 			Where = "-198.163635 4760.567871 291.313049" //accepts KVString
+// 			TotalCount = 15
+// 			MaxActive = 5
+// 			WaitBetweenSpawns = 3
+// 			Team = 3
+// 			TFBot = {
+// 				Class = TF_CLASS_SCOUT
+// 				Health = 150
+// 				ClassIcon = "scout_bat"
+// 				Name = "Scout"
+// 				Items = ["The Shortstop", "Bonk! Atomic Punch"]
+// 				Tags = ["popext_addcond|11"]
+// 			}
+// 		},
+// 		[2] = { //wavespawn
 
-			Name = "wave1b"
-			Where = Vector( -1071.587646, 4216.348633, 200.016907 ) //accepts vector
-			TotalCount = 10
-			MaxActive = 10
-			SpawnCount = 2
-			Team = 3
-			WaitForAllSpawned = "wave1a"
-			ActionPoint = "action_point_test"
-			RetainBuildings = true
+// 			Name = "wave1b"
+// 			Where = Vector( -1071.587646, 4216.348633, 200.016907 ) //accepts vector
+// 			TotalCount = 10
+// 			MaxActive = 10
+// 			SpawnCount = 2
+// 			Team = 3
+// 			WaitForAllSpawned = "wave1a"
+// 			ActionPoint = "action_point_test"
+// 			RetainBuildings = true
 
-			TFBot = {
-				Class = TF_CLASS_SCOUT
-				Health = 150
-				Name = "Scout"
-				Items = ["The Shortstop", "Bonk! Atomic Punch"]
-				Tags = ["popext_usehumananimations", "popext_addcond|11"]
-			}
-		},
-		[3] = { //wavespawn
+// 			TFBot = {
+// 				Class = TF_CLASS_SCOUT
+// 				Health = 150
+// 				Name = "Scout"
+// 				Items = ["The Shortstop", "Bonk! Atomic Punch"]
+// 				Tags = ["popext_usehumananimations", "popext_addcond|11"]
+// 			}
+// 		},
+// 		[3] = { //wavespawn
 
-			Name = "wave1c"
-			Where = "spawnbot" //accepts targetname
-			TotalCount = 100
-			MaxActive = 10
-			SpawnCount = 5
-			Team = 3
-			WaitForAllDead = "wave1b"
-			RetainBuildings = true
+// 			Name = "wave1c"
+// 			Where = "spawnbot" //accepts targetname
+// 			TotalCount = 100
+// 			MaxActive = 10
+// 			SpawnCount = 5
+// 			Team = 3
+// 			WaitForAllDead = "wave1b"
+// 			RetainBuildings = true
 
-			TFBot = {
-				Class = "Engineer"
-				Health = 275
-				Name = "Scout"
-				Items = ["The Shortstop", "Bonk! Atomic Punch"]
-				Tags = ["popext_usehumananimations", "popext_addcond|11"]
-			}
-		}
-	}
-}
-PopExtPopulator.InitializeWave()
+// 			TFBot = {
+// 				Class = "Engineer"
+// 				Health = 275
+// 				Name = "Scout"
+// 				Items = ["The Shortstop", "Bonk! Atomic Punch"]
+// 				Tags = ["popext_usehumananimations", "popext_addcond|11"]
+// 			}
+// 		}
+// 	}
+// }
+// PopExtPopulator.InitializeWave()

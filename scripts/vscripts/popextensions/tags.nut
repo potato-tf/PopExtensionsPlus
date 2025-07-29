@@ -1519,28 +1519,19 @@ local popext_funcs = {
 		local viewangle 		  = "viewangle" in args ? args.viewangle : bot.EyeAngles()
 		local velocity 			  = "velocity" in args ? args.velocity : bot.GetAbsVelocity()
 
-		local where_type = typeof where
 		local spawn_point = null
 
-		if ( where_type == "Vector" )
-			spawn_point = where
-
-		else if ( where_type == "string" && FindByName( null, where ) != null )
+		if ( typeof where == "string" && FindByName( null, where ) != null )
 			spawn_point = FindByName( null, where ).GetOrigin()
+		else
+			spawn_point = PopExtUtil.KVStringToVectorOrQAngle( where )
 
-		else if ( where_type == "string" ) {
-
-			local org = args.where.find( "," ) ? split( args.where, "," ) : split( args.where, " " )
-
-			org.apply( @( val ) val.tofloat() )
-			spawn_point = Vector( org[0], org[1], org[2] )
-		}
 
 		bot.AddCondEx( TF_COND_INVULNERABLE_HIDE_UNLESS_DAMAGED, spawn_uber_duration, null )
 
 		//gross hack to stop the game from panicking and spawning them at some random spawn
-
 		bot.GetScriptScope().PlayerThinkTable.SpawnHereCollisionFix <- function() {
+
 			if ( ( bot.GetOrigin() - spawn_point ).Length() > 16.0 ) {
 
 				bot.Teleport( true, spawn_point, true, viewangle, true, velocity )
@@ -2091,7 +2082,7 @@ local popext_funcs = {
 
 	/***********************************************************************************************************************
 	 * ICON COUNT																										   *
-	 * wrapper for PopExt.SetWaveIconSpawnCount																			   *
+	 * wrapper for PopExtWavebar.SetWaveIconSpawnCount																			   *
 	 * See IconOverride for a more comprehensive way to control wavebar icons.											   *
 	 **********************************************************************************************************************/
 
@@ -2102,7 +2093,12 @@ local popext_funcs = {
 		local flags 				 = "flags" in args ? args.flags : 0
 		local change_max_enemy_count = "changeMaxEnemyCount" in args ? args.changeMaxEnemyCount : true
 
-		PopExt.SetWaveIconSpawnCount( icon, flags, count, change_max_enemy_count )
+		if ( !PopExtMain.IncludeModule( "wavebar" ) ) {
+			PopExtMain.Error.RaiseModuleError( "wavebar", "popext_iconcount" )
+			return
+		}
+
+		PopExtWavebar.SetWaveIcon( icon, flags, count, change_max_enemy_count )
 	}
 
 	/***********************************************************************************************************************
@@ -2253,9 +2249,14 @@ local popext_funcs = {
 		local flags = "flags" in args ? args.flags : 0
 		local count = "count" in args ? args.count : 1
 
+		if ( !PopExtMain.IncludeModule( "wavebar" ) ) {
+			PopExtMain.Error.RaiseModuleError( "wavebar", "popext_iconoverride" )
+			return
+		}
+
 		PopExtEvents.AddRemoveEventHook( "player_death", format( "IconOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
-			PopExt.DecrementWaveIconSpawnCount( icon, flags, count )
+			PopExtWavebar.DecrementWaveIcon( icon, flags, count )
 
 		}, EVENT_WRAPPER_TAGS)
 	}

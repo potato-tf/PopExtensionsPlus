@@ -7,7 +7,7 @@ const SCOUT_MONEY_COLLECTION_RADIUS = 288
 if ( !( "ScriptLoadTable" in ROOT ) ) ::ScriptLoadTable   <- {}
 if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
-::MissionAttributes <- {
+class MissionAttributes {
 
 	noromecarrier = false //the rome tank removing stuff loops through every prop_dynamic if it can't find the carrier by name, skip the prop_dynamic loop if we already did it
 
@@ -899,9 +899,9 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
 
-		// =================================================================================
-		// change sentry kill count per mini-boss kill.  -4 will make giants count as 1 kill
-		// =================================================================================
+		// =============================================================================
+		// change sentry kill count per giant kill.  -4 will make giants count as 1 kill
+		// =============================================================================
 
 		GiantSentryKillCountOffset = function( value ) {
 
@@ -926,19 +926,17 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 		FlagResetTime = function( value ) {
 
-			MissionAttributes.FlagResetTime <- function() {
-				for ( local flag; flag = FindByClassname( flag, "item_teamflag" ); ) {
+			if ( typeof value == "table" )
 
-					if ( typeof value == "table" )
-						foreach ( k, v in value )
-							EntFire( k, "SetReturnTime", v.tostring() )
+				foreach ( k, v in value )
 
-					else if ( typeof value == "integer" || typeof value == "float" )
-						EntFire( "item_teamflag", "SetReturnTime", value.tostring() )
-				}
-			}
-			MissionAttributes.FlagResetTime()
+					EntFire( k, "SetReturnTime", v.tostring() )
+			else
+
+				EntFire( "item_teamflag", "SetReturnTime", value.tostring() )
 		}
+
+		BombResetTime = @( value ) FlagResetTime( value )
 
 		// =============================
 		// enable bot/blu team headshots
@@ -1057,8 +1055,8 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
 				if ( value & 8 ) {
 
-					if ( !"VCD_SOUNDSCRIPT_MAP" in ROOT ) {
-						PopExtMain.Error.RaiseModuleError( "robotvoicelines", "missionattributes (PlayersAreRobots)", true )
+					if ( !PopExtMain.IncludeModules( "robotvoicelines" ) ) {
+						PopExtMain.Error.RaiseModuleError( "robotvoicelines", "PlayersAreRobots", true )
 						return false
 					}
 
@@ -2863,11 +2861,17 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 		// =========================================================================================================
 		IconOverride = function( value ) {
 
-			if ( typeof value != "table" ) return
+			if ( typeof value != "table" ) {
+				PopExtMain.Error.RaiseTypeError( "IconOverride", "table" )
+				return false
+			}
+
+			if ( !PopExtMain.IncludeModules( "wavebar" ) ) 
+				return false
 
 			local wave = PopExtUtil.CurrentWaveNum
 
-			PopExt.SetWaveIconsFunction( function() {
+			PopExtWavebar.SetWaveIconsFunction( function() {
 
 				foreach ( icon, params in value ) {
 
@@ -2878,10 +2882,10 @@ if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 					local flags   	   = "flags" in params ? params.flags : null
 					local index   	   = "index" in params ? params.index : -1
 
-					PopExt.SetWaveIconSlot( icon, replace, flags, count, index, false, flags != null && !( flags & MVM_CLASS_FLAG_SUPPORT_LIMITED || flags & MVM_CLASS_FLAG_SUPPORT ) )
+					PopExtWavebar.SetWaveIconSlot( icon, replace, flags, count, index, false, flags != null && !( flags & MVM_CLASS_FLAG_SUPPORT_LIMITED || flags & MVM_CLASS_FLAG_SUPPORT ) )
 
 					if ( "newflags" in params ) {
-						PopExt.SetWaveIconFlags( replace, params.newflags )
+						PopExtWavebar.SetWaveIconFlags( replace, params.newflags )
 					}
 				}
 			})
