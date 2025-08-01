@@ -1,5 +1,6 @@
-- Anything in the existing code that breaks these formatting rules was done before these rules became a thing.
-- Offending lines of code that already exist are not a pass to break them yourself.
+
+### Any existing code that breaks these rules predates these guidelines and is too load-bearing/widely used to change
+**Offending lines of code that already exist are not a pass to break them yourself.**
 
 ## General
 - Use PopExtUtil functions as much as possible, all generic re-usable functions go here
