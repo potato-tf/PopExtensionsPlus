@@ -38,12 +38,5 @@ jobs:
         env:
             SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          mapfile -t servers < <(curl -s https://raw.githubusercontent.com/potato-tf/deploy/refs/heads/main/serverlist.json | jq -r '.servers[]')
-          for i in "${servers[@]}"; do a=( $i );
-          {
-              rsync -a --mkpath -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/vscripts/popextensions_main.nut ${a[1]}:${a[2]}/tf2testingserver/tf/download/scripts/vscripts/popextensions_main.nut
-              rsync -a --mkpath -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/vscripts/popextensions ${a[1]}:${a[2]}/tf2testingserver/tf/download/scripts/vscripts/
-              rsync -a --mkpath -e "ssh -p ${a[0]} -o StrictHostKeyChecking=no" ./scripts/population/mvm_bigrock_vscript.pop ${a[1]}:${a[2]}/tf2testingserver/tf/download/scripts/population/mvm_bigrock_vscript.pop
-          } &
-          done
-          wait
+          rsync -a --mkpath -e "ssh -o StrictHostKeyChecking=no" ./scripts/vscripts/* pterodactyl@storage.potato.tf:/mnt/archival/testing_uploads_current/scripts/vscripts/
+          rsync -a --mkpath -e "ssh -o StrictHostKeyChecking=no" ./scripts/population/* pterodactyl@storage.potato.tf:/mnt/archival/testing_uploads_current/scripts/population/

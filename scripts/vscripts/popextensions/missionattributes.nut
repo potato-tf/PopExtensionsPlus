@@ -3028,6 +3028,7 @@ class MissionAttributes {
 		}
 
 		MissionUnloadOutput = function( value ) {
+
 			if ( typeof value != "table" ) {
 
 				PopExtMain.Error.RaiseValueError( "MissionUnloadOutput must be a table" )
@@ -3178,7 +3179,7 @@ local MissionAttrEntity = FindByName( null, "__popext_missionattr_ent" )
 if ( MissionAttrEntity == null ) MissionAttrEntity = SpawnEntityFromTable( "info_teleport_destination", {targetname = "__popext_missionattr_ent"} )
 
 function MissionAttrThink() {
-	if ( !MissionAttrEntity || !( "MissionAttributes" in ROOT ) ) return -1; // Prevent error on mission complete
+	if ( !MissionAttrEntity || !( "MissionAttributes" in ROOT ) ) return 1; // Prevent error on mission complete
 	foreach ( func in MissionAttributes.ThinkTable ) func()
 	return -1
 }
