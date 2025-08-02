@@ -1,8 +1,6 @@
 # PopExtensionsPlus Documentation
 
-*Documentation last updated [03.12.2024]*
-
-A work-in-progress documentation for [PopExt](https://github.com/potato-tf/PopExtensionsPlus), so some areas are still being worked on. As updates to PopExt are made consistently, this documentation will also inevitably fall slightly behind.
+A work-in-progress documentation for [PopExtensions](https://github.com/potato-tf/PopExtensionsPlus), so some areas are still being worked on. As updates to PopExt are made consistently, this documentation will also inevitably fall slightly behind.
 
 For the above issues, typos, grammar mistakes, as well as bug reports in PopExt itself, please make a post in our [Discord](https://discord.gg/M8YbW3k) under "archive_restoration/PopExtensions Meta" or submit a pull request!
 ## Table of Contents

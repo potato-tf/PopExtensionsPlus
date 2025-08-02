@@ -154,7 +154,7 @@ if (
         - Replace: ``$1 )``
     - Disable regex search
     - Find: ``( )`` Replace: ``()``
-    - Find: ``))`` Replace: ``) )`` (might not need this one?)
+    - Find: ``))`` Replace: ``) )``
 - Trim whitespace:
     - Find: ``\s+$``
     - Replace: empty string
