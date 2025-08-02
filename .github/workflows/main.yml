@@ -38,6 +38,6 @@ jobs:
         env:
             SSH_AUTH_SOCK: /tmp/ssh_agent.sock
         run: |
-          rsync -a --mkpath -e "ssh -o StrictHostKeyChecking=no" ./scripts/vscripts/* pterodactyl@storage.potato.tf:/mnt/archival/testing_uploads_current/scripts/vscripts/
-          rsync -a --mkpath -e "ssh -o StrictHostKeyChecking=no" ./scripts/population/* pterodactyl@storage.potato.tf:/mnt/archival/testing_uploads_current/scripts/population/
+          rsync -a --chmod=777 --mkpath -e "ssh -o StrictHostKeyChecking=no" ./scripts/vscripts/* pterodactyl@storage.potato.tf:/mnt/archival/testing_uploads_current/scripts/vscripts/
+          rsync -a --chmod=777 --mkpath -e "ssh -o StrictHostKeyChecking=no" ./scripts/population/* pterodactyl@storage.potato.tf:/mnt/archival/testing_uploads_current/scripts/population/
           curl https://testing.potato.tf/forceupdate.php?serverkey=23049785
