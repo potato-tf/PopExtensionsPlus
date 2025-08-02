@@ -3,7 +3,7 @@
 
 local strings_to_purge = {}
 
-::CBaseEntity.KeyValueFromString <- function( key, value ) {
+function CBaseEntity::KeyValueFromString( key, value ) {
 
 	// TODO: find another way to do this, dot notation for function calls is expensive
 	CBaseEntity.__KeyValueFromString.call( this, key, value )
@@ -31,7 +31,8 @@ foreach( name, func in Entities.getclass() ) {
 
 	ROOT[ name ] <- function( ... ) {
 
-		local result = func.acall( [ this ].extend( vargv ) )
+		// local result = func.acall( [ this ].extend( vargv ) )
+		local result = func.acall( vargv )
 
 		foreach( arg in vargv )
 			if ( typeof arg == "string" )

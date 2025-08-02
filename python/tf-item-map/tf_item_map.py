@@ -47,13 +47,6 @@ def schema_block_from_prefabs(prefabs: dict, block: dict, _depth: int = 0) -> di
     block.pop('prefab', None)
     return block
 
-# def replace_dict_quote_recursive(inputdict: dict) -> dict:
-#     for k, v in inputdict.items():
-#         if type(v) == dict:
-#             v = replace_dict_quote_recursive(v)
-#         inputdict[k] = v.replace("'", "\"") if isinstance(v, str) else v
-#     return inputdict
-
 def ItemMap_to_squirrel(tablename: str, inputdict: dict, indent: str = '    ', globalscope: bool = True) -> list:
     """
     Converts an ItemMap dict to the string representation of a Squirrel table.
@@ -105,7 +98,14 @@ def ItemMap_to_squirrel(tablename: str, inputdict: dict, indent: str = '    ', g
 # == SCRIPT ==
 if __name__ == "__main__":
     # GPL says you're supposed to do this or something
-    print('\nTFItemMap Generator Script by fellen.\n https://github.com/mtxfellen/\n')
+    print("""
+        TFItemMap Generator by fellen.  
+            https://github.com/mtxfellen/
+        Modified by Braindawg.
+            https://github.com/Brain-dawg/
+        Used for PopExtensionsPlus.
+            https://github.com/potato-tf/PopExtensionsPlus
+    """)
 
     print('Reading items_game.txt...')
     path_to_schema = os.path.abspath(f'{tf_path}/scripts/items/items_game.txt')

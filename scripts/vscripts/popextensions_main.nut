@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "07.29.2025.1"
+::POPEXT_VERSION <- "08.01.2025.1"
 
 local function Include( path, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -30,6 +30,7 @@ Include( "shared/constants" ) 									// Generic constants used by all scripts,
 Include( "shared/itemdef_constants", "ID_SNUG_SHARPSHOOTER" )   // Item definitions.  check if a random constant was already folded to root to avoid re-including
 Include( "shared/item_map", "PopExtItems" ) 		   		    // Item map for english name item look-ups
 Include( "shared/attribute_map", "PopExtItems", "PopExtItems" ) // Attribute map for attribute info look-ups
+Include( "shared/config" )										// Configuration file for end users, always re-include this
 Include( "shared/event_wrapper", "PopExtEvents" ) 	   		    // Event wrapper for all events
 Include( "shared/util", "PopExtUtil" )						    // misc utils/entities
 // Include( "shared/gamestrings" )								    // prevent string leaks
@@ -99,13 +100,15 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 local cleanup = [
 
 	"MissionAttributes"
-	"CustomAttributes"
+	"CustomAttributes" // TODO: deprecate this and use PopExtAttributes instead
+	"PopExtAttributes"
 	"SpawnTemplate"
 	"SpawnTemplateWaveSchedule"
 	"SpawnTemplates"
 	"VCD_SOUNDSCRIPT_MAP"
 	"PointTemplates"
-	"CustomWeapons"
+	"CustomWeapons" // TODO: deprecate this and use PopExtWeapons instead
+	"PopExtWeapons"
 	"__popname"
 	"ExtraItems"
 	"Homing"
@@ -129,10 +132,8 @@ local cleanup = [
 	"PopExtHooks"
 	"PopExtPathPoint"
 	"PopExtBotBehavior"
-	"PopExtWeapons"
-	"PopExtAttributes"
 	"PopExtItems"
-	"PopExtGlobalThink"
+	"PopExtHooksThink"
 	"PopExtTutorial"
 
 	// clear these last
@@ -143,40 +144,8 @@ local cleanup = [
 
 class PopExtMain {
 
-	IncludeAllModules = true
-
-	DebugText = false
-
-	DebugFiles = {
-		"missionattributes" : null,
-		"util" 				: null,
-		"tags" 				: null,
-	}
-
-    /******************************************************************************************************************************************
-     * manual cleanup flag, set to true for missions that are created for a specific map.                                                     *
-     * automated unloading is meant for multiple missions on one map, purpose-built map/mission combos ( like mvm_redridge ) don't need this. *
-     * this should also be used if you change the popfile name mid-mission.                                                                   *
-     *****************************************************************************************************************************************/
-	ManualCleanup = false
-
+	
 	ActiveModules = {}
-
-
-    /*************************************************************************************************************
-     * ignore these variables when cleaning up player scope                                                      *
-     * "Preserved" is a special table that will persist through the cleanup process unless full_cleanup is true. *
-     * any player scoped variables you want to use across multiple waves should be added here                    *
-     *************************************************************************************************************/
-	IgnoreTable = {
-		"self"         		   : null
-		"__vname"      		   : null
-		"__vrefs"      		   : null
-		"Preserved"    		   : null
-		"ExtraLoadout" 		   : null
-		"templates_to_kill"    : null
-		"wearables_to_kill"    : null
-	}
 
 	function PlayerCleanup( player, full_cleanup = false ) {
 
@@ -193,13 +162,31 @@ class PopExtMain {
 
 		local scope_keys = scope.keys()
 
-		if ( scope_keys.len() > IgnoreTable.len() )
+		if ( scope_keys.len() > PopExtConfig.IgnoreTable.len() )
 
 			foreach ( k in scope_keys )
 
-				if ( !( k in IgnoreTable ) )
+				if ( !( k in PopExtConfig.IgnoreTable ) )
 
 					delete scope[k]
+	}
+
+	function FullCleanup() {
+
+		for ( local i = 1, player; i <= MAX_CLIENTS; i++ )
+			if ( player = PlayerInstanceFromIndex( i ) )
+				PopExtMain.PlayerCleanup( player, true )
+
+		// Nuke all popextension globals
+		foreach( c in cleanup ) 
+			if ( c in ROOT ) 
+				delete ROOT[c]
+
+		// Kill all popextensions entities
+		// TODO: extratankpath is too broad of a name, collect these in a table instead
+		EntFire( "__popext*", "Kill" )
+		EntFire( "extratankpath*", "Kill" )
+
 	}
 
 	function IncludeModules( ... ) {
@@ -226,19 +213,19 @@ class PopExtMain {
 
 	Error = {
 
-		RaisedParseError = false
+		raised_parse_error = false
 
 		function DebugLog( LogMsg ) {
 
 			local src = getstackinfos(2).src
 
-			if ( !PopExtMain.DebugText || !( src in PopExtMain.DebugFiles ) || !( src.slice(0, -4) in PopExtMain.DebugFiles ) ) return
-			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", POPEXT_DEBUG, LogMsg ) )
+			if ( !PopExtConfig.DebugText || !( src in PopExtConfig.DebugFiles ) || !( src.slice(0, -4) in PopExtConfig.DebugFiles ) ) return
+			ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", POPEXT_LOG_DEBUG, LogMsg ) )
 		}
 
 		// warnings
-		GenericWarning 	   = @( msg ) 	   ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", POPEXT_WARNING, msg ) )
-		DeprecationWarning = @( old, new ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s is DEPRECATED and may be removed in a future update. Use %s instead.", POPEXT_WARNING, old, new ) )
+		GenericWarning 	   = @( msg ) 	   ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s.", POPEXT_LOG_WARNING, msg ) )
+		DeprecationWarning = @( old, new ) ClientPrint( null, HUD_PRINTCONSOLE, format( "%s %s is DEPRECATED and may be removed in a future update. Use %s instead.", POPEXT_LOG_WARNING, old, new ) )
 
 		// errors
 		RaiseIndexError  = @( key, max = [0, 1], assert = false ) 	   ParseError( format( "Index out of range for '%s', value range: %d - %d", key, max[0], max[1] ), assert )
@@ -247,84 +234,29 @@ class PopExtMain {
 		RaiseModuleError = @( module, module_user, assert = false )    ParseError( format( "Missing module or incorrect include order: '%s' (%s).", module, module_user ), assert )
 
 		// generic template parsing error
-		function ParseError( ErrorMsg, assert = false ) {
+		function ParseError( error_msg, error_level = POPEXT_LOG_ERROR, assert = false ) {
 
-			if ( !RaisedParseError ) {
+			if ( !raised_parse_error && error_level != POPEXT_LOG_DEBUG) {
 
-				RaisedParseError = true
-				ClientPrint( null, HUD_PRINTTALK, POPEXT_PARSE_ERROR )
+				raised_parse_error = true
+				ClientPrint( null, HUD_PRINTTALK, POPEXT_LOG_PARSE_ERROR )
 			}
-			if ( assert ) {
-				RaiseException( format( "%s.\n", ErrorMsg ) )
+			if ( error_level == POPEXT_LOG_FATAL ) {
+				RaiseException( format( "%s.\n", error_msg ) )
 			}
 			else {
-				ClientPrint( null, HUD_PRINTTALK, format( "%s %s.\n", POPEXT_ERROR, ErrorMsg ) )
-				printf( "%s %s.\n", POPEXT_ERROR, ErrorMsg )
+				ClientPrint( null, HUD_PRINTTALK, format( "%s %s.\n", POPEXT_LOG_ERROR, error_msg ) )
+				printf( "%s %s.\n", POPEXT_LOG_ERROR, error_msg )
 			}
 		}
 
 		// generic exception
-		RaiseException = @( ExceptionMsg ) Assert( false, format( "%s: %s.", POPEXT_ERROR, ExceptionMsg ) )
-	}
-
-	GlobalThinks = {
-
-		// add think table to all projectiles
-		function AddProjectileThink() {
-
-			for ( local projectile; projectile = Entities.FindByClassname( projectile, "tf_projectile*" ); ) {
-
-				if ( projectile.GetEFlags() & EFL_USER ) continue
-
-				projectile.ValidateScriptScope()
-				local scope = projectile.GetScriptScope()
-				local owner = projectile.GetOwner()
-
-				if ( owner && owner.IsValid() ) {
-
-					local owner_scope = owner.GetScriptScope()
-					if ( !owner_scope ) {
-
-						owner.ValidateScriptScope()
-						owner_scope = owner.GetScriptScope()
-					}
-
-					// this should not be a thing.  Preserved gets added in player_spawn but we still get does not exist errors
-					if ( !( "Preserved" in owner_scope ) )
-						owner_scope.Preserved <- {}
-
-					if ( !( "ActiveProjectiles" in owner_scope.Preserved ) )
-						owner_scope.Preserved.ActiveProjectiles <- {}
-
-					owner_scope.Preserved.ActiveProjectiles[projectile.entindex()] <- [projectile, Time()]
-
-					PopExtUtil.SetDestroyCallback( projectile, function() {
-						if ( "ActiveProjectiles" in owner_scope.Preserved && self.entindex() in owner_scope.Preserved.ActiveProjectiles )
-							delete owner_scope.Preserved.ActiveProjectiles[self.entindex()]
-					})
-				}
-
-				if ( !( "ProjectileThinkTable" in scope ) )
-					scope.ProjectileThinkTable <- {}
-
-				scope.ProjectileThink <- function () {
-
-					foreach ( name, func in scope.ProjectileThinkTable )
-						func.call( scope )
-
-					return -1
-				}
-
-				_AddThinkToEnt( projectile, "ProjectileThink" )
-
-				projectile.AddEFlags( EFL_USER )
-			}
-		}
+		RaiseException = @( error_msg ) Assert( false, format( "%s: %s.", POPEXT_LOG_FATAL, error_msg ) )
 	}
 }
 
 // overwrite EntFireByHandle to get invalid/null entities
-if ( PopExtMain.DebugText && !( "_EntFireByHandle" in ROOT ) ) {
+if ( PopExtConfig.DebugText && !( "_EntFireByHandle" in ROOT ) ) {
 
 	::_EntFireByHandle <- EntFireByHandle
 
@@ -337,17 +269,75 @@ if ( PopExtMain.DebugText && !( "_EntFireByHandle" in ROOT ) ) {
 	}
 }
 
-local global_think_entity = Entities.FindByName( null, "__popext_global_think" )
-if ( global_think_entity == null ) global_think_entity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext_global_think" } )
+local main_think_entity = Entities.FindByName( null, "__popext_main_think" )
+if ( main_think_entity == null ) 
+	main_think_entity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext_main_think" } )
 
-global_think_entity.ValidateScriptScope()
+main_think_entity.ValidateScriptScope()
+::main_think_scope <- main_think_entity.GetScriptScope()
 
-global_think_entity.GetScriptScope().GlobalThink <- function() {
-	foreach( func in PopExtMain.GlobalThinks ) func()
-	return -1
+main_think_scope.MainThinks <- {
+
+	// add think table to all projectiles
+	function AddProjectileThink() {
+
+		for ( local projectile; projectile = Entities.FindByClassname( projectile, "tf_projectile*" ); ) {
+
+			if ( projectile.GetEFlags() & EFL_USER ) continue
+
+			projectile.ValidateScriptScope()
+			local scope = projectile.GetScriptScope()
+			local owner = projectile.GetOwner()
+
+			if ( owner && owner.IsValid() ) {
+
+				local owner_scope = owner.GetScriptScope()
+				if ( !owner_scope ) {
+
+					owner.ValidateScriptScope()
+					owner_scope = owner.GetScriptScope()
+				}
+
+				// this should not be a thing.  Preserved gets added in player_spawn but we still get does not exist errors
+				if ( !( "Preserved" in owner_scope ) )
+					owner_scope.Preserved <- {}
+
+				if ( !( "ActiveProjectiles" in owner_scope.Preserved ) )
+					owner_scope.Preserved.ActiveProjectiles <- {}
+
+				owner_scope.Preserved.ActiveProjectiles[projectile.entindex()] <- [projectile, Time()]
+
+				PopExtUtil.SetDestroyCallback( projectile, function() {
+					if ( "ActiveProjectiles" in owner_scope.Preserved && self.entindex() in owner_scope.Preserved.ActiveProjectiles )
+						delete owner_scope.Preserved.ActiveProjectiles[self.entindex()]
+				})
+			}
+
+			if ( !( "ProjectileThinkTable" in scope ) )
+				scope.ProjectileThinkTable <- {}
+
+			scope.ProjectileThink <- function() {
+
+				foreach ( name, func in scope.ProjectileThinkTable )
+					func.call( scope )
+
+				return -1
+			}
+
+			_AddThinkToEnt( projectile, "ProjectileThink" )
+
+			projectile.AddEFlags( EFL_USER )
+		}
+	}
 }
 
-AddThinkToEnt( global_think_entity, "GlobalThink" )
+function main_think_scope::MainThink() {
+
+	foreach( func in MainThinks )
+		func.call( main_think_scope )
+	return -1
+}
+AddThinkToEnt( main_think_entity, "MainThink" )
 
 PopExtEvents.AddRemoveEventHook( "player_spawn", "MainPlayerSpawn", function( params ) {
 
@@ -386,8 +376,6 @@ PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventor
 	if ( !( "Preserved" in scope ) )
 		scope.Preserved <- {}
 
-	local scope = player.GetScriptScope()
-
 	if ( !( "PlayerThinkTable" in scope ) ) 
 		scope.PlayerThinkTable <- {}
 
@@ -395,18 +383,20 @@ PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MainPostInventor
 
 		scope.aibot <- PopExtBotBehavior( player )
 
-		scope.PlayerThinkTable.BotThink <- function() {
-
-				aibot.OnUpdate()
+		function BotThink() {
+			aibot.OnUpdate()
 		}
+
+		scope.PlayerThinkTable.BotThink <- BotThink
 	}
 
-	scope.PlayerThinks <- function() {
+	function PlayerThinks() {
 
-		foreach ( name, func in scope.PlayerThinkTable )
-			func.call( scope )
+		foreach ( name, func in PlayerThinkTable )
+			func()
 		return -1
 	}
+	scope.PlayerThinks <- PlayerThinks
 
 	_AddThinkToEnt( player, "PlayerThinks" )
 
@@ -445,33 +435,13 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 		if ( wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType( TF_BOT_TYPE ) )
 			EntFireByHandle( wearable, "Kill", "", -1, null, null )
 
-	foreach ( bot in PopExtUtil.BotTable.keys() )
+	foreach ( bot in PopExtUtil.BotArray )
 		if ( bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
 			bot.ForceChangeTeam( TEAM_SPECTATOR, true )
 
 	//same pop or manual cleanup flag set, don't run
-	if ( __popname == GetPropString( objres, "m_iszMvMPopfileName" ) || PopExtMain.ManualCleanup ) 
+	if ( __popname == GetPropString( objres, "m_iszMvMPopfileName" ) || PopExtConfig.ManualCleanup ) 
 		return
-
-	//clean up all players
-	local maxclients = MaxClients().tointeger()
-
-	for ( local i = 1; i <= maxclients; i++ ) {
-
-		local player = PlayerInstanceFromIndex( i )
-
-		if ( player == null ) continue
-
-		PopExtMain.PlayerCleanup( player, true )
-	}
-
-	//nuke it all
-	foreach( c in cleanup ) 
-		if ( c in ROOT ) 
-			delete ROOT[c]
-
-	EntFire( "__popext*", "Kill" )
-	EntFire( "extratankpath*", "Kill" )
 })
 
 //HACK: forces post_inventory_application to fire on pop load
@@ -482,5 +452,5 @@ for ( local i = MaxClients().tointeger(); i > 0; --i )
 // populator.nut and tutorialtools.nut are unfinished and not included by default
 // They can be manually included in the popfile using PopExtMain.IncludeModules( "populator", "tutorialtools" )
 
-if ( PopExtMain.IncludeAllModules )
+if ( PopExtConfig.IncludeAllModules )
 	PopExtMain.IncludeModules( "hooks", "popextensions", "wavebar", "robotvoicelines", "customattributes", "missionattributes", "customweapons", "botbehavior", "tags", "spawntemplate" )

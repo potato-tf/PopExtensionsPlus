@@ -516,9 +516,9 @@ PopExtEvents.AddRemoveEventHook( "npc_hurt", "PopExtTankHurt", function( params 
 				EntFireByHandle( scope.blimpTrain, "Kill", "", -1, null, null )
 		}
 
-		if ( dead && scope && !( "popFiredDeathHook" in scope ) ) {
+		if ( dead && scope && !( "pop_fired_death_hook" in scope ) ) {
 
-			scope.popFiredDeathHook <- true
+			scope.pop_fired_death_hook <- true
 
 			if ( "pop_property" in scope && "Icon" in scope.pop_property ) {
 

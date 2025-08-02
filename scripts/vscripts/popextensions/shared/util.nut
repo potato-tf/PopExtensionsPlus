@@ -263,8 +263,8 @@
 	function PlayerClassCount() {
 
 		local classes = array( TF_CLASS_COUNT_ALL, 0 )
-		foreach ( player in HumanTable.keys() )
-			++classes[player.GetPlayerClass()]
+		foreach ( player in HumanArray )
+			classes[player.GetPlayerClass()]++
 		return classes
 	}
 
@@ -397,7 +397,7 @@
 
 		PopExtUtil.ValidatePlayerTables()
 
-		local player_array = countbots ? BotTable.keys() : HumanTable.keys()
+		local player_array = countbots ? BotArray : HumanArray
 
 		foreach ( player in player_array )
 			if ( player.IsAlive() )
@@ -695,7 +695,7 @@
 
 				PopExtAttributes.RefreshDescs( player )
 
-				if ( PopExtMain.DebugText )
+				if ( PopExtConfig.DebugText )
 					foreach( attr, value in attrs )
 						PopExtMain.Error.DebugLog( format( "Added custom attribute '%s' to player %d ( weapon %d )", customattr_function, PlayerTable[ player ], item ? item.entindex() : -1 ) )
 			}
@@ -927,9 +927,9 @@
 			if ( ent = EntIndexToHScript( i ) )
 				entlist.append( ent )
 
-		if (callback != null)
-			foreach (ent in entlist)
-				callback(ent)
+		if ( callback != null )
+			foreach ( ent in entlist )
+				callback( ent )
 
 		return { "entlist": entlist, "numents": entlist.len() }
 	}
@@ -1823,7 +1823,7 @@
 
 		//move to red
 		if ( doteamswitch )
-			foreach ( player in PopExtUtil.HumanTable.keys() )
+			foreach ( player in PopExtUtil.HumanArray )
 				ChangePlayerTeamMvM( player, TF_TEAM_PVE_DEFENDERS )
 
 		temp.ValidateScriptScope()
@@ -1832,14 +1832,14 @@
 			if ( !PopExtUtil.IsWaveStarted ) {
 
 				if ( doteamswitch )
-					foreach ( player in PopExtUtil.HumanTable.keys() )
+					foreach ( player in PopExtUtil.HumanArray )
 						PopExtUtil.ChangePlayerTeamMvM( player, TF_TEAM_PVE_INVADERS )
 
 				self.Kill()
 				return 1
 			}
 			//kill all bots
-			foreach ( bot in PopExtUtil.BotTable.keys() )
+			foreach ( bot in PopExtUtil.BotArray )
 				if ( bot.IsAlive() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
 					PopExtUtil.KillPlayer( bot )
 		}
@@ -2061,7 +2061,7 @@
 	}
 
 	function KillAllBots() {
-		foreach ( bot in BotTable.keys() )
+		foreach ( bot in BotArray )
 			if ( bot.IsAlive() )
 				KillPlayer( bot )
 	}
@@ -2536,13 +2536,13 @@ PopExtEvents.AddRemoveEventHook("post_inventory_application", "UtilPostInventory
 
 		scope.ItemThinkTable <- {}
 
-		scope.ItemThinks <- function() {
+		function ItemThinks() {
 
-			foreach ( name, func in scope.ItemThinkTable )
-				func.call( scope )
+			foreach ( name, func in ItemThinkTable )
+				func()
 			return -1
 		}
-
+		scope.ItemThinks <- ItemThinks
 		_AddThinkToEnt( wep, "ItemThinks" )
 	}
 
@@ -2550,11 +2550,20 @@ PopExtEvents.AddRemoveEventHook("post_inventory_application", "UtilPostInventory
 
 		child.ValidateScriptScope()
 		local scope = child.GetScriptScope()
-		if ( !( "ItemThinkTable" in scope ) ) scope.ItemThinkTable <- {}
+
+		if ( !( "ItemThinkTable" in scope ) ) 
+			scope.ItemThinkTable <- {}
 
 		if( child.GetClassname() == "tf_wearable" ) {
 
-			scope.ItemThinks <- function() { foreach ( name, func in scope.ItemThinkTable ) func.call( scope ); return -1 }
+			function ItemThinks() {
+
+				foreach ( name, func in ItemThinkTable )
+					func()
+				return -1
+			}
+
+			scope.ItemThinkTable.ItemThinks <- ItemThinks
 			_AddThinkToEnt( child, "ItemThinks" )
 		}
 	}

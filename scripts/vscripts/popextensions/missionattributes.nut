@@ -3096,7 +3096,6 @@ class MissionAttributes {
 	OptimizedTracks		= {}
 
 	ThinkTable     		= {}
-	DebugText        	= false
 
 	PathNum 			= 0
 	RedMoneyValue 		= 0

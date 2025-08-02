@@ -74,7 +74,7 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 			SetPropBool( PopExtUtil.GameRules, "m_bShowMatchSummary", false )
 
 			// Loop through our human players
-			foreach ( player in PopExtUtil.HumanTable.keys() ) {
+			foreach ( player in PopExtUtil.HumanArray ) {
 
 				local scope = player.GetScriptScope()
 
@@ -104,7 +104,7 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 		}
 
 		// Loop through our human players
-		foreach ( player in PopExtUtil.HumanTable.keys() ) {
+		foreach ( player in PopExtUtil.HumanArray ) {
 
 			player.GetScriptScope().__position <- player.GetOrigin()
 
@@ -134,6 +134,8 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 
 		PopExtTutorial.IsPlayingViewcontrol = true
 
+		local camera_scope = camera.GetScriptScope()
+
 		// Update camera origin and angles every frame linearly towards keyframe values
 		camera.GetScriptScope().CameraThink <- function() {
 
@@ -147,7 +149,7 @@ PrecacheSound( "replay/exitperformancemode.wav" )
 
 			// Gay babyjail our human players to prevent them from moving with things like conga
 
-			foreach ( player in PopExtUtil.HumanTable.keys() ) {
+			foreach ( player in PopExtUtil.HumanArray ) {
 
 				SetPropInt( player, "movetype", MOVETYPE_WALK )
 				player.SetAbsOrigin( player.GetScriptScope().__position )

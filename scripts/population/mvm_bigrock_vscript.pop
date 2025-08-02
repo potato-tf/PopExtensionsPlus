@@ -50,8 +50,9 @@ WaveSchedule
 				|See DoExplanation in util.nut for more info`, `FFFF66`, `Explanation: `, true)
 
 				::ExtraItems <- {
-					`Wasp Launcher`:
-					{
+
+					`Wasp Launcher`: {
+
 						OriginalItemName = `Upgradeable TF_WEAPON_ROCKETLAUNCHER`
 						Model = `models/weapons/c_models/c_wasp_launcher/c_wasp_launcher.mdl`
 						`Blast radius increased` : 1.5

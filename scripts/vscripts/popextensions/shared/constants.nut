@@ -61,11 +61,12 @@ const STRING_NETPROP_AMMO		  = "m_iAmmo"
 const STRING_NETPROP_MODELINDEX   = "m_nModelIndex"
 
 // Logging
-const POPEXT_ERROR   = "POPEXT ERROR: "
-const POPEXT_WARNING = "POPEXT WARNING: "
-const POPEXT_DEBUG   = "POPEXT DEBUG: "
+const POPEXT_LOG_DEBUG   = "[POPEXT DEBUG] "
+const POPEXT_LOG_WARNING = "[POPEXT WARNING] "
+const POPEXT_LOG_ERROR   = "[POPEXT ERROR] "
+const POPEXT_LOG_FATAL   = "[POPEXT FATAL ERROR] "
 
-CONST.POPEXT_PARSE_ERROR <- format( "\x08FFB4B4FF%s A parsing error has occured. Check console for details.", POPEXT_ERROR )
+CONST.POPEXT_LOG_PARSE_ERROR <- format( "\x08FFB4B4FF%s A parsing error has occured. Check console for details.", POPEXT_LOG_ERROR )
 
 // Single tick interval
 const SINGLE_TICK = 0.015

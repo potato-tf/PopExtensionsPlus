@@ -4,15 +4,36 @@
 
 ## General
 - Use PopExtUtil functions as much as possible, all generic re-usable functions go here
-- Use PopExtMain.Error for parse errors and warnings, do not use error() or other print functions
 - Always use constants defined in constants.nut/itemdef_constants.nut, avoid magic numbers
-    - many netprop strings are cached as constants for performance + ease of writing
-- Only popextensions_main.nut is allowed to break these rules due to being included before any other files
+    - various strings are cached as constants for performance or ease of writing
+## Error Logging:
+- Use `PopExtMain.Error` for errors and warnings, do not use `error()` or other print functions
+    - ### Debug:
+    - Print to Console if `PopExtConfig.DebugText` is true and Debug Logging for the module is whitelisted in `PopExtConfig.DebugFiles`
+        - `PopExtMain.Error.DebugLog` - Generic Debug Logging with the `POPEXT DEBUG:` prefix
+    - ### Warnings:
+    - Always print to console with the `POPEXT WARNING:` prefix
+    - `PopExtMain.Error.GenericWarning` - Self-explanatory
+    - `PopExtMain.Error.DeprecationWarning` - Deprecation warning.  First argument is old function/variable name, Second argument is the new name.
+    - `PopExtMain.Error.RaiseIndexError` - Index out-of-range error, set the 3rd argument to `true` to trigger an assert/full vscript error
+    - `PopExtMain.Error.RaiseTypeError` - Type error, see above for assert
+    - `PopExtMain.Error.RaiseValueError` - Generic value error, see above for assert (argument 4 instead of 3)
+    - `PopExtMain.Error.RaiseModuleError` - Module import error, `PopExtMain.IncludeModules` will handle this automatically
+    - `PopExtMain.Error.ParseError` - Generic parsing errors.
+    - `PopExtMain.Error.RaiseException` - Generic Exceptions/Asserts.
+
+## Naming Conventions:
+- ### snake_case:
+    - all INTERNAL variable names
+- ### PascalCase:
+    - function names
+- ### ALL_UPPERCASE:
+    - constant names
+    - "constant-like" values (e.g. `ROBOT_ARM_PATHS` in util.nut)
+
 
 ## Formatting
 - no trailing semicolons, only use in for-loops and one-liners
-- snake_case variable names, PascalCase function names, ALL_UPPERCASE constant names, no camelCase
-    - "constant-like" values (e.g. ROBOT_ARM_PATH in util.nut) are the only exception
 - K&R syntax (inline opening braces, newline after)
 - Valve-style argument formatting (spaces between opening/closing parentheses)
 - Trim whitespace (Ctrl+M then Ctrl+X in VSCode)

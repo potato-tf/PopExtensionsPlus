@@ -1,49 +1,70 @@
-popext_entity <- FindByName( null, "__popext" )
-if ( popext_entity == null ) popext_entity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext" } )
+local popext_hooks_entity = FindByName( null, "__popext_hooks" )
+if ( popext_hooks_entity == null ) 
+	popext_hooks_entity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext_hooks" } )
 
-popext_entity.ValidateScriptScope()
-PopExt <- popext_entity.GetScriptScope()
+popext_hooks_entity.ValidateScriptScope()
+::PopExtHooks <- popext_hooks_entity.GetScriptScope()
 
-::PopExtHooks <- {
+function PopExtHooks::AddHooksToScope( name, table, scope ) {
 
-	function AddHooksToScope( name, table, scope ) {
+	foreach( hook_name, func in table ) {
 
-		foreach( hook_name, func in table ) {
+		// Entries in hook table must begin with 'On' to be considered hooks
+		if ( hook_name.slice( 0,2 ) == "On" ) {
 
-			// Entries in hook table must begin with 'On' to be considered hooks
-			if ( hook_name.slice( 0,2 ) == "On" ) {
+			if ( !( "popext_hooks" in scope ) )
+				scope.popext_hooks <- {}
 
-				if ( !( "popext_hooks" in scope ) )
-					scope.popext_hooks <- {}
+			if ( !( hook_name in scope.popext_hooks ) )
+				scope.popext_hooks[hook_name] <- []
 
-				if ( !( hook_name in scope.popext_hooks ) )
-					scope.popext_hooks[hook_name] <- []
-
-				scope.popext_hooks[hook_name].append( func )
-			}
-			else {
-				if ( !( "pop_property" in scope ) )
-					scope.pop_property <- {}
-
-				scope.pop_property[hook_name] <- func
-			}
-			// legacy backwards compatibility, some missions still use the old camelCase names
-			scope.popHooks 	  <- scope_popext_hooks
-			scope.popProperty <- scope_pop_property
+			scope.popext_hooks[hook_name].append( func )
 		}
-	}
+		else {
+			if ( !( "pop_property" in scope ) )
+				scope.pop_property <- {}
 
-	function FireHooks( entity, scope, name ) {
-		if ( scope != null && "popext_hooks" in scope && name in scope.popext_hooks )
-			foreach( index, func in scope.popext_hooks[name] )
-				func( entity )
-	}
-	function FireHooksParam( entity, scope, name, param ) {
-		if ( scope != null && "popext_hooks" in scope && name in scope.popext_hooks )
-			foreach( index, func in scope.popext_hooks[name] )
-				func( entity, param )
+			scope.pop_property[hook_name] <- func
+		}
+		// legacy backwards compatibility, some missions still use the old camelCase names
+		scope.popHooks 	  <- scope_popext_hooks
+		scope.popProperty <- scope_pop_property
 	}
 }
+
+function PopExtHooks::FireHooks( entity, scope, name ) {
+
+	if ( scope != null && "popext_hooks" in scope && name in scope.popext_hooks )
+		foreach( index, func in scope.popext_hooks[name] )
+			func( entity )
+}
+function PopExtHooks::FireHooksParam( entity, scope, name, param ) {
+
+	if ( scope != null && "popext_hooks" in scope && name in scope.popext_hooks )
+		foreach( index, func in scope.popext_hooks[name] )
+			func( entity, param )
+}
+
+function PopExtHooks::PopExtHooksThink() {
+
+	if ( !PopExtUtil.IsWaveStarted )
+		return 0.2
+
+	foreach ( player in PopExtUtil.BotArray ) {
+
+		local scope = player.GetScriptScope()
+		// Make sure that ondeath hook is fired always
+		if ( !player.IsAlive() && "pop_fired_death_hook" in scope ) {
+			if ( !scope.pop_fired_death_hook )
+				PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
+
+			delete scope.pop_fired_death_hook
+		}
+	}
+	return -1
+}
+
+AddThinkToEnt( popext_hooks_entity, "PopExtHooksThink" )
 
 PopExtEvents.AddRemoveEventHook( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 
@@ -86,10 +107,10 @@ PopExtEvents.AddRemoveEventHook( "player_spawn", "PopHooksPlayerSpawn", function
 		delete scope.wearables_to_kill
 	}
 
-	if ( "popFiredDeathHook" in scope && !scope.popFiredDeathHook ) {
+	if ( "pop_fired_death_hook" in scope && !scope.pop_fired_death_hook ) {
 
 		PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
-		delete scope.popFiredDeathHook
+		delete scope.pop_fired_death_hook
 	}
 
 	// Reset hooks
@@ -107,7 +128,7 @@ PopExtEvents.AddRemoveEventHook( "player_team", "PopHooksPlayerTeam", function( 
 
 	local player = GetPlayerFromUserID( params.userid )
 
-	if ( !player ) return //can sometimes be null when the server empties out?
+	if ( !player ) return // can sometimes be null when the server empties out? Likely a rafmod bug
 
 	local scope = player.GetScriptScope()
 
@@ -119,9 +140,9 @@ PopExtEvents.AddRemoveEventHook( "player_team", "PopHooksPlayerTeam", function( 
 		delete scope.wearables_to_kill
 	}
 
-	if ( "popFiredDeathHook" in scope && !scope.popFiredDeathHook ) {
+	if ( "pop_fired_death_hook" in scope && !scope.pop_fired_death_hook ) {
 		PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
-		delete scope.popFiredDeathHook
+		delete scope.pop_fired_death_hook
 	}
 
 		// Reset hooks
@@ -152,7 +173,7 @@ PopExtEvents.AddRemoveEventHook( "player_death", "PopHooksPlayerDeath", function
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
-	scope.popFiredDeathHook <- true
+	scope.pop_fired_death_hook <- true
 	PopExtHooks.FireHooksParam( player, scope, "OnDeath", params )
 
 
@@ -162,22 +183,3 @@ PopExtEvents.AddRemoveEventHook( "player_death", "PopHooksPlayerDeath", function
 		PopExtHooks.FireHooksParam( attacker, scope, "OnKill", params )
 	}
 }, EVENT_WRAPPER_HOOKS)
-
-function PopExtGlobalThink() {
-
-	if ( !PopExtUtil.IsWaveStarted )
-		return 0.2
-
-	foreach ( player in PopExtUtil.BotTable.keys() ) {
-
-		local scope = player.GetScriptScope()
-		// Make sure that ondeath hook is fired always
-		if ( !player.IsAlive() && "popFiredDeathHook" in scope ) {
-			if ( !scope.popFiredDeathHook )
-				PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
-
-			delete scope.popFiredDeathHook
-		}
-	}
-	return -1
-}

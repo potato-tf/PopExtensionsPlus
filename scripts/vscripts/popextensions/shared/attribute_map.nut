@@ -1,3 +1,6 @@
+// Clunky horrible update procedure
+// - Copy/paste the "attributes" table from items_game.nut into the FromItemsGame table (replace existing data)
+
 local FromItemsGame = {
 	[1] = {
 
@@ -7902,7 +7905,7 @@ local FromItemsGame = {
 	},
 }
 
-PopExtItems.GenerateItemAttributeTable <- function() {
+function PopExtItems::GenerateItemAttributeTable() {
 
 	local x = {}
 	foreach ( k, v in FromItemsGame ) {

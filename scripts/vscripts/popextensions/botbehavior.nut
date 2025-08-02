@@ -94,7 +94,7 @@ class PopExtBotBehavior {
 		local closest_threat = null
 		local closest_threat_dist = min_dist_sqr
 
-		foreach ( player in PopExtUtil.PlayerTable.keys() ) {
+		foreach ( player in PopExtUtil.PlayerArray ) {
 
 			if ( player == bot || !player.IsAlive() || player.GetTeam() == team || ( must_be_visible && !IsThreatVisible( player ) ) )
 				continue
@@ -111,7 +111,7 @@ class PopExtBotBehavior {
 	function CollectThreats( maxdist = INT_MAX, disguised = false, invisible = false, alive = true ) {
 
 		local threatarray = []
-		foreach ( player in PopExtUtil.PlayerTable.keys() ) {
+		foreach ( player in PopExtUtil.PlayerArray ) {
 
 			if ( player == bot ||
 				player.GetTeam() == bot.GetTeam() ||
