@@ -211,9 +211,7 @@
 	StartRelay 		  = FindByName( null, "wave_start_relay" )
 	FinishedRelay 	  = FindByName( null, "wave_finished_relay" )
 
-	PopInterface 	  = FindByClassname( null, "point_populator_interface" ) ?
-						FindByClassname( null, "point_populator_interface" ) :
-						SpawnEntityFromTable( "point_populator_interface", {targetname = "__popext_pop_interface"} )
+	PopInterface 	  = FindByClassname( null, "point_populator_interface" ) || SpawnEntityFromTable( "point_populator_interface", { targetname = "__popext_pop_interface" } )
 
 	TriggerHurt 	  = CreateByClassname( "trigger_hurt" )
 

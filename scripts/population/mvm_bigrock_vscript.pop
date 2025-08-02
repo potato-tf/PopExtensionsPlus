@@ -1,5 +1,6 @@
 #base robot_giant.pop
 #base robot_standard.pop
+#base robot_gatebot.pop
 
 // This is an example mission with vscript and popextensions
 // Functions provided by popextensions are defined at the end of the file
@@ -47,7 +48,8 @@ WaveSchedule
 				|PAUSE 2
 				|Explanation text can support pauses, and optionally syncing chat prints with the game_text
 				|By default, text lifetime is determined by the length of the sentence
-				|See DoExplanation in util.nut for more info`, `FFFF66`, `Explanation: `, true)
+				|See DoExplanation in util.nut for more info`, 
+				`FFFF66`, `Explanation: `, true)
 
 				::ExtraItems <- {
 
@@ -67,23 +69,24 @@ WaveSchedule
 
 				MissionAttrs({
 
-					EnableGlobalFixes = 1
-					NoReanimators = 1
-					ForceHoliday = 2
-					NoRome = 2
-					BotHeadshots = 1
-					NoCrumpkins = 1
-					BotsAreHumans = 2
-					WaveStartCountdown = 3
-					SpellRateCommon = 0.5
-					NoSkeleSplit = 1
-					WaveNum = 3
-					MaxWaveNum = 60
-					StandableHeads = 1
-					MultiSapper = 1
-					TeamWipeWaveLoss = 1
+					EnableGlobalFixes  	 = 1
+					NoReanimators 	   	 = 1
+					ForceHoliday 	   	 = 2
+					NoRome 			   	 = 2
+					BotHeadshots 	   	 = 1
+					NoCrumpkins 	   	 = 1
+					BotsAreHumans 	   	 = 2
+					WaveStartCountdown 	 = 3
+					SpellRateCommon    	 = 0.5
+					NoSkeleSplit 	   	 = 1
+					WaveNum 		   	 = 3
+					MaxWaveNum 		   	 = 60
+					StandableHeads 	   	 = 1
+					MultiSapper 	   	 = 1
+					TeamWipeWaveLoss   	 = 1
 					UnusedGiantFootsteps = 2
 					GiantSentryKillCountOffset = -4
+
 					ClassLimits = {
 						[TF_CLASS_SCOUT]   = 1,      // Limit class to 1
 						[TF_CLASS_SPY] 	   = 1,      // Prevent class selection
@@ -290,7 +293,9 @@ WaveSchedule
             Target bignet
             Action RunScriptCode
             Param "
+
                 IncludeScript(`popextensions_main`, getroottable())
+
                 MissionAttrs({
                     `WaveStartCountdown`: 1
                     `ExtraTankPath`: [

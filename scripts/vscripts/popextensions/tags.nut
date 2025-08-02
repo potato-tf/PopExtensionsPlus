@@ -1431,7 +1431,10 @@ local popext_funcs = {
 		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScanner <- function() {
 
 			for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile_*" ); ) {
-				if ( projectile.GetOwner() != bot || !PopExtHoming.IsValidProjectile( projectile, PopExtUtil.HomingProjectiles ) ) continue
+
+				if ( projectile.GetOwner() != bot || !PopExtHoming.IsValidProjectile( projectile, PopExtUtil.HomingProjectiles ) ) 
+					continue
+
 				// Any other parameters needed by the projectile thinker can be set here
 				PopExtHoming.AttachProjectileThinker( projectile, speed_mult, turn_power, ignore_disguised_spies, ignore_stealthed_spies )
 			}
@@ -1453,7 +1456,7 @@ local popext_funcs = {
     /*******************************************************************
      * CUSTOM ROCKET TRAIL                                   		   *
      *                                                                 *
-     * purple monoculus trail ( recommended for homing projectiles )     *
+     * purple monoculus trail ( recommended for homing projectiles )   *
      *                                                                 *
      * Example: popext_rocketcustomtrail{name = `eyeboss_projectile` } *
      *******************************************************************/
@@ -1468,9 +1471,13 @@ local popext_funcs = {
 
 				EntFireByHandle( projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null )
 
+				local name = "name" in args ? args.name : args.type
+
+				if ( name == "" ) return
+
 				local particle = CreateByClassname( "trigger_particle" )
 
-				particle.KeyValueFromString( "particle_name", "name" in args ? args.name : args.type )
+				particle.KeyValueFromString( "particle_name", name )
 				particle.KeyValueFromInt( "attachment_type", PATTACH_ABSORIGIN_FOLLOW )
 				particle.KeyValueFromInt( "spawnflags", SF_TRIGGER_ALLOW_ALL )
 
@@ -2112,8 +2119,7 @@ local popext_funcs = {
 		local ifseetarget 	= "ifseetarget" in args ? args.ifseetarget : false
 		local ifhealthbelow = "ifhealthbelow" in args ? args.ifhealthbelow : INT_MAX
 
-		if ( ifseetarget && !( "PopExtBotBehavior" in ROOT ) ) {
-			PopExtMain.Error.RaiseModuleError( "botbehavior", "popext_changeattributes" )
+		if ( ifseetarget && !PopExtMain.IncludeModules( "botbehavior" ) ) {
 			ifseetarget = false
 		}
 
@@ -2130,15 +2136,15 @@ local popext_funcs = {
 
 					PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.PopInterface.AcceptInput( `ChangeBotAttributes`, `%s`, null, null )", name ), delay, bot, bot )
 
-				repeats--
+					repeats--
 
-				if ( repeats < 1 ) {
+					if ( repeats < 1 ) {
 
-					delete PlayerThinkTable.ChangeAttributesThink
-					return
-				}
+						delete PlayerThinkTable.ChangeAttributesThink
+						return
+					}
 
-				cooldowntime = Time() + cooldown
+					cooldowntime = Time() + cooldown
 				}
 			}
 		}

@@ -16,16 +16,10 @@ local foldblacklist = {
 }
 
 // fold every class into the root table for performance
-foreach( _class in tofold ) {
-
-	foreach( k, v in ROOT[_class].getclass() ) {
-
-		if ( !( k in foldblacklist ) && !( k in ROOT ) ) {
-
+foreach( _class in tofold )
+	foreach( k, v in ROOT[_class].getclass() )
+		if ( !( k in foldblacklist ) && !( k in ROOT ) ) 
 			ROOT[k] <- ROOT[_class][k].bindenv( ROOT[_class] )
-		}
-	}
-}
 
 
 // fold every pre-defined constant into the const table
