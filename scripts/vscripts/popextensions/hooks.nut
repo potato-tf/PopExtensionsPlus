@@ -1,7 +1,4 @@
-popext_entity <- FindByName( null, "__popext" )
-if ( popext_entity == null ) popext_entity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext" } )
-
-popext_entity.ValidateScriptScope()
+local popext_entity = PopExtMain.CreateScope( "__popext" ).Entity
 PopExt <- popext_entity.GetScriptScope()
 
 ::PopExtHooks <- {
@@ -544,8 +541,8 @@ function PopExtGlobalThink() {
 
 					//using a think prevents tank from briefly becoming invisible when changing damage models
 					scope.TankThinkTable.SetModel <- function() {
-						SetPropIntArray( self, "m_nModelIndexOverrides", cur_model, VISION_MODE_NONE )
-						SetPropIntArray( self, "m_nModelIndexOverrides", cur_model, VISION_MODE_ROME )
+						SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_NONE )
+						SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_ROME )
 					}
 
 					if ( "LeftTrack" in scope.pop_property.Model ) {
@@ -587,8 +584,8 @@ function PopExtGlobalThink() {
 
 						if ( replace_model != -1 ) {
 							child.SetModel( replace_model_str )
-							SetPropIntArray( child, "m_nModelIndexOverrides", replace_model, VISION_MODE_NONE )
-							SetPropIntArray( child, "m_nModelIndexOverrides", replace_model, VISION_MODE_ROME )
+							SetPropIntArray( child, STRING_NETPROP_MDLINDEX_OVERRIDES, replace_model, VISION_MODE_NONE )
+							SetPropIntArray( child, STRING_NETPROP_MDLINDEX_OVERRIDES, replace_model, VISION_MODE_ROME )
 						}
 
 						if ( is_track ) {

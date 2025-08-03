@@ -241,10 +241,9 @@ class PopExtWeapons {
 			// Apply attributes
 			// THIS MUST BE DONE AFTER WEAPON_EQUIP!!!
 			// Normal attributes can work for owner-less items, custom attributes cannot.
-			if ( extraitem != null )
-				foreach ( attribute, value in extraitem )
-					if ( !( attribute in reserved_keywords ) )
-						PopExtUtil.SetPlayerAttributes( player, attribute, value, item, true )
+			foreach ( attribute, value in extraitem || {} )
+				if ( !( attribute in reserved_keywords ) )
+					PopExtUtil.SetPlayerAttributes( player, attribute, value, item, true )
 
 			// copied from ficool2 mw2_highrise
 			// viewmodel

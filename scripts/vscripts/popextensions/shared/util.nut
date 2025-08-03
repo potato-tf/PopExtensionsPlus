@@ -1889,15 +1889,14 @@
 		if ( player == null || !player.IsPlayer() ) return
 
 		function FindTargetPlayer( passcond ) {
-			local target = null
-			for ( local i = 1; i <= MAX_CLIENTS; i++ ) {
-				local potentialtarget = PlayerInstanceFromIndex( i )
-				if ( potentialtarget == null || potentialtarget == player ) continue
 
-				if ( passcond( potentialtarget ) ) {
-					target = potentialtarget
-					break
-				}
+			local target = null
+			foreach( potentialtarget in PopExtUtil.HumanArray ) {
+
+				if ( potentialtarget == player || !passcond( potentialtarget ) ) continue
+
+				target = potentialtarget
+				break
 			}
 			return target
 		}
@@ -2099,6 +2098,8 @@
 
 		local dummy = CreateByClassname( "info_null" )
 		SetTargetname( dummy, str )
+		SetPropBool( dummy, STRING_NETPROP_PURGESTRINGS, true )
+		DispatchSpawn( dummy )
 	}
 
 	function SetDestroyCallback( entity, callback ) {

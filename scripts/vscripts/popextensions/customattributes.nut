@@ -1686,7 +1686,7 @@ class PopExtAttributes {
 
 		function MinRespawnTime( player, item, value ) {
 
-			PopExtEvents.AddRemoveEventHook( "post_inventory_application", "MinRespawnTime", function( params ) {
+			PopExtEvents.AddRemoveEventHook( "post_inventory_application", format( "MinRespawnTime_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
 
 				if (!PopExtUtil.IsWaveStarted) return
 
@@ -1694,6 +1694,11 @@ class PopExtAttributes {
 					return
 
 				local respawn_override = PopExtUtil.RespawnOverride
+
+				if ( !respawn_override.IsValid() )
+					return
+				printl( respawn_override )
+
 				local prev_respawn = GetPropFloat(respawn_override, "m_flRespawnTime")
 				respawn_override.AcceptInput("SetRespawnTime", value.tostring(), null, null)
 				respawn_override.AcceptInput("StartTouch", "", player, player)

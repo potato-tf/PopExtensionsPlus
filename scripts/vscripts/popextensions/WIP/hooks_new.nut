@@ -1,9 +1,6 @@
-local popext_hooks_entity = FindByName( null, "__popext_hooks" )
-if ( popext_hooks_entity == null ) 
-	popext_hooks_entity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext_hooks" } )
-
-popext_hooks_entity.ValidateScriptScope()
-::PopExtHooks <- popext_hooks_entity.GetScriptScope()
+local scope = PopExtMain.CreateScope( "__popext_hooks" )
+::PopExtHooks <- scope.Scope
+popext_hooks_entity <- scope.Entity
 
 function PopExtHooks::AddHooksToScope( name, table, scope ) {
 

@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "08.02.2025.1"
+::POPEXT_VERSION <- "08.03.2025.1"
 
 local function Include( path, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -32,8 +32,8 @@ Include( "shared/item_map", "PopExtItems" ) 		   		    // Item map for english n
 Include( "shared/attribute_map", "PopExtItems", "PopExtItems" ) // Attribute map for attribute info look-ups
 Include( "shared/config" )										// Configuration file for end users, always re-include this
 Include( "shared/event_wrapper", "PopExtEvents" ) 	   		    // Event wrapper for all events
+// Include( "WIP/gamestrings" )								    // prevent string leaks
 Include( "shared/util", "PopExtUtil" )						    // misc utils/entities
-// Include( "shared/gamestrings" )								    // prevent string leaks
 
 // these get defined here so we can use them
 local objres = Entities.FindByClassname( null, "tf_objective_resource" )
@@ -51,16 +51,6 @@ local objres = Entities.FindByClassname( null, "tf_objective_resource" )
  * don't want to confuse new scripters by allowing adding multiple thinks with AddThinkToEnt in our library and our library only *
  * spew a big fat warning below so they know what's going on                                                                     *
  *********************************************************************************************************************************/
-
-local banned_think_classnames = {
-
-	player 			= "PlayerThinkTable"
-	tank_boss 		= "TankThinkTable"
-	tf_projectile_ 	= "ProjectileThinkTable"
-	tf_weapon_ 		= "ItemThinkTable"
-	tf_wearable 	= "ItemThinkTable"
-}
-
 if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
     /******************************************************************************************************************************************
@@ -69,6 +59,15 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
      * I'm not including this in the warning, only the people that know what they're doing already and can find it here should know about it. *
      ******************************************************************************************************************************************/
 	::_AddThinkToEnt <- AddThinkToEnt
+
+	local banned_think_classnames = {
+
+		player 			= "PlayerThinkTable"
+		tank_boss 		= "TankThinkTable"
+		tf_projectile_ 	= "ProjectileThinkTable"
+		tf_weapon_ 		= "ItemThinkTable"
+		tf_wearable 	= "ItemThinkTable"
+	}
 
 	::AddThinkToEnt <- function( ent, func ) {
 
@@ -80,7 +79,8 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 			return
 		}
 
-		foreach ( k, v in banned_think_classnames )
+		foreach ( k, _ in banned_think_classnames ) {
+
 			if ( startswith( ent.GetClassname(), k ) ) {
 
 				error( format( "ERROR: **POPEXTENSIONS WARNING: AddThinkToEnt on '%s' entity overwritten!**\n", k ) )
@@ -91,66 +91,101 @@ if ( !( "_AddThinkToEnt" in ROOT ) ) {
 				PopExtUtil.AddThinkToEnt( ent, func )
 				return
 			}
+		}
 
 		_AddThinkToEnt( ent, func )
 	}
 }
-
-// Global variable cleanup
-local cleanup = [
-
-	"MissionAttributes"
-	"CustomAttributes" // TODO: deprecate this and use PopExtAttributes instead
-	"PopExtAttributes"
-	"SpawnTemplate"
-	"SpawnTemplateWaveSchedule"
-	"SpawnTemplates"
-	"VCD_SOUNDSCRIPT_MAP"
-	"PointTemplates"
-	"CustomWeapons" // TODO: deprecate this and use PopExtWeapons instead
-	"PopExtWeapons"
-	"__popname"
-	"ExtraItems"
-	"Homing"
-	"MAtr"
-	"MAtrs"
-	"MissionAttr"
-	"MissionAttrs"
-	"MissionAttrThink"
-
-	"pop_ext_think_func_set"
-	"POPEXT_VERSION"
-
-	"ScriptLoadTable"
-	"ScriptUnloadTable"
-	"EntAdditions"
-	"Explanation"
-	"Info"
-
-	"PopExt"
-	"PopExtTags"
-	"PopExtHooks"
-	"PopExtPathPoint"
-	"PopExtBotBehavior"
-	"PopExtItems"
-	"PopExtHooksThink"
-	"PopExtTutorial"
-
-	// clear these last
-	"PopExtEvents"
-	"PopExtUtil"
-	"PopExtMain"
-]
 
 class PopExtMain {
 
 	
 	ActiveModules = {}
 
+	// Global variable cleanup
+	cleanup = [
+
+		"MissionAttributes"
+		"CustomAttributes" // TODO: deprecate this and use PopExtAttributes instead
+		"PopExtAttributes"
+		"SpawnTemplate"
+		"SpawnTemplateWaveSchedule"
+		"SpawnTemplates"
+		"VCD_SOUNDSCRIPT_MAP"
+		"PointTemplates"
+		"CustomWeapons" // TODO: deprecate this and use PopExtWeapons instead
+		"PopExtWeapons"
+		"__popname"
+		"ExtraItems"
+		"Homing"
+		"MAtr"
+		"MAtrs"
+		"MissionAttr"
+		"MissionAttrs"
+		"MissionAttrThink"
+
+		"pop_ext_think_func_set"
+		"POPEXT_VERSION"
+
+		"ScriptLoadTable"
+		"ScriptUnloadTable"
+		"EntAdditions"
+		"Explanation"
+		"Info"
+
+		"PopExt"
+		"PopExtTags"
+		"PopExtHooks"
+		"PopExtPathPoint"
+		"PopExtBotBehavior"
+		"PopExtItems"
+		"PopExtHooksThink"
+		"PopExtTutorial"
+
+		// clear these last
+		"PopExtEvents"
+		"PopExtUtil"
+		"PopExtMain"
+	]
+
+	function CreateScope( name, think_name = null, preserved = false ) {
+
+		local ent = FindByName( null, name ) || SpawnEntityFromTable( preserved ? "move_rope" : "info_teleport_destination", { targetname = name, vscripts = " " } )
+		local scope = ent.GetScriptScope() || ( ent.ValidateScriptScope(), ent.GetScriptScope() )
+
+		if ( think_name ) {
+
+			scope.ThinkTable <- {}
+
+			function Think() {
+
+				foreach ( func in ThinkTable || {} ) 
+					func()
+
+				return -1
+			}
+
+			scope[ think_name ] <- Think
+
+			AddThinkToEnt( ent, think_name )
+		}
+
+		return { Entity = ent, Scope = scope }
+
+	}
+
 	function PlayerCleanup( player, full_cleanup = false ) {
 
 		NetProps.SetPropInt( player, "m_nRenderMode", kRenderNormal )
 		NetProps.SetPropInt( player, "m_clrRender", 0xFFFFFF )
+
+		for ( local child = player.FirstMoveChild(), scope; child != null; scope = child.GetScriptScope(), child = child.NextMovePeer() )
+			if ( full_cleanup )
+				child.TerminateScriptScope()
+			else
+				foreach ( k, v in scope || {} )
+					if ( !( k in PopExtConfig.IgnoreTable ) )
+						delete scope[k]
 
 		if ( full_cleanup ) {
 
@@ -173,9 +208,8 @@ class PopExtMain {
 
 	function FullCleanup() {
 
-		for ( local i = 1, player; i <= MAX_CLIENTS; i++ )
-			if ( player = PlayerInstanceFromIndex( i ) )
-				PopExtMain.PlayerCleanup( player, true )
+		foreach( player in PopExtUtil.HumanArray )
+			PopExtMain.PlayerCleanup( player, true )
 
 		// Nuke all popextension globals
 		foreach( c in cleanup ) 
@@ -269,12 +303,8 @@ if ( PopExtConfig.DebugText && !( "_EntFireByHandle" in ROOT ) ) {
 	}
 }
 
-local main_think_entity = Entities.FindByName( null, "__popext_main_think" )
-if ( main_think_entity == null ) 
-	main_think_entity = SpawnEntityFromTable( "info_teleport_destination", { targetname = "__popext_main_think" } )
-
-main_think_entity.ValidateScriptScope()
-::main_think_scope <- main_think_entity.GetScriptScope()
+local scope = PopExtMain.CreateScope( "__popext_main_think" )
+::main_think_scope <- scope.Scope
 
 main_think_scope.MainThinks <- {
 
@@ -431,8 +461,8 @@ PopExtEvents.AddRemoveEventHook( "player_death", "MainDeathCleanup", function( p
 PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
 
 	// clean up lingering wearables/weapons
-	for ( local wearable; wearable = FindByClassname( wearable, "tf_wea*" ); )
-		if ( wearable.GetOwner() == null || wearable.GetOwner().IsBotOfType( TF_BOT_TYPE ) )
+	for ( local wearable, owner; wearable = FindByClassname( wearable, "tf_wea*" ), owner = wearable.GetOwner() || null; )
+		if ( !owner || owner.IsBotOfType( TF_BOT_TYPE ) )
 			EntFireByHandle( wearable, "Kill", "", -1, null, null )
 
 	foreach ( bot in PopExtUtil.BotArray )
@@ -442,15 +472,30 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "MainRoundStartCleanup"
 	//same pop or manual cleanup flag set, don't run
 	if ( __popname == GetPropString( objres, "m_iszMvMPopfileName" ) || PopExtConfig.ManualCleanup ) 
 		return
+
+	PopExtMain.FullCleanup()
 })
 
 //HACK: forces post_inventory_application to fire on pop load
-for ( local i = MaxClients().tointeger(); i > 0; --i )
-	if ( PlayerInstanceFromIndex( i ) )
-		PopExtUtil.ScriptEntFireSafe( PlayerInstanceFromIndex( i ), "self.Regenerate( true )", SINGLE_TICK )
+for ( local i = 0, player; i <= MAX_CLIENTS; i++ )
+	if ( player = PlayerInstanceFromIndex( i ) )
+		PopExtUtil.ScriptEntFireSafe( player, "self.Regenerate( true )", SINGLE_TICK )
 
 // populator.nut and tutorialtools.nut are unfinished and not included by default
 // They can be manually included in the popfile using PopExtMain.IncludeModules( "populator", "tutorialtools" )
 
-if ( PopExtConfig.IncludeAllModules )
-	PopExtMain.IncludeModules( "hooks", "popextensions", "wavebar", "robotvoicelines", "customattributes", "missionattributes", "customweapons", "botbehavior", "tags", "spawntemplate" )
+if ( !PopExtConfig.IncludeAllModules ) return
+
+PopExtMain.IncludeModules(
+
+	"hooks", 
+	"popextensions",
+	"wavebar", 
+	"robotvoicelines", 
+	"customattributes", 
+	"missionattributes",
+	"customweapons",
+	"botbehavior",
+	"tags",
+	"spawntemplate"
+)

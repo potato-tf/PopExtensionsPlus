@@ -6,8 +6,6 @@
 // These backwards compatibility efforts come from old tags that existed prior to the new table syntax
 // Anyone interested in creating new tags should not waste time trying to support this deprecated behavior
 
-PopExtUtil.PlayerManager.ValidateScriptScope()
-
 local popext_funcs = {
 
     /**************************************************************************************************************************

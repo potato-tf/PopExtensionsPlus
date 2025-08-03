@@ -1,39 +1,31 @@
 // fold constants/functions again here so this can be standalone
-if ( !( "CONST" in getroottable() ) ) {
+::CONST <- getconsttable()
+::ROOT  <- getroottable()
 
-    ::CONST <- getconsttable()
-    ::ROOT <- getroottable()
+CONST.setdelegate( { _newslot = @( k, v ) compilestring( "const " + k + "=" + ( typeof v == "string" ? ( "\"" + v + "\"" ) : v ) )() } )
+CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
-    CONST.setdelegate( { _newslot = @( k, v ) compilestring( "const " + k + "=" + ( typeof v == "string" ? ( "\"" + v + "\"" ) : v ) )() } )
-    CONST.MAX_CLIENTS <- MaxClients().tointeger()
+// fold every class into the root table for performance
+foreach( _class in [ "NetProps", "Entities", "EntityOutputs", "NavMesh", "Convars" ])
+    foreach( k, v in ROOT[_class].getclass() )
+        if ( !( k in ROOT ) && k != "IsValid" )
+            ROOT[k] <- ROOT[_class][k].bindenv( ROOT[_class] )
 
-    local tofold = [ "NetProps", "Entities", "EntityOutputs", "NavMesh", "Convars" ]
+if ( !( "ConstantNamingConvention" in ROOT ) ) {
 
-    // these are defined multiple times in other classes, skip to avoid conflicts
-    // realistically "IsValid" is the only problematic one, but just in case
-    local foldblacklist = {
-        IsValid   = true
-        GetName   = true
-        GetCenter = true
-    }
+    foreach( a, b in Constants ) {
 
-    // fold every class into the root table for performance
-    foreach( _class in tofold)
+        foreach( k, v in b ) {
 
-        foreach( k, v in ROOT[_class].getclass() )
+            if ( k in CONST )
+                continue
 
-            if ( !( k in foldblacklist ) && !( k in ROOT ) )
+            if ( v == null )
+                v = 0
 
-                ROOT[k] <- ROOT[_class][k].bindenv( ROOT[_class] )
-
-    if ( !( "ConstantNamingConvention" in ROOT ) ) {
-
-        foreach( a, b in Constants )
-            foreach( k, v in b ) {
-
-                CONST[k] <- v != null ? v : 0
-                ROOT[k] <- v != null ? v : 0
-            }
+            CONST[k] <- v
+            ROOT[k]  <- v
+        }
     }
 }
 

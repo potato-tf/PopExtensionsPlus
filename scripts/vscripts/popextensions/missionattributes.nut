@@ -4,8 +4,10 @@ const EFL_USER 					= 1048576
 const HUNTSMAN_DAMAGE_FIX_MOD 	= 1.263157
 const SCOUT_MONEY_COLLECTION_RADIUS = 288
 
-if ( !( "ScriptLoadTable" in ROOT ) ) ::ScriptLoadTable   <- {}
+if ( !( "ScriptLoadTable" in ROOT ) ) ::ScriptLoadTable     <- {}
 if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
+
+::MissionAttrScope <- PopExtMain.CreateScope( "__popext_missionattr", "MissionAttrThink" ).Scope
 
 class MissionAttributes {
 
@@ -56,21 +58,14 @@ class MissionAttributes {
 		}
 
 		NoHolidayPickups = function( value ) {
-			local array_size = GetPropArraySize( pickup, "m_nModelIndexOverrides" )
-			for ( local pickup; pickup = FindByClassname( pickup, "item_healthkit*" ); ) {
 
-				for ( local i = 0; i < array_size; i++ ) {
+			[ "item_healthkit*", "item_ammopack*" ]
+			.apply( function ( pickup ) {
 
-					SetPropIntArray( pickup, "m_nModelIndexOverrides", 0, i )
-				}
-			}
-			for ( local pickup; pickup = FindByClassname( pickup, "item_ammopack*" ); ) {
-
-				for ( local i = 0; i < array_size; i++ ) {
-
-					SetPropIntArray( pickup, "m_nModelIndexOverrides", 0, i )
-				}
-			}
+				for ( local pack; pack = FindByClassname( pack, pickup ); ) 
+					for ( local i = 0; i < GetPropArraySize( pack, STRING_NETPROP_MDLINDEX_OVERRIDES ); i++ ) 
+						SetPropIntArray( pack, STRING_NETPROP_MDLINDEX_OVERRIDES, 0, i )
+			})
 		}
 
 		// =========================================
@@ -170,7 +165,8 @@ class MissionAttributes {
 		}
 
 		EnableGlobalFixes = function( value = null ) {
-			local fixes = [
+
+			[
 				"DragonsFuryFix",
 				"FastNPCUpdate",
 				"NoCreditVelocity",
@@ -181,14 +177,11 @@ class MissionAttributes {
 				"HolidayPunchFix",
 				"LooseCannonFix",
 				"BotGibFix"
-			]
-			foreach ( fix in fixes ) {
-				MissionAttributes.Attrs[fix]()
-			}
+			].apply( @( fix ) MissionAttributes.Attrs[ fix ]() )
 		}
 
 		DragonsFuryFix = function( value = null ) {
-			MissionAttributes.ThinkTable.DragonsFuryFix <- function() {
+			function MissionAttrScope::ThinkTable::DragonsFuryFix() {
 				for ( local fireball; fireball = FindByClassname( fireball, "tf_projectile_balloffire" ); )
 					fireball.RemoveFlag( FL_GRENADE )
 			}
@@ -196,10 +189,9 @@ class MissionAttributes {
 
 		FastNPCUpdate = function( value = null ) {
 
-			MissionAttributes.ThinkTable.FastNPCUpdate <- function() {
-				local validnpcs = ["headless_hatman", "eyeball_boss", "merasmus", "tf_zombie"]
+			function MissionAttrScope::ThinkTable::FastNPCUpdate() {
 
-				foreach ( npc in validnpcs )
+				foreach ( npc in [ "headless_hatman", "eyeball_boss", "merasmus", "tf_zombie" ] )
 					for ( local n; n = FindByClassname( n, npc ); )
 						n.FlagForUpdate( true )
 			}
@@ -386,7 +378,7 @@ class MissionAttributes {
 
 			local pumpkin_index = PrecacheModel( "models/props_halloween/pumpkin_loot.mdl" )
 
-			MissionAttributes.ThinkTable.NoCrumpkins <- function() {
+			function MissionAttrScope::ThinkTable::NoCrumpkins() {
 
 				for ( local pumpkin; pumpkin = FindByClassname( pumpkin, "tf_ammo_pack" ); )
 					if ( GetPropInt( pumpkin, STRING_NETPROP_MODELINDEX ) == pumpkin_index )
@@ -878,7 +870,8 @@ class MissionAttributes {
 
 			if ( value < 1 ) return
 
-			MissionAttributes.ThinkTable.SniperHideLasers <- function() {
+			function MissionAttrScope::ThinkTable::SniperHideLasers() {
+
 				for ( local dot; dot = FindByClassname( dot, "env_sniperdot" ); )
 					if ( dot.GetOwner().GetTeam() == TF_TEAM_PVE_INVADERS )
 						EntFireByHandle( dot, "Kill", "", -1, null, null )
@@ -1060,7 +1053,7 @@ class MissionAttributes {
 						return false
 					}
 
-					MissionAttributes.ThinkTable.RobotVOThink <- function() {
+					function MissionAttrScope::ThinkTable::RobotVOThink() {
 
 						for ( local ent; ent = FindByClassname( ent, "instanced_scripted_scene" ); ) {
 
@@ -1239,7 +1232,7 @@ class MissionAttributes {
 					}
 				}
 
-				SetPropIntArray( carrier, "m_nModelIndexOverrides", carrier_parts_index, VISION_MODE_ROME )
+				SetPropIntArray( carrier, STRING_NETPROP_MDLINDEX_OVERRIDES, carrier_parts_index, VISION_MODE_ROME )
 				MissionAttributes.noromecarrier = true
 			}, EVENT_WRAPPER_MISSIONATTR )
 		}
@@ -1350,7 +1343,7 @@ class MissionAttributes {
 
 		NoSkeleSplit = function( value ) {
 
-			MissionAttributes.ThinkTable.NoSkeleSplit <- function() {
+			function MissionAttrScope::ThinkTable::NoSkeleSplit() {
 
 				//kill skele spawners before they split from tf_zombie_spawner
 				for ( local skelespell; skelespell = FindByClassname( skelespell, "tf_projectile_spellspawnzombie" ); )
@@ -1379,7 +1372,7 @@ class MissionAttributes {
 
 		WaveStartCountdown = function( value ) {
 
-			MissionAttributes.ThinkTable.WaveStartCountdown <- function() {
+			function MissionAttrScope::ThinkTable::WaveStartCountdown() {
 
 				if ( PopExtUtil.IsWaveStarted ) return
 
@@ -1806,7 +1799,7 @@ class MissionAttributes {
 			}
 
 			//tank overrides
-			MissionAttributes.ThinkTable.SetTankSounds <- function() {
+			function MissionAttrScope::ThinkTable::SetTankSounds() {
 
 				for ( local tank; tank = FindByClassname( tank, "tank_boss" ); ) {
 
@@ -1945,7 +1938,7 @@ class MissionAttributes {
 				"tf_weapon_sniperrifle" : null,
 			}
 
-			MissionAttributes.ThinkTable.EnableRandomCritsThink <- function() {
+			function MissionAttrScope::ThinkTable::EnableRandomCritsThink() {
 
 				if ( !PopExtUtil.IsWaveStarted ) return -1
 
@@ -2159,7 +2152,7 @@ class MissionAttributes {
 				EntFire( "__bombdeploy", "Kill" )
 			}
 
-			MissionAttributes.ThinkTable.ReverseMVMThink <- function() {
+			function MissionAttrScope::ThinkTable::ReverseMVMThink() {
 				// Enforce max team size
 				local player_count  = 0
 
@@ -2295,9 +2288,8 @@ class MissionAttributes {
 						local mvm_stats_ent = PopExtUtil.MvMStatsEnt
 						SetPropInt( mvm_stats_ent, credits_acquired_prop, GetPropInt( mvm_stats_ent, credits_acquired_prop ) + money_value )
 
-						for ( local i = 1, player; i <= MAX_CLIENTS; i++ )
-							if ( player = PlayerInstanceFromIndex( i ), player && !player.IsBotOfType( TF_BOT_TYPE ) )
-								player.AddCurrency( money_value )
+						foreach( player in PopExtUtil.HumanArray )
+							player.AddCurrency( money_value )
 
 						EmitSoundOn( "MVM.MoneyPickup", player )
 
@@ -2802,6 +2794,7 @@ class MissionAttributes {
 		// =========================================================
 
 		HideRespawnText = function( value ) {
+
 			local rtime = 0.0
 			switch ( value ) {
 				case 1: break
@@ -3035,7 +3028,7 @@ class MissionAttributes {
 				return
 			}
 
-			ScriptUnloadTable.UnloadOutput <- function( value ) {
+			function ScriptUnloadTable::UnloadOutput( value ) {
 
 				local target = value.target
 				local action = value.action
@@ -3096,8 +3089,6 @@ class MissionAttributes {
 	SoundsToReplace 	= {}
 	OptimizedTracks		= {}
 
-	ThinkTable     		= {}
-
 	PathNum 			= 0
 	RedMoneyValue 		= 0
 
@@ -3142,6 +3133,31 @@ class MissionAttributes {
 	}
 }
 
+foreach ( func in ScriptLoadTable ) 
+	func()
+
+// This only supports key = value pairs, if you want var args call MissionAttr directly
+function MissionAttrs( attrs = {} ) {
+	foreach ( attr, value in attrs )
+		MissionAttributes.MissionAttr( attr, value )
+}
+
+//super truncated version incase the pop character limit becomes an issue.
+function MAtrs( attrs = {} ) {
+	foreach ( attr, value in attrs )
+		MissionAttributes.MissionAttr( attr, value )
+}
+
+// Allow calling MissionAttr() directly with MissionAttr().
+function MissionAttr( ... ) {
+	MissionAttr.acall( vargv.insert( 0, MissionAttributes ) )
+}
+
+//super truncated version incase the pop character limit becomes an issue.
+function MAtr( ... ) {
+	MissionAttr.acall( vargv.insert( 0, MissionAttributes ) )
+}
+
 PopExtEvents.AddRemoveEventHook("teamplay_round_start", "MissionAttributesCleanup", function( params ) {
 
 	foreach ( bot in PopExtUtil.BotTable.keys() )
@@ -3172,40 +3188,3 @@ PopExtEvents.AddRemoveEventHook("mvm_mission_complete", "MissionAttributeFireUnl
 
 	foreach ( func in ScriptUnloadTable ) func()
 }, EVENT_WRAPPER_MISSIONATTR )
-
-foreach ( func in ScriptLoadTable ) func()
-
-local MissionAttrEntity = FindByName( null, "__popext_missionattr_ent" )
-if ( MissionAttrEntity == null ) MissionAttrEntity = SpawnEntityFromTable( "info_teleport_destination", {targetname = "__popext_missionattr_ent"} )
-
-function MissionAttrThink() {
-	if ( !MissionAttrEntity || !( "MissionAttributes" in ROOT ) ) return 1; // Prevent error on mission complete
-	foreach ( func in MissionAttributes.ThinkTable ) func()
-	return -1
-}
-
-MissionAttrEntity.ValidateScriptScope()
-MissionAttrEntity.GetScriptScope().MissionAttrThink <- MissionAttrThink
-AddThinkToEnt( MissionAttrEntity, "MissionAttrThink" )
-
-// This only supports key = value pairs, if you want var args call MissionAttr directly
-function MissionAttrs( attrs = {} ) {
-	foreach ( attr, value in attrs )
-		MissionAttributes.MissionAttr( attr, value )
-}
-
-//super truncated version incase the pop character limit becomes an issue.
-function MAtrs( attrs = {} ) {
-	foreach ( attr, value in attrs )
-		MissionAttributes.MissionAttr( attr, value )
-}
-
-// Allow calling MissionAttr() directly with MissionAttr().
-function MissionAttr( ... ) {
-	MissionAttr.acall( vargv.insert( 0, MissionAttributes ) )
-}
-
-//super truncated version incase the pop character limit becomes an issue.
-function MAtr( ... ) {
-	MissionAttr.acall( vargv.insert( 0, MissionAttributes ) )
-}

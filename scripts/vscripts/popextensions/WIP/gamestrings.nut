@@ -1,43 +1,58 @@
 // Accessing any entity in VScript will allocate a string that never gets freed, eventually causing a CUtlRBTree overflow.
 // Hook existing API functions to free them ourselves.
 
-local strings_to_purge = {}
-
 function CBaseEntity::KeyValueFromString( key, value ) {
 
 	// TODO: find another way to do this, dot notation for function calls is expensive
 	CBaseEntity.__KeyValueFromString.call( this, key, value )
 
-    strings_to_purge[ value ] <- key
+    SetPropBool( self, STRING_NETPROP_PURGESTRINGS, true )
 }
 
 ::SetPropStringArray <- function( entity, property, value, index ) {
 
     NetProps.SetPropStringArray( entity, property, value, index )
 
-    strings_to_purge[ value ] <- property
+    SetPropBool( entity, STRING_NETPROP_PURGESTRINGS, true )
 }
 
 ::SetPropString <- @( entity, property, value ) SetPropStringArray( entity, property, value, 0 )
 
 // ::CreateByClassname <- function( classname ) {
 
-//     strings_to_purge[ classname ] <- null
+//     SetPropBool( self, STRING_NETPROP_PURGESTRINGS, true )
 
 //     return Entities.CreateByClassname( classname )
 // }
 
 foreach( name, func in Entities.getclass() ) {
 
-	ROOT[ name ] <- function( ... ) {
+	if ( name == "IsValid" ) continue
 
-		// local result = func.acall( [ this ].extend( vargv ) )
-		local result = func.acall( vargv )
+	local original = format( " _%s", name )
 
-		foreach( arg in vargv )
-			if ( typeof arg == "string" )
-				strings_to_purge[ arg ] <- null
+	// if ( !( original in ROOT ) ) {
 
-		return result
-	}
+	// __DumpScope( 0, func.getinfos() )
+		printl( name )
+		ROOT[ name ] <- function( ... ) {
+			
+			// foreach( i, arg in vargv )
+				// printl( name + " : " + i + " : " + arg )
+			// try {
+				local result = ::Entities[ name ].bindenv( ::Entities ).acall( [ this ].extend( vargv ) )
+				printl( result )
+			// } catch ( e ) {
+			// 	foreach( i, arg in vargv )
+			// 		printl( name + "\n : " + i + " : " + arg )
+			// 	Assert( false, name )
+			// }
+
+			// local result = func.bindenv( ::Entities ).acall( [ this ].extend( vargv ) )
+
+			// printl( "\n" )
+		}
+
+		// ROOT[ original ] <- func.bindenv( ::Entities )
+	// }
 }

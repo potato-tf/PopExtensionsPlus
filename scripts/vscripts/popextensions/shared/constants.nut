@@ -46,13 +46,14 @@ const EVENT_WRAPPER_HOOKS       = 6
 const EVENT_WRAPPER_POPULATOR   = 7
 
 // String caches
-const STRING_NETPROP_ITEMDEF 	  = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
-const STRING_NETPROP_INIT 	 	  = "m_AttributeManager.m_Item.m_bInitialized"
-const STRING_NETPROP_ATTACH  	  = "m_bValidatedAttachedEntity"
-const STRING_NETPROP_PURGESTRINGS = "m_bForcePurgeFixedupStrings"
-const STRING_NETPROP_MYWEAPONS    = "m_hMyWeapons"
-const STRING_NETPROP_AMMO		  = "m_iAmmo"
-const STRING_NETPROP_MODELINDEX   = "m_nModelIndex"
+const STRING_NETPROP_ITEMDEF 	  	    = "m_AttributeManager.m_Item.m_iItemDefinitionIndex"
+const STRING_NETPROP_INIT 	 	  	    = "m_AttributeManager.m_Item.m_bInitialized"
+const STRING_NETPROP_ATTACH  	  	    = "m_bValidatedAttachedEntity"
+const STRING_NETPROP_PURGESTRINGS 	    = "m_bForcePurgeFixedupStrings"
+const STRING_NETPROP_MYWEAPONS    	    = "m_hMyWeapons"
+const STRING_NETPROP_AMMO		  	    = "m_iAmmo"
+const STRING_NETPROP_MODELINDEX   	    = "m_nModelIndex"
+const STRING_NETPROP_MDLINDEX_OVERRIDES = "m_nModelIndexOverrides"
 
 // Logging
 const POPEXT_LOG_DEBUG   = "[POPEXT DEBUG] "

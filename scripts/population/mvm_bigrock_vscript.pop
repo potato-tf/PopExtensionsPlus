@@ -69,12 +69,12 @@ WaveSchedule
 
 				MissionAttrs({
 
-					EnableGlobalFixes  	 = 1
+					// EnableGlobalFixes  	 = 1
 					NoReanimators 	   	 = 1
 					ForceHoliday 	   	 = 2
 					NoRome 			   	 = 2
 					BotHeadshots 	   	 = 1
-					NoCrumpkins 	   	 = 1
+					// NoCrumpkins 	   	 = 1
 					BotsAreHumans 	   	 = 2
 					WaveStartCountdown 	 = 3
 					SpellRateCommon    	 = 0.5

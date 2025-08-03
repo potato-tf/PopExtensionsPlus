@@ -1,10 +1,5 @@
-local popext_homing_entity = FindByName( null, "__popext_homing" )
-if ( popext_homing_entity == null ) {
-	popext_homing_entity = SpawnEntityFromTable( "move_rope", { targetname = "__popext_homing" })
-	popext_homing_entity.ValidateScriptScope()
-}
-
-::PopExtHoming <- popext_homing_entity.GetScriptScope()
+local scope = PopExtMain.CreateScope( "__popext_homing" )
+::PopExtHoming <- scope.Scope
 
 // Modify the AttachProjectileThinker function to accept projectile speed adjustment if needed
 function PopExtHoming::AttachProjectileThinker( projectile, speed_mult, turn_power, ignore_disguised_spies = true, ignore_stealthed_spies = true ) {
@@ -25,8 +20,9 @@ function PopExtHoming::AttachProjectileThinker( projectile, speed_mult, turn_pow
     projectile_scope.ignore_disguised_spies <- ignore_disguised_spies
     projectile_scope.ignore_stealthed_spies <- ignore_stealthed_spies
 
-    //this should be added in globalfixes.nut but sometimes this code tries to run before the table is created
-    if ( !( "ProjectileThinkTable" in projectile_scope ) ) projectile_scope.ProjectileThinkTable <- {}
+    // sometimes this code tries to run before the table is created
+    if ( !( "ProjectileThinkTable" in projectile_scope ) ) 
+        projectile_scope.ProjectileThinkTable <- {}
 
     projectile_scope.ProjectileThinkTable.HomingProjectileThink <- PopExtHoming.HomingProjectileThink
 }
