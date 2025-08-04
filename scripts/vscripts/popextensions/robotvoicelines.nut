@@ -1,4 +1,4 @@
-::VCD_SOUNDSCRIPT_MAP <- {
+::POPEXT_ROBOT_VO <- {
 	[TF_CLASS_DEMOMAN] = {
 		["cm_demo_gamewon_01"] = "cm_demo_gamewon_01",
 		["cm_demo_gamewon_02"] = "cm_demo_gamewon_02",

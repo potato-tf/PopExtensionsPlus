@@ -109,7 +109,8 @@ if ( !( "EntAdditions" in ROOT ) ) {
                 local xyz = array( 3, 0.0 )
                 ent.ValidateScriptScope()
                 local scope = ent.GetScriptScope()
-                scope.RotateFixThink <- function() {
+
+                function RotateFixThink() {
 
                     for ( local i = 0; i < 3; i++ ) {
 
@@ -123,6 +124,7 @@ if ( !( "EntAdditions" in ROOT ) ) {
                     }
                     return -1
                 }
+                scope.RotateFixThink <- RotateFixThink
                 AddThinkToEnt( ent, "RotateFixThink" )
                 scope.noise <- GetPropString( ent, "m_NoiseRunning" )
 
@@ -210,13 +212,14 @@ if ( !( "EntAdditions" in ROOT ) ) {
             //fix FireSound not working, added volume setting ( example: "sound_name_here.wav|40" )
             //fix ModelScale not working on arrows/rockets
             tf_point_weapon_mimic = function( ent, spawnflags ) {
+
                 local particle = CreateByClassname( "trigger_particle" )
                 ent.ValidateScriptScope()
 
                 local modelscale = GetPropFloat( ent, "m_flModelScale" )
                 local firesound = GetPropString( ent, "m_pzsFireSound" )
 
-                ent.GetScriptScope().ProjectileFixes <- function() {
+                function ProjectileFixes() {
 
                     for ( local projectile; projectile = FindByClassnameWithin( projectile, "tf_projectile*", ent.GetOrigin(), 1 ); ) {
 
@@ -271,6 +274,7 @@ if ( !( "EntAdditions" in ROOT ) ) {
 
                     return -1
                 }
+                ent.GetScriptScope().ProjectileFixes <- ProjectileFixes
                 AddThinkToEnt( ent, "ProjectileFixes" )
             }
         }

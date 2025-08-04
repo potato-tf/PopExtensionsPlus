@@ -1,13 +1,20 @@
 // By washy
 
-::SpawnTemplates <- {
-	wave_schedule_point_templates = []
-	wave_point_templates = []
-	global_template_spawn_count = 0
+POPEXT_CREATE_SCOPE( "__popext_spawntemplate", "SpawnTemplates" )
+
+SpawnTemplates.wave_point_templates 		 <- []
+SpawnTemplates.global_template_spawn_count   <- 0
+SpawnTemplates.wave_schedule_point_templates <- []
+
+function SpawnTemplates::_OnDestroy() {
+
+	foreach( key in [ "PointTemplates", "SpawnTemplate" ] )
+		if ( key in ROOT )
+			delete ROOT[ key ]
 }
 
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
-::SpawnTemplate <- function( pointtemplate, parent = null, origin = "", angles = "", forceparent = false, attachment = null, parentabsorigin = true, nonsolidchildren = false ) {
+function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "", angles = "", forceparent = false, attachment = null, parentabsorigin = true, nonsolidchildren = false ) {
 	
 	// forceparent is set, delete the EFlag to parent another template
 	if ( forceparent && parent.IsEFlagSet( EFL_SPAWNTEMPLATE ) )
@@ -44,7 +51,7 @@
 		}
 	})
 
-	scope.PostSpawn <- function( named_entities ) {
+	function TemplatePostSpawn() {
 
 		// can only set bounding box size for brush entities after they spawn
 		foreach( entity in Entities ) {
@@ -114,8 +121,8 @@
 					parent.AddEFlags( EFL_SPAWNTEMPLATE )
 
 					if ( !keepalive ) {
-						parent.ValidateScriptScope()
-						local scope = parent.GetScriptScope()
+
+						local scope = PopExtUtil.GetEntScope( parent )
 
 						if ( !( "templates_to_kill" in scope ) )
 							scope.templates_to_kill <- []
@@ -148,7 +155,7 @@
 				// copied from popextensions_hooks.nut
 				if ( scope.OnParentKilledOutputArray.len() ) {
 
-					local playerscope = parent.GetScriptScope()
+					local playerscope = PopExtUtil.GetEntScope( parent )
 
 					if ( !( "spawntemplate_onparentkilled" in playerscope ) ) 
 						playerscope.spawntemplate_onparentkilled <- []
@@ -206,6 +213,8 @@
 			entfirefunc( target, action, param, delay, activator, caller )
 		}
 	}
+
+	scope.PostSpawn <- TemplatePostSpawn
 
 	//make a copy of the pointtemplate
 	local pointtemplatecopy = PopExtUtil.CopyTable( PointTemplates[pointtemplate] )
@@ -372,8 +381,10 @@ function SpawnTemplates::DoSpawnTemplate( args = { pointtemplate = null, parent 
 	SpawnTemplate( args.pointtemplate, args.parent, args.origin, args.angles, args.forceparent, args.parentabsorigin, args.nonsolidchildren )
 }
 
+::SpawnTemplate <- SpawnTemplates.SpawnTemplate
 
-PopExtEvents.AddRemoveEventHook("mvm_wave_complete", "SpawnTemplateWaveComplete", function( params ) {
+
+PopEventHook("mvm_wave_complete", "SpawnTemplateWaveComplete", function( params ) {
 
 	foreach( entity in SpawnTemplates.wave_point_templates )
 		if ( entity.IsValid() )
@@ -383,7 +394,7 @@ PopExtEvents.AddRemoveEventHook("mvm_wave_complete", "SpawnTemplateWaveComplete"
 })
 
 //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
-PopExtEvents.AddRemoveEventHook("mvm_wave_failed", "SpawnTemplateWaveFailed", function( params ) {
+PopEventHook("mvm_wave_failed", "SpawnTemplateWaveFailed", function( params ) {
 
 	foreach( entity in SpawnTemplates.wave_point_templates )
 		if ( entity.IsValid() )
@@ -393,10 +404,10 @@ PopExtEvents.AddRemoveEventHook("mvm_wave_failed", "SpawnTemplateWaveFailed", fu
 		SpawnTemplate( param[0], null, param[1], param[2] )
 })
 
-PopExtEvents.AddRemoveEventHook("player_death", "SpawnTemplatePlayerDeath", function( params ) {
+PopEventHook("player_death", "SpawnTemplatePlayerDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
-	local scope = player.GetScriptScope()
+	local scope = PopExtUtil.GetEntScope( player )
 
 	if ( "spawntemplate_onparentkilled" in scope ) {
 

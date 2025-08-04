@@ -4,23 +4,11 @@
 CONST.setdelegate( { _newslot = @( k, v ) compilestring( "const " + k + "=" + ( typeof v == "string" ? ( "\"" + v + "\"" ) : v ) )() } )
 CONST.MAX_CLIENTS <- MaxClients().tointeger()
 
-local tofold = [ "NetProps", "Entities", "EntityOutputs", "NavMesh", "Convars" ]
-
-// these are defined multiple times in other classes, skip to avoid conflicts
-// realistically "IsValid" is the only problematic one, but just in case
-local foldblacklist = {
-
-	IsValid   = true
-	GetName   = true
-	GetCenter = true
-}
-
 // fold every class into the root table for performance
-foreach( _class in tofold )
+foreach( _class in [ "NetProps", "Entities", "EntityOutputs", "NavMesh", "Convars" ] )
 	foreach( k, v in ROOT[_class].getclass() )
-		if ( !( k in foldblacklist ) && !( k in ROOT ) ) 
+		if ( !( k in ROOT ) && k != "IsValid" ) 
 			ROOT[k] <- ROOT[_class][k].bindenv( ROOT[_class] )
-
 
 // fold every pre-defined constant into the const table
 if ( !( "ConstantNamingConvention" in ROOT ) )
@@ -53,6 +41,7 @@ const STRING_NETPROP_PURGESTRINGS 	    = "m_bForcePurgeFixedupStrings"
 const STRING_NETPROP_MYWEAPONS    	    = "m_hMyWeapons"
 const STRING_NETPROP_AMMO		  	    = "m_iAmmo"
 const STRING_NETPROP_MODELINDEX   	    = "m_nModelIndex"
+const STRING_NETPROP_POPNAME    		= "m_iszMvMPopfileName"
 const STRING_NETPROP_MDLINDEX_OVERRIDES = "m_nModelIndexOverrides"
 
 // Logging

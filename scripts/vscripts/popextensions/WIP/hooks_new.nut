@@ -1,6 +1,4 @@
-local scope = PopExtMain.CreateScope( "__popext_hooks" )
-::PopExtHooks <- scope.Scope
-popext_hooks_entity <- scope.Entity
+POPEXT_CREATE_SCOPE( "__popext_hooks", "PopExtHooks", "PopExtHooksEntity" )
 
 function PopExtHooks::AddHooksToScope( name, table, scope ) {
 
@@ -42,16 +40,21 @@ function PopExtHooks::FireHooksParam( entity, scope, name, param ) {
 			func( entity, param )
 }
 
-function PopExtHooks::PopExtHooksThink() {
+function PopExtHooks::PopHooksThink() {
 
 	if ( !PopExtUtil.IsWaveStarted )
 		return 0.2
 
 	foreach ( player in PopExtUtil.BotArray ) {
 
+		local alive = player.IsAlive()
+		if ( alive && !( "bot_created" in scope ) )
+			scope.bot_created <- true
+
 		local scope = player.GetScriptScope()
+
 		// Make sure that ondeath hook is fired always
-		if ( !player.IsAlive() && "pop_fired_death_hook" in scope ) {
+		if ( !alive && "pop_fired_death_hook" in scope ) {
 			if ( !scope.pop_fired_death_hook )
 				PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
 
@@ -61,9 +64,9 @@ function PopExtHooks::PopExtHooksThink() {
 	return -1
 }
 
-AddThinkToEnt( popext_hooks_entity, "PopExtHooksThink" )
+AddThinkToEnt( popext_hooks_entity, "PopHooksThink" )
 
-PopExtEvents.AddRemoveEventHook( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
+PopEventHook( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 
 	local victim = params.const_entity
 	local attacker = params.attacker
@@ -91,7 +94,7 @@ PopExtEvents.AddRemoveEventHook( "OnTakeDamage", "PopHooksTakeDamage", function(
 	}
 }, EVENT_WRAPPER_HOOKS)
 
-PopExtEvents.AddRemoveEventHook( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
+PopEventHook( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
@@ -111,15 +114,15 @@ PopExtEvents.AddRemoveEventHook( "player_spawn", "PopHooksPlayerSpawn", function
 	}
 
 	// Reset hooks
-	if ( "botCreated" in scope )
-		delete scope.botCreated
+	if ( "bot_created" in scope )
+		delete scope.bot_created
 
 	if ( "popext_hooks" in scope )
 		delete scope.popext_hooks
 
 }, EVENT_WRAPPER_HOOKS)
 
-PopExtEvents.AddRemoveEventHook( "player_team", "PopHooksPlayerTeam", function( params ) {
+PopEventHook( "player_team", "PopHooksPlayerTeam", function( params ) {
 
 	if ( params.team != TEAM_SPECTATOR ) return
 
@@ -143,15 +146,15 @@ PopExtEvents.AddRemoveEventHook( "player_team", "PopHooksPlayerTeam", function( 
 	}
 
 		// Reset hooks
-	if ( "botCreated" in scope )
-		delete scope.botCreated
+	if ( "bot_created" in scope )
+		delete scope.bot_created
 
 	if ( "popext_hooks" in scope )
 		delete scope.popext_hooks
 
 }, EVENT_WRAPPER_HOOKS)
 
-PopExtEvents.AddRemoveEventHook( "player_hurt", "PopHooksPlayerHurt", function( params ) {
+PopEventHook( "player_hurt", "PopHooksPlayerHurt", function( params ) {
 
 	local victim = GetPlayerFromUserID( params.userid )
 	local scope = victim.GetScriptScope()
@@ -166,7 +169,7 @@ PopExtEvents.AddRemoveEventHook( "player_hurt", "PopHooksPlayerHurt", function( 
 	}
 }, EVENT_WRAPPER_HOOKS)
 
-PopExtEvents.AddRemoveEventHook( "player_death", "PopHooksPlayerDeath", function( params ) {
+PopEventHook( "player_death", "PopHooksPlayerDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()

@@ -27,10 +27,7 @@ const EFL_SPAWNER_ACTIVE = 1073741824 //EFL_NO_PHYSCANNON_INTERACTION
 const EFL_SPAWNER_EXPENDED = 33554432 //EFL_DONTBLOCKLOS
 const MAX_WAVESPAWNS_PER_WAVE = 128
 
-local scope = PopExtMain.CreateScope( "__popext_populator" )
-
-local PopulatorEnt <- scope.Entity
-::PopExtPopulator <- scope.Scope
+POPEXT_CREATE_SCOPE( "__popext_populator", "PopExtPopulator", "PopulatorEnt" )
 
 PopExtPopulator.WaveArray <- []
 
@@ -39,6 +36,12 @@ PopExtPopulator.PopulatorFunctions <- {
 	function Mission() {
 		printl( "mission spawner" )
 	}
+}
+
+function PopExtPopulator::_OnDestroy() {
+
+	if ( "WaveSchedule" in ROOT )
+		delete ::WaveSchedule
 }
 
 function PopExtPopulator::DoEntityIO( type, WaveSchedule = ::WaveSchedule ) {
@@ -59,7 +62,6 @@ function PopExtPopulator::DoEntityIO( type, WaveSchedule = ::WaveSchedule ) {
 
 function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 
-	//PopulatorEnt is a null instance when this is initially called, it is valid by the time another recalculate_holidays event fires, so this works reliably
 	printl( "PopulatorEnt: " + PopulatorEnt )
 	if ( !( "WaveSchedule" in getroottable() ) || !PopulatorEnt.IsValid() ) return
 
@@ -158,9 +160,7 @@ function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 
 					generator.AcceptInput( "Disable", "", null, null )
 
-					generator.ValidateScriptScope()
-
-					local genscope = generator.GetScriptScope()
+					local genscope = PopExtUtil.GetEntScope( generator )
 
 					if ( "WaveSpawn" in genscope && "WaitBetweenSpawns" in genscope.WaveSpawn ) 
 						genscope.spawninterval <- genscope.WaveSpawn.WaitBetweenSpawns.tofloat()
@@ -169,7 +169,7 @@ function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 
 						if ( self.IsEFlagSet( EFL_SPAWNER_ACTIVE ) ) {
 
-							local scope = self.GetScriptScope()
+							local scope = PopExtUtil.GetEntScope( self )
 
 							if ( !( "spawninterval" in scope ) ) scope.spawninterval <- 0.0
 							if ( !( "nextspawn" in scope ) ) scope.nextspawn <- 0.0
@@ -220,6 +220,7 @@ function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 		}
 	}
 }
+
 function PopExtPopulator::GetWavespawnInfo( wavenum = 0, wavespawn = 0 ) {
 
 	// this function expects the actual wave number, not the array index ( wavenum 1 would get the array index 0 )
@@ -267,7 +268,7 @@ function PopExtPopulator::GetWavespawnInfo( wavenum = 0, wavespawn = 0 ) {
 	}
 }
 
-PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "InitializeWave", function( params ) {
+PopEventHook( "teamplay_round_start", "InitializeWave", function( params ) {
 
 	PopExtPopulator.InitializeWave()
 
@@ -275,7 +276,7 @@ PopExtEvents.AddRemoveEventHook( "teamplay_round_start", "InitializeWave", funct
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopExtEvents.AddRemoveEventHook( "mvm_begin_wave", "StartWave", function( params ) {
+PopEventHook( "mvm_begin_wave", "StartWave", function( params ) {
 
 	//grab the first spawner and enable it on wave start
 	local firstspawner = PopExtPopulator.WaveArray[PopExtUtil.CurrentWaveNum][1].keys()[0]
@@ -285,26 +286,26 @@ PopExtEvents.AddRemoveEventHook( "mvm_begin_wave", "StartWave", function( params
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopExtEvents.AddRemoveEventHook( "mvm_wave_complete", "DoneOutput", function( params ) {
+PopEventHook( "mvm_wave_complete", "DoneOutput", function( params ) {
 
 	PopExtPopulator.DoEntityIO( "DoneOutput" )
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopExtEvents.AddRemoveEventHook( "player_death", "RemoveIcon", function( params ) {
+PopEventHook( "player_death", "RemoveIcon", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
 	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
-	local scope = player.GetScriptScope()
+	local scope = PopExtUtil.GetEntScope( player )
 	PopExtUtil.PrintTable( scope )
 	local spawner = FindByName( null, scope.spawner )
 
 	PopExtWavebar.DecrementWaveIcon( spawner.GetScriptScope().WaveSpawn.TFBot.ClassIcon, 0, 1 )
 }, EVENT_WRAPPER_POPULATOR)
 
-PopExtEvents.AddRemoveEventHook( "player_death", "WaitBetweenSpawnsAfterDeath", function( params ) {
+PopEventHook( "player_death", "WaitBetweenSpawnsAfterDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -319,7 +320,7 @@ PopExtEvents.AddRemoveEventHook( "player_death", "WaitBetweenSpawnsAfterDeath", 
 	}
 }, EVENT_WRAPPER_POPULATOR)
 
-PopExtEvents.AddRemoveEventHook( "player_death", "DoneOutput", function( params ) {
+PopEventHook( "player_death", "DoneOutput", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -331,7 +332,7 @@ PopExtEvents.AddRemoveEventHook( "player_death", "DoneOutput", function( params 
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopExtEvents.AddRemoveEventHook( "player_spawn", "WaitBetweenSpawnsAfterDeath", function( params ) {
+PopEventHook( "player_spawn", "WaitBetweenSpawnsAfterDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -347,7 +348,7 @@ PopExtEvents.AddRemoveEventHook( "player_spawn", "WaitBetweenSpawnsAfterDeath", 
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopExtEvents.AddRemoveEventHook( "player_spawn", "SetSpawner", function( params ) {
+PopEventHook( "player_spawn", "SetSpawner", function( params ) {
 
 		local player = GetPlayerFromUserID( params.userid )
 

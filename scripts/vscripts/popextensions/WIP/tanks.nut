@@ -1,15 +1,6 @@
-local scope = PopExtMain.CreateScope( "__popext_tanks" )
-::PopExtTanks <- scope.Scope
-popext_tanks_entity <- scope.Entity
-
-tank_names = {}
+POPEXT_CREATE_SCOPE( "__popext_tanks", "PopExtTanks", "PopExtTanksEntity" )
 
 function PopExtTanks::AddTankName( name, table ) {
-
-    if ( !pop_ext_think_func_set ) {
-        AddThinkToEnt( popext_tanks_entity, "TankThink" )
-        pop_ext_think_func_set = true
-    }
 
     if ( "Icon" in table ) {
 
@@ -35,7 +26,7 @@ function PopExtTanks::AddTankName( name, table ) {
 // alias with more intuitive name
 PopExtTanks.CustomTank <- PopExtTanks.AddTankName
 
-PopExtTanks.sound_funcs = {
+PopExtTanks.sound_funcs <- {
 
     Destroy = function( scope ) {
 
@@ -46,7 +37,7 @@ PopExtTanks.sound_funcs = {
 
         scope.cooldowntime <- 0.0
 
-        scope.TankThinkTable.PingSound <- function() {
+        function PingSoundThink() {
 
             StopSoundOn( "MVM.TankPing", self )
 
@@ -56,6 +47,7 @@ PopExtTanks.sound_funcs = {
 
             cooldowntime = Time() + 5.0
         }
+        scope.TankThinkTable.PingSound <- PingSoundThink
     },
 
     EngineLoop = function( scope ) {
@@ -96,7 +88,7 @@ PopExtTanks.sound_funcs = {
 
         local deploysound = sound_overrides.Deploy
 
-        scope.TankThinkTable.DeploySound <- function() {
+        function DeploySoundThink() {
 
             if ( self.GetSequence() != self.LookupSequence( "deploy" ) ) 
                 return
@@ -116,10 +108,11 @@ PopExtTanks.sound_funcs = {
 
             delete scope.pop_property.SoundOverrides.Deploy
         }
+        scope.TankThinkTable.DeploySound <- DeploySoundThink
     }
 }
 
-PopExtTanks.tank_funcs = {
+PopExtTanks.tank_funcs <- {
 
     TankModelVisionOnly = function( scope ) {
         scope.pop_property.ModelVisionOnly <- scope.pop_property.TankModelVisionOnly
@@ -216,7 +209,7 @@ PopExtTanks.tank_funcs = {
         tank.SetAbsAngles( QAngle( 0, tank.GetAbsAngles().y, 0 ) )
         scope.blimp_train <- SpawnEntityFromTable( "func_tracktrain", {origin = tank.GetOrigin(), startspeed = INT_MAX, target = scope.pop_property.StartTrack} )
 
-        scope.TankThinkTable.BlimpThink <- function() {
+        function BlimpThink() {
 
             // this is normally not possible, however we need to do a pretty gross hack that will turn the tank into a null instance sometimes
             if ( self == null ) return
@@ -228,6 +221,7 @@ PopExtTanks.tank_funcs = {
             if ( GetPropFloat( blimp_train, "m_flSpeed" ) != GetPropFloat( self, "m_speed" ) )
                 EntFireByHandle( blimp_train, "SetSpeedReal", GetPropFloat( self, "m_speed" ).tostring(), -1, null, null )
         }
+        scope.TankThinkTable.BlimpThink <- BlimpThink
     },
     
 
@@ -237,10 +231,8 @@ PopExtTanks.tank_funcs = {
 
     SpawnTemplate = function( scope ) {
 
-        if ( !("SpawnTemplate" in ROOT) ) {
-            PopExtMain.Error.RaiseModuleError( "SpawnTemplate", "AddTankName/CustomTank", true )
+        if ( !PopExtMain.IncludeModules( "spawntemplate" ) )
             return
-        }
 
         SpawnTemplate( scope.pop_property.SpawnTemplate, tank )
     },
@@ -269,10 +261,11 @@ PopExtTanks.tank_funcs = {
 
         if ( !scope.pop_property.DisableSmoke ) return
 
-        scope.TankThinkTable.DisableSmoke <- function() {
+        function DisableSmokeThink() {
             //disables smokestack, still emits one smoke particle when spawning and when moving out from under low ceilings ( solid brushes 300 units or lower )
             EntFireByHandle( self, "DispatchEffect", "ParticleEffectStop", -1, null, null )
         }
+        scope.TankThinkTable.DisableSmoke <- DisableSmokeThink
     },
 
     Scale = function( scope ) {
@@ -280,9 +273,12 @@ PopExtTanks.tank_funcs = {
     },
     
     AngleOverride = function( scope ) {
-        scope.TankThinkTable.AngleOverride <- function() {
+
+        function AngleOverrideThink() {
+
             self.SetAbsAngles( PopExtUtil.KVStringToVectorOrQAngle( pop_property.AngleOverride, true ) )
         }
+        scope.TankThinkTable.AngleOverride <- AngleOverrideThink
     },
 
     Model = function( scope ) {
@@ -313,7 +309,7 @@ PopExtTanks.tank_funcs = {
             tank.SetModelSimple( scope.pop_property.Model.Default ) //changes bbox size
         
         // using a think prevents tank from briefly becoming invisible when changing damage models
-        scope.TankThinkTable.SetModel <- function() {
+        function SetModelThink() {
 
             SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_NONE )
             SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_ROME )
@@ -331,7 +327,7 @@ PopExtTanks.tank_funcs = {
                 last_health_stage = health_stage
             }
         }
-
+        scope.TankThinkTable.SetModel <- SetModelThink
         if ( "LeftTrack" in scope.pop_property.Model ) {
             scope.pop_property.Model.TrackL <- scope.pop_property.Model.LeftTrack
             scope.pop_property.ModelPrecached.TrackL <- scope.pop_property.ModelPrecached.LeftTrack
@@ -393,7 +389,7 @@ PopExtTanks.tank_funcs = {
     }
 }
 
-PopExtTanks.props_to_delete = {
+PopExtTanks.props_to_delete <- {
 
     TankModel           = null
     TankModelVisionOnly = null
@@ -407,8 +403,7 @@ function PopExtTanks::TankThink() {
 
     for ( local tank; tank = FindByClassname( tank, "tank_boss" ); ) {
 
-        tank.ValidateScriptScope()
-        local scope = tank.GetScriptScope()
+        local scope = PopExtUtil.GetEntScope( tank )
 
         if ( !( "created" in scope ) ) {
 
@@ -464,7 +459,9 @@ function PopExtTanks::TankThink() {
     return -1
 }
 
-PopExtEvents.AddRemoveEventHook( "npc_hurt", "PopExtTankHurt", function( params ) {
+AddThinkToEnt( PopExtTanksEntity, "TankThink" )
+
+PopEventHook( "npc_hurt", "PopExtTankHurt", function( params ) {
 
 	local victim = EntIndexToHScript( params.entindex )
 	if ( victim.GetClassname() == "tank_boss" ) {
@@ -495,8 +492,7 @@ PopExtEvents.AddRemoveEventHook( "npc_hurt", "PopExtTankHurt", function( params 
 				local temp = CreateByClassname( "info_teleport_destination" )
 				PopExtUtil.SetTargetname( temp, "__popext_temp_nodeathfx" )
 				temp.SetAbsOrigin( victim.GetOrigin() )
-				temp.ValidateScriptScope()
-				temp.GetScriptScope().FindTankDestructionEnt <- function() {
+				function FindTankDestructionEnt() {
 
 					for ( local destruction; destruction = FindByClassnameWithin( destruction, "tank_destruction", self.GetOrigin(), 1 ); ) {
 
@@ -510,6 +506,7 @@ PopExtEvents.AddRemoveEventHook( "npc_hurt", "PopExtTankHurt", function( params 
 
 					return -1
 				}
+				PopExtUtil.GetEntScope( temp ).FindTankDestructionEnt <- FindTankDestructionEnt
 				AddThinkToEnt( temp, "FindTankDestructionEnt" )
 			}
 			if ( "IsBlimp" in pop_property && pop_property.IsBlimp )

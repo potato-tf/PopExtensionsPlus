@@ -4267,10 +4267,10 @@ string PopExtUtil::StringReplace(string str, string findwhat, string replace)
 
 ---
 
-<a name="PopExtUtil.capwords"></a>
+<a name="PopExtUtil.CapWords"></a>
 
 ```cpp
-string PopExtUtil::capwords(string s, string sep = null)
+string PopExtUtil::CapWords(string s, string sep = null)
 ```
 
 Python's string.capwords()

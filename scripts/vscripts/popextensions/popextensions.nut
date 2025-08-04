@@ -2,26 +2,14 @@ PopExt.robot_tags          <- {}
 PopExt.tank_names          <- {}
 PopExt.tank_names_wildcard <- {}
 
-pop_ext_think_func_set <- false
-AddThinkToEnt( popext_entity, null )
-
 PrecacheModel( "models/weapons/w_models/w_rocket.mdl" )
 
 function PopExt::AddRobotTag( tag, table ) {
 
-	if ( !pop_ext_think_func_set ) {
-		AddThinkToEnt( popext_entity, "PopExtGlobalThink" )
-		pop_ext_think_func_set = true
-	}
 	PopExt.robot_tags[tag] <- table
 }
 
 function PopExt::AddTankName( name, table ) {
-
-	if ( !pop_ext_think_func_set ) {
-		AddThinkToEnt( popext_entity, "PopExtGlobalThink" )
-		pop_ext_think_func_set = true
-	}
 
 	if ( "Icon" in table ) {
 		if ( typeof table.Icon == "table" ) {
