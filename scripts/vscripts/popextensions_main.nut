@@ -1,7 +1,8 @@
 // Core popextensions script
 // Error handling, think table management, cleanup management, etc.
 
-local ROOT = getroottable::PO::P::POPEXT_VERSION <- "08.06.2025.1"
+local ROOT = getroottable()
+::POPEXT_VERSION <- "08.06.2025.1"
 
 local function Include( path, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -510,3 +511,25 @@ PopEventHook( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
 //HACK: forces post_inventory_application to fire on pop load
 for ( local i = 1, player; i <= MAX_CLIENTS; player = PlayerInstanceFromIndex( i ), i++ )
 	if ( player )
+		PopExtUtil.ScriptEntFireSafe( player, "self.Regenerate( true )", SINGLE_TICK )
+
+// populator.nut and tutorialtools.nut are unfinished and not included by default
+// They can be manually included in the popfile using PopExtMain.IncludeModules( "populator", "tutorialtools" )
+
+if ( !PopExtConfig.IncludeAllModules ) return
+
+PopExtMain.IncludeModules(
+
+	"hooks", 
+	"popextensions",
+	"wavebar", 
+	"robotvoicelines", 
+	"customattributes", 
+	"missionattributes",
+	"customweapons",
+	"botbehavior",
+	"tags",
+	"spawntemplate"/*,
+	"populator",
+	"tutorialtools" */
+)
