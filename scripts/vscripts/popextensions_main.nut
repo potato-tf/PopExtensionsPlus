@@ -14,7 +14,7 @@ local function Include( path, include_only_if_missing = null, scope_to_check = R
 
 	try {
 
-		IncludeScript( format( "popextensions/%s", path ), getroottable() ) 
+		IncludeScript( format( "popextensions/%s", path ), getroottable() )
 		return true
 	}
 	catch( e ) {
@@ -34,7 +34,7 @@ Include( "shared/attribute_map", "PopExtItems", "PopExtItems" ) // Attribute map
 
 /*********************************************************************************************
  * Namespacing wrapper for creating self-contained scopes for modules.					     *
- * - name: Targetname of the entity.  "__popext" prefixed names are cleaned up on unload	 * 
+ * - name: Targetname of the entity.  "__popext" prefixed names are cleaned up on unload	 *
  * - scope_ref: Root table reference to the scope.                                           *
  * - entity_ref: Root table reference to the entity.                                         *
  * - think_func: Create a think function for this entity/scope, depending on argument type.  *
@@ -50,7 +50,7 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 	// local oldents = []
 	// for (local oldent; oldent = FindByName( oldent, name ); )
 	// 	oldents.append( oldent )
-	
+
 	// oldents.apply( @( oldent ) oldent.Kill() )
 
 	// empty vscripts kv will do ValidateScriptScope automatically
@@ -89,7 +89,7 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 
 			function %s() {
 
-				foreach ( func in ThinkTable || {} ) 
+				foreach ( func in ThinkTable || {} )
 					func.call( scope )
 				return -1
 			}
@@ -106,7 +106,7 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 
 		function _newslot( k, v ) {
 
-			if ( k == "_OnDestroy" && _OnDestroy == null ) 
+			if ( k == "_OnDestroy" && _OnDestroy == null )
 				_OnDestroy = v
 			scope.rawset( k, v )
 		}
@@ -297,19 +297,21 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 	NetProps.SetPropInt( player, "m_nRenderMode", kRenderNormal )
 	NetProps.SetPropInt( player, "m_clrRender", 0xFFFFFF )
 
-	for ( local child = player.FirstMoveChild(), scope; child != null; scope = child.GetScriptScope(), child = child.NextMovePeer() ) {
+	for ( local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer() ) {
+
+        local scope = child.GetScriptScope()
 
 		// to not clash with bombhop
-		if ( child.GetClassname() == "item_teamflag" )
-			continue
+        if ( child.GetClassname() == "item_teamflag" )
+            continue
 
-		if ( full_cleanup )
-			child.TerminateScriptScope()
-		else
-			foreach ( k, v in scope || {} )
-				if ( !( k in PopExtConfig.IgnoreTable ) )
-					delete scope[k]
-	}
+        if ( full_cleanup )
+            child.TerminateScriptScope()
+        else
+            foreach ( k, v in scope || {} )
+                if ( !( k in PopExtConfig.IgnoreTable ) )
+                    delete scope[k]
+    }
 
 	if ( full_cleanup ) {
 
@@ -443,7 +445,7 @@ PopEventHook( "post_inventory_application", "MainPostInventoryApplication", func
 	if ( !( "Preserved" in scope ) )
 		scope.Preserved <- {}
 
-	if ( !( "PlayerThinkTable" in scope ) ) 
+	if ( !( "PlayerThinkTable" in scope ) )
 		scope.PlayerThinkTable <- {}
 
 	if ( player.IsBotOfType( TF_BOT_TYPE ) && "PopExtBotBehavior" in ROOT ) {
@@ -507,7 +509,7 @@ PopEventHook( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
 			bot.ForceChangeTeam( TEAM_SPECTATOR, true )
 
 	//same pop or manual cleanup flag set, don't run
-	if ( __popname == GetPropString( objres, STRING_NETPROP_POPNAME ) || PopExtConfig.ManualCleanup ) 
+	if ( __popname == GetPropString( objres, STRING_NETPROP_POPNAME ) || PopExtConfig.ManualCleanup )
 		return
 
 	PopExtMain.FullCleanup()
@@ -525,11 +527,11 @@ if ( !PopExtConfig.IncludeAllModules ) return
 
 PopExtMain.IncludeModules(
 
-	"hooks", 
+	"hooks",
 	"popextensions",
-	"wavebar", 
-	"robotvoicelines", 
-	"customattributes", 
+	"wavebar",
+	"robotvoicelines",
+	"customattributes",
 	"missionattributes",
 	"customweapons",
 	"botbehavior",
