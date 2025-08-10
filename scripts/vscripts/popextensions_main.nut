@@ -297,13 +297,19 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 	NetProps.SetPropInt( player, "m_nRenderMode", kRenderNormal )
 	NetProps.SetPropInt( player, "m_clrRender", 0xFFFFFF )
 
-	for ( local child = player.FirstMoveChild(), scope; child != null; scope = child.GetScriptScope(), child = child.NextMovePeer() )
+	for ( local child = player.FirstMoveChild(), scope; child != null; scope = child.GetScriptScope(), child = child.NextMovePeer() ) {
+
+		// to not clash with bombhop
+		if ( child.GetClassname() == "item_teamflag" )
+			continue
+
 		if ( full_cleanup )
 			child.TerminateScriptScope()
 		else
 			foreach ( k, v in scope || {} )
 				if ( !( k in PopExtConfig.IgnoreTable ) )
 					delete scope[k]
+	}
 
 	if ( full_cleanup ) {
 
