@@ -232,11 +232,11 @@ PopExtMain.Error <- {
  *********************************************************************************************************************************/
 if ( !( "_AddThinkToEnt" in ROOT ) ) {
 
-    /******************************************************************************************************************************************
-     * rename so we can still use it elsewhere                                                                                                *
-     * this also allows people to override the think restriction by using _AddThinkToEnt( ent, "FuncNameHere" ) instead                       *
-     * I'm not including this in the warning, only the people that know what they're doing already and can find it here should know about it. *
-     ******************************************************************************************************************************************/
+	/******************************************************************************************************************************************
+	 * rename so we can still use it elsewhere                                                                                                *
+	 * this also allows people to override the think restriction by using _AddThinkToEnt( ent, "FuncNameHere" ) instead                       *
+	 * I'm not including this in the warning, only the people that know what they're doing already and can find it here should know about it. *
+	 ******************************************************************************************************************************************/
 	::_AddThinkToEnt <- AddThinkToEnt
 
 	local banned_think_classnames = {
@@ -299,19 +299,19 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 
 	for ( local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer() ) {
 
-        local scope = child.GetScriptScope()
+		local scope = child.GetScriptScope()
 
 		// to not clash with bombhop
-        if ( child.GetClassname() == "item_teamflag" )
-            continue
+		if ( child.GetClassname() == "item_teamflag" )
+			continue
 
-        if ( full_cleanup )
-            child.TerminateScriptScope()
-        else
-            foreach ( k, v in scope || {} )
-                if ( !( k in PopExtConfig.IgnoreTable ) )
-                    delete scope[k]
-    }
+		if ( full_cleanup )
+			child.TerminateScriptScope()
+		else
+			foreach ( k, v in scope || {} )
+				if ( !( k in PopExtConfig.IgnoreTable ) )
+					delete scope[k]
+	}
 
 	if ( full_cleanup ) {
 
