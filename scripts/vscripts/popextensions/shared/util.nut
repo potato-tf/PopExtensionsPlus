@@ -1,6 +1,6 @@
 // All Global Utility Functions go here
 
-POPEXT_CREATE_SCOPE( "__popext_util", "PopExtUtil" )
+POPEXT_CREATE_SCOPE( "__popext_util", "PopExtUtil", "PopExtUtilEntity", "PopExtUtilThink" )
 
 PopExtUtil.HumanTable 	 <- {}
 PopExtUtil.BotTable 	 <- {}
@@ -11,10 +11,9 @@ PopExtUtil.PlayerArray   <- []
 PopExtUtil.Classes 	  	 <- ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer", "civilian"]
 PopExtUtil.ClassesCaps   <- ["", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer", "Civilian"]
 PopExtUtil.Slots   	  	 <- ["slot_primary", "slot_secondary", "slot_melee", "slot_utility", "slot_building", "slot_pda", "slot_pda2"]
-PopExtUtil.IsWaveStarted <- false // check a global variable instead of accessing a netprop every time to check if we are between waves.
 PopExtUtil.AllNavAreas   <- {} // gets filled by GetAllAreas at the end of this file
 PopExtUtil.ConVars       <- {}
-PopExtUtil.LateBinder    <- LateBinder()
+PopExtUtil.TempEnts      <- {}
 
 PopExtUtil.ROBOT_ARM_PATHS <- [
 
@@ -199,27 +198,164 @@ PopExtUtil.DeflectableProjectiles <- {
 
 function PopExtUtil::_OnDestroy() {
 
+	ResetConvars( false )
+
 	foreach( key in [ "Explanation", "Info" ] )
 		if ( key in ROOT )
 			delete ROOT[ key ]
+
+	foreach( ent in TempEnts.keys() ) {
+		if (ent && ent.IsValid()) {
+			SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+			EntFireByHandle( ent, "Kill", "", -1, null, null )
+		}
+	}
+}
+
+function PopExtUtil::EntityManager() {
+
+	local tempent_snapshot = clone TempEnts
+
+	foreach( ent in tempent_snapshot.keys() ) {
+
+		if ( !ent || !ent.IsValid() ) continue
+
+		// PopExtMain.Error.DebugLog( "Killing tempent: " + ent )
+
+		SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+		EntFireByHandle( ent, "Kill", "", 0.1, null, null )
+		delete TempEnts[ent]
+		yield ent
+	}
+
+	return null
+}
+
+local entmanager_cooldown = 0.0
+local gen = null
+function PopExtUtil::ThinkTable::EntityManagerThink() {
+
+	if ( Time() < entmanager_cooldown )
+		return
+
+	if ( !TempEnts.len() ) {
+		entmanager_cooldown = Time() + 0.5
+		return
+	}
+
+	if ( !gen || gen.getstatus() == "dead" )
+		gen = EntityManager()
+
+	resume gen
+
+	entmanager_cooldown = 0.0
+}
+
+function PopExtUtil::GetEntScope( ent ) {
+
+	local scope = ent.GetScriptScope() || ( ent.ValidateScriptScope(), ent.GetScriptScope() )
+
+	if ( !("Preserved" in scope ) )
+		scope.Preserved <- PopExtMain.PlayerPreserved
+
+	return scope
+}
+
+function PopExtUtil::TouchCrashFix() { return activator != null && activator.IsValid() }
+
+function PopExtUtil::SetTargetname( ent, name ) {
+
+	local oldname = GetPropString( ent, STRING_NETPROP_NAME )
+	if ( oldname != "" )
+		PurgeGameString( oldname, true )
+	SetPropString( ent, STRING_NETPROP_NAME, name )
+}
+
+function PopExtUtil::PurgeGameString( str, urgent = false ) {
+
+	if ( urgent ) {
+
+		local tempent = CreateByClassname( "logic_autosave" )
+		SetTargetname( tempent, str )
+		SetPropBool( tempent, STRING_NETPROP_PURGESTRINGS, true )
+		tempent.Kill()
+		return
+	}
+
+	SpawnEnt( "logic_autosave", str, true )
+}
+
+// spawn permanent ents or tempents that are automatically wiped out on map reset/fixed timer
+function PopExtUtil::SpawnEnt( ... ) {
+
+	local classname = vargv[0]
+	local name = vargv[1]
+	local args = 3 in vargv ? vargv.slice( 3 ) : null
+
+	local ent = CreateByClassname( classname )
+	SetTargetname( ent, name )
+
+	if ( args && args.len() ) {
+
+		for (local i = 0; i < args.len(); i += 2) {
+
+			if ( !(i in args) || !(i + 1 in args) )
+				break
+
+			ent.KeyValueFromString( args[i], args[i + 1].tostring() )
+		}
+	}
+
+	if ( 2 in vargv && vargv[2] ) {
+		TempEnts[ent] <- ent.GetScriptId()
+		return ent
+	}
+
+	ent.ValidateScriptScope()
+
+	// auto-detect triggers
+	if ( HasProp( ent, "m_hTouchingEntities" ) ) {
+
+		SetPropInt( ent, "m_spawnflags", SF_TRIGGER_ALLOW_CLIENTS )
+		local scope = GetEntScope( ent )
+		scope.InputStartTouch <- TouchCrashFix
+		scope.Inputstarttouch <- TouchCrashFix
+		scope.InputEndTouch <- TouchCrashFix
+		scope.Inputendtouch <- TouchCrashFix
+		DispatchSpawn( ent )
+		ent.SetSolid( SOLID_BBOX )
+		ent.SetSize( sizemin, sizemax )
+	}
+
+	SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+
+	return ent
 }
 
 PopExtUtil.Worldspawn 		 <- First()
+PopExtUtil.StartRelay 		 <- FindByName( null, "wave_start_relay" )
+PopExtUtil.FinishedRelay 	 <- FindByName( null, "wave_finished_relay" )
 PopExtUtil.GameRules 		 <- FindByClassname( null, "tf_gamerules" )
 PopExtUtil.ObjectiveResource <- FindByClassname( null, "tf_objective_resource" )
 PopExtUtil.MonsterResource   <- FindByClassname( null, "monster_resource" )
 PopExtUtil.MvMLogicEnt 	  	 <- FindByClassname( null, "tf_logic_mann_vs_machine" )
 PopExtUtil.MvMStatsEnt 	  	 <- FindByClassname( null, "tf_mann_vs_machine_stats" )
 PopExtUtil.PlayerManager 	 <- FindByClassname( null, "tf_player_manager" )
-PopExtUtil.StartRelay 		 <- FindByName( null, "wave_start_relay" )
-PopExtUtil.FinishedRelay 	 <- FindByName( null, "wave_finished_relay" )
-PopExtUtil.TriggerHurt 	     <- SpawnEntityFromTable( "trigger_hurt", 					 { targetname = "__popext_triggerhurt", vscripts = " " } )
-PopExtUtil.ClientCommand 	 <- SpawnEntityFromTable( "point_clientcommand", 			 { targetname = "__popext_clientcommand", vscripts = " " } )
-PopExtUtil.GameRoundWin 	 <- SpawnEntityFromTable( "game_round_win", 				 { targetname = "__popext_roundwin", TeamNum = TF_TEAM_PVE_INVADERS, force_map_reset = 1, vscripts = " " } )
-PopExtUtil.RespawnOverride   <- SpawnEntityFromTable( "trigger_player_respawn_override", { targetname = "__popext_respawnoverride", spawnflags = SF_TRIGGER_ALLOW_CLIENTS, vscripts = " " } )
-PopExtUtil.PopInterface 	 <- FindByClassname( null, "point_populator_interface" ) || 
-								SpawnEntityFromTable( "point_populator_interface", 		 { targetname = "__popext_pop_interface", vscripts = " " } )
+PopExtUtil.TriggerHurt 	     <- PopExtUtil.SpawnEnt( "trigger_hurt", "__popext_triggerhurt" )
+PopExtUtil.ClientCommand 	 <- PopExtUtil.SpawnEnt( "point_clientcommand", "__popext_clientcommand" )
+PopExtUtil.GameRoundWin 	 <- PopExtUtil.SpawnEnt( "game_round_win", "__popext_roundwin", false, "TeamNum", TF_TEAM_PVE_INVADERS, "force_map_reset", 1 )
+PopExtUtil.RespawnOverride   <- PopExtUtil.SpawnEnt( "trigger_player_respawn_override", "__popext_respawnoverride" )
 
+PopExtUtil.CommentaryNode	 <- @() FindByName( null, "__popext_hide_fcvar_notify" ) ||
+								PopExtUtil.SpawnEnt( "point_commentary_node", "__popext_hide_fcvar_notify", false, "commentaryfile", " ", "commentaryfilenohdr", " " )
+
+PopExtUtil.PopInterface 	 <- FindByClassname( null, "point_populator_interface" ) ||
+								PopExtUtil.SpawnEnt( "point_populator_interface", "__popext_pop_interface" )
+
+PopExtUtil.NavInterface 	 <- FindByClassname( null, "tf_point_nav_interface" ) ||
+								PopExtUtil.SpawnEnt( "tf_point_nav_interface", "__popext_nav_interface" )
+
+PopExtUtil.IsWaveStarted 	 <- false // check a global variable instead of accessing a netprop every time to check if we are between waves.
 PopExtUtil.CurrentWaveNum 	 <- GetPropInt( PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount" )
 PopExtUtil.IsLinux 		  	 <- RAND_MAX != 32767
 
@@ -230,7 +366,6 @@ function PopExtUtil::SwitchWeaponSlot( player, slot ) { EntFire( "__popext_clien
 function PopExtUtil::ShowHintMessage( message ) 	  { SendGlobalGameEvent( "player_hintmessage", {hintmessage = message} ) }
 function PopExtUtil::HideAnnotation( id = 0 ) 		  { SendGlobalGameEvent( "hide_annotation", {id = id} ) }
 function PopExtUtil::SetItemIndex( item, index ) 	  { SetPropInt( item, STRING_NETPROP_ITEMDEF, index ) }
-function PopExtUtil::SetTargetname( ent, name ) 	  { SetPropString( ent, "m_iName", name ) }
 function PopExtUtil::PrecacheParticle( name ) 		  { PrecacheEntityFromTable( { classname = "info_particle_system", effect_name = name } ) }
 function PopExtUtil::PrecacheModelGibs( name ) 		  { PrecacheEntityFromTable( { classname = "tf_generic_bomb", model = name } ) }
 function PopExtUtil::DisableCloak( player ) 		  { SetPropFloat( player, "m_Shared.m_flStealthNextChangeTime", Time() * INT_MAX ) }
@@ -239,8 +374,6 @@ function PopExtUtil::PlayerRespawn() 				  { self.ForceRegenerateAndRespawn() }
 function PopExtUtil::SetEffect( ent, value ) 		  { SetPropInt( ent, "m_fEffects", value ) }
 
 function PopExtUtil::GetPlayerSteamID( player ) 	  { return GetPropString( player, "m_szNetworkIDString" ) }
-function PopExtUtil::TouchCrashFix() 				  { return ( activator == null || !activator.IsValid() ) ? false : true }
-function PopExtUtil::IsLinuxServer() 				  { PopExtMain.Error.DeprecationWarning( "PopExtUtil.IsLinuxServer()", "PopExtUtil.IsLinux") ; return RAND_MAX != 32767 } // backwards compatibility
 function PopExtUtil::IsDucking( player ) 			  { return player.GetFlags() & FL_DUCKING }
 function PopExtUtil::IsOnGround( player ) 			  { return player.GetFlags() & FL_ONGROUND }
 function PopExtUtil::GetItemIndex( item ) 			  { return GetPropInt( item, STRING_NETPROP_ITEMDEF ) }
@@ -252,7 +385,11 @@ function PopExtUtil::GetPlayerUserID( player ) 		  { return GetPropIntArray( Pla
 function PopExtUtil::InUpgradeZone( player ) 		  { return GetPropBool( player, "m_Shared.m_bInUpgradeZone" ) }
 function PopExtUtil::InButton( player, button ) 	  { return GetPropInt( player, "m_nButtons" ) & button }
 function PopExtUtil::HasEffect( ent, value ) 		  { return GetPropInt( ent, "m_fEffects" ) == value }
-function PopExtUtil::GetEntScope( ent ) 			  { return ent.GetScriptScope() || ( ent.ValidateScriptScope(), ent.GetScriptScope() ) }
+
+function PopExtUtil::IsLinuxServer() {
+	PopExtMain.Error.DeprecationWarning( "PopExtUtil.IsLinuxServer()", "PopExtUtil.IsLinux")
+	return RAND_MAX != 32767
+}
 
 function PopExtUtil::ForceChangeClass( player, classindex = 1 ) {
 
@@ -556,12 +693,9 @@ function PopExtUtil::CreatePlayerWearable( player, model, bonemerge = true, atta
 	SetParentLocalOrigin( wearable, player, attachment )
 
 	local scope = player.GetScriptScope()
-	if ( auto_destroy ) {
-		if ( !( "wearables_to_kill" in scope ) )
-			scope.wearables_to_kill <- []
+	if ( auto_destroy )
+		scope.Preserved.kill_on_spawn.append( wearable )
 
-		scope.wearables_to_kill.append( wearable )
-	}
 	return wearable
 }
 
@@ -596,10 +730,8 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
 	player.RemoveEFlags( EFL_CUSTOM_WEARABLE )
 
 	local scope = player.GetScriptScope()
-	if ( !( "wearables_to_kill" in scope ) )
-		scope.wearables_to_kill <- []
 
-	scope.wearables_to_kill.append( wearable )
+	scope.Preserved.kill_on_spawn.append( wearable )
 
 	return wearable
 }
@@ -658,13 +790,11 @@ function PopExtUtil::SetPlayerAttributes( player, attrib, value, item = null, cu
 	}
 
 	// add the item to our items table
-	if ( item_handle && item_handle.IsValid() )
+	else if ( item_handle && item_handle.IsValid() )
 		items[item_handle] <- [attrib, value]
 	else
 		// null/invalid item handle, apply the attribute to our entire loadout
-		for ( local i = 0; i < GetPropArraySize( player, STRING_NETPROP_MYWEAPONS ); i++ )
-			if ( GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i ) )
-				items[GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )] <- [attrib, value]
+		ForEachItem( player, @( item ) items[item] <- [attrib, value], true )
 
 	//do the customattributes check first, since we replace some vanilla attributes
 	local customattr_function = PopExtAttributes.GetAttributeFunctionFromStringName( attrib )
@@ -678,22 +808,21 @@ function PopExtUtil::SetPlayerAttributes( player, attrib, value, item = null, cu
 		PopEventHook( "*", format( "%s_%d_*", customattr_function, PlayerTable[ player ] ), null, EVENT_WRAPPER_CUSTOMATTR )
 
 		//cleanup item thinks
-		foreach( item, _ in items )
+		foreach( item in items.keys() )
 			PopExtAttributes.CleanupFunctionTable( item, "ItemThinkTable", customattr_function )
 
-		if ( !( "attribinfo" in scope ) ) scope.attribinfo <- {}
+		if ( !( "attribinfo" in scope ) )
+			scope.attribinfo <- {}
 
 		foreach( item, attrs in items ) {
 
-			local wep = HasItemInLoadout( player, item )
+			if ( !HasItemInLoadout( player, item ) )
+				continue
 
-			if ( wep == null || !( customattr_function in PopExtAttributes.Attrs ) ) return
+			if ( !("ItemThinkTable" in scope) )
+				AddThink( item, "" )
 
-			local wep_scope = PopExtUtil.GetEntScope( wep )
-			if ( !( "ItemThinkTable" in wep_scope ) )
-				wep_scope.ItemThinkTable <- {}
-
-			PopExtAttributes.Attrs[customattr_function]( player, wep, value )
+			PopExtAttributes.Attrs[customattr_function]( player, item, value )
 
 			PopExtAttributes.RefreshDescs( player )
 
@@ -723,10 +852,9 @@ function PopExtUtil::SetPlayerAttributes( player, attrib, value, item = null, cu
 				else {
 
 					// warpaint attributes need the full float value, rest can be truncated for cleaner printouts
-					local formatstr = attrib in specialattribs ?
-						format( "self.AddAttribute( `%s`, %1.8e, -1 ); self.ReapplyProvision()", attrib, value.tofloat() ) :
-						format( "self.AddAttribute( `%s`, %.2f, -1 ); self.ReapplyProvision()", attrib, value.tofloat() )
-					ScriptEntFireSafe( item_handle, formatstr, -1 )
+					local formatstr = attrib in specialattribs ? @"%1.8e" : "%.2f"
+					local finalstr = format( "self.AddAttribute( `%s`, %s, -1 ); self.ReapplyProvision()", attrib, formatstr )
+					ScriptEntFireSafe( item_handle, format( finalstr, value.tofloat() ), -1 )
 				}
 			}
 
@@ -806,7 +934,7 @@ function PopExtUtil::SetPlayerAttributesMulti( player, item, attributes, customw
 
 function PopExtUtil::DoExplanation( message, print_color = COLOR_YELLOW, message_prefix = "Explanation: ", sync_chat_with_game_text = false, text_print_time = -1, text_scan_time = 0.02 ) {
 
-	local rgb = PopExtUtil.HexOrIntToRgb( "FFFF66" )
+	local rgb = HexOrIntToRgb( "FFFF66" )
 
 	local txtent = SpawnEntityFromTable( "game_text", {
 		effect = 2,
@@ -823,7 +951,7 @@ function PopExtUtil::DoExplanation( message, print_color = COLOR_YELLOW, message
 	})
 
 	SetPropBool( txtent, STRING_NETPROP_PURGESTRINGS, true )
-	PopExtUtil.SetTargetname( txtent, format( "__popext_explanation_text%d", txtent.entindex() ) )
+	SetTargetname( txtent, format( "__popext_explanation_text%d", txtent.entindex() ) )
 	local strarray = []
 
 	//avoid needing to do a ton of function calls for multiple announcements.
@@ -845,13 +973,11 @@ function PopExtUtil::DoExplanation( message, print_color = COLOR_YELLOW, message
 		i++
 		if ( i == strarray.len() ) {
 
-			SetPropString( txtent, "m_iszScriptThinkFunction", "" )
-
 			SetPropString( txtent, "m_iszMessage", "" )
-			EntFireByHandle( txtent, "Display", "", -1, null, null )
-			EntFireByHandle( txtent, "Kill", "", 0.1, null, null )
-			foreach ( str in strarray )
-				PopExtUtil.PurgeGameString( str )
+			txtent.AcceptInput( "Display", "", null, null )
+			txtent.Kill()
+
+			strarray.apply( @( str ) PopExtUtil.PurgeGameString( str ) )
 			return
 		}
 		local s = strarray[i]
@@ -872,7 +998,7 @@ function PopExtUtil::DoExplanation( message, print_color = COLOR_YELLOW, message
 			SetPropInt( txtent, "m_textParms.holdTime", pause )
 			txtent.KeyValueFromInt( "holdtime", pause )
 
-			EntFireByHandle( txtent, "Display", "", -1, null, null )
+			txtent.AcceptInput( "Display", "", null, null )
 
 			textcooldown = Time() + pause
 			return 0.033
@@ -896,16 +1022,16 @@ function PopExtUtil::DoExplanation( message, print_color = COLOR_YELLOW, message
 		SetPropInt( txtent, "m_textParms.holdTime", delaybetweendisplays )
 		txtent.KeyValueFromInt( "holdtime", delaybetweendisplays )
 
-		EntFireByHandle( txtent, "Display", "", -1, null, null )
-		if ( sync_chat_with_game_text ) ClientPrint( null, 3, format( "\x07%s %s\x07%s %s", COLOR_YELLOW, message_prefix, TF_COLOR_DEFAULT, s ) )
+		txtent.AcceptInput( "Display", "", null, null )
+		if ( sync_chat_with_game_text )
+			ClientPrint( null, 3, format( "\x07%s %s\x07%s %s", COLOR_YELLOW, message_prefix, TF_COLOR_DEFAULT, s ) )
 
 		textcooldown = Time() + delaybetweendisplays
 
 		return 0.033
 	}
-	local txtent_scope = PopExtUtil.GetEntScope( txtent )
-	txtent_scope.ExplanationTextThink <- ExplanationTextThink
-	AddThinkToEnt( txtent, "ExplanationTextThink" )
+
+	AddThink( txtent, ExplanationTextThink )
 }
 
 // LEGACY: keeping this around since some archive missions use it
@@ -931,8 +1057,8 @@ function PopExtUtil::GetAllEnts( count_players = false, callback = null ) {
 
 	local start = count_players ? 1 : MAX_CLIENTS
 
-	for ( local i = start, ent; i <= MAX_EDICTS; i++ )
-		if ( ent = EntIndexToHScript( i ) )
+	for ( local i = start, ent; i <= MAX_EDICTS; ent = EntIndexToHScript( i ), i++ )
+		if ( ent )
 			entlist.append( ent )
 
 	if ( callback != null )
@@ -1158,11 +1284,11 @@ function PopExtUtil::IsPointInTrigger( point, classname = "func_respawnroom" ) {
 function PopExtUtil::GetItemInSlot( player, slot ) {
 
 	local item
-	for ( local i = 0; i < SLOT_COUNT; i++ ) {
-		local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
-		if ( wep == null || wep.GetSlot() != slot ) continue
+	for ( local child = player.FirstMoveChild(); child && child instanceof CBaseCombatWeapon; child = child.NextMovePeer() ) {
 
-		item = wep
+		if ( child.GetSlot() != slot ) continue
+
+		item = child
 		break
 	}
 	return item
@@ -1188,7 +1314,7 @@ function PopExtUtil::PlayerRobotModel( player, model ) {
 	local scope = player.GetScriptScope()
 
 	local wearable = CreateByClassname( "tf_wearable" )
-	SetPropString( wearable, "m_iName", "__popext_bonemerge_model" )
+	SetPropString( wearable, STRING_NETPROP_NAME, "__popext_bonemerge_model" )
 	SetPropInt( wearable, STRING_NETPROP_MODELINDEX, PrecacheModel( model ) )
 	SetPropBool( wearable, STRING_NETPROP_ATTACH, true )
 	SetPropEntity( wearable, "m_hOwnerEntity", player )
@@ -1207,7 +1333,7 @@ function PopExtUtil::PlayerRobotModel( player, model ) {
 			wearable.AcceptInput( "SetParent", "!activator", player, player )
 		return -1
 	}
-	scope.PlayerThinkTable.BotModelThink <- BotModelThink
+	AddThink( player, BotModelThink )
 }
 
 function PopExtUtil::PlayerBonemergeModel( player, model ) {
@@ -1218,7 +1344,7 @@ function PopExtUtil::PlayerBonemergeModel( player, model ) {
 		scope.bonemerge_model.Kill()
 
 	local bonemerge_model = CreateByClassname( "tf_wearable" )
-	SetPropString( bonemerge_model, "m_iName", "__popext_bonemerge_model" )
+	SetPropString( bonemerge_model, STRING_NETPROP_NAME, "__popext_bonemerge_model" )
 	SetPropInt( bonemerge_model, STRING_NETPROP_MODELINDEX, PrecacheModel( model ) )
 	SetPropBool( bonemerge_model, STRING_NETPROP_ATTACH, true )
 	SetPropEntity( bonemerge_model, "m_hOwner", player )
@@ -1238,7 +1364,6 @@ function PopExtUtil::PlayerBonemergeModel( player, model ) {
 			bonemerge_model.AcceptInput( "SetParent", "!activator", player, player )
 		return -1
 	}
-	scope.PlayerThinkTable.BonemergeModelThink <- BonemergeModelThink
 }
 
 function PopExtUtil::PlayerSequence( player, sequence, model_override = "", playbackrate = 1.0, freeze_player = false, thirdperson = false ) {
@@ -1285,8 +1410,7 @@ function PopExtUtil::PlayerSequence( player, sequence, model_override = "", play
 		dummy.StudioFrameAdvance()
 		return -1
 	}
-	PopExtUtil.GetEntScope( dummy ).PlaySequenceThink <- PlaySequenceThink
-	AddThinkToEnt( dummy, "PlaySequenceThink" )
+	AddThink( dummy, PlaySequenceThink )
 
 	if ( freeze_player ) LockInPlace( player )
 	if ( thirdperson ) player.AcceptInput( "SetForcedTauntCam", "1", null, null )
@@ -1369,34 +1493,30 @@ function PopExtUtil::StunPlayer( player, duration = 5, type = 1, delay = 0, spee
 
 function PopExtUtil::Ignite( player, duration = 10.0, damage = 1 ) {
 
-	local utilignite = FindByName( null, "__popext_ignite" )
-	if ( utilignite == null ) {
-
-		utilignite = SpawnEntityFromTable( "trigger_ignite", {
+	local utilignite = FindByName( null, "__popext_ignite" ) || SpawnEntityFromTable( "trigger_ignite", {
 			targetname = "__popext_ignite"
 			burn_duration = duration
 			damage = damage
 			spawnflags = SF_TRIGGER_ALLOW_CLIENTS
 		})
-	}
 	EntFireByHandle( utilignite, "StartTouch", "", -1, player, player )
 	EntFireByHandle( utilignite, "EndTouch", "", SINGLE_TICK, player, player )
 }
 
 function PopExtUtil::ShowHudHint( text = "This is a hud hint", player = null, duration = 5.0 ) {
 
-	local hudhint = FindByName( null, "__popext_hudhint" )
-
-	local flags = player == null ? 1 : 0
-
-	if ( !hudhint ) hudhint = SpawnEntityFromTable( "env_hudhint", { targetname = "__popext_hudhint", spawnflags = flags, message = text } )
-
+	local hudhint = FindByName( null, "__popext_hudhint" ) || SpawnEntityFromTable( "env_hudhint", {
+		targetname = "__popext_hudhint"
+		spawnflags = !player ? 1 : 0
+		message = text
+	})
+	SetPropBool( hudhint, STRING_NETPROP_PURGESTRINGS, true )
 	hudhint.KeyValueFromString( "message", text )
 
-	EntFireByHandle( hudhint, "ShowHudHint", "", -1, player, player )
+	hudhint.AcceptInput("ShowHudHint", "", player, player )
 	EntFireByHandle( hudhint, "HideHudHint", "", duration, player, player )
 
-	PopExtUtil.ScriptEntFireSafe( hudhint, format( "PopExtUtil.PurgeGameString( `%s` );", text ), duration )
+	PurgeGameString( text )
 }
 
 function PopExtUtil::SetEntityColor( entity, r, g, b, a ) {
@@ -1418,15 +1538,11 @@ function PopExtUtil::GetEntityColor( entity ) {
 
 function PopExtUtil::AddAttributeToLoadout( player, attribute, value, duration = -1 ) {
 
-	for ( local i = 0; i < SLOT_COUNT; i++ ) {
+	ForEachItem( player, function( item ) {
 
-		local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
-
-		if ( wep == null ) continue
-
-		wep.AddAttribute( attribute, value, duration )
-		wep.ReapplyProvision()
-	}
+		item.AddAttribute( attribute, value, duration )
+		item.ReapplyProvision()
+	})
 }
 
 function PopExtUtil::ShowModelToPlayer( player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = INT_MAX, bodygroup = null ) {
@@ -1496,8 +1612,8 @@ function PopExtUtil::RemoveOutputAll( ent, output ) {
 		outputs.append( t )
 	}
 
-	foreach ( o in outputs ) 
-		foreach( _ in o ) 
+	foreach ( o in outputs )
+		foreach( _ in o )
 			RemoveOutput( ent, output, o.target, o.input, o.parameter )
 }
 
@@ -1512,6 +1628,7 @@ function PopExtUtil::GetAllOutputs( ent, output ) {
 }
 
 function PopExtUtil::GetPropAny( ent, prop, i = 0 ) {
+
 	local type = GetPropType( ent, prop )
 
 	if ( type == "instance" )
@@ -1535,6 +1652,8 @@ function PopExtUtil::SetPropAny( ent, prop, value, i = 0 ) {
 		SetPropIntArray( ent, prop, value, i )
 
 	else {
+
+		local converted = type == "bool" ? value.tointeger() : value[format("to%s", type)]()
 
 		local funcname = format( "SetProp%sArray", type.slice( 0, 1 ).toupper() + type.slice( 1 ) )
 		ROOT[funcname]( ent, prop, value, i )
@@ -1565,15 +1684,14 @@ function PopExtUtil::GiveWeapon( player, class_name, item_id ) {
 	DispatchSpawn( weapon )
 
 	// remove existing weapon in same slot
-	for ( local i = 0; i < SLOT_COUNT; i++ ) {
+	ForEachItem( player, function( child ) {
 
-		local held_weapon = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
-		if ( held_weapon == null || held_weapon.GetSlot() != weapon.GetSlot() )
-			continue
-		held_weapon.Kill()
-		SetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, null, i )
-		break
-	}
+		if ( child.GetSlot() != weapon.GetSlot() )
+			return
+
+		EntFireByHandle( child, "Kill", "", -1, null, null )
+		// SetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, null, slot )
+	}, true)
 
 	player.Weapon_Equip( weapon )
 	player.Weapon_Switch( weapon )
@@ -1727,7 +1845,7 @@ function PopExtUtil::SplitOnce( s, sep = null ) {
 
 function PopExtUtil::EndWaveReverse( doteamswitch = true ) {
 
-	local temp = CreateByClassname( "info_teleport_destination" )
+	local temp = CreateByClassname( "logic_autosave" )
 
 	if ( !IsWaveStarted ) return
 
@@ -1752,47 +1870,149 @@ function PopExtUtil::EndWaveReverse( doteamswitch = true ) {
 			if ( bot.IsAlive() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
 				PopExtUtil.KillPlayer( bot )
 	}
-	PopExtUtil.GetEntScope( temp ).ClearWave <- ClearWaveThink
-	AddThinkToEnt( temp, "ClearWave" )
+	AddThink( temp, ClearWaveThink )
 }
 
-function PopExtUtil::AddThinkToEnt( ent, func ) {
+function PopExtUtil::AddThink( ent, func ) {
 
-	local scope = ent.GetScriptScope()
-	local thinktable = null
+	local thinktable_name = null
+	local thinktable_func = null
 
-	if ( ent.IsPlayer() )
-		thinktable = "PlayerThinkTable"
+	if ( !ent || !ent.IsValid() )
+		return
 
-	else if ( ( ent.GetClassname() == "tank_boss" ) )
-		thinktable = "TankThinkTable"
+	foreach ( k, v in PopExtConfig.ThinkTableSetup ) {
 
-	else if ( startswith( ent.GetClassname(), "tf_projectile" ) )
-		thinktable = "ProjectileThinkTable"
+		if ( typeof v != "array" )
+			continue
 
-	else if ( HasProp( ent, STRING_NETPROP_ATTACH ) )
-		thinktable = "ItemThinkTable"
-	else
-		_AddThinkToEnt( ent, func )
+		if ( startswith( ent.GetClassname(), k ) ) {
 
-	if ( !thinktable ) return
+			thinktable_name = 0 in v ? v[0] : "ThinkTable"
+			thinktable_func = 1 in v ? v[1] : format( "%s_Think", ent.GetName() )
 
-	local thinkfunc
+			// if ( thinktable_name == "PlayerThinkTable" ) {
 
-	if ( func != null ) {
-
-		if ( func in scope )
-			thinkfunc = scope[func]
-
-		else if ( func in ROOT )
-			thinkfunc = ROOT[func]
-		else
-			return
+			// 	ForEachItem( ent, @( item ) AddThink( item, func ))
+			// }
+			break
+		}
 	}
 
-	if ( !( thinktable in scope ) ) scope[thinktable] <- {}
+	local scope = GetEntScope( ent )
 
-	func == null ? scope[thinktable].clear() : scope[format( "%s", thinktable )][func] <- thinkfunc
+	if ( ent.IsPlayer() && !( "Preserved" in scope ) )
+		scope.Preserved <- PopExtMain.PlayerPreserved
+
+	// no think table setup, normal function
+	if ( !thinktable_name || !thinktable_func ) {
+
+		local func_name = ""
+
+		if ( endswith( typeof func, "function" ) ) {
+
+			func_name = func.getinfos().name || format( "__%s_ANONYMOUS_THINK", ent.GetName() )
+			scope[ func_name ] <- func
+		}
+		else if ( !(func in scope) && func in ROOT ) {
+
+			func_name = func
+			scope[ func_name ] <- ROOT[ func_name ].bindenv( scope )
+		}
+
+		"_AddThinkToEnt" in ROOT ? _AddThinkToEnt( ent, func_name ) : AddThinkToEnt( ent, func_name )
+
+		return
+	}
+
+	// setup thinktable if it doesn't exist
+	if ( !( thinktable_name in scope ) ) {
+
+		scope[ thinktable_name ] <- {}
+		scope.__thinktable_name <- thinktable_name
+	}
+
+	if ( !( thinktable_func in scope ) ) {
+
+		// scope[ thinktable_func ] <- function() {
+
+		// 	foreach ( name, _func in scope[ thinktable_name ] || {} )
+		// 		_func.call( scope )
+
+		// 	return -1
+		// }
+		// try { _AddThinkToEnt( ent, thinktable_func ) } catch ( e ) { AddThinkToEnt( ent, thinktable_func ) }
+
+		local str = format( @"
+
+			local ent = EntIndexToHScript( %d )
+			local func_name = ""%s""
+			local scope = ent.GetScriptScope()
+
+			function %s() {
+
+				foreach ( name, func in scope.%s || {} )
+					func.call( scope )
+
+				return -1
+			}
+			scope[ func_name ] <- %s
+
+			try { _AddThinkToEnt( ent, func_name ) } catch ( e ) { AddThinkToEnt( ent, func_name ) }
+
+		", ent.entindex(), thinktable_func, thinktable_func, thinktable_name, thinktable_func )
+
+		compilestring(str)()
+	}
+	// only initialize blank think setup for empty string
+	if ( func == "" )
+		return
+
+	// add think function to thinktable
+	else if ( func ) {
+		if (typeof func == "function")
+
+		if ( endswith( typeof func, "function" ) ) {
+
+			scope[ thinktable_name ][ func.getinfos().name || format( "__%s_ANONYMOUS_THINK", ent.GetName() ) ] <- func
+			return
+		}
+
+		else if (
+			typeof func == "string"
+			&& !( func in scope[ thinktable_name ] )
+			&& ( ( func in this && endswith( typeof this[ func ], "function" ) ) || ( func in ROOT && endswith( typeof ROOT[ func ], "function" ) ) )
+		) {
+
+			scope[ thinktable_name ][ func ] <- func in this ? this[ func ].bindenv( scope ) : ROOT[ func ].bindenv( scope )
+			return
+		}
+	}
+	else {
+
+		scope[ thinktable_name ].clear()
+		return
+	}
+
+}
+
+PopExtUtil.AddThinkToEnt <- PopExtUtil.AddThink
+
+function PopExtUtil::RemoveThink( ent, func = null ) {
+
+	local scope = GetEntScope( ent )
+
+	if ( !( "__thinktable_name" in scope ) ) {
+		_AddThinkToEnt( ent, null )
+		return
+	}
+
+	local thinktable_name = scope.__thinktable_name
+
+	if ( !( func in scope[ thinktable_name ] ) )
+		return
+
+	func == null ? scope[ thinktable_name ].clear() : delete scope[ thinktable_name ][ func ]
 }
 
 function PopExtUtil::SilentDisguise( player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT ) {
@@ -1802,7 +2022,7 @@ function PopExtUtil::SilentDisguise( player, target = null, tfteam = TF_TEAM_PVE
 	function FindTargetPlayer( passcond ) {
 
 		local target = null
-		foreach( potentialtarget in PopExtUtil.HumanArray ) {
+		foreach( potentialtarget in HumanArray ) {
 
 			if ( potentialtarget == player || !passcond( potentialtarget ) ) continue
 
@@ -2005,12 +2225,57 @@ function PopExtUtil::ScriptEntFireSafe( target, code, delay = -1, activator = nu
 	PurgeGameString( code )
 }
 
-function PopExtUtil::PurgeGameString( str ) {
+function PopExtUtil::PurgeGameString( str, urgent = false ) {
 
-	local dummy = CreateByClassname( "info_null" )
-	SetTargetname( dummy, str )
-	SetPropBool( dummy, STRING_NETPROP_PURGESTRINGS, true )
-	DispatchSpawn( dummy )
+	if ( urgent ) {
+
+		local tempent = CreateByClassname( "logic_autosave" )
+		SetTargetname( tempent, str )
+		SetPropBool( tempent, STRING_NETPROP_PURGESTRINGS, true )
+		tempent.Kill()
+		return
+	}
+
+	SpawnEnt( "logic_autosave", str, true )
+}
+
+function PopExtUtil::PurgeStringBatch( ... ) {
+
+	local template = CreateByClassname( "point_script_template" )
+	SetTargetname( template, "__popext_purgestringbatch" )
+	SetPropBool( template, STRING_NETPROP_PURGESTRINGS, true )
+	local scope = template.GetScriptScope()
+	scope.ents <- []
+	scope.__EntityMakerResult <- {
+		entities = scope.ents
+	}.setdelegate( {
+		function _newslot ( _, value ) {
+			entities.append( value )
+		}
+	})
+
+	function _PurgeStringBatch() {
+
+		foreach ( i, ent in ents ) {
+
+			SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+			EntFireByHandle( ent, "Kill", "", i * 0.1, null, null )
+		}
+		ents.clear()
+	}
+
+	scope.PostSpawn <- _PurgeStringBatch
+
+	foreach ( i, arg in vargv ) {
+
+		template.AddTemplate( "logic_autosave", { targetname = arg })
+		if ( !(i % 8) )
+			template.AcceptInput( "ForceSpawn", "", null, null )
+	}
+
+	template.AcceptInput( "ForceSpawn", "", null, null )
+
+	template.Kill()
 }
 
 function PopExtUtil::SetDestroyCallback( entity, callback ) {
@@ -2061,7 +2326,18 @@ function PopExtUtil::OnWeaponFire( wep, func ) {
 		}
 		return
 	}
-	scope.ItemThinkTable[ format( "OnWeaponFire_%d_%d", PlayerTable[ wep.GetOwner()], wep.entindex() ) ] <- OnWeaponFireThink
+	AddThink( wep, OnWeaponFireThink )
+}
+
+function PopExtUtil::ForEachItem( player, func, weapons_only = false ) {
+
+	for ( local child = player.FirstMoveChild(); ( child && child instanceof CEconEntity ); child = child.NextMovePeer() ) {
+
+		if ( weapons_only && !( child instanceof CBaseCombatWeapon ) )
+			continue
+
+		func( child )
+	}
 }
 
 function PopExtUtil::IsProjectileWeapon( wep ) {
@@ -2074,10 +2350,7 @@ function PopExtUtil::IsProjectileWeapon( wep ) {
 
 function PopExtUtil::GetLastFiredProjectile( player ) {
 
-	if ( !( "ActiveProjectiles" in GetEntScope( player ).Preserved ) )
-		return null
-
-	local active_projectiles = GetEntScope( player ).Preserved.ActiveProjectiles
+	local active_projectiles = GetEntScope( player ).Preserved.active_projectiles
 	local projectiles = []
 
 	foreach ( projectile, info in active_projectiles )
@@ -2169,7 +2442,7 @@ function PopExtUtil::SetRedMoney( value ) {
 					if ( weapon == null )
 						continue
 
-					if ( PopExtUtil.GetItemIndex( weapon ) != params.weapon_def_index )
+					if ( GetItemIndex( weapon ) != params.weapon_def_index )
 						continue
 
 					local weapon_scope = GetEntScope( weapon )
@@ -2244,7 +2517,7 @@ function PopExtUtil::SetRedMoney( value ) {
 					fake_pack.SetAbsOrigin( origin )
 
 
-				PopExtUtil.GetEntScope( fake_pack ).despawn_time <- Time() + TF_POWERUP_LIFETIME
+				GetEntScope( fake_pack ).despawn_time <- Time() + TF_POWERUP_LIFETIME
 
 				function DespawnThink() {
 
@@ -2253,8 +2526,7 @@ function PopExtUtil::SetRedMoney( value ) {
 
 					fake_pack.Kill()
 				}
-				PopExtUtil.GetEntScope( fake_pack ).DespawnThink <- DespawnThink
-				AddThinkToEnt( fake_pack, "DespawnThink" )
+				AddThink( fake_pack, DespawnThink )
 			}
 			scope.CollectPack <- CollectPack
 
@@ -2268,38 +2540,32 @@ function PopExtUtil::SetRedMoney( value ) {
 function PopExtUtil::SetConvar( convar, value, duration = 0, hide_chat_message = true ) {
 
 	// TODO: this hack doesn't seem to work.
-	local hide_fcvar_notify
-
-	if ( hide_chat_message )
-		hide_fcvar_notify = SpawnEntityFromTable( "point_commentary_node", {targetname = "  IGNORE THIS ERROR \r"} )
+	local hide_fcvar_notify = hide_chat_message ? CommentaryNode() : null
 
 	// save original values to restore later
 	if ( !( convar in ConVars ) ) ConVars[convar] <- GetStr( convar )
 
 	// delay to ensure its set after any server configs
 	if ( GetStr( convar ) != value )
-		ScriptEntFireSafe( "BigNet", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
+		ScriptEntFireSafe( "__popext_util", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
 
 	if ( duration > 0 )
-		ScriptEntFireSafe( "BigNet", format( "PopExtUtil.SetConvar( `%s`,`%s` )", convar, ConVars[convar].tostring() ), duration )
+		ScriptEntFireSafe( "__popext_util", format( "PopExtUtil.SetConvar( `%s`,`%s` )", convar, ConVars[convar].tostring() ), duration )
 
-	if ( hide_fcvar_notify != null )
+	if ( hide_fcvar_notify )
 		EntFireByHandle( hide_fcvar_notify, "Kill", "", 1, null, null )
 }
 
 function PopExtUtil::ResetConvars( hide_chat_message = true ) {
 
-	local hide_fcvar_notify = FindByClassname( null, "point_commentary_node" )
+	local hide_fcvar_notify = hide_chat_message ? CommentaryNode() : null
 
-	if ( hide_fcvar_notify == null && hide_chat_message )
-		hide_fcvar_notify = SpawnEntityFromTable( "point_commentary_node", { targetname = "  IGNORE THIS ERROR \r" } )
-
-	foreach ( convar, value in ConVars ) 
+	foreach ( convar, value in ConVars )
 		ScriptEntFireSafe( "BigNet", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
 
 	ConVars.clear()
 
-	if ( hide_fcvar_notify != null )
+	if ( hide_fcvar_notify )
 		EntFireByHandle( hide_fcvar_notify, "Kill", "", -1, null, null )
 }
 
@@ -2517,8 +2783,8 @@ AddEventHook( "mvm_begin_wave", "UtilWaveStatus", function ( params ) { PopExtUt
 
 AddEventHook( "mvm_wave_complete", "UtilWaveStatus", function ( params ) {
 
-	PopExtUtil.IsWaveStarted = false 
-	PopExtUtil.ResetConvars( false )
+	PopExtUtil.IsWaveStarted = false
+	PopExtUtil.ResetConvars()
 
 }, EVENT_WRAPPER_UTIL )
 
@@ -2526,7 +2792,7 @@ AddEventHook( "teamplay_round_start", "UtilRoundStart", function ( params ) {
 
 	PopExtUtil.IsWaveStarted = false
 	SetPropBool( PopExtUtil.GameRules, "m_bIsInTraining", false )
-	PopExtUtil.ResetConvars( false )
+	PopExtUtil.ResetConvars()
 
 }, EVENT_WRAPPER_UTIL )
 
@@ -2548,8 +2814,8 @@ AddEventHook( "player_disconnect", "UtilPlayerDisconnect", function ( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
-	local human_table  = PopExtUtil.HumanTable
 	local bot_table    = PopExtUtil.BotTable
+	local human_table  = PopExtUtil.HumanTable
 	local player_table = PopExtUtil.PlayerTable
 
 	if ( player in human_table )
@@ -2568,8 +2834,6 @@ AddEventHook( "player_disconnect", "UtilPlayerDisconnect", function ( params ) {
 
 AddEventHook( "post_inventory_application", "UtilPostInventoryApplication", function( params ) {
 
-	if ( GetRoundState() == GR_STATE_PREROUND ) return
-
 	local player = GetPlayerFromUserID( params.userid )
 
 	if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
@@ -2580,51 +2844,8 @@ AddEventHook( "post_inventory_application", "UtilPostInventoryApplication", func
 	//sort weapons by slot
 	local myweapons = {}
 
-	for ( local i = 0; i < SLOT_COUNT; i++ ) {
+	PopExtUtil.ForEachItem( player, @( child ) myweapons[child.GetSlot()] <- child, true)
 
-		local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
-
-		if ( wep == null ) continue
-
-		myweapons[wep.GetSlot()] <- wep
-
-		//add weapon think table while we're here
-
-		local scope = PopExtUtil.GetEntScope( wep )
-
-		if ( !( "ItemThinkTable" in scope ) )
-			scope.ItemThinkTable <- {}
-
-		function ItemThinks() {
-
-			foreach ( name, func in scope.ItemThinkTable )
-				func.call( scope )
-			return -1
-		}
-		scope.ItemThinks <- ItemThinks
-		_AddThinkToEnt( wep, "ItemThinks" )
-	}
-
-	for ( local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer() ) {
-
-		local scope = PopExtUtil.GetEntScope( child )
-
-		if ( !( "ItemThinkTable" in scope ) ) 
-			scope.ItemThinkTable <- {}
-
-		if( child.GetClassname() == "tf_wearable" ) {
-
-			function ItemThinks() {
-
-				foreach ( name, func in scope.ItemThinkTable )
-					func.call( scope )
-				return -1
-			}
-
-			scope.ItemThinkTable.ItemThinks <- ItemThinks
-			_AddThinkToEnt( child, "ItemThinks" )
-		}
-	}
 	foreach( slot, wep in myweapons ) {
 
 		local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, slot )
@@ -2632,23 +2853,17 @@ AddEventHook( "post_inventory_application", "UtilPostInventoryApplication", func
 		SetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, wep, slot )
 	}
 
+	local bot_table    = PopExtUtil.BotTable
+	local human_table  = PopExtUtil.HumanTable
 	local player_table = PopExtUtil.PlayerTable
-	local bot_table = PopExtUtil.BotTable
-	local human_table = PopExtUtil.HumanTable
 
-	if ( !player_table.len() ) {
+	if ( !player_table.len() || !human_table.len() || !bot_table.len() ) {
 
-		for ( local i = 1; i <= MAX_CLIENTS; i++ ) {
-
-			local player = PlayerInstanceFromIndex( i )
+		for ( local i = 1, player; i <= MAX_CLIENTS; player = PlayerInstanceFromIndex( i ), i++ ) {
 
 			if ( !player ) continue
 
 			local scope = PopExtUtil.GetEntScope( player )
-
-			if ( !( "Preserved" in scope ) )
-				scope.Preserved <- {}
-
 			local userid = PopExtUtil.GetPlayerUserID( player )
 
 			if ( player.IsBotOfType( TF_BOT_TYPE ) )
@@ -2681,19 +2896,11 @@ AddEventHook( "post_inventory_application", "UtilPostInventoryApplication", func
 
 //shorter syntax in popfiles ( Info( message ) vs PopExtUtil.Info( message ) )
 function Info( message, print_color = COLOR_YELLOW, message_prefix = "Explanation: ", sync_chat_with_game_text = false, text_print_time = -1, text_scan_time = 0.02 ) {
-	PopExtUtil.DoExplanation( message, print_color, message_prefix, sync_chat_with_game_text, text_print_time, text_scan_time ) 
+	PopExtUtil.DoExplanation( message, print_color, message_prefix, sync_chat_with_game_text, text_print_time, text_scan_time )
 }
 
-function Explanation( message, print_color = COLOR_YELLOW, message_prefix = "Explanation: ", sync_chat_with_game_text = false, text_print_time = -1, text_scan_time = 0.02 ) { 
+function Explanation( message, print_color = COLOR_YELLOW, message_prefix = "Explanation: ", sync_chat_with_game_text = false, text_print_time = -1, text_scan_time = 0.02 ) {
 	PopExtUtil.DoExplanation( message, print_color, message_prefix, sync_chat_with_game_text, text_print_time, text_scan_time )
 }
 
 GetAllAreas( PopExtUtil.AllNavAreas )
-
-PopExtUtil.RespawnOverride.SetSolid( SOLID_BBOX )
-PopExtUtil.RespawnOverride.SetSize( Vector(), Vector( 1, 1, 1 ) )
-
-PopExtUtil.RespawnOverride.GetScriptScope().InputStartTouch <- PopExtUtil.TouchCrashFix
-PopExtUtil.RespawnOverride.GetScriptScope().Inputstarttouch <- PopExtUtil.TouchCrashFix 
-PopExtUtil.RespawnOverride.GetScriptScope().InputEndTouch   <- PopExtUtil.TouchCrashFix
-PopExtUtil.RespawnOverride.GetScriptScope().Inputendtouch   <- PopExtUtil.TouchCrashFix

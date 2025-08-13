@@ -13,11 +13,7 @@ A [documentation](https://github.com/potato-tf/PopExtensionsPlus/blob/main/docum
 
 The stucture of the library is as follows:
 
-- **PopExt**: This is the original popextensions library, **all functions from the original popextensions library must be prefixed with PopExt now**
-
-- **PopExtHooks**: This is the original hooks.nut file for popextensions.  These functions generally don't need to be touched by the end user
-
-- **PopExtUtil**:  A wide variety of utility functions.  All functions are listed in util.nut and prefixed with `PopExtUtil.`  **Some functions previously included in popextensions.nut have been moved here**
+- **PopExtUtil**:  A wide variety of utility functions.  All functions are listed in util.nut and prefixed with `PopExtUtil.`
 
 - **MissionAttributes**: Dozens of one-line key-values that mimic many of the features of rafmod/sigmod.  All keyvalues are documented in `missionattributes.nut`
 
@@ -27,11 +23,19 @@ The stucture of the library is as follows:
 
 - **CustomAttributes**: this works in combination with MissionAttributes and Tags to allow creating completely custom player and item attributes that can be applied to both players and bots.
 
+- **CustomWeapons**: A framework for creating custom weapons.  An example weapon is provided in the example popfile.
+
 - **Entity Additions**: This is a file that is run directly on an entity in the `vscripts` keyvalue.  **It is not used like other scripts in this library!**
 
 - **Main**: This is the main cleanup and include file.  These functions generally don't need to be touched by the end user.
 
 # Backwards compatibility with popextensions
+
+- **PopExt**: Modified and expanded version of the original popextensions library.
+
+- **PopExtHooks**: Modified and expanded version of the original popextensions hooks.
+
+**Some functions previously included in popextensions.nut have been moved to util.nut**
 
 All functions from the original popextensions library have been prefixed with `PopExt`.  This means that this code
 ```
@@ -100,7 +104,7 @@ The example below makes bots with tag abc green, spawns a barrel prop on bot's h
                 // Add event hooks for bots with specifed Tag.
                 PopExt.AddRobotTag(`abc`, {
                     // Called when the robot is spawned
-                    OnSpawn = function(bot, tag) {
+                    function OnSpawn (bot, tag) {
                         bot.KeyValueFromString(`rendercolor`, `0 255 0`)
                         // Create a barrel prop on bot's head
                         PopExtUtil.CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)
@@ -108,7 +112,7 @@ The example below makes bots with tag abc green, spawns a barrel prop on bot's h
                     // Called when the robot is killed
                     // Params as in player_death event in https://wiki.alliedmods.net/Team_Fortress_2_Events
                     // Params may be null if the bot was forcefully changed to spectator team
-                    OnDeath = function(bot, params) {
+                    function OnDeath (bot, params) {
                         // Restore colors back to normal as necessary
                         bot.KeyValueFromString(`rendercolor`, `255 255 255`)
                     },
@@ -142,7 +146,7 @@ Example below makes all tanks that begin with name abc red and spawn with a prop
                 // Add event hooks for tanks with specified Name, also supports wildcard suffix
                 PopExt.AddTankName(`abc*`, {
                     // Called when the tank is spawned
-                    OnSpawn = function(tank, name) {
+                    function OnSpawn (tank, name) {
                         // Create a prop on top of the tank
                         local prop = SpawnEntityFromTable(`prop_dynamic`, {model = `models/props_badlands/barrel01.mdl`, origin = `0 0 200`})
 
@@ -156,7 +160,7 @@ Example below makes all tanks that begin with name abc red and spawn with a prop
                     },
                     // Called when the tank is destroyed
                     // Params as in https://wiki.alliedmods.net/Team_Fortress_2_Events#player_hurt:~:text=level-,npc_hurt,-Name%3A
-                    OnDeath = function(tank, params) {
+                    function OnDeath (tank, params) {
                         // Decrement custom tank icon when killed
                         PopExt.DecrementWaveIconSpawnCount(`tank_red`, MVM_CLASS_FLAG_MINIBOSS | MVM_CLASS_FLAG_NORMAL, 1)
                     }

@@ -5,7 +5,7 @@ POPEXT_CREATE_SCOPE( "__popext_missionattr", "MissionAttributes", "MissionAttrEn
 if ( !( "ScriptLoadTable" in ROOT ) )   ::ScriptLoadTable   <- {}
 if ( !( "ScriptUnloadTable" in ROOT ) ) ::ScriptUnloadTable <- {}
 
-foreach ( func in ScriptLoadTable ) 
+foreach ( func in ScriptLoadTable )
 	func()
 
 delete ::ScriptLoadTable
@@ -14,8 +14,13 @@ function MissionAttributes::_OnDestroy() {
 
 	foreach ( func in ScriptUnloadTable )
 		func()
-	
+
 	delete ::ScriptUnloadTable
+
+	if ( "ExtraTankPathTracks" in this )
+		foreach ( track in ExtraTankPathTracks )
+			if ( track && track.IsValid() )
+				track.Kill()
 
 	foreach( key in [ "MissionAttr", "MissionAttrs", "MAtr", "MAtrs" ] )
 		if ( key in ROOT )
@@ -79,8 +84,8 @@ MissionAttributes.Attrs <- {
 		[ "item_healthkit*", "item_ammopack*" ]
 		.apply( function ( pickup ) {
 
-			for ( local pack; pack = FindByClassname( pack, pickup ); ) 
-				for ( local i = 0; i < GetPropArraySize( pack, STRING_NETPROP_MDLINDEX_OVERRIDES ); i++ ) 
+			for ( local pack; pack = FindByClassname( pack, pickup ); )
+				for ( local i = 0; i < GetPropArraySize( pack, STRING_NETPROP_MDLINDEX_OVERRIDES ); i++ )
 					SetPropIntArray( pack, STRING_NETPROP_MDLINDEX_OVERRIDES, 0, i )
 		})
 	}
@@ -177,7 +182,7 @@ MissionAttributes.Attrs <- {
 						SetPropString( self, "m_iszScriptThinkFunction", "" )
 					}
 				}
-				victim.GetScriptScope().PlayerThinkTable.BotModelThink <- BotModelThink
+				PopExtUtil.AddThink( victim, BotModelThink )
 			}
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
@@ -239,8 +244,8 @@ MissionAttributes.Attrs <- {
 
 			function MoneyThink() {
 
-				if ( player.GetPlayerClass() != TF_CLASS_SCOUT || "ReverseMVMCurrencyThink" in player.GetScriptScope().PlayerThinkTable ) {
-					delete player.GetScriptScope().PlayerThinkTable.MoneyThink
+				if ( player.GetPlayerClass() != TF_CLASS_SCOUT ) {
+					PopExtUtil.RemoveThink( player, "MoneyThink" )
 					return
 				}
 
@@ -248,7 +253,7 @@ MissionAttributes.Attrs <- {
 				for ( local money; money = FindByClassnameWithin( money, "item_currencypack*", player.GetOrigin(), SCOUT_MONEY_COLLECTION_RADIUS ); )
 					money.SetAbsOrigin( origin )
 			}
-			player.GetScriptScope().PlayerThinkTable.MoneyThink <- MoneyThink
+			PopExtUtil.AddThink( player, MoneyThink )
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 
@@ -285,7 +290,7 @@ MissionAttributes.Attrs <- {
 					scope.holdingfire = false
 				}
 			}
-			scope.PlayerThinkTable.HoldFireThink <- HoldFireThink
+			PopExtUtil.AddThink( player, HoldFireThink )
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 
@@ -316,26 +321,26 @@ MissionAttributes.Attrs <- {
 			scope.nextthink <- -1
 			function EngineerBuildingPushbackThink() {
 
-				if ( !( "nextthink" in scope ) || ( nextthink > -1 && Time() < nextthink ) ) return
+				if ( !( "nextthink" in scope ) || ( scope.nextthink > -1 && Time() < scope.nextthink ) ) return
 
-				if ( !self.IsAlive() ) return
+				if ( !player.IsAlive() ) return
 
-				local velocity = self.GetAbsVelocity()
+				local velocity = player.GetAbsVelocity()
 
-				local wep       = self.GetActiveWeapon()
+				local wep       = player.GetActiveWeapon()
 				local classname = ( wep != null ) ? wep.GetClassname() : ""
 				local lastfire  = GetPropFloat( wep, "m_flLastFireTime" )
 
 				// We might have been pushed by an engineer building something, lets double check
-				if ( "lastvelocity" in scope && fabs( ( lastvelocity - velocity ).Length() - 700 ) < epsilon ) {
+				if ( "lastvelocity" in scope && fabs( ( scope.lastvelocity - velocity ).Length() - 700 ) < epsilon ) {
 					// Blast jumping can generate this type of velocity change in a frame, lets check for that
-					if ( self.InCond( TF_COND_BLASTJUMPING ) && classname in blastjump_weapons && ( Time() - lastfire < 0.1 ) )
+					if ( player.InCond( TF_COND_BLASTJUMPING ) && classname in blastjump_weapons && ( Time() - lastfire < 0.1 ) )
 						return
 
 					// Even with the above check, some things still sneak through so lets continue filtering
 
 					// Look around us to see if there's a building hint and bot engineer within range
-					local origin   = self.GetOrigin()
+					local origin   = player.GetOrigin()
 					local engie    = null
 					local hint     = null
 
@@ -352,22 +357,22 @@ MissionAttributes.Attrs <- {
 					// Counteract impulse velocity
 					if ( hint != null && engie != null ) {
 						// ClientPrint( null, 3, "COUNTERACTING VELOCITY" )
-						local dir =  self.EyePosition() - hint.GetOrigin()
+						local dir =  player.EyePosition() - hint.GetOrigin()
 
 						dir.z = 0
 						dir.Norm()
 						dir.z = 1
 
 						local push = dir * 500
-						self.SetAbsVelocity( velocity - push )
+						player.SetAbsVelocity( velocity - push )
 
 						scope.nextthink = Time() + 1
 					}
 				}
 
-				lastvelocity = velocity
+				scope.lastvelocity = velocity
 			}
-			scope.PlayerThinkTable.EngineerBuildingPushbackThink <- EngineerBuildingPushbackThink
+			PopExtUtil.AddThink( player, EngineerBuildingPushbackThink )
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 	// =================================
@@ -465,7 +470,7 @@ MissionAttributes.Attrs <- {
 				if ( !groundent || !groundent.IsPlayer() || PopExtUtil.InButton( player, movekeys ) ) return
 				player.SetAbsVelocity( Vector() )
 			}
-			player.GetScriptScope().PlayerThinkTable.StandableHeadsThink <- StandableHeadsThink
+			PopExtUtil.AddThink( player, StandableHeadsThink )
 
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
@@ -913,8 +918,11 @@ MissionAttributes.Attrs <- {
 	function TeamWipeWaveLoss( value ) {
 
 		PopEventHook("player_death", "TeamWipeWaveLoss", function( params ) {
+
 			if ( !PopExtUtil.IsWaveStarted ) return
-			PopExtUtil.ScriptEntFireSafe( "BigNet", "if ( PopExtUtil.CountAlivePlayers() == 0 ) EntFire( `__popext_roundwin`, `RoundWin` )" )
+
+			PopExtUtil.ScriptEntFireSafe( "__popext_util", "if ( CountAlivePlayers() == 0 ) EntFire( `__popext_roundwin`, `RoundWin` )" )
+
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 
@@ -1066,11 +1074,10 @@ MissionAttributes.Attrs <- {
 					scope.stepside = GetPropInt( self,"m_Local.m_nStepside" )
 					return -1
 				}
-				if ( !( "StepThink" in scope.PlayerThinkTable ) )
-					scope.PlayerThinkTable.StepThink <- StepThink
-
-
-			} else if ( "StepThink" in scope.PlayerThinkTable ) delete scope.PlayerThinkTable.StepThink
+				PopExtUtil.AddThink( player, StepThink )
+			}
+			else
+				PopExtUtil.RemoveThink( player, "StepThink" )
 
 			if ( value & 8 ) {
 
@@ -1119,12 +1126,13 @@ MissionAttributes.Attrs <- {
 					return -1
 				}
 
-			} else if ( "RobotVOThink" in scope.PlayerThinkTable ) delete scope.PlayerThinkTable.RobotVOThink
+			} else
+				PopExtUtil.RemoveThink( player, "RobotVOThink" )
 
 			if ( value & 16 ) {
 
 				//run this with a delay for LoadoutControl
-				PopExtUtil.ScriptEntFireSafe( player, @"	
+				PopExtUtil.ScriptEntFireSafe( player, @"
 
 					if ( `HandModelOverride` in MissionAttributes.CurAttrs ) return
 
@@ -1154,11 +1162,11 @@ MissionAttributes.Attrs <- {
 
 	// =======================================================
 	// Uses bitflags to change behavior:
-	// 1   =	 Blu bots use human models.
-	// 2   = 	 Blu bots use zombie models. Overrides human models.
-	// 4   =	 Red bots use human models.
-	// 4   =	 Red bots use zombie models. Overrides human models.
-	// 128 = 	 Include buster
+	// 1   = Blu bots use human models.
+	// 2   = Blu bots use zombie models. Overrides human models.
+	// 4   = Red bots use human models.
+	// 8   = Red bots use zombie models. Overrides human models.
+	// 128  = Include buster
 	// =======================================================
 
 	function BotsAreHumans( value ) {
@@ -1167,10 +1175,8 @@ MissionAttributes.Attrs <- {
 
 			local player = GetPlayerFromUserID( params.userid )
 
-			if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
+			if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) || !player.IsBotOfType( TF_BOT_TYPE ) )
 				return
-
-			if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
 			if ( "usingcustommodel" in player.GetScriptScope() || ( !( value & 128 ) && player.GetModelName() ==  "models/bots/demo/bot_sentry_buster.mdl" ) ) return
 
@@ -1484,12 +1490,24 @@ MissionAttributes.Attrs <- {
 
 	function ExtraTankPath( value ) {
 
-		if ( typeof value != "array" ) {
-			PopExtMain.Error.RaiseTypeError( "ExtraTankPath", "array" )
+		if ( typeof value != "array" && typeof value != "table" ) {
+
+			PopExtMain.Error.RaiseTypeError( "ExtraTankPath", "array or table" )
 			return false
 		}
+
 		if ( !( "ExtraTankPathTracks" in MissionAttributes ) )
 			MissionAttributes.ExtraTankPathTracks <- []
+
+		local path_name = "extratankpath"
+
+		if ( typeof value == "table" ) {
+
+			if ( "name" in value )
+				path_name = value.name
+
+			value = value.tracks
+		}
 
 		// we get silly
 		// converts a mixed array of space/comma separated xyz values, or Vectors, into an array of Vectors
@@ -1509,14 +1527,15 @@ MissionAttributes.Attrs <- {
 
 		foreach ( path in paths ) {
 
-			MissionAttributes.PathNum++
+			PathNum++
 
-			for ( local path; path = FindByName( path, "extratankpath*" ); )
+			for ( local path; path = FindByName( path, format( "%s*", path_name ) ); )
 				EntFireByHandle( path, "Kill", "", -1, null, null )
 
 			foreach ( i, pos in path ) {
-				local trackname = format( "extratankpath%d_%d", MissionAttributes.PathNum, i+1 )
-				local nexttrackname = format( "extratankpath%d_%d", MissionAttributes.PathNum, i+2 )
+
+				local trackname = format( "%s%d_%d", path_name, PathNum, i+1 )
+				local nexttrackname = format( "%s%d_%d", path_name, PathNum, i+2 )
 
 				local track = {
 					targetname = trackname
@@ -1529,6 +1548,7 @@ MissionAttributes.Attrs <- {
 			}
 		}
 		spawner.AcceptInput( "ForceSpawn", "", null, null )
+		ExtraTankPathTracks.extend( scope.tracks )
 		spawner.Kill()
 	}
 
@@ -1586,7 +1606,7 @@ MissionAttributes.Attrs <- {
 					wep.SetCustomViewModel( vmodel )
 				}
 			}
-			scope.PlayerThinkTable.ArmThink <- ArmThink
+			PopExtUtil.AddThink( player, "ArmThink" )
 
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
@@ -1702,9 +1722,9 @@ MissionAttributes.Attrs <- {
 
 				local wep = PopExtUtil.HasItemInLoadout( player, item )
 
-				if ( wep == null ) return
+				if ( !wep ) return
 
-				if ( GetPropEntity( wep, "m_hExtraWearable" ) != null ) {
+				if ( GetPropEntity( wep, "m_hExtraWearable" ) ) {
 
 					GetPropEntity( wep, "m_hExtraWearableViewModel" ).Kill()
 					GetPropEntity( wep, "m_hExtraWearable" ).Kill()
@@ -1712,7 +1732,7 @@ MissionAttributes.Attrs <- {
 
 				wep.Kill()
 
-				if ( replacement == null ) return
+				if ( !replacement ) return
 
 				try
 
@@ -1924,7 +1944,7 @@ MissionAttributes.Attrs <- {
 					}
 				}
 			}
-			player.GetScriptScope().PlayerThinkTable.NoThrillerTaunt <- NoThrillerTauntThink
+			PopExtUtil.AddThink( player, NoThrillerTauntThink )
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 	// =====================================
@@ -2129,7 +2149,7 @@ MissionAttributes.Attrs <- {
 			//do this so we can do CancelPending
 			local deployrelay = SpawnEntityFromTable( "logic_relay", {
 				targetname = "__bombdeploy"
-				"OnTrigger#1": "bignet,RunScriptCode,PopExtUtil.EndWaveReverse(),2,-1"
+				"OnTrigger#1": "__popext_util,CallScriptFunction,EndWaveReverse,2,-1"
 				"OnTrigger#2": "boss_deploy_relay,Trigger,,2,-1"
 			})
 			if ( GetPropEntity( player, "m_hItem" ) == null ) return
@@ -2218,12 +2238,8 @@ MissionAttributes.Attrs <- {
 				return
 
 			if ( player.IsBotOfType( TF_BOT_TYPE ) ) return
-			local scope = player.GetScriptScope()
 
-			if ( "ReverseMVMCurrencyThink" in scope.PlayerThinkTable ) delete scope.PlayerThinkTable.ReverseMVMCurrencyThink
-			if ( "ReverseMVMPackThink" in scope.PlayerThinkTable )  delete scope.PlayerThinkTable.ReverseMVMPackThink
-			if ( "ReverseMVMLaserThink" in scope.PlayerThinkTable )  delete scope.PlayerThinkTable.ReverseMVMLaserThink
-			if ( "ReverseMVMDrainAmmoThink" in scope.PlayerThinkTable )  delete scope.PlayerThinkTable.ReverseMVMDrainAmmoThink
+			local scope = player.GetScriptScope()
 
 			// Switch to blue team
 			if ( player.GetTeam() != TF_TEAM_PVE_INVADERS ) {
@@ -2234,18 +2250,21 @@ MissionAttributes.Attrs <- {
 			PopExtUtil.ScriptEntFireSafe( player, @"
 				for ( local ent; ent = FindByClassname( ent, `env_laserdot` ); )
 					if ( ent.GetOwner() == self )
-						ent.Kill()
+						EntFireByHandle( ent, `Kill`, ``, -1, null, null )
 			", 0.5 )
 
 			// Temporary solution for engie wrangler laser
 			scope.handled_laser   <- false
 			function ReverseMVMLaserThink() {
 
-				if ( !( "laser_spawntime" in scope ) ) scope.laser_spawntime <- -1
+				if ( !( "laser_spawntime" in scope ) )
+					scope.laser_spawntime <- -1
+
+				local laser_spawntime = scope.laser_spawntime
 
 				if ( !player.IsAlive() || player.GetTeam() == TEAM_SPECTATOR ) return
 
-				local wep = self.GetActiveWeapon()
+				local wep = player.GetActiveWeapon()
 
 				if ( wep && wep.GetClassname() == "tf_weapon_laser_pointer" ) {
 					if ( laser_spawntime == -1 )
@@ -2264,7 +2283,7 @@ MissionAttributes.Attrs <- {
 
 				local laser = null
 				for ( local ent; ent = FindByClassname( ent, "env_laserdot" ); ) {
-					if ( ent.GetOwner() == self ) {
+					if ( ent.GetOwner() == player ) {
 						laser = ent
 						break
 					}
@@ -2272,16 +2291,16 @@ MissionAttributes.Attrs <- {
 
 				for ( local ent; ent = FindByClassname( ent, "obj_sentrygun" ); ) {
 					local builder = GetPropEntity( ent, "m_hBuilder" )
-					if ( builder != self ) continue
+					if ( builder != player ) continue
 
 					if ( !GetPropBool( ent, "m_bPlayerControlled" ) || laser == null ) continue
 
-					originalposition <- self.GetOrigin()
-					originalvelocity <- self.GetAbsVelocity()
-					originalmovetype <- self.GetMoveType()
-					self.SetAbsOrigin( ent.GetOrigin() + Vector( 0, 0, -32 ) )
-					self.SetAbsVelocity( Vector() )
-					self.SetMoveType( MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT )
+					originalposition <- player.GetOrigin()
+					originalvelocity <- player.GetAbsVelocity()
+					originalmovetype <- player.GetMoveType()
+					player.SetAbsOrigin( ent.GetOrigin() + Vector( 0, 0, -32 ) )
+					player.SetAbsVelocity( Vector() )
+					player.SetMoveType( MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT )
 					PopExtUtil.ScriptEntFireSafe( laser, "self.SetTeam( TF_TEAM_PVE_DEFENDERS )", SINGLE_TICK )
 					PopExtUtil.ScriptEntFireSafe( self, "self.SetAbsOrigin( originalposition ); self.SetAbsVelocity( originalvelocity ); self.SetMoveType( originalmovetype, MOVECOLLIDE_DEFAULT )", SINGLE_TICK )
 
@@ -2292,15 +2311,14 @@ MissionAttributes.Attrs <- {
 				if ( !handled_laser && laser != null )
 					laser.Kill()
 			}
-			scope.PlayerThinkTable.ReverseMVMLaserThink <- ReverseMVMLaserThink
 
 			// Allow money collection
 			local collectionradius = 0
 			function ReverseMVMCurrencyThink() {
 
 				// Find currency near us
-				local origin = self.GetOrigin()
-				self.GetPlayerClass() != TF_CLASS_SCOUT ? collectionradius = 72 : collectionradius = 288
+				local origin = player.GetOrigin()
+				player.GetPlayerClass() != TF_CLASS_SCOUT ? collectionradius = 72 : collectionradius = 288
 
 				for ( local moneypile; moneypile = FindByClassnameWithin( moneypile, "item_currencypack_*", origin, collectionradius ); ) {
 
@@ -2325,10 +2343,10 @@ MissionAttributes.Attrs <- {
 					EmitSoundOn( "MVM.MoneyPickup", player )
 
 					// scout money healing
-					if ( self.GetPlayerClass() == TF_CLASS_SCOUT ) {
+					if ( player.GetPlayerClass() == TF_CLASS_SCOUT ) {
 
-						local cur_health = self.GetHealth()
-						local max_health = self.GetMaxHealth()
+						local cur_health = player.GetHealth()
+						local max_health = player.GetMaxHealth()
 						local health_addition = cur_health < max_health ? 50 : 25
 
 						// If we cross the border into insanity, scale the reward
@@ -2338,16 +2356,16 @@ MissionAttributes.Attrs <- {
 							health_addition = PopExtUtil.RemapValClamped( cur_health, health_cap, ( health_cap * 1.5 ), 20, 5 )
 						}
 
-						self.SetHealth( cur_health + health_addition )
+						player.SetHealth( cur_health + health_addition )
 					}
 				}
 			}
-			scope.PlayerThinkTable.ReverseMVMCurrencyThink <- ReverseMVMCurrencyThink
 
 			// Allow health/ammo pack pickup
 			function ReverseMVMPackThink() {
 
-				local origin = self.GetOrigin()
+				local origin = player.GetOrigin()
+
 				for ( local ent; ent = FindByClassnameWithin( ent, "item_*", origin, 40 ); ) {
 
 					if ( ent.IsEFlagSet( EFL_USER ) || GetPropInt( ent, "m_fEffects" ) & EF_NODRAW ) continue
@@ -2365,7 +2383,7 @@ MissionAttributes.Attrs <- {
 
 					if ( startswith( classname, "item_ammopack_" ) ) {
 
-						local metal    = GetPropIntArray( self, STRING_NETPROP_AMMO, TF_AMMO_METAL )
+						local metal    = GetPropIntArray( player, STRING_NETPROP_AMMO, TF_AMMO_METAL )
 						local maxmetal = 200
 
 						if ( metal < maxmetal ) {
@@ -2373,14 +2391,14 @@ MissionAttributes.Attrs <- {
 							local maxmult  = PopExtUtil.Round( maxmetal * multiplier )
 							local setvalue = ( metal + maxmult > maxmetal ) ? maxmetal : metal + maxmult
 
-							SetPropIntArray( self, STRING_NETPROP_AMMO, setvalue, TF_AMMO_METAL )
+							SetPropIntArray( player, STRING_NETPROP_AMMO, setvalue, TF_AMMO_METAL )
 							refill = true
 						}
 
 						for ( local i = 0; i < SLOT_MELEE; i++ ) {
-							local wep     = PopExtUtil.GetItemInSlot( self, i )
-							local ammo    = GetPropIntArray( self, STRING_NETPROP_AMMO, i+1 )
-							local maxammo = PopExtUtil.GetWeaponMaxAmmo( self, wep )
+							local wep     = PopExtUtil.GetItemInSlot( player, i )
+							local ammo    = GetPropIntArray( player, STRING_NETPROP_AMMO, i+1 )
+							local maxammo = PopExtUtil.GetWeaponMaxAmmo( player, wep )
 
 							if ( ammo >= maxammo )
 								continue
@@ -2388,7 +2406,7 @@ MissionAttributes.Attrs <- {
 								local maxmult  = PopExtUtil.Round( maxammo * multiplier )
 								local setvalue = ( ammo + maxmult > maxammo ) ? maxammo : ammo + maxmult
 
-								SetPropIntArray( self, STRING_NETPROP_AMMO, setvalue, i+1 )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, setvalue, i+1 )
 								refill = true
 							}
 						}
@@ -2398,36 +2416,36 @@ MissionAttributes.Attrs <- {
 
 						is_health = true
 
-						local hp    = self.GetHealth()
-						local maxhp = self.GetMaxHealth()
+						local hp    = player.GetHealth()
+						local maxhp = player.GetMaxHealth()
 						if ( hp >= maxhp ) continue
 
 						refill = true
 
 						local maxmult  = PopExtUtil.Round( maxhp * multiplier )
 						local setvalue = ( hp + maxmult > maxhp ) ? maxhp : hp + maxmult
-						self.ExtinguishPlayerBurning()
+						player.ExtinguishPlayerBurning()
 
 						SendGlobalGameEvent( "player_healed", {
-							patient = PopExtUtil.PlayerTable[ self ]
+							patient = PopExtUtil.PlayerTable[ player ]
 							healer  = 0
 							amount  = setvalue - hp
 						})
 						SendGlobalGameEvent( "player_healonhit", {
-							entindex         = self.entindex()
+							entindex         = player.entindex()
 							weapon_def_index = 65535
 							amount           = setvalue - hp
 						})
 
-						self.SetHealth( setvalue )
+						player.SetHealth( setvalue )
 					}
 
 					if ( refill ) {
 
 						if ( is_health )
-							EmitSoundOnClient( "HealthKit.Touch", self )
+							EmitSoundOnClient( "HealthKit.Touch", player )
 						else
-							EmitSoundOnClient( "AmmoPack.Touch", self )
+							EmitSoundOnClient( "AmmoPack.Touch", player )
 
 						ent.AddEFlags( EFL_USER )
 						EntFireByHandle( ent, "Disable", "", -1, null, null )
@@ -2437,13 +2455,12 @@ MissionAttributes.Attrs <- {
 					}
 				}
 			}
-			scope.PlayerThinkTable.ReverseMVMPackThink <- ReverseMVMPackThink
 
 			// Drain player ammo on weapon usage
 			function ReverseMVMDrainAmmoThink() {
 
 				if ( value & 4 ) return
-				local buttons = GetPropInt( self, "m_nButtons" )
+				local buttons = GetPropInt( player, "m_nButtons" )
 
 				local wep = player.GetActiveWeapon()
 				if ( wep == null || wep.IsMeleeWeapon() ) return
@@ -2473,13 +2490,13 @@ MissionAttributes.Attrs <- {
 					// We reloaded
 					if ( clip > scope.lastclip ) {
 						local difference = clip - scope.lastclip
-						if ( self.GetPlayerClass() == TF_CLASS_SPY && classname == "tf_weapon_revolver" ) {
-							local maxammo = GetPropIntArray( self, STRING_NETPROP_AMMO, SLOT_SECONDARY + 1 )
-							SetPropIntArray( self, STRING_NETPROP_AMMO, maxammo - difference, SLOT_SECONDARY + 1 )
+						if ( player.GetPlayerClass() == TF_CLASS_SPY && classname == "tf_weapon_revolver" ) {
+							local maxammo = GetPropIntArray( player, STRING_NETPROP_AMMO, SLOT_SECONDARY + 1 )
+							SetPropIntArray( player, STRING_NETPROP_AMMO, maxammo - difference, SLOT_SECONDARY + 1 )
 						}
 						else {
-							local maxammo = GetPropIntArray( self, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
-							SetPropIntArray( self, STRING_NETPROP_AMMO, maxammo - difference, wep.GetSlot() + 1 )
+							local maxammo = GetPropIntArray( player, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
+							SetPropIntArray( player, STRING_NETPROP_AMMO, maxammo - difference, wep.GetSlot() + 1 )
 						}
 					}
 
@@ -2490,22 +2507,22 @@ MissionAttributes.Attrs <- {
 						local recharge = GetPropFloat( player, "m_Shared.m_flItemChargeMeter" )
 						if ( recharge == 0 ) {
 							local cost = ( sequence == 13 ) ? 2 : 1
-							local maxammo = GetPropIntArray( self, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
+							local maxammo = GetPropIntArray( player, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
 
 							if ( maxammo - cost > -1 )
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxammo - cost, wep.GetSlot() + 1 )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxammo - cost, wep.GetSlot() + 1 )
 						}
 					}
 					else if ( classname == "tf_weapon_flamethrower" ) {
 						if ( sequence == 12 ) return // Weapon deploy
 						if ( Time() < scope.nextattack ) return
 
-						local maxammo = GetPropIntArray( self, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
+						local maxammo = GetPropIntArray( player, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
 
 						// The airblast sequence lasts 0.25s too long so we check against it here
 						if ( buttons & IN_ATTACK && sequence != 13 ) {
 							if ( maxammo - 1 > -1 ) {
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
 								scope.nextattack <- Time() + 0.105
 							}
 						}
@@ -2517,7 +2534,7 @@ MissionAttributes.Attrs <- {
 								cost = 25
 
 							if ( maxammo - cost > -1 ) {
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxammo - cost, wep.GetSlot() + 1 )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxammo - cost, wep.GetSlot() + 1 )
 								scope.nextattack <- Time() + 0.75
 							}
 						}
@@ -2526,45 +2543,45 @@ MissionAttributes.Attrs <- {
 						local nextattack = GetPropFloat( wep, "m_flNextPrimaryAttack" )
 						if ( Time() < nextattack ) return
 
-						local maxammo = GetPropIntArray( self, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
+						local maxammo = GetPropIntArray( player, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
 						if ( buttons & IN_ATTACK ) {
 							if ( maxammo - 1 > -1 )
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
 						}
 					}
 					else if ( classname == "tf_weapon_minigun" ) {
 						local nextattack = GetPropFloat( wep, "m_flNextPrimaryAttack" )
 						if ( Time() < nextattack ) return
 
-						local maxammo = GetPropIntArray( self, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
+						local maxammo = GetPropIntArray( player, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
 						if ( sequence == 21 ) {
 							if ( maxammo - 1 > -1 )
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
 						}
 						else if ( sequence == 25 ) {
 							if ( Time() < scope.nextattack ) return
 							if ( itemid != ID_HUO_LONG_HEATMAKER && itemid != ID_GENUINE_HUO_LONG_HEATMAKER ) return
 
 							if ( maxammo - 1 > -1 ) {
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
 								scope.nextattack <- Time() + 0.25
 							}
 						}
 					}
 					else if ( classname == "tf_weapon_mechanical_arm" ) {
 						// Reset hack
-						SetPropIntArray( self, STRING_NETPROP_AMMO, 0, TF_AMMO_GRENADES1 )
+						SetPropIntArray( player, STRING_NETPROP_AMMO, 0, TF_AMMO_GRENADES1 )
 						SetPropInt( wep, "m_iPrimaryAmmoType", TF_AMMO_METAL )
 
 						local nextattack1 = GetPropFloat( wep, "m_flNextPrimaryAttack" )
 						local nextattack2 = GetPropFloat( wep, "m_flNextSecondaryAttack" )
 
-						local maxmetal = GetPropIntArray( self, STRING_NETPROP_AMMO, TF_AMMO_METAL )
+						local maxmetal = GetPropIntArray( player, STRING_NETPROP_AMMO, TF_AMMO_METAL )
 
 						if ( buttons & IN_ATTACK ) {
 							if ( Time() < nextattack1 ) return
 							if ( maxmetal - 5 > -1 ) {
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxmetal - 5, TF_AMMO_METAL )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxmetal - 5, TF_AMMO_METAL )
 								// This prevents an exploit where you M1 and M2 in rapid succession to evade the 65 orb cost
 								SetPropFloat( wep, "m_flNextSecondaryAttack", Time() + 0.25 )
 							}
@@ -2574,10 +2591,10 @@ MissionAttributes.Attrs <- {
 
 							if ( maxmetal - 65 > -1 ) {
 								// Hack to get around the game blocking SecondaryAttack below 65 metal
-								SetPropIntArray( self, STRING_NETPROP_AMMO, INT_MAX, TF_AMMO_GRENADES1 )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, INT_MAX, TF_AMMO_GRENADES1 )
 								SetPropInt( wep, "m_iPrimaryAmmoType", TF_AMMO_GRENADES1 )
 
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxmetal - 65, TF_AMMO_METAL )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxmetal - 65, TF_AMMO_METAL )
 							}
 						}
 					}
@@ -2585,11 +2602,11 @@ MissionAttributes.Attrs <- {
 						local nextattack = GetPropFloat( wep, "m_flNextPrimaryAttack" )
 						if ( Time() < nextattack ) return
 
-						local maxmetal = GetPropIntArray( self, STRING_NETPROP_AMMO, TF_AMMO_METAL )
+						local maxmetal = GetPropIntArray( player, STRING_NETPROP_AMMO, TF_AMMO_METAL )
 
 						if ( buttons & IN_ATTACK ) {
 							if ( maxmetal - 30 > -1 )
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxmetal - 30, TF_AMMO_METAL )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxmetal - 30, TF_AMMO_METAL )
 						}
 					}
 					else if ( classname == "tf_weapon_sniperrifle" || itemid == ID_BAZAAR_BARGAIN || itemid == ID_CLASSIC ) {
@@ -2597,14 +2614,19 @@ MissionAttributes.Attrs <- {
 						if ( scope.lastattack == lastfire ) return
 
 						scope.lastattack <- lastfire
-						local maxammo = GetPropIntArray( self, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
+						local maxammo = GetPropIntArray( player, STRING_NETPROP_AMMO, wep.GetSlot() + 1 )
 						if ( scope.lastattack > 0 && scope.lastattack < Time() ) {
 							if ( maxammo - 1 > -1 )
-								SetPropIntArray( self, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
+								SetPropIntArray( player, STRING_NETPROP_AMMO, maxammo - 1, wep.GetSlot() + 1 )
 						}
 					}
 				}
 			}
+
+			PopExtUtil.AddThink( player, ReverseMVMLaserThink )
+			PopExtUtil.AddThink( player, ReverseMVMCurrencyThink )
+			PopExtUtil.AddThink( player, ReverseMVMPackThink )
+			PopExtUtil.AddThink( player, ReverseMVMDrainAmmoThink )
 
 			if ( player.GetPlayerClass() == TF_CLASS_ENGINEER ) {
 
@@ -2680,15 +2702,15 @@ MissionAttributes.Attrs <- {
 					if ( value & 32 )
 						player.AddCustomAttribute( "no_attack", 1, 0.033 )
 				}
-				scope.PlayerThinkTable.InRespawnThink <- InRespawnThink
+				PopExtUtil.AddThink( player, InRespawnThink )
 			}
 
 			// disable footsteps
 			if ( value & 64 ) {
 				// player.AddCond( TF_COND_DISGUISED )
-				// scope.PlayerThinkTable.RemoveFootsteps <- function() {
+				// PopExtUtil.AddThink( player, function RemoveFootsteps() {
 				// 	if ( !player.IsMiniBoss() ) player.SetIsMiniBoss( true )
-				// }
+				// })
 
 				//stop explosion sound
 				PopEventHook("player_death", "RemoveFootsteps", function( params ) {
@@ -2713,19 +2735,19 @@ MissionAttributes.Attrs <- {
 			}
 		}, EVENT_WRAPPER_MISSIONATTR )
 
-		PopEventHook("player_team", "BlockSpectator", function( params ) {
+		// PopEventHook("player_team", "BlockSpectator", function( params ) {
 
-			local player = GetPlayerFromUserID( params.userid )
-			if ( player.IsBotOfType( TF_BOT_TYPE ) ) return
+		// 	local player = GetPlayerFromUserID( params.userid )
+		// 	if ( player.IsBotOfType( TF_BOT_TYPE ) ) return
 
-			if (
-				player && player.IsValid()
-				&& params.team == TEAM_SPECTATOR
-				&& params.oldteam == TF_TEAM_PVE_INVADERS
-			) {
-				PopExtUtil.ScriptEntFireSafe( player, "PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_INVADERS, true )", SINGLE_TICK )
-			}
-		}, EVENT_WRAPPER_MISSIONATTR )
+		// 	if (
+		// 		player && player.IsValid()
+		// 		&& params.team == TEAM_SPECTATOR
+		// 		&& params.oldteam == TF_TEAM_PVE_INVADERS
+		// 	) {
+		// 		PopExtUtil.ScriptEntFireSafe( player, "PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_INVADERS, true )", SINGLE_TICK )
+		// 	}
+		// }, EVENT_WRAPPER_MISSIONATTR )
 	}
 
 	function HumansMustJoinTeam( value ) {
@@ -2782,7 +2804,7 @@ MissionAttributes.Attrs <- {
 		MissionAttributes.ClassLimits <- value
 
 		// Dump overflow players to free classes on wave init.
-		PopExtUtil.ScriptEntFireSafe( "BigNet", @"
+		PopExtUtil.ScriptEntFireSafe( "__popext_missionattr", @"
 
 			local initcounts = PopExtUtil.PlayerClassCount()
 			local classes = array( TF_CLASS_COUNT_ALL, 0 )
@@ -2792,10 +2814,10 @@ MissionAttributes.Attrs <- {
 				local pclass = player.GetPlayerClass()
 				classes[pclass]++
 
-				if ( pclass in MissionAttributes.ClassLimits && classes[pclass] > MissionAttributes.ClassLimits[pclass] ) {
+				if ( pclass in ClassLimits && classes[pclass] > ClassLimits[pclass] ) {
 
 					local nobreak = 1
-					foreach ( i, targetcount in MissionAttributes.ClassLimits ) {
+					foreach ( i, targetcount in ClassLimits ) {
 
 						if ( targetcount > initcounts[i] ) {
 
@@ -2896,7 +2918,7 @@ MissionAttributes.Attrs <- {
 			return false
 		}
 
-		if ( !PopExtMain.IncludeModules( "wavebar" ) ) 
+		if ( !PopExtMain.IncludeModules( "wavebar" ) )
 			return false
 
 		local wave = PopExtUtil.CurrentWaveNum
@@ -2964,7 +2986,7 @@ MissionAttributes.Attrs <- {
 
 			if ( entname == "" ) return
 
-			SetPropString( ent, "m_iName", entname.tolower() )
+			SetPropString( ent, STRING_NETPROP_NAME, entname.tolower() )
 		})
 	}
 
@@ -2974,7 +2996,7 @@ MissionAttributes.Attrs <- {
 
 			local player = GetPlayerFromUserID( params.userid )
 
-			if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) || !player.IsBotOfType( TF_BOT_TYPE ) ) 
+			if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) || !player.IsBotOfType( TF_BOT_TYPE ) )
 				return
 
 			local viewmodel = GetPropEntityArray( player, "m_hViewModel", 0 )
@@ -2999,7 +3021,7 @@ MissionAttributes.Attrs <- {
 
 			local player = GetPlayerFromUserID( params.userid )
 
-			if ( 
+			if (
 				player.IsEFlagSet( EFL_CUSTOM_WEARABLE )
 				|| ( !player.IsBotOfType( TF_BOT_TYPE ) && !(value & 2) )
 				|| !( player.GetPlayerClass() in validclasses )
@@ -3029,34 +3051,33 @@ MissionAttributes.Attrs <- {
 
 			function UnusedGiantFootstepsThink() {
 
-				local _player = self
-
-				if ( !_player.IsMiniBoss() ) return
+				if ( !player.IsMiniBoss() ) return
 
 				if ( !"stepside" in scope )
-					stepside <- GetPropInt( _player, "m_Local.m_nStepside" )
+					scope.stepside <- GetPropInt( player, "m_Local.m_nStepside" )
 
 				if ( !("stepcount" in scope) )
-					stepcount <- 1
+					scope.stepcount <- 1
 
-				if ( GetPropInt( _player, "m_Local.m_nStepside" ) == stepside ) return
+				if ( GetPropInt( player, "m_Local.m_nStepside" ) == scope.stepside ) return
 
 				local footstepsound = format( "^mvm/giant_%s/giant_%s_step_0%d.wav", cstring, cstring, RandomInt( 1, 4 ) )
 
-				if ( _player.GetPlayerClass() == TF_CLASS_DEMOMAN )
+				if ( player.GetPlayerClass() == TF_CLASS_DEMOMAN )
 					footstepsound = format( "^mvm/giant_demoman/giant_demoman_step_0%d.wav", RandomInt( 1, 4 ) )
 
-				else if ( _player.GetPlayerClass() == TF_CLASS_SOLDIER || _player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS )
+				else if ( player.GetPlayerClass() == TF_CLASS_SOLDIER || player.GetPlayerClass() == TF_CLASS_HEAVYWEAPONS )
 					footstepsound = format( "^mvm/giant_%s/giant_%s_step0%d.wav", cstring, cstring, RandomInt( 1, 4 ) )
 
 				// play sound every other step, otherwise it's spammy
-				if ( value & 4 || stepcount % 2 == 0 )
-					_player.EmitSound( footstepsound )
+				if ( value & 4 || scope.stepcount % 2 == 0 )
+					player.EmitSound( footstepsound )
 
-				stepcount++
-				stepside = ( GetPropInt( _player, "m_Local.m_nStepside" ) )
+				scope.stepcount++
+				scope.stepside = ( GetPropInt( player, "m_Local.m_nStepside" ) )
 			}
-			scope.PlayerThinkTable.UnusedGiantFootsteps <- UnusedGiantFootstepsThink
+			PopExtUtil.AddThink( player, UnusedGiantFootstepsThink )
+
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 
@@ -3156,6 +3177,8 @@ function MissionAttributes::MissionAttr( ... ) {
 	}
 
 	if ( attr in Attrs ) {
+
+		Attrs[attr] <- Attrs[attr].bindenv( MissionAttributes )
 
 		local success = Attrs[attr]( value )
 		if ( success == false ) {

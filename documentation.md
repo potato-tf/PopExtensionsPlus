@@ -1078,7 +1078,7 @@ Tag "popext_playsequence{sequence = `primary_shoot`, playback_rate = 1.0, delay 
 - [`PopExtUtil.PlaySoundOnAllClients`](#PopExtUtil.PlaySoundOnAllClients)
 - [`PopExtUtil.StopAndPlayMVMSound`](#PopExtUtil.StopAndPlayMVMSound)
 - [`PopExtUtil.EndWaveReverse`](#PopExtUtil.EndWaveReverse)
-- [`PopExtUtil.AddThinkToEnt`](#PopExtUtil.AddThinkToEnt)
+- [`PopExtUtil.AddThink`](#PopExtUtil.AddThink)
 - [`PopExtUtil.SilentDisguise`](#PopExtUtil.SilentDisguise)
 - [`PopExtUtil.GetPlayerReadyCount`](#PopExtUtil.GetPlayerReadyCount)
 - [`PopExtUtil.GetWeaponMaxAmmo`](#PopExtUtil.GetWeaponMaxAmmo)
@@ -3939,7 +3939,7 @@ Ends the wave in reverse mode
 
 ---
 
-<a name="PopExtUtil.AddThinkToEnt"></a>
+<a name="PopExtUtil.AddThink"></a>
 
 ```cpp
 void PopExtUtil::AddThinkToEnt(handle ent, function() func)

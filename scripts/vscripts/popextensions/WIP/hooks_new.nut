@@ -3,7 +3,6 @@ POPEXT_CREATE_SCOPE( "__popext_hooks", "PopExtHooks", "PopExtHooksEntity" )
 function PopExtHooks::AddHooksToScope( name, table, scope ) {
 
 	foreach( hook_name, func in table ) {
-
 		// Entries in hook table must begin with 'On' to be considered hooks
 		if ( hook_name.slice( 0,2 ) == "On" ) {
 
@@ -63,8 +62,7 @@ function PopExtHooks::PopHooksThink() {
 	}
 	return -1
 }
-
-AddThinkToEnt( popext_hooks_entity, "PopHooksThink" )
+PopExtUtil.AddThink( PopExtHooksEntity, "PopHooksThink" )
 
 PopEventHook( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 
@@ -110,7 +108,6 @@ PopEventHook( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
 	if ( "pop_fired_death_hook" in scope && !scope.pop_fired_death_hook ) {
 
 		PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
-		delete scope.pop_fired_death_hook
 	}
 
 	// Reset hooks
@@ -127,8 +124,7 @@ PopEventHook( "player_team", "PopHooksPlayerTeam", function( params ) {
 	if ( params.team != TEAM_SPECTATOR ) return
 
 	local player = GetPlayerFromUserID( params.userid )
-
-	if ( !player ) return // can sometimes be null when the server empties out? Likely a rafmod bug
+	if ( !player || !player.IsValid() ) return
 
 	local scope = player.GetScriptScope()
 

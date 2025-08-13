@@ -39,7 +39,6 @@ WaveSchedule
 			Target bignet
 			Action RunScriptCode
 			Param "
-
 				// Load popextensions script
 				IncludeScript(`popextensions_main.nut`, getroottable())
 
@@ -64,6 +63,7 @@ WaveSchedule
 						`min respawn time`: 500
 						`provide on active` : 1
 						`move speed bonus` : 0.4
+						`rocket penetration` : 10
 					}
 				}
 
@@ -74,7 +74,6 @@ WaveSchedule
 					ForceHoliday 	   	 = 2
 					NoRome 			   	 = 2
 					BotHeadshots 	   	 = 1
-					// NoCrumpkins 	   	 = 1
 					BotsAreHumans 	   	 = 2
 					WaveStartCountdown 	 = 3
 					SpellRateCommon    	 = 0.5
@@ -135,7 +134,6 @@ WaveSchedule
 						`mult dmg vs same class`: 2,
 						`reloads full clip at once`: 1,
 						`passive reload`: 1,
-						// `fires milk bolt` : 1,
 						`max health additive bonus` : 100,
 
 						[TF_CLASS_SCOUT] = {
@@ -249,6 +247,7 @@ WaveSchedule
 				// Attributes IgnoreFlag
 				Item "The Cow Mangler 5000"
 				Tag "popext_homingprojectile{turn_power = 0.5, speed_mult = 1.0}"
+				Tag "popext_customweaponmodel{model = `models/weapons/c_models/c_wasp_launcher/c_wasp_launcher.mdl`}"
 				// Tag "popext_reprogrammed"
 				Tag "popext_usehumanmodel"
 				// Tag "popext_meleeai"
@@ -256,10 +255,9 @@ WaveSchedule
 				Tag "popext_customattr{attr = `wet immunity`, value = 1}"
 				Tag "popext_weaponresist{weapon = ID_IRON_CURTAIN, amount = 20}" //20x damage from iron curtain
 				// Tag "popext_weaponresist{type = 298, amount = 20}"
-				// Tag "popext_setskin|0" //red skin
 				// Tag "popext_setskin{skin = 0}"
 				// Tag "popext_mobber"
-				// Tag "popext_fireweapon|2048"
+				// Tag "popext_fireweapon{button = IN_ATTACK2}"
 				Tag "popext_rocketcustomtrail{name = `eyeboss_projectile`}"
 			}
 		}
@@ -297,34 +295,49 @@ WaveSchedule
                 IncludeScript(`popextensions_main`, getroottable())
 
                 MissionAttrs({
-                    `WaveStartCountdown`: 1
-                    `ExtraTankPath`: [
-						[`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`],
-						[`640 5404 350`, Vector(640, 4810, 350), `640 4400 550`, `1100 4100 650`, `1636 3900 770`]
-					]
-					`SoundOverrides` : { //overrides teamplay_broadcast_audio sounds
+
+                    WaveStartCountdown = 1
+                    // `ExtraTankPath`: [
+					// 	[`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`],
+					// 	[`640 5404 350`, Vector(640, 4810, 350), `640 4400 550`, `1100 4100 650`, `1636 3900 770`]
+					// ]
+					ExtraTankPath = {
+
+						name = `mytankpath`
+						tracks = [
+
+							[`686 4000 392`, `667 4358 390`, `378 4515 366`, `-193 4250 289`],
+							[`640 5404 350`, Vector(640, 4810, 350), `640 4400 550`, `1100 4100 650`, `1636 3900 770`]
+						]
+					}
+
+					SoundOverrides = { //overrides teamplay_broadcast_audio sounds
+						`Game.YourTeamWon`: 			null
+						`music.mvm_end_last_wave`: 		null
 						`Announcer.MVM_Get_To_Upgrade`: null
-						`music.mvm_end_last_wave`: null
-						`Game.YourTeamWon`: null
 					}
                 })
 
                 PopExt.CustomTank(`abc*`, {
-                    OnSpawn = function(tank, name) {
-                        local prop = SpawnEntityFromTable(`prop_dynamic`, {model = `models/props_badlands/barrel01.mdl`, origin = `0 0 79`})
 
-                        local trigger = SpawnEntityFromTable(`trigger_ignite`, {origin = `0 0 100`, spawnflags = `1`})
-                        PopExtUtil.SetupTriggerBounds(trigger, Vector(-175,-175,-175), Vector(175,175,175))
-                        PopExtUtil.SetParentLocalOrigin([prop, trigger], tank)
-
-                        tank.KeyValueFromString(`rendercolor`, `255 0 0`)
-                    },
                     Scale = `0.5`
                     DisableSmoke = true
 					NoDeathFX = 2
+
+                    function OnSpawn(tank, name) {
+
+                        local prop = SpawnEntityFromTable(`prop_dynamic`, {model = `models/props_badlands/barrel01.mdl`, origin = `0 0 79`})
+                        local trigger = SpawnEntityFromTable(`trigger_ignite`, {origin = `0 0 100`, spawnflags = `1`})
+
+                        trigger.SetSize(Vector(-175,-175,-175), Vector(175,175,175))
+                        PopExtUtil.SetParentLocalOrigin([prop, trigger], tank)
+
+                        tank.KeyValueFromString(`rendercolor`, `255 0 0`)
+                    }
                 })
 
                 PopExt.CustomTank(`tank2`, {
+
                     IsBlimp = true
 					Icon = `blimp2_lite`
 					StartTrack = `extratankpath2_1` //this is only required for blimps so the func_tracktrain knows where to go
@@ -332,7 +345,9 @@ WaveSchedule
 					NoScreenShake = true
 					CrushDamageMult = 0
 					Team = 2
+
 					SoundOverrides = {
+
 						Ping = `npc/combine_gunship/ping_search.wav`
 						Start = `ui/chime_rd_2base_pos.wav`
 						EngineLoop = `npc/combine_gunship/dropship_engine_distant_loop1.wav`
@@ -342,19 +357,23 @@ WaveSchedule
 					// SpawnTemplate = `templateName`
                 })
 				// create a point_viewcontrol with custom ent_additions spawnflags
-				::PointTemplates <- {
-					viewcontrol = {
-						[0] = {
-							point_viewcontrol = {
-								targetname = `viewcontrol_example`
-								spawnflags = 768 //custom spawnflags to fix viewcontrol + enable for all players
-								vscripts = `popextensions/ent_additions`
-								origin = `32 4892 659`
-								angles = `23 -47 0`
-							}
-						}
-					}
-				}
+				// ::PointTemplates <- {
+
+				// 	viewcontrol = {
+
+				// 		[0] = {
+
+				// 			point_viewcontrol = {
+
+				// 				targetname = `viewcontrol_example`
+				// 				spawnflags = 768 //custom spawnflags to fix viewcontrol + enable for all players
+				// 				vscripts = `popextensions/ent_additions`
+				// 				origin = `32 4892 659`
+				// 				angles = `23 -47 0`
+				// 			}
+				// 		}
+				// 	}
+				// }
             "
 		}
 		StartWaveOutput
@@ -386,7 +405,7 @@ WaveSchedule
                 Health 100
                 Speed 75
                 Name "abcd"
-                StartingPathTrackNode "extratankpath1_1"
+                StartingPathTrackNode "mytankpath1_1"
 
                 OnBombDroppedOutput
                 {
@@ -407,7 +426,7 @@ WaveSchedule
                 Speed 70
                 Name "tank2"
                 Skin 0
-                StartingPathTrackNode "extratankpath2_1"
+                StartingPathTrackNode "mytankpath2_1"
 
                 OnBombDroppedOutput
                 {

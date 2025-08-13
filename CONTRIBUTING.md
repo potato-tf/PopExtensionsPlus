@@ -1,11 +1,10 @@
 
-### Any existing code that breaks these rules predates these guidelines and is too load-bearing/widely used to change
+### Any existing code that breaks these rules predates these guidelines and/or is too load-bearing/widely used to change
 **Offending lines of code that already exist are not a pass to break them yourself.**
 
 ## General
 - Use PopExtUtil functions as much as possible, all generic re-usable functions go here
 - Always use constants defined in constants.nut/itemdef_constants.nut, avoid magic numbers
-    - various strings are cached as constants for performance or ease of writing
 ## Error Logging:
 - Use `PopExtMain.Error` for errors and warnings, do not use `error()` or other print functions
     - ### Debug:
@@ -24,9 +23,10 @@
 
 ## Naming Conventions:
 - ### snake_case:
-    - all INTERNAL variable names
+    - all internal variables
 - ### PascalCase:
     - function names
+    - global or regularly accessed class/table names (e.g. ThinkTable)
 - ### ALL_UPPERCASE:
     - constant names
     - "constant-like" values (e.g. `ROBOT_ARM_PATHS` in util.nut)
@@ -41,6 +41,29 @@
 - Use ternaries and lambda functions where appropriate
     - simple yes/no conditional checks, simple functions that return a value and do nothing else, do not look at ExtraTankPath xd
 - format() > string concatenation
+- functions must be declared as `function name( args )`, DO NOT use `name = function( args )` or `name <- function(args)`
+    - This is done for the perf counter.  `name <- function( args )` creates an anonymous function that will just print `<lambda or free run script>`
+
+## Game events
+- See event_wrapper.nut for an example of how to use the event hooking system
+
+## Think functions
+- Use `PopExtUtil.AddThink( ent, func )`
+    - This accepts both function string names and actual function references, handles scoping automatically for function references.
+- You should almost never use `_AddThinkToEnt`, this will break other think functions on certain entities if you don't know what you are doing.
+
+## Cleanup
+- all entity targetnames prefixed with these will be wiped out on wave/mission change:
+    - `__popext`
+    - `extratankpath`
+- See the `teamplay_round_start` event in popextensions_main.nut for dealing with global variable cleanup
+    - You should scope your variables to an existing table where possible instead of adding it to the cleanup array.
+
+## Performance
+- various strings are cached as constants for performance or ease of writing, notably netprop strings
+- `PopExtUtil.AllNavAreas`, a pre-collected table of all nav areas for nav related code
+- Always use folded constant names and API functions (e.g. SetPropString instead of NetProps.SetPropString)
+    - Every API function that can be folded is already folded, check constants.nut
 
 ### Single-line control flow:
 - This is fine:
@@ -145,7 +168,11 @@ if (
         - Find: ``((|if|else\s+if|else|for|while|switch|try|catch|class\s+\w+)\s*(?:\([^)]*\))?\s*)\n\s*\{``
     - Replace: ``$1 { \n``
     - Finding broken brackets due to inline comments: ``\/\/ s* \{``
+- Correct function declaration syntax:
+    - Find: ``(\w+\s*)=\s*function``
+    - Replace: ``$1 = function $1``
 - Valve-style argument formatting:
+    - WARNING: will break regex capture groups, manually fix these after running it
     - Opening parentheses:
         - Find: ``\(([^\s)])``
         - Replace: ``( $1``
@@ -159,18 +186,3 @@ if (
     - Find: ``\s+$``
     - Replace: empty string
 
-## Game events
-- See event_wrapper.nut for an example of how to use the event hooking system
-- We will be migrating away from using the currently existing hook table setup
-
-## Think functions
-- Use `PopExtUtil.AddThinkToEnt( ent, "funcname" )`
-- Alternatively, you can directly add your function to the correct think table for the entity (see tags/customattributes/missionattributes).
-- You should almost never use `_AddThinkToEnt`, this will break other think functions on certain entities if you don't know what you are doing.
-
-## Cleanup
-- all entity targetnames prefixed with these will be wiped out on wave/mission change:
-    - `__popext`
-    - `extratankpath`
-- See the `teamplay_round_start` event in popextensions_main.nut for dealing with global variable cleanup
-    - You should scope your variables to an existing table where possible instead of adding it to the cleanup array.

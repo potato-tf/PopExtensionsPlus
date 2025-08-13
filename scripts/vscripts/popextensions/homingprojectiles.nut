@@ -19,7 +19,7 @@ function PopExtHoming::AttachProjectileThinker( projectile, speed_mult, turn_pow
 
     local projectile_scope = PopExtUtil.GetEntScope( projectile )
 
-    if ( !( "speedmultiplied" in projectile_scope ) ) 
+    if ( !( "speedmultiplied" in projectile_scope ) )
         projectile_scope.speedmultiplied <- false
 
     local projectile_speed = projectile.GetAbsVelocity().Norm()
@@ -34,11 +34,7 @@ function PopExtHoming::AttachProjectileThinker( projectile, speed_mult, turn_pow
     projectile_scope.ignore_disguised_spies <- ignore_disguised_spies
     projectile_scope.ignore_stealthed_spies <- ignore_stealthed_spies
 
-    // sometimes this code tries to run before the table is created
-    if ( !( "ProjectileThinkTable" in projectile_scope ) ) 
-        projectile_scope.ProjectileThinkTable <- {}
-
-    projectile_scope.ProjectileThinkTable.HomingProjectileThink <- PopExtHoming.HomingProjectileThink
+    PopExtUtil.AddThink( projectile, PopExtHoming.HomingProjectileThink )
 }
 
 function PopExtHoming::HomingProjectileThink() {
@@ -64,7 +60,7 @@ function PopExtHoming::SelectVictim( projectile ) {
 
         local distance = ( projectile.GetOrigin() - player.GetOrigin() ).Length()
 
-        if ( !IsValidTarget( player, distance, min_distance, projectile ) ) 
+        if ( !IsValidTarget( player, distance, min_distance, projectile ) )
             continue
 
         target = player

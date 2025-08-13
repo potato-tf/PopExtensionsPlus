@@ -73,7 +73,7 @@ function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 
 		// printl( "Wave: " + wave )
 
-		if ( !( "CustomWaveOrder" in WaveSchedule ) && typeof wave == "integer" ) 
+		if ( !( "CustomWaveOrder" in WaveSchedule ) && typeof wave == "integer" )
 			WaveArray[wave] = array( wavespawns.len() )
 
 		if ( wave == "MissionAttrs" ) {
@@ -116,6 +116,8 @@ function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 					WaveArray[wave][wavespawn] = {}
 					WaveArray[wave][wavespawn][generator] <- keyvalues
 
+					PopExtUtil.SetTargetname( generator, "Name" in keyvalues ? keyvalues.Name : format( "__popext_generator%d", generator.entindex() ) )
+
 					// generator.KeyValueFromInt( "spawnOnlyWhenTriggered", "WaitBetweenSpawnsAfterDeath" in keyvalues || ( "SpawnCount" in keyvalues && keyvalues.SpawnCount > 1 ) ? 1 : 0 ) //we need manual control always for the spawn interval
 					generator.KeyValueFromInt( "spawnOnlyWhenTriggered", 1 )
 					// generator.KeyValueFromFloat( "interval", "WaitBetweenSpawns" in keyvalues ? keyvalues.WaitBetweenSpawns.tofloat() : SINGLE_TICK )
@@ -126,7 +128,6 @@ function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 					generator.KeyValueFromInt( "difficulty", "Skill" in keyvalues ? keyvalues.Skill.tointeger() : 1 )
 					generator.KeyValueFromInt( "disableDodge", "disableDodge" in keyvalues ? keyvalues.disableDodge.tointeger() : 0 )
 					generator.KeyValueFromString( "team", "TeamString" in keyvalues ? keyvalues.TeamString : "blue" )
-					generator.KeyValueFromString( "targetname", "Name" in keyvalues ? keyvalues.Name : format( "__popext_generator%d", generator.entindex() ) )
 					generator.KeyValueFromString( "class", playerclass )
 
 					local org = keyvalues.Where
@@ -162,7 +163,7 @@ function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 
 					local genscope = PopExtUtil.GetEntScope( generator )
 
-					if ( "WaveSpawn" in genscope && "WaitBetweenSpawns" in genscope.WaveSpawn ) 
+					if ( "WaveSpawn" in genscope && "WaitBetweenSpawns" in genscope.WaveSpawn )
 						genscope.spawninterval <- genscope.WaveSpawn.WaitBetweenSpawns.tofloat()
 
 					function GeneratorThink() {
@@ -193,11 +194,11 @@ function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 
 							for ( local g; g = FindByClassname( g, "bot_generator" ); ) {
 
-								if ( 
-									!g.IsEFlagSet( EFL_SPAWNER_ACTIVE ) 
-									&& "WaveSpawn" in g.GetScriptScope() 
-									&& "WaitForAllSpawned" in g.GetScriptScope().WaveSpawn 
-									&& self.GetName() == g.GetScriptScope().WaveSpawn.WaitForAllSpawned 
+								if (
+									!g.IsEFlagSet( EFL_SPAWNER_ACTIVE )
+									&& "WaveSpawn" in g.GetScriptScope()
+									&& "WaitForAllSpawned" in g.GetScriptScope().WaveSpawn
+									&& self.GetName() == g.GetScriptScope().WaveSpawn.WaitForAllSpawned
 								) {
 
 									self.AcceptInput( "Disable", "", null, null )
@@ -211,7 +212,7 @@ function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
 
 						return -1
 					}
-				
+
 					genscope.WaveSpawn <- keyvalues
 					genscope.GeneratorThink <- GeneratorThink
 					AddThinkToEnt( generator, "GeneratorThink" )

@@ -44,11 +44,11 @@ if ( !( "EntAdditions" in ROOT ) ) {
                     id       = entity.GetScriptId()
                     index    = entity.entindex()
                     callback = callback
-                    _get = function( k ) {
+                    function _get ( k ) {
 
                         return parent[k]
                     }
-                    _delslot = function( k ) {
+                    function _delslot ( k ) {
 
                         if ( k == id ) {
 
@@ -64,27 +64,27 @@ if ( !( "EntAdditions" in ROOT ) ) {
         }
         Precache = {
             //mini-sentry spawnflag
-            obj_sentrygun = function( ent, spawnflags ) {
+            function obj_sentrygun ( ent, spawnflags ) {
                 if ( spawnflags & 64 )
                     SetPropBool( ent, "m_bMiniBuilding", true )
             }
         }
         OnPostSpawn = {
             //non-solid spawnflag
-            func_button = function( ent, spawnflags ) {
+            function func_button ( ent, spawnflags ) {
                 if ( spawnflags & 16384 ) {
 
                     ent.AddEFlags( EFL_USE_PARTITION_WHEN_NOT_SOLID )
                     ent.AddSolidFlags( FSOLID_NOT_SOLID )
                 }
             }
-            func_rot_button = function( ent, spawnflags ) {
+            function func_rot_button ( ent, spawnflags ) {
                 //fix broken locked spawnflag
                 if ( spawnflags & SF_BUTTON_LOCKED )
                     SetPropBool( ent, "m_bLocked", true )
             }
             //mini-sentry spawnflag
-            obj_sentrygun = function( ent, spawnflags ) {
+            function obj_sentrygun ( ent, spawnflags ) {
                 if ( spawnflags & 64 ) {
 
                     ent.SetModelScale( 0.75, 0.0 )
@@ -92,18 +92,18 @@ if ( !( "EntAdditions" in ROOT ) ) {
                 }
             }
             //fix invulnerable flag not working
-            obj_dispenser = function( ent, spawnflags ) {
+            function obj_dispenser ( ent, spawnflags ) {
                 if ( spawnflags & 2 )
                     SetPropInt( ent, "m_takedamage", 0 )
             }
             //start disabled spawnflag
-            light_dynamic = function( ent, spawnflags ) {
+            function light_dynamic ( ent, spawnflags ) {
                 if ( spawnflags & 16 )
                     ent.AcceptInput( "TurnOff", "", null, null )
             }
             //fix func_rotating capping at 360,000 degrees
             //fix killing func_rotating before stopping sound causing sound to play forever
-            func_rotating = function( ent, spawnflags ) {
+            function func_rotating ( ent, spawnflags ) {
 
                 local maxangle = 350000.0 //max angle is actually 360,000.0, reset it a bit earlier just in case
                 local xyz = array( 3, 0.0 )
@@ -134,7 +134,7 @@ if ( !( "EntAdditions" in ROOT ) ) {
             // add spawnflag to allow for taking damage
             // fix not being able to disable on dead players
             // fix persisting between map/round changes
-            point_viewcontrol = function( ent, spawnflags ) {
+            function point_viewcontrol ( ent, spawnflags ) {
 
                 function InputEnable() {
 
@@ -153,14 +153,13 @@ if ( !( "EntAdditions" in ROOT ) ) {
                     if ( spawnflags & 256 ) {
 
                         ent.AddEFlags( EFL_IS_BEING_LIFTED_BY_BARNACLE )
-                        for ( local i = 1; i <= MAX_CLIENTS; i++ ) {
 
-                            local player = PlayerInstanceFromIndex( i )
-                            if ( player && player.IsValid() ) {
+                        for ( local i = 1, player; i <= MAX_CLIENTS; player = PlayerInstanceFromIndex( i ), i++ ) {
 
-                                ent.AcceptInput( "Enable", "", player, player )
-                                SetPropEntity( ent, "m_hPlayer", player )
-                            }
+                            if ( !player ) continue
+
+                            ent.AcceptInput( "Enable", "", player, player )
+                            SetPropEntity( ent, "m_hPlayer", player )
                         }
                         ent.RemoveEFlags( EFL_IS_BEING_LIFTED_BY_BARNACLE )
                     }
@@ -184,17 +183,17 @@ if ( !( "EntAdditions" in ROOT ) ) {
                     if ( spawnflags & 256 ) {
 
                         ent.AddEFlags( EFL_IS_BEING_LIFTED_BY_BARNACLE )
-                        for ( local i = 1; i <= MAX_CLIENTS; i++ ) {
 
-                            local player = PlayerInstanceFromIndex( i )
-                            if ( player && player.IsValid() ) {
+                        for ( local i = 1, player; i <= MAX_CLIENTS; player = PlayerInstanceFromIndex( i ), i++ ) {
 
-                                SetPropEntity( ent, "m_hPlayer", player )
-                                local life_state = GetPropInt( player, "m_lifeState" )
-                                SetPropInt( player, "m_lifeState", LIFE_ALIVE )
-                                ent.AcceptInput( "Disable", "", player, player )
-                                EntFireByHandle( player, "RunScriptCode", format( "SetPropInt( self, `m_lifeState`, %d )", life_state ), SINGLE_TICK, null, null )
-                            }
+                            if ( !player ) continue
+
+                            SetPropEntity( ent, "m_hPlayer", player )
+                            local life_state = GetPropInt( player, "m_lifeState" )
+                            SetPropInt( player, "m_lifeState", LIFE_ALIVE )
+                            ent.AcceptInput( "Disable", "", player, player )
+                            EntFireByHandle( player, "RunScriptCode", format( "SetPropInt( self, `m_lifeState`, %d )", life_state ), SINGLE_TICK, null, null )
+
                         }
                         ent.RemoveEFlags( EFL_IS_BEING_LIFTED_BY_BARNACLE )
                     }
@@ -211,7 +210,7 @@ if ( !( "EntAdditions" in ROOT ) ) {
             //fix TeamNum not working
             //fix FireSound not working, added volume setting ( example: "sound_name_here.wav|40" )
             //fix ModelScale not working on arrows/rockets
-            tf_point_weapon_mimic = function( ent, spawnflags ) {
+            function tf_point_weapon_mimic ( ent, spawnflags ) {
 
                 local particle = CreateByClassname( "trigger_particle" )
                 ent.ValidateScriptScope()

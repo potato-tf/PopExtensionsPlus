@@ -375,8 +375,7 @@ PopExtAttributes.Attrs <- {
 				printl( GetPropFloat( teleporter, "m_flRechargeTime" ) + " : " + teleportscope.rechargetimestamp )
 				return
 			}
-			teleportscope.TeleportMultThink <- TeleportMultThink
-			AddThinkToEnt( teleporter, "TeleportMultThink" )
+			PopExtUtil.AddThink( teleporter, TeleportMultThink )
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- TeleporterRechargeTimeThink
 		player.GetScriptScope().attribinfo[ "teleporter recharge time" ] <- format( "Teleporter recharge rate multiplied by %.2f", value )
@@ -414,8 +413,8 @@ PopExtAttributes.Attrs <- {
 		SetPropInt( freeze_proxy_weapon, STRING_NETPROP_ITEMDEF, ID_SPY_CICLE )
 		SetPropBool( freeze_proxy_weapon, STRING_NETPROP_INIT, true )
 		freeze_proxy_weapon.AddEFlags( EFL_USER )
-		SetPropEntity( freeze_proxy_weapon, "m_hOwner", player )
-		freeze_proxy_weapon.DispatchSpawn()
+		PopExtUtil._SetOwner( freeze_proxy_weapon, player )
+		DispatchSpawn( freeze_proxy_weapon )
 		freeze_proxy_weapon.DisableDraw()
 
 		// Add the attribute that creates ice statues
@@ -675,8 +674,8 @@ PopExtAttributes.Attrs <- {
 		SetPropInt( launcher, STRING_NETPROP_ITEMDEF, ID_GRENADELAUNCHER )
 		SetPropBool( launcher, STRING_NETPROP_INIT, true )
 		launcher.AddEFlags( EFL_USER )
-		launcher.SetOwner( player )
-		launcher.DispatchSpawn()
+		PopExtUtil._SetOwner( launcher, player )
+		DispatchSpawn( launcher )
 		launcher.DisableDraw()
 
 		launcher.AddAttribute( "fuse bonus", 0.0, -1 )
@@ -695,7 +694,7 @@ PopExtAttributes.Attrs <- {
 				return
 
 			local grenade = CreateByClassname( "tf_projectile_pipe" )
-			SetPropEntity( grenade, "m_hOwnerEntity", launcher )
+			grenade.SetOwner( launcher )
 			SetPropEntity( grenade, "m_hLauncher", launcher )
 			SetPropEntity( grenade, "m_hThrower", player )
 			SetPropFloat( grenade, "m_flDamage", value * 2 ) // shithack: multiply damage by 2 to account for distance falloff
@@ -770,8 +769,8 @@ PopExtAttributes.Attrs <- {
 			SetPropString( bomb, "m_explodeParticleName", particle ) // doesn't work
 			SetPropString( bomb, "m_strExplodeSoundName", sound )
 
-			bomb.DispatchSpawn()
-			bomb.SetOwner( params.attacker )
+			DispatchSpawn( bomb )
+			PopExtUtil._SetOwner( bomb, params.attacker )
 
 			bomb.SetTeam( team )
 			bomb.SetAbsOrigin( params.damage_position )
@@ -841,10 +840,13 @@ PopExtAttributes.Attrs <- {
 
 		function IsMinibossThink() {
 
-			if ( player.GetActiveWeapon() == item  || value == 2 ) {
+			if ( player.GetActiveWeapon() == item || value == 2 ) {
 
-				player.SetIsMiniBoss( true )
-				player.SetModelScale( 1.75, -1 )
+				if ( !player.IsMiniBoss() ) {
+
+					player.SetIsMiniBoss( true )
+					player.SetModelScale( 1.75, -1 )
+				}
 				return
 			}
 			player.SetIsMiniBoss( false )
@@ -875,7 +877,7 @@ PopExtAttributes.Attrs <- {
 			PrecacheScriptSound( value[ 1 ] )
 		}
 
-		local scope = item.GetScriptScope()
+		local scope = PopExtUtil.GetEntScope( item )
 		scope.attacksound <- 0.0
 
 		local event_hook_string = format( "ReplaceWeaponFireSound_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
@@ -1016,7 +1018,7 @@ PopExtAttributes.Attrs <- {
 			if ( player.GetActiveWeapon() == item )
 				player.AddCondEx( value, duration, player )
 		}
-		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- AddCondWhenActiveThink	
+		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- AddCondWhenActiveThink
 		local desc_string = duration != 0.033 ?
 		format( "On deploy: player receives cond %d for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
 		format( "When active: player receives cond %d", value )
@@ -1185,7 +1187,7 @@ PopExtAttributes.Attrs <- {
 			// weapon ent has been destroyed, reference is still valid but the entity isn't
 			if ( item && !item.IsValid() ) {
 
-				delete scope.ItemThinkTable[ event_hook_string ]
+				PopExtUtil.RemoveThink( item, event_hook_string )
 				return
 			}
 
@@ -1348,9 +1350,6 @@ PopExtAttributes.Attrs <- {
 				}
 			}
 
-			if ( !( "ProjectileThinkTable" in rocket_scope ) )
-				rocket_scope.ProjectileThinkTable <- {}
-
 			function RocketThink() {
 
 				local origin = self.GetOrigin()
@@ -1416,7 +1415,7 @@ PopExtAttributes.Attrs <- {
 				return
 			}
 
-			rocket_scope.ProjectileThinkTable.RocketThink <- RocketThink
+			PopExtUtil.AddThink( rocket, RocketThink)
 			rocket_scope.DetonateRocket <- DetonateRocket
 		}
 
@@ -1437,7 +1436,6 @@ PopExtAttributes.Attrs <- {
 		}
 		weapon_scope.OnShot <- OnShot
 		weapon_scope.ApplyPenetrationToRocket <- ApplyPenetrationToRocket
-		PopExtUtil.AddThinkToEnt( item, "CheckWeaponFire" )
 
 		player.GetScriptScope().attribinfo[ "rocket penetration" ] <- format( "rocket penetrates up to %d enemy players", value )
 	}
@@ -1453,6 +1451,7 @@ PopExtAttributes.Attrs <- {
 
 			local current_clip = item.Clip1()
 			local wep_slot = item.GetSlot() + 1
+			local last_clip = scope.last_clip
 
 			if ( current_clip > last_clip ) {
 
@@ -1462,7 +1461,7 @@ PopExtAttributes.Attrs <- {
 				SetPropIntArray( player, STRING_NETPROP_AMMO, current_ammo - ammo_deducted, wep_slot )
 				current_clip = item.Clip1()
 			}
-			last_clip = current_clip
+			scope.last_clip = current_clip
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- ReloadsFullClipAtOnceThink
 		player.GetScriptScope().attribinfo[ "reloads full clip at once" ] <- "This weapon reloads its entire clip at once."
@@ -1518,6 +1517,8 @@ PopExtAttributes.Attrs <- {
 	function ArrowIgnite( player, item, value = null ) {
 
 		local event_hook_string = format( "ArrowIgnite_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
+
+		local netprop_arrow_ignite = "m_bArrowAlight"
 
 		function ArrowIgniteThink() {
 
@@ -1635,7 +1636,7 @@ PopExtAttributes.Attrs <- {
 				return
 
 			local killicon_dummy = CreateByClassname( "info_teleport_destination" )
-			SetPropString( killicon_dummy, "m_iName", format( "killicon_dummy_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ) )
+			SetPropString( killicon_dummy, STRING_NETPROP_NAME, format( "killicon_dummy_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ) )
 			SetPropString( killicon_dummy, "m_iClassname", value )
 			params.inflictor = killicon_dummy
 		}, EVENT_WRAPPER_CUSTOMATTR )
@@ -1701,7 +1702,6 @@ PopExtAttributes.Attrs <- {
 
 			if ( !respawn_override.IsValid() )
 				return
-			printl( respawn_override )
 
 			local prev_respawn = GetPropFloat(respawn_override, "m_flRespawnTime")
 			respawn_override.AcceptInput("SetRespawnTime", value.tostring(), null, null)
@@ -1899,9 +1899,10 @@ PopExtAttributes.Attrs <- {
 	}
 }
 
+// DEPRECATED: DO NOT USE
 function PopExtAttributes::AddAttr( player, attr_string, value = 0, item = null ) {
 
-	// PopExtMain.Error.DeprecationWarning( "CustomAttributes::AddAttr.  Unless you're passing a table or array,", "PopExtUtil::SetPlayerAttributes" )
+	PopExtMain.Error.DeprecationWarning( "CustomAttributes::AddAttr", "PopExtUtil::SetPlayerAttributes" )
 
 	local attr = split( attr_string, " ", true ).len() > 1 ? GetAttributeFunctionFromStringName( attr_string ) : attr_string
 
@@ -1994,7 +1995,7 @@ function PopExtAttributes::RefreshDescs( player ) {
 
 		cooldowntime = Time() + 3.0
 	}
-	scope.PlayerThinkTable.ShowAttribInfoThink <- ShowAttribInfoThink
+	PopExtUtil.AddThink( player, ShowAttribInfoThink )
 }
 
 function PopExtAttributes::GetAttributeFunctionFromStringName( attr ) {

@@ -28,12 +28,12 @@ PopExtTanks.CustomTank <- PopExtTanks.AddTankName
 
 PopExtTanks.sound_funcs <- {
 
-    Destroy = function( scope ) {
+    function Destroy ( scope ) {
 
         scope.pop_property.SoundOverrides.Explodes <- sound_overrides.Destroy
     },
 
-    Ping = function( scope ) {
+    function Ping ( scope ) {
 
         scope.cooldowntime <- 0.0
 
@@ -47,15 +47,15 @@ PopExtTanks.sound_funcs <- {
 
             cooldowntime = Time() + 5.0
         }
-        scope.TankThinkTable.PingSound <- PingSoundThink
+        PopExtUtil.AddThink( tank, PingSoundThink )
     },
 
-    EngineLoop = function( scope ) {
+    function EngineLoop ( scope ) {
 
         if ( scope.engineloopreplaced ) return
 
         StopSoundOn( "MVM.TankEngineLoop", tank )
-        EmitSoundEx({ 
+        EmitSoundEx({
             sound_name = sound_overrides.EngineLoop
             entity = tank
             filter_type = RECIPIENT_FILTER_GLOBAL
@@ -74,14 +74,14 @@ PopExtTanks.sound_funcs <- {
         scope.engineloopreplaced = true
     },
 
-    Start = function( scope ) {
+    function Start ( scope ) {
 
         StopSoundOn( "MVM.TankStart", tank )
         EmitSoundEx( {sound_name = sound_overrides.Start, entity = tank} )
         delete scope.pop_property.SoundOverrides.Start
     },
 
-    Deploy = function( scope ) {
+    function Deploy ( scope ) {
 
         //tank becomes a null reference when we start deploying
         //store the sound in a variable to still play it, then delete the think function when this happens
@@ -90,7 +90,7 @@ PopExtTanks.sound_funcs <- {
 
         function DeploySoundThink() {
 
-            if ( self.GetSequence() != self.LookupSequence( "deploy" ) ) 
+            if ( self.GetSequence() != self.LookupSequence( "deploy" ) )
                 return
 
             StopSoundOn( "MVM.TankDeploy", self )
@@ -102,23 +102,23 @@ PopExtTanks.sound_funcs <- {
 
             if ( tank == null ) {
 
-                delete scope.TankThinkTable.DeploySound
+                PopExtUtil.RemoveThink( tank, "DeploySound" )
                 return
             }
 
             delete scope.pop_property.SoundOverrides.Deploy
         }
-        scope.TankThinkTable.DeploySound <- DeploySoundThink
+        PopExtUtil.AddThink( tank, DeploySoundThink )
     }
 }
 
 PopExtTanks.tank_funcs <- {
 
-    TankModelVisionOnly = function( scope ) {
+    function TankModelVisionOnly ( scope ) {
         scope.pop_property.ModelVisionOnly <- scope.pop_property.TankModelVisionOnly
     },
 
-    SoundOverrides = function( scope ) {
+    function SoundOverrides ( scope ) {
 
         local sound_overrides = scope.pop_property.SoundOverrides
 
@@ -130,7 +130,7 @@ PopExtTanks.tank_funcs <- {
         }
     },
 
-    Team = function( scope ) {
+    function Team ( scope ) {
 
         if (scope.teamchanged) return
 
@@ -154,13 +154,13 @@ PopExtTanks.tank_funcs <- {
         scope.team = tank.GetTeam()
     },
 
-    NoScreenShake = function( scope ) {
+    function NoScreenShake ( scope ) {
 
         if ( scope.pop_property.NoScreenShake )
-            scope.TankThinkTable.NoScreenShake <- @() ScreenShake( self.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true )
+            PopExtUtil.AddThink( tank, function NoScreenShake() { ScreenShake( self.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true ) })
     },
 
-    IsBlimp = function( scope ) {
+    function IsBlimp ( scope ) {
 
         if ( !scope.pop_property.IsBlimp ) return
 
@@ -221,15 +221,15 @@ PopExtTanks.tank_funcs <- {
             if ( GetPropFloat( blimp_train, "m_flSpeed" ) != GetPropFloat( self, "m_speed" ) )
                 EntFireByHandle( blimp_train, "SetSpeedReal", GetPropFloat( self, "m_speed" ).tostring(), -1, null, null )
         }
-        scope.TankThinkTable.BlimpThink <- BlimpThink
+        PopExtUtil.AddThink( tank, BlimpThink )
     },
-    
 
-    Skin = function( scope ) {
+
+    function Skin ( scope ) {
         SetPropInt( tank, "m_nSkin", scope.pop_property.Skin )
     },
 
-    SpawnTemplate = function( scope ) {
+    function SpawnTemplate ( scope ) {
 
         if ( !PopExtMain.IncludeModules( "spawntemplate" ) )
             return
@@ -237,7 +237,7 @@ PopExtTanks.tank_funcs <- {
         SpawnTemplate( scope.pop_property.SpawnTemplate, tank )
     },
 
-    DisableTracks = function( scope ) {
+    function DisableTracks ( scope ) {
 
         if ( !scope.pop_property.DisableTracks ) return
 
@@ -247,7 +247,7 @@ PopExtTanks.tank_funcs <- {
                     child.DisableDraw()
     },
 
-    DisableBomb = function( scope ) {
+    function DisableBomb ( scope ) {
 
         if ( !scope.pop_property.DisableBomb ) return
 
@@ -257,7 +257,7 @@ PopExtTanks.tank_funcs <- {
                     child.DisableDraw()
     },
 
-    DisableSmoke = function( scope ) {
+    function DisableSmoke ( scope ) {
 
         if ( !scope.pop_property.DisableSmoke ) return
 
@@ -265,23 +265,23 @@ PopExtTanks.tank_funcs <- {
             //disables smokestack, still emits one smoke particle when spawning and when moving out from under low ceilings ( solid brushes 300 units or lower )
             EntFireByHandle( self, "DispatchEffect", "ParticleEffectStop", -1, null, null )
         }
-        scope.TankThinkTable.DisableSmoke <- DisableSmokeThink
+        PopExtUtil.AddThink( tank, DisableSmokeThink )
     },
 
-    Scale = function( scope ) {
+    function Scale ( scope ) {
         EntFireByHandle( tank, "SetModelScale", scope.pop_property.Scale.tostring(), -1, null, null )
     },
-    
-    AngleOverride = function( scope ) {
+
+    function AngleOverride ( scope ) {
 
         function AngleOverrideThink() {
 
             self.SetAbsAngles( PopExtUtil.KVStringToVectorOrQAngle( pop_property.AngleOverride, true ) )
         }
-        scope.TankThinkTable.AngleOverride <- AngleOverrideThink
+        PopExtUtil.AddThink( tank, AngleOverrideThink )
     },
 
-    Model = function( scope ) {
+    function Model ( scope ) {
 
         local mdl = scope.pop_property.Model
 
@@ -307,7 +307,7 @@ PopExtTanks.tank_funcs <- {
 
         if ( "ModelVisionOnly" in scope.pop_property && !scope.pop_property.ModelVisionOnly )
             tank.SetModelSimple( scope.pop_property.Model.Default ) //changes bbox size
-        
+
         // using a think prevents tank from briefly becoming invisible when changing damage models
         function SetModelThink() {
 
@@ -327,7 +327,7 @@ PopExtTanks.tank_funcs <- {
                 last_health_stage = health_stage
             }
         }
-        scope.TankThinkTable.SetModel <- SetModelThink
+        PopExtUtil.AddThink( tank, SetModelThink )
         if ( "LeftTrack" in scope.pop_property.Model ) {
             scope.pop_property.Model.TrackL <- scope.pop_property.Model.LeftTrack
             scope.pop_property.ModelPrecached.TrackL <- scope.pop_property.ModelPrecached.LeftTrack
@@ -382,7 +382,7 @@ PopExtTanks.tank_funcs <- {
         }
     },
 
-    TankModel = function( scope ) {
+    function TankModel ( scope ) {
 
         scope.pop_property.Model <- scope.pop_property.TankModel
         Model( scope )
@@ -408,7 +408,6 @@ function PopExtTanks::TankThink() {
         if ( !( "created" in scope ) ) {
 
 			scope.created         	 <- true
-			scope.TankThinkTable  	 <- {}
 			scope.max_health         <- tank.GetMaxHealth()
 			scope.cur_health         <- tank.GetHealth()
 			scope.last_health_stage  <- 0
@@ -433,18 +432,7 @@ function PopExtTanks::TankThink() {
                     if ( prop_keys[ i ] in PopExtTanks.props_to_delete )
 
                         delete scope.pop_property[ prop_keys[ i ] ]
-            }            
-
-            function TankThinks() { 
-
-                foreach ( name, func in scope.TankThinkTable ) 
-                    func.call( scope ) 
-                        return -1 
             }
-
-            scope.TankThinks <- TankThinks
-            TankThinks() //run thinks for availability in OnSpawn
-            _AddThinkToEnt( tank, "TankThinks" )
 
             foreach( name, table in tank_names ) {
 

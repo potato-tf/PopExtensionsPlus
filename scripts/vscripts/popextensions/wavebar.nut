@@ -1,5 +1,5 @@
 POPEXT_CREATE_SCOPE( "__popext_wavebar", "PopExtWavebar" )
-    
+
 PopExtWavebar.netprop_classnames <- "m_iszMannVsMachineWaveClassNames"
 PopExtWavebar.netprop_flags      <- "m_nMannVsMachineWaveClassFlags"
 PopExtWavebar.netprop_counts     <- "m_nMannVsMachineWaveClassCounts"
@@ -49,7 +49,7 @@ function PopExtWavebar::_PopIncrementIcon( icon ) {
 
     if ( icon.is_tank )
         DecrementWaveIcon( "tank", MVM_CLASS_FLAG_NORMAL | MVM_CLASS_FLAG_MINIBOSS | ( icon.is_support ? MVM_CLASS_FLAG_SUPPORT : 0 ) | ( icon.is_support_limited ? MVM_CLASS_FLAG_SUPPORT_LIMITED : 0 ), icon.count, false )
-    
+
     IncrementWaveIcon( icon.name, flags, icon.count, !icon.is_tank )
 }
 

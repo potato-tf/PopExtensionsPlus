@@ -6,6 +6,9 @@ SpawnTemplates.wave_point_templates 		 <- []
 SpawnTemplates.global_template_spawn_count   <- 0
 SpawnTemplates.wave_schedule_point_templates <- []
 
+// empty table to avoid does not exist errors
+::PointTemplates <- {}
+
 function SpawnTemplates::_OnDestroy() {
 
 	foreach( key in [ "PointTemplates", "SpawnTemplate" ] )
@@ -15,14 +18,14 @@ function SpawnTemplates::_OnDestroy() {
 
 //spawns an entity when called, can be called on StartWaveOutput and InitWaveOutput, automatically kills itself after wave completion
 function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "", angles = "", forceparent = false, attachment = null, parentabsorigin = true, nonsolidchildren = false ) {
-	
+
 	// forceparent is set, delete the EFlag to parent another template
 	if ( forceparent && parent.IsEFlagSet( EFL_SPAWNTEMPLATE ) )
-		parent.RemoveEFlags( EFL_SPAWNTEMPLATE ) 
+		parent.RemoveEFlags( EFL_SPAWNTEMPLATE )
 
 	// we already have a template
 	if ( parent != null && parent.IsEFlagSet( EFL_SPAWNTEMPLATE ) )
-		return 
+		return
 
 	// credit to ficool2
 	SpawnTemplates.global_template_spawn_count++
@@ -46,7 +49,7 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 	scope.__EntityMakerResult <- {
 		entities = scope.Entities
 	}.setdelegate( {
-		_newslot = function( _, value ) {
+		function _newslot ( _, value ) {
 			entities.append( value )
 		}
 	})
@@ -124,10 +127,7 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 
 						local scope = PopExtUtil.GetEntScope( parent )
 
-						if ( !( "templates_to_kill" in scope ) )
-							scope.templates_to_kill <- []
-
-						scope.templates_to_kill.append( entity )
+						scope.Preserved.kill_on_death.append( entity )
 					}
 				}
 			}
@@ -157,7 +157,7 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 
 					local playerscope = PopExtUtil.GetEntScope( parent )
 
-					if ( !( "spawntemplate_onparentkilled" in playerscope ) ) 
+					if ( !( "spawntemplate_onparentkilled" in playerscope ) )
 						playerscope.spawntemplate_onparentkilled <- []
 
 					playerscope.spawntemplate_onparentkilled.append( FireOnParentKilledOutputs )
@@ -194,9 +194,7 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 				}
 				return -1
 			}
-			"PlayerThinkTable" in scope ?
-			scope.PlayerThinkTable.CheckIfKilled <- CheckIfKilled :
-			scope.CheckIfKilled <- CheckIfKilled; AddThinkToEnt( template, "CheckIfKilled" )
+			PopExtUtil.AddThink( template, CheckIfKilled )
 		}
 
 		//fire OnSpawnOutputs
@@ -415,14 +413,6 @@ PopEventHook("player_death", "SpawnTemplatePlayerDeath", function( params ) {
 			func.call( scope )
 
 		scope.spawntemplate_onparentkilled.clear()
-	}
-
-	if ( "templates_to_kill" in scope ) {
-
-		foreach ( entity in scope.templates_to_kill )
-			entity.Kill()
-
-		scope.templates_to_kill.clear()
 	}
 
 	player.RemoveEFlags( EFL_SPAWNTEMPLATE )

@@ -1,6 +1,12 @@
 // Accessing any entity in VScript will allocate a string that never gets freed, eventually causing a CUtlRBTree overflow.
 // Hook existing API functions to free them ourselves.
 
+/************************************************************************************
+ * BUG: DONT USE ANY OF THIS WITHOUT TESTING MORE                                   *
+ * causes null instance errors and other issues with accessing entity references    *
+ * Is this not as harmless as people are implying?                                  *
+ ************************************************************************************/
+
 function CBaseEntity::KeyValueFromString( key, value ) {
 
 	// TODO: find another way to do this, dot notation for function calls is expensive
@@ -98,7 +104,7 @@ if ( !("_SpawnEntityFromTable" in ROOT ) )
 function SpawnEntityFromTable( classname, properties ) {
 
     local ent = _SpawnEntityFromTable( classname, properties )
-    // SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+    SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
     return ent
 }
 
@@ -113,7 +119,7 @@ function SpawnEntityFromTable( classname, properties ) {
 // 	__DumpScope( 0, func.getinfos() )
 // 		printl( name )
 // 		ROOT[ name ] <- function( ... ) {
-			
+
 // 			foreach( i, arg in vargv )
 // 				printl( name + " : " + i + " : " + arg )
 // 			try {

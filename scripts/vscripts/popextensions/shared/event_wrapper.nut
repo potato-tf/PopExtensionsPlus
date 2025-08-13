@@ -11,6 +11,9 @@
 // We use this to dynamically add/remove events at potentially critical times (large piles of bot spawns mostly)
 // So far I haven't seen any PERF WARNINGS in console using this, some bot tags/custom attributes may yell on bot/player spawn.
 
+// NOTE: rafmod has an issue with player handles being null in player_team events on bot disconnect
+// The null checks in player_team are not necessary in vanilla
+
 POPEXT_CREATE_SCOPE( "__popext_event_wrapper", "PopExtEvents" )
 
 PopExtEvents.EventsPreCollect <- {}
@@ -173,7 +176,6 @@ function PopExtEvents::ClearEvents( index = "unordered" ) {
 
         PopExtEvents.CollectedEvents.clear()
         PopExtEvents.EventsPreCollect.clear()
-        PopExtEvents.CollectEvents()
         return
     }
 

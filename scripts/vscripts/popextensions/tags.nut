@@ -1,7 +1,7 @@
 // behavior tags
 
 // NOTE: some tags will reuse generic key names (cooldown/duration/etc) in place of other args
-// This is for some backwards compatibility with the old pipe syntax 
+// This is for some backwards compatibility with the old pipe syntax
 // Pipe syntax is not fully supported by newer tags and may be haphazardly broken by updates
 // These backwards compatibility efforts come from old tags that existed prior to the new table syntax
 // Anyone interested in creating new tags should not waste time trying to support this deprecated behavior
@@ -180,7 +180,7 @@ PopExtTags.TagFunctions <- {
 
 			scope.stepside = GetPropInt( bot, "m_Local.m_nStepside" )
 		}
-		scope.PlayerThinkTable.StepsoundThink <- StepsoundThink
+		PopExtUtil.AddThink( bot, StepsoundThink )
 	}
 
     /**********************************************************
@@ -285,9 +285,9 @@ PopExtTags.TagFunctions <- {
 
 		local glow = SpawnEntityFromTable("tf_glow", {
 
-			targetname = format( "__popext_alwaysglow_%d", bot.entindex() ) 
-			target = "BigNet" 
-			GlowColor = format( "%d %d %d %d", color[0], color[1], color[2], color[3] ) 
+			targetname = format( "__popext_alwaysglow_%d", bot.entindex() )
+			target = "__popext_tags"
+			GlowColor = format( "%d %d %d %d", color[0], color[1], color[2], color[3] )
 		})
 
 		SetPropEntity( glow, "m_hTarget", bot )
@@ -344,7 +344,7 @@ PopExtTags.TagFunctions <- {
 
 			if ( ( maxrepeats ) >= repeats ) {
 
-				delete bot.GetScriptScope().PlayerThinkTable.FireWeaponThink
+				PopExtUtil.RemoveThink( bot, "FireWeaponThink" )
 				return
 			}
 
@@ -356,7 +356,7 @@ PopExtTags.TagFunctions <- {
 			PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.ReleaseButton( self, %d )", button ), duration )
 			cooldowntime = Time() + cooldown
 		}
-		bot.GetScriptScope().PlayerThinkTable.FireWeaponThink <- FireWeaponThink
+		PopExtUtil.AddThink( bot, FireWeaponThink )
 	}
 
     /***************************************************************************************************************************
@@ -387,7 +387,7 @@ PopExtTags.TagFunctions <- {
 
 			if ( ( maxrepeats ) >= repeats ) {
 
-				delete bot.GetScriptScope().PlayerThinkTable.WeaponSwitchThink
+				PopExtUtil.RemoveThink( bot, "WeaponSwitchThink" )
 				return
 			}
 
@@ -401,7 +401,7 @@ PopExtTags.TagFunctions <- {
 			PopExtUtil.ScriptEntFireSafe( bot, format( "self.Weapon_Switch( PopExtUtil.GetItemInSlot( self, %d ) )", slot ), duration+SINGLE_TICK )
 			cooldowntime = Time() + cooldown
 		}
-		bot.GetScriptScope().PlayerThinkTable.WeaponSwitchThink <- WeaponSwitchThink
+		PopExtUtil.AddThink( bot, WeaponSwitchThink )
 	}
 
     /***************************************************************************************************************************
@@ -432,7 +432,7 @@ PopExtTags.TagFunctions <- {
 		//equip a spellbook if the bot doesn't have one
 		if ( spellbook == null ) {
 
-			local book = CreateByClassname( "tf_weapon_spellbook" )
+			local book = PopExtUtil.SpawnEnt( "tf_weapon_spellbook", "__popext_spellbook" )
 			PopExtUtil.InitEconItem( book, ID_BASIC_SPELLBOOK )
 			SetPropEntityArray( bot, STRING_NETPROP_MYWEAPONS, book, book.GetSlot() )
 
@@ -453,7 +453,7 @@ PopExtTags.TagFunctions <- {
 
 			if ( ( maxrepeats ) >= repeats ) {
 
-				delete bot.GetScriptScope().PlayerThinkTable.SpellThink
+				PopExtUtil.RemoveThink( spellbook, "SpellThink" )
 				return
 			}
 
@@ -476,7 +476,7 @@ PopExtTags.TagFunctions <- {
 
 			cooldowntime = Time() + cooldown
 		}
-		bot.GetScriptScope().PlayerThinkTable.SpellThink <- SpellThink
+		PopExtUtil.AddThink( spellbook, SpellThink )
 	}
 
     /******************************************************************************************
@@ -530,7 +530,7 @@ PopExtTags.TagFunctions <- {
 				// figure out a way to apply cosmetics to ragdolls on death without this
 				// local wearable = PopExtUtil.CreatePlayerWearable( bot, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2] )
 				local wearable = PopExtUtil.GiveWearableItem( bot, 9911, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2] )
-				SetPropString( wearable, "m_iName", "__popext_romevision_model" )
+				SetPropString( wearable, STRING_NETPROP_NAME, "__popext_romevision_model" )
 				return
 			}
 			foreach ( i, cosmetic in cosmetics ) {
@@ -539,7 +539,7 @@ PopExtTags.TagFunctions <- {
 				// figure out a way to apply cosmetics to ragdolls on death without this
 				// local wearable = PopExtUtil.CreatePlayerWearable( bot, cosmetic )
 				local wearable = PopExtUtil.GiveWearableItem( bot, 9911, cosmetic )
-				SetPropString( wearable, "m_iName", "__popext_romevision_model" )
+				SetPropString( wearable, STRING_NETPROP_NAME, "__popext_romevision_model" )
 			}
 	}
 
@@ -581,7 +581,7 @@ PopExtTags.TagFunctions <- {
 			PopExtUtil.SetPlayerAttributes( bot, attr, value, PopExtUtil.GetItemIndex( weapon ) )
 			return
 		}
-		if ( typeof value == "string" ) 
+		if ( typeof value == "string" )
 			value = format( "`%s`", value )
 
 		PopExtUtil.ScriptEntFireSafe( bot, format( "PopExtUtil.SetPlayerAttributes( self, `%s`, "+value+", %d )", attr, PopExtUtil.GetItemIndex( weapon ) ), delay )
@@ -624,7 +624,7 @@ PopExtTags.TagFunctions <- {
 			}
 			cooldown = Time() + interval
 		}
-		bot.GetScriptScope().PlayerThinkTable.RingOfFireThink <- RingOfFireThink
+		PopExtUtil.AddThink( bot, RingOfFireThink )
 	}
 
 	//FIX THIS
@@ -654,7 +654,7 @@ PopExtTags.TagFunctions <- {
 			if ( !bot.HasBotTag( "popext_mobber" ) )
 				aibot.UpdatePathAndMove( t.GetOrigin() )
 		}
-		bot.GetScriptScope().PlayerThinkTable.MeleeAIThink <- MeleeAIThink
+		PopExtUtil.AddThink( bot, MeleeAIThink )
 	}
 
 	function popext_mobber(bot, args) {
@@ -710,7 +710,7 @@ PopExtTags.TagFunctions <- {
 					aibot.LookAt( threat.EyePosition() - Vector( 0, 0, 20 ), 1500, 1500 )
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.MobberThink <- MobberThink
+		PopExtUtil.AddThink( bot, MobberThink )
 	}
 
     /***************************************************************************************************
@@ -746,7 +746,7 @@ PopExtTags.TagFunctions <- {
 		function MoveToPointThink() {
 			aibot.UpdatePathAndMove( pos )
 		}
-		bot.GetScriptScope().PlayerThinkTable.MoveToPointThink <- MoveToPointThink
+		PopExtUtil.AddThink( bot, MoveToPointThink )
 	}
 
 	/************************************************************************************************************************************************************************************************************
@@ -814,9 +814,8 @@ PopExtTags.TagFunctions <- {
 			local target_point = target_point_ent ? target_point_ent.GetOrigin() : Vector()
 
 			// spawn an action point
-			local new_action_point = CreateByClassname( "bot_action_point" )
+			local new_action_point = PopExtUtil.SpawnEnt( "bot_action_point", format( "__popext_actionpoint_%d", bot.entindex() ) )
 
-			PopExtUtil.SetTargetname( new_action_point, format( "__popext_actionpoint_%d", bot.entindex() ) )
 			new_action_point.KeyValueFromString( "next_action_point", next_action_point )
 			new_action_point.KeyValueFromString( "command", command )
 
@@ -885,22 +884,21 @@ PopExtTags.TagFunctions <- {
 						return
 
 					PopExtUtil.ScriptEntFireSafe( bot, format( "self.SetActionPoint( null ); EntFire( `__popext_actionpoint_%d`, `Kill` )", bot.entindex() ), duration )
-					delete PlayerThinkTable.ActionPointWaitUntilDoneThink
+					PopExtUtil.RemoveThink( bot, "ActionPointWaitUntilDoneThink" )
 				}
-				bot.GetScriptScope().PlayerThinkTable.ActionPointWaitUntilDoneThink <- ActionPointWaitUntilDoneThink
+				PopExtUtil.AddThink( bot, ActionPointWaitUntilDoneThink )
 			repeats--
 
 			if ( repeats < 0 ) {
 
-				delete PlayerThinkTable.ActionPointThink
-				if ( "AimTarget" in PlayerThinkTable )
-					delete PlayerThinkTable.AimTargetThink
+				PopExtUtil.RemoveThink( bot, "ActionPointThink" )
+				PopExtUtil.RemoveThink( bot, "AimTargetThink" )
 				return
 			}
 
 			cooldowntime = Time() + ( duration + repeat_cooldown )
 		}
-		bot.GetScriptScope().PlayerThinkTable.ActionPointThink <- ActionPointThink
+		PopExtUtil.AddThink( bot, ActionPointThink )
 		PopEventHook( "player_death", format( "ActionPointDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
@@ -985,7 +983,7 @@ PopExtTags.TagFunctions <- {
 				}
 
 			}
-			bot.GetScriptScope().PlayerThinkTable.AimTargetThink <- AimTargetThink
+			PopExtUtil.AddThink( bot, AimTargetThink )
 		}
 	}
 
@@ -1033,13 +1031,13 @@ PopExtTags.TagFunctions <- {
 
 				if ( refire < 0 ) {
 
-					delete PlayerThinkTable.EntFireRepeatsThink
+					PopExtUtil.RemoveThink( bot, "EntFireRepeatsThink" )
 					return
 				}
 
 				cooldowntime = Time() + refire_time
 			}
-			bot.GetScriptScope().PlayerThinkTable.EntFireRepeatsThink <- EntFireRepeatsThink
+			PopExtUtil.AddThink( bot, EntFireRepeatsThink )
 	}
 
     /*****************************************************************************
@@ -1066,7 +1064,7 @@ PopExtTags.TagFunctions <- {
 			weapon = PopExtUtil.HasItemInLoadout( player, weapon )
 
 			if ( params.const_entity != bot || params.weapon == null || params.weapon != weapon ) return
-	
+
 			params.damage *= amount
 
 		}, EVENT_WRAPPER_TAGS)
@@ -1099,7 +1097,7 @@ PopExtTags.TagFunctions <- {
 	}
 
 	//UNFINIHSED
-	popext_doubledonk = function( bot, args ) {
+	function popext_doubledonk ( bot, args ) {
 
 			local distance = GetThreatDistanceSqr()
 			printl( "holdtime: " + ( 2 * exp( -distance / 10 ) + 0.5 ) )
@@ -1128,7 +1126,7 @@ PopExtTags.TagFunctions <- {
 			local hint = FindByClassnameWithin( null, "bot_hint*", bot.GetOrigin(), 16 )
 			if ( hint && !alwaysfire ) bot.PressFireButton( 0.0 )
 		}
-		bot.GetScriptScope().PlayerThinkTable.DispenserBuildThink <- DispenserBuildThink
+		PopExtUtil.AddThink( bot, DispenserBuildThink )
 		PopEventHook( "player_builtobject", format( "DispenserBuildOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
@@ -1180,7 +1178,7 @@ PopExtTags.TagFunctions <- {
 				PopExtUtil.SetTargetname( building, format( "building%d", building.entindex() ) )
 
 				//create a dispenser
-				local dispenser = CreateByClassname( "obj_dispenser" )
+				local dispenser = PopExtUtil.SpawnEnt( "obj_dispenser" )
 
 				SetPropEntity( dispenser, "m_hBuilder", _bot )
 
@@ -1189,7 +1187,7 @@ PopExtTags.TagFunctions <- {
 				dispenser.SetTeam( _bot.GetTeam() )
 				dispenser.SetSkin( _bot.GetSkin() )
 
-				dispenser.DispatchSpawn()
+				DispatchSpawn( dispenser )
 
 				//post-spawn stuff
 
@@ -1220,7 +1218,7 @@ PopExtTags.TagFunctions <- {
 	}
 
 	function popext_minisentry(bot, args) {
-		
+
 		PopEventHook( "player_builtobject", format( "MinisentryBuildOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
@@ -1334,7 +1332,7 @@ PopExtTags.TagFunctions <- {
 				PopExtUtil.ScriptEntFireSafe( melee, "self.RemoveAttribute( `disable weapon switch` ); self.ReapplyProvision(); self.GetOwner().RemoveEFlags( EFL_BOT )", 1.1 )
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.MeleeWhenCloseThink <- MeleeWhenCloseThink
+		PopExtUtil.AddThink( bot, MeleeWhenCloseThink )
 	}
 
     /********************************************************************************************************
@@ -1414,7 +1412,7 @@ PopExtTags.TagFunctions <- {
 			break
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.BestWeaponThink <- BestWeaponThink
+		PopExtUtil.AddThink( bot, BestWeaponThink )
 	}
 
     /***********************************************************************************************************************************
@@ -1441,14 +1439,16 @@ PopExtTags.TagFunctions <- {
 
 			for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile_*" ); ) {
 
-				if ( projectile.GetOwner() != bot || !PopExtHoming.IsValidProjectile( projectile, PopExtHoming.HomingProjectiles ) ) 
+				if ( projectile.GetOwner() != bot || !PopExtHoming.IsValidProjectile( projectile, PopExtHoming.HomingProjectiles ) )
 					continue
 
 				// Any other parameters needed by the projectile thinker can be set here
 				PopExtHoming.AttachProjectileThinker( projectile, speed_mult, turn_power, ignore_disguised_spies, ignore_stealthed_spies )
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.HomingProjectileScannerThink <- HomingProjectileScannerThink
+
+		PopExtUtil.AddThink( bot, HomingProjectileScannerThink )
+
 		PopEventHook( "OnTakeDamage", format( "HomingTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			if ( !params.const_entity.IsPlayer() ) return
@@ -1476,7 +1476,7 @@ PopExtTags.TagFunctions <- {
 
 			for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile_*" ); ) {
 
-				if ( projectile.IsEFlagSet( EFL_PROJECTILE ) || GetPropEntity( projectile, "m_hOwnerEntity" ) != bot ) continue
+				if ( projectile.IsEFlagSet( EFL_PROJECTILE ) || projectile.GetOwner() != bot ) continue
 
 				EntFireByHandle( projectile, "DispatchEffect", "ParticleEffectStop", -1, null, null )
 
@@ -1498,7 +1498,7 @@ PopExtTags.TagFunctions <- {
 				projectile.AddEFlags( EFL_PROJECTILE )
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.ProjectileTrailThink <- ProjectileTrailThink
+		PopExtUtil.AddThink( bot, ProjectileTrailThink )
 	}
 
     /*************************************************************************************************
@@ -1513,7 +1513,19 @@ PopExtTags.TagFunctions <- {
 
 		local wep = "slot" in args ? PopExtUtil.GetItemInSlot( bot, args.slot ) : PopExtUtil.GetItemInSlot( bot, 0 )
 
-		wep.SetModelSimple( "model" in args ? args.model : args.type )
+		local scope = bot.GetScriptScope()
+		local modelindex = PrecacheModel( "model" in args ? args.model : args.type )
+		local tp_wearable = CreateByClassname( "tf_wearable" )
+
+		SetPropInt( tp_wearable, STRING_NETPROP_MODELINDEX, modelindex )
+		SetPropBool( tp_wearable, STRING_NETPROP_INIT, true )
+		SetPropBool( tp_wearable, STRING_NETPROP_ATTACH, true )
+		PopExtUtil._SetOwner( tp_wearable, bot )
+		DispatchSpawn( tp_wearable )
+		tp_wearable.AcceptInput( "SetParent", "!activator", bot, bot )
+		SetPropInt( tp_wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL )
+
+		scope.Preserved.kill_on_spawn.append( tp_wearable )
 	}
 
     /************************************************************************************
@@ -1553,9 +1565,9 @@ PopExtTags.TagFunctions <- {
 				bot.Teleport( true, spawn_point, true, viewangle, true, velocity )
 				return
 			}
-			delete PlayerThinkTable.SpawnHereCollisionFixThink
+			PopExtUtil.RemoveThink( bot, "SpawnHereCollisionFixThink" )
 		}
-		bot.GetScriptScope().PlayerThinkTable.SpawnHereCollisionFixThink <- SpawnHereCollisionFixThink
+		PopExtUtil.AddThink( bot, SpawnHereCollisionFixThink )
 	}
 
     /******************************************************************************************************************
@@ -1617,7 +1629,7 @@ PopExtTags.TagFunctions <- {
 				}
 			}
 		}
-		bot.GetScriptScope().PlayerThinkTable.ImprovedAirblastThink <- ImprovedAirblastThink
+		PopExtUtil.AddThink( bot, ImprovedAirblastThink )
 	}
 
     /************************************************************
@@ -1664,8 +1676,8 @@ PopExtTags.TagFunctions <- {
 			}
 		}
 		if ( "duration" in args )
-			PopExtUtil.ScriptEntFireSafe( bot, "delete self.GetScriptScope().PlayerThinkTable.AimAtThink", args.duration.tofloat() )
-		bot.GetScriptScope().PlayerThinkTable.AimAtThink <- AimAtThink
+			PopExtUtil.ScriptEntFireSafe( bot, "PopExtUtil.RemoveThink( bot, `AimAtThink` )", args.duration.tofloat() )
+		PopExtUtil.AddThink( bot, AimAtThink )
 	}
 
 
@@ -1712,17 +1724,11 @@ PopExtTags.TagFunctions <- {
 		//   will always have its first slot active pre-spawn if it has any weapons.
 
 		// Get the weapon in the slot provided.
-		local weapon = null
-		local notfound = true
-		for ( local i = 0; i < SLOT_COUNT; i++ ) {
-			weapon = GetPropEntityArray( bot, STRING_NETPROP_MYWEAPONS, i )
-			if ( weapon == null || weapon.GetSlot() != slot ) continue
-			notfound = false
-			break
-		}
+		local weapon = PopExtUtil.GetItemInSlot( bot, slot )
+
 		// Throw an error and early return if the weapon in the specified slot could not be
 		//  found.
-		if ( notfound ) {
+		if ( !weapon ) {
 			local e = format( "popext_warpaint: Bot '%%s' does not have a weapon in slot %i.", slot )
 			// We must delay the error message by 1 tick in order to get the proper bot name.
 			PopExtUtil.ScriptEntFireSafe( bot,
@@ -1802,7 +1808,7 @@ PopExtTags.TagFunctions <- {
 		PopEventHook( "player_death", format( "DropWeaponDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
-			
+
 			if ( _bot != bot ) return
 
 			local slot = args.type ? args.type.tointeger() : -1
@@ -1815,7 +1821,7 @@ PopExtTags.TagFunctions <- {
 			SetPropBool( wearable, STRING_NETPROP_INIT, true )
 			SetPropInt( wearable, STRING_NETPROP_ITEMDEF, itemid )
 
-			wearable.DispatchSpawn()
+			DispatchSpawn( wearable )
 
 			local modelname = wearable.GetModelName()
 
@@ -1829,7 +1835,7 @@ PopExtTags.TagFunctions <- {
 			droppedweapon.SetModelSimple( modelname )
 			droppedweapon.SetAbsOrigin( _bot.GetOrigin() )
 
-			droppedweapon.DispatchSpawn()
+			DispatchSpawn( droppedweapon )
 
 			// Store attributes in scope, when it gets picked up add the attributes to the real weapon
 
@@ -1925,7 +1931,7 @@ PopExtTags.TagFunctions <- {
 
 			bot.TakeDamage( INT_MAX, DMG_GENERIC, __popext_bosskiller )
 		}
-		scope.PlayerThinkTable.BossHealthThink <- BossHealthThink
+		PopExtUtil.AddThink( bot, BossHealthThink )
 	}
 
     /**********************************************************
@@ -1980,7 +1986,7 @@ PopExtTags.TagFunctions <- {
 				bot_scope.Teleported = true
 			}
 		}
-		bot_scope.PlayerThinkTable.TeleportNearVictimThink <- TeleportNearVictimThink
+		PopExtUtil.AddThink( bot, TeleportNearVictimThink )
 	}
 
 	/**********************************************************
@@ -2093,9 +2099,9 @@ PopExtTags.TagFunctions <- {
 
 			cooldowntime = Time() + interval
 		}
-		bot.GetScriptScope().PlayerThinkTable.SuicideCounterThink <- SuicideCounterThink
+		PopExtUtil.AddThink( bot, SuicideCounterThink )
 		if ( duration )
-			PopExtUtil.ScriptEntFireSafe( bot, "delete self.GetScriptScope().PlayerThinkTable.SuicideCounterThink", duration )
+			PopExtUtil.ScriptEntFireSafe( bot, "PopExtUtil.RemoveThink( bot, `SuicideCounterThink` )", duration )
 	}
 
 	/***********************************************************************************************************************
@@ -2111,7 +2117,7 @@ PopExtTags.TagFunctions <- {
 		local flags 				 = "flags" in args ? args.flags : 0
 		local change_max_enemy_count = "changeMaxEnemyCount" in args ? args.changeMaxEnemyCount : true
 
-		if ( !PopExtMain.IncludeModules( "wavebar" ) ) 
+		if ( !PopExtMain.IncludeModules( "wavebar" ) )
 			return
 
 		PopExtWavebar.SetWaveIcon( icon, flags, count, change_max_enemy_count )
@@ -2150,16 +2156,17 @@ PopExtTags.TagFunctions <- {
 
 					if ( repeats < 1 ) {
 
-						delete PlayerThinkTable.ChangeAttributesThink
+						PopExtUtil.RemoveThink( bot, "ChangeAttributesThink" )
 						return
 					}
 
 					cooldowntime = Time() + cooldown
 				}
 			}
-			bot.GetScriptScope().PlayerThinkTable.ChangeAttributesThink <- ChangeAttributesThink
+			PopExtUtil.AddThink( bot, ChangeAttributesThink )
 		}
 	}
+
 	function popext_taunt(bot, args) {
 
 		local id       = args.id
@@ -2193,13 +2200,13 @@ PopExtTags.TagFunctions <- {
 
 			if ( repeats < 0 ) {
 
-				delete PlayerThinkTable.TauntThink
+				PopExtUtil.RemoveThink( bot, "TauntThink" )
 				return
 			}
 
 			cooldowntime = Time() + cooldown
 		}
-		bot.GetScriptScope().PlayerThinkTable.TauntThink <- TauntThink
+		PopExtUtil.AddThink( bot, TauntThink )
 	}
 
 	function popext_playsequence(bot, args) {
@@ -2212,7 +2219,7 @@ PopExtTags.TagFunctions <- {
 		local duration 		= "duration" in args ? args.duration : INT_MAX
 		local ifseetarget 	= "ifseetarget" in args ? args.ifseetarget : false
 		local ifhealthbelow = "ifhealthbelow" in args ? args.ifhealthbelow : INT_MAX
-		
+
 		if ( ifseetarget && !PopExtMain.IncludeModules( "botbehavior" ) )
 			ifseetarget = false
 
@@ -2232,14 +2239,15 @@ PopExtTags.TagFunctions <- {
 
 			if ( repeats < 0 ) {
 
-				delete PlayerThinkTable.PlaySequenceThink
+				PopExtUtil.RemoveThink( bot, "PlaySequenceThink" )
 				return
 			}
 
 			cooldowntime = Time() + cooldown
 		}
-		bot.GetScriptScope().PlayerThinkTable.PlaySequenceThink <- PlaySequenceThink
+		PopExtUtil.AddThink( bot, PlaySequenceThink )
 	}
+
 	function popext_ignore(bot, args) {
 		local flags = "flags" in args ? args.flags : args.type
 		bot.SetBehaviorFlag( flags )
@@ -2265,10 +2273,12 @@ PopExtTags.TagFunctions <- {
 		local flags = "flags" in args ? args.flags : 0
 		local count = "count" in args ? args.count : 1
 
-		if ( !PopExtMain.IncludeModules( "wavebar" ) ) 
+		if ( !PopExtMain.IncludeModules( "wavebar" ) )
 			return
 
 		PopEventHook( "player_death", format( "IconOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+
+			if ( params.userid != PopExtUtil.BotTable[ bot ] ) return
 
 			PopExtWavebar.DecrementWaveIcon( icon, flags, count )
 
@@ -2432,12 +2442,12 @@ function PopExtTags::EvaluateTags( bot, changeattributes = false ) {
 		local func = ""; tag.find( "|" ) ? func = split( tag, "|" )[0] : func = split( tag, "{" )[0]
 		local args = ParseTagArguments( bot, tag )
 
-		if ( PopExtConfig.DebugText )
-			foreach ( k, v in args )
-				PopExtMain.Error.DebugLog( format( "( %s [%d] ) EvaluateTags ( %s ): {%s = %s}", GetClientConvarValue( "name", bot.entindex() ), PopExtUtil.BotTable[bot], func, k.tostring(), v ? v.tostring() : "null" ) )
+		// if ( PopExtConfig.DebugText )
+			// foreach ( k, v in args )
+				// PopExtMain.Error.DebugLog( format( "( %s [%d] ) EvaluateTags ( %s ): {%s = %s}", GetClientConvarValue( "name", bot.entindex() ), PopExtUtil.BotTable[bot], func, k.tostring(), v ? v.tostring() : "null" ) )
 
 		if ( func in TagFunctions )
-			TagFunctions[func].call( bot.GetScriptScope(), bot, args )
+			TagFunctions[ func ].call( bot.GetScriptScope(), bot, args )
 
 		if ( tag in custom_tags ) {
 
@@ -2467,7 +2477,8 @@ PopEventHook( "player_team", "TagsPlayerTeam", function( params ) {
 	//this can fire before we are spawned
 	local scope = PopExtUtil.GetEntScope( bot )
 
-	if ( params.team == TEAM_SPECTATOR ) _AddThinkToEnt( bot, null )
+	if ( params.team == TEAM_SPECTATOR )
+		PopExtUtil.RemoveThink( bot )
 
 }, EVENT_WRAPPER_TAGS)
 
@@ -2494,7 +2505,7 @@ PopEventHook( "player_death", "TagsPlayerDeath", function( params ) {
 	local scope = bot.GetScriptScope()
 	bot.ClearAllBotTags()
 
-	_AddThinkToEnt( bot, null )
+	PopExtUtil.RemoveThink( bot )
 
 }, EVENT_WRAPPER_TAGS)
 

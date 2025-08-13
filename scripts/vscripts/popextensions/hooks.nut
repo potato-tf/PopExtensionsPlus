@@ -67,7 +67,6 @@ function PopExtHooks::PopHooksThink() {
 		if ( !( "created" in scope ) ) {
 
 			scope.created         	 <- true
-			scope.TankThinkTable  	 <- {}
 			scope.max_health         <- tank.GetMaxHealth()
 			scope.team            	 <- tank.GetTeam()
 			scope.teamchanged     	 <- false
@@ -82,7 +81,8 @@ function PopExtHooks::PopHooksThink() {
 				cur_speed          <- cur_vel.Length()
 				last_health_percentage <- GetPropFloat( self, "m_lastHealthPercentage" )
 			}
-			scope.TankThinkTable.Updates <- Updates
+			PopExtUtil.AddThink( tank, Updates )
+
 			local tank_name = tank.GetName().tolower()
 
 			foreach( name, table in PopExt.tank_names_wildcard )
@@ -129,12 +129,12 @@ function PopExtHooks::PopHooksThink() {
 
 							cooldowntime = Time() + 5.0
 						}
-						scope.TankThinkTable.PingSound <- PingSound
+						PopExtUtil.AddThink( tank, PingSound )
 					}
 					if ( "EngineLoop" in sound_overrides && !scope.engineloopreplaced ) {
 
 						StopSoundOn( "MVM.TankEngineLoop", tank )
-						EmitSoundEx({ 
+						EmitSoundEx({
 							sound_name = sound_overrides.EngineLoop
 							entity = tank
 							filter_type = RECIPIENT_FILTER_GLOBAL
@@ -177,13 +177,13 @@ function PopExtHooks::PopHooksThink() {
 
 							if ( tank == null ) {
 
-								delete scope.TankThinkTable.DeploySound
+								PopExtUtil.RemoveThink( tank, "DeploySound" )
 								return
 							}
 
 							delete scope.pop_property.SoundOverrides.Deploy
 						}
-						scope.TankThinkTable.DeploySound <- DeploySound
+						PopExtUtil.AddThink( tank, DeploySound )
 					}
 				}
 
@@ -209,8 +209,10 @@ function PopExtHooks::PopHooksThink() {
 					scope.team = tank.GetTeam()
 				}
 
-				if ( "NoScreenShake" in scope.pop_property && scope.pop_property.NoScreenShake )
-					scope.TankThinkTable.NoScreenShake <- @() ScreenShake( self.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true )
+				if ( "NoScreenShake" in scope.pop_property && scope.pop_property.NoScreenShake ) {
+					function NoScreenShake() { ScreenShake( self.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true ) }
+					PopExtUtil.AddThink( tank, NoScreenShake )
+				}
 
 				if ( "IsBlimp" in scope.pop_property && scope.pop_property.IsBlimp ) {
 
@@ -269,7 +271,7 @@ function PopExtHooks::PopHooksThink() {
 						if ( GetPropFloat( blimp_train, "m_flSpeed" ) != GetPropFloat( self, "m_speed" ) )
 							EntFireByHandle( blimp_train, "SetSpeedReal", GetPropFloat( self, "m_speed" ).tostring(), -1, null, null )
 					}
-					scope.TankThinkTable.BlimpThink <- BlimpThink
+					PopExtUtil.AddThink( tank, BlimpThink )
 				}
 
 				if ( "Skin" in scope.pop_property )
@@ -282,34 +284,32 @@ function PopExtHooks::PopHooksThink() {
 				}
 
 				if ( "DisableTracks" in scope.pop_property && scope.pop_property.DisableTracks )
-					for ( local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer() )
-						if ( child.GetClassname() == "prop_dynamic" )
-							if ( child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl" )
-								child.DisableDraw()
+					for ( local child = tank.FirstMoveChild(); (child && child.GetClassname() == "prop_dynamic"); child = child.NextMovePeer() )
+						if ( child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl" )
+							child.DisableDraw()
 
 				if ( "DisableBomb" in scope.pop_property && scope.pop_property.DisableBomb )
-					for ( local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer() )
-						if ( child.GetClassname() == "prop_dynamic" )
-							if ( child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl" )
-								child.DisableDraw()
+					for ( local child = tank.FirstMoveChild(); (child && child.GetClassname() == "prop_dynamic"); child = child.NextMovePeer() )
+						if ( child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl" )
+							child.DisableDraw()
 
 				if ( "DisableSmoke" in scope.pop_property && scope.pop_property.DisableSmoke ) {
 					function DisableSmoke() {
 						//disables smokestack, still emits one smoke particle when spawning and when moving out from under low ceilings ( solid brushes 300 units or lower )
 						EntFireByHandle( self, "DispatchEffect", "ParticleEffectStop", -1, null, null )
 					}
-					scope.TankThinkTable.DisableSmoke <- DisableSmoke
+					PopExtUtil.AddThink( tank, DisableSmoke )
 				}
 
 				if ( "Scale" in scope.pop_property )
 					EntFireByHandle( tank, "SetModelScale", scope.pop_property.Scale.tostring(), -1, null, null )
-				
+
 				if ( "AngleOverride" in scope.pop_property ) {
 
 					function AngleOverride() {
 						self.SetAbsAngles( PopExtUtil.KVStringToVectorOrQAngle( pop_property.AngleOverride, true ) )
 					}
-					scope.TankThinkTable.AngleOverride <- AngleOverride
+					PopExtUtil.AddThink( tank, AngleOverride )
 				}
 
 				if ( "Model" in scope.pop_property ) {
@@ -323,7 +323,7 @@ function PopExtHooks::PopHooksThink() {
 						SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_NONE )
 						SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_ROME )
 					}
-					scope.TankThinkTable.SetModel <- SetModel
+					PopExtUtil.AddThink( tank, SetModel )
 					if ( "LeftTrack" in scope.pop_property.Model ) {
 						scope.pop_property.Model.TrackL <- scope.pop_property.Model.LeftTrack
 						delete scope.pop_property.Model.LeftTrack
@@ -337,9 +337,7 @@ function PopExtHooks::PopHooksThink() {
 						delete scope.pop_property.ModelPrecached.RightTrack
 					}
 
-					for ( local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer() ) {
-
-						if ( child.GetClassname() != "prop_dynamic" ) continue
+					for ( local child = tank.FirstMoveChild(); ( child && child.GetClassname() == "prop_dynamic" ); child = child.NextMovePeer() ) {
 
 						local replace_model     = -1
 						local replace_model_str = ""
@@ -378,16 +376,6 @@ function PopExtHooks::PopHooksThink() {
 					}
 				}
 			}
-
-			function TankThinks() {
-
-				foreach ( name, func in scope.TankThinkTable ) 
-					func.call( scope )
-				return -1
-			}
-
-			TankThinks() //run thinks for availability in OnSpawn
-			AddThinkToEnt( tank, "TankThinks" )
 
 			foreach( name, table in PopExt.tank_names_wildcard )
 				if ( startswith( tank_name, name ) && "OnSpawn" in table )
@@ -488,14 +476,6 @@ PopEventHook( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
 
-	if ( scope != null && "wearables_to_kill" in scope ) {
-		foreach( wearable in scope.wearables_to_kill )
-			if ( wearable.IsValid() )
-				EntFireByHandle( wearable, "Kill", "", -1, null, null )
-
-		delete scope.wearables_to_kill
-	}
-
 	if ( "popFiredDeathHook" in scope && !scope.popFiredDeathHook ) {
 
 		PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
@@ -516,18 +496,9 @@ PopEventHook( "player_team", "PopHooksPlayerTeam", function( params ) {
 	if ( params.team != TEAM_SPECTATOR ) return
 
 	local player = GetPlayerFromUserID( params.userid )
-
-	if ( !player ) return //can sometimes be null when the server empties out?
+	if ( !player || !player.IsValid() ) return
 
 	local scope = player.GetScriptScope()
-
-	if ( scope != null && "wearables_to_kill" in scope ) {
-		foreach( wearable in scope.wearables_to_kill )
-			if ( wearable.IsValid() )
-				EntFireByHandle( wearable, "Kill", "", -1, null, null )
-
-		delete scope.wearables_to_kill
-	}
 
 	if ( "popFiredDeathHook" in scope && !scope.popFiredDeathHook ) {
 		PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
