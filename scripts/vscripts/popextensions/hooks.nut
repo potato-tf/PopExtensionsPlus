@@ -62,10 +62,8 @@ function PopExtHooks::PopHooksThink() {
 
 	for ( local tank; tank = FindByClassname( tank, "tank_boss" ); ) {
 
-		if ( tank.GetScriptThinkFunc() != "" )
-			continue
-
 		local scope = PopExtUtil.GetEntScope( tank )
+			continue
 
 		if ( !( "created" in scope ) ) {
 
