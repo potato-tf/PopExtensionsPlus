@@ -313,6 +313,7 @@ function PopExtHooks::PopHooksThink() {
 				}
 
 				if ( "Model" in scope.pop_property ) {
+
 					if ( !( "ModelVisionOnly" in scope.pop_property && scope.pop_property.ModelVisionOnly ) )
 						tank.SetModelSimple( scope.pop_property.Model.Default ) //changes bbox size
 

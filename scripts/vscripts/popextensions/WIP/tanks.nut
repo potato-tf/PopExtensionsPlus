@@ -309,25 +309,43 @@ PopExtTanks.tank_funcs <- {
             tank.SetModelSimple( scope.pop_property.Model.Default ) //changes bbox size
 
         // using a think prevents tank from briefly becoming invisible when changing damage models
-        function SetModelThink() {
 
-            SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_NONE )
-            SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_ROME )
+        function TankModelThink() {
 
-            local health_stage = cur_health <= 0 ? 3 : floor( ( max_health - cur_health ) / max_health.tofloat() * 4 )
+            //sets damaged tank models
+            if ( cur_health != self.GetHealth() ) {
 
-            if ( last_health_stage != health_stage ) {
+                local health_stage
+                if ( self.GetHealth() <= 0 )
+                    health_stage = 3
+                else
+                    // how many quarters of max_health has the tank received in damage
+                    health_stage = floor( ( max_health - self.GetHealth() ) / max_health.tofloat() * 4 )
 
-                local name = health_stage == 0 ? "Default" : format( "Damage%d", health_stage )
+                if ( last_health_stage != health_stage && "pop_property" in this && "Model" in pop_property ) {
 
-                if ( !( "ModelVisionOnly" in pop_property && pop_property.ModelVisionOnly ) )
-                    tank.SetModelSimple( pop_property.Model[name] )
+                    local name = health_stage == 0 ? "Default" : format( "Damage%d", health_stage )
 
-                cur_model <- pop_property.ModelPrecached[name]
+                    if ( !( "ModelVisionOnly" in pop_property && pop_property.ModelVisionOnly ) )
+                        self.SetModelSimple( pop_property.Model[name] )
+
+                    cur_model <- pop_property.ModelPrecached[name]
+
+                }
+
+                cur_health = self.GetHealth()
                 last_health_stage = health_stage
+
+            }
+
+            if ( GetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, VISION_MODE_NONE ) != cur_model ) {
+
+                SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_NONE )
+                SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_ROME )
             }
         }
-        PopExtUtil.AddThink( tank, SetModelThink )
+        PopExtUtil.AddThink( tank, TankModelThink )
+
         if ( "LeftTrack" in scope.pop_property.Model ) {
             scope.pop_property.Model.TrackL <- scope.pop_property.Model.LeftTrack
             scope.pop_property.ModelPrecached.TrackL <- scope.pop_property.ModelPrecached.LeftTrack
