@@ -185,7 +185,7 @@ local unload_cleanup = [
  ***********************/
 function PopExtMain::_OnDestroy() {
 
-	AddThinkToEnt <- _AddThinkToEnt
+	::AddThinkToEnt <- _AddThinkToEnt
 
 	if ( "_EntFireByHandle" in ROOT )
 		::EntFireByHandle <- ::_EntFireByHandle
