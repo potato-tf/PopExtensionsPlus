@@ -63,9 +63,8 @@ function PopExtHooks::PopHooksThink() {
 	for ( local tank; tank = FindByClassname( tank, "tank_boss" ); ) {
 
 		local scope = PopExtUtil.GetEntScope( tank )
-			continue
 
-		if ( !( "created" in scope ) ) {
+		if ( !( "created" in scope ) && tank.GetScriptThinkFunc() == "" ) {
 
 			scope.created         	 <- true
 			scope.max_health         <- tank.GetMaxHealth()
@@ -319,19 +318,52 @@ function PopExtHooks::PopHooksThink() {
 
 					scope.cur_model <- scope.pop_property.ModelPrecached.Default
 
-					//using a think prevents tank from briefly becoming invisible when changing damage models
-					function SetModel() {
-						SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_NONE )
-						SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_ROME )
+					function TankModelThink() {
+
+						//sets damaged tank models
+						if ( cur_health != self.GetHealth() ) {
+
+							local health_stage
+							if ( self.GetHealth() <= 0 )
+								health_stage = 3
+							else
+								// how many quarters of max_health has the tank received in damage
+								health_stage = floor( ( max_health - self.GetHealth() ) / max_health.tofloat() * 4 )
+
+							if ( last_health_stage != health_stage && "pop_property" in this && "Model" in pop_property ) {
+
+								local name = health_stage == 0 ? "Default" : format( "Damage%d", health_stage )
+
+								if ( !( "ModelVisionOnly" in pop_property && pop_property.ModelVisionOnly ) )
+									self.SetModelSimple( pop_property.Model[name] )
+
+								cur_model <- pop_property.ModelPrecached[name]
+
+							}
+
+							cur_health = self.GetHealth()
+							last_health_stage = health_stage
+
+						}
+
+						if ( GetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, VISION_MODE_NONE ) != cur_model ) {
+
+							SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_NONE )
+							SetPropIntArray( self, STRING_NETPROP_MDLINDEX_OVERRIDES, cur_model, VISION_MODE_ROME )
+						}
 					}
-					PopExtUtil.AddThink( tank, SetModel )
+					PopExtUtil.AddThink( tank, TankModelThink )
+
 					if ( "LeftTrack" in scope.pop_property.Model ) {
+
 						scope.pop_property.Model.TrackL <- scope.pop_property.Model.LeftTrack
 						delete scope.pop_property.Model.LeftTrack
 						scope.pop_property.ModelPrecached.TrackL <- scope.pop_property.ModelPrecached.LeftTrack
 						delete scope.pop_property.ModelPrecached.LeftTrack
 					}
+
 					if ( "RightTrack" in scope.pop_property.Model ) {
+
 						scope.pop_property.Model.TrackR <- scope.pop_property.Model.RightTrack
 						delete scope.pop_property.Model.RightTrack
 						scope.pop_property.ModelPrecached.TrackR <- scope.pop_property.ModelPrecached.RightTrack
@@ -361,6 +393,7 @@ function PopExtHooks::PopHooksThink() {
 						}
 
 						if ( replace_model != -1 ) {
+
 							child.SetModel( replace_model_str )
 							SetPropIntArray( child, STRING_NETPROP_MDLINDEX_OVERRIDES, replace_model, VISION_MODE_NONE )
 							SetPropIntArray( child, STRING_NETPROP_MDLINDEX_OVERRIDES, replace_model, VISION_MODE_ROME )
@@ -386,29 +419,6 @@ function PopExtHooks::PopHooksThink() {
 				local table = PopExt.tank_names[tank_name]
 				if ( "OnSpawn" in table )
 					table.OnSpawn( tank, tank_name )
-			}
-		}
-		else {
-			//sets damaged tank models
-			if ( scope.cur_health != tank.GetHealth() ) {
-				local health_stage
-				if ( tank.GetHealth() <= 0 )
-					health_stage = 3
-				else
-					// how many quarters of max_health has the tank received in damage
-					health_stage = floor( ( scope.max_health - tank.GetHealth() )/scope.max_health.tofloat() * 4 )
-
-				if ( scope.last_health_stage != health_stage && "pop_property" in scope && "Model" in scope.pop_property ) {
-					local name = health_stage == 0 ? "Default" : format( "Damage%d", health_stage )
-
-					if ( !( "ModelVisionOnly" in scope.pop_property && scope.pop_property.ModelVisionOnly ) )
-						tank.SetModelSimple( scope.pop_property.Model[name] )
-
-					scope.cur_model <- scope.pop_property.ModelPrecached[name]
-				}
-
-				scope.cur_health = tank.GetHealth() //set this here instead of Updates think to prevent conflict
-				scope.last_health_stage = health_stage
 			}
 		}
 	}
