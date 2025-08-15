@@ -62,9 +62,12 @@ function PopExtHooks::PopHooksThink() {
 
 	for ( local tank; tank = FindByClassname( tank, "tank_boss" ); ) {
 
+		if ( tank.GetScriptThinkFunc() != "" )
+			continue
+
 		local scope = PopExtUtil.GetEntScope( tank )
 
-		if ( !( "created" in scope ) && tank.GetScriptThinkFunc() == "" ) {
+		if ( !( "created" in scope ) ) {
 
 			scope.created         	 <- true
 			scope.max_health         <- tank.GetMaxHealth()
