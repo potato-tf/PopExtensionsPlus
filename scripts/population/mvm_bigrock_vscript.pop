@@ -31,6 +31,20 @@ WaveSchedule
 			// Attributes AlwaysFireWeapon
 		}
 	}
+
+	// Wave X Spies
+	Mission
+	{
+		Objective           Spy
+		Where               spawnbot_mission_spy
+		BeginAtWave         1
+		RunForThisManyWaves 1
+		CooldownTime        10
+		DesiredCount        5
+		InitialCooldown     0
+		TFBot { Template T_TFBot_Spy }
+	}
+	
 	Wave
 	{
 		// Add or replace existing InitWaveOutput with code below
@@ -42,7 +56,7 @@ WaveSchedule
 				// Load popextensions script
 				IncludeScript(`popextensions_main.nut`, getroottable())
 
-				//parameters: text, prefix color, prefix text, sync with game_text true/false
+				// parameters: text, prefix color, prefix text, sync with game_text true/false
 				Info(@`This is an explanation text example
 				|PAUSE 2
 				|Explanation text can support pauses, and optionally syncing chat prints with the game_text
@@ -357,23 +371,23 @@ WaveSchedule
 					// SpawnTemplate = `templateName`
                 })
 				// create a point_viewcontrol with custom ent_additions spawnflags
-				// ::PointTemplates <- {
+				::PointTemplates <- {
 
-				// 	viewcontrol = {
+					viewcontrol = {
 
-				// 		[0] = {
+						[0] = {
 
-				// 			point_viewcontrol = {
+							point_viewcontrol = {
 
-				// 				targetname = `viewcontrol_example`
-				// 				spawnflags = 768 //custom spawnflags to fix viewcontrol + enable for all players
-				// 				vscripts = `popextensions/ent_additions`
-				// 				origin = `32 4892 659`
-				// 				angles = `23 -47 0`
-				// 			}
-				// 		}
-				// 	}
-				// }
+								targetname = `viewcontrol_example`
+								spawnflags = 256|512 //custom spawnflags to fix viewcontrol + enable for all players
+								vscripts = `popextensions/ent_additions`
+								origin = `32 4892 659`
+								angles = `23 -47 0`
+							}
+						}
+					}
+				}
             "
 		}
 		StartWaveOutput
@@ -453,54 +467,54 @@ WaveSchedule
 					::PointTemplates <- {}
 
 				PointTemplates.SampleTemplateName <- {
-					NoFixup = 1, //Name fix-up behaves somewhat similarly to point_template name fix-up, appending a unique number to the end of the targetname to separate identical templates.  Set NoFixup 1 to disable this behavior
+					NoFixup = 1, // Name fix-up appends a unique number to the end of the targetname to separate identical templates.  Set NoFixup 1 to disable this behavior
 					[0] = { //first entity to spawn in the template
-							item_teamflag = { //entity classnames here
-									targetname = `example_flag`
-									origin = `0 0 0`
-									angles = `0 0 0`
-									//other item_teamflag key/values go in here
-							}
+						item_teamflag = { //entity classnames here
+								targetname = `example_flag`
+								origin = `0 0 0`
+								angles = `0 0 0`
+								//other item_teamflag key/values go in here
+						}
 					},
 					[1] = { //second entity to spawn in the template
-							prop_dynamic = {
-									targetname = `example_barrel`
-									parentname = `example_flag` //parent a barrel prop to the flag
-									model = `models/props_badlands/barrel01.mdl`
-							}
+						prop_dynamic = {
+								targetname = `example_barrel`
+								parentname = `example_flag` //parent a barrel prop to the flag
+								model = `models/props_badlands/barrel01.mdl`
+						}
 					}
 				}
 				PointTemplates.Sentry <- {
 					KeepAlive = 1, //Dont remove entities after their spawner had been killed
 					RemoveIfKilled = `sentry`, // Remove all entities in template if the specified entity is killed
 					[0] = {
-							OnSpawnOutput = { //Parent entity is the !activator. Set builder to parent entity
-								Target = `sentry` //targetname of an entity added below
-								Action = `setbuilder`
-								Delay = 0.2
-							}
+						OnSpawnOutput = { //Parent entity is the !activator. Set builder to parent entity
+							Target = `sentry` //targetname of an entity added below
+							Action = `setbuilder`
+							Delay = 0.2
+						}
 					},
 					[1] = {
 							OnParentKilledOutput = { //kill players after the carrier was dead
-								Target = `player`
-								Action =`sethealth`
-								Delay = 0.00
-								Param = 1
-							}
+							Target = `player`
+							Action =`sethealth`
+							Delay = 0.00
+							Param = 1
+						}
 					},
 					[2] = {
-							prop_dynamic = { //Entity classname
-								model = `models/props_coalmines/wood_fence_short_128.mdl` //keyvalue
-								solid = 0 //Physics collision model (0- No collision, 1 - BSP, 2 - Bounding box, 3 - Oriented bounding box, 6 - VPhysics)=
-							}
+						prop_dynamic = { //Entity classname
+							model = `models/props_coalmines/wood_fence_short_128.mdl` //keyvalue
+							solid = 0 //Physics collision model (0- No collision, 1 - BSP, 2 - Bounding box, 3 - Oriented bounding box, 6 - VPhysics)=
+						}
 					},
 					[3] = {
-							obj_sentrygun = {
-								targetname = `sentry` //Entity name. Required if the entity is going to be referenced somewhere
-								origin = `0 0 0`
-								teamnum = 3 // 2 - Red team, 3 - Blu team
-								SolidToPlayer = 0
-							}
+						obj_sentrygun = {
+							targetname = `sentry` //Entity name. Required if the entity is going to be referenced somewhere
+							origin = `0 0 0`
+							teamnum = 3 // 2 - Red team, 3 - Blu team
+							SolidToPlayer = 0
+						}
 					}
 				}
 
@@ -592,7 +606,7 @@ WaveSchedule
 						`MVM.PlayerDied`: null
 					}
 
-					AddCond = [32, 10] //speed boost for 10s
+					// AddCond = [32, 10] //speed boost for 10s
 
 					PlayerAttributes = {
 

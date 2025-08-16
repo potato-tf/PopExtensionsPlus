@@ -1082,6 +1082,7 @@ PopExtTags.TagFunctions <- {
 
 		SetPropBool( bot, "m_bForcedSkin", true )
 		SetPropInt( bot, "m_nForcedSkin", "skin" in args ? args.skin.tointeger() : args.type.tointeger() )
+		SetPropInt( bot, "m_iPlayerSkinOverride", 1 )
 
 		PopEventHook( "player_team", format( "ResetBotSkin_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 

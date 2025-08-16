@@ -247,6 +247,7 @@ function PopExtUtil::ThinkTable::EntityManagerThink() {
 		gen = EntityManager()
 
 	resume gen
+	// resume EntityManager()
 
 	entmanager_cooldown = 0.0
 }
@@ -693,6 +694,7 @@ function PopExtUtil::CreatePlayerWearable( player, model, bonemerge = true, atta
 	SetParentLocalOrigin( wearable, player, attachment )
 
 	local scope = player.GetScriptScope()
+
 	if ( auto_destroy )
 		scope.Preserved.kill_on_spawn.append( wearable )
 
@@ -715,6 +717,7 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
 
 	PopExtUtil.InitEconItem( wearable, item_id )
 	DispatchSpawn( wearable )
+	PopExtUtil.SetTargetname( wearable, format( "__popext_wearable_%d", wearable.entindex() ) )
 
 	if ( model ) 
 		wearable.SetModelSimple( model )
