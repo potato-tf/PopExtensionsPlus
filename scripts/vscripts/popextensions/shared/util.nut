@@ -703,10 +703,6 @@ function PopExtUtil::CreatePlayerWearable( player, model, bonemerge = true, atta
 // The wearable is automatically removed on respawn.
 function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
 
-	local model_index = GetModelIndex( model )
-	if ( model_index == -1 )
-		model_index = PrecacheModel( model )
-
 	local dummy = CreateByClassname( "tf_weapon_parachute" )
 	SetPropInt( dummy, STRING_NETPROP_ITEMDEF, ID_BASE_JUMPER )
 	SetPropBool( dummy, STRING_NETPROP_INIT, true )
@@ -720,7 +716,8 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
 	PopExtUtil.InitEconItem( wearable, item_id )
 	DispatchSpawn( wearable )
 
-	if ( model ) wearable.SetModelSimple( model )
+	if ( model ) 
+		wearable.SetModelSimple( model )
 
 	// avoid infinite loops from post_inventory_application hooks
 	player.AddEFlags( EFL_CUSTOM_WEARABLE )
