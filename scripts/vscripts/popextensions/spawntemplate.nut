@@ -48,7 +48,7 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 	// unnamed ents/ents that share a targetname need an array
 	scope.__EntityMakerResult <- {
 		entities = scope.Entities
-	}.setdelegate( {
+	}.setdelegate({
 		function _newslot ( _, value ) {
 			entities.append( value )
 		}

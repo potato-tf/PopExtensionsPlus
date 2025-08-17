@@ -2,9 +2,9 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "08.15.2025.4"
+::POPEXT_VERSION <- "08.17.2025.1"
 
-local function Include( path, include_only_if_missing = null, scope_to_check = ROOT ) {
+local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 
 	if ( scope_to_check != ROOT && scope_to_check in ROOT )
 		scope_to_check = ROOT[scope_to_check]
@@ -19,9 +19,12 @@ local function Include( path, include_only_if_missing = null, scope_to_check = R
 	}
 	catch( e ) {
 
-		error( e )
+		local msg = format( "%s\n", e )
+		continue_on_error ? error( msg ) : Assert( false, msg )
 		return false
 	}
+
+	return true
 }
 
 // INCLUDE ORDER IS IMPORTANT
@@ -124,9 +127,26 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 
 			if ( k == "_OnDestroy" && _OnDestroy == null )
 				_OnDestroy = v.bindenv( scope )
-			else if ( k == "_OnCreate" )
-				_OnCreate.call( scope )
+
 			scope.rawset( k, v )
+
+			if ( typeof v == "function" ) {
+
+				if ( k == "_OnCreate" )
+					_OnCreate()
+
+				// fix anonymous function declarations in perf counter
+				else if ( v.getinfos().name == null ) {
+
+					compilestring( format( @"
+
+						local _%s = %s.%s
+
+						function %s::%s() { _%s() }
+
+					", k, scope_ref, k, scope_ref, k, k ) )()
+				}
+			}
 		}
 
 	}.setdelegate({
@@ -321,11 +341,10 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 		// clean up all entities that should be killed on death/spawn
 		if ( "Preserved" in scope ) {
 
-			foreach ( entlist in [ scope.Preserved.kill_on_death, scope.Preserved.kill_on_spawn ] ) {
-
-				entlist.apply( @( ent ) ent.Kill() )
-				entlist.clear()
-			}
+			foreach ( entlist in [ scope.Preserved.kill_on_death, scope.Preserved.kill_on_spawn ] ) 
+				foreach ( ent in entlist )
+					if ( ent && ent.IsValid() )
+						ent.Kill()
 		}
 		player.TerminateScriptScope()
 		return
@@ -368,7 +387,7 @@ function PopExtMain::IncludeModules( ... ) {
 
 		if ( !( module in ActiveModules ) ) {
 
-			if ( !Include( module ) ) {
+			if ( !Include( module, true ) ) {
 
 				failed_modules[module] <- true
 				Error.RaiseModuleError( module, format( "file: %s, func: %s", getstackinfos(2).src, getstackinfos(2).func ), true )

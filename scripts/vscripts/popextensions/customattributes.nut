@@ -158,16 +158,25 @@ PopExtAttributes.Attrs <- {
 
 	function FireInputOnHit( player, item, value ) {
 
-		local args = split( value, "^" )
-		local targetname = args[ 0 ]
-		local input = args[ 1 ]
-		local param = ""
-		local delay = -1
+		if ( typeof value != "string" && typeof value != "array" ) {
 
-		if ( args.len() > 2 )
-			param = args[ 2 ]
-		if ( args.len() > 3 )
-			delay = args[ 3 ].tofloat()
+			PopExtMain.Error.RaiseTypeError( "FireInputOnHit", "string or array", false )
+			return
+		}
+
+		local args = typeof value == "string" ? split( value, "^", true ) : value
+
+		local targetname = args[ 0 ]
+		local input 	 = args[ 1 ]
+		local param 	 = 2 in args ? args[ 2 ] : ""
+		local delay 	 = 3 in args ? args[ 3 ].tofloat() : -1
+		local activator  = 4 in args ? args[ 4 ] : player
+		local caller 	 = 5 in args ? args[ 5 ] : player
+
+		if ( typeof activator == "string" )
+			activator = FindByName( null, activator )
+		if ( typeof caller == "string" )
+			caller = FindByName( null, caller )
 
 		local event_hook_string = format( "FireInputOnHit_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
@@ -176,7 +185,7 @@ PopExtAttributes.Attrs <- {
 			if ( params.attacker != player || params.weapon != item )
 				return
 
-			targetname == "!self" ? EntFireByHandle( params.attacker, input, param, delay, null, null ) : DoEntFire( targetname, input, param, delay, null, null )
+			targetname == "!self" ? EntFireByHandle( params.attacker, input, param, delay, activator, caller ) : DoEntFire( targetname, input, param, delay, activator, caller )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
 		player.GetScriptScope().attribinfo[ "fire input on hit" ] <- format( "fires custom entity input on hit: %s", value )
@@ -184,16 +193,25 @@ PopExtAttributes.Attrs <- {
 
 	function FireInputOnKill( player, item, value ) {
 
-		local args = split( value, "^" )
-		local targetname = args[ 0 ]
-		local input = args[ 1 ]
-		local param = ""
-		local delay = -1
+		if ( typeof value != "string" && typeof value != "array" ) {
 
-		if ( args.len() > 2 )
-			param = args[ 2 ]
-		if ( args.len() > 3 )
-			delay = args[ 3 ].tofloat()
+			PopExtMain.Error.RaiseTypeError( "FireInputOnKill", "string or array", false )
+			return
+		}
+
+		local args = typeof value == "string" ? split( value, "^", true ) : value
+
+		local targetname = args[ 0 ]
+		local input 	 = args[ 1 ]
+		local param 	 = 2 in args ? args[ 2 ] : ""
+		local delay 	 = 3 in args ? args[ 3 ].tofloat() : -1
+		local activator  = 4 in args ? args[ 4 ] : player
+		local caller 	 = 5 in args ? args[ 5 ] : player
+
+		if ( typeof activator == "string" )
+			activator = FindByName( null, activator )
+		if ( typeof caller == "string" )
+			caller = FindByName( null, caller )
 
 		local event_hook_string = format( "FireInputOnKill_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
@@ -202,7 +220,7 @@ PopExtAttributes.Attrs <- {
 			if ( GetPlayerFromUserID( params.attacker ) != player || params.weapon != item )
 				return
 
-			targetname = "!self" ? EntFireByHandle( GetPlayerFromUserID( params.attacker ), input, param, delay, null, null ) : DoEntFire( targetname, input, param, delay, null, null )
+			targetname = "!self" ? EntFireByHandle( GetPlayerFromUserID( params.attacker ), input, param, delay, activator, caller ) : DoEntFire( targetname, input, param, delay, activator, caller )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
 		player.GetScriptScope().attribinfo[ "fire input on kill" ] <- format( "fires custom entity input on kill: %s", value )
@@ -2009,7 +2027,7 @@ function PopExtAttributes::GetAttributeFunctionFromStringName( attr ) {
 		return special_names[ attr ]
 
 	local str = ""
-	split( attr, " " ).apply( @( s ) str += format( "%s%s", s.slice( 0, 1 ).toupper(), s.slice( 1, s.len() ) ) )
+	split( attr, " ", true ).apply( @( s ) str += format( "%s%s", s.slice( 0, 1 ).toupper(), s.slice( 1 ) ) )
 	return str
 }
 

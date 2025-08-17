@@ -2,18 +2,56 @@
 
 POPEXT_CREATE_SCOPE( "__popext_util", "PopExtUtil", "PopExtUtilEntity", "PopExtUtilThink" )
 
-PopExtUtil.HumanTable 	 <- {}
+PopExtUtil.HumanTable 	 <- {} // player caching for faster player handle/userid lookups
 PopExtUtil.BotTable 	 <- {}
 PopExtUtil.PlayerTable   <- {}
-PopExtUtil.HumanArray 	 <- [] // backwards compatible arrays
+
+PopExtUtil.HumanArray 	 <- [] // array variants, backwards compatible
 PopExtUtil.BotArray 	 <- []
 PopExtUtil.PlayerArray   <- []
+
+// entity caching for faster iteration/lookup
+PopExtUtil.EntTable   	 <- {}.setdelegate({
+
+	function _newslot( key, value ) {
+
+		if ( typeof key != "instance" || !( key instanceof CBaseEntity ) )
+			Assert( false, format( "Invalid entity key: %s", key.tostring() ) )
+		
+		if ( !value ) {
+
+			value = {
+
+				name 	  = key.GetName()
+				scope     = key.GetScriptScope()
+				entidx    = key.entindex()
+				classname = key.GetClassname()
+				scriptid  = key.GetScriptId()
+				thinkfunc = key.GetScriptThinkFunc()
+				cachetime = Time()
+			}
+		}
+
+		EntTable.rawset( key.entindex(), value )
+	}
+
+	function _delslot( key ) {
+
+		if ( key && key.IsValid() )
+			EntFireByHandle( key, "Kill", "", -1, null, null )
+
+		EntTable.rawdelete( key )
+	}
+})
+
+// class index -> class string lookup
 PopExtUtil.Classes 	  	 <- ["", "scout", "sniper", "soldier", "demo", "medic", "heavy", "pyro", "spy", "engineer", "civilian"]
 PopExtUtil.ClassesCaps   <- ["", "Scout", "Sniper", "Soldier", "Demoman", "Medic", "Heavy", "Pyro", "Spy", "Engineer", "Civilian"]
 PopExtUtil.Slots   	  	 <- ["slot_primary", "slot_secondary", "slot_melee", "slot_utility", "slot_building", "slot_pda", "slot_pda2"]
+
 PopExtUtil.AllNavAreas   <- {} // gets filled by GetAllAreas at the end of this file
-PopExtUtil.ConVars       <- {}
-PopExtUtil.TempEnts      <- {}
+PopExtUtil.ConVars       <- {} // convar tracking to revert to original values
+PopExtUtil.EntShredder   <- {} // entity shredder. One entity is deleted per think.
 
 PopExtUtil.ROBOT_ARM_PATHS <- [
 
@@ -204,7 +242,7 @@ function PopExtUtil::_OnDestroy() {
 		if ( key in ROOT )
 			delete ROOT[ key ]
 
-	foreach( ent in TempEnts.keys() ) {
+	foreach( ent in EntShredder.keys() ) {
 		if (ent && ent.IsValid()) {
 			SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
 			EntFireByHandle( ent, "Kill", "", -1, null, null )
@@ -214,18 +252,19 @@ function PopExtUtil::_OnDestroy() {
 
 function PopExtUtil::EntityManager() {
 
-	local tempent_snapshot = clone TempEnts
+	local tempent_snapshot = clone EntShredder
 
 	foreach( ent in tempent_snapshot.keys() ) {
 
-		if ( !ent || !ent.IsValid() ) continue
+		if ( ent && ent.IsValid() ) {
 
-		// PopExtMain.Error.DebugLog( "Killing tempent: " + ent )
+			SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+			EntFireByHandle( ent, "Kill", "", -1, null, null )
+		}
+		delete EntShredder[ent]
 
-		SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
-		EntFireByHandle( ent, "Kill", "", 0.1, null, null )
-		delete TempEnts[ent]
-		yield ent
+		if ( EntShredder.len() < ( MAX_EDICTS / 4 ) )
+			yield ent
 	}
 
 	return null
@@ -238,12 +277,12 @@ function PopExtUtil::ThinkTable::EntityManagerThink() {
 	if ( Time() < entmanager_cooldown )
 		return
 
-	if ( !TempEnts.len() ) {
+	if ( !EntShredder.len() ) {
 		entmanager_cooldown = Time() + 0.5
 		return
 	}
 
-	if ( !gen || gen.getstatus() == "dead" )
+	if ( !gen || gen.getstatus() == "dead" ) 
 		gen = EntityManager()
 
 	resume gen
@@ -267,9 +306,10 @@ function PopExtUtil::TouchCrashFix() { return activator != null && activator.IsV
 function PopExtUtil::SetTargetname( ent, name ) {
 
 	local oldname = GetPropString( ent, STRING_NETPROP_NAME )
+	SetPropString( ent, STRING_NETPROP_NAME, name )
+
 	if ( oldname != "" )
 		PurgeGameString( oldname, true )
-	SetPropString( ent, STRING_NETPROP_NAME, name )
 }
 
 function PopExtUtil::PurgeGameString( str, urgent = false ) {
@@ -291,6 +331,7 @@ function PopExtUtil::SpawnEnt( ... ) {
 
 	local classname = vargv[0]
 	local name = vargv[1]
+	local temp = 2 in vargv ? vargv[2] : false
 	local args = 3 in vargv ? vargv.slice( 3 ) : null
 
 	local ent = CreateByClassname( classname )
@@ -307,8 +348,8 @@ function PopExtUtil::SpawnEnt( ... ) {
 		}
 	}
 
-	if ( 2 in vargv && vargv[2] ) {
-		TempEnts[ent] <- ent.GetScriptId()
+	if ( temp ) {
+		EntShredder[ent] <- ent.GetScriptId()
 		return ent
 	}
 
@@ -701,7 +742,7 @@ function PopExtUtil::CreatePlayerWearable( player, model, bonemerge = true, atta
 	return wearable
 }
 
-// Make a fake wearable that is attached to the player.
+// Make a fake wearable that is attached to the player.  Applies to ragdolls
 // The wearable is automatically removed on respawn.
 function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
 
@@ -2009,6 +2050,9 @@ function PopExtUtil::RemoveThink( ent, func = null ) {
 
 	local thinktable_name = scope.__thinktable_name
 
+	if ( typeof func == "function" )
+		func = func.getinfos().name || format( "__%s_ANONYMOUS_THINK", ent.GetName() )
+
 	if ( !( func in scope[ thinktable_name ] ) )
 		return
 
@@ -2237,45 +2281,6 @@ function PopExtUtil::PurgeGameString( str, urgent = false ) {
 	}
 
 	SpawnEnt( "logic_autosave", str, true )
-}
-
-function PopExtUtil::PurgeStringBatch( ... ) {
-
-	local template = CreateByClassname( "point_script_template" )
-	SetTargetname( template, "__popext_purgestringbatch" )
-	SetPropBool( template, STRING_NETPROP_PURGESTRINGS, true )
-	local scope = template.GetScriptScope()
-	scope.ents <- []
-	scope.__EntityMakerResult <- {
-		entities = scope.ents
-	}.setdelegate( {
-		function _newslot ( _, value ) {
-			entities.append( value )
-		}
-	})
-
-	function _PurgeStringBatch() {
-
-		foreach ( i, ent in ents ) {
-
-			SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
-			EntFireByHandle( ent, "Kill", "", i * 0.1, null, null )
-		}
-		ents.clear()
-	}
-
-	scope.PostSpawn <- _PurgeStringBatch
-
-	foreach ( i, arg in vargv ) {
-
-		template.AddTemplate( "logic_autosave", { targetname = arg })
-		if ( !(i % 8) )
-			template.AcceptInput( "ForceSpawn", "", null, null )
-	}
-
-	template.AcceptInput( "ForceSpawn", "", null, null )
-
-	template.Kill()
 }
 
 function PopExtUtil::SetDestroyCallback( entity, callback ) {

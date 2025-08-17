@@ -511,35 +511,22 @@ PopExtTags.TagFunctions <- {
 
 	function popext_forceromevision(bot, args) {
 
-			local killrome = []
-
-			if ( bot.IsBotOfType( TF_BOT_TYPE ) )
-				for ( local child = bot.FirstMoveChild(); child != null; child = child.NextMovePeer() )
-					if ( child.GetClassname() == "tf_wearable" && startswith( child.GetModelName(), format( "models/workshop/player/items/%s/tw", PopExtUtil.Classes[bot.GetPlayerClass()] ) ) )
-						killrome.append( child )
-
-			local killrome_len_iter = killrome.len() - 1
-			for ( local i = killrome_len_iter; i >= 0; i-- )
-				killrome[i].Kill()
+			for ( local child = bot.FirstMoveChild(); ( child && child.GetClassname() == "tf_wearable" ); child = child.NextMovePeer() )
+				if ( startswith( child.GetModelName(), format( "models/workshop/player/items/%s/tw", PopExtUtil.Classes[bot.GetPlayerClass()] ) ) )
+					EntFireByHandle( child, "Kill", "", -1, null, null )
 
 			local cosmetics = PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()]
 
 			if ( bot.GetModelName() == "models/bots/demo/bot_sentry_buster.mdl" ) {
 
-				// GiveWearableItem is subject to romevision restrictions, we don't want this
-				// figure out a way to apply cosmetics to ragdolls on death without this
-				// local wearable = PopExtUtil.CreatePlayerWearable( bot, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2] )
 				local wearable = PopExtUtil.GiveWearableItem( bot, 9911, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2] )
-				SetPropString( wearable, STRING_NETPROP_NAME, "__popext_romevision_model" )
+				SetPropString( wearable, STRING_NETPROP_NAME, format( "__popext_romevision_%d", wearable.entindex() ) )
 				return
 			}
 			foreach ( i, cosmetic in cosmetics ) {
 
-				// GiveWearableItem is subject to romevision restrictions, we don't want this
-				// figure out a way to apply cosmetics to ragdolls on death without this
-				// local wearable = PopExtUtil.CreatePlayerWearable( bot, cosmetic )
 				local wearable = PopExtUtil.GiveWearableItem( bot, 9911, cosmetic )
-				SetPropString( wearable, STRING_NETPROP_NAME, "__popext_romevision_model" )
+				SetPropString( wearable, STRING_NETPROP_NAME, format( "__popext_romevision_%d", wearable.entindex() ) )
 			}
 	}
 

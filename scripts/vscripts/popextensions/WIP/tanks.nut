@@ -423,7 +423,7 @@ function PopExtTanks::TankThink() {
 
         local scope = PopExtUtil.GetEntScope( tank )
 
-        if ( !( "created" in scope ) ) {
+		if ( !( "created" in scope ) && tank.GetScriptThinkFunc() == "" ) {
 
 			scope.created         	 <- true
 			scope.max_health         <- tank.GetMaxHealth()

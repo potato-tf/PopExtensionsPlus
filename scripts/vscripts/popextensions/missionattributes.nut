@@ -1231,19 +1231,15 @@ MissionAttributes.Attrs <- {
 
 			local bot = GetPlayerFromUserID( params.userid )
 
-			if ( bot.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
+			if ( !bot.IsBotOfType( TF_BOT_TYPE ) || bot.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
 				return
 
 			PopExtUtil.ScriptEntFireSafe( bot, @"
 
-				if ( !self.IsBotOfType( TF_BOT_TYPE ) ) return
-
 				local armor_model = format( `models/workshop/player/items/%s/tw`, PopExtUtil.Classes[self.GetPlayerClass()] )
 
-				for ( local child = self.FirstMoveChild(); child != null; child = child.NextMovePeer() )
-
-					if ( child.GetClassname() == `tf_wearable` && startswith( child.GetModelName(), armor_model ) )
-
+				for ( local child = self.FirstMoveChild(); ( child && child.GetClassname() == `tf_wearable` ); child = child.NextMovePeer() )
+					if ( startswith( child.GetModelName(), armor_model ) )
 						EntFireByHandle( child, `Kill`, ``, -1, null, null )
 			", -1 )
 
@@ -1283,10 +1279,12 @@ MissionAttributes.Attrs <- {
 			if ( !bot.IsBotOfType( TF_BOT_TYPE ) || bot.IsMiniBoss() ) return
 
 			local spell = SpawnEntityFromTable( "tf_spell_pickup", {
+
 				targetname = "__popext_commonspell"
 				origin = bot.GetLocalOrigin()
 				TeamNum = TF_TEAM_PVE_DEFENDERS
-				tier = 0 "OnPlayerTouch#1": "!self,Kill,,0,-1"
+				tier = 0 
+				"OnPlayerTouch#1": "!self,Kill,,0,-1"
 			})
 
 		}, EVENT_WRAPPER_MISSIONATTR )
@@ -1308,7 +1306,7 @@ MissionAttributes.Attrs <- {
 
 			local spell = SpawnEntityFromTable( "tf_spell_pickup", {
 
-				targetname = "__popext_giantspell"
+				targetname = format( "__popext_giantspell_%d", bot.entindex() )
 				origin = bot.GetLocalOrigin()
 				TeamNum = TF_TEAM_PVE_DEFENDERS
 				tier = 0
@@ -1332,7 +1330,7 @@ MissionAttributes.Attrs <- {
 			if ( !bot.IsBotOfType( TF_BOT_TYPE ) || bot.IsMiniBoss() ) return
 
 			local spell = SpawnEntityFromTable( "tf_spell_pickup", {
-				targetname = "__popext_commonspell"
+				targetname = format( "__popext_commonspell_%d", bot.entindex() )
 				origin = bot.GetLocalOrigin()
 				TeamNum = TF_TEAM_PVE_DEFENDERS
 				tier = 1
@@ -1357,7 +1355,7 @@ MissionAttributes.Attrs <- {
 
 			local spell = SpawnEntityFromTable( "tf_spell_pickup", {
 
-				targetname = "__popext_giantspell"
+				targetname = format( "__popext_giantspell_%d", bot.entindex() )
 				origin = bot.GetLocalOrigin()
 				TeamNum = TF_TEAM_PVE_DEFENDERS
 				tier = 1
@@ -2148,15 +2146,18 @@ MissionAttributes.Attrs <- {
 
 			//do this so we can do CancelPending
 			local deployrelay = SpawnEntityFromTable( "logic_relay", {
-				targetname = "__bombdeploy"
+
+				targetname = format( "__popext_bombdeploy_%d", player.entindex() )
+
 				"OnTrigger#1": "__popext_util,CallScriptFunction,EndWaveReverse,2,-1"
 				"OnTrigger#2": "boss_deploy_relay,Trigger,,2,-1"
 			})
-			if ( GetPropEntity( player, "m_hItem" ) == null ) return
+
+			if ( !GetPropEntity( player, "m_hItem" ) ) return
 
 			player.DisableDraw()
 
-			for ( local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer() )
+			for ( local child = player.FirstMoveChild(); child; child = child.NextMovePeer() )
 				child.DisableDraw()
 
 			player.AddCustomAttribute( "move speed bonus", 0.00001, -1 )
@@ -2173,20 +2174,25 @@ MissionAttributes.Attrs <- {
 			DispatchSpawn( dummy )
 			dummy.ResetSequence( dummy.LookupSequence( "primary_deploybomb" ) )
 
-			player.IsMiniBoss() ? EmitSoundEx( {sound_name = "MVM.DeployBombGiant", entity = player, flags = SND_CHANGE_VOL, volume = 0.5} ) : EmitSoundEx( {sound_name = "MVM.DeployBombSmall", entity = player, flags = SND_CHANGE_VOL, volume = 0.5} )
+			EmitSoundEx({
+				sound_name = player.IsMiniBoss() ? "MVM.DeployBombGiant" : "MVM.DeployBombSmall"
+				entity = player
+				flags = SND_CHANGE_VOL
+				volume = 0.5
+			})
 
 			EntFireByHandle( player, "SetForcedTauntCam", "1", -1, null, null )
 			EntFireByHandle( player, "SetHudVisibility", "0", -1, null, null )
-			EntFire( "__bombdeploy", "Trigger" )
+			EntFire( format( "__popext_bombdeploy_%d", player.entindex() ), "Trigger" )
 		}
 
 		function MissionAttributes::DeployBombStop( player ) {
 
-			if ( GetPropEntity( player, "m_hItem" ) == null ) return
+			if ( !GetPropEntity( player, "m_hItem" ) ) return
 
 			player.EnableDraw()
 
-			for ( local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer() )
+			for ( local child = player.FirstMoveChild(); child; child = child.NextMovePeer() )
 				child.EnableDraw()
 
 			player.RemoveCustomAttribute( "move speed bonus" )
@@ -2194,12 +2200,12 @@ MissionAttributes.Attrs <- {
 
 			FindByName( null, format( "__deployanim%d", player.entindex() ) ).Kill()
 
-			player.IsMiniBoss() ? StopSoundOn( "MVM.DeployBombGiant", player ) : StopSoundOn( "MVM.DeployBombSmall", player )
+			StopSoundOn( player.IsMiniBoss() ? "MVM.DeployBombGiant" : "MVM.DeployBombSmall", player )
 
 			EntFireByHandle( player, "SetForcedTauntCam", "0", -1, null, null )
 			EntFireByHandle( player, "SetHudVisibility", "1", -1, null, null )
-			EntFire( "__bombdeploy", "CancelPending" )
-			EntFire( "__bombdeploy", "Kill" )
+			EntFire( format( "__popext_bombdeploy_%d", player.entindex() ), "CancelPending" )
+			EntFire( format( "__popext_bombdeploy_%d", player.entindex() ), "Kill" )
 		}
 
 		function MissionAttributes::ThinkTable::ReverseMVMThink() {
@@ -2234,10 +2240,8 @@ MissionAttributes.Attrs <- {
 
 			local player = GetPlayerFromUserID( params.userid )
 
-			if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
+			if ( player.IsBotOfType( TF_BOT_TYPE ) || player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
 				return
-
-			if ( player.IsBotOfType( TF_BOT_TYPE ) ) return
 
 			local scope = player.GetScriptScope()
 
