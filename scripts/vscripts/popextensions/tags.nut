@@ -1510,6 +1510,7 @@ PopExtTags.TagFunctions <- {
 		SetPropBool( tp_wearable, STRING_NETPROP_ATTACH, true )
 		PopExtUtil._SetOwner( tp_wearable, bot )
 		DispatchSpawn( tp_wearable )
+		SetPropBool( tp_wearable, STRING_NETPROP_PURGESTRINGS, true )
 		tp_wearable.AcceptInput( "SetParent", "!activator", bot, bot )
 		SetPropInt( tp_wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL )
 
@@ -1824,6 +1825,7 @@ PopExtTags.TagFunctions <- {
 			droppedweapon.SetAbsOrigin( _bot.GetOrigin() )
 
 			DispatchSpawn( droppedweapon )
+			SetPropBool( droppedweapon, STRING_NETPROP_PURGESTRINGS, true )
 
 			// Store attributes in scope, when it gets picked up add the attributes to the real weapon
 
@@ -2462,8 +2464,7 @@ PopEventHook( "player_team", "TagsPlayerTeam", function( params ) {
 
 	if ( !bot || !bot.IsValid() || !bot.IsBotOfType( TF_BOT_TYPE ) ) return
 
-	//this can fire before we are spawned
-	local scope = PopExtUtil.GetEntScope( bot )
+	PopExtUtil.GetEntScope( bot )
 
 	if ( params.team == TEAM_SPECTATOR )
 		PopExtUtil.RemoveThink( bot )

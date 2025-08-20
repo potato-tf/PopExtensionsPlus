@@ -18,11 +18,13 @@ POPEXT_CREATE_SCOPE( "__popext_event_wrapper", "PopExtEvents" )
 
 PopExtEvents.EventsPreCollect <- {}
 PopExtEvents.CollectedEvents  <- {}
-PopExtEvents.TableId          <- UniqueString( "_Compiled" )
+
+if ( !("TableId" in PopExtEvents) )
+    PopExtEvents.TableId <- UniqueString( "_Compiled" )
 
 function PopExtEvents::_OnDestroy() {
 
-    PopExtEvents.ClearEvents( "*" )
+    PopExtEvents.ClearEvents( null )
     delete ::PopEventHook
 }
 
@@ -172,10 +174,10 @@ function PopExtEvents::CollectEvents() {
 
 function PopExtEvents::ClearEvents( index = "unordered" ) {
 
-    if (index == null || index == "*" ) {
+    if ( !index || index == "*" ) {
 
-        PopExtEvents.CollectedEvents.clear()
-        PopExtEvents.EventsPreCollect.clear()
+        PopExtEvents.CollectedEvents  <- {}
+        PopExtEvents.EventsPreCollect <- {}
         return
     }
 

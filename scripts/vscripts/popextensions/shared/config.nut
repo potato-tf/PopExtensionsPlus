@@ -16,6 +16,7 @@ PopExtConfig.DebugText <- false
 PopExtConfig.DebugFiles <- {
 
     "missionattributes" : null
+    "gamestrings"       : null
     "util" 				: null
     "tags" 				: null
 }

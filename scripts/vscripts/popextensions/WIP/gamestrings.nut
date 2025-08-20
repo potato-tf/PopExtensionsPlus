@@ -1,99 +1,162 @@
+// experimental standalone game string handler
+
+/*************************************************************************************************************************************************************
+ * PROBLEM:                                                                                                                                                  *
+ * All entity access functions will add the entities scriptID and targetname to the string table                                                             *
+ * Additionally, "param" arguments passed to Entity I/O related functions (AcceptInput, EntFire...) will add the param to the string table                   *
+ * these strings don't get cleared until map change, eventually causing a CUtlRBTree overflow                                                                *
+ * large amounts of rapid entity spawning, modifying, and Entity I/O calls (notably RunScriptCode) will overflow the string table faster                     *
+ * freaky fair (and probably some other vscript-heavy maps) have this problem on 100 player servers, after ~40 minutes the server will crash with this error *
+ *                                                                                                                                                           *
+ * Scripters can largely workaround this issue by:                                                                                                           *
+ * 1. setting NetProps.SetPropBool( ent, "m_bForcePurgeFixedUpStrings", true ) on all entities after they are spawned or modified/accessed in any way        *
+ * 2. manually hooking and  purging the values passed to the following functions:                                                                            *
+ *   - AcceptInput/EntFire/DoEntFire/EntFireByHandle's parameter argument                                                                                    *
+ *   - KeyValueFromString                                                                                                                                    *
+ *   - SetPropString                                                                                                                                         *
+ * 3. constantly purge all targetname/script ID string entries for every entity in a think function to be extra certain.  The risk of doing this are unclear *
+ *                                                                                                                                                           *
+ * This script does all 3 of these at once, collecting as many strings as possible and batch deleting them in a constantly running generator/think function. *
+ *                                                                                                                                                           *
+ * It's been recommended by community members to NOT set this netprop until the entity is fully spawned                                                      *
+ *  e.g. setting in OnPostSpawn() is safe, setting it in Precache() may break things                                                                         *
+ *************************************************************************************************************************************************************/
+
 POPEXT_CREATE_SCOPE( "__popext_gamestrings", "PopGameStrings", null, "PopGameStringsThink" )
 
-StringFix.StringTable <- {}
+local entio_funcs = [ "EntFireByHandle", "DoEntFire", "EntFire" ]
+
+PopGameStrings.StringTable <- {}
+
+if ( !( "_SpawnEntityFromTable" in ROOT ) )
+    ::_SpawnEntityFromTable <- SpawnEntityFromTable
+
+function PopGameStrings::_OnDestroy() {
+
+    foreach ( func in entio_funcs ) {
+
+        local copy_name = format( "_%s", func )
+        ROOT[ func ] <- ROOT[ copy_name ]
+        delete ROOT[ copy_name ]
+    }
+
+    local last_run = StringFixGenerator()
+
+    while ( resume last_run ) continue
+
+    ::SetPropString                  <- NetProps.SetPropString.bindenv( NetProps )
+    ::SetPropStringArray             <- NetProps.SetPropStringArray.bindenv( NetProps )
+    ::CBaseEntity.KeyValueFromString <- CBaseEntity.__KeyValueFromString.bindenv( CBaseEntity )
+
+    if ( "_SpawnEntityFromTable" in ROOT ) {
+
+        ::SpawnEntityFromTable <- _SpawnEntityFromTable
+        delete _SpawnEntityFromTable
+    }
+}
 
 function PopGameStrings::PurgeString( str ) {
 
+    if ( !str || str == "" )
+        return
+
     local temp = CreateByClassname( "logic_autosave" )
-    SetPropString( temp, "m_iName", str )
-    SetPropBool( temp, STRING_NETPROP_PURGESTRING, true )
+    SetPropString( temp, STRING_NETPROP_NAME, str )
+    SetPropBool( temp, STRING_NETPROP_PURGESTRINGS, true )
     temp.Kill()
-    delete StringTable[ str ]
+    if ( "StringTable" in this && str in StringTable )
+        delete StringTable[ str ]
 }
 
-function PopGameStrings::PurgeStringBatch( strings = {}) {
+// function PopGameStrings::PurgeStringBatch( strings = {} ) {
 
-	local template = CreateByClassname( "point_script_template" )
-	SetTargetname( template, "__popext_purgestringbatch" )
-	SetPropBool( template, STRING_NETPROP_PURGESTRINGS, true )
+//     function PurgeStringBatchPostSpawn() {
 
-	TemplateScope <- template.GetScriptScope()
-	TemplateScope.ents <- []
+// 		foreach ( i, ent in ents ) {
+//             printl( ent.GetName() )
+// 			SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+// 			EntFireByHandle( ent, "Kill", "", i * 0.1, null, null )
+// 		}
+// 	}
 
-	TemplateScope.__EntityMakerResult <- { entities = TemplateScope.ents }.setdelegate({
+// 	local template = PopExtUtil.PointScriptTemplate( null, PurgeStringBatchPostSpawn )
 
-		function _newslot( _, value ) {
+// 	foreach ( i, k in strings.keys() ) {
 
-			entities.append( value )
-		}
-	})
+// 		template.AddTemplate( "logic_autosave", { targetname = k.tostring() })
+// 		template.AddTemplate( "logic_autosave", { targetname = strings[k].tostring() })
 
-	function TemplateScope::PostSpawn() {
+// 		if ( !( i % 8 ) && i ) {
 
-		foreach ( i, ent in ents ) {
+// 			template.AcceptInput( "ForceSpawn", "", null, null )
+//             EntFire( template.GetName(), "Kill", "", 0.1 )
+//             template = PopExtUtil.PointScriptTemplate( null, PurgeStringBatchPostSpawn )
+//             continue
+//         }
+// 	}
 
-			SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
-			EntFireByHandle( ent, "Kill", "", i * 0.1, null, null )
-		}
-		ents.clear()
-	}
-
-	foreach ( k, v in strings ) {
-
-		template.AddTemplate( "logic_autosave", { targetname = arg })
-		if ( !( i % 8 ) && i )
-			template.AcceptInput( "ForceSpawn", "", null, null )
-	}
-
-	template.AcceptInput( "ForceSpawn", "", null, null )
-
-	template.Kill()
-}
+// 	template.AcceptInput( "ForceSpawn", "", null, null )
+// 	template.Kill()
+// }
 
 function PopGameStrings::StringFixGenerator() {
 
-    for ( local i = 0, ent; i <= MAX_EDICTS; ent = EntIndexToHScript(i), i++ )
-    {
-        if ( !ent || GetPropBool( ent, STRING_NETPROP_PURGESTRING ) )
-            continue
-
-        SetPropBool( ent, STRING_NETPROP_PURGESTRING, true )
-
-        // remove everything between the comments if this causes problems
-        ////////////////////////////////////
-        local script_id = ent.GetScriptId()
-        if ( script_id )
-            StringTable[ script_id ] <- null
-        StringTable[ ent.GetName() ] <- null
-        StringTable[ ent.GetClassname() ] <- null
-        ////////////////////////////////////
-        yield ent
-    }
-
+    local PurgeString = PopGameStrings.PurgeString
     local string_table = clone StringTable
 
-    foreach ( str in string_table.keys() ) {
+    local i = 1
+    foreach ( k, v in string_table ) {
 
-        PurgeString( str )
-        yield str
+        PurgeString( k )
+        PurgeString( v )
+
+        PopExtMain.Error.DebugLog(format( "GAME STRINGS : %s : %s : %d", k.tostring(), v ? v.tostring() : "null", i ))
+        if ( !( i % 4 ) )
+            yield k || true
+
+        i++
+    }
+
+    for ( local ent = First(), i = 0; ent; ent = Next( ent ), i++ ) {
+
+        PopExtMain.Error.DebugLog(format( "GAME STRINGS : %s : %d", ent.tostring(), i ))
+
+        if ( !ent || !ent.IsValid() || GetPropBool( ent, STRING_NETPROP_PURGESTRINGS ) )
+            continue
+
+        if ( !( i % 16 ) && i )
+            yield ent
+
+        local classname = ent.GetClassname()
+        SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+        StringTable[ ent.GetScriptId() ] <- null
+
+        // if ( "PopExtUtil" in ROOT )
+            // PopExtUtil.SetDestroyCallback( ent, @() PurgeString( classname ) )
+
     }
 }
 
 local gen = null
+local cooldown = 0.0
 function PopGameStrings::ThinkTable::StringFixThink() {
+
+    if ( Time() < cooldown )
+        return
+
+    if ( !StringTable.len() ) {
+
+        cooldown = Time() + 0.2
+        return
+    }
 
     if ( !gen || gen.getstatus() == "dead" )
         gen = StringFixGenerator()
 
     local result = resume gen
-
-    // console spam for every string being purged
-    // if ( result )
-    //     printl( result )
-    return -1
 }
 
-foreach ( i, func in [ "EntFireByHandle", "DoEntFire", "EntFire" ] ) {
+foreach ( i, func in entio_funcs ) {
 
     local copy_name = format( "_%s", func )
 
@@ -102,87 +165,60 @@ foreach ( i, func in [ "EntFireByHandle", "DoEntFire", "EntFire" ] ) {
 
     ROOT[ copy_name ] <- ROOT[ func ]
 
-    compilestring( format( @"
+    local _func = ROOT[ copy_name ]
 
-        function %s( ... ) {
+    ROOT[ func ] <- function( ... ) {
 
-            local target    = vargv[0]
-            local action    = vargv[1]
-            local param     = 2 in vargv ? vargv[2] : """"
-            local delay     = 3 in vargv ? vargv[3] : 0.0
-            local activator = 4 in vargv ? vargv[4] : null
-            local caller    = 5 in vargv ? vargv[5] : null
+        local target    = vargv[0]
+        local param     = 2 in vargv ? vargv[2] : ""
+        local copy_name = format( "_%s", func )
 
-            if ( param && typeof param == ""string"" && param != """" )
-                PopGameStrings.StringTable[ param ] <- null
+        if ( "PopGameStrings" in ROOT && param && typeof param == "string" && param != "" )
+            PopGameStrings.StringTable[ param ] <- null
 
-            if ( !i && target && target.IsValid() )
-                SetPropBool( target, STRING_NETPROP_PURGESTRING, true )
-            else
-                for ( local ent; ent = FindByName( null, ent ); )
-                    SetPropBool( ent, STRING_NETPROP_PURGESTRING, true )
-        }
+        if ( func == "EntFireByHandle" && target && target.IsValid() )
+            SetPropBool( target, STRING_NETPROP_PURGESTRINGS, true )
 
-    ", func ) )()
+        // __DumpScope( 0, vargv )
+        return _func.acall( [ this ].extend( vargv ) )
+    }
 
-    return ROOT[ func ]( target, action, param, delay, activator, caller )
 }
-// if (!("_EntFireByHandle" in ROOT)) {
-
-//     ::_EntFireByHandle <- EntFireByHandle
-
-//     function ROOT::EntFireByHandle( target, action, param, delay, activator, caller ) {
-
-//         if ( param && typeof param == "string" && param != "" )
-//             PopGameStrings.StringTable[ param ] <- null
-
-//         _EntFireByHandle( target, action, param, delay, activator, caller )
-
-//         SetPropBool( target, STRING_NETPROP_PURGESTRING, true )
-//     }
-// }
-
-// if (!("_DoEntFire" in ROOT)) {
-
-//     ::_DoEntFire <- DoEntFire
-
-//     function ROOT::DoEntFire( target, action, param, delay, activator, caller ) {
-
-//         if ( param && typeof param == "string" && param != "" )
-//             PopGameStrings.StringTable[ param ] <- null
-
-//         return _DoEntFire( target, action, param, delay, activator, caller )
-//     }
-// }
-
-// if (!("_EntFire" in ROOT)) {
-
-//     ::_EntFire <- EntFire
-
-//     function ROOT::EntFire( target, action, param, delay, activator ) {
-
-//         if ( param && typeof param == "string" && param != "" )
-//             PopGameStrings.StringTable[ param ] <- null
-
-//         return _EntFire( target, action, param, delay, activator )
-//     }
-// }
 
 // might cause perf warnings on maps that spam this function
 function CBaseEntity::KeyValueFromString( key, value ) {
 
-    if ( value && typeof value == "string" && value != "" )
-        PopGameStrings.StringTable[ value ] <- null
-
+    // if ( "PopGameStrings" in ROOT && value && typeof value == "string" && value != "" )
+        // PopGameStrings.StringTable[ value ] <- this.GetScriptId()
+    SetPropBool( this, STRING_NETPROP_PURGESTRINGS, true )
     return CBaseEntity.__KeyValueFromString.call( this, key, value )
 }
 
 function SetPropStringArray( ent, prop, value, index = 0 ) {
 
-    if ( value && typeof value == "string" && value != "" )
-        PopGameStrings.StringTable[ value ] <- null
+    // if ( "PopGameStrings" in ROOT && value && typeof value == "string" && value != "" )
+        // PopGameStrings.StringTable[ value ] <- ent.GetScriptId()
+    SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
 
     return NetProps.SetPropStringArray( ent, prop, value, index )
 }
 
 ::SetPropString <- SetPropStringArray
+
+function CreateByClassname( classname ) {
+
+    local ent = Entities.CreateByClassname( classname )
+    SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+    return ent
+}
+
+function SpawnEntityFromTable( classname, table ) {
+
+    local ent = _SpawnEntityFromTable( classname, table )
+    SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+
+    if ( "PopGameStrings" in ROOT )
+        PopGameStrings.StringTable[ ent.GetScriptId() ] <- null
+
+    return ent
+}

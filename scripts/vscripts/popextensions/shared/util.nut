@@ -11,7 +11,27 @@ PopExtUtil.BotArray 	 <- []
 PopExtUtil.PlayerArray   <- []
 
 // entity caching for faster iteration/lookup
-PopExtUtil.EntTable   	 <- {}.setdelegate({
+PopExtUtil.EntTable   	 <- {
+
+	[First()] = {
+
+		name 	  = First().GetName()
+		scope     = null
+		entidx    = 0
+		classname = "worldspawn"
+		scriptid  = First().GetScriptId()
+		thinkfunc = ""
+		cachetime = Time()
+	}
+
+	ByName          = { cachetime = Time(), BigNet = { [ FindByName( null, "BigNet" ) ] = {} } }
+	ByClassname     = { cachetime = Time(), worldspawn = { [ First() ] = {} } }
+	ByModel         = { cachetime = Time(), [ First().GetModelName() ] = { [ First() ] = {} } }
+	ByTarget        = { cachetime = Time(), [ GetPropString( First(), "m_target" ) ] = { [ First() ] = {} } }
+	ByScriptID      = { cachetime = Time(), [ First().GetScriptId() ] = { [ First() ] = {} } }
+	ByThinkFunc     = { cachetime = Time(), [ First().GetScriptThinkFunc() ] = { [ First() ] = {} } }
+
+}.setdelegate({
 
 	function _newslot( key, value ) {
 
@@ -32,7 +52,7 @@ PopExtUtil.EntTable   	 <- {}.setdelegate({
 			}
 		}
 
-		EntTable.rawset( key.entindex(), value )
+		this.rawset( key, value )
 	}
 
 	function _delslot( key ) {
@@ -40,7 +60,7 @@ PopExtUtil.EntTable   	 <- {}.setdelegate({
 		if ( key && key.IsValid() )
 			EntFireByHandle( key, "Kill", "", -1, null, null )
 
-		EntTable.rawdelete( key )
+		this.rawdelete( key )
 	}
 })
 
@@ -242,10 +262,10 @@ function PopExtUtil::_OnDestroy() {
 		if ( key in ROOT )
 			delete ROOT[ key ]
 
-	foreach( ent in EntShredder.keys() ) {
+	foreach( i, ent in EntShredder.keys() ) {
 		if (ent && ent.IsValid()) {
 			SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
-			EntFireByHandle( ent, "Kill", "", -1, null, null )
+			EntFireByHandle( ent, "Kill", "", i * 0.1, null, null )
 		}
 	}
 }
@@ -296,7 +316,7 @@ function PopExtUtil::GetEntScope( ent ) {
 	local scope = ent.GetScriptScope() || ( ent.ValidateScriptScope(), ent.GetScriptScope() )
 
 	if ( !("Preserved" in scope ) )
-		scope.Preserved <- PopExtMain.PlayerPreserved
+		scope.Preserved <- PopExtMain.ScopePreserved
 
 	return scope
 }
@@ -309,7 +329,7 @@ function PopExtUtil::SetTargetname( ent, name ) {
 	SetPropString( ent, STRING_NETPROP_NAME, name )
 
 	if ( oldname != "" )
-		PurgeGameString( oldname, true )
+		PopGameStrings.StringTable[ oldname ] <- ent.GetScriptId()
 }
 
 function PopExtUtil::PurgeGameString( str, urgent = false ) {
@@ -370,6 +390,9 @@ function PopExtUtil::SpawnEnt( ... ) {
 	}
 
 	SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+	if ( "PopGameStrings" in ROOT ) {
+		PopGameStrings.StringTable[ ent.GetClassname() ] <- ent.GetScriptId()
+	}
 
 	return ent
 }
@@ -387,6 +410,7 @@ PopExtUtil.TriggerHurt 	     <- PopExtUtil.SpawnEnt( "trigger_hurt", "__popext_t
 PopExtUtil.ClientCommand 	 <- PopExtUtil.SpawnEnt( "point_clientcommand", "__popext_clientcommand" )
 PopExtUtil.GameRoundWin 	 <- PopExtUtil.SpawnEnt( "game_round_win", "__popext_roundwin", false, "TeamNum", TF_TEAM_PVE_INVADERS, "force_map_reset", 1 )
 PopExtUtil.RespawnOverride   <- PopExtUtil.SpawnEnt( "trigger_player_respawn_override", "__popext_respawnoverride" )
+PopExtUtil.TriggerParticle   <- PopExtUtil.SpawnEnt( "trigger_particle", "__popext_triggerparticle" )
 
 PopExtUtil.CommentaryNode	 <- @() FindByName( null, "__popext_hide_fcvar_notify" ) ||
 								PopExtUtil.SpawnEnt( "point_commentary_node", "__popext_hide_fcvar_notify", false, "commentaryfile", " ", "commentaryfilenohdr", " " )
@@ -538,23 +562,46 @@ function PopExtUtil::CopyTable( table, keyfunc = null, valuefunc = null ) {
 	return newtable
 }
 
-function PopExtUtil::HexOrIntToRgb( hex_or_int, alpha = false ) {
+function PopExtUtil::HexOrIntToRgb( hex_or_int, alpha = false, return_as = null ) {
 
-	local r = 0, g = 0, b = 0
+	local rgba = [0, 0, 0, 255]
+
 	if ( typeof hex_or_int == "string" ) {
 
-		r = hex_or_int.slice( 0, 2 ).tointeger( 16 )
-		g = hex_or_int.slice( 2, 4 ).tointeger( 16 )
-		b = hex_or_int.slice( 4, 6 ).tointeger( 16 )
+		rgba[0] = hex_or_int.slice( 0, 2 ).tointeger( 16 )
+		rgba[1] = hex_or_int.slice( 2, 4 ).tointeger( 16 )
+		rgba[2] = hex_or_int.slice( 4, 6 ).tointeger( 16 )
 
-		return [r, g, b, alpha ? ( hex_or_int.slice( 6, 8 ).tointeger( 16 ) ) : 255]
+		if ( alpha )
+			rgba[3] = hex_or_int.slice( 6, 8 ).tointeger( 16 )
+	}
+	else if ( typeof hex_or_int == "integer" ) {
+
+	rgba[0] = hex_or_int & 0xFF
+	rgba[1] = ( hex_or_int >> 8 ) & 0xFF
+	rgba[2] = ( hex_or_int >> 16 ) & 0xFF
+
+		if ( alpha )
+			rgba[3] = ( hex_or_int >> 24 ) & 0xFF
 	}
 
-	r = hex_or_int & 0xFF
-	g = ( hex_or_int >> 8 ) & 0xFF
-	b = ( hex_or_int >> 16 ) & 0xFF
+	if ( return_as ) {
 
-	return [r, g, b, alpha ? ( hex_or_int >> 24 ) & 0xFF : 255]
+		switch ( return_as ) {
+
+			case "int":
+				return rgba[0] | ( rgba[1] << 8 ) | ( rgba[2] << 16 ) | ( rgba[3] << 24 )
+
+			case "hex":
+				return format( "#%02X%02X%02X%02X", rgba[0], rgba[1], rgba[2], rgba[3] )
+
+			default:
+				PopExtMain.Error.ValueError( return_as, "PopExtUtil.HexOrIntToRgb", "expected 'int', 'hex', or null" )
+				return rgba
+		}
+	}
+
+	return rgba
 }
 
 function PopExtUtil::HexToRgb( hex ) {
@@ -731,6 +778,7 @@ function PopExtUtil::CreatePlayerWearable( player, model, bonemerge = true, atta
 
 	wearable.SetOwner( player )
 	DispatchSpawn( wearable )
+	SetPropBool( wearable, STRING_NETPROP_PURGESTRINGS, true )
 	SetPropInt( wearable, "m_fEffects", bonemerge ? EF_BONEMERGE|EF_BONEMERGE_FASTCULL : 0 )
 	SetParentLocalOrigin( wearable, player, attachment )
 
@@ -756,9 +804,10 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
 	local wearable = GetPropEntity( dummy, "m_hExtraWearable" )
 	dummy.Kill()
 
-	PopExtUtil.InitEconItem( wearable, item_id )
+	InitEconItem( wearable, item_id )
 	DispatchSpawn( wearable )
-	PopExtUtil.SetTargetname( wearable, format( "__popext_wearable_%d", wearable.entindex() ) )
+	SetTargetname( wearable, format( "__popext_wearable_%d", wearable.entindex() ) )
+	SetPropBool( wearable, STRING_NETPROP_PURGESTRINGS, true )
 
 	if ( model ) 
 		wearable.SetModelSimple( model )
@@ -766,7 +815,7 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
 	// avoid infinite loops from post_inventory_application hooks
 	player.AddEFlags( EFL_CUSTOM_WEARABLE )
 
-	SendGlobalGameEvent( "post_inventory_application",  { userid = PopExtUtil.PlayerTable[ player ] } )
+	SendGlobalGameEvent( "post_inventory_application",  { userid = PlayerTable[ player ] } )
 
 	player.RemoveEFlags( EFL_CUSTOM_WEARABLE )
 
@@ -1016,9 +1065,9 @@ function PopExtUtil::DoExplanation( message, print_color = COLOR_YELLOW, message
 
 			SetPropString( txtent, "m_iszMessage", "" )
 			txtent.AcceptInput( "Display", "", null, null )
-			txtent.Kill()
 
-			strarray.apply( @( str ) PopExtUtil.PurgeGameString( str ) )
+			strarray.apply( @( str ) PopGameStrings.StringTable[ str ] <- "game_text" )
+			txtent.Kill()
 			return
 		}
 		local s = strarray[i]
@@ -1102,11 +1151,143 @@ function PopExtUtil::GetAllEnts( count_players = false, callback = null ) {
 		if ( ent )
 			entlist.append( ent )
 
-	if ( callback != null )
+	if ( callback != null ) {
+		PopExtMain.Error.DeprecationWarning( "PopExtUtil.GetAllEnts callback feature", "PopExtUtil.ForEachEnt" )
 		foreach ( ent in entlist )
 			callback( ent )
+	}
 
 	return { "entlist": entlist, "numents": entlist.len() }
+}
+
+// optimized entity cache iteration for large numbers of static entities
+function PopExtUtil::ForEachEnt( identifier = null, filter = null, callback = null, findby = "FindByClassname", force_update = true ) {
+
+	local entlist = []
+
+	// no lambda so perf counter prints it
+	local function foreachent_filter( i, ent ) { return filter ? filter( ent ) : true }
+
+
+	if ( !findby || !(findby in ROOT) )
+		findby = "FindByClassname"
+
+	local cache_key = findby.slice( 4 )
+
+	local update_entity_cache = force_update || ( identifier && !(identifier in EntTable[cache_key]) )
+
+	// check the existing entity cache instead
+	if ( !update_entity_cache ) {
+
+		local tbl = identifier ? EntTable[ cache_key ][ identifier ] : EntTable
+
+		foreach ( i, ent in tbl ) {
+
+			if ( identifier || ( typeof ent == "instance" && foreachent_filter( i, ent ) ) ) {
+
+				if ( EntTable[ ent ].cachetime < Time() + 5 )
+					ent = EntIndexToHScript( i )
+
+				entlist.append( ent )
+
+				if ( callback ) callback( ent )
+			}
+		}
+
+		return { "entlist": entlist, "numents": entlist.len() }
+	}
+
+	// check using FindByX functions
+	if ( identifier ) {
+
+		// special case for players
+		if ( identifier == "player" && findby == "FindByClassname" ) {
+
+			if ( PlayerArray.len() )
+				entlist.extend( PlayerArray )
+
+			// we should at least have the bots in this list.
+			if ( IsMannVsMachineMode() && entlist.len() < GetInt( "tf_mvm_max_invaders" ) )
+				for ( local i = 1, player; i <= MAX_CLIENTS; player = PlayerInstanceFromIndex( i ), i++ )
+					if ( player )
+						entlist.append( player )
+		}
+		// non-players
+		else
+			for ( local ent; ent = ROOT[ findby ]( ent, identifier ); )
+				entlist.append( ent )
+	}
+
+	// get every entity
+	else
+		for ( local ent = First(); ent; ent = Next( ent ) )
+			entlist.append( ent )
+
+	// run callbacks and update entity cache
+	foreach ( ent in entlist ) {
+
+		if ( callback )
+			callback( ent )
+
+		PopExtUtil.EntTable[ent] <- {
+
+			name 	  = ent.GetName()
+			model     = ent.GetModelName()
+			scope     = ent.GetScriptScope()
+			entidx    = ent.entindex()
+			classname = ent.GetClassname()
+			scriptid  = ent.GetScriptId()
+			thinkfunc = ent.GetScriptThinkFunc()
+			cachetime = Time()
+		}
+
+		local ent_table = clone PopExtUtil.EntTable[ ent ]
+		foreach ( cachekey, entval in { ByName = "name", ByModel = "model", ByThinkFunc = "thinkfunc", ByClassname = "classname", ByScriptID = "scriptid" } ) {
+
+			local val = ent_table[ entval ]
+
+			if ( val == "" ) continue
+
+			if ( !(val in PopExtUtil.EntTable[ cachekey ]) )
+				PopExtUtil.EntTable[ cachekey ][ val ] <- {}
+
+			PopExtUtil.EntTable[ cachekey ][ val ][ ent ] <- ent_table
+		}
+
+		local target = GetPropString( ent, "m_target" )
+		if ( target != "" ) {
+
+			if ( !(target in PopExtUtil.EntTable.ByTarget) )
+				PopExtUtil.EntTable.ByTarget[ target ] <- {}
+
+			PopExtUtil.EntTable.ByTarget[ target ][ ent ] <- ent_table
+		}
+
+	}
+	return { "entlist": entlist, "numents": entlist.len() }
+}
+
+function PopExtUtil::PointScriptTemplate( targetname = null, onspawn = null ) {
+
+	local template = CreateByClassname( "point_script_template" )
+	SetTargetname( template, targetname || template.GetScriptId() )
+	SetPropBool( template, STRING_NETPROP_PURGESTRINGS, true )
+
+	local template_scope = GetEntScope( template )
+	template_scope.ents <- []
+
+	template_scope.__EntityMakerResult <- { entities = template_scope.ents }.setdelegate({
+
+		function _newslot( _, value ) {
+
+			entities.append( value )
+		}
+	})
+
+	if ( onspawn )
+		template_scope.PostSpawn <- onspawn.bindenv( template_scope )
+
+	return template
 }
 
 //sets m_hOwnerEntity and m_hOwner to the same value
@@ -1362,6 +1543,7 @@ function PopExtUtil::PlayerRobotModel( player, model ) {
 	wearable.SetTeam( player.GetTeam() )
 	wearable.SetOwner( player )
 	DispatchSpawn( wearable )
+	SetPropBool( wearable, STRING_NETPROP_PURGESTRINGS, true )
 	EntFireByHandle( wearable, "SetParent", "!activator", -1, player, player )
 	SetPropInt( wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL )
 	scope.wearable <- wearable
@@ -1392,6 +1574,7 @@ function PopExtUtil::PlayerBonemergeModel( player, model ) {
 	bonemerge_model.SetTeam( player.GetTeam() )
 	bonemerge_model.SetOwner( player )
 	DispatchSpawn( bonemerge_model )
+	SetPropBool( bonemerge_model, STRING_NETPROP_PURGESTRINGS, true )
 	EntFireByHandle( bonemerge_model, "SetParent", "!activator", -1, player, player )
 	SetPropInt( bonemerge_model, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL )
 	scope.bonemerge_model <- bonemerge_model
@@ -1557,7 +1740,7 @@ function PopExtUtil::ShowHudHint( text = "This is a hud hint", player = null, du
 	hudhint.AcceptInput("ShowHudHint", "", player, player )
 	EntFireByHandle( hudhint, "HideHudHint", "", duration, player, player )
 
-	PurgeGameString( text )
+	PopGameStrings.StringTable[ text ] <- "env_hudhint"
 }
 
 function PopExtUtil::SetEntityColor( entity, r, g, b, a ) {
@@ -1634,13 +1817,12 @@ function PopExtUtil::InitEconItem( item, index ) {
 	SetPropBool( item, STRING_NETPROP_ATTACH, true )
 }
 
-function PopExtUtil::SpawnEffect( player,  effect ) {
+function PopExtUtil::SpawnEffect( player, effect ) {
 
 	local player_angle	   =  player.GetLocalAngles()
 	local player_angle_vec =  Vector( player_angle.x, player_angle.y, player_angle.z )
 
 	DispatchParticleEffect( effect, player.GetLocalOrigin(), player_angle_vec )
-	return
 }
 
 function PopExtUtil::RemoveOutputAll( ent, output ) {
@@ -1705,9 +1887,10 @@ function PopExtUtil::SetPropAny( ent, prop, value, i = 0 ) {
 
 function PopExtUtil::RemovePlayerWearables( player ) {
 
-	for ( local wearable = player.FirstMoveChild(); wearable != null; wearable = wearable.NextMovePeer() ) {
-		if ( wearable.GetClassname() == "tf_wearable" )
-			wearable.Kill()
+	for ( local wearable = player.FirstMoveChild(); (wearable && wearable.GetClassname() == "tf_wearable"); wearable = wearable.NextMovePeer() ) {
+
+		SetPropBool( wearable, STRING_NETPROP_PURGESTRINGS, true )
+		EntFireByHandle( wearable, "Kill", "", -1, null, null )
 	}
 	return
 }
@@ -1723,6 +1906,7 @@ function PopExtUtil::GiveWeapon( player, class_name, item_id ) {
 	InitEconItem( weapon, item_id )
 	weapon.SetTeam( player.GetTeam() )
 	DispatchSpawn( weapon )
+	SetPropBool( weapon, STRING_NETPROP_PURGESTRINGS, true )
 
 	// remove existing weapon in same slot
 	ForEachItem( player, function( child ) {
@@ -1730,6 +1914,7 @@ function PopExtUtil::GiveWeapon( player, class_name, item_id ) {
 		if ( child.GetSlot() != weapon.GetSlot() )
 			return
 
+		SetPropBool( child, STRING_NETPROP_PURGESTRINGS, true )
 		EntFireByHandle( child, "Kill", "", -1, null, null )
 		// SetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, null, slot )
 	}, true)
@@ -1887,6 +2072,7 @@ function PopExtUtil::SplitOnce( s, sep = null ) {
 function PopExtUtil::EndWaveReverse( doteamswitch = true ) {
 
 	local temp = CreateByClassname( "logic_autosave" )
+	SetPropString( temp, STRING_NETPROP_PURGESTRINGS, true )
 
 	if ( !IsWaveStarted ) return
 
@@ -1943,7 +2129,7 @@ function PopExtUtil::AddThink( ent, func ) {
 	local scope = GetEntScope( ent )
 
 	if ( ent.IsPlayer() && !( "Preserved" in scope ) )
-		scope.Preserved <- PopExtMain.PlayerPreserved
+		scope.Preserved <- PopExtMain.ScopePreserved
 
 	// no think table setup, normal function
 	if ( !thinktable_name || !thinktable_func ) {
@@ -2250,7 +2436,9 @@ function PopExtUtil::ScriptEntFireSafe( target, code, delay = -1, activator = nu
 
 		if ( self && self.IsValid() ) {
 
-			if ( self.IsPlayer() && !self.IsAlive() && !%d ) {
+			SetPropBool( self, STRING_NETPROP_PURGESTRINGS, true )
+
+			if ( self.IsPlayer() && !self.IsAlive() && %d == 0 ) {
 
 				PopExtMain.Error.DebugLog( `Ignoring dead player in ScriptEntFireSafe: ` + self )
 				return
@@ -2266,33 +2454,23 @@ function PopExtUtil::ScriptEntFireSafe( target, code, delay = -1, activator = nu
 
 	", allow_dead.tointeger(), code ), delay, activator, caller )
 
-	PurgeGameString( code )
-}
-
-function PopExtUtil::PurgeGameString( str, urgent = false ) {
-
-	if ( urgent ) {
-
-		local tempent = CreateByClassname( "logic_autosave" )
-		SetTargetname( tempent, str )
-		SetPropBool( tempent, STRING_NETPROP_PURGESTRINGS, true )
-		tempent.Kill()
-		return
-	}
-
-	SpawnEnt( "logic_autosave", str, true )
+	PopGameStrings.StringTable[ code ] <- null
 }
 
 function PopExtUtil::SetDestroyCallback( entity, callback ) {
 
 	local scope = GetEntScope( entity )
 
+	if ( "__popext_destroy_callback" in scope )
+		return
+
+	scope.__popext_destroy_callback <- callback.bindenv( scope )
+
 	scope.setdelegate({}.setdelegate({
 
 			parent   = scope.getdelegate()
 			id       = entity.GetScriptId()
 			index    = entity.entindex()
-			callback = callback
 
 			function _get( k ) {
 
@@ -2306,8 +2484,10 @@ function PopExtUtil::SetDestroyCallback( entity, callback ) {
 					entity = EntIndexToHScript( index )
 					local scope = entity.GetScriptScope()
 					scope.self <- entity
-					callback.pcall( scope )
+					// PopGameStrings.StringTable[ entity.GetClassname() ] <- id
+					scope.__popext_destroy_callback()
 				}
+
 				delete parent[k]
 			}
 		})
@@ -2909,3 +3089,4 @@ function Explanation( message, print_color = COLOR_YELLOW, message_prefix = "Exp
 }
 
 GetAllAreas( PopExtUtil.AllNavAreas )
+PopExtUtil.ForEachEnt( null, null, null, null, true )

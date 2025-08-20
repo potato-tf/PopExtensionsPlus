@@ -1239,8 +1239,10 @@ MissionAttributes.Attrs <- {
 				local armor_model = format( `models/workshop/player/items/%s/tw`, PopExtUtil.Classes[self.GetPlayerClass()] )
 
 				for ( local child = self.FirstMoveChild(); ( child && child.GetClassname() == `tf_wearable` ); child = child.NextMovePeer() )
-					if ( startswith( child.GetModelName(), armor_model ) )
+					if ( startswith( child.GetModelName(), armor_model ) ) {
+						SetPropBool( child, STRING_NETPROP_PURGESTRINGS, true )
 						EntFireByHandle( child, `Kill`, ``, -1, null, null )
+					}
 			", -1 )
 
 			if ( value < 2 || MissionAttributes.noromecarrier ) return
@@ -1377,14 +1379,20 @@ MissionAttributes.Attrs <- {
 			if ( !PopExtUtil.IsWaveStarted ) return
 
 			//kill skele spawners before they split from tf_zombie_spawner
-			for ( local skelespell; skelespell = FindByClassname( skelespell, "tf_projectile_spellspawnzombie" ); )
+			for ( local skelespell; skelespell = FindByClassname( skelespell, "tf_projectile_spellspawnzombie" ); ) {
+
+				if ( !GetPropBool( skelespell, STRING_NETPROP_PURGESTRINGS ) )
+					SetPropBool( skelespell, STRING_NETPROP_PURGESTRINGS, true )
+
 				if ( !GetPropEntity( skelespell, "m_hThrower" ) )
 					EntFireByHandle( skelespell, "Kill", "", -1, null, null )
+			}
 
 			// m_hThrower does not change when the skeletons split for spell-casted skeles, just need to kill them after spawning
 			for ( local skeles; skeles = FindByClassname( skeles, "tf_zombie" );  ) {
-				//kill bot owned split skeles
+				// kill bot owned split skeles
 				if ( !skeles.GetModelScale().tointeger() && ( !skeles.GetOwner() || skeles.GetOwner().IsBotOfType( TF_BOT_TYPE ) ) ) {
+					SetPropBool( skeles, STRING_NETPROP_PURGESTRINGS, true )
 					EntFireByHandle( skeles, "Kill", "", -1, null, null )
 					return
 				}

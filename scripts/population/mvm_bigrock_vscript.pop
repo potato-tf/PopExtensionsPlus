@@ -50,7 +50,7 @@ WaveSchedule
 		// Add or replace existing InitWaveOutput with code below
 		InitWaveOutput
 		{
-			Target bignet
+			Target BigNet
 			Action RunScriptCode
 			Param "
 				// Load popextensions script
