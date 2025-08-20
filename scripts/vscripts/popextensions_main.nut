@@ -182,7 +182,7 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 	return { Entity = ent, Scope = scope }
 }
 
-Include( "WIP/gamestrings" )									// Experimental string leak handler
+Include( "shared/gamestrings" )									// Experimental string leak handler
 Include( "shared/config" )										// Configuration file for end users, always re-include this
 Include( "shared/event_wrapper", "PopExtEvents" ) 	   		    // Event wrapper for all events
 Include( "shared/util", "PopExtUtil" )						    // misc utils/entities
@@ -375,7 +375,8 @@ function PopExtMain::FullCleanup() {
 
 	// Kill all remaining popextensions entities
 	EntFire( "extratankpath*", "Kill" )
-	PopGameStrings.StringTable[ "__popext*" ] <- "extratankpath*"
+	if ( "PopGameStrings" in ROOT )
+		PopGameStrings.StringTable[ "__popext*" ] <- "extratankpath*"
 	PopExtUtil.ScriptEntFireSafe( "__popext*", "SetPropBool( self, STRING_NETPROP_PURGESTRINGS, true ); self.Kill()" )
 }
 

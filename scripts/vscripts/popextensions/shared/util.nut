@@ -1740,7 +1740,8 @@ function PopExtUtil::ShowHudHint( text = "This is a hud hint", player = null, du
 	hudhint.AcceptInput("ShowHudHint", "", player, player )
 	EntFireByHandle( hudhint, "HideHudHint", "", duration, player, player )
 
-	PopGameStrings.StringTable[ text ] <- "env_hudhint"
+	if ( "PopGameStrings" in ROOT )
+		PopGameStrings.StringTable[ text ] <- "env_hudhint"
 }
 
 function PopExtUtil::SetEntityColor( entity, r, g, b, a ) {
@@ -2454,7 +2455,8 @@ function PopExtUtil::ScriptEntFireSafe( target, code, delay = -1, activator = nu
 
 	", allow_dead.tointeger(), code ), delay, activator, caller )
 
-	PopGameStrings.StringTable[ code ] <- null
+	if ( "PopGameStrings" in ROOT )
+		PopGameStrings.StringTable[ code ] <- null
 }
 
 function PopExtUtil::SetDestroyCallback( entity, callback ) {
