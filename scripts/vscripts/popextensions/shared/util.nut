@@ -329,7 +329,7 @@ function PopExtUtil::SetTargetname( ent, name ) {
 	SetPropString( ent, STRING_NETPROP_NAME, name )
 
 	if ( oldname != "" )
-		PopGameStrings.StringTable[ oldname ] <- ent.GetScriptId()
+		PopGameStrings.StringTable[ ent.GetScriptId() ] <- oldname
 }
 
 function PopExtUtil::PurgeGameString( str, urgent = false ) {
@@ -413,7 +413,7 @@ PopExtUtil.RespawnOverride   <- PopExtUtil.SpawnEnt( "trigger_player_respawn_ove
 PopExtUtil.TriggerParticle   <- PopExtUtil.SpawnEnt( "trigger_particle", "__popext_triggerparticle" )
 
 PopExtUtil.CommentaryNode	 <- @() FindByName( null, "__popext_hide_fcvar_notify" ) ||
-								PopExtUtil.SpawnEnt( "point_commentary_node", "__popext_hide_fcvar_notify", false, "commentaryfile", " ", "commentaryfilenohdr", " " )
+								PopExtUtil.SpawnEnt( "point_commentary_node", "__popext_hide_fcvar_notify", true, "commentaryfile", " ", "commentaryfilenohdr", " " )
 
 PopExtUtil.PopInterface 	 <- FindByClassname( null, "point_populator_interface" ) ||
 								PopExtUtil.SpawnEnt( "point_populator_interface", "__popext_pop_interface" )

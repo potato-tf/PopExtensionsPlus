@@ -169,7 +169,7 @@ if (
     - Replace: ``$1 { \n``
     - Finding broken brackets due to inline comments: ``\/\/ s* \{``
 - Correct function declaration syntax:
-    - Find: ``(\w+\s*)=\s*function``
+    - Find: ``(\w+\s*)=\s*function`` (replace = with <- and add :: where necessary)
     - Replace: ``$1 = function $1``
 - Valve-style argument formatting:
     - WARNING: will break regex capture groups, manually fix these after running it

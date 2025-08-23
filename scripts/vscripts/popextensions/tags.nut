@@ -1272,11 +1272,6 @@ PopExtTags.TagFunctions <- {
 		local weapon = CreateByClassname( args.weapon ? args.weapon : args.type )
 		PopExtUtil.InitEconItem( weapon, "id" in args ? args.id.tointeger() : args.cooldown.tointeger() )
 		weapon.SetTeam( bot.GetTeam() )
-		DispatchSpawn( weapon )
-
-		PopExtUtil.GetItemInSlot( bot, weapon.GetSlot() ).Kill()
-
-		bot.Weapon_Equip( weapon )
 
 		if ( "attrs" in args ) {
 
@@ -1288,6 +1283,12 @@ PopExtTags.TagFunctions <- {
 			foreach ( k, v in args.attr )
 				PopExtUtil.SetPlayerAttributes( bot, k, v, weapon )
 		}
+
+		DispatchSpawn( weapon )
+
+		PopExtUtil.GetItemInSlot( bot, weapon.GetSlot() ).Kill()
+
+		bot.Weapon_Equip( weapon )
 
 		return weapon
 	}
@@ -1499,11 +1500,14 @@ PopExtTags.TagFunctions <- {
 
 	function popext_customweaponmodel(bot, args) {
 
-		local wep = "slot" in args ? PopExtUtil.GetItemInSlot( bot, args.slot ) : PopExtUtil.GetItemInSlot( bot, 0 )
+		local wep = "slot" in args ? PopExtUtil.GetItemInSlot( bot, args.slot ) : bot.GetActiveWeapon()
 
 		local scope = bot.GetScriptScope()
 		local modelindex = PrecacheModel( "model" in args ? args.model : args.type )
 		local tp_wearable = CreateByClassname( "tf_wearable" )
+
+		SetPropInt( wep, "m_nRenderMode", kRenderTransColor )
+		SetPropInt( wep, "m_clrRender", 0 )
 
 		SetPropInt( tp_wearable, STRING_NETPROP_MODELINDEX, modelindex )
 		SetPropBool( tp_wearable, STRING_NETPROP_INIT, true )
@@ -2481,7 +2485,7 @@ PopEventHook( "player_spawn", "TagsPlayerSpawn", function( params ) {
 	PopEventHook( "*", format( "TagsPlayerSpawn_%d*", params.userid ), null, EVENT_WRAPPER_TAGS )
 
 	// new tags
-	PopExtUtil.ScriptEntFireSafe( player, "PopExtTags.EvaluateTags( self )", SINGLE_TICK )
+	PopExtUtil.ScriptEntFireSafe( player, "PopExtTags.EvaluateTags( self )", 0.1 )
 
 }, EVENT_WRAPPER_TAGS)
 

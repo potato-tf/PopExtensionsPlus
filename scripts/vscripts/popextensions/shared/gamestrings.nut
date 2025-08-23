@@ -101,6 +101,9 @@ function PopGameStrings::PurgeString( str ) {
 
 function PopGameStrings::StringFixGenerator() {
 
+    if ( !("PopGameStrings" in ROOT) )
+        return
+
     local PurgeString = PopGameStrings.PurgeString
     local string_table = clone StringTable
 
@@ -119,21 +122,16 @@ function PopGameStrings::StringFixGenerator() {
 
     for ( local ent = First(), i = 0; ent; ent = Next( ent ), i++ ) {
 
-        PopExtMain.Error.DebugLog(format( "GAME STRINGS : %s : %d", ent.tostring(), i ))
-
-        if ( !ent || !ent.IsValid() || GetPropBool( ent, STRING_NETPROP_PURGESTRINGS ) )
-            continue
-
-        if ( !( i % 16 ) && i )
+        if ( !( i % 8 ) && i )
             yield ent
+
+        if ( !ent || !ent.IsValid() )
+            continue
 
         local classname = ent.GetClassname()
         SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+        PopExtMain.Error.DebugLog(format( "GAME STRINGS : %s : %d", ent.tostring(), i ))
         StringTable[ ent.GetScriptId() ] <- null
-
-        // if ( "PopExtUtil" in ROOT )
-            // PopExtUtil.SetDestroyCallback( ent, @() PurgeString( classname ) )
-
     }
 }
 
@@ -208,11 +206,13 @@ function SetPropStringArray( ent, prop, value, index = 0 ) {
 function CreateByClassname( classname ) {
 
     local ent = Entities.CreateByClassname( classname )
-    SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
     return ent
 }
 
 function SpawnEntityFromTable( classname, table ) {
+
+    if ( !("_SpawnEntityFromTable" in ROOT) )
+        return SpawnEntityFromTable( classname, table )
 
     local ent = _SpawnEntityFromTable( classname, table )
     SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )

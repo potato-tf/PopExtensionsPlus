@@ -24,7 +24,7 @@ if ( !("TableId" in PopExtEvents) )
 
 function PopExtEvents::_OnDestroy() {
 
-    PopExtEvents.ClearEvents( null )
+    ClearEvents( null )
     delete ::PopEventHook
 }
 
@@ -176,12 +176,15 @@ function PopExtEvents::ClearEvents( index = "unordered" ) {
 
     if ( !index || index == "*" ) {
 
-        PopExtEvents.CollectedEvents  <- {}
-        PopExtEvents.EventsPreCollect <- {}
-        return
-    }
+        CollectedEvents  = {}
+        EventsPreCollect = {}
+    } 
+    else 
+        AddRemoveEventHook( "*", "*", null, index )
 
-    AddRemoveEventHook( "*", "*", null, index )
+    // wipe out leftover null event hooks
+    foreach( k, v in ::GameEventCallbacks )
+        GameEventCallbacks[k] = v.filter( @( _, e ) e )
 }
 
 ::PopEventHook <- PopExtEvents.AddRemoveEventHook.bindenv( PopExtEvents )

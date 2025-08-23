@@ -283,13 +283,15 @@ WaveSchedule
 			TotalCount 9999
 			MaxActive 1
 			SpawnCount 1
-			WaitBetweenSpawns 9999
-			WaitBeforeStarting 9999
+			WaitBetweenSpawns 1
+			WaitBeforeStarting 1
 			TFBot
 			{
 				Class Scout
+				WeaponRestrictions MeleeOnly
 				// Attributes UseBossHealthBar
 				Health 400
+				Tag "popext_giveweapon{weapon = `tf_weapon_bat`, id = 1071, attrs = {`item style override`: 0}}"
 				// Tag "popext_halloweenboss|eyeball_boss|3000|752 4529 389|60"
 				// CharacterAttributes
 				// {
