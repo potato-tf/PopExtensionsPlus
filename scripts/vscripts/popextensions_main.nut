@@ -49,12 +49,6 @@ if ( !( "__active_scopes" in ROOT ) )
 
 function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_func = null, preserved = true, classname_override = null ) {
 
-	// local oldents = []
-	// for (local oldent; oldent = FindByName( oldent, name ); )
-	// 	oldents.append( oldent )
-
-	// oldents.apply( @( oldent ) oldent.Kill() )
-
 	local classname = classname_override || ( preserved ? "entity_saucer" : "logic_autosave" )
 
 	// empty vscripts kv will do ValidateScriptScope automatically
@@ -228,6 +222,26 @@ PopExtMain.Error <- {
 
 	raised_parse_error = false
 
+	// generic exception
+	function RaiseException( error_msg ) { Assert( false, format( "%s: %s.", POPEXT_LOG_FATAL, error_msg ) ) }
+
+	// generic parsing error
+	function ParseError( error_msg, error_level = POPEXT_LOG_ERROR, assert = false ) {
+
+		if ( !raised_parse_error && error_level != POPEXT_LOG_DEBUG) {
+
+			raised_parse_error = true
+			ClientPrint( null, HUD_PRINTTALK, POPEXT_LOG_PARSE_ERROR )
+		}
+		if ( error_level == POPEXT_LOG_FATAL || assert ) {
+			RaiseException( format( "%s.\n", error_msg ) )
+		}
+		else {
+			ClientPrint( null, HUD_PRINTTALK, format( "%s %s.\n", POPEXT_LOG_ERROR, error_msg ) )
+			printf( "%s %s.\n", POPEXT_LOG_ERROR, error_msg )
+		}
+	}
+
 	// debug logging
 	function DebugLog( LogMsg ) {
 
@@ -245,26 +259,6 @@ PopExtMain.Error <- {
 	function RaiseTypeError( key, type, assert = false ) 			   { ParseError( format( "Bad type for '%s' (should be %s)", key, type ), assert ) }
 	function RaiseValueError( key, value, extra = "", assert = false ) { ParseError( format( "Bad value '%s' passed to %s. %s", value.tostring(), key, extra ), assert ) }
 	function RaiseModuleError( module, module_user, assert = false )   { ParseError( format( "Missing module or incorrect include order: '%s' (%s).", module, module_user ), assert ) }
-
-	// generic parsing error
-	function ParseError( error_msg, error_level = POPEXT_LOG_ERROR, assert = false ) {
-
-		if ( !raised_parse_error && error_level != POPEXT_LOG_DEBUG) {
-
-			raised_parse_error = true
-			ClientPrint( null, HUD_PRINTTALK, POPEXT_LOG_PARSE_ERROR )
-		}
-		if ( error_level == POPEXT_LOG_FATAL ) {
-			RaiseException( format( "%s.\n", error_msg ) )
-		}
-		else {
-			ClientPrint( null, HUD_PRINTTALK, format( "%s %s.\n", POPEXT_LOG_ERROR, error_msg ) )
-			printf( "%s %s.\n", POPEXT_LOG_ERROR, error_msg )
-		}
-	}
-
-	// generic exception
-	function RaiseException( error_msg ) { Assert( false, format( "%s: %s.", POPEXT_LOG_FATAL, error_msg ) ) }
 }
 
 /*********************************************************************************************************************************

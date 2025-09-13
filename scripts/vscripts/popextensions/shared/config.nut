@@ -22,7 +22,7 @@ PopExtConfig.DebugFiles <- {
 }
 
 /************************************************************************************************************
-* manual cleanup flag, set to true for missions that are created for a specific map.                        *
+* manual cleanup flag                                                                                       *
 * purpose-built map/mission combos where per-round cleanup is not necessary (mvm_redridge) should use this. *
 * this should also be used if you change the popfile name mid-mission.                                      *
 * to manually clean everything up, call PopExtMain.FullCleanup()                                            *
@@ -31,8 +31,8 @@ PopExtConfig.ManualCleanup <- false
 
 /*************************************************************************************************************
 * ignore these variables when cleaning up player scope                                                      *
-* "Preserved" is a special table that will persist through the cleanup process unless full_cleanup is true. *
-* any player scoped variables you want to use across multiple waves should be added here                    *
+* "Preserved" is a special table that will persist through the player death/spawn cleanup steps.            *
+* any entity scoped variables you want to use across multiple lives should be added here                    *
 *************************************************************************************************************/
 PopExtConfig.IgnoreTable <- {
 

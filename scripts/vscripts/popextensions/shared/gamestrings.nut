@@ -168,7 +168,7 @@ foreach ( i, func in entio_funcs ) {
     ROOT[ func ] <- function( ... ) {
 
         local target    = vargv[0]
-        local param     = 2 in vargv ? vargv[2] : ""
+        local param     = 2 in vargv ? vargv[2] : null
         local copy_name = format( "_%s", func )
 
         if ( "PopGameStrings" in ROOT && param && typeof param == "string" && param != "" )

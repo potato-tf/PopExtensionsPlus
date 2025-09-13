@@ -1,25 +1,27 @@
+# Contributing to PopExtensions
 
-### Any existing code that breaks these rules predates these guidelines and/or is too load-bearing/widely used to change
-**Offending lines of code that already exist are not a pass to break them yourself.**
+### Any existing code that breaks these rules predates these guidelines and/or is too load-bearing/widely used to change, they are not a pass to break them yourself.
 
 ## General
 - Use PopExtUtil functions as much as possible, all generic re-usable functions go here
 - Always use constants defined in constants.nut/itemdef_constants.nut, avoid magic numbers
 ## Error Logging:
-- Use `PopExtMain.Error` for errors and warnings, do not use `error()` or other print functions
-    - ### Debug:
-    - Print to Console if `PopExtConfig.DebugText` is true and Debug Logging for the module is whitelisted in `PopExtConfig.DebugFiles`
-        - `PopExtMain.Error.DebugLog` - Generic Debug Logging with the `POPEXT DEBUG:` prefix
-    - ### Warnings:
-    - Always print to console with the `POPEXT WARNING:` prefix
-    - `PopExtMain.Error.GenericWarning` - Self-explanatory
-    - `PopExtMain.Error.DeprecationWarning` - Deprecation warning.  First argument is old function/variable name, Second argument is the new name.
-    - `PopExtMain.Error.RaiseIndexError` - Index out-of-range error, set the 3rd argument to `true` to trigger an assert/full vscript error
-    - `PopExtMain.Error.RaiseTypeError` - Type error, see above for assert
-    - `PopExtMain.Error.RaiseValueError` - Generic value error, see above for assert (argument 4 instead of 3)
-    - `PopExtMain.Error.RaiseModuleError` - Module import error, `PopExtMain.IncludeModules` will handle this automatically
-    - `PopExtMain.Error.ParseError` - Generic parsing errors.
-    - `PopExtMain.Error.RaiseException` - Generic Exceptions/Asserts.
+- Use `PopExtMain.Error` for errors and warnings
+### Debug:
+- Print to Console if `PopExtConfig.DebugText` is true and Debug Logging for the module is whitelisted in `PopExtConfig.DebugFiles`
+- `PopExtMain.Error.DebugLog` - Generic Debug Logging with the `POPEXT DEBUG:` prefix
+### Warnings:
+- Always print to console with the `POPEXT WARNING:` prefix
+- `PopExtMain.Error.GenericWarning` - Self-explanatory
+- `PopExtMain.Error.DeprecationWarning` - Deprecation warning.  First argument is old function/variable name, Second argument is the new name.
+### Errors:
+- Always print to console with the `POPEXT ERROR:` or `POPEXT FATAL:` prefix, depending on if assert is true
+- `PopExtMain.Error.RaiseIndexError` - Index out-of-range error, set the 3rd argument to `true` to trigger an assert/full vscript error
+- `PopExtMain.Error.RaiseTypeError` - Type error, see above for assert
+- `PopExtMain.Error.RaiseValueError` - Generic value error, see above for assert (argument 4 instead of 3)
+- `PopExtMain.Error.RaiseModuleError` - Module import error, `PopExtMain.IncludeModules` will handle this automatically
+- `PopExtMain.Error.ParseError` - Generic parsing errors.
+- `PopExtMain.Error.RaiseException` - Generic Exceptions/Asserts.
 
 ## Naming Conventions:
 - ### snake_case:
@@ -37,12 +39,32 @@
 - K&R syntax (inline opening braces, newline after)
 - Valve-style argument formatting (spaces between opening/closing parentheses)
 - Trim whitespace (Ctrl+M then Ctrl+X in VSCode)
-- No inline comments, comments should always be above the code they are meant to explain
-- Use ternaries and lambda functions where appropriate
-    - simple yes/no conditional checks, simple functions that return a value and do nothing else, do not look at ExtraTankPath xd
-- format() > string concatenation
-- functions must be declared as `function name( args )`, DO NOT use `name = function( args )` or `name <- function(args)`
-    - This is done for the perf counter.  `name <- function( args )` creates an anonymous function that will just print `<lambda or free run script>`
+- Comments should always be above the code they are meant to explain
+
+### function declarations
+Functions must be declared in a way the performance counter can see them.
+
+DO NOT DO THIS:
+
+- `FuncName <- function( args ) { ... }`
+- `MyTable.FuncName <- function( args ) { ... }`
+- `FuncName = function( args ) { ... }`
+
+DO THIS INSTEAD:
+
+- `function FuncName( args ) { ... }`
+- `function MyTable::FuncName( args ) { ... }`
+
+The `MyTable::FuncName` syntax is not always valid (e.g. local scope references).  Define your function separately then assign it to the table:
+
+```js
+function FuncName( args ) { 
+    // code here 
+}
+MyTable.FuncName <- FuncName
+```
+
+Only use ternaries and lambda functions where appropriate.  E.g. simple yes/no conditional checks, simple functions that return a value and do nothing else, do not look at ExtraTankPath xd
 
 ## Game events
 - See event_wrapper.nut for an example of how to use the event hooking system
@@ -63,7 +85,8 @@
 - various strings are cached as constants for performance or ease of writing, notably netprop strings
 - `PopExtUtil.AllNavAreas`, a pre-collected table of all nav areas for nav related code
 - Always use folded constant names and API functions (e.g. SetPropString instead of NetProps.SetPropString)
-    - Every API function that can be folded is already folded, check constants.nut
+- format() > string concatenation
+
 
 ### Single-line control flow:
 - This is fine:
@@ -71,11 +94,6 @@
 if ( condition1 == 3 )
     foreach( thing in myarray )
         printl( thing )
-```
-
-- This is also fine for single conditional checks
-```js
-if ( condition1 == 3 ) foreach( thing in myarray ) printl( thing )
 ```
 
 - Whitespace after control flow lines for complex nested statements is preferred, see event_wrapper.nut

@@ -2489,7 +2489,6 @@ function PopExtUtil::SetDestroyCallback( entity, callback ) {
 					// PopGameStrings.StringTable[ entity.GetClassname() ] <- id
 					scope.__popext_destroy_callback()
 				}
-
 				delete parent[k]
 			}
 		})

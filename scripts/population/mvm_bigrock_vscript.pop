@@ -213,14 +213,14 @@ WaveSchedule
 					count = 1
 				}"
 				Tag "popext_actionpoint{
-						target = `-648 4802 234`
-						repeats = 5
-						duration = 1
-						distance = 100
-						waituntildone = true
-						repeat_cooldown = 10
-						killaimtarget = 2048
-						aimtarget = `RandomEnemy`
+					target = `-648 4802 234`
+					repeats = 5
+					duration = 1
+					distance = 100
+					waituntildone = true
+					repeat_cooldown = 10
+					killaimtarget = 2048
+					aimtarget = `RandomEnemy`
 				}"
 				// Tag "popext_improvedairblast"
 				// Tag "popext_usehumananims"
