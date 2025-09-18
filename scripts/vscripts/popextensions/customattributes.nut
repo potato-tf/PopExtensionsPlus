@@ -46,7 +46,7 @@ PopExtAttributes.Attrs <- {
 			}
 		}
 		player_scope.PlayerThinkTable[ event_hook_string ] <- FiresMilkBoltThink
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local victim = params.const_entity
 			local attacker = params.attacker
@@ -71,7 +71,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "AddCondOnHit_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local victim = params.const_entity
 			local attacker = params.attacker
@@ -100,7 +100,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "RemoveCondOnHit_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "player_hurt", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "player_hurt", event_hook_string, function( params ) {
 
 			local victim = GetPlayerFromUserID( params.userid )
 			local attacker = GetPlayerFromUserID( params.attacker )
@@ -118,7 +118,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "SelfAddCondOnHit_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local victim = params.const_entity
 			local attacker = params.attacker
@@ -139,7 +139,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "SelfAddCondOnKill_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "player_death", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "player_death", event_hook_string, function( params ) {
 
 			local attacker = GetPlayerFromUserID( params.attacker )
 			local victim = GetPlayerFromUserID( params.userid )
@@ -180,7 +180,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "FireInputOnHit_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( params.attacker != player || params.weapon != item )
 				return
@@ -215,7 +215,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "FireInputOnKill_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "player_death", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "player_death", event_hook_string, function( params ) {
 
 			if ( GetPlayerFromUserID( params.attacker ) != player || params.weapon != item )
 				return
@@ -230,7 +230,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "MultDmgVsSameClass_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local victim = params.const_entity
 			local attacker = params.attacker
@@ -257,7 +257,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "MultDmgVsAirborne_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local victim = params.const_entity
 			if ( victim != null && victim.IsPlayer() && GetPropEntity( victim, "m_hGroundEntity" ) == null )
@@ -271,7 +271,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "TeleportInsteadOfDie_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( RandomFloat( 0, 1 ) > value.tofloat() )
 				return
@@ -322,7 +322,7 @@ PopExtAttributes.Attrs <- {
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- MeleeCleaveAttackThink
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( scope.cleaved || params.weapon != item || !( "melee cleave attack" in player.GetScriptScope().attribinfo ) )
 				return
@@ -403,7 +403,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "UberOnDamageTaken_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local damagedplayer = params.const_entity
 
@@ -440,7 +440,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "SetTurnToIce_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local attacker = params.attacker
 
@@ -466,7 +466,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "AddCondOnHit_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "player_teleported", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "player_teleported", event_hook_string, function( params ) {
 
 			if ( !( "mod teleporter speed boost" in player.GetScriptScope().attribinfo ) || params.builderid != PopExtUtil.PlayerTable[ player ] )
 				return
@@ -587,7 +587,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "BuildSmallSentries_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "player_builtobject", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "player_builtobject", event_hook_string, function( params ) {
 
 			local builder = GetPlayerFromUserID( params.userid )
 
@@ -615,7 +615,7 @@ PopExtAttributes.Attrs <- {
 			", SINGLE_TICK )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		PopEventHook( "player_upgradedobject", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "player_upgradedobject", event_hook_string, function( params ) {
 
 			local upgrader = GetPlayerFromUserID( params.userid )
 
@@ -634,7 +634,7 @@ PopExtAttributes.Attrs <- {
 			", SINGLE_TICK )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		PopEventHook( "mvm_quick_sentry_upgrade", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "mvm_quick_sentry_upgrade", event_hook_string, function( params ) {
 
 			for ( local sentry; sentry = FindByClassname( sentry, "obj_sentrygun" ); ) {
 
@@ -657,7 +657,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "RadiusSleeper_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "player_hurt", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "player_hurt", event_hook_string, function( params ) {
 
 			local victim = GetPlayerFromUserID( params.userid )
 			local attacker = GetPlayerFromUserID( params.attacker )
@@ -765,7 +765,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "ExplosiveBulletsExt_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( "explosivebullets" in scope || params.weapon != item || !( "explosive bullets ext" in player.GetScriptScope().attribinfo ) )
 				return
@@ -816,7 +816,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "OldSandmanStun_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local attacker = params.attacker
 			local victim = params.const_entity
@@ -841,7 +841,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "StunOnHit_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( !params.const_entity.IsPlayer() || params.weapon != item || ( !stungiants && params.const_entity.IsMiniBoss() ) )
 				return
@@ -942,7 +942,7 @@ PopExtAttributes.Attrs <- {
 
 		SetPropInt( PopExtUtil.Worldspawn, "m_takedamage", 1 )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local _weapon = params.weapon
 
@@ -1047,7 +1047,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "DontCountDamageTowardsCritRate_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( params.weapon != item )
 				return params.damage_type = params.damage_type | DMG_DONT_COUNT_DAMAGE_TOWARDS_CRIT_RATE
@@ -1060,7 +1060,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "NoDamageFalloff_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( params.weapon != item )
 				return params.damage_type = params.damage_type & ~DMG_USEDISTANCEMOD
@@ -1073,7 +1073,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "CanHeadshot_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local victim = params.const_entity
 			if ( params.weapon != item || !victim.IsPlayer() || GetPropInt( victim, "m_LastHitGroup" ) != HITGROUP_HEAD )
@@ -1090,7 +1090,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "CannotHeadshot_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( params.weapon != item || params.damage_stats != TF_DMG_CUSTOM_HEADSHOT )
 				return
@@ -1106,7 +1106,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "CannotBeHeadshot_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local scope = params.const_entity.GetScriptScope()
 
@@ -1142,7 +1142,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "MultDmgVsGiants_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local victim = params.const_entity, attacker = params.attacker
 
@@ -1157,7 +1157,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "MultDmgVsTanks_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local victim = params.const_entity, attacker = params.attacker
 
@@ -1172,7 +1172,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "SetDamageType_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( params.weapon == item )
 				params.damage_type = value
@@ -1185,7 +1185,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "SetDamageTypeCustom_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( params.weapon == item )
 				params.damage_stats = value
@@ -1243,7 +1243,7 @@ PopExtAttributes.Attrs <- {
 
 		local scope = item.GetScriptScope()
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local entity = params.const_entity
 			if ( !entity.IsPlayer() )
@@ -1509,7 +1509,7 @@ PopExtAttributes.Attrs <- {
 
 		local scope = item.GetScriptScope()
 
-		PopEventHook( "player_builtobject", format( "MultBuildingScale_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
+		POP_EVENT_HOOK( "player_builtobject", format( "MultBuildingScale_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
 
 			local building = EntIndexToHScript( params.index )
 			if ( GetPropEntity( building, "m_hBuilder" ) == player && "mult building scale" in player.GetScriptScope().attribinfo )
@@ -1523,7 +1523,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "MultCritDmg_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( params.damage_type & DMG_CRITICAL )
 				params.damage *= value
@@ -1648,7 +1648,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "CustonKillIcon_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( params.weapon != item || player.GetActiveWeapon() != item )
 				return
@@ -1659,7 +1659,7 @@ PopExtAttributes.Attrs <- {
 			params.inflictor = killicon_dummy
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		PopEventHook( "player_hurt", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "player_hurt", event_hook_string, function( params ) {
 
 			EntFire( format( "killicon_dummy_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), "Kill" )
 		}, EVENT_WRAPPER_CUSTOMATTR )
@@ -1709,7 +1709,7 @@ PopExtAttributes.Attrs <- {
 
 	function MinRespawnTime( player, item, value ) {
 
-		PopEventHook( "post_inventory_application", format( "MinRespawnTime_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
+		POP_EVENT_HOOK( "post_inventory_application", format( "MinRespawnTime_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
 
 			if (!PopExtUtil.IsWaveStarted) return
 
@@ -1752,7 +1752,7 @@ PopExtAttributes.Attrs <- {
 
 				item.AddAttribute( "mod soldier buff type", 4, -1 ) // dummy buff type, does nothing
 
-				PopEventHook( "deploy_buff_banner", format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
+				POP_EVENT_HOOK( "deploy_buff_banner", format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
 
 					if ( params.buff_owner == PopExtUtil.PlayerTable[ player ] ) {
 						// player.RemoveCondEx( buff_conds[ buff_type ], true )
@@ -1782,7 +1782,7 @@ PopExtAttributes.Attrs <- {
 
 		if ( item.GetClassname() == "tf_weapon_medigun" ) {
 
-			PopEventHook( "player_chargedeployed", format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
+			POP_EVENT_HOOK( "player_chargedeployed", format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
 
 				if ( params.userid != PopExtUtil.PlayerTable[ player ] )
 					return
@@ -1852,7 +1852,7 @@ PopExtAttributes.Attrs <- {
 			SetPropInt( player, "m_afButtonDisabled", 0 )
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- AltFireDisabledThink
-		PopEventHook( "post_inventory_application", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "post_inventory_application", event_hook_string, function( params ) {
 
 			if ( GetPlayerFromUserID( params.userid ).IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
 				return
@@ -1888,7 +1888,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "DmgBonusWhileHalfDead_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( !( "dmg bonus while half dead" in player.GetScriptScope().attribinfo ) || params.weapon != item || player.GetActiveWeapon() != item )
 				return
@@ -1904,7 +1904,7 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "DmgPenaltyWhileHalfAlive_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
-		PopEventHook( "OnTakeDamage", event_hook_string, function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			if ( !( "dmg penalty while half alive" in player.GetScriptScope().attribinfo ) || params.weapon != item || player.GetActiveWeapon() != item )
 				return

@@ -895,7 +895,7 @@ function PopExtUtil::SetPlayerAttributes( player, attrib, value, item = null, cu
 		scope.CustomAttrItems <- items
 
 		// wipe out old event hooks
-		PopEventHook( "*", format( "%s_%d_*", customattr_function, PlayerTable[ player ] ), null, EVENT_WRAPPER_CUSTOMATTR )
+		POP_EVENT_HOOK( "*", format( "%s_%d_*", customattr_function, PlayerTable[ player ] ), null, EVENT_WRAPPER_CUSTOMATTR )
 
 		//cleanup item thinks
 		foreach( item in items.keys() )
@@ -1506,9 +1506,10 @@ function PopExtUtil::IsPointInTrigger( point, classname = "func_respawnroom" ) {
 function PopExtUtil::GetItemInSlot( player, slot ) {
 
 	local item
-	for ( local child = player.FirstMoveChild(); child && child instanceof CBaseCombatWeapon; child = child.NextMovePeer() ) {
+	for ( local child = player.FirstMoveChild(); child; child = child.NextMovePeer() ) {
 
-		if ( child.GetSlot() != slot ) continue
+		if ( !(child instanceof CBaseCombatWeapon) || child.GetSlot() != slot ) 
+			continue
 
 		item = child
 		break
@@ -2605,11 +2606,11 @@ function PopExtUtil::SetRedMoney( value ) {
 
 	if ( !value ) {
 
-		PopEventHook( "player_death", "ForceRedMoneyKill", null, EVENT_WRAPPER_UTIL )
+		POP_EVENT_HOOK( "player_death", "ForceRedMoneyKill", null, EVENT_WRAPPER_UTIL )
 		return
 	}
 
-	PopEventHook("player_death", "ForceRedMoneyKill", function( params ) {
+	POP_EVENT_HOOK("player_death", "ForceRedMoneyKill", function( params ) {
 
 		local should_collect = false
 
@@ -2963,7 +2964,7 @@ function PopExtUtil::CheckBitwise( num ) {
 	return ( num != 0 && ( ( num & ( num - 1 ) ) == 0 ) )
 }
 
-local AddEventHook = PopEventHook.bindenv( PopExtEvents )
+local AddEventHook = POP_EVENT_HOOK.bindenv( PopExtEvents )
 AddEventHook( "mvm_wave_failed", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = false }, EVENT_WRAPPER_UTIL )
 AddEventHook( "mvm_begin_wave", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = true }, EVENT_WRAPPER_UTIL )
 

@@ -14,6 +14,38 @@
 // NOTE: rafmod has an issue with player handles being null in player_team events on bot disconnect
 // The null checks in player_team are not necessary in vanilla
 
+// example
+// player_death functions will be called in the order specified
+
+// POP_EVENT_HOOK( "player_death", "FuncNameHereA", function( params ) {
+//     printl( params.userid + " died0" )
+// }, 0)
+// POP_EVENT_HOOK( "player_death", "FuncNameHereB", function( params ) {
+//     printl( params.userid + " died0" )
+// }, 0)
+// POP_EVENT_HOOK( "player_death", "FuncNameHere1", function( params ) {
+//     printl( params.userid + " died1" )
+// }, 1)
+// POP_EVENT_HOOK( "player_death", "FuncNameHere2", function( params ) {
+//     printl( params.userid + " died2" )
+// }, 2)
+// POP_EVENT_HOOK( "player_death", "FuncNameHere3", function( params ) {
+//     printl( params.userid + " died3" )
+// }, 3)
+// POP_EVENT_HOOK( "player_death", "FuncNameHere4", function( params ) {
+//     printl( params.userid + " died last" )
+// })
+
+// prints:
+
+// <userid> died0
+// <userid> died0
+// <userid> died1
+// <userid> died2
+// <userid> died3
+// <userid> died last
+
+
 POPEXT_CREATE_SCOPE( "__popext_event_wrapper", "PopExtEvents" )
 
 PopExtEvents.EventsPreCollect <- {}
@@ -25,7 +57,7 @@ if ( !("TableId" in PopExtEvents) )
 function PopExtEvents::_OnDestroy() {
 
     ClearEvents( null )
-    delete ::PopEventHook
+    delete ::POP_EVENT_HOOK
 }
 
 function PopExtEvents::AddRemoveEventHook( event, funcname, func = null, index = "unordered", manual_collect = false ) {
@@ -187,24 +219,4 @@ function PopExtEvents::ClearEvents( index = "unordered" ) {
         GameEventCallbacks[k] = v.filter( @( _, e ) e )
 }
 
-::PopEventHook <- PopExtEvents.AddRemoveEventHook.bindenv( PopExtEvents )
-
-//examples
-// PopEventHook( "player_death", "FuncNameHereA", function( params ) {
-//     printl( params.userid + " died first" )
-// }, 0 )
-// PopEventHook( "player_death", "FuncNameHereB", function( params ) {
-//     printl( params.userid + " died first" )
-// }, 0 )
-// PopEventHook( "player_death", "FuncNameHere1", function( params ) {
-//     printl( params.userid + " died1" )
-// }, 1 )
-// PopEventHook( "player_death", "FuncNameHere2", function( params ) {
-//     printl( params.userid + " died2" )
-// }, 2 )
-// PopEventHook( "player_death", "FuncNameHere3", function( params ) {
-//     printl( params.userid + " died3" )
-// }, 3 )
-// PopEventHook( "player_death", "FuncNameHere4", function( params ) {
-//     printl( params.userid + " died last" )
-// } )
+::POP_EVENT_HOOK <- PopExtEvents.AddRemoveEventHook.bindenv( PopExtEvents )

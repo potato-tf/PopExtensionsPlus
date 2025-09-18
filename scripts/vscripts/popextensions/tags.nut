@@ -93,7 +93,7 @@ PopExtTags.TagFunctions <- {
 		local filter_type  	 = "filter_type" in args 	? args.filter_type : 0
 		local filter_param 	 = "filter_param" in args 	? args.filter_param : -1
 
-		PopEventHook( "player_death", format( "DeathSound%d", bot.entindex() ), function( params ) {
+		POP_EVENT_HOOK( "player_death", format( "DeathSound%d", bot.entindex() ), function( params ) {
 
 			local victim = GetPlayerFromUserID( params.userid )
 
@@ -256,7 +256,7 @@ PopExtTags.TagFunctions <- {
 
 		if ( apply_to_ragdoll ) {
 
-			PopEventHook( "player_death", format( "BonemergeDeathModel_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+			POP_EVENT_HOOK( "player_death", format( "BonemergeDeathModel_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 				local _bot = GetPlayerFromUserID( params.userid )
 
@@ -292,7 +292,7 @@ PopExtTags.TagFunctions <- {
 
 		SetPropEntity( glow, "m_hTarget", bot )
 
-		PopEventHook( "player_death", format( "AlwaysGlowDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		POP_EVENT_HOOK( "player_death", format( "AlwaysGlowDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
 			if ( _bot != bot ) return
@@ -886,7 +886,7 @@ PopExtTags.TagFunctions <- {
 			cooldowntime = Time() + ( duration + repeat_cooldown )
 		}
 		PopExtUtil.AddThink( bot, ActionPointThink )
-		PopEventHook( "player_death", format( "ActionPointDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		POP_EVENT_HOOK( "player_death", format( "ActionPointDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
 
@@ -1042,7 +1042,7 @@ PopExtTags.TagFunctions <- {
 		local weapon = args.weapon ? args.weapon : args.type
 		local amount = ( "amount" in args ) ? args.amount.tofloat() : args.cooldown.tofloat()
 
-		PopEventHook( "OnTakeDamage", format( "WeaponResistTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", format( "WeaponResistTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local player = params.attacker
 
@@ -1071,7 +1071,7 @@ PopExtTags.TagFunctions <- {
 		SetPropInt( bot, "m_nForcedSkin", "skin" in args ? args.skin.tointeger() : args.type.tointeger() )
 		SetPropInt( bot, "m_iPlayerSkinOverride", 1 )
 
-		PopEventHook( "player_team", format( "ResetBotSkin_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		POP_EVENT_HOOK( "player_team", format( "ResetBotSkin_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
 
@@ -1115,7 +1115,7 @@ PopExtTags.TagFunctions <- {
 			if ( hint && !alwaysfire ) bot.PressFireButton( 0.0 )
 		}
 		PopExtUtil.AddThink( bot, DispenserBuildThink )
-		PopEventHook( "player_builtobject", format( "DispenserBuildOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		POP_EVENT_HOOK( "player_builtobject", format( "DispenserBuildOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
 
@@ -1207,7 +1207,7 @@ PopExtTags.TagFunctions <- {
 
 	function popext_minisentry(bot, args) {
 
-		PopEventHook( "player_builtobject", format( "MinisentryBuildOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		POP_EVENT_HOOK( "player_builtobject", format( "MinisentryBuildOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
 
@@ -1438,7 +1438,7 @@ PopExtTags.TagFunctions <- {
 
 		PopExtUtil.AddThink( bot, HomingProjectileScannerThink )
 
-		PopEventHook( "OnTakeDamage", format( "HomingTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		POP_EVENT_HOOK( "OnTakeDamage", format( "HomingTakeDamage_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			if ( !params.const_entity.IsPlayer() ) return
 
@@ -1798,7 +1798,7 @@ PopExtTags.TagFunctions <- {
 
 	function popext_dropweapon(bot, args) {
 
-		PopEventHook( "player_death", format( "DropWeaponDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		POP_EVENT_HOOK( "player_death", format( "DropWeaponDeath_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			local _bot = GetPlayerFromUserID( params.userid )
 
@@ -2270,7 +2270,7 @@ PopExtTags.TagFunctions <- {
 		if ( !PopExtMain.IncludeModules( "wavebar" ) )
 			return
 
-		PopEventHook( "player_death", format( "IconOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
+		POP_EVENT_HOOK( "player_death", format( "IconOverride_%d_%s", PopExtUtil.BotTable[ bot ], UniqueString( "_Tag" ) ), function( params ) {
 
 			if ( params.userid != PopExtUtil.BotTable[ bot ] ) return
 
@@ -2462,7 +2462,7 @@ function PopExtTags::AddRobotTag( tag, table ) {
 	custom_tags[ tag ] <- table
 }
 
-PopEventHook( "player_team", "TagsPlayerTeam", function( params ) {
+POP_EVENT_HOOK( "player_team", "TagsPlayerTeam", function( params ) {
 
 	local bot = GetPlayerFromUserID( params.userid )
 
@@ -2475,21 +2475,21 @@ PopEventHook( "player_team", "TagsPlayerTeam", function( params ) {
 
 }, EVENT_WRAPPER_TAGS)
 
-PopEventHook( "player_spawn", "TagsPlayerSpawn", function( params ) {
+POP_EVENT_HOOK( "player_spawn", "TagsPlayerSpawn", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
 	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
 	// kill any existing tag hooks for this bot
-	PopEventHook( "*", format( "TagsPlayerSpawn_%d*", params.userid ), null, EVENT_WRAPPER_TAGS )
+	POP_EVENT_HOOK( "*", format( "TagsPlayerSpawn_%d*", params.userid ), null, EVENT_WRAPPER_TAGS )
 
 	// new tags
 	PopExtUtil.ScriptEntFireSafe( player, "PopExtTags.EvaluateTags( self )", 0.1 )
 
 }, EVENT_WRAPPER_TAGS)
 
-PopEventHook( "player_death", "TagsPlayerDeath", function( params ) {
+POP_EVENT_HOOK( "player_death", "TagsPlayerDeath", function( params ) {
 
 	local bot = GetPlayerFromUserID( params.userid )
 
@@ -2502,7 +2502,7 @@ PopEventHook( "player_death", "TagsPlayerDeath", function( params ) {
 
 }, EVENT_WRAPPER_TAGS)
 
-PopEventHook( "teamplay_round_start", "TagsTeamplayRoundStart", function( params ) {
+POP_EVENT_HOOK( "teamplay_round_start", "TagsTeamplayRoundStart", function( params ) {
 
 	foreach ( bot in PopExtUtil.BotArray )
 		if ( bot.IsValid() && bot.GetTeam() != TEAM_SPECTATOR )
@@ -2510,6 +2510,6 @@ PopEventHook( "teamplay_round_start", "TagsTeamplayRoundStart", function( params
 
 }, EVENT_WRAPPER_TAGS)
 
-PopEventHook( "halloween_boss_killed", "TagsHalloweenBossKilled", function( params ) {
+POP_EVENT_HOOK( "halloween_boss_killed", "TagsHalloweenBossKilled", function( params ) {
 	::__popext_bosskiller <- GetPlayerFromUserID( params.killer )
 }, EVENT_WRAPPER_TAGS)

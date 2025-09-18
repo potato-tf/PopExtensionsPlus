@@ -64,7 +64,7 @@ function PopExtHooks::PopHooksThink() {
 }
 PopExtUtil.AddThink( PopExtHooksEntity, "PopHooksThink" )
 
-PopEventHook( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
+POP_EVENT_HOOK( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 
 	local victim = params.const_entity
 	local attacker = params.attacker
@@ -92,7 +92,7 @@ PopEventHook( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 	}
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
+POP_EVENT_HOOK( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
@@ -119,7 +119,7 @@ PopEventHook( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
 
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "player_team", "PopHooksPlayerTeam", function( params ) {
+POP_EVENT_HOOK( "player_team", "PopHooksPlayerTeam", function( params ) {
 
 	if ( params.team != TEAM_SPECTATOR ) return
 
@@ -150,7 +150,7 @@ PopEventHook( "player_team", "PopHooksPlayerTeam", function( params ) {
 
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "player_hurt", "PopHooksPlayerHurt", function( params ) {
+POP_EVENT_HOOK( "player_hurt", "PopHooksPlayerHurt", function( params ) {
 
 	local victim = GetPlayerFromUserID( params.userid )
 	local scope = victim.GetScriptScope()
@@ -165,7 +165,7 @@ PopEventHook( "player_hurt", "PopHooksPlayerHurt", function( params ) {
 	}
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "player_death", "PopHooksPlayerDeath", function( params ) {
+POP_EVENT_HOOK( "player_death", "PopHooksPlayerDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()

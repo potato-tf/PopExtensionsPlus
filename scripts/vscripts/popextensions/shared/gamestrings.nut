@@ -189,7 +189,7 @@ function CBaseEntity::KeyValueFromString( key, value ) {
     // if ( "PopGameStrings" in ROOT && value && typeof value == "string" && value != "" )
         // PopGameStrings.StringTable[ value ] <- this.GetScriptId()
     SetPropBool( this, STRING_NETPROP_PURGESTRINGS, true )
-    return CBaseEntity.__KeyValueFromString.call( this, key, value )
+    return this.__KeyValueFromString( key, value )
 }
 
 function SetPropStringArray( ent, prop, value, index = 0 ) {
@@ -203,11 +203,14 @@ function SetPropStringArray( ent, prop, value, index = 0 ) {
 
 ::SetPropString <- SetPropStringArray
 
-function CreateByClassname( classname ) {
+// Setting this netprop before the internal Spawn() function fires seemingly causes issues for some ents
+// CreateByClassname does not call Spawn()
+// function CreateByClassname( classname ) {
 
-    local ent = Entities.CreateByClassname( classname )
-    return ent
-}
+//     local ent = Entities.CreateByClassname( classname )
+//     SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
+//     return ent
+// }
 
 function SpawnEntityFromTable( classname, table ) {
 

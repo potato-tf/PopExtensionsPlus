@@ -431,7 +431,7 @@ function PopExtMain::ThinkTable::AddProjectileThink() {
 	}
 }
 
-PopEventHook( "player_activate", "MainPlayerActivate", function( params ) {
+POP_EVENT_HOOK( "player_activate", "MainPlayerActivate", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = PopExtUtil.GetEntScope( player )
@@ -441,7 +441,7 @@ PopEventHook( "player_activate", "MainPlayerActivate", function( params ) {
 
 }, EVENT_WRAPPER_MAIN)
 
-PopEventHook( "player_team", "MainPlayerTeam", function( params ) {
+POP_EVENT_HOOK( "player_team", "MainPlayerTeam", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	if ( !player || !player.IsValid() ) return
@@ -461,7 +461,7 @@ PopEventHook( "player_team", "MainPlayerTeam", function( params ) {
 
 }, EVENT_WRAPPER_MAIN)
 
-PopEventHook( "post_inventory_application", "MainPostInventoryApplication", function( params ) {
+POP_EVENT_HOOK( "post_inventory_application", "MainPostInventoryApplication", function( params ) {
 
 	if ( GetRoundState() == 3 ) return
 
@@ -493,7 +493,7 @@ PopEventHook( "post_inventory_application", "MainPostInventoryApplication", func
 
 }, EVENT_WRAPPER_MAIN)
 
-PopEventHook( "player_changeclass", "MainChangeClassCleanup", function( params ) {
+POP_EVENT_HOOK( "player_changeclass", "MainChangeClassCleanup", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -504,7 +504,7 @@ PopEventHook( "player_changeclass", "MainChangeClassCleanup", function( params )
 }, EVENT_WRAPPER_MAIN)
 
 //clean up bot scope on death
-PopEventHook( "player_death", "MainDeathCleanup", function( params ) {
+POP_EVENT_HOOK( "player_death", "MainDeathCleanup", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -517,7 +517,7 @@ PopEventHook( "player_death", "MainDeathCleanup", function( params ) {
 /*************************************
  * FINAL CLEANUP STEP, MUST RUN LAST *
  *************************************/
-PopEventHook( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
+POP_EVENT_HOOK( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
 
 	// clean up lingering wearables/weapons
 	for ( local wearable; wearable = FindByClassname( wearable, "tf_wea*" ); )

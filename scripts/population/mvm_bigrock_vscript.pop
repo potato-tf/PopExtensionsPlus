@@ -74,7 +74,7 @@ WaveSchedule
 						`max health additive bonus` : 100
 						`reloads full clip at once` : 1
 						`is miniboss` : 1
-						`min respawn time`: 500
+						// `min respawn time`: 500
 						`provide on active` : 1
 						`move speed bonus` : 0.4
 						`rocket penetration` : 10

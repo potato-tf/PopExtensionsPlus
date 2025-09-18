@@ -455,7 +455,7 @@ function PopExtHooks::PopHooksThink() {
 }
 AddThinkToEnt( PopExtHooksEntity, "PopHooksThink" )
 
-PopEventHook( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
+POP_EVENT_HOOK( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 
 	local victim = params.const_entity
 	local attacker = params.attacker
@@ -483,7 +483,7 @@ PopEventHook( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 	}
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
+POP_EVENT_HOOK( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
@@ -503,7 +503,7 @@ PopEventHook( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
 
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "player_team", "PopHooksPlayerTeam", function( params ) {
+POP_EVENT_HOOK( "player_team", "PopHooksPlayerTeam", function( params ) {
 
 	if ( params.team != TEAM_SPECTATOR ) return
 
@@ -526,7 +526,7 @@ PopEventHook( "player_team", "PopHooksPlayerTeam", function( params ) {
 
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "player_hurt", "PopHooksPlayerHurt", function( params ) {
+POP_EVENT_HOOK( "player_hurt", "PopHooksPlayerHurt", function( params ) {
 
 	local victim = GetPlayerFromUserID( params.userid )
 	local scope = victim.GetScriptScope()
@@ -541,7 +541,7 @@ PopEventHook( "player_hurt", "PopHooksPlayerHurt", function( params ) {
 	}
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "player_death", "PopHooksPlayerDeath", function( params ) {
+POP_EVENT_HOOK( "player_death", "PopHooksPlayerDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
@@ -556,7 +556,7 @@ PopEventHook( "player_death", "PopHooksPlayerDeath", function( params ) {
 	}
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "npc_hurt", "PopHooksNPCHurt", function( params ) {
+POP_EVENT_HOOK( "npc_hurt", "PopHooksNPCHurt", function( params ) {
 
 	local victim = EntIndexToHScript( params.entindex )
 	if ( victim.GetClassname() == "tank_boss" ) {
@@ -639,7 +639,7 @@ PopEventHook( "npc_hurt", "PopHooksNPCHurt", function( params ) {
 	}
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "mvm_begin_wave", "PopHooksWaveStarts", function( params ) {
+POP_EVENT_HOOK( "mvm_begin_wave", "PopHooksWaveStarts", function( params ) {
 
 	if ( "wave_icons_function" in PopExt )
 		PopExt.wave_icons_function()
@@ -651,7 +651,7 @@ PopEventHook( "mvm_begin_wave", "PopHooksWaveStarts", function( params ) {
 		PopExt._PopIncrementIcon( v )
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "teamplay_round_start", "PopHooksTeamplayRoundStart", function( params ) {
+POP_EVENT_HOOK( "teamplay_round_start", "PopHooksTeamplayRoundStart", function( params ) {
 
 	if ( "wave_icons_function" in PopExt )
 		delete PopExt.wave_icons_function

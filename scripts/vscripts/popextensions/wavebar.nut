@@ -454,7 +454,7 @@ function PopExtWavebar::GetWaveIconActive( name, flags ) {
     return false
 }
 
-PopEventHook( "mvm_begin_wave", "WavebarWaveStart", function( params ) {
+POP_EVENT_HOOK( "mvm_begin_wave", "WavebarWaveStart", function( params ) {
 
 	if ( PopExtWavebar.wave_icons_function != null )
 		PopExtWavebar.wave_icons_function()
@@ -464,7 +464,7 @@ PopEventHook( "mvm_begin_wave", "WavebarWaveStart", function( params ) {
 
 }, EVENT_WRAPPER_HOOKS)
 
-PopEventHook( "teamplay_round_start", "WavebarRoundReset", function( params ) {
+POP_EVENT_HOOK( "teamplay_round_start", "WavebarRoundReset", function( params ) {
 
     PopExtWavebar.wave_icons_function = null
 	PopExtWavebar.icons <- []

@@ -382,7 +382,7 @@ function SpawnTemplates::DoSpawnTemplate( args = { pointtemplate = null, parent 
 ::SpawnTemplate <- SpawnTemplates.SpawnTemplate
 
 
-PopEventHook("mvm_wave_complete", "SpawnTemplateWaveComplete", function( params ) {
+POP_EVENT_HOOK("mvm_wave_complete", "SpawnTemplateWaveComplete", function( params ) {
 
 	foreach( entity in SpawnTemplates.wave_point_templates )
 		if ( entity.IsValid() )
@@ -392,7 +392,7 @@ PopEventHook("mvm_wave_complete", "SpawnTemplateWaveComplete", function( params 
 })
 
 //despite the name, this event also calls on wave reset from voting, and on jumping to wave, and when loading mission
-PopEventHook("mvm_wave_failed", "SpawnTemplateWaveFailed", function( params ) {
+POP_EVENT_HOOK("mvm_wave_failed", "SpawnTemplateWaveFailed", function( params ) {
 
 	foreach( entity in SpawnTemplates.wave_point_templates )
 		if ( entity.IsValid() )
@@ -402,7 +402,7 @@ PopEventHook("mvm_wave_failed", "SpawnTemplateWaveFailed", function( params ) {
 		SpawnTemplate( param[0], null, param[1], param[2] )
 })
 
-PopEventHook("player_death", "SpawnTemplatePlayerDeath", function( params ) {
+POP_EVENT_HOOK("player_death", "SpawnTemplatePlayerDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = PopExtUtil.GetEntScope( player )

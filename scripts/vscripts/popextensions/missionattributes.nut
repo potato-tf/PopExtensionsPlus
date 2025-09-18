@@ -95,7 +95,7 @@ MissionAttributes.Attrs <- {
 	// =========================================
 	function YERDisguiseFix( value = null ) {
 
-		PopEventHook("OnTakeDamage", "YERDisguiseFix", function( params ) {
+		POP_EVENT_HOOK("OnTakeDamage", "YERDisguiseFix", function( params ) {
 			local victim   = params.const_entity
 			local attacker = params.inflictor
 
@@ -107,7 +107,7 @@ MissionAttributes.Attrs <- {
 				PopExtUtil.ScriptEntFireSafe( attacker, "PopExtUtil.SilentDisguise( self, stabvictim )", -1 )
 			}
 		}, EVENT_WRAPPER_MISSIONATTR )
-		PopEventHook("post_inventory_application", "RemoveYERAttribute", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "RemoveYERAttribute", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -129,7 +129,7 @@ MissionAttributes.Attrs <- {
 	// =========================================
 	function LooseCannonFix( value = null ) {
 
-		PopEventHook("OnTakeDamage", "LooseCannonFix", function( params ) {
+		POP_EVENT_HOOK("OnTakeDamage", "LooseCannonFix", function( params ) {
 			local wep = params.weapon
 
 			if ( PopExtUtil.GetItemIndex( wep ) != ID_LOOSE_CANNON || params.damage_custom != TF_DMG_CUSTOM_CANNONBALL_PUSH ) return
@@ -140,7 +140,7 @@ MissionAttributes.Attrs <- {
 
 	function BotGibFix( value = null ) {
 
-		PopEventHook("OnTakeDamage", "BotGibFix", function( params ) {
+		POP_EVENT_HOOK("OnTakeDamage", "BotGibFix", function( params ) {
 			local victim = params.const_entity
 			if ( victim.IsPlayer() && !victim.IsMiniBoss() && victim.GetModelScale() <= 1.0 && params.damage >= victim.GetHealth() && ( params.damage_type & DMG_CRITICAL || params.damage_type & DMG_BLAST ) )
 			victim.SetModelScale( 1.0000001, 0.0 )
@@ -149,7 +149,7 @@ MissionAttributes.Attrs <- {
 
 	function HolidayPunchFix( value = null ) {
 
-		PopEventHook("OnTakeDamage", "HolidayPunchFix", function( params ) {
+		POP_EVENT_HOOK("OnTakeDamage", "HolidayPunchFix", function( params ) {
 			local wep   = params.weapon
 			local index = PopExtUtil.GetItemIndex( wep )
 			if ( index != ID_HOLIDAY_PUNCH || !( params.damage_type & DMG_CRITICAL ) ) return
@@ -222,7 +222,7 @@ MissionAttributes.Attrs <- {
 
 	function NoCreditVelocity( value = null ) {
 
-		PopEventHook("player_death", "NoCreditVelocity", function( params ) {
+		POP_EVENT_HOOK("player_death", "NoCreditVelocity", function( params ) {
 			local player = GetPlayerFromUserID( params.userid )
 			if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
@@ -233,7 +233,7 @@ MissionAttributes.Attrs <- {
 
 	function ScoutBetterMoneyCollection( value = null ) {
 
-		PopEventHook("post_inventory_application", "ScoutBetterMoneyCollection", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "ScoutBetterMoneyCollection", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -259,7 +259,7 @@ MissionAttributes.Attrs <- {
 
 	function HoldFireUntilFullReloadFix( value = null ) {
 
-		PopEventHook("post_inventory_application", "HoldFireUntilFullReloadFix", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "HoldFireUntilFullReloadFix", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -297,7 +297,7 @@ MissionAttributes.Attrs <- {
 	// Doesn't fully work correctly, need to investigate
 	function EngineerBuildingPushbackFix( value = null ) {
 
-		PopEventHook("post_inventory_application", "EngineerBuildingPushbackFix", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "EngineerBuildingPushbackFix", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -381,7 +381,7 @@ MissionAttributes.Attrs <- {
 
 	function RedBotsNoRandomCrit( value ) {
 
-		PopEventHook("post_inventory_application", "RedBotsNoRandomCrit", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "RedBotsNoRandomCrit", function( params ) {
 			local player = GetPlayerFromUserID( params.userid )
 
 			if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
@@ -424,7 +424,7 @@ MissionAttributes.Attrs <- {
 
 		if ( value < 1 ) return
 
-		PopEventHook("player_death", "NoReanimators", function( params ) {
+		POP_EVENT_HOOK("player_death", "NoReanimators", function( params ) {
 			for ( local revivemarker; revivemarker = FindByClassname( revivemarker, "entity_revive_marker" ); )
 				EntFireByHandle( revivemarker, "Kill", "", -1, null, null )
 		}, EVENT_WRAPPER_MISSIONATTR )
@@ -454,7 +454,7 @@ MissionAttributes.Attrs <- {
 
 		local movekeys = IN_FORWARD | IN_BACK | IN_LEFT | IN_RIGHT
 		// PopExtUtil.PrintTable( GetListenServerHost().GetScriptScope() )
-		PopEventHook("post_inventory_application", "StandableHeads", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "StandableHeads", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -482,7 +482,7 @@ MissionAttributes.Attrs <- {
 	//need quotes for this guy.
 	"666Wavebar": function( value ) {
 
-		PopEventHook("mvm_begin_wave", "EventWavebar", function( params ) {
+		POP_EVENT_HOOK("mvm_begin_wave", "EventWavebar", function( params ) {
 
 			SetPropInt( PopExtUtil.ObjectiveResource, "m_nMvMEventPopfileType", value )
 			// also needs to set maxwavenum to be zero, thanks ptyx
@@ -499,7 +499,7 @@ MissionAttributes.Attrs <- {
 
 	function WaveNum( value ) {
 
-		PopEventHook("mvm_begin_wave", "SetWaveNum", function( params ) {
+		POP_EVENT_HOOK("mvm_begin_wave", "SetWaveNum", function( params ) {
 
 			SetPropInt( PopExtUtil.ObjectiveResource, "m_nMannVsMachineWaveCount", value )
 		}, EVENT_WRAPPER_MISSIONATTR )
@@ -513,7 +513,7 @@ MissionAttributes.Attrs <- {
 
 	function MaxWaveNum( value ) {
 
-		PopEventHook("mvm_begin_wave", "SetMaxWaveNum", function( params ) {
+		POP_EVENT_HOOK("mvm_begin_wave", "SetMaxWaveNum", function( params ) {
 			SetPropInt( PopExtUtil.ObjectiveResource, "m_nMannVsMachineMaxWaveCount", value )
 		}, EVENT_WRAPPER_MISSIONATTR )
 		PopExtUtil.ScriptEntFireSafe( PopExtUtil.ObjectiveResource, format( "SetPropInt( self, `m_nMannVsMachineMaxWaveCount`, %d )", value ), SINGLE_TICK )
@@ -550,7 +550,7 @@ MissionAttributes.Attrs <- {
 
 	function MultiSapper( value ) {
 
-		PopEventHook("post_inventory_application", "MultiSapper", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "MultiSapper", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -559,7 +559,7 @@ MissionAttributes.Attrs <- {
 
 			if ( player.IsBotOfType( TF_BOT_TYPE ) || player.GetPlayerClass() < TF_CLASS_SPY ) return
 
-			PopEventHook( "player_builtobject", format( "MultiSapper_%d", PopExtUtil.PlayerTable[ player ] ), function( params ) {
+			POP_EVENT_HOOK( "player_builtobject", format( "MultiSapper_%d", PopExtUtil.PlayerTable[ player ] ), function( params ) {
 
 				if ( params.object != OBJ_ATTACHMENT_SAPPER ) return
 				local sapper = EntIndexToHScript( params.index )
@@ -590,7 +590,7 @@ MissionAttributes.Attrs <- {
 			[ID_SHARPENED_VOLCANO_FRAGMENT] = null
 		}
 
-		PopEventHook("OnTakeDamage", "SetDamageTypeIgniteFix", function( params ) {
+		POP_EVENT_HOOK("OnTakeDamage", "SetDamageTypeIgniteFix", function( params ) {
 
 			local wep = params.weapon
 			local victim = params.const_entity
@@ -872,19 +872,19 @@ MissionAttributes.Attrs <- {
 
 		if (!value) return
 
-		PopEventHook("pumpkin_lord_summoned", "HalloweenBossNotSolidToPlayers", function( params ) {
+		POP_EVENT_HOOK("pumpkin_lord_summoned", "HalloweenBossNotSolidToPlayers", function( params ) {
 
 			for ( local boss; boss = FindByClassname( boss, "headless_hatman" ); )
 				boss.SetCollisionGroup( COLLISION_GROUP_PUSHAWAY )
 		}, EVENT_WRAPPER_MISSIONATTR )
 
-		PopEventHook("eyeball_boss_summoned", "HalloweenBossNotSolidToPlayers", function( params ) {
+		POP_EVENT_HOOK("eyeball_boss_summoned", "HalloweenBossNotSolidToPlayers", function( params ) {
 
 			for ( local boss; boss = FindByClassname( boss, "eyeball_boss" ); )
 				boss.SetCollisionGroup( COLLISION_GROUP_PUSHAWAY )
 		}, EVENT_WRAPPER_MISSIONATTR )
 
-		PopEventHook("merasmus_summoned", "HalloweenBossNotSolidToPlayers", function( params ) {
+		POP_EVENT_HOOK("merasmus_summoned", "HalloweenBossNotSolidToPlayers", function( params ) {
 
 			for ( local boss; boss = FindByClassname( boss, "merasmus" ); )
 				boss.SetCollisionGroup( COLLISION_GROUP_PUSHAWAY )
@@ -917,7 +917,7 @@ MissionAttributes.Attrs <- {
 
 	function TeamWipeWaveLoss( value ) {
 
-		PopEventHook("player_death", "TeamWipeWaveLoss", function( params ) {
+		POP_EVENT_HOOK("player_death", "TeamWipeWaveLoss", function( params ) {
 
 			if ( !PopExtUtil.IsWaveStarted ) return
 
@@ -932,7 +932,7 @@ MissionAttributes.Attrs <- {
 
 	function GiantSentryKillCountOffset( value ) {
 
-		PopEventHook("player_death", "GiantSentryKillCount", function( params ) {
+		POP_EVENT_HOOK("player_death", "GiantSentryKillCount", function( params ) {
 
 			local sentry = EntIndexToHScript( params.inflictor_entindex )
 			local victim = GetPlayerFromUserID( params.userid )
@@ -973,7 +973,7 @@ MissionAttributes.Attrs <- {
 
 		if ( value < 1 ) return
 
-		PopEventHook("OnTakeDamage", "BotHeadshots", function( params ) {
+		POP_EVENT_HOOK("OnTakeDamage", "BotHeadshots", function( params ) {
 
 			local player = params.attacker, victim = params.const_entity
 			local wep = params.weapon
@@ -1022,7 +1022,7 @@ MissionAttributes.Attrs <- {
 
 	function PlayersAreRobots( value ) {
 
-		PopEventHook("post_inventory_application", "PlayersAreRobots", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "PlayersAreRobots", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -1171,7 +1171,7 @@ MissionAttributes.Attrs <- {
 
 	function BotsAreHumans( value ) {
 
-		PopEventHook("post_inventory_application", "BotsAreHumans", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "BotsAreHumans", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -1227,7 +1227,7 @@ MissionAttributes.Attrs <- {
 
 		local carrier_parts_index = GetModelIndex( "models/bots/boss_bot/carrier_parts.mdl" )
 
-		PopEventHook("post_inventory_application", "NoRome", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "NoRome", function( params ) {
 
 			local bot = GetPlayerFromUserID( params.userid )
 
@@ -1272,7 +1272,7 @@ MissionAttributes.Attrs <- {
 
 		PopExtUtil.SetConvar( "tf_spells_enabled", 1 )
 
-		PopEventHook("player_death", "SpellRateCommon", function( params ) {
+		POP_EVENT_HOOK("player_death", "SpellRateCommon", function( params ) {
 
 			if ( RandomFloat( 0, 1 ) > value ) return
 
@@ -1298,7 +1298,7 @@ MissionAttributes.Attrs <- {
 
 		PopExtUtil.SetConvar( "tf_spells_enabled", 1 )
 
-		PopEventHook("player_death", "SpellRateGiant", function( params ) {
+		POP_EVENT_HOOK("player_death", "SpellRateGiant", function( params ) {
 
 			if ( RandomFloat( 0, 1 ) > value ) return
 
@@ -1324,7 +1324,7 @@ MissionAttributes.Attrs <- {
 
 		PopExtUtil.SetConvar( "tf_spells_enabled", 1 )
 
-		PopEventHook("player_death", "RareSpellRateCommon", function( params ) {
+		POP_EVENT_HOOK("player_death", "RareSpellRateCommon", function( params ) {
 
 			if ( RandomFloat( 0, 1 ) > value ) return
 
@@ -1348,7 +1348,7 @@ MissionAttributes.Attrs <- {
 
 		PopExtUtil.SetConvar( "tf_spells_enabled", 1 )
 
-		PopEventHook("player_death", "RareSpellRateGiant", function( params ) {
+		POP_EVENT_HOOK("player_death", "RareSpellRateGiant", function( params ) {
 
 			if ( RandomFloat( 0, 1 ) > value ) return
 
@@ -1565,7 +1565,7 @@ MissionAttributes.Attrs <- {
 
 	function HandModelOverride( value ) {
 
-		PopEventHook("post_inventory_application", "HandModelOverride", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "HandModelOverride", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -1623,7 +1623,7 @@ MissionAttributes.Attrs <- {
 
 	function AddCond( value ) {
 
-		PopEventHook("post_inventory_application", "AddCond", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "AddCond", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -1651,7 +1651,7 @@ MissionAttributes.Attrs <- {
 
 	function PlayerAttributes( value ) {
 
-		PopEventHook("post_inventory_application", "PlayerAttributes", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "PlayerAttributes", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -1687,7 +1687,7 @@ MissionAttributes.Attrs <- {
 
 	function ItemAttributes( value ) {
 
-		PopEventHook("post_inventory_application", "ItemAttributes", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "ItemAttributes", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -1715,7 +1715,7 @@ MissionAttributes.Attrs <- {
 
 	function LoadoutControl( value ) {
 
-		PopEventHook("post_inventory_application", "LoadoutControl", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "LoadoutControl", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -1878,7 +1878,7 @@ MissionAttributes.Attrs <- {
 		}
 
 		//death overrides
-		PopEventHook("player_death", "SoundOverrides", function( params ) {
+		POP_EVENT_HOOK("player_death", "SoundOverrides", function( params ) {
 
 			local victim = GetPlayerFromUserID( params.userid )
 
@@ -1914,14 +1914,14 @@ MissionAttributes.Attrs <- {
 		}, EVENT_WRAPPER_MISSIONATTR )
 
 		//unused
-		// PopEventHook("OnTakeDamage", "SoundOverrides", function( params ) {
+		// POP_EVENT_HOOK("OnTakeDamage", "SoundOverrides", function( params ) {
 
 		// }, EVENT_WRAPPER_MISSIONATTR )
 	}
 
 	function NoThrillerTaunt( value ) {
 
-		PopEventHook("post_inventory_application", "NoThrillerTaunt", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "NoThrillerTaunt", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -2075,7 +2075,7 @@ MissionAttributes.Attrs <- {
 			}
 		}
 
-		PopEventHook("player_death", "EnableRandomCritsKill", function( params ) {
+		POP_EVENT_HOOK("player_death", "EnableRandomCritsKill", function( params ) {
 
 			local attacker = GetPlayerFromUserID( params.attacker )
 			if ( attacker == null || !attacker.IsBotOfType( TF_BOT_TYPE ) ) return
@@ -2095,7 +2095,7 @@ MissionAttributes.Attrs <- {
 
 		}, EVENT_WRAPPER_MISSIONATTR )
 
-		PopEventHook("OnTakeDamage", "EnableRandomCritsTakeDamage", function( params ) {
+		POP_EVENT_HOOK("OnTakeDamage", "EnableRandomCritsTakeDamage", function( params ) {
 
 			if ( !( "inflictor" in params ) ) return
 
@@ -2244,7 +2244,7 @@ MissionAttributes.Attrs <- {
 			}
 		}
 
-		PopEventHook("post_inventory_application", "ReverseMVMSpawn", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "ReverseMVMSpawn", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -2643,7 +2643,7 @@ MissionAttributes.Attrs <- {
 			if ( player.GetPlayerClass() == TF_CLASS_ENGINEER ) {
 
 				// Drain metal on built objects
-				PopEventHook( "player_builtobject", format( "DrainMetal_%d", PopExtUtil.PlayerTable[ player ] ), function( params ) {
+				POP_EVENT_HOOK( "player_builtobject", format( "DrainMetal_%d", PopExtUtil.PlayerTable[ player ] ), function( params ) {
 
 					if ( value & 4 ) return
 
@@ -2725,7 +2725,7 @@ MissionAttributes.Attrs <- {
 				// })
 
 				//stop explosion sound
-				PopEventHook("player_death", "RemoveFootsteps", function( params ) {
+				POP_EVENT_HOOK("player_death", "RemoveFootsteps", function( params ) {
 					foreach ( player in PopExtUtil.HumanArray )
 						StopSoundOn( "MVM.GiantCommonExplodes", player )
 				}, EVENT_WRAPPER_MISSIONATTR )
@@ -2747,7 +2747,7 @@ MissionAttributes.Attrs <- {
 			}
 		}, EVENT_WRAPPER_MISSIONATTR )
 
-		// PopEventHook("player_team", "BlockSpectator", function( params ) {
+		// POP_EVENT_HOOK("player_team", "BlockSpectator", function( params ) {
 
 		// 	local player = GetPlayerFromUserID( params.userid )
 		// 	if ( player.IsBotOfType( TF_BOT_TYPE ) ) return
@@ -2776,7 +2776,7 @@ MissionAttributes.Attrs <- {
 
 		local no_sound = ["", "Scout.No3", "Sniper.No4", "Soldier.No1", "Demoman.No3", "Medic.No3", "Heavy.No2", "Pyro.No1", "Spy.No2", "Engineer.No3", "Scout.No3"]
 
-		PopEventHook("player_changeclass", "ClassLimits", function( params ) {
+		POP_EVENT_HOOK("player_changeclass", "ClassLimits", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 			if ( player.IsBotOfType( TF_BOT_TYPE ) ) return
@@ -2980,7 +2980,7 @@ MissionAttributes.Attrs <- {
 
 	function BotSpectateTime( value ) {
 
-		PopEventHook("player_death", "BotSpectateTime", function( params ) {
+		POP_EVENT_HOOK("player_death", "BotSpectateTime", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -3004,7 +3004,7 @@ MissionAttributes.Attrs <- {
 
 	function RemoveBotViewmodels( value ) {
 
-		PopEventHook("post_inventory_application", "RemoveBotViewmodels", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "RemoveBotViewmodels", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -3029,7 +3029,7 @@ MissionAttributes.Attrs <- {
 			[TF_CLASS_HEAVYWEAPONS] = null
 		}
 
-		PopEventHook("post_inventory_application", "UnusedGiantFootsteps", function( params ) {
+		POP_EVENT_HOOK("post_inventory_application", "UnusedGiantFootsteps", function( params ) {
 
 			local player = GetPlayerFromUserID( params.userid )
 
@@ -3228,7 +3228,7 @@ function MAtr( ... ) {
 	MissionAttr.acall( vargv.insert( 0, MissionAttributes ) )
 }
 
-PopEventHook("teamplay_round_start", "MissionAttributesCleanup", function( params ) {
+POP_EVENT_HOOK("teamplay_round_start", "MissionAttributesCleanup", function( params ) {
 
 	foreach ( bot in PopExtUtil.BotArray )
 		if ( bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
@@ -3236,7 +3236,7 @@ PopEventHook("teamplay_round_start", "MissionAttributesCleanup", function( param
 
 }, EVENT_WRAPPER_MISSIONATTR )
 
-PopEventHook("teamplay_broadcast_audio", "SoundOverrides", function( params ) {
+POP_EVENT_HOOK("teamplay_broadcast_audio", "SoundOverrides", function( params ) {
 
 	if ( !MissionAttributes.SoundsToReplace.len() ) return
 
@@ -3254,7 +3254,7 @@ PopEventHook("teamplay_broadcast_audio", "SoundOverrides", function( params ) {
 	}
 }, EVENT_WRAPPER_MISSIONATTR )
 
-PopEventHook("mvm_mission_complete", "MissionAttributeFireUnload", function( params ) {
+POP_EVENT_HOOK("mvm_mission_complete", "MissionAttributeFireUnload", function( params ) {
 
 	foreach ( func in ScriptUnloadTable ) func()
 }, EVENT_WRAPPER_MISSIONATTR )

@@ -269,7 +269,7 @@ function PopExtPopulator::GetWavespawnInfo( wavenum = 0, wavespawn = 0 ) {
 	}
 }
 
-PopEventHook( "teamplay_round_start", "InitializeWave", function( params ) {
+POP_EVENT_HOOK( "teamplay_round_start", "InitializeWave", function( params ) {
 
 	PopExtPopulator.InitializeWave()
 
@@ -277,7 +277,7 @@ PopEventHook( "teamplay_round_start", "InitializeWave", function( params ) {
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopEventHook( "mvm_begin_wave", "StartWave", function( params ) {
+POP_EVENT_HOOK( "mvm_begin_wave", "StartWave", function( params ) {
 
 	//grab the first spawner and enable it on wave start
 	local firstspawner = PopExtPopulator.WaveArray[PopExtUtil.CurrentWaveNum][1].keys()[0]
@@ -287,13 +287,13 @@ PopEventHook( "mvm_begin_wave", "StartWave", function( params ) {
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopEventHook( "mvm_wave_complete", "DoneOutput", function( params ) {
+POP_EVENT_HOOK( "mvm_wave_complete", "DoneOutput", function( params ) {
 
 	PopExtPopulator.DoEntityIO( "DoneOutput" )
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopEventHook( "player_death", "RemoveIcon", function( params ) {
+POP_EVENT_HOOK( "player_death", "RemoveIcon", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -306,7 +306,7 @@ PopEventHook( "player_death", "RemoveIcon", function( params ) {
 	PopExtWavebar.DecrementWaveIcon( spawner.GetScriptScope().WaveSpawn.TFBot.ClassIcon, 0, 1 )
 }, EVENT_WRAPPER_POPULATOR)
 
-PopEventHook( "player_death", "WaitBetweenSpawnsAfterDeath", function( params ) {
+POP_EVENT_HOOK( "player_death", "WaitBetweenSpawnsAfterDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -321,7 +321,7 @@ PopEventHook( "player_death", "WaitBetweenSpawnsAfterDeath", function( params ) 
 	}
 }, EVENT_WRAPPER_POPULATOR)
 
-PopEventHook( "player_death", "DoneOutput", function( params ) {
+POP_EVENT_HOOK( "player_death", "DoneOutput", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -333,7 +333,7 @@ PopEventHook( "player_death", "DoneOutput", function( params ) {
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopEventHook( "player_spawn", "WaitBetweenSpawnsAfterDeath", function( params ) {
+POP_EVENT_HOOK( "player_spawn", "WaitBetweenSpawnsAfterDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -349,7 +349,7 @@ PopEventHook( "player_spawn", "WaitBetweenSpawnsAfterDeath", function( params ) 
 
 }, EVENT_WRAPPER_POPULATOR)
 
-PopEventHook( "player_spawn", "SetSpawner", function( params ) {
+POP_EVENT_HOOK( "player_spawn", "SetSpawner", function( params ) {
 
 		local player = GetPlayerFromUserID( params.userid )
 

@@ -431,7 +431,7 @@ function PopExtWeapons::GetMaxAmmo( player, slot ) {
 
 //regenerating players by default will clear custom weapons
 //give all weapons in the player's class's extraloadout and set hp
-PopEventHook("post_inventory_application", "RegenerateCustomWeapons", function( params ) {
+POP_EVENT_HOOK("post_inventory_application", "RegenerateCustomWeapons", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 

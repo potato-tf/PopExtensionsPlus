@@ -467,7 +467,7 @@ function PopExtTanks::TankThink() {
 
 AddThinkToEnt( PopExtTanksEntity, "TankThink" )
 
-PopEventHook( "npc_hurt", "PopExtTankHurt", function( params ) {
+POP_EVENT_HOOK( "npc_hurt", "PopExtTankHurt", function( params ) {
 
 	local victim = EntIndexToHScript( params.entindex )
 	if ( victim.GetClassname() == "tank_boss" ) {
