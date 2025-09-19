@@ -1648,21 +1648,30 @@ PopExtAttributes.Attrs <- {
 
 		local event_hook_string = format( "CustonKillIcon_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
+
+		local killicon_dummy = CreateByClassname( "info_teleport_destination" )
+		local dummy_name = format( "killicon_dummy_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
+
+		SetPropString( killicon_dummy, STRING_NETPROP_NAME, dummy_name )
+		SetPropString( killicon_dummy, "m_iClassname", value )
+		SetPropBool( killicon_dummy, STRING_NETPROP_PURGESTRINGS, true )
+
 		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
-			if ( params.weapon != item || player.GetActiveWeapon() != item )
-				return
+            // OnTakeDamage fires before damage calculations
+			// always assume the worst possible damage rampup scenario (point blank minicrit scattergun)
+			// player_hurt would be better, but doesn't have an easy way to get the weapon
+			if (
+				!params.weapon
+                || params.weapon != item
+                || params.const_entity.GetHealth() - ( ( params.damage * 1.75 ) * 1.35 ) > 0
+            ) return
 
-			local killicon_dummy = CreateByClassname( "info_teleport_destination" )
-			SetPropString( killicon_dummy, STRING_NETPROP_NAME, format( "killicon_dummy_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ) )
-			SetPropString( killicon_dummy, "m_iClassname", value )
 			params.inflictor = killicon_dummy
+
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		POP_EVENT_HOOK( "player_hurt", event_hook_string, function( params ) {
-
-			EntFire( format( "killicon_dummy_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), "Kill" )
-		}, EVENT_WRAPPER_CUSTOMATTR )
+		player.GetScriptScope().kill_on_death.append( killicon_dummy )
 
 		player.GetScriptScope().attribinfo[ "custom kill icon" ] <- format( "custom kill icon: %s", value )
 	}

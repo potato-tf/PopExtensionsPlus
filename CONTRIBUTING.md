@@ -42,9 +42,9 @@
 - Comments should always be above the code they are meant to explain
 
 ### function declarations
-Functions must be declared in a way the performance counter can see them.
+Functions must be declared in a way the performance counter can see them, we never want to see "<lambda or free run script>" in console if we can avoid it.
 
-DO NOT DO THIS:
+DO NOT DO THIS, THESE ARE ANONYMOUS FUNCTIONS:
 
 - `FuncName <- function( args ) { ... }`
 - `MyTable.FuncName <- function( args ) { ... }`
@@ -55,16 +55,26 @@ DO THIS INSTEAD:
 - `function FuncName( args ) { ... }`
 - `function MyTable::FuncName( args ) { ... }`
 
-The `MyTable::FuncName` syntax is not always valid (e.g. local scope references).  Define your function separately then assign it to the table:
+The `MyTable::FuncName` syntax does not work for local variables.  Define your function separately then assign it to the table:
 
 ```js
+
+local scope = GetEntScope( ent )
+// this also works with MyTable::FuncName() syntax:
+// scope <- GetEntScope( ent )
+// define as named function
 function FuncName( args ) { 
-    // code here 
+    // ...
 }
-MyTable.FuncName <- FuncName
+// assign named function to scope
+scope.FuncName <- FuncName
 ```
 
 Only use ternaries and lambda functions where appropriate.  E.g. simple yes/no conditional checks, simple functions that return a value and do nothing else, do not look at ExtraTankPath xd
+
+### Constant Functions
+
+- PopExtensions+ has a handful of functions defined in UPPERCASE syntax.  These are helper functions that are defined in the root table and guaranteed to be used in almost every script file.
 
 ## Game events
 - See event_wrapper.nut for an example of how to use the event hooking system
