@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "08.23.2025.1"
+::POPEXT_VERSION <- "09.20.2025.1"
 
 local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -61,10 +61,8 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 		ent.SetCollisionGroup( COLLISION_GROUP_IN_VEHICLE )
 	}
 
-	if ( "PopGameStrings" in ROOT ) {
-		PopGameStrings.StringTable[ ent.GetName() ] <- ent.GetScriptId()
-		PopGameStrings.StringTable[ ent.GetClassname() ] <- null
-	}
+	if ( "PopGameStrings" in ROOT )
+		PopGameStrings.StringTable[ ent.GetScriptId() ] <- null
 
 	__active_scopes[ ent ] <- scope_ref
 
@@ -338,9 +336,9 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 	if ( full_cleanup ) {
 
 		// clean up all entities that should be killed on death/spawn
-		if ( "Preserved" in scope ) {
+		if ( "PRESERVED" in scope ) {
 
-			foreach ( entlist in [ scope.Preserved.kill_on_death, scope.Preserved.kill_on_spawn ] ) 
+			foreach ( entlist in [ scope.PRESERVED.kill_on_death, scope.PRESERVED.kill_on_spawn ] ) 
 				foreach ( ent in entlist )
 					if ( ent && ent.IsValid() )
 						ent.Kill()
@@ -380,7 +378,7 @@ function PopExtMain::IncludeModules( ... ) {
 
 	foreach ( module in vargv ) {
 
-		if ( startswith( module, "!" ) && module.slice( 1 ) in ActiveModules ) {
+		if ( module[0] == '!' && module.slice( 1 ) in ActiveModules ) {
 
 			delete ActiveModules[module.slice( 1 )]
 			continue
@@ -418,12 +416,12 @@ function PopExtMain::ThinkTable::AddProjectileThink() {
 
 			local owner_scope = PopExtUtil.GetEntScope( owner )
 
-			owner_scope.Preserved.active_projectiles[projectile.entindex()] <- [projectile, Time()]
+			owner_scope.PRESERVED.active_projectiles[projectile.entindex()] <- [projectile, Time()]
 
 			PopExtUtil.SetDestroyCallback( projectile, function() {
 
-				if ( self.entindex() in owner_scope.Preserved.active_projectiles )
-					delete owner_scope.Preserved.active_projectiles[self.entindex()]
+				if ( self.entindex() in owner_scope.PRESERVED.active_projectiles )
+					delete owner_scope.PRESERVED.active_projectiles[self.entindex()]
 			})
 		}
 
@@ -452,11 +450,11 @@ POP_EVENT_HOOK( "player_team", "MainPlayerTeam", function( params ) {
 
 	if ( params.oldteam > TEAM_SPECTATOR && params.team == TEAM_SPECTATOR && !player.IsAlive() ) {
 
-		foreach( ent in scope.Preserved.kill_on_spawn )
+		foreach( ent in scope.PRESERVED.kill_on_spawn )
 			if ( ent.IsValid() && ent.GetOwner() == player )
 				ent.Kill()
 
-		scope.Preserved.kill_on_spawn.clear()
+		scope.PRESERVED.kill_on_spawn.clear()
 	}
 
 }, EVENT_WRAPPER_MAIN)
@@ -528,7 +526,9 @@ POP_EVENT_HOOK( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
 		if ( bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
 			bot.ForceChangeTeam( TEAM_SPECTATOR, true )
 
-	//same pop or manual cleanup flag set, don't run
+	collectgarbage()
+
+	// same pop or manual cleanup flag set, don't run
 	if ( __popname == GetPropString( objres, STRING_NETPROP_POPNAME ) || PopExtConfig.ManualCleanup )
 		return
 

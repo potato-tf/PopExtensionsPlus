@@ -54,7 +54,7 @@ const POPEXT_LOG_FATAL   = "[POPEXT FATAL ERROR] "
 CONST.POPEXT_LOG_PARSE_ERROR <- format( "\x08FFB4B4FF%s A parsing error has occured. Check console for details.", POPEXT_LOG_ERROR )
 
 // Single tick interval
-const SINGLE_TICK = 0.015
+CONST.SINGLE_TICK <- FrameTime()
 
 // Clientprint chat colors
 const COLOR_LIME       = "22FF22"

@@ -73,7 +73,7 @@ function PopExtEvents::AddRemoveEventHook( event, funcname, func = null, index =
                 delete EventsPreCollect[ event ][ index ][ funcname ]
 
             // wildcard funcname
-            if ( index in EventsPreCollect[ event ] && endswith( funcname, "*" ) )
+            if ( index in EventsPreCollect[ event ] && funcname[funcname.len() - 1] == '*' )
 
                 foreach( name, func in EventsPreCollect[ event ][ index ] )
 
@@ -110,7 +110,7 @@ function PopExtEvents::AddRemoveEventHook( event, funcname, func = null, index =
 
                     delete EventsPreCollect[ e ][ index ][ funcname ]
 
-                else if ( index in event_table && endswith( funcname, "*" ) )
+                else if ( index in event_table && funcname[funcname.len() - 1] == '*' )
 
                     foreach( name, func in event_table[ index ] )
 

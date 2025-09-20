@@ -1518,7 +1518,7 @@ PopExtTags.TagFunctions <- {
 		tp_wearable.AcceptInput( "SetParent", "!activator", bot, bot )
 		SetPropInt( tp_wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL )
 
-		scope.Preserved.kill_on_spawn.append( tp_wearable )
+		scope.PRESERVED.kill_on_spawn.append( tp_wearable )
 	}
 
     /************************************************************************************

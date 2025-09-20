@@ -136,12 +136,12 @@ function PopExtWeapons::GiveItem( itemname, player ) {
 				ammofix.AcceptInput( "SetParent", "!activator", player, player )
 				player.GetScriptScope().CustomWeapons.ammofix <- ammofix
 
-				if ( !( "ExtraLoadout" in player.GetScriptScope().Preserved ) ) {
+				if ( !( "ExtraLoadout" in player.GetScriptScope().PRESERVED ) ) {
 
 					local ExtraLoadout = array( 10 )
-					player.GetScriptScope().Preserved.ExtraLoadout <- ExtraLoadout
+					player.GetScriptScope().PRESERVED.ExtraLoadout <- ExtraLoadout
 				}
-				player.GetScriptScope().Preserved.ExtraLoadout.append( ammofix ) //for clean up
+				player.GetScriptScope().PRESERVED.ExtraLoadout.append( ammofix ) //for clean up
 			}
 			player.GetScriptScope().CustomWeapons.ammofix.AddAttribute( "hidden primary max ammo bonus", TF_AMMO_PER_CLASS_PRIMARY[animset].tofloat() / TF_AMMO_PER_CLASS_PRIMARY[playerclass].tofloat(), -1.0 )
 			player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
@@ -162,12 +162,12 @@ function PopExtWeapons::GiveItem( itemname, player ) {
 				DispatchSpawn( ammofix )
 				ammofix.AcceptInput( "SetParent", "!activator", player, player )
 				player.GetScriptScope().CustomWeapons.ammofix <- ammofix
-				if ( !( "ExtraLoadout" in player.GetScriptScope().Preserved ) ) {
+				if ( !( "ExtraLoadout" in player.GetScriptScope().PRESERVED ) ) {
 
 					local ExtraLoadout = array( 10 )
-					player.GetScriptScope().Preserved.ExtraLoadout <- ExtraLoadout
+					player.GetScriptScope().PRESERVED.ExtraLoadout <- ExtraLoadout
 				}
-				player.GetScriptScope().Preserved.ExtraLoadout.append( ammofix ) //for clean up
+				player.GetScriptScope().PRESERVED.ExtraLoadout.append( ammofix ) //for clean up
 			}
 			player.GetScriptScope().CustomWeapons.ammofix.AddAttribute( "hidden secondary max ammo penalty", TF_AMMO_PER_CLASS_SECONDARY[animset].tofloat() / TF_AMMO_PER_CLASS_SECONDARY[playerclass].tofloat(), -1.0 )
 			player.GetScriptScope().CustomWeapons.ammofix.ReapplyProvision()
@@ -231,12 +231,12 @@ function PopExtWeapons::GiveItem( itemname, player ) {
 			tp_wearable.AcceptInput( "SetParent", "!activator", player, player )
 			SetPropInt( tp_wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL )
 			player_scope.CustomWeapons.worldmodel <- tp_wearable
-			if ( !( "ExtraLoadout" in player_scope.Preserved ) ) {
+			if ( !( "ExtraLoadout" in player_scope.PRESERVED ) ) {
 
 				local ExtraLoadout = array( 10 )
-				player_scope.Preserved.ExtraLoadout <- ExtraLoadout
+				player_scope.PRESERVED.ExtraLoadout <- ExtraLoadout
 			}
-			player_scope.Preserved.ExtraLoadout.append( tp_wearable ) //for clean up
+			player_scope.PRESERVED.ExtraLoadout.append( tp_wearable ) //for clean up
 		}
 
 		// copied from LizardOfOz open fortress dm_crossfire
@@ -303,16 +303,16 @@ function PopExtWeapons::EquipItem( itemname, player, playerclass = null ) {
 
 	if ( playerclass == null ) playerclass = player.GetPlayerClass()
 
-	if ( !( "ExtraLoadout" in player.GetScriptScope().Preserved ) ) {
+	if ( !( "ExtraLoadout" in player.GetScriptScope().PRESERVED ) ) {
 
 		local ExtraLoadout = array( 10 )
-		player.GetScriptScope().Preserved.ExtraLoadout <- ExtraLoadout
+		player.GetScriptScope().PRESERVED.ExtraLoadout <- ExtraLoadout
 	}
-	if ( player.GetScriptScope().Preserved.ExtraLoadout[playerclass] == null )
-		player.GetScriptScope().Preserved.ExtraLoadout[playerclass] = []
+	if ( player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass] == null )
+		player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass] = []
 
-	if ( player.GetScriptScope().Preserved.ExtraLoadout[playerclass].find( itemname ) == null )
-		player.GetScriptScope().Preserved.ExtraLoadout[playerclass].append( itemname )
+	if ( player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass].find( itemname ) == null )
+		player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass].append( itemname )
 }
 
 //unequip item in player's loadout
@@ -323,10 +323,10 @@ function PopExtWeapons::UnequipItem( itemname, player, playerclass = null ) {
 
 	if ( playerclass == null ) playerclass = player.GetPlayerClass()
 
-	if ( "ExtraLoadout" in player.GetScriptScope().Preserved )
-		if ( player.GetScriptScope().Preserved.ExtraLoadout[playerclass] != null )
-			if ( player.GetScriptScope().Preserved.ExtraLoadout[playerclass].find( itemname ) != null )
-				player.GetScriptScope().Preserved.ExtraLoadout[playerclass].remove( player.GetScriptScope().Preserved.ExtraLoadout[playerclass].find( itemname ) )
+	if ( "ExtraLoadout" in player.GetScriptScope().PRESERVED )
+		if ( player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass] != null )
+			if ( player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass].find( itemname ) != null )
+				player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass].remove( player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass].find( itemname ) )
 
 }
 
@@ -359,12 +359,12 @@ function PopExtWeapons::UpdateWorldmodel() {
 				tp_wearable.AcceptInput( "SetParent", "!activator", self, self )
 				SetPropInt( tp_wearable, "m_fEffects", EF_BONEMERGE|EF_BONEMERGE_FASTCULL )
 				scope.CustomWeapons.worldmodel <- tp_wearable
-				if ( !( "ExtraLoadout" in scope.Preserved ) ) {
+				if ( !( "ExtraLoadout" in scope.PRESERVED ) ) {
 
 					local ExtraLoadout = array( 10 )
-					scope.Preserved.ExtraLoadout <- ExtraLoadout
+					scope.PRESERVED.ExtraLoadout <- ExtraLoadout
 				}
-				scope.Preserved.ExtraLoadout.append( tp_wearable ) //for clean up
+				scope.PRESERVED.ExtraLoadout.append( tp_wearable ) //for clean up
 			}
 		}
 		else if ( scope.CustomWeapons.worldmodel.IsValid() )
@@ -438,21 +438,21 @@ POP_EVENT_HOOK("post_inventory_application", "RegenerateCustomWeapons", function
 	if ( player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
 		return
 
-	if ( ( "ExtraLoadout" in player.GetScriptScope().Preserved ) ) {
+	if ( ( "ExtraLoadout" in player.GetScriptScope().PRESERVED ) ) {
 
-		if ( player.GetScriptScope().Preserved.ExtraLoadout.len() > 10 ) {
+		if ( player.GetScriptScope().PRESERVED.ExtraLoadout.len() > 10 ) {
 
-			foreach ( entity in player.GetScriptScope().Preserved.ExtraLoadout ) {
+			foreach ( entity in player.GetScriptScope().PRESERVED.ExtraLoadout ) {
 
 				if ( ( typeof entity == "instance" ) && entity.IsValid() )
 				entity.Kill()
 			}
-			player.GetScriptScope().Preserved.ExtraLoadout.resize( 10 )
+			player.GetScriptScope().PRESERVED.ExtraLoadout.resize( 10 )
 		}
 		local playerclass = player.GetPlayerClass()
 
-		if ( player.GetScriptScope().Preserved.ExtraLoadout[playerclass] != null )
-			foreach ( item in player.GetScriptScope().Preserved.ExtraLoadout[playerclass] )
+		if ( player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass] != null )
+			foreach ( item in player.GetScriptScope().PRESERVED.ExtraLoadout[playerclass] )
 				PopExtWeapons.GiveItem( item, player )
 
 		player.SetHealth( player.GetMaxHealth() )

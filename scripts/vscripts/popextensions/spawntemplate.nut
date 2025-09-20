@@ -2,16 +2,18 @@
 
 POPEXT_CREATE_SCOPE( "__popext_spawntemplate", "SpawnTemplates" )
 
+SpawnTemplates.ROOT_TABLE_NAME <- "PointTemplates"
+
 SpawnTemplates.wave_point_templates 		 <- []
 SpawnTemplates.global_template_spawn_count   <- 0
 SpawnTemplates.wave_schedule_point_templates <- []
 
 // empty table to avoid does not exist errors
-::PointTemplates <- {}
+ROOT[SpawnTemplates.ROOT_TABLE_NAME] <- {}
 
 function SpawnTemplates::_OnDestroy() {
 
-	foreach( key in [ "PointTemplates", "SpawnTemplate" ] )
+	foreach( key in [ SpawnTemplates.ROOT_TABLE_NAME, "SpawnTemplate" ] )
 		if ( key in ROOT )
 			delete ROOT[ key ]
 }
@@ -127,7 +129,7 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 
 						local scope = PopExtUtil.GetEntScope( parent )
 
-						scope.Preserved.kill_on_death.append( entity )
+						scope.PRESERVED.kill_on_death.append( entity )
 					}
 				}
 			}
@@ -215,7 +217,7 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 	scope.PostSpawn <- TemplatePostSpawn
 
 	//make a copy of the pointtemplate
-	local pointtemplatecopy = PopExtUtil.CopyTable( PointTemplates[pointtemplate] )
+	local pointtemplatecopy = PopExtUtil.CopyTable( ROOT[SpawnTemplates.ROOT_TABLE_NAME][pointtemplate] )
 
 	//establish "flags", lowercase all keys
 	foreach( index, entity in pointtemplatecopy ) {
@@ -379,7 +381,7 @@ function SpawnTemplates::DoSpawnTemplate( args = { pointtemplate = null, parent 
 	SpawnTemplate( args.pointtemplate, args.parent, args.origin, args.angles, args.forceparent, args.parentabsorigin, args.nonsolidchildren )
 }
 
-::SpawnTemplate <- SpawnTemplates.SpawnTemplate
+::SpawnTemplate <- SpawnTemplates.SpawnTemplate.bindenv( SpawnTemplates )
 
 
 POP_EVENT_HOOK("mvm_wave_complete", "SpawnTemplateWaveComplete", function( params ) {

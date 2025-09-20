@@ -14,7 +14,8 @@ class PopExtPathPoint {
 
 class PopExtBotBehavior {
 
-	function constructor( bot ) {
+	constructor( bot ) {
+
 		this.bot       = bot
 		this.scope     = bot.GetScriptScope()
 		this.team      = bot.GetTeam()

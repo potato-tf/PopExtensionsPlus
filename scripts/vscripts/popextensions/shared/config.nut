@@ -31,7 +31,7 @@ PopExtConfig.ManualCleanup <- false
 
 /*************************************************************************************************************
 * ignore these variables when cleaning up player scope                                                      *
-* "Preserved" is a special table that will persist through the player death/spawn cleanup steps.            *
+* "PRESERVED" is a special table that will persist through the player death/spawn cleanup steps.            *
 * any entity scoped variables you want to use across multiple lives should be added here                    *
 *************************************************************************************************************/
 PopExtConfig.IgnoreTable <- {
@@ -39,7 +39,7 @@ PopExtConfig.IgnoreTable <- {
     "self"         		   : null
     "__vname"      		   : null
     "__vrefs"      		   : null
-    "Preserved"    		   : null
+    "PRESERVED"    		   : null
 }
 
 //

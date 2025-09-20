@@ -2216,27 +2216,26 @@ MissionAttributes.Attrs <- {
 			EntFire( format( "__popext_bombdeploy_%d", player.entindex() ), "Kill" )
 		}
 
+		// Enforce max team size
+		local player_count = 0
 		function MissionAttributes::ThinkTable::ReverseMVMThink() {
-			// Enforce max team size
-			local player_count  = 0
 
-			foreach ( player in PopExtUtil.HumanArray ) {
+			foreach ( i, player in PopExtUtil.HumanArray ) {
 
 				if ( player_count + 1 > max_team_size && player.GetTeam() != TEAM_SPECTATOR ) {
 
 					player.ForceChangeTeam( TEAM_SPECTATOR, false )
 					continue
 				}
-				player_count++
+				player_count = i + 1
 			}
 
 			// Readying up starts the round
-			if ( !PopExtUtil.IsWaveStarted ) {
+			if ( !( "WaveStartCountdown" in MissionAttributes ) && !PopExtUtil.IsWaveStarted ) {
 
 				local ready = PopExtUtil.GetPlayerReadyCount()
 				if (
 					ready && ready >= PopExtUtil.HumanTable.len()
-					&& !( "WaveStartCountdown" in MissionAttributes )
 					&& GetPropFloat( PopExtUtil.GameRules, "m_flRestartRoundTime" ) >= Time() + 12.0
 				) {
 					SetPropFloat( PopExtUtil.GameRules, "m_flRestartRoundTime", Time() + 10.0 )

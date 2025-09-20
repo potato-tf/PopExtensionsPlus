@@ -454,7 +454,7 @@ function PopExtTanks::TankThink() {
 
             foreach( name, table in tank_names ) {
 
-                if ( (tank_name == name || ( endswith( name, "*" ) && startswith( tank_name, name.slice( 0, -1 ) ) ) ) && "OnSpawn" in table ) {
+                if ( (tank_name == name || ( name[name.len() - 1] == '*' && startswith( tank_name, name.slice( 0, -1 ) ) ) ) && "OnSpawn" in table ) {
 
                     table.OnSpawn( tank, tank_name )
                     break

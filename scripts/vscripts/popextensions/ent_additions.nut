@@ -29,7 +29,7 @@ if ( !( "ConstantNamingConvention" in ROOT ) ) {
     }
 }
 
-local SINGLE_TICK = 0.015
+local SINGLE_TICK = FrameTime()
 
 if ( !( "EntAdditions" in ROOT ) ) {
 

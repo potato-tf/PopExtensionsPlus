@@ -42,6 +42,7 @@ PopExtUtil.EntTable   	 <- {
 
 			value = {
 
+				self      = key
 				name 	  = key.GetName()
 				scope     = key.GetScriptScope()
 				entidx    = key.entindex()
@@ -315,8 +316,8 @@ function PopExtUtil::GetEntScope( ent ) {
 
 	local scope = ent.GetScriptScope() || ( ent.ValidateScriptScope(), ent.GetScriptScope() )
 
-	if ( !("Preserved" in scope ) )
-		scope.Preserved <- PopExtMain.ScopePreserved
+	if ( !("PRESERVED" in scope ) )
+		scope.PRESERVED <- PopExtMain.ScopePreserved
 
 	return scope
 }
@@ -785,7 +786,7 @@ function PopExtUtil::CreatePlayerWearable( player, model, bonemerge = true, atta
 	local scope = player.GetScriptScope()
 
 	if ( auto_destroy )
-		scope.Preserved.kill_on_spawn.append( wearable )
+		scope.PRESERVED.kill_on_spawn.append( wearable )
 
 	return wearable
 }
@@ -821,7 +822,7 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
 
 	local scope = player.GetScriptScope()
 
-	scope.Preserved.kill_on_spawn.append( wearable )
+	scope.PRESERVED.kill_on_spawn.append( wearable )
 
 	return wearable
 }
@@ -1145,7 +1146,7 @@ function PopExtUtil::GetAllEnts( count_players = false, callback = null ) {
 
 	local entlist = []
 
-	local start = count_players ? 1 : MAX_CLIENTS
+	local start = count_players.tointeger() || MAX_CLIENTS
 
 	for ( local i = start, ent; i <= MAX_EDICTS; ent = EntIndexToHScript( i ), i++ )
 		if ( ent )
@@ -1166,26 +1167,30 @@ function PopExtUtil::ForEachEnt( identifier = null, filter = null, callback = nu
 	local entlist = []
 
 	// no lambda so perf counter prints it
-	local function foreachent_filter( i, ent ) { return filter ? filter( ent ) : true }
+	local function foreachent_filter( ent ) { return true }
 
+	if ( filter )
+		foreachent_filter = filter.bindenv( this )
 
 	if ( !findby || !(findby in ROOT) )
 		findby = "FindByClassname"
 
 	local cache_key = findby.slice( 4 )
 
-	local update_entity_cache = force_update || ( identifier && !(identifier in EntTable[cache_key]) )
+	local ent_table = EntTable
+
+	local update_entity_cache = force_update || ( identifier && !(identifier in ent_table[cache_key]) )
 
 	// check the existing entity cache instead
 	if ( !update_entity_cache ) {
 
-		local tbl = identifier ? EntTable[ cache_key ][ identifier ] : EntTable
+		local tbl = identifier ? ent_table[ cache_key ][ identifier ] : ent_table
 
 		foreach ( i, ent in tbl ) {
 
-			if ( identifier || ( typeof ent == "instance" && foreachent_filter( i, ent ) ) ) {
+			if ( identifier || ( typeof ent == "instance" && foreachent_filter( ent ) ) ) {
 
-				if ( EntTable[ ent ].cachetime < Time() + 5 )
+				if ( ent_table[ ent ].cachetime < Time() + 5 )
 					ent = EntIndexToHScript( i )
 
 				entlist.append( ent )
@@ -1224,6 +1229,8 @@ function PopExtUtil::ForEachEnt( identifier = null, filter = null, callback = nu
 			entlist.append( ent )
 
 	// run callbacks and update entity cache
+	local ent_table_keys = { ByName = "name", ByModel = "model", ByThinkFunc = "thinkfunc", ByClassname = "classname", ByScriptID = "scriptid" }
+
 	foreach ( ent in entlist ) {
 
 		if ( callback )
@@ -1231,6 +1238,7 @@ function PopExtUtil::ForEachEnt( identifier = null, filter = null, callback = nu
 
 		PopExtUtil.EntTable[ent] <- {
 
+			self      = ent
 			name 	  = ent.GetName()
 			model     = ent.GetModelName()
 			scope     = ent.GetScriptScope()
@@ -1241,17 +1249,18 @@ function PopExtUtil::ForEachEnt( identifier = null, filter = null, callback = nu
 			cachetime = Time()
 		}
 
-		local ent_table = clone PopExtUtil.EntTable[ ent ]
-		foreach ( cachekey, entval in { ByName = "name", ByModel = "model", ByThinkFunc = "thinkfunc", ByClassname = "classname", ByScriptID = "scriptid" } ) {
+		local this_ent = clone PopExtUtil.EntTable[ ent ]
 
-			local val = ent_table[ entval ]
+		foreach ( cachekey, entval in ent_table_keys ) {
+
+			local val = this_ent[ entval ]
 
 			if ( val == "" ) continue
 
 			if ( !(val in PopExtUtil.EntTable[ cachekey ]) )
 				PopExtUtil.EntTable[ cachekey ][ val ] <- {}
 
-			PopExtUtil.EntTable[ cachekey ][ val ][ ent ] <- ent_table
+			PopExtUtil.EntTable[ cachekey ][ val ][ ent ] <- this_ent
 		}
 
 		local target = GetPropString( ent, "m_target" )
@@ -1260,7 +1269,7 @@ function PopExtUtil::ForEachEnt( identifier = null, filter = null, callback = nu
 			if ( !(target in PopExtUtil.EntTable.ByTarget) )
 				PopExtUtil.EntTable.ByTarget[ target ] <- {}
 
-			PopExtUtil.EntTable.ByTarget[ target ][ ent ] <- ent_table
+			PopExtUtil.EntTable.ByTarget[ target ][ ent ] <- this_ent
 		}
 
 	}
@@ -2130,8 +2139,8 @@ function PopExtUtil::AddThink( ent, func ) {
 
 	local scope = GetEntScope( ent )
 
-	if ( ent.IsPlayer() && !( "Preserved" in scope ) )
-		scope.Preserved <- PopExtMain.ScopePreserved
+	if ( ent.IsPlayer() && !( "PRESERVED" in scope ) )
+		scope.PRESERVED <- PopExtMain.ScopePreserved
 
 	// no think table setup, normal function
 	if ( !thinktable_name || !thinktable_func ) {
@@ -2295,14 +2304,17 @@ function PopExtUtil::SilentDisguise( player, target = null, tfteam = TF_TEAM_PVE
 }
 
 function PopExtUtil::GetPlayerReadyCount() {
-	local roundtime = GetPropFloat( GameRules, "m_flRestartRoundTime" )
-	if ( IsWaveStarted ) return 0
+
+	if ( IsWaveStarted ) 
+		return 0
+
 	local ready = 0
 
-	for ( local i = 0; i < GetPropArraySize( GameRules, "m_bPlayerReady" ); i++ ) {
-		if ( !GetPropBoolArray( GameRules, "m_bPlayerReady", i ) ) continue
-		ready++
-	}
+	local size = GetPropArraySize( GameRules, "m_bPlayerReady" )
+
+	for ( local i = 0; i < size; i++ ) 
+		if ( GetPropBoolArray( GameRules, "m_bPlayerReady", i ) )
+			ready++
 
 	return ready
 }
@@ -2537,7 +2549,7 @@ function PopExtUtil::IsProjectileWeapon( wep ) {
 
 function PopExtUtil::GetLastFiredProjectile( player ) {
 
-	local active_projectiles = GetEntScope( player ).Preserved.active_projectiles
+	local active_projectiles = GetEntScope( player ).PRESERVED.active_projectiles
 	local projectiles = []
 
 	foreach ( projectile, info in active_projectiles )
