@@ -329,8 +329,7 @@ function PopExtUtil::SetTargetname( ent, name ) {
 	local oldname = GetPropString( ent, STRING_NETPROP_NAME )
 	SetPropString( ent, STRING_NETPROP_NAME, name )
 
-	if ( oldname != "" )
-		PopGameStrings.StringTable[ ent.GetScriptId() ] <- oldname
+	PURGE_STRINGS( ent.GetScriptId(), oldname )
 }
 
 function PopExtUtil::PurgeGameString( str, urgent = false ) {
@@ -1022,6 +1021,10 @@ function PopExtUtil::SetPlayerAttributesMulti( player, item, attributes, customw
 		}
 	}
 }
+
+// wrapper for game_text for displaying timed messages
+// very basic custom syntax support for separating messages with "|"
+// "Message1|PAUSE 5|Message2" will display Message1, wait for 5 seconds, then display Message2
 
 function PopExtUtil::DoExplanation( message, print_color = COLOR_YELLOW, message_prefix = "Explanation: ", sync_chat_with_game_text = false, text_print_time = -1, text_scan_time = 0.02 ) {
 
@@ -2003,36 +2006,109 @@ function PopExtUtil::StopAndPlayMVMSound( player, soundscript, delay ) {
 	ScriptEntFireSafe( player, "self.EmitSound( mvmsound );", delay + SINGLE_TICK )
 }
 
+/**************************************
+ * GENERIC NON-MVM SPECIFIC UTILITIES *
+ **************************************/
+
 function PopExtUtil::StringReplace( str, findwhat, replace ) {
 
 	local returnstring = ""
+	local strlen 	   = str.len()
 	local findwhatlen  = findwhat.len()
-	local splitlist	   = []
+	local split_list   = []
 
 	local start = 0
 	local previndex = 0
-	while ( start < str.len() ) {
+	while ( start < strlen ) {
+
 		local index = str.find( findwhat, start )
+
 		if ( index == null ) {
-			if ( start < str.len() - 1 )
-				splitlist.append( str.slice( start ) )
+			if ( start < strlen - 1 )
+				split_list.append( str.slice( start ) )
 			break
 		}
 
-		splitlist.append( str.slice( previndex, index ) )
+		split_list.append( str.slice( previndex, index ) )
 
 		start = index + findwhatlen
 		previndex = start
 	}
 
-	foreach ( index, s in splitlist ) {
-		if ( index < splitlist.len() - 1 )
-			returnstring += s + replace
-		else
-			returnstring += s
-	}
+	local split_list_length = split_list.len() - 1
+
+	for (local index = 0, s; index < split_list_length; s = split_list[index], index++)
+		returnstring += s + replace
+
+	returnstring += split_list[split_list_length]
 
 	return returnstring
+}
+
+function PopExtUtil::CharReplace(str, findwhat, replace, firstonly = false) {
+
+	local returnstring = ""
+	local strlen = str.len()
+	local type = typeof findwhat
+	if ( 6 in type && type[0] == 'i' && type[6] == 'r' )
+		findwhat = findwhat.tochar()
+
+	// local charlist 	= array(strlen, "").apply( @(c, i) c = str[i] == findwhat[0] ? replace[0] : c )
+	local charlist 	= array(strlen, "").map( @(i, c) str[i] == findwhat[0] ? replace[0] : c )
+
+	foreach( c in charlist )
+		returnstring += c.tochar()
+
+	return returnstring
+}
+
+// more early returns for failed matches
+// direct integer comparisons using binary search
+// supports arrays too
+
+// NOTE FOR MAXIMUM PERFORMANCE: 
+// you are expected to pass the length of the comparison string/array MINUS ONE as an argument
+// this way you can e.g. cache off its length outside of a loop for repeated calls
+// if length is passed correctly, this function only does basic integer comparisons.
+function PopExtUtil::StartsWithFast( str, prefix, prefixlen ) {
+
+	// first/last character doesn't match, or string is shorter than comparison
+	if ( str[0] != prefix[0] || !( prefixlen in str ) || str[prefixlen] != prefix[prefixlen] )
+		return false
+
+	local middle = prefixlen >> 1
+
+	if ( str[middle] != prefix[middle] )
+		return false
+
+	// binary step through the prefix string/array
+	// early returns if one side doesn't match
+	for ( local behind = 0, ahead = middle+1; ahead < prefixlen; behind = prefixlen - ahead, ahead++ )
+		if ( str[ahead] != prefix[ahead] || str[behind] != prefix[behind] )
+			return false
+
+	return true
+}
+
+function PopExtUtil::EndsWithFast( str, suffix, strlen, suffixlen ) {
+
+	// first/last character doesn't match, or string is shorter than comparison
+	local suffixstart = strlen - suffixlen
+	if ( str[strlen] != suffix[suffixlen] || str[suffixstart+1] != suffix[0] )
+		return false
+
+	local middle = suffixlen >> 1
+
+	if ( str[suffixstart+middle] != suffix[middle] )
+		return false
+
+	// binary step through the suffix string/array
+	// early returns if one side doesn't match
+	for ( local behind = 0, ahead = middle+1; ahead < strlen; behind = suffixlen - ahead, ahead++ )
+		if ( str[ahead] != suffix[ahead] || str[behind] != suffix[behind] )
+			return false
+
+	return true
 }
 
 // Python's string.capwords()
@@ -2468,8 +2544,7 @@ function PopExtUtil::ScriptEntFireSafe( target, code, delay = -1, activator = nu
 
 	", allow_dead.tointeger(), code ), delay, activator, caller )
 
-	if ( "PopGameStrings" in ROOT )
-		PopGameStrings.StringTable[ code ] <- null
+	PURGE_STRINGS( code )
 }
 
 function PopExtUtil::SetDestroyCallback( entity, callback ) {
@@ -2499,8 +2574,8 @@ function PopExtUtil::SetDestroyCallback( entity, callback ) {
 					entity = EntIndexToHScript( index )
 					local scope = entity.GetScriptScope()
 					scope.self <- entity
-					// PopGameStrings.StringTable[ entity.GetClassname() ] <- id
 					scope.__popext_destroy_callback()
+					PURGE_STRINGS( id )
 				}
 				delete parent[k]
 			}
@@ -2976,18 +3051,17 @@ function PopExtUtil::CheckBitwise( num ) {
 	return ( num != 0 && ( ( num & ( num - 1 ) ) == 0 ) )
 }
 
-local AddEventHook = POP_EVENT_HOOK.bindenv( PopExtEvents )
-AddEventHook( "mvm_wave_failed", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = false }, EVENT_WRAPPER_UTIL )
-AddEventHook( "mvm_begin_wave", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = true }, EVENT_WRAPPER_UTIL )
+POP_EVENT_HOOK( "mvm_wave_failed", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = false }, EVENT_WRAPPER_UTIL )
+POP_EVENT_HOOK( "mvm_begin_wave", "UtilWaveStatus", function ( params ) { PopExtUtil.IsWaveStarted = true }, EVENT_WRAPPER_UTIL )
 
-AddEventHook( "mvm_wave_complete", "UtilWaveStatus", function ( params ) {
+POP_EVENT_HOOK( "mvm_wave_complete", "UtilWaveStatus", function ( params ) {
 
 	PopExtUtil.IsWaveStarted = false
 	PopExtUtil.ResetConvars()
 
 }, EVENT_WRAPPER_UTIL )
 
-AddEventHook( "teamplay_round_start", "UtilRoundStart", function ( params ) {
+POP_EVENT_HOOK( "teamplay_round_start", "UtilRoundStart", function ( params ) {
 
 	PopExtUtil.IsWaveStarted = false
 	SetPropBool( PopExtUtil.GameRules, "m_bIsInTraining", false )
@@ -2995,7 +3069,7 @@ AddEventHook( "teamplay_round_start", "UtilRoundStart", function ( params ) {
 
 }, EVENT_WRAPPER_UTIL )
 
-AddEventHook( "player_activate", "UtilPlayerActivate", function ( params ) {
+POP_EVENT_HOOK( "player_activate", "UtilPlayerActivate", function ( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -3009,7 +3083,7 @@ AddEventHook( "player_activate", "UtilPlayerActivate", function ( params ) {
 
 }, EVENT_WRAPPER_UTIL)
 
-AddEventHook( "player_disconnect", "UtilPlayerDisconnect", function ( params ) {
+POP_EVENT_HOOK( "player_disconnect", "UtilPlayerDisconnect", function ( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
@@ -3031,7 +3105,7 @@ AddEventHook( "player_disconnect", "UtilPlayerDisconnect", function ( params ) {
 
 }, EVENT_WRAPPER_UTIL)
 
-AddEventHook( "post_inventory_application", "UtilPostInventoryApplication", function( params ) {
+POP_EVENT_HOOK( "post_inventory_application", "UtilPostInventoryApplication", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 

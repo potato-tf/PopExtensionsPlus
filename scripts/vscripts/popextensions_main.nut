@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "09.20.2025.1"
+::POPEXT_VERSION <- "09.23.2025.1"
 
 local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -49,7 +49,7 @@ if ( !( "__active_scopes" in ROOT ) )
 
 function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_func = null, preserved = true, classname_override = null ) {
 
-	local classname = classname_override || ( preserved ? "entity_saucer" : "logic_autosave" )
+	local classname = classname_override || "logic_autosave"
 
 	// empty vscripts kv will do ValidateScriptScope automatically
 	local ent = FindByName( null, name ) || SpawnEntityFromTable( classname, { targetname = name, vscripts = " " } )
@@ -61,8 +61,8 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 		ent.SetCollisionGroup( COLLISION_GROUP_IN_VEHICLE )
 	}
 
-	if ( "PopGameStrings" in ROOT )
-		PopGameStrings.StringTable[ ent.GetScriptId() ] <- null
+	if ( "PURGE_STRINGS" in ROOT )
+		PURGE_STRINGS( ent.GetScriptId() )
 
 	__active_scopes[ ent ] <- scope_ref
 
@@ -87,25 +87,8 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 
 		scope.ThinkTable <- {}
 
-		// Allows us to use any arbitrary string for the think function name
-		// scope.MyFunc <- function() { ... } creates an anonymous function
-		// won't show up in the performance counter
-		compilestring( format( @"
-
-			local ent = EntIndexToHScript( %d )
-			local func_name = %s
-			local scope = ent.GetScriptScope()
-
-			local function %s() {
-
-				foreach ( func in scope.ThinkTable || {} )
-					func.call( scope )
-				return -1
-			}
-
-			scope[ func_name ] <- %s
-
-		", ent.entindex(), format( "\"%s\"", think_func ), think_func, think_func ) )()
+		// Always create a named function to satisfy the perf counter
+		compilestring( format( @"function %s() { foreach ( func in ThinkTable || {} ) func(); return -1 }", think_func ) ).call( scope )
 
 		try { _AddThinkToEnt( ent, think_func ) } catch (_) { AddThinkToEnt( ent, think_func ) }
 	}
@@ -114,7 +97,7 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 
 		function _newslot( k, v ) {
 
-			if ( k == "_OnDestroy" && _OnDestroy == null )
+			if ( k == "_OnDestroy" && !_OnDestroy )
 				_OnDestroy = v.bindenv( scope )
 
 			scope.rawset( k, v )
@@ -125,16 +108,8 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 					_OnCreate()
 
 				// fix anonymous function declarations in perf counter
-				else if ( v.getinfos().name == null ) {
-
-					compilestring( format( @"
-
-						local _%s = %s.%s
-
-						function %s::%s() { _%s() }
-
-					", k, scope_ref, k, scope_ref, k, k ) )()
-				}
+				else if ( v.getinfos().name == null )
+					compilestring( format( @"local _%s = %s; function %s() { _%s() }", k, k, k, k ) ).call(scope)
 			}
 		}
 
@@ -151,13 +126,8 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 
 				if ( k == id ) {
 
-					if ( _OnDestroy ) {
-
-						local entity = EntIndexToHScript( index )
-						local scope  = entity.GetScriptScope()
-						scope.self   <- entity
+					if ( _OnDestroy )
 						_OnDestroy()
-					}
 
 					if ( scope_ref in ROOT )
 						delete ROOT[ scope_ref ]
@@ -170,6 +140,9 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 			}
 		})
 	)
+
+	if ( preserved )
+		SetPropString( ent, STRING_NETPROP_CLASSNAME, "move_rope" )
 
 	return { Entity = ent, Scope = scope }
 }
@@ -367,8 +340,7 @@ function PopExtMain::FullCleanup() {
 
 	// Kill all remaining popextensions entities
 	EntFire( "extratankpath*", "Kill" )
-	if ( "PopGameStrings" in ROOT )
-		PopGameStrings.StringTable[ "__popext*" ] <- "extratankpath*"
+	PURGE_STRINGS( "__popext*", "extratankpath*" )
 	PopExtUtil.ScriptEntFireSafe( "__popext*", "SetPropBool( self, STRING_NETPROP_PURGESTRINGS, true ); self.Kill()" )
 }
 

@@ -2138,6 +2138,7 @@ PopExtTags.TagFunctions <- {
 		else {
 
 			local cooldowntime = 0.0
+			local funcname = "ChangeAttributesThink_" + name
 			function ChangeAttributesThink() {
 
 				if ( cooldowntime > Time() ) return
@@ -2150,14 +2151,15 @@ PopExtTags.TagFunctions <- {
 
 					if ( repeats < 1 ) {
 
-						PopExtUtil.RemoveThink( bot, "ChangeAttributesThink" )
+						PopExtUtil.RemoveThink( bot, funcname )
 						return
 					}
 
 					cooldowntime = Time() + cooldown
 				}
 			}
-			PopExtUtil.AddThink( bot, ChangeAttributesThink )
+			scope[ funcname ] <- ChangeAttributesThink
+			PopExtUtil.AddThink( bot, funcname )
 		}
 	}
 

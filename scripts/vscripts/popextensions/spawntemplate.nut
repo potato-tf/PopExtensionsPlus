@@ -2,18 +2,34 @@
 
 POPEXT_CREATE_SCOPE( "__popext_spawntemplate", "SpawnTemplates" )
 
-SpawnTemplates.ROOT_TABLE_NAME <- "PointTemplates"
+// mission makers can override the "PointTemplates" global table name to something else 
+// by adding this line BEFORE "IncludeScript(`popextensions_main`, getroottable())"
+
+// Example:
+/*******************************************************************
+ *                                                                 *
+ * InitWaveOutput {                                                *
+ *     Target BigNet                                               *
+ *     Action RunScriptCode                                        *
+ *     Param "                                                     *
+ *         ::SpawnTemplates <- { ROOT_TABLE_NAME = "MyTemplates" } *
+ *     "                                                           *
+ * }                                                               *
+ *******************************************************************/
+// ::SpawnTemplates <- { ROOT_TABLE_NAME = "PointTemplates" } 
+
+local ROOT_TABLE_NAME = "SpawnTemplates" in ROOT && "ROOT_TABLE_NAME" in SpawnTemplates ? SpawnTemplates.ROOT_TABLE_NAME : "PointTemplates"
 
 SpawnTemplates.wave_point_templates 		 <- []
 SpawnTemplates.global_template_spawn_count   <- 0
 SpawnTemplates.wave_schedule_point_templates <- []
 
 // empty table to avoid does not exist errors
-ROOT[SpawnTemplates.ROOT_TABLE_NAME] <- {}
+ROOT[ROOT_TABLE_NAME] <- {}
 
 function SpawnTemplates::_OnDestroy() {
 
-	foreach( key in [ SpawnTemplates.ROOT_TABLE_NAME, "SpawnTemplate" ] )
+	foreach( key in [ ROOT_TABLE_NAME, "SpawnTemplate" ] )
 		if ( key in ROOT )
 			delete ROOT[ key ]
 }
@@ -217,7 +233,7 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 	scope.PostSpawn <- TemplatePostSpawn
 
 	//make a copy of the pointtemplate
-	local pointtemplatecopy = PopExtUtil.CopyTable( ROOT[SpawnTemplates.ROOT_TABLE_NAME][pointtemplate] )
+	local pointtemplatecopy = PopExtUtil.CopyTable( ROOT[ROOT_TABLE_NAME][pointtemplate] )
 
 	//establish "flags", lowercase all keys
 	foreach( index, entity in pointtemplatecopy ) {

@@ -53,11 +53,30 @@ function PopGameStrings::_OnDestroy() {
         ::SpawnEntityFromTable <- _SpawnEntityFromTable
         delete _SpawnEntityFromTable
     }
+
+    if ( "PURGE_STRINGS" in ROOT )
+        delete PURGE_STRINGS
+}
+
+function PopGameStrings::AddStrings( ... ) {
+
+    local arg_len = vargv.len()
+
+    for ( local i = 0, str; i < arg_len; str = vargv[i], i += 2 ) {
+
+        if ( !str || !( 0 in str ) )
+            continue
+
+        StringTable[ str ] <- null
+
+        if ( i + 1 < arg_len )
+            StringTable[ str ] = vargv[ i + 1 ]
+    }
 }
 
 function PopGameStrings::PurgeString( str ) {
 
-    if ( !str || str == "" )
+    if ( !str || !( 0 in str ) )
         return
 
     local temp = CreateByClassname( "logic_autosave" )
@@ -114,15 +133,15 @@ function PopGameStrings::StringFixGenerator() {
         PurgeString( v )
 
         PopExtMain.Error.DebugLog(format( "GAME STRINGS : %s : %s : %d", k.tostring(), v ? v.tostring() : "null", i ))
-        if ( !( i % 4 ) )
+        if ( !( i % 2 ) )
             yield k || true
 
         i++
     }
 
-    for ( local ent = First(), i = 0; ent; ent = Next( ent ), i++ ) {
+    for ( local ent = First(), i = 1; ent; ent = Next( ent ), i++ ) {
 
-        if ( !( i % 8 ) && i )
+        if ( !( i % 4 ) )
             yield ent
 
         if ( !ent || !ent.IsValid() )
@@ -154,6 +173,7 @@ function PopGameStrings::ThinkTable::StringFixThink() {
     local result = resume gen
 }
 
+// replace base entity I/O functions to handle the string table
 foreach ( i, func in entio_funcs ) {
 
     local copy_name = format( "_%s", func )
@@ -171,8 +191,8 @@ foreach ( i, func in entio_funcs ) {
         local param     = 2 in vargv ? vargv[2] : null
         local copy_name = format( "_%s", func )
 
-        if ( "PopGameStrings" in ROOT && param && typeof param == "string" && param != "" )
-            PopGameStrings.StringTable[ param ] <- null
+        if ( "PopGameStrings" in ROOT && param && typeof param == "string" && ( 0 in param ) )
+            PURGE_STRINGS( param )
 
         if ( func == "EntFireByHandle" && target && target.IsValid() )
             SetPropBool( target, STRING_NETPROP_PURGESTRINGS, true )
@@ -183,19 +203,24 @@ foreach ( i, func in entio_funcs ) {
 
 }
 
+// Purge entity keyvalue/netprop related strings
+// DO NOT DO PURGE THE VALUE!!! 
+// if someone sets m_iClassname/m_iName/modelname and you purge it, you will break things
+
 // might cause perf warnings on maps that spam this function
 function CBaseEntity::KeyValueFromString( key, value ) {
 
-    // if ( "PopGameStrings" in ROOT && value && typeof value == "string" && value != "" )
-        // PopGameStrings.StringTable[ value ] <- this.GetScriptId()
+    // if ( "PopGameStrings" in ROOT && value && typeof value == "string" && ( 0 in value ) )
+        // PURGE_STRINGS( value )
     SetPropBool( this, STRING_NETPROP_PURGESTRINGS, true )
     return this.__KeyValueFromString( key, value )
 }
 
+// non-array functions are just wrappers around these at index 0
 function SetPropStringArray( ent, prop, value, index = 0 ) {
 
-    // if ( "PopGameStrings" in ROOT && value && typeof value == "string" && value != "" )
-        // PopGameStrings.StringTable[ value ] <- ent.GetScriptId()
+    // if ( "PopGameStrings" in ROOT && value && typeof value == "string" && ( 0 in value ) )
+        // PURGE_STRINGS( value )
     SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
 
     return NetProps.SetPropStringArray( ent, prop, value, index )
@@ -220,8 +245,9 @@ function SpawnEntityFromTable( classname, table ) {
     local ent = _SpawnEntityFromTable( classname, table )
     SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
 
-    if ( "PopGameStrings" in ROOT )
-        PopGameStrings.StringTable[ ent.GetScriptId() ] <- null
+    PURGE_STRINGS( ent.GetScriptId() )
 
     return ent
 }
+
+::PURGE_STRINGS <- PopGameStrings.AddStrings

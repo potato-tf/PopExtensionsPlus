@@ -797,7 +797,7 @@ PopExtAttributes.Attrs <- {
 				bomb.SetModel( model )
 
 			particleent.SetAbsOrigin( bomb.GetOrigin() )
-			SetPropString( bomb, "m_iClassname", killicon )
+			SetPropString( bomb, STRING_NETPROP_CLASSNAME, killicon )
 			bomb.TakeDamage( 1, DMG_CLUB, player )
 			EntFireByHandle( particleent, "Start", "", -1, null, null )
 			EntFireByHandle( particleent, "Stop", "", SINGLE_TICK, null, null )
@@ -990,7 +990,7 @@ PopExtAttributes.Attrs <- {
 	function CannotUpgrade( player, item, value = null ) {
 
 		local index = PopExtUtil.GetItemIndex( item )
-		local classname = GetPropString( item, "m_iClassname" )
+		local classname = GetPropString( item, STRING_NETPROP_CLASSNAME )
 
 		local event_hook_string = format( "CannotUpgrade_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
@@ -1002,10 +1002,10 @@ PopExtAttributes.Attrs <- {
 					ClientPrint( player, HUD_PRINTCENTER, "This weapon cannot be upgraded" )
 
 				SetPropInt( item, STRING_NETPROP_ITEMDEF, -1 )
-				SetPropString( item, "m_iClassname", "" )
+				SetPropString( item, STRING_NETPROP_CLASSNAME, "" )
 				return
 			}
-			SetPropString( item, "m_iClassname", classname )
+			SetPropString( item, STRING_NETPROP_CLASSNAME, classname )
 			SetPropInt( item, STRING_NETPROP_ITEMDEF, index )
 		}
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- CannotUpgradeThink
@@ -1653,7 +1653,7 @@ PopExtAttributes.Attrs <- {
 		local dummy_name = format( "killicon_dummy_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 
 		SetPropString( killicon_dummy, STRING_NETPROP_NAME, dummy_name )
-		SetPropString( killicon_dummy, "m_iClassname", value )
+		SetPropString( killicon_dummy, STRING_NETPROP_CLASSNAME, value )
 		SetPropBool( killicon_dummy, STRING_NETPROP_PURGESTRINGS, true )
 
 		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
@@ -1902,7 +1902,7 @@ PopExtAttributes.Attrs <- {
 			if ( !( "dmg bonus while half dead" in player.GetScriptScope().attribinfo ) || params.weapon != item || player.GetActiveWeapon() != item )
 				return
 
-			if ( player.GetHealth() < player.GetMaxHealth() / 2 )
+			if ( player.GetHealth() < ( player.GetMaxHealth() >> 1 ) )
 				params.damage *= value
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
@@ -1918,7 +1918,7 @@ PopExtAttributes.Attrs <- {
 			if ( !( "dmg penalty while half alive" in player.GetScriptScope().attribinfo ) || params.weapon != item || player.GetActiveWeapon() != item )
 				return
 
-			if ( player.GetHealth() > player.GetMaxHealth() / 2 )
+			if ( player.GetHealth() > ( player.GetMaxHealth() >> 1 ) )
 				params.damage *= value
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
