@@ -562,9 +562,11 @@ PopExtTags.TagFunctions <- {
 		if ( weapon == null )
 			weapon = -1
 
-		if ( ( typeof value == "array" || typeof value == "table" ) && delay > 0.0 ) {
+		if ( !delay || typeof value == "array" || typeof value == "table" ) {
 
-			PopExtMain.Error.GenericWarning( "popext_customattr: Cannot set delay on array or table values" )
+			if ( delay )
+				PopExtMain.Error.GenericWarning( "popext_customattr: Cannot set delay on array or table values" )
+
 			PopExtUtil.SetPlayerAttributes( bot, attr, value, PopExtUtil.GetItemIndex( weapon ) )
 			return
 		}
