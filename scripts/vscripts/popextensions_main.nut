@@ -479,8 +479,8 @@ POP_EVENT_HOOK( "player_death", "MainDeathCleanup", function( params ) {
 
 	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
-
-	// clean up all entities that should be killed on death/spawn
+	// clean up all entities that should be killed on death
+	local scope = player.GetScriptScope()
 	if ( "PRESERVED" in scope ) 
 		foreach ( ent in scope.PRESERVED.kill_on_death )
 			if ( ent && ent.IsValid() )
