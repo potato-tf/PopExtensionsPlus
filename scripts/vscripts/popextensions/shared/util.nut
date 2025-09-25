@@ -794,7 +794,7 @@ function PopExtUtil::CreatePlayerWearable( player, model, bonemerge = true, atta
 
 // Make a fake wearable that is attached to the player.  Applies to ragdolls
 // The wearable is automatically removed on respawn.
-function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
+function PopExtUtil::GiveWearableItem( player, item_id, model = null, on_death = false ) {
 
 	local dummy = CreateByClassname( "tf_weapon_parachute" )
 	SetPropInt( dummy, STRING_NETPROP_ITEMDEF, ID_BASE_JUMPER )
@@ -823,7 +823,7 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null ) {
 
 	local scope = player.GetScriptScope()
 
-	scope.PRESERVED[bonemerge ? "kill_on_spawn" : "kill_on_death"].append( wearable )
+	scope.PRESERVED[on_death ? "kill_on_death" : "kill_on_spawn"].append( wearable )
 
 	return wearable
 }
