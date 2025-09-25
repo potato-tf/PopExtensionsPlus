@@ -511,8 +511,8 @@ PopExtTags.TagFunctions <- {
 
 	function popext_forceromevision(bot, args) {
 
-			for ( local child = bot.FirstMoveChild(); ( child && child.GetClassname() == "tf_wearable" ); child = child.NextMovePeer() )
-				if ( startswith( child.GetModelName(), format( "models/workshop/player/items/%s/tw", PopExtUtil.Classes[bot.GetPlayerClass()] ) ) )
+			for ( local child = bot.FirstMoveChild(); child; child = child.NextMovePeer() )
+				if ( child instanceof CEconEntity && startswith( child.GetModelName(), format( "models/workshop/player/items/%s/tw", PopExtUtil.Classes[bot.GetPlayerClass()] ) ) )
 					EntFireByHandle( child, "Kill", "", -1, null, null )
 
 			local cosmetics = PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()]

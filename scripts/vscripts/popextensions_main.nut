@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "09.25.2025.2"
+::POPEXT_VERSION <- "09.25.2025.3"
 
 local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -293,8 +293,14 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 	NetProps.SetPropInt( player, "m_nRenderMode", kRenderNormal )
 	NetProps.SetPropInt( player, "m_clrRender", 0xFFFFFF )
 
+	// clean up all entities that should be killed on death/spawn
+	if ( "PRESERVED" in scope ) 
+		foreach ( ent in scope.PRESERVED.kill_on_death )
+			if ( ent && ent.IsValid() )
+				ent.Kill()
+
 	// clean up all weapons/wearables
-	for ( local child = player.FirstMoveChild(), scope; (child && child instanceof CEconEntity); scope = child.GetScriptScope(), child = child.NextMovePeer() ) {
+	for ( local child = player.FirstMoveChild(), scope; child; scope = child.GetScriptScope(), child = child.NextMovePeer() ) {
 
 		if ( full_cleanup )
 			child.TerminateScriptScope()
@@ -308,14 +314,10 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 
 	if ( full_cleanup ) {
 
-		// clean up all entities that should be killed on death/spawn
-		if ( "PRESERVED" in scope ) {
-
-			foreach ( entlist in [ scope.PRESERVED.kill_on_death, scope.PRESERVED.kill_on_spawn ] ) 
-				foreach ( ent in entlist )
-					if ( ent && ent.IsValid() )
-						ent.Kill()
-		}
+		foreach ( ent in scope.PRESERVED.kill_on_death )
+			if ( ent && ent.IsValid() )
+				ent.Kill()
+		
 		player.TerminateScriptScope()
 		return
 	}

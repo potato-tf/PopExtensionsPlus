@@ -2607,7 +2607,7 @@ function PopExtUtil::OnWeaponFire( wep, func ) {
 
 function PopExtUtil::ForEachItem( player, func, weapons_only = false ) {
 
-	for ( local child = player.FirstMoveChild(); ( child && child instanceof CEconEntity ); child = child.NextMovePeer() ) {
+	for ( local child = player.FirstMoveChild(); child; child = child.NextMovePeer() ) {
 
 		if ( weapons_only && !( child instanceof CBaseCombatWeapon ) )
 			continue

@@ -1238,8 +1238,8 @@ MissionAttributes.Attrs <- {
 
 				local armor_model = format( `models/workshop/player/items/%s/tw`, PopExtUtil.Classes[self.GetPlayerClass()] )
 
-				for ( local child = self.FirstMoveChild(); ( child && child.GetClassname() == `tf_wearable` ); child = child.NextMovePeer() )
-					if ( startswith( child.GetModelName(), armor_model ) ) {
+				for ( local child = self.FirstMoveChild(); child; child = child.NextMovePeer() )
+					if ( child instanceof CEconEntity && startswith( child.GetModelName(), armor_model ) ) {
 						SetPropBool( child, STRING_NETPROP_PURGESTRINGS, true )
 						EntFireByHandle( child, `Kill`, ``, -1, null, null )
 					}

@@ -284,12 +284,12 @@ function PopExtHooks::PopHooksThink() {
 				}
 
 				if ( "DisableTracks" in scope.pop_property && scope.pop_property.DisableTracks )
-					for ( local child = tank.FirstMoveChild(); (child && child.GetClassname() == "prop_dynamic"); child = child.NextMovePeer() )
+					for ( local child = tank.FirstMoveChild(); child; child = child.NextMovePeer() )
 						if ( child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl" )
 							child.DisableDraw()
 
 				if ( "DisableBomb" in scope.pop_property && scope.pop_property.DisableBomb )
-					for ( local child = tank.FirstMoveChild(); (child && child.GetClassname() == "prop_dynamic"); child = child.NextMovePeer() )
+					for ( local child = tank.FirstMoveChild(); child; child = child.NextMovePeer() )
 						if ( child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl" )
 							child.DisableDraw()
 
@@ -371,7 +371,9 @@ function PopExtHooks::PopHooksThink() {
 						delete scope.pop_property.ModelPrecached.RightTrack
 					}
 
-					for ( local child = tank.FirstMoveChild(); ( child && child.GetClassname() == "prop_dynamic" ); child = child.NextMovePeer() ) {
+					for ( local child = tank.FirstMoveChild(); child; child = child.NextMovePeer() ) {
+
+						if ( child.GetClassname() != "prop_dynamic" ) continue
 
 						local replace_model     = -1
 						local replace_model_str = ""
