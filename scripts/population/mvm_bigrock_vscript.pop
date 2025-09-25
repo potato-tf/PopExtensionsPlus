@@ -520,6 +520,25 @@ WaveSchedule
 					}
 				}
 
+				PopExtTags.AddRobotTag(`abc`, {
+
+                    // Called when the robot is spawned
+                    function OnSpawn( bot, tag ) {
+
+                        bot.KeyValueFromString(`rendercolor`, `0 255 0`)
+                        // Create a barrel prop on bot's head
+                        PopExtUtil.CreatePlayerWearable(bot, `models/props_farm/wooden_barrel.mdl`, false, `head`)
+                    },
+
+                    // Called when the robot is killed
+                    // Params as in player_death event in https://wiki.alliedmods.net/Team_Fortress_2_Events
+                    // Params may be null if the bot was forcefully changed to spectator team
+                    function OnDeath( bot, params ) {
+                        // Restore colors back to normal as necessary
+                        bot.KeyValueFromString(`rendercolor`, `255 255 255`)
+                    },
+                })
+
 			"
 		}
 
@@ -562,6 +581,25 @@ WaveSchedule
 				Attributes HoldFireUntilFullReload //now works with every clip-based weapon
 				Item "The Cow Mangler 5000"
 				Tag "popext_spawntemplate{template = `Sentry`, attachment = `head`}" // spawns the template with the bot as its parent
+			}
+		}
+
+		// Subwave description here
+		WaveSpawn
+		{
+			Name "waveXXy"
+			Where spawnbot
+			// TotalCount 3
+			MaxActive 13
+			SpawnCount 3
+			WaitBeforeStarting 0
+			WaitBetweenSpawns 0
+			TotalCurrency 120
+			Support 1 // This will make the robots appear in Support. 1 makes them spawn infinitely and Limited makes only TotalCount spawn. Delete this line to make them normal bots
+			TFBot
+			{
+				Class Scout
+				Tag abc
 			}
 		}
 

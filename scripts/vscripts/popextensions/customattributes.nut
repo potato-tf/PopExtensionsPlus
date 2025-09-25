@@ -6,6 +6,74 @@ function PopExtAttributes::_OnDestroy() {
 		delete ::CustomAttributes
 }
 
+PopExtAttributes.Descs <- {
+
+	"fires milk bolt" 				: "Secondary attack: fires a bolt that applies milk for %.2f seconds. Regenerates every %.2f seconds.",
+	"add cond on hit" 				: "applies cond %d to victim on hit for %.2f seconds",
+	"remove cond on hit" 			: "removes cond %d from victim",
+	"self add cond on hit" 			: "applies cond %d to self on hit for %.2f seconds",
+	"self add cond on kill" 		: "applies cond %d to self on kill for %.2f seconds",
+	"fire input on hit" 			: "fires custom entity input on hit: %s",
+	"fire input on kill" 			: "fires custom entity input on kill: %s",
+	"mult dmg vs same class" 		: "Damage versus %s multiplied by %.2f",
+	"mult dmg vs airborne" 			: "Damage versus airborne targets multiplied by %.2f",
+	"teleport instead of die" 		: "%d⁒ chance of teleporting to spawn with 1 health instead of dying",
+	"melee cleave attack" 			: "On Swing: Weapon hits multiple targets",
+	"mult teleporter recharge time" : "Teleporter recharge rate multiplied by %.2f",
+	"uber on damage taken" 			: "On damage taken: gain %d⁒ of uber",
+	"set turn to ice" 				: "On Kill: Turn victim to ice.",
+	"mod teleporter speed boost" 	: "Teleporters grant a speed boost for %.2f seconds",
+	"can breathe under water" 		: "Player can breathe underwater",
+	"mult swim speed" 				: "Swimming speed multiplied by %.2f",
+	"last shot crits" 				: "Crit boost on last shot. Crit boost will stay active for %.2f seconds after holster",
+	"crit when health below" 		: "On health below %d⁒: gain crit boost",
+	"wet immunity" 					: "Immune to jar effects",
+	"build small sentries" 			: "On kill: build a small sentry",
+	"mvm sentry ammo" 				: "On kill: gain %d rounds of sentry ammo",
+	"radius sleeper" 				: "On kill: sleep radius of %.2f",
+	"explosive bullets" 			: "On hit: explode for %.2f damage",
+	"explosive bullets ext" 		: "On hit: explode for %.2f damage",
+	"old sandman stun" 				: "On hit: stun for %.2f seconds",
+	"stun on hit" 					: "On hit: stun for %.2f seconds",
+	"is miniboss" 					: "Is miniboss",
+	"replace weapon fire sound" 	: "Weapon fire sound replaced with %s",
+	"is invisible" 					: "Weapon is invisible",
+	"cannot upgrade" 				: "Weapon cannot be upgraded",
+	"always crit" 					: "Weapon always crits",
+	"add cond when active" 			: "On deploy: player receives cond %d for %.2f seconds",
+	"dont count damage towards crit rate" : "Damage doesn't count towards crit rate",
+	"no damage falloff" 			: "Weapon has no damage fall-off or ramp-up",
+	"can headshot" 					: "Crits on headshot",
+	"cannot headshot" 				: "weapon cannot headshot",
+	"cannot be headshot" 			: "Immune to headshots",
+	"projectile lifetime" 			: "projectile disappears after %.2f seconds",
+	"mult dmg vs tanks" 			: "Damage vs tanks multiplied by %.2f",
+	"mult dmg vs giants" 			: "Damage vs giants multiplied by %.2f",
+	"set damage type" 				: "Sets damage type to %s",
+	"set damage type custom" 		: "Sets damage type to custom",
+	"passive reload" 				: "Passive reload",
+	"collect currency on kill" 		: "On kill: collect currency",
+	"rocket penetration" 			: "Rocket penetrates up to %d enemy players",
+	"reloads full clip at once" 	: "Reloads full clip at once",
+	"mult projectile scale" 		: "Projectile scale multiplied by %.2f",
+	"mult building scale" 			: "Building scale multiplied by %.2f",
+	"mult crit dmg" 				: "Crit damage multiplied by %.2f",
+	"arrow ignite" 					: "Arrows are always ignited",
+	"noclip projectile" 			: "Projectiles go through walls and enemies harmlessly",
+	"projectile gravity" 			: "Projectile gravity %d hu/s",
+	"immune to cond" 				: "Immune to cond %d",
+	"mult max health" 				: "Player max health is multiplied by %.2f",
+	"custom kill icon" 				: "Custom kill icon: %s",
+	"set warpaint seed" 			: "Sets warpaint seed to %d",
+	"min respawn time"				: "Min respawn time: %.2f seconds",
+	"effect cond override" 			: "Effect cond override: %d",
+	"mult player model scale" 		: "Player model scale multiplied by %.2f",
+	"alt-fire disabled" 			: "Secondary fire disabled",
+	"custom projectile model" 		: "Fires custom projectile model: %s",
+	"dmg bonus while half dead" 	: "%d⁒ damage bonus while half dead",
+	"dmg penalty while half alive"  : "%d⁒ damage penalty while half alive"
+}
+
 PopExtAttributes.Attrs <- {
 
 	function FiresMilkBolt( player, item, value ) {
@@ -64,7 +132,6 @@ PopExtAttributes.Attrs <- {
 			scope.milk_bolt_request = false
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "fires milk bolt" ] <- format( "Secondary attack: fires a bolt that applies milk for %.2f seconds. Regenerates every %.2f seconds.", duration.tofloat(), recharge.tofloat() )
 	}
 
 	function AddCondOnHit( player, item, value ) {
@@ -93,7 +160,6 @@ PopExtAttributes.Attrs <- {
 		local desc_string = typeof value == "array" ?
 		format( "applies cond %d to victim on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
 		format( "applies cond %d to victim on hit", value )
-		player.GetScriptScope().attribinfo[ "add cond on hit" ] <- desc_string
 	}
 
 	function RemoveCondOnHit( player, item, value ) {
@@ -111,7 +177,6 @@ PopExtAttributes.Attrs <- {
 			victim.RemoveCondEx( value, true )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "remove cond on hit" ] <- format( "removes cond %d from victim", value )
 	}
 
 	function SelfAddCondOnHit( player, item, value ) {
@@ -132,7 +197,6 @@ PopExtAttributes.Attrs <- {
 		local desc_string = typeof value == "array" ?
 		format( "applies cond %d to self on hit for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
 		format( "applies cond %d to self on hit", value )
-		player.GetScriptScope().attribinfo[ "self add cond on hit" ] <- desc_string
 	}
 
 	function SelfAddCondOnKill( player, item, value ) {
@@ -153,7 +217,6 @@ PopExtAttributes.Attrs <- {
 		local desc_string = typeof value == "array" ?
 		format( "applies cond %d to self on kill for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
 		format( "applies cond %d to self on kill", value )
-		player.GetScriptScope().attribinfo[ "self add cond on kill" ] <- desc_string
 	}
 
 	function FireInputOnHit( player, item, value ) {
@@ -188,7 +251,6 @@ PopExtAttributes.Attrs <- {
 			targetname == "!self" ? EntFireByHandle( params.attacker, input, param, delay, activator, caller ) : DoEntFire( targetname, input, param, delay, activator, caller )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "fire input on hit" ] <- format( "fires custom entity input on hit: %s", value )
 	}
 
 	function FireInputOnKill( player, item, value ) {
@@ -223,7 +285,6 @@ PopExtAttributes.Attrs <- {
 			targetname = "!self" ? EntFireByHandle( GetPlayerFromUserID( params.attacker ), input, param, delay, activator, caller ) : DoEntFire( targetname, input, param, delay, activator, caller )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "fire input on kill" ] <- format( "fires custom entity input on kill: %s", value )
 	}
 
 	function MultDmgVsSameClass( player, item, value ) {
@@ -235,22 +296,22 @@ PopExtAttributes.Attrs <- {
 			local victim = params.const_entity
 			local attacker = params.attacker
 
-			if ( attacker && ( !attacker.IsValid() || attacker.GetTeam() == player.GetTeam() ) )
+			if ( !attacker || !attacker.IsValid() )
 				return
 
-			local scope = attacker.GetScriptScope()
+			else if ( !PopExtAttributes.HasAttr( attacker, "mult dmg vs same class" ) )
+				return
 
-			if (
-				!attacker.IsPlayer() || !victim.IsPlayer() ||
-				!( "mult dmg vs same class" in player.GetScriptScope().attribinfo ) ||
-				attacker.GetPlayerClass() != victim.GetPlayerClass() ||
-				player.GetActiveWeapon() != item
-			) return
+			else if ( !attacker.IsPlayer() || !victim.IsPlayer() ) 
+				return
+
+			else if ( attacker.GetPlayerClass() != victim.GetPlayerClass() || params.weapon != item)
+				return
 
 			params.damage *= value
+
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "mult dmg vs same class" ] <- format( "Damage versus %s multiplied by %.2f", PopExtUtil.Classes[ player.GetPlayerClass() ], value.tofloat() )
 	}
 
 	function MultDmgVsAirborne( player, item, value ) {
@@ -264,7 +325,6 @@ PopExtAttributes.Attrs <- {
 			params.damage *= value
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "mult dmg vs airborne" ] <- format( "Damage versus airborne targets multiplied by %.2f", value.tofloat() )
 	}
 
 	function TeleportInsteadOfDie( player, item, value ) {
@@ -277,25 +337,22 @@ PopExtAttributes.Attrs <- {
 				return
 
 			local player = params.const_entity
-			local scope = player.GetScriptScope()
 
-			if ( !( "attribinfo" in scope ) )
+			if ( !PopExtAttributes.HasAttr( player, "teleport instead of die" ) )
 				return
 
-			if (
-				!player.IsPlayer() || player.GetHealth() > params.damage ||
-				!( "teleport instead of die" in scope.attribinfo ) ||
-				player.IsInvulnerable() || PopExtUtil.IsPointInTrigger( player.EyePosition() )
-			) return
+			else if ( !player.IsPlayer() || player.GetHealth() > params.damage )
+				return
 
-			local health = player.GetHealth()
+			else if ( player.IsInvulnerable() || PopExtUtil.IsPointInTrigger( player.EyePosition() ) )
+				return
+
 			params.early_out = true
-
 			player.ForceRespawn()
 			PopExtUtil.ScriptEntFireSafe( player, "self.SetHealth( 1 )", -1 )
+
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "teleport instead of die" ] <- format( "%d⁒ chance of teleporting to spawn with 1 health instead of dying", ( value.tofloat() * 100 ).tointeger() )
 	}
 
 	function MeleeCleaveAttack( player, item, value = 64 ) {
@@ -309,12 +366,11 @@ PopExtAttributes.Attrs <- {
 
 		function MeleeCleaveAttackThink() {
 
-			if (
-				scope.cleavenextattack == GetPropFloat( item, "m_flNextPrimaryAttack" )
-				|| GetPropFloat( item, "m_fFireDuration" ) == 0.0
-				|| player.GetActiveWeapon() != item
-				|| !( "melee cleave attack" in player.GetScriptScope().attribinfo )
-			) return
+			if ( player.GetActiveWeapon() != item || !PopExtAttributes.HasAttr( player, "melee cleave attack" ) )
+				return
+
+			if ( scope.cleavenextattack == GetPropFloat( item, "m_flNextPrimaryAttack" ) || GetPropFloat( item, "m_fFireDuration" ) == 0.0 ) 
+				return
 
 			scope.cleaved = false
 
@@ -324,7 +380,7 @@ PopExtAttributes.Attrs <- {
 
 		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
-			if ( scope.cleaved || params.weapon != item || !( "melee cleave attack" in player.GetScriptScope().attribinfo ) )
+			if ( scope.cleaved || params.weapon != item || !PopExtAttributes.HasAttr( player, "melee cleave attack" ) )
 				return
 
 			scope.cleaved = true
@@ -337,7 +393,6 @@ PopExtAttributes.Attrs <- {
 					p.TakeDamageCustom( params.inflictor, params.attacker, params.weapon, params.damage_force, params.damage_position, params.damage, params.damage_type, params.damage_custom )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "melee cleave attack" ] <- "On Swing: Weapon hits multiple targets"
 	}
 
 	// unfinished attribute
@@ -396,7 +451,6 @@ PopExtAttributes.Attrs <- {
 			PopExtUtil.AddThink( teleporter, TeleportMultThink )
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- TeleporterRechargeTimeThink
-		player.GetScriptScope().attribinfo[ "teleporter recharge time" ] <- format( "Teleporter recharge rate multiplied by %.2f", value )
 	}
 
 	function UberOnDamageTaken( player, item, value ) {
@@ -409,7 +463,7 @@ PopExtAttributes.Attrs <- {
 
 			if (
 				damagedplayer != player || RandomInt( 0, 1 ) > value ||
-				!( "uber on damage taken" in player.GetScriptScope().attribinfo ) ||
+				!PopExtAttributes.HasAttr( player, "uber on damage taken" ) ||
 				damagedplayer.IsInvulnerable() || player.GetActiveWeapon() != item
 			) return
 
@@ -417,7 +471,6 @@ PopExtAttributes.Attrs <- {
 			params.early_out = true
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "uber on damage taken" ] <- format( "On take damage: %d⁒ chance of gaining invicibility for 3 seconds", ( value.tofloat() * 100 ).tointeger() )
 	}
 
 	function SetTurnToIce( player, item, value = null ) {
@@ -457,7 +510,6 @@ PopExtAttributes.Attrs <- {
 			}
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "set turn to ice" ] <- format( "On Kill: Turn victim to ice.", value )
 	}
 
 	function ModTeleporterSpeedBoost( player, item, value ) {
@@ -468,14 +520,13 @@ PopExtAttributes.Attrs <- {
 
 		POP_EVENT_HOOK( "player_teleported", event_hook_string, function( params ) {
 
-			if ( !( "mod teleporter speed boost" in player.GetScriptScope().attribinfo ) || params.builderid != PopExtUtil.PlayerTable[ player ] )
+			if ( !PopExtAttributes.HasAttr( player, "mod teleporter speed boost" ) || params.builderid != PopExtUtil.PlayerTable[ player ] )
 				return
 
 			local teleportedplayer = GetPlayerFromUserID( params.userid )
 			teleportedplayer.AddCondEx( TF_COND_SPEED_BOOST, value, player )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "mod teleporter speed boost" ] <- format( "Teleporters grant a speed boost for %.2f seconds upon exiting", value )
 	}
 
 	function CanBreatheUnderWater( player, item, value = null ) {
@@ -486,7 +537,7 @@ PopExtAttributes.Attrs <- {
 		local event_hook_string = format( "CanBreatheUnderwater_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 		function CanBreatheUnderWaterThink() {
 
-			if ( !( "can breathe under water" in player.GetScriptScope().attribinfo ) || player.GetActiveWeapon() != item )
+			if ( !PopExtAttributes.HasAttr( player, "can breathe under water" ) || player.GetActiveWeapon() != item )
 				return
 
 			if ( player.GetWaterLevel() == 3 ) {
@@ -497,7 +548,6 @@ PopExtAttributes.Attrs <- {
 			SetPropFloat( player, "m_PainFinished", 0.0 )
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- CanBreatheUnderWaterThink
-		player.GetScriptScope().attribinfo[ "can breathe under water" ] <- "Player can breathe underwater"
 	}
 
 	function MultSwimSpeed( player, item, value = 1.25 ) {
@@ -509,7 +559,7 @@ PopExtAttributes.Attrs <- {
 		local event_hook_string = format( "MultSwimSpeed_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 		function MultSwimSpeedThink() {
 
-			if ( !( "mult swim speed" in player.GetScriptScope().attribinfo ) || player.GetActiveWeapon() != item )
+			if ( !PopExtAttributes.HasAttr( player, "mult swim speed" ) || player.GetActiveWeapon() != item )
 				return
 
 			if ( player.GetWaterLevel() == 3 ) {
@@ -520,7 +570,6 @@ PopExtAttributes.Attrs <- {
 			SetPropFloat( player, "m_flMaxspeed", maxspeed )
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- MultSwimSpeedThink
-		player.GetScriptScope().attribinfo[ "mult swim speed" ] <- format( "Swimming speed multiplied by %.2f", value.tofloat() )
 	}
 
 	function LastShotCrits( player, item, value ) {
@@ -533,7 +582,7 @@ PopExtAttributes.Attrs <- {
 		local event_hook_string = format( "LastShotCrits_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
 		function LastShotCritsThink() {
 
-			if ( !item || !( "last shot crits" in player.GetScriptScope().attribinfo ) || player.GetActiveWeapon() != item )
+			if ( !item || !PopExtAttributes.HasAttr( player, "last shot crits" ) || player.GetActiveWeapon() != item )
 				return
 
 			// if ( scope.lastshotcritsnextattack == GetPropFloat( item, "m_flNextPrimaryAttack" ) ) return
@@ -544,7 +593,6 @@ PopExtAttributes.Attrs <- {
 				player.AddCondEx( COND_CRITBOOST, duration, null )
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- LastShotCritsThink
-		player.GetScriptScope().attribinfo[ "last shot crits" ] <- format( "Crit boost on last shot. Crit boost will stay active for %.2f seconds after holster", duration.tofloat() )
 	}
 
 	function CritWhenHealthBelow( player, item, value = -1 ) {
@@ -559,7 +607,6 @@ PopExtAttributes.Attrs <- {
 			}
 		}
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- CritWhenHealthBelowThink
-		player.GetScriptScope().attribinfo[ "crit when health below" ] <- format( "Player is crit boosted when below %d health", value )
 	}
 
 	function WetImmunity( player, item, value = null ) {
@@ -577,7 +624,6 @@ PopExtAttributes.Attrs <- {
 				player.RemoveCondEx( cond, true )
 		}
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- WetImmunityThink
-		player.GetScriptScope().attribinfo[ "wet immunity" ] <- "Immune to jar effects when active"
 	}
 
 	function BuildSmallSentries( player, item, value = null ) {
@@ -650,7 +696,6 @@ PopExtAttributes.Attrs <- {
 			}
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "build small sentries" ] <- "Sentries are 20⁒ smaller, have 33⁒ less health, take 25⁒ less metal to upgrade"
 	}
 
 	function RadiusSleeper( player, item, value = null ) {
@@ -662,21 +707,15 @@ PopExtAttributes.Attrs <- {
 			local victim = GetPlayerFromUserID( params.userid )
 			local attacker = GetPlayerFromUserID( params.attacker )
 
-			if ( attacker == null )
+			if ( !attacker || attacker != player || !PopExtAttributes.HasAttr( player, "radius sleeper" ) )
 				return
-
-			local scope = attacker.GetScriptScope()
-
-			if ( !( "radius sleeper" in player.GetScriptScope().attribinfo ) )
-				return
-
-			if ( victim == null || attacker == null || attacker != player || GetPropFloat( attacker.GetActiveWeapon(), "m_flChargedDamage" ) < 150.0 )
+				
+			else if ( GetPropFloat( attacker.GetActiveWeapon(), "m_flChargedDamage" ) < 150.0 )
 				return
 
 			SpawnEntityFromTable( "tf_projectile_jar", { origin = victim.EyePosition() } )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "radius sleeper" ] <- "On full charge headshot: create jarate explosion on victim"
 	}
 
 	// OBSOLETE, use ExplosiveBulletsExt instead
@@ -708,7 +747,7 @@ PopExtAttributes.Attrs <- {
 
 		function ExplosiveBulletsThink() {
 
-			if ( !( "explosive bullets" in player.GetScriptScope().attribinfo ) || player.GetActiveWeapon() != item || scope.explosivebulletsnextattack == GetPropFloat( item, "m_flLastFireTime" ) )
+			if ( !PopExtAttributes.HasAttr( player, "explosive bullets" ) || player.GetActiveWeapon() != item || scope.explosivebulletsnextattack == GetPropFloat( item, "m_flLastFireTime" ) )
 				return
 
 			local grenade = CreateByClassname( "tf_projectile_pipe" )
@@ -742,7 +781,6 @@ PopExtAttributes.Attrs <- {
 				scope.curclip = item.Clip1()
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- ExplosiveBulletsThink
-		player.GetScriptScope().attribinfo[ "explosive bullets" ] <- format( "Fires explosive rounds that deal %d damage.  \nOBSOLETE: USE 'explosive bullets ext' INSTEAD", value )
 	}
 
 	function ExplosiveBulletsExt( player, item, value ) {
@@ -767,18 +805,18 @@ PopExtAttributes.Attrs <- {
 
 		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
-			if ( "explosivebullets" in scope || params.weapon != item || !( "explosive bullets ext" in player.GetScriptScope().attribinfo ) )
+			if ( "explosivebullets" in scope || params.weapon != item || !PopExtAttributes.HasAttr( player, "explosive bullets ext" ) )
 				return
 
 			scope.explosivebullets <- true
 
 			local particleent = SpawnEntityFromTable( "info_particle_system", { effect_name = particle } )
 
-			if (
-				params.const_entity.GetClassname() == generic_bomb
-				|| params.attacker.GetClassname() == generic_bomb
-				|| ( params.attacker == player && params.const_entity.GetClassname() == generic_bomb )
-			) return
+			if ( params.const_entity.GetClassname() == generic_bomb || params.attacker.GetClassname() == generic_bomb )
+				return
+
+			else if ( params.attacker == player && params.const_entity.GetClassname() == generic_bomb )
+				return
 
 			local bomb = CreateByClassname( generic_bomb )
 
@@ -807,7 +845,6 @@ PopExtAttributes.Attrs <- {
 				delete scope.explosivebullets
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "explosive bullets ext" ] <- format( "Fires explosive rounds that deal %d damage in a radius of %d", value.damage, value.radius )
 	}
 
 	function OldSandmanStun( player, item, value = null ) {
@@ -825,7 +862,6 @@ PopExtAttributes.Attrs <- {
 
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "old sandman stun" ] <- "Uses pre-JI stun mechanics"
 	}
 
 	function StunOnHit( player, item, value ) {
@@ -849,7 +885,6 @@ PopExtAttributes.Attrs <- {
 			PopExtUtil.StunPlayer( params.const_entity, duration, type, 0, speedmult )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "stun on hit" ] <- format( "Stuns victim for %.2f seconds on hit", value[ "duration" ].tofloat() )
 	}
 
 	function IsMiniboss( player, item, value = null ) {
@@ -871,7 +906,6 @@ PopExtAttributes.Attrs <- {
 			player.SetModelScale( 1.0, -1 )
 		}
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- IsMinibossThink
-		player.GetScriptScope().attribinfo[ "is miniboss" ] <- "When weapon is active: player becomes giant"
 	}
 
 	function ReplaceWeaponFireSound( player, item, value ) {
@@ -969,7 +1003,6 @@ PopExtAttributes.Attrs <- {
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
 		local infostring = typeof value[ 1 ] == "array" ? format( "Weapon fire sound replaced with %s ( normal ) and %s ( critical )", value[ 1 ][ 0 ], value[ 1 ][ 1 ] ) : format( "Weapon fire sound replaced with %s", value[ 1 ] )
-		player.GetScriptScope().attribinfo[ "replace weapon fire sound" ] <- infostring
 	}
 
 	function IsInvisible( player, item, value = null ) {
@@ -984,7 +1017,6 @@ PopExtAttributes.Attrs <- {
 			item.DisableDraw()
 		}
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- IsInvisibleThink
-		player.GetScriptScope().attribinfo[ "is invisible" ] <- "Weapon is invisible"
 	}
 
 	function CannotUpgrade( player, item, value = null ) {
@@ -1009,7 +1041,6 @@ PopExtAttributes.Attrs <- {
 			SetPropInt( item, STRING_NETPROP_ITEMDEF, index )
 		}
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- CannotUpgradeThink
-		player.GetScriptScope().attribinfo[ "cannot upgrade" ] <- "Weapon cannot be upgraded"
 	}
 
 	function AlwaysCrit( player, item, value = null ) {
@@ -1022,7 +1053,6 @@ PopExtAttributes.Attrs <- {
 				player.AddCondEx( COND_CRITBOOST, 0.033, player )
 		}
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- AlwaysCritThink
-		player.GetScriptScope().attribinfo[ "always crit" ] <- "Weapon always crits"
 	}
 
 	function AddCondWhenActive( player, item, value ) {
@@ -1040,7 +1070,6 @@ PopExtAttributes.Attrs <- {
 		local desc_string = duration != 0.033 ?
 		format( "On deploy: player receives cond %d for %.2f seconds", value[ 0 ].tointeger(), value[ 1 ].tofloat() ) :
 		format( "When active: player receives cond %d", value )
-		player.GetScriptScope().attribinfo[ "add cond when active" ] <- desc_string
 	}
 
 	function DontCountDamageTowardsCritRate( player, item, value = null ) {
@@ -1053,7 +1082,6 @@ PopExtAttributes.Attrs <- {
 				return params.damage_type = params.damage_type | DMG_DONT_COUNT_DAMAGE_TOWARDS_CRIT_RATE
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "dont count damage towards crit rate" ] <- "Damage doesn't count towards crit rate"
 	}
 
 	function NoDamageFalloff( player, item, value = null ) {
@@ -1066,7 +1094,6 @@ PopExtAttributes.Attrs <- {
 				return params.damage_type = params.damage_type & ~DMG_USEDISTANCEMOD
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "no damage falloff" ] <- "Weapon has no damage fall-off or ramp-up"
 	}
 
 	function CanHeadshot( player, item, value = null ) {
@@ -1083,7 +1110,6 @@ PopExtAttributes.Attrs <- {
 			params.damage_stats = TF_DMG_CUSTOM_HEADSHOT
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "can headshot" ] <- "Crits on headshot"
 	}
 
 	function CannotHeadshot( player, item, value = null ) {
@@ -1099,7 +1125,6 @@ PopExtAttributes.Attrs <- {
 			params.damage_stats = TF_DMG_CUSTOM_NONE
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "cannot headshot" ] <- "weapon cannot headshot"
 	}
 
 	function CannotBeHeadshot( player, item, value = null ) {
@@ -1108,16 +1133,13 @@ PopExtAttributes.Attrs <- {
 
 		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
-			local scope = params.const_entity.GetScriptScope()
-
-			if ( !params.const_entity.IsPlayer() || !( "cannot be headshot" in player.GetScriptScope().attribinfo ) )
+			if ( !params.const_entity.IsPlayer() || !PopExtAttributes.HasAttr( player, "cannot be headshot" ) )
 				return
 
 			params.damage_type = params.damage_type & ~DMG_CRITICAL
 			params.damage_stats = TF_DMG_CUSTOM_NONE
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "cannot be headshot" ] <- "Immune to headshots"
 	}
 
 	function ProjectileLifetime( player, item, value ) {
@@ -1135,7 +1157,6 @@ PopExtAttributes.Attrs <- {
 					EntFireByHandle( projectile, "Kill", "", value, null, null )
 		}
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- ProjectileLifetimeThink
-		player.GetScriptScope().attribinfo[ "projectile lifetime" ] <- format( "projectile disappears after %.2f seconds", value.tofloat() )
 	}
 
 	function MultDmgVsGiants( player, item, value ) {
@@ -1150,7 +1171,6 @@ PopExtAttributes.Attrs <- {
 				params.damage *= value
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "mult dmg vs giants" ] <- format( "Damage vs giants multiplied by %.2f", value.tofloat() )
 	}
 
 	function MultDmgVsTanks( player, item, value ) {
@@ -1165,7 +1185,6 @@ PopExtAttributes.Attrs <- {
 				params.damage *= value
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "mult dmg vs tanks" ] <- format( "Damage vs tanks multiplied by %.2f", value.tofloat() )
 	}
 
 	function SetDamageType( player, item, value ) {
@@ -1178,7 +1197,6 @@ PopExtAttributes.Attrs <- {
 				params.damage_type = value
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "set damage type" ] <- format( "Damage type set to %d", value )
 	}
 
 	function SetDamageTypeCustom( player, item, value ) {
@@ -1191,7 +1209,6 @@ PopExtAttributes.Attrs <- {
 				params.damage_stats = value
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "set damage type custom" ] <- format( "Custom damage type set to %d", value )
 	}
 
 	function PassiveReload( player, item, value = null ) {
@@ -1223,7 +1240,6 @@ PopExtAttributes.Attrs <- {
 			}
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- PassiveReloadThink
-		player.GetScriptScope().attribinfo[ "passive reload" ] <- "weapon reloads when holstered"
 	}
 
 	function CollectCurrencyOnKill( player, item, value ) {
@@ -1231,7 +1247,6 @@ PopExtAttributes.Attrs <- {
 		local scope = PopExtUtil.GetEntScope( item )
 		scope.collectCurrencyOnKill <- true
 
-		player.GetScriptScope().attribinfo[ "collect currency on kill" ] <- "bots drop money when killed"
 	}
 
 	function RocketPenetration( player, item, value ) {
@@ -1455,7 +1470,6 @@ PopExtAttributes.Attrs <- {
 		weapon_scope.OnShot <- OnShot
 		weapon_scope.ApplyPenetrationToRocket <- ApplyPenetrationToRocket
 
-		player.GetScriptScope().attribinfo[ "rocket penetration" ] <- format( "rocket penetrates up to %d enemy players", value )
 	}
 
 	function ReloadsFullClipAtOnce( player, item, value = null ) {
@@ -1482,7 +1496,6 @@ PopExtAttributes.Attrs <- {
 			scope.last_clip = current_clip
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- ReloadsFullClipAtOnceThink
-		player.GetScriptScope().attribinfo[ "reloads full clip at once" ] <- "This weapon reloads its entire clip at once."
 	}
 
 	function MultProjectileScale( player, item, value ) {
@@ -1493,7 +1506,7 @@ PopExtAttributes.Attrs <- {
 
 		function MultProjectileScaleThink() {
 
-			if ( !( "mult projectile scale" in player.GetScriptScope().attribinfo ) || player.GetActiveWeapon() != item )
+			if ( !PopExtAttributes.HasAttr( player, "mult projectile scale" ) || player.GetActiveWeapon() != item )
 				return
 
 			for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile*" ); )
@@ -1501,7 +1514,6 @@ PopExtAttributes.Attrs <- {
 					projectile.SetModelScale( value, 0.0 )
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- MultProjectileScaleThink
-		player.GetScriptScope().attribinfo[ "mult projectile scale" ] <- format( "projectile scale multiplied by %.2f", value.tofloat() )
 	}
 
 	// this needs to be looked at
@@ -1512,11 +1524,11 @@ PopExtAttributes.Attrs <- {
 		POP_EVENT_HOOK( "player_builtobject", format( "MultBuildingScale_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
 
 			local building = EntIndexToHScript( params.index )
-			if ( GetPropEntity( building, "m_hBuilder" ) == player && "mult building scale" in player.GetScriptScope().attribinfo )
+			if ( GetPropEntity( building, "m_hBuilder" ) == player && PopExtAttributes.HasAttr( player, "mult building scale" ) )
 				building.SetModelScale( value, 0.0 )
+
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "mult building scale" ] <- format( "building scale multiplied by %.2f", value.tofloat() )
 	}
 
 	function MultCritDmg( player, item, value ) {
@@ -1529,7 +1541,6 @@ PopExtAttributes.Attrs <- {
 				params.damage *= value
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "mult crit dmg" ] <- format( "critical damage multiplied by %.2f", value.tofloat() )
 	}
 
 	function ArrowIgnite( player, item, value = null ) {
@@ -1547,7 +1558,6 @@ PopExtAttributes.Attrs <- {
 				SetPropBool( item, "m_bArrowAlight", true )
 		}
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- ArrowIgniteThink
-		player.GetScriptScope().attribinfo[ "arrow ignite" ] <- "arrows are always ignited"
 	}
 
 	function NoclipProjectile( player, item, value ) {
@@ -1558,7 +1568,7 @@ PopExtAttributes.Attrs <- {
 
 		function NoclipProjectileThink() {
 
-			if ( !( "noclip projectile" in player.GetScriptScope().attribinfo ) || player.GetActiveWeapon() != item )
+			if ( !PopExtAttributes.HasAttr( player, "noclip projectile" ) || player.GetActiveWeapon() != item )
 				return
 
 			for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile*" ); )
@@ -1566,7 +1576,6 @@ PopExtAttributes.Attrs <- {
 					projectile.SetMoveType( MOVETYPE_NOCLIP, MOVECOLLIDE_DEFAULT )
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- NoclipProjectileThink
-		player.GetScriptScope().attribinfo[ "noclip projectile" ] <- "projectiles go through walls and enemies harmlessly"
 	}
 
 	function ProjectileGravity( player, item, value ) {
@@ -1577,7 +1586,7 @@ PopExtAttributes.Attrs <- {
 
 		function ProjectileGravityThink() {
 
-			if ( !( "projectile gravity" in player.GetScriptScope().attribinfo ) || player.GetActiveWeapon() != item )
+			if ( !PopExtAttributes.HasAttr( player, "projectile gravity" ) || player.GetActiveWeapon() != item )
 				return
 
 			for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile*" ); ) {
@@ -1595,7 +1604,6 @@ PopExtAttributes.Attrs <- {
 			}
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- ProjectileGravityThink
-		player.GetScriptScope().attribinfo[ "projectile gravity" ] <- format( "projectile gravity %.2f hu/s", value.tofloat() )
 	}
 
 	function ImmuneToCond( player, item, value ) {
@@ -1620,7 +1628,6 @@ PopExtAttributes.Attrs <- {
 		item.GetScriptScope().ItemThinkTable[ event_hook_string ] <- ImmuneToCondThink
 		if ( typeof value == "integer" ) {
 
-			player.GetScriptScope().attribinfo[ "immune to cond" ] <- format( "wielder is immune to cond %d", value )
 		}
 		else {
 
@@ -1631,7 +1638,6 @@ PopExtAttributes.Attrs <- {
 			}
 			local final_comma_and_space = 2
 			output_string = output_string.slice( 0, output_string.len() - final_comma_and_space )
-			player.GetScriptScope().attribinfo[ "immune to cond" ] <- format( "wielder is immune to cond %s", output_string )
 		}
 	}
 
@@ -1641,7 +1647,6 @@ PopExtAttributes.Attrs <- {
 		local add_hp_amount = player.GetMaxHealth() * ( value - 1 )
 		item.AddAttribute( "SET BONUS: max health additive bonus", add_hp_amount, -1 )
 
-		player.GetScriptScope().attribinfo[ "mult max health" ] <- format( "max health multiplied by %.2f", value.tofloat() )
 	}
 
 	function CustomKillIcon( player, item, value ) {
@@ -1673,7 +1678,6 @@ PopExtAttributes.Attrs <- {
 
 		player.GetScriptScope().kill_on_death.append( killicon_dummy )
 
-		player.GetScriptScope().attribinfo[ "custom kill icon" ] <- format( "custom kill icon: %s", value )
 	}
 
 	function SetWarpaintSeed( player, item, value ) {
@@ -1713,7 +1717,6 @@ PopExtAttributes.Attrs <- {
 		}
 		item.ReapplyProvision()
 
-		player.GetScriptScope().attribinfo[ "set warpaint seed" ] <- format( "warpaint seed: %d", value.tointeger() )
 	}
 
 	function MinRespawnTime( player, item, value ) {
@@ -1740,7 +1743,6 @@ PopExtAttributes.Attrs <- {
 
 		}, EVENT_WRAPPER_CUSTOMATTR)
 
-		player.GetScriptScope().attribinfo[ "min respawn time" ] <- format( "Respawn time: %d", value.tointeger() )
 	}
 
 	function EffectCondOverride( player, item, value ) {
@@ -1824,19 +1826,16 @@ PopExtAttributes.Attrs <- {
 			}, EVENT_WRAPPER_CUSTOMATTR )
 		}
 
-		player.GetScriptScope().attribinfo[ "effect cond override" ] <- format( "effect cond override: %s", value )
 	}
 
 	function SpecialItemDescription( player, item, value ) {
 
-		player.GetScriptScope().attribinfo[ "special item description" ] <- format( "%s", value )
 	}
 
 	function MultPlayerModelScale( player, item, value ) {
 
 		player.SetModelScale( value, 0.0 )
 
-		player.GetScriptScope().attribinfo[ "mult player model scale" ] <- format( "Player model scale multiplied by %.2f", value )
 	}
 
 
@@ -1852,7 +1851,7 @@ PopExtAttributes.Attrs <- {
 
 		function AltFireDisabledThink() {
 
-			if ( "alt-fire disabled" in player.GetScriptScope().attribinfo && player.GetActiveWeapon() == item ) {
+			if ( PopExtAttributes.HasAttr( player, "alt-fire disabled" ) && player.GetActiveWeapon() == item ) {
 
 				SetPropInt( player, "m_afButtonDisabled", IN_ATTACK2 )
 				SetPropFloat( item, "m_flNextSecondaryAttack", INT_MAX )
@@ -1869,7 +1868,6 @@ PopExtAttributes.Attrs <- {
 			SetPropInt( GetPlayerFromUserID( params.userid ), "m_afButtonDisabled", 0 )
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "alt-fire disabled" ] <- "Secondary fire disabled"
 	}
 
 	function CustomProjectileModel( player, item, value ) {
@@ -1882,7 +1880,7 @@ PopExtAttributes.Attrs <- {
 
 		function CustomProjectileModelThink() {
 
-			if ( !( "custom projectile model" in player.GetScriptScope().attribinfo ) || player.GetActiveWeapon() != item )
+			if ( !PopExtAttributes.HasAttr( player, "custom projectile model" ) || player.GetActiveWeapon() != item )
 				return
 
 			for ( local projectile; projectile = FindByClassname( projectile, "tf_projectile*" ); )
@@ -1890,7 +1888,6 @@ PopExtAttributes.Attrs <- {
 					projectile.SetModel( value )
 		}
 		scope.ItemThinkTable[ event_hook_string ] <- CustomProjectileModelThink
-		player.GetScriptScope().attribinfo[ "custom projectile model" ] <- format( "custom projectile model set to %s", value )
 	}
 
 	function DmgBonusWhileHalfDead( player, item, value ) {
@@ -1899,14 +1896,14 @@ PopExtAttributes.Attrs <- {
 
 		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
-			if ( !( "dmg bonus while half dead" in player.GetScriptScope().attribinfo ) || params.weapon != item || player.GetActiveWeapon() != item )
+			if (  params.weapon != item || !PopExtAttributes.HasAttr( player, "dmg bonus while half dead" ) )
 				return
 
 			if ( player.GetHealth() < ( player.GetMaxHealth() >> 1 ) )
 				params.damage *= value
+
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "dmg bonus while half dead" ] <- format( "%d⁒ damage bonus while under half health", ( value.tofloat() * 100 ).tointeger() )
 	}
 
 	function DmgPenaltyWhileHalfAlive( player, item, value ) {
@@ -1915,16 +1912,93 @@ PopExtAttributes.Attrs <- {
 
 		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
-			if ( !( "dmg penalty while half alive" in player.GetScriptScope().attribinfo ) || params.weapon != item || player.GetActiveWeapon() != item )
+			if ( params.weapon != item || !PopExtAttributes.HasAttr( player, "dmg penalty while half alive" ) )
 				return
 
 			if ( player.GetHealth() > ( player.GetMaxHealth() >> 1 ) )
 				params.damage *= value
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().attribinfo[ "dmg penalty while half alive" ] <- format( "%d⁒ damage penalty while above half health", ( value.tofloat() * 100 ).tointeger() )
 	}
 }
+
+function PopExtAttributes::SetDesc( player, attr ) {
+
+	local scope = player.GetScriptScope()
+
+	if ( !( "attribinfo" in scope ) )
+		scope.attribinfo <- {}
+
+	scope.attribinfo[ attr ] <- Descs[ attr ]
+	PopExtAttributes.RefreshDescs( player )
+}
+
+function PopExtAttributes::HasAttr( player, attr ) {
+
+	local scope = player.GetScriptScope()
+	return "attribinfo" in scope && attr in scope.attribinfo
+}
+
+function PopExtAttributes::RefreshDescs( player ) {
+
+	local cooldowntime = 3.0
+
+	local scope = player.GetScriptScope()
+	local formattedtable = []
+
+	if ( !("attribinfo" in scope) )
+		return
+
+	foreach ( desc, attr in scope.attribinfo )
+		if ( !formattedtable.find( attr ) )
+			formattedtable.append( format( "%s:\n\n%s\n\n\n", desc, attr ) )
+
+	local i = 0
+	function ShowAttribInfoThink() {
+
+		if ( !formattedtable.len() || !player.IsInspecting() || Time() < cooldowntime )
+			return
+
+		if ( i + 1 < formattedtable.len() )
+			PopExtUtil.ShowHudHint( format( "%s%s", formattedtable[ i ], formattedtable[ i + 1 ] ), player, 3.0 - SINGLE_TICK )
+		else
+			PopExtUtil.ShowHudHint( formattedtable[ i ], player, 3.0 - SINGLE_TICK )
+
+		i += 2
+
+		if ( i >= formattedtable.len() )
+			i = 0
+
+		cooldowntime = Time() + 3.0
+	}
+	PopExtUtil.AddThink( player, ShowAttribInfoThink )
+}
+
+function PopExtAttributes::GetAttributeFunctionFromStringName( attr ) {
+
+	local special_names = {
+
+		"alt-fire disabled" : "AltFireDisabled",
+		"mult teleporter recharge rate" : "TeleporterRechargeTime",
+	}
+	if ( attr in special_names )
+		return special_names[ attr ]
+
+	local str = ""
+	split( attr, " ", true ).apply( @( s ) str += format( "%s%s", s.slice( 0, 1 ).toupper(), s.slice( 1 ) ) )
+	return str
+}
+
+function PopExtAttributes::CleanupFunctionTable( handle, table, attr ) {
+
+	local str = GetAttributeFunctionFromStringName( attr )
+
+	foreach ( name, v in table )
+		if ( typeof v == "function" && startswith( name, format( "%s_%d", str, PlayerTable[ handle ] ) ) )
+			delete table[ format( "%s", name ) ]
+}
+
+
 
 // DEPRECATED: DO NOT USE
 function PopExtAttributes::AddAttr( player, attr_string, value = 0, item = null ) {
@@ -1991,62 +2065,6 @@ function PopExtAttributes::AddAttr( player, attr_string, value = 0, item = null 
 
 		PopExtAttributes.RefreshDescs( player )
 	}
-}
-
-function PopExtAttributes::RefreshDescs( player ) {
-
-	local cooldowntime = 3.0
-
-	local scope = player.GetScriptScope()
-	local formattedtable = []
-
-	foreach ( desc, attr in scope.attribinfo )
-		if ( !formattedtable.find( attr ) )
-			formattedtable.append( format( "%s:\n\n%s\n\n\n", desc, attr ) )
-
-	local i = 0
-	function ShowAttribInfoThink() {
-
-		if ( !formattedtable.len() || !player.IsInspecting() || Time() < cooldowntime )
-			return
-
-		if ( i + 1 < formattedtable.len() )
-			PopExtUtil.ShowHudHint( format( "%s%s", formattedtable[ i ], formattedtable[ i + 1 ] ), player, 3.0 - SINGLE_TICK )
-		else
-			PopExtUtil.ShowHudHint( formattedtable[ i ], player, 3.0 - SINGLE_TICK )
-
-		i += 2
-
-		if ( i >= formattedtable.len() )
-			i = 0
-
-		cooldowntime = Time() + 3.0
-	}
-	PopExtUtil.AddThink( player, ShowAttribInfoThink )
-}
-
-function PopExtAttributes::GetAttributeFunctionFromStringName( attr ) {
-
-	local special_names = {
-
-		"alt-fire disabled" : "AltFireDisabled",
-		"mult teleporter recharge rate" : "TeleporterRechargeTime",
-	}
-	if ( attr in special_names )
-		return special_names[ attr ]
-
-	local str = ""
-	split( attr, " ", true ).apply( @( s ) str += format( "%s%s", s.slice( 0, 1 ).toupper(), s.slice( 1 ) ) )
-	return str
-}
-
-function PopExtAttributes::CleanupFunctionTable( handle, table, attr ) {
-
-	local str = GetAttributeFunctionFromStringName( attr )
-
-	foreach ( name, v in table )
-		if ( typeof v == "function" && startswith( name, format( "%s_%d", str, PlayerTable[ handle ] ) ) )
-			delete table[ format( "%s", name ) ]
 }
 
 // TODO: deprecate the old namespace.

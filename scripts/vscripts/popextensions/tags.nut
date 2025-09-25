@@ -2444,15 +2444,17 @@ function PopExtTags::EvaluateTags( bot, changeattributes = false ) {
 			// foreach ( k, v in args )
 				// PopExtMain.Error.DebugLog( format( "( %s [%d] ) EvaluateTags ( %s ): {%s = %s}", GetClientConvarValue( "name", bot.entindex() ), PopExtUtil.BotTable[bot], func, k.tostring(), v ? v.tostring() : "null" ) )
 
+
+		local scope = bot.GetScriptScope()
 		if ( func in TagFunctions )
-			TagFunctions[ func ].call( bot.GetScriptScope(), bot, args )
+			TagFunctions[ func ].call( scope, bot, args )
 
 		if ( tag in custom_tags ) {
 
 			local table = custom_tags[ tag ]
 
 			scope.pop_fired_death_hook <- false
-			PopExtHooks.AddHooksToScope( tag, table, bot.GetScriptScope() )
+			PopExtHooks.AddHooksToScope( tag, table, scope )
 
 			if ( "OnSpawn" in table )
 				table.OnSpawn( bot, tag )
@@ -2498,7 +2500,6 @@ POP_EVENT_HOOK( "player_death", "TagsPlayerDeath", function( params ) {
 
 	if ( !bot.IsBotOfType( TF_BOT_TYPE ) ) return
 
-	local scope = bot.GetScriptScope()
 	bot.ClearAllBotTags()
 
 	PopExtUtil.RemoveThink( bot )

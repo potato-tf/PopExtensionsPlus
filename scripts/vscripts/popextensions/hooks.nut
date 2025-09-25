@@ -45,12 +45,12 @@ function PopExtHooks::AddHooksToScope( name, table, scope ) {
 }
 
 function PopExtHooks::FireHooks( entity, scope, name ) {
-	if ( scope != null && "popHooks" in scope && name in scope.popHooks )
+	if ( scope && "popHooks" in scope && name in scope.popHooks )
 		foreach( index, func in scope.popHooks[name] )
 			func( entity )
 }
 function PopExtHooks::FireHooksParam( entity, scope, name, param ) {
-	if ( scope != null && "popHooks" in scope && name in scope.popHooks )
+	if ( scope && "popHooks" in scope && name in scope.popHooks )
 		foreach( index, func in scope.popHooks[name] )
 			func( entity, param )
 }
@@ -438,7 +438,8 @@ function PopExtHooks::PopHooksThink() {
 
 				if ( player.HasBotTag( tag ) ) {
 
-					scope.popFiredDeathHook <- false
+					scope.pop_fired_death_hook <- false
+					scope.popFiredDeathHook <- scope.pop_fired_death_hook // backwards compatibility
 					PopExtHooks.AddHooksToScope( tag, table, scope )
 
 					if ( "OnSpawn" in table )
@@ -446,11 +447,11 @@ function PopExtHooks::PopHooksThink() {
 				}
 		}
 		// Make sure that ondeath hook is fired always
-		if ( !alive && "popFiredDeathHook" in scope ) {
-			if ( !scope.popFiredDeathHook )
+		if ( !alive && "pop_fired_death_hook" in scope ) {
+			if ( !scope.pop_fired_death_hook )
 				PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
 
-			delete scope.popFiredDeathHook
+			delete scope.pop_fired_death_hook
 		}
 	}
 	return -1
@@ -490,10 +491,10 @@ POP_EVENT_HOOK( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
 
-	if ( "popFiredDeathHook" in scope && !scope.popFiredDeathHook ) {
+	if ( "pop_fired_death_hook" in scope && !scope.pop_fired_death_hook ) {
 
 		PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
-		delete scope.popFiredDeathHook
+		delete scope.pop_fired_death_hook
 	}
 
 	// Reset hooks
@@ -514,9 +515,9 @@ POP_EVENT_HOOK( "player_team", "PopHooksPlayerTeam", function( params ) {
 
 	local scope = player.GetScriptScope()
 
-	if ( "popFiredDeathHook" in scope && !scope.popFiredDeathHook ) {
+	if ( "pop_fired_death_hook" in scope && !scope.pop_fired_death_hook ) {
 		PopExtHooks.FireHooksParam( player, scope, "OnDeath", null )
-		delete scope.popFiredDeathHook
+		delete scope.pop_fired_death_hook
 	}
 
 		// Reset hooks
@@ -547,7 +548,7 @@ POP_EVENT_HOOK( "player_death", "PopHooksPlayerDeath", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
-	scope.popFiredDeathHook <- true
+	scope.pop_fired_death_hook <- true
 	PopExtHooks.FireHooksParam( player, scope, "OnDeath", params )
 
 
@@ -612,9 +613,9 @@ POP_EVENT_HOOK( "npc_hurt", "PopHooksNPCHurt", function( params ) {
 				EntFireByHandle( scope.blimpTrain, "Kill", "", -1, null, null )
 		}
 
-		if ( dead && scope && !( "popFiredDeathHook" in scope ) ) {
+		if ( dead && scope && !( "pop_fired_death_hook" in scope ) ) {
 
-			scope.popFiredDeathHook <- true
+			scope.pop_fired_death_hook <- true
 
 			if ( "pop_property" in scope && "Icon" in scope.pop_property ) {
 

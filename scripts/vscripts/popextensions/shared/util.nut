@@ -784,10 +784,8 @@ function PopExtUtil::CreatePlayerWearable( player, model, bonemerge = true, atta
 	SetPropInt( wearable, "m_fEffects", bonemerge ? EF_BONEMERGE|EF_BONEMERGE_FASTCULL : 0 )
 	SetParentLocalOrigin( wearable, player, attachment )
 
-	local scope = player.GetScriptScope()
-
 	if ( auto_destroy )
-		scope.PRESERVED.kill_on_death.append( wearable )
+		player.GetScriptScope().PRESERVED.kill_on_death.append( wearable )
 
 	return wearable
 }
@@ -821,9 +819,9 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null, on_death =
 
 	player.RemoveEFlags( EFL_CUSTOM_WEARABLE )
 
-	local scope = player.GetScriptScope()
+	wearable.SetOwner( player )
 
-	scope.PRESERVED[on_death ? "kill_on_death" : "kill_on_spawn"].append( wearable )
+	player.GetScriptScope().PRESERVED[on_death ? "kill_on_death" : "kill_on_spawn"].append( wearable )
 
 	return wearable
 }
@@ -903,9 +901,6 @@ function PopExtUtil::SetPlayerAttributes( player, attrib, value, item = null, cu
 		foreach( item in items.keys() )
 			PopExtAttributes.CleanupFunctionTable( item, "ItemThinkTable", customattr_function )
 
-		if ( !( "attribinfo" in scope ) )
-			scope.attribinfo <- {}
-
 		foreach( item, attrs in items ) {
 
 			if ( !HasItemInLoadout( player, item ) )
@@ -913,6 +908,8 @@ function PopExtUtil::SetPlayerAttributes( player, attrib, value, item = null, cu
 
 			if ( !("ItemThinkTable" in scope) )
 				AddThink( item, "" )
+
+			PopExtAttributes.SetDesc( player, attrib )
 
 			PopExtAttributes.Attrs[customattr_function]( player, item, value )
 
@@ -959,9 +956,7 @@ function PopExtUtil::SetPlayerAttributes( player, attrib, value, item = null, cu
 			&& "hidden" in PopExtItems.Attributes[attrib]
 			&& PopExtItems.Attributes[attrib]["hidden"] == "1"
 		) {
-			if ( !( "attribinfo" in scope ) ) scope.attribinfo <- {}
-
-			scope.attribinfo[attrib] <- format( "%s: %s" attrib, value.tostring() )
+			scope.attribinfo[attrib] <- format( "%s: %s", attrib, value.tostring() )
 			PopExtAttributes.RefreshDescs( player )
 		}
 	}
@@ -1903,7 +1898,10 @@ function PopExtUtil::SetPropAny( ent, prop, value, i = 0 ) {
 
 function PopExtUtil::RemovePlayerWearables( player ) {
 
-	for ( local wearable = player.FirstMoveChild(); (wearable && wearable.GetClassname() == "tf_wearable"); wearable = wearable.NextMovePeer() ) {
+	for ( local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer() ) {
+
+		if ( wearable.GetClassname() != "tf_wearable" ) 
+			continue
 
 		SetPropBool( wearable, STRING_NETPROP_PURGESTRINGS, true )
 		EntFireByHandle( wearable, "Kill", "", -1, null, null )

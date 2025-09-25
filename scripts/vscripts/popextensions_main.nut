@@ -312,7 +312,7 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 	if ( full_cleanup ) {
 
 		foreach ( ent in scope.PRESERVED.kill_on_death )
-			if ( ent && ent.IsValid() )
+			if ( ent && ent.IsValid() && ent.GetOwner() == player )
 				ent.Kill()
 		
 		player.TerminateScriptScope()
@@ -422,7 +422,7 @@ POP_EVENT_HOOK( "player_team", "MainPlayerTeam", function( params ) {
 	if ( params.oldteam > TEAM_SPECTATOR && params.team == TEAM_SPECTATOR && !player.IsAlive() ) {
 
 		foreach( ent in scope.PRESERVED.kill_on_spawn )
-			if ( ent.IsValid() )
+			if ( ent && ent.IsValid() && ent.GetOwner() == player )
 				ent.Kill()
 
 		scope.PRESERVED.kill_on_spawn.clear()
@@ -483,7 +483,7 @@ POP_EVENT_HOOK( "player_death", "MainDeathCleanup", function( params ) {
 	local scope = player.GetScriptScope()
 	if ( "PRESERVED" in scope ) 
 		foreach ( ent in scope.PRESERVED.kill_on_death )
-			if ( ent && ent.IsValid() )
+			if ( ent && ent.IsValid() && ent.GetOwner() == player )
 				ent.Kill()
 
 	PopExtMain.PlayerCleanup( player )
