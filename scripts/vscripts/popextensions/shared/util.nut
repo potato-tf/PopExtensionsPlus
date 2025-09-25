@@ -758,7 +758,8 @@ function PopExtUtil::DoPrintTable( table, indent ) {
 // LEGACY: THIS DOES NOT APPLY TO RAGDOLLS! use GiveWearableItem instead
 function PopExtUtil::CreatePlayerWearable( player, model, bonemerge = true, attachment = null, auto_destroy = true, on_death = false ) {
 
-	PopExtMain.Error.DeprecationWarning( "PopExtUtil.CreatePlayerWearable", "PopExtUtil.GiveWearableItem" )
+	// this is still useful for setting arbitrary models and not actual cosmetics
+	// PopExtMain.Error.DeprecationWarning( "PopExtUtil.CreatePlayerWearable", "PopExtUtil.GiveWearableItem" )
 	local model_index = GetModelIndex( model )
 	if ( model_index == -1 )
 		model_index = PrecacheModel( model )
