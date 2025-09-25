@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "09.23.2025.2"
+::POPEXT_VERSION <- "09.25.2025.2"
 
 local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -423,7 +423,7 @@ POP_EVENT_HOOK( "player_team", "MainPlayerTeam", function( params ) {
 	if ( params.oldteam > TEAM_SPECTATOR && params.team == TEAM_SPECTATOR && !player.IsAlive() ) {
 
 		foreach( ent in scope.PRESERVED.kill_on_spawn )
-			if ( ent.IsValid() && ent.GetOwner() == player )
+			if ( ent.IsValid() )
 				ent.Kill()
 
 		scope.PRESERVED.kill_on_spawn.clear()
