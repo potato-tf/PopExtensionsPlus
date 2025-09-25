@@ -2450,10 +2450,9 @@ function PopExtTags::EvaluateTags( bot, changeattributes = false ) {
 		if ( tag in custom_tags ) {
 
 			local table = custom_tags[ tag ]
-			local scope = bot.GetScriptScope()
 
 			scope.pop_fired_death_hook <- false
-			PopExtHooks.AddHooksToScope( tag, table, scope )
+			PopExtHooks.AddHooksToScope( tag, table, bot.GetScriptScope() )
 
 			if ( "OnSpawn" in table )
 				table.OnSpawn( bot, tag )

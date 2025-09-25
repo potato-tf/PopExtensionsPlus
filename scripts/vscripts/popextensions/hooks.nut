@@ -8,7 +8,7 @@ function PopExtHooks::AddHooksToScope( name, table, scope ) {
 
 	foreach( hook_name, func in table ) {
 		// Entries in hook table must begin with 'On' to be considered hooks
-		if ( hook_name.slice( 0,2 ) == "On" ) {
+		if ( hook_name.slice( 0, 2 ) == "On" ) {
 
 			if ( !( "popHooks" in scope ) )
 				scope.popHooks <- {}
