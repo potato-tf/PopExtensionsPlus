@@ -293,14 +293,11 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 	NetProps.SetPropInt( player, "m_nRenderMode", kRenderNormal )
 	NetProps.SetPropInt( player, "m_clrRender", 0xFFFFFF )
 
-	// clean up all entities that should be killed on death/spawn
-	if ( "PRESERVED" in scope ) 
-		foreach ( ent in scope.PRESERVED.kill_on_death )
-			if ( ent && ent.IsValid() )
-				ent.Kill()
-
 	// clean up all weapons/wearables
 	for ( local child = player.FirstMoveChild(), scope; child; scope = child.GetScriptScope(), child = child.NextMovePeer() ) {
+
+		if ( !(child instanceof CEconEntity) )
+			continue
 
 		if ( full_cleanup )
 			child.TerminateScriptScope()
@@ -311,6 +308,12 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 	}
 
 	local scope = player.GetScriptScope()
+
+	// clean up all entities that should be killed on death/spawn
+	if ( "PRESERVED" in scope ) 
+		foreach ( ent in scope.PRESERVED.kill_on_death )
+			if ( ent && ent.IsValid() )
+				ent.Kill()
 
 	if ( full_cleanup ) {
 
