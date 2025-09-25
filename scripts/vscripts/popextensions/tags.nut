@@ -2456,7 +2456,7 @@ function PopExtTags::EvaluateTags( bot, changeattributes = false ) {
 			PopExtHooks.AddHooksToScope( tag, table, scope )
 
 			if ( "OnSpawn" in table )
-				table.OnSpawn( player, tag )
+				table.OnSpawn( bot, tag )
 		}
 	}
 }
