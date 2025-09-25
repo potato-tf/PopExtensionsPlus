@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "09.25.2025.4"
+::POPEXT_VERSION <- "09.25.2025.5"
 
 local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -309,12 +309,6 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 
 	local scope = player.GetScriptScope()
 
-	// clean up all entities that should be killed on death/spawn
-	if ( "PRESERVED" in scope ) 
-		foreach ( ent in scope.PRESERVED.kill_on_death )
-			if ( ent && ent.IsValid() )
-				ent.Kill()
-
 	if ( full_cleanup ) {
 
 		foreach ( ent in scope.PRESERVED.kill_on_death )
@@ -484,6 +478,13 @@ POP_EVENT_HOOK( "player_death", "MainDeathCleanup", function( params ) {
 	local player = GetPlayerFromUserID( params.userid )
 
 	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
+
+
+	// clean up all entities that should be killed on death/spawn
+	if ( "PRESERVED" in scope ) 
+		foreach ( ent in scope.PRESERVED.kill_on_death )
+			if ( ent && ent.IsValid() )
+				ent.Kill()
 
 	PopExtMain.PlayerCleanup( player )
 
