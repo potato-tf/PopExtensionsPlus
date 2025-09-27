@@ -1749,8 +1749,9 @@ PopExtAttributes.Attrs <- {
 
 		local buff_conds = [ -1, TF_COND_OFFENSEBUFF, TF_COND_DEFENSEBUFF, TF_COND_REGENONDAMAGEBUFF, -1, TF_COND_CRITBOOSTED_RAGE_BUFF, TF_COND_SNIPERCHARGE_RAGE_BUFF, TF_COND_ENERGY_BUFF, TF_COND_ENERGY_BUFF ]
 		local buff_type = item.GetAttribute( "mod soldier buff type", 0.0 )
+		local item_classname = item.GetClassname()
 
-		if ( startswith( item.GetClassname(), "tf_weapon_lunchbox" ) || item.GetClassname() == "tf_weapon_charged_smg" )
+		if ( 17 in item_classname && (item_classname == "tf_weapon_charged_smg" || startswith( item_classname, "tf_weapon_lunchbox" ) ) )
 			buff_type = PopExtUtil.GetItemIndex( item ) == ID_BUFFALO_STEAK_SANDVICH ? 8 : 7
 
 		local event_hook_string = format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
@@ -1778,7 +1779,7 @@ PopExtAttributes.Attrs <- {
 
 				function EffectCondOverrideThink() {
 
-					if ( ( player.GetActiveWeapon() != item && buff_type != 7 ) || !player.InCond( buff_conds[ buff_type ] ) )
+					if ( ( buff_type != 7 && player.GetActiveWeapon() != item ) || !player.InCond( buff_conds[ buff_type ] ) )
 						return
 
 					player.RemoveCondEx( buff_conds[ buff_type ], true )
@@ -1791,7 +1792,7 @@ PopExtAttributes.Attrs <- {
 			break
 		}
 
-		if ( item.GetClassname() == "tf_weapon_medigun" ) {
+		if ( item_classname == "tf_weapon_medigun" ) {
 
 			POP_EVENT_HOOK( "player_chargedeployed", format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
 

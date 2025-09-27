@@ -388,7 +388,7 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 
 //altenative version of SpawnTemplate that will recreate itself only after wave resets ( after failure, after voting, after using tf_mvm_jump_to_wave ) to imitate spawning in WaveSchedule
 //does not accept parent parameter, does not allow parenting entities
-// ::SpawnTemplateWaveSchedule <- function ( pointtemplate, origin = null, angles = null ) {
+// function ROOT::SpawnTemplateWaveSchedule( pointtemplate, origin = null, angles = null ) {
 	// SpawnTemplates.wave_schedule_point_templates.append( [PointTemplates[pointtemplate], origin, angles] )
 // }
 

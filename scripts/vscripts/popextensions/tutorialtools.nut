@@ -36,14 +36,14 @@ function PopExtTutorial::AnimatedViewControlAll( args = {track = [], speed_mult 
 	if ( !keyframes || keyframes.len() <= 1 || keyframes[0].len() < 3 ) return
 
 	local camera = SpawnEntityFromTable( "point_viewcontrol", { spawnflags = 8 } )
-	local camera_scope = PopExtUtil.GetEntScope( camera )
+	camera_scope <- PopExtUtil.GetEntScope( camera )
 	AddThinkToEnt( camera, null )
 
 	// Hack to make it so taunting doesn't fuck up the camera
 	SetPropBool( PopExtUtil.GameRules, "m_bShowMatchSummary", true )
 
 	// Put everything back to normal
-	camera_scope.CleanupCamera <- function() {
+	function camera_scope::CleanupCamera() {
 
 		SetPropBool( PopExtUtil.GameRules, "m_bShowMatchSummary", false )
 
@@ -108,10 +108,10 @@ function PopExtTutorial::AnimatedViewControlAll( args = {track = [], speed_mult 
 
 	IsPlayingViewcontrol = true
 
-	local camera_scope = PopExtUtil.GetEntScope( camera )
+	camera_scope <- PopExtUtil.GetEntScope( camera )
 
 	// Update camera origin and angles every frame linearly towards keyframe values
-	camera_scope.CameraThink <- function() {
+	function camera_scope::CameraThink() {
 
 		// Stop thinking once we finish going through keyframes
 		if ( keyframe >= keyframes.len() ) {

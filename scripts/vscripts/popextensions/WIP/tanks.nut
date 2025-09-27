@@ -1,5 +1,7 @@
 POPEXT_CREATE_SCOPE( "__popext_tanks", "PopExtTanks", "PopExtTanksEntity" )
 
+PopExtTanks.tank_names <- {}
+
 function PopExtTanks::AddTankName( name, table ) {
 
     if ( "Icon" in table ) {
@@ -437,28 +439,31 @@ function PopExtTanks::TankThink() {
 
             if ( "pop_property" in scope ) {
 
-                foreach ( name, func in scope.pop_property )
+                foreach ( name, func in scope.pop_property ) {
 
                     if ( name in tank_funcs )
-
                         tank_funcs[ name ]( scope )
-
-                local prop_keys = scope.pop_property.keys()
-
-                for ( local i = prop_keys.len(); i >= 0; i-- )
-
-                    if ( prop_keys[ i ] in PopExtTanks.props_to_delete )
-
-                        delete scope.pop_property[ prop_keys[ i ] ]
+                    
+                    if ( name in props_to_delete )
+                        delete scope.pop_property[ name ]
+                }
             }
 
-            foreach( name, table in tank_names ) {
+            if ( tank_name in tank_names ) {
 
-                if ( (tank_name == name || ( name[name.len() - 1] == '*' && startswith( tank_name, name.slice( 0, -1 ) ) ) ) && "OnSpawn" in table ) {
+                local table = tank_names[tank_name]
 
+                if ( "OnSpawn" in table )
                     table.OnSpawn( tank, tank_name )
-                    break
-                }
+
+                break
+            } 
+            else {
+
+                local wildcards = tank_names.filter( @( k, v ) "OnSpawn" in v && k[k.len() - 1] == '*' && startswith( tank_name, k.slice( 0, -1 ) ) )
+
+                foreach( tank_name, table in wildcards )
+                    table.OnSpawn( tank, tank_name )
             }
         }
     }

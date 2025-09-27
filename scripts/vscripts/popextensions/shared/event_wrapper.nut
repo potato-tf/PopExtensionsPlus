@@ -174,7 +174,8 @@ function PopExtEvents::CollectEvents() {
         local event_string = event == "OnTakeDamage" ? "OnScriptHook_" : "OnGameEvent_"
 
         // set up hook table
-        old_table[ format( "%s%s", event_string, event ) ] <- function( params ) {
+        local func_name = format( "%s%s", event_string, event )
+        old_table[ func_name ] <- function( params ) {
 
             foreach( i, tbl in call_order )
 
@@ -184,6 +185,8 @@ function PopExtEvents::CollectEvents() {
 
                         func( params )
         }
+        // fix anonymous function declaration
+        compilestring( format( @"local _%s = %s; function %s( params ) { _%s( params ) }", func_name, func_name, func_name, func_name ) ).call(old_table)
     }
 
     // copy table to new ID

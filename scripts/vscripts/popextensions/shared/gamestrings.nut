@@ -183,23 +183,44 @@ foreach ( i, func in entio_funcs ) {
 
     ROOT[ copy_name ] <- ROOT[ func ]
 
-    local _func = ROOT[ copy_name ]
+    // local _func = ROOT[ copy_name ]
 
-    ROOT[ func ] <- function( ... ) {
+    // // ROOT[ func ] <- function( ... ) {
 
-        local target    = vargv[0]
-        local param     = 2 in vargv ? vargv[2] : null
-        local copy_name = format( "_%s", func )
+    // //     local target    = vargv[0]
+    // //     local param     = 2 in vargv ? vargv[2] : null
+    // //     local copy_name = format( "_%s", func )
 
-        if ( "PopGameStrings" in ROOT && param && typeof param == "string" && ( 0 in param ) )
-            PURGE_STRINGS( param )
+    // //     if ( "PopGameStrings" in ROOT && param && typeof param == "string" && ( 0 in param ) )
+    // //         PURGE_STRINGS( param )
 
-        if ( func == "EntFireByHandle" && target && target.IsValid() )
-            SetPropBool( target, STRING_NETPROP_PURGESTRINGS, true )
+    // //     if ( func == "EntFireByHandle" && target && target.IsValid() )
+    // //         SetPropBool( target, STRING_NETPROP_PURGESTRINGS, true )
 
-        // __DumpScope( 0, vargv )
-        return _func.acall( [ this ].extend( vargv ) )
-    }
+    // //     // __DumpScope( 0, vargv )
+    // //     return _func.acall( [ this ].extend( vargv ) )
+    // // }
+
+    compilestring(format( @"
+
+        local func_name = %s
+
+        function %s( ... ) {
+
+            local target    = vargv[0]
+            local param     = 2 in vargv ? vargv[2] : null
+
+            if ( ""PopGameStrings"" in ROOT && param && (typeof param)[0] == 's' && ( 0 in param ) )
+                PURGE_STRINGS( param )
+
+            if ( 9 in func_name && func_name[9] == 'H' )
+                if ( target && target.IsValid() )
+                    SetPropBool( target, STRING_NETPROP_PURGESTRINGS, true )
+
+            // __DumpScope( 0, vargv )
+            return _%s.acall( [ this ].extend( vargv ) )
+        }
+    ", "\"" + func + "\"", func, func ) ).call( ROOT )
 
 }
 
