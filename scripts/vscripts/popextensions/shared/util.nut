@@ -1514,16 +1514,9 @@ function PopExtUtil::IsPointInTrigger( point, classname = "func_respawnroom" ) {
 
 function PopExtUtil::GetItemInSlot( player, slot ) {
 
-	local item
-	for ( local child = player.FirstMoveChild(); child; child = child.NextMovePeer() ) {
-
-		if ( !(child instanceof CBaseCombatWeapon) || child.GetSlot() != slot ) 
-			continue
-
-		item = child
-		break
-	}
-	return item
+	for ( local child = player.FirstMoveChild(); child; child = child.NextMovePeer() )
+		if ( child instanceof CBaseCombatWeapon && child.GetSlot() == slot )
+			return child
 }
 
 function PopExtUtil::SwitchToFirstValidWeapon( player ) {
@@ -1598,6 +1591,7 @@ function PopExtUtil::PlayerBonemergeModel( player, model ) {
 			bonemerge_model.AcceptInput( "SetParent", "!activator", player, player )
 		return -1
 	}
+	AddThink( player, BonemergeModelThink )
 }
 
 function PopExtUtil::PlayerSequence( player, sequence, model_override = "", playbackrate = 1.0, freeze_player = false, thirdperson = false ) {
@@ -1651,23 +1645,21 @@ function PopExtUtil::PlayerSequence( player, sequence, model_override = "", play
 
 }
 
-function PopExtUtil::HasItemInLoadout( player, index ) {
+function PopExtUtil::HasItemInLoadout( player, item ) {
 
-	local t = null
-
-	for ( local child = player.FirstMoveChild(); child != null; child = child.NextMovePeer() ) {
-		if (
-			child == index
-			|| child.GetClassname() == index
-			|| ( index != -1 && GetItemIndex( child ) == index )
-			|| ( index in PopExtItems && GetItemIndex( child ) == PopExtItems[index].id )
-		) {
-			t = child
-			break
-		}
+	for ( local child = player.FirstMoveChild(); child; child = child.NextMovePeer() ) {
+		
+		//entity handle or classname
+		if ( child == item || child.GetClassname() == item )
+			return child
+		// item index
+		else if ( item != -1 && GetItemIndex( child ) == item )
+			return child
+		// english item name
+		else if ( item in PopExtItems && GetItemIndex( child ) == PopExtItems[item].id )
+			return child
 	}
 
-	if ( t != null ) return t
 
 	//didn't find weapon in children, go through m_hMyWeapons instead
 	for ( local i = 0; i < SLOT_COUNT; i++ ) {
@@ -1676,34 +1668,31 @@ function PopExtUtil::HasItemInLoadout( player, index ) {
 
 		if ( !wep || !wep.IsValid() ) continue
 
-		if (
-			wep == index
-			|| wep.GetClassname() == index
-			|| GetItemIndex( wep ) == index
-			|| ( index in PopExtItems && GetItemIndex( wep ) == PopExtItems[index].id )
-		) {
-			t = wep
-			break
-		}
+		// entity handle or classname
+		if ( wep == item || wep.GetClassname() == item )
+			return wep
+		// item index
+		else if ( item != -1 && GetItemIndex( wep ) == item )
+			return wep
+		// english item name
+		else if ( item in PopExtItems && GetItemIndex( wep ) == PopExtItems[item].id )
+			return wep
 	}
-	if ( t != null ) return t
 
 	// check for custom weapons
 	// only accepts weapon handle or weapon string name
 	local scope = player.GetScriptScope()
 	if ( "CustomWeapons" in scope ) {
-		foreach ( wep, v in scope.CustomWeapons ) {
 
-			if ( wep == "worldmodel" ) continue
+		foreach ( wep, wepinfo in scope.CustomWeapons ) {
 
-			if ( wep == index || v.name == index ) {
+			if ( wep == "worldmodel" ) 
+				continue
 
-				t = wep
-				break
-			}
+			else if ( wep == item || wepinfo.name == item )
+				return wep
 		}
 	}
-	return t
 }
 
 // This was made before StunPlayer was exposed, however StunPlayer doesn't control m_bStunEffects like this does.
@@ -1773,11 +1762,7 @@ function PopExtUtil::GetEntityColor( entity ) {
 
 function PopExtUtil::AddAttributeToLoadout( player, attribute, value, duration = -1 ) {
 
-	ForEachItem( player, function( item ) {
-
-		item.AddAttribute( attribute, value, duration )
-		item.ReapplyProvision()
-	})
+	ForEachItem( player, @( item ) item.AddAttribute( attribute, value, duration ), item.ReapplyProvision() )
 }
 
 function PopExtUtil::ShowModelToPlayer( player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = INT_MAX, bodygroup = null ) {
@@ -2605,13 +2590,9 @@ function PopExtUtil::OnWeaponFire( wep, func ) {
 
 function PopExtUtil::ForEachItem( player, func, weapons_only = false ) {
 
-	for ( local child = player.FirstMoveChild(); child; child = child.NextMovePeer() ) {
-
-		if ( weapons_only && !( child instanceof CBaseCombatWeapon ) )
-			continue
-
-		func( child )
-	}
+	for ( local child = player.FirstMoveChild(); child; child = child.NextMovePeer() )
+		if ( !weapons_only || child instanceof CBaseCombatWeapon )
+			func( child )
 }
 
 function PopExtUtil::IsProjectileWeapon( wep ) {
