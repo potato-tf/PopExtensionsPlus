@@ -1542,9 +1542,9 @@ PopExtTags.TagFunctions <- {
 		local viewangle 		  = "viewangle" in args ? args.viewangle : bot.EyeAngles()
 		local velocity 			  = "velocity" in args ? args.velocity : bot.GetAbsVelocity()
 
-		local spawn_point = null
+		local spawn_point = Vector()
 
-		if ( typeof where == "string" && FindByName( null, where ) != null )
+		if ( typeof where == "string" && FindByName( null, where ) )
 			spawn_point = FindByName( null, where ).GetOrigin()
 		else
 			spawn_point = PopExtUtil.KVStringToVectorOrQAngle( where )
@@ -2160,7 +2160,6 @@ PopExtTags.TagFunctions <- {
 					cooldowntime = Time() + cooldown
 				}
 			}
-			scope[ funcname ] <- ChangeAttributesThink
 			PopExtUtil.AddThink( bot, funcname )
 		}
 	}

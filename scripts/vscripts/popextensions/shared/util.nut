@@ -2225,43 +2225,25 @@ function PopExtUtil::AddThink( ent, func ) {
 	}
 
 	// setup thinktable if it doesn't exist
-	if ( !( thinktable_name in scope ) ) {
-
+	if ( !( thinktable_name in scope ) )
 		scope[ thinktable_name ] <- {}
-		scope.__thinktable_name <- thinktable_name
-	}
+
+	scope.__thinktable_name <- thinktable_name
 
 	if ( !( thinktable_func in scope ) ) {
 
-		// scope[ thinktable_func ] <- function() {
+		scope[ thinktable_func ] <- function() {
 
-		// 	foreach ( name, _func in scope[ thinktable_name ] || {} )
-		// 		_func.call( scope )
+			foreach ( name, _func in scope[ thinktable_name ] || {} )
+				_func.call( scope )
 
-		// 	return -1
-		// }
-		// try { _AddThinkToEnt( ent, thinktable_func ) } catch ( e ) { AddThinkToEnt( ent, thinktable_func ) }
+			return -1
+		}
 
-		local str = format( @"
+        // fix anonymous function declaration
+        compilestring( format( @"local _%s = %s; function %s() { _%s() }", thinktable_func, thinktable_func, thinktable_func, thinktable_func ) ).call(scope)
 
-			local ent = EntIndexToHScript( %d )
-			local func_name = ""%s""
-			local scope = ent.GetScriptScope()
-
-			function %s() {
-
-				foreach ( name, func in scope.%s || {} )
-					func.call( scope )
-
-				return -1
-			}
-			scope[ func_name ] <- %s
-
-			try { _AddThinkToEnt( ent, func_name ) } catch ( e ) { AddThinkToEnt( ent, func_name ) }
-
-		", ent.entindex(), thinktable_func, thinktable_func, thinktable_name, thinktable_func )
-
-		compilestring(str)()
+		try { _AddThinkToEnt( ent, thinktable_func ) } catch ( e ) { AddThinkToEnt( ent, thinktable_func ) }
 	}
 	// only initialize blank think setup for empty string
 	if ( func == "" )
@@ -2269,7 +2251,6 @@ function PopExtUtil::AddThink( ent, func ) {
 
 	// add think function to thinktable
 	else if ( func ) {
-		if (typeof func == "function")
 
 		if ( endswith( typeof func, "function" ) ) {
 
@@ -2302,7 +2283,7 @@ function PopExtUtil::RemoveThink( ent, func = null ) {
 	local scope = GetEntScope( ent )
 
 	if ( !( "__thinktable_name" in scope ) ) {
-		_AddThinkToEnt( ent, null )
+		SetPropString( ent, "m_iszScriptThinkFunction", "" )
 		return
 	}
 
