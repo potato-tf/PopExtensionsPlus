@@ -2649,17 +2649,17 @@ MissionAttributes.Attrs <- {
 					local player = GetPlayerFromUserID( params.userid )
 					local scope = player.GetScriptScope()
 					local curmetal = GetPropIntArray( player, STRING_NETPROP_AMMO, TF_AMMO_METAL )
+					local buildings = "buildings" in scope ? scope.buildings : [-1, array( 2 ), -1]
 
-					if ( !( "buildings" in scope ) ) scope.buildings <- [-1, array( 2 ), -1]
 					// don't drain metal if this buildings entindex exists in the players scope
 					if ( scope.buildings.find( params.index ) != null || scope.buildings[1].find( params.index ) != null ) return
 
 					// add entindexes to player scope
 					if ( params.object == OBJ_TELEPORTER )
 						if ( GetPropInt( EntIndexToHScript( params.index ), "m_iTeleportType" ) == TTYPE_ENTRANCE )
-							scope.buildings[1][0] = params.index
+							buildings[1][0] = params.index
 						else
-							scope.buildings[1][1] = params.index
+							buildings[1][1] = params.index
 					else
 						scope.buildings[params.object] = params.index
 

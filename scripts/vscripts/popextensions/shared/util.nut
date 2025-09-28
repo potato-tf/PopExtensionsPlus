@@ -350,7 +350,7 @@ function PopExtUtil::PurgeGameString( str, urgent = false ) {
 function PopExtUtil::SpawnEnt( ... ) {
 
 	local classname = vargv[0]
-	local name = vargv[1]
+	local name = 1 in vargv ? vargv[1] : UniqueString() + classname
 	local temp = 2 in vargv ? vargv[2] : false
 	local args = 3 in vargv ? vargv.slice( 3 ) : null
 
