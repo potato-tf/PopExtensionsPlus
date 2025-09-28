@@ -2251,23 +2251,9 @@ MissionAttributes.Attrs <- {
 					PopExtUtil.RemoveThink( player, "ReverseMVMCurrencyThink" )
 					PopExtUtil.RemoveThink( player, "ReverseMVMPackThink" )
 					PopExtUtil.RemoveThink( player, "ReverseMVMDrainAmmoThink" )
-
-					local cls = player.GetPlayerClass()
-					local team = i + 1 < max_team_size && player.GetTeam() != TF_TEAM_PVE_DEFENDERS ? TF_TEAM_PVE_DEFENDERS : TEAM_SPECTATOR
-
-					if ( player.GetTeam() == TF_TEAM_PVE_DEFENDERS )
-
-						PopExtUtil.ScriptEntFireSafe( player, format( @"
-
-							self.ForceChangeTeam( %d, false )
-							PopExtUtil.ForceChangeClass( self, %d )
-							self.ForceRespawn()
-
-						", team, cls, 0.1 ) )
 				}
 
 				POP_EVENT_HOOK( "post_inventory_application", "ReverseMVMSpawn", null, EVENT_WRAPPER_MISSIONATTR )
-
 				return
 			}
 
@@ -2772,19 +2758,26 @@ MissionAttributes.Attrs <- {
 			}
 		}, EVENT_WRAPPER_MISSIONATTR )
 
-		// POP_EVENT_HOOK( "player_team", "BlockSpectator", function( params ) {
+		POP_EVENT_HOOK( "player_team", "BlockSpectator", function( params ) {
 
-		// 	local player = GetPlayerFromUserID( params.userid )
-		// 	if ( player.IsBotOfType( TF_BOT_TYPE ) ) return
+			local player = GetPlayerFromUserID( params.userid )
 
-		// 	if (
-		// 		player && player.IsValid()
-		// 		&& params.team == TEAM_SPECTATOR
-		// 		&& params.oldteam == TF_TEAM_PVE_INVADERS
-		// 	) {
-		// 		PopExtUtil.ScriptEntFireSafe( player, "PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_INVADERS, true )", SINGLE_TICK )
-		// 	}
-		// }, EVENT_WRAPPER_MISSIONATTR )
+			if ( !player || !player.IsValid() || player.IsBotOfType( TF_BOT_TYPE ) ) 
+				return
+
+			if ( params.team == TEAM_SPECTATOR ) {
+
+				local cls = player.GetPlayerClass()
+
+				PopExtUtil.ScriptEntFireSafe( player, format( @"
+
+					PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_DEFENDERS, true )
+					PopExtUtil.ForceChangeClass( self, %d )
+					self.ForceRespawn()
+
+				", cls ), 0.1, null, null, true )
+			}
+		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 
 	function HumansMustJoinTeam( value ) {
