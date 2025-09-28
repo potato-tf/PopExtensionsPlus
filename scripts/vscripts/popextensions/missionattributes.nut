@@ -2220,7 +2220,18 @@ MissionAttributes.Attrs <- {
 		local player_count = 0
 		function MissionAttributes::ThinkTable::ReverseMVMThink() {
 
+			local cleanup = !("ReverseMvM" in MissionAttributes)
+
 			foreach ( i, player in PopExtUtil.HumanArray ) {
+
+				if ( cleanup ) {
+
+					PopExtUtil.RemoveThink( player, "ReverseMVMLaserThink" )
+					PopExtUtil.RemoveThink( player, "ReverseMVMCurrencyThink" )
+					PopExtUtil.RemoveThink( player, "ReverseMVMPackThink" )
+					PopExtUtil.RemoveThink( player, "ReverseMVMDrainAmmoThink" )
+					continue
+				}
 
 				if ( player_count + 1 > max_team_size && player.GetTeam() != TEAM_SPECTATOR ) {
 
@@ -2228,6 +2239,15 @@ MissionAttributes.Attrs <- {
 					continue
 				}
 				player_count = i + 1
+			}
+
+			if ( cleanup ) {
+
+				POP_EVENT_HOOK("post_inventory_application", "ReverseMVMSpawn", null , EVENT_WRAPPER_MISSIONATTR )
+				delete MissionAttributes.DeployBombStart
+				delete MissionAttributes.DeployBombStop
+				delete MissionAttributes.ThinkTable.ReverseMVMThink
+				return
 			}
 
 			// Readying up starts the round
@@ -2250,20 +2270,6 @@ MissionAttributes.Attrs <- {
 
 			if ( player.IsBotOfType( TF_BOT_TYPE ) || player.IsEFlagSet( EFL_CUSTOM_WEARABLE ) )
 				return
-
-			if ( "MissionAttributes" in ROOT && !("ReverseMvM" in MissionAttributes) ) {
-
-				delete MissionAttributes.ThinkTable.ReverseMVMThink
-				delete MissionAttributes.DeployBombStart
-				delete MissionAttributes.DeployBombStop
-
-				PopExtUtil.RemoveThink( player, "ReverseMVMLaserThink" )
-				PopExtUtil.RemoveThink( player, "ReverseMVMCurrencyThink" )
-				PopExtUtil.RemoveThink( player, "ReverseMVMPackThink" )
-				PopExtUtil.RemoveThink( player, "ReverseMVMDrainAmmoThink" )
-				POP_EVENT_HOOK("post_inventory_application", "ReverseMVMSpawn", null , EVENT_WRAPPER_MISSIONATTR )
-				return
-			}
 
 			local scope = player.GetScriptScope()
 
