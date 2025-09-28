@@ -2765,9 +2765,9 @@ MissionAttributes.Attrs <- {
 			if ( !player || !player.IsValid() || player.IsBotOfType( TF_BOT_TYPE ) ) 
 				return
 
-			if ( params.team == TEAM_SPECTATOR ) {
+			local cls = player.GetPlayerClass()
 
-				local cls = player.GetPlayerClass()
+			if ( params.team == TEAM_SPECTATOR ) {
 
 				PopExtUtil.ScriptEntFireSafe( player, format( @"
 
@@ -2776,6 +2776,22 @@ MissionAttributes.Attrs <- {
 					self.ForceRespawn()
 
 				", cls ), 0.1, null, null, true )
+			}
+
+			if ( !("ReverseMVM" in MissionAttributes.CurAttrsPre) && !("ReverseMVM" in MissionAttributes.CurAttrs) ) {
+
+				foreach ( player in PopExtUtil.HumanArray ) {
+
+					PopExtUtil.ScriptEntFireSafe( player, format( @"
+
+						PopExtUtil.ChangePlayerTeamMvM( self, TF_TEAM_PVE_DEFENDERS, true )
+						PopExtUtil.ForceChangeClass( self, %d )
+						self.ForceRespawn()
+
+					", cls ), 0.1, null, null, true )
+				}
+
+				POP_EVENT_HOOK( "player_team", "BlockSpectator", null, EVENT_WRAPPER_MISSIONATTR )
 			}
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
