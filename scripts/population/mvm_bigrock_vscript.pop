@@ -16,10 +16,9 @@ WaveSchedule
 	{
 		Objective Engineer
 
-		InitialCooldown 0
+		InitialCooldown 1
 		Where spawnbot
 		Where spawnbot_mission_sniper
-		RandomSpawn 1
 		BeginAtWave 2
 		RunForThisManyWaves 1
 		CooldownTime 1
