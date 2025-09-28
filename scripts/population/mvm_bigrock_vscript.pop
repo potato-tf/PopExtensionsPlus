@@ -763,7 +763,7 @@ WaveSchedule
 				Tag "popext_customattr{attr = `wet immunity`, value = 1}"
 				Tag "popext_customattr{attr = `custom projectile model`, value = `models/player/heavy.mdl`}"
 				Tag "popext_weaponresist{weapon = ID_IRON_CURTAIN, amount = 20}" //20x damage from iron curtain
-				Tag "popext_mobber"
+				// Tag "popext_mobber"
 				Tag "popext_setskin{ skin = 0 }" //red skin
 				Tag "popext_fireweapon{ button = IN_ATTACK2 }"
 				Tag "popext_rocketcustomtrail{name = `eyeboss_projectile`}"
