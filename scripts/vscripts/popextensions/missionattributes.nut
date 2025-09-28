@@ -2247,8 +2247,6 @@ MissionAttributes.Attrs <- {
 
 				foreach ( i, player in PopExtUtil.HumanArray ) {
 
-					printl( player )
-
 					PopExtUtil.RemoveThink( player, "ReverseMVMLaserThink" )
 					PopExtUtil.RemoveThink( player, "ReverseMVMCurrencyThink" )
 					PopExtUtil.RemoveThink( player, "ReverseMVMPackThink" )
@@ -2256,18 +2254,16 @@ MissionAttributes.Attrs <- {
 
 					local cls = player.GetPlayerClass()
 					local team = i + 1 < max_team_size && player.GetTeam() != TF_TEAM_PVE_DEFENDERS ? TF_TEAM_PVE_DEFENDERS : TEAM_SPECTATOR
-					printl(team)
-
 
 					if ( player.GetTeam() == TF_TEAM_PVE_DEFENDERS )
 
 						PopExtUtil.ScriptEntFireSafe( player, format( @"
 
 							self.ForceChangeTeam( %d, false )
-							PopExtUtil.ForceChangeClass( self, TF_CLASS_SCOUT )
+							PopExtUtil.ForceChangeClass( self, %d )
 							self.ForceRespawn()
 
-						", team, 0.1 ) )
+						", team, cls, 0.1 ) )
 				}
 
 				POP_EVENT_HOOK( "post_inventory_application", "ReverseMVMSpawn", null, EVENT_WRAPPER_MISSIONATTR )
