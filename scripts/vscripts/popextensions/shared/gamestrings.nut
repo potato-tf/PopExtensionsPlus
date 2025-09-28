@@ -42,7 +42,7 @@ function PopGameStrings::_OnDestroy() {
 
     local last_run = StringFixGenerator()
 
-    while ( resume last_run ) continue
+    while ( last_run.getstatus() != "dead" ) resume last_run
 
     ::SetPropString                  <- NetProps.SetPropString.bindenv( NetProps )
     ::SetPropStringArray             <- NetProps.SetPropStringArray.bindenv( NetProps )
@@ -144,7 +144,7 @@ function PopGameStrings::StringFixGenerator() {
         if ( !( i % 4 ) )
             yield ent
 
-        if ( !ent || !ent.IsValid() )
+        if ( !ent || !ent.IsValid() || GetPropBool( ent, STRING_NETPROP_PURGESTRINGS ) )
             continue
 
         local classname = ent.GetClassname()
