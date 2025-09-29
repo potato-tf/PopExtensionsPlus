@@ -1768,7 +1768,7 @@ PopExtAttributes.Attrs <- {
 
 					if ( params.buff_owner == PopExtUtil.PlayerTable[ player ] ) {
 						// player.RemoveCondEx( buff_conds[ buff_type ], true )
-						player.AddCondEx( value, item.GetAttribute( "increase buff duration", 1.0 ) * 10.0, self )
+						player.AddCondEx( value, item.GetAttribute( "increase buff duration", 1.0 ) * 10.0, player )
 					}
 				}, EVENT_WRAPPER_CUSTOMATTR )
 			break
@@ -1783,7 +1783,7 @@ PopExtAttributes.Attrs <- {
 						return
 
 					player.RemoveCondEx( buff_conds[ buff_type ], true )
-					player.AddCondEx( value, 0.33, self )
+					player.AddCondEx( value, 0.33, player )
 
 					if ( buff_type == 8 )
 						player.RemoveCondEx( TF_COND_CANNOT_SWITCH_FROM_MELEE, true )
@@ -1811,13 +1811,13 @@ PopExtAttributes.Attrs <- {
 						if ( player.InCond( cond ) ) {
 
 							player.RemoveCondEx( cond, true )
-							player.AddCondEx( value, 0.33, self )
+							player.AddCondEx( value, 0.33, player )
 							local heal_target = player.GetHealTarget()
 
 							if ( heal_target != null ) {
 
 								heal_target.RemoveCondEx( cond, true )
-								heal_target.AddCondEx( value, 0.33, self )
+								heal_target.AddCondEx( value, 0.33, player )
 							}
 							break
 						}
