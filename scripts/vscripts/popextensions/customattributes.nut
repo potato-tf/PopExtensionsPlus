@@ -1751,7 +1751,7 @@ PopExtAttributes.Attrs <- {
 		local buff_type = item.GetAttribute( "mod soldier buff type", 0.0 )
 		local item_classname = item.GetClassname()
 
-		if ( 17 in item_classname && (item_classname == "tf_weapon_charged_smg" || startswith( item_classname, "tf_weapon_lunchbox" ) ) )
+		if ( 17 in item_classname && ( item_classname == "tf_weapon_charged_smg" || startswith( item_classname, "tf_weapon_lunchbox" ) ) )
 			buff_type = PopExtUtil.GetItemIndex( item ) == ID_BUFFALO_STEAK_SANDVICH ? 8 : 7
 
 		local event_hook_string = format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() )
@@ -1763,6 +1763,7 @@ PopExtAttributes.Attrs <- {
 			case 3:
 
 				item.AddAttribute( "mod soldier buff type", 4, -1 ) // dummy buff type, does nothing
+				item.ReapplyProvision()
 
 				POP_EVENT_HOOK( "deploy_buff_banner", format( "EffectCondOverride_%d_%d", PopExtUtil.PlayerTable[ player ], item.entindex() ), function( params ) {
 
