@@ -1271,8 +1271,27 @@ PopExtTags.TagFunctions <- {
 
 	function popext_giveweapon(bot, args) {
 
-		local weapon = CreateByClassname( args.weapon ? args.weapon : args.type )
-		PopExtUtil.InitEconItem( weapon, "id" in args ? args.id.tointeger() : args.cooldown.tointeger() )
+		local weparg = "weapon" in args ? args.weapon : args.type
+		local id     = "id" in args     ? args.id.tointeger() : args.cooldown.tointeger() 
+
+		// support multiclass classnames, but throw a warning.  
+		// multi-class items are a special case where the game handles 'saxxy' or 'tf_weapon_shotgun' differently to set up class-specific behavior
+		// we can mimic this with a lookup table, but newer scripters should still be discouraged from doing this to avoid confusion
+		if ( weparg == "saxxy" || weparg == "tf_weapon_shotgun" ) {
+
+			local item_info = PopExtItems[weparg == "saxxy" ? "Saxxy" : "TF_WEAPON_SHOTGUN_PRIMARY"]
+			local class_string = PopExtUtil.Classes[bot.GetPlayerClass()]
+
+			if ( !(class_string in item_info.animset) )
+				weparg = "tf_weapon_shotgun_soldier"
+			else
+				weparg = item_info.item_class[item_info.animset.find(class_string)]
+
+			PopExtMain.Error.GenericWarning( "multi-class classnames (saxxy, tf_weapon_shotgun) are discouraged, use the stock classname (" + weparg + ") instead" )
+		}
+
+		local weapon = CreateByClassname( weparg )
+		PopExtUtil.InitEconItem( weapon, id )
 		weapon.SetTeam( bot.GetTeam() )
 
 		if ( "attrs" in args ) {

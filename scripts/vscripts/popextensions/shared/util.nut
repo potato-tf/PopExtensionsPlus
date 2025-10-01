@@ -1885,7 +1885,9 @@ function PopExtUtil::RemovePlayerWearables( player ) {
 
 	for ( local wearable = player.FirstMoveChild(); wearable; wearable = wearable.NextMovePeer() ) {
 
-		if ( wearable.GetClassname() != "tf_wearable" ) 
+		if ( wearable instanceof CBaseCombatWeapon )
+			continue 
+		else if ( !(wearable instanceof CEconEntity) ) 
 			continue
 
 		SetPropBool( wearable, STRING_NETPROP_PURGESTRINGS, true )
@@ -1900,6 +1902,18 @@ function PopExtUtil::GiveWeapon( player, class_name, item_id ) {
 
 		CTFBot.GenerateAndWearItem.call( player, item_id )
 		return
+	}
+	else if ( class_name == "saxxy" || class_name == "tf_weapon_shotgun" ) {
+
+		local item_info = PopExtItems[class_name == "saxxy" ? "Saxxy" : "TF_WEAPON_SHOTGUN_PRIMARY"]
+		local class_string = PopExtUtil.Classes[player.GetPlayerClass()]
+
+		if ( !(class_string in item_info.animset) )
+			class_name = "tf_weapon_shotgun_soldier"
+		else
+			class_name = item_info.item_class[item_info.animset.find(class_string)]
+
+		PopExtMain.Error.GenericWarning( "multi-class classnames (saxxy, tf_weapon_shotgun) are discouraged, use the stock classname (" + class_name + ") instead" )
 	}
 	local weapon = CreateByClassname( class_name )
 	InitEconItem( weapon, item_id )

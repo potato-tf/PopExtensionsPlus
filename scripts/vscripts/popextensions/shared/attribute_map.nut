@@ -1,5 +1,8 @@
 // Clunky horrible update procedure
 // - Copy/paste the "attributes" table from items_game.nut into the FromItemsGame table (replace existing data)
+// - use find/replace to convert to squirrel table format
+// - `script PopExtItems.GenerateItemAttributeTable()`
+// - paste results here
 
 local FromItemsGame = {
 	[1] = {
