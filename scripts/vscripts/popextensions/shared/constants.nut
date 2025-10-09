@@ -667,7 +667,7 @@ const INT_MAX   = 2147483647
 // now re-fold the entire constant table into the root table
 // this is done in a separate loop so our custom constants are also available in the root table
 // check a random constant to see if we've already re-scoped them to root
-if ( !( "STEP_HEIGHT" in ROOT ) )
+if ( !( "POPEXT_LOG_DEBUG" in ROOT ) )
 	foreach( k, v in CONST )
 		ROOT[k] <- v
 
