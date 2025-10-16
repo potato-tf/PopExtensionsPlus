@@ -412,8 +412,8 @@ PopExtUtil.GameRoundWin 	 <- PopExtUtil.SpawnEnt( "game_round_win", "__popext_ro
 PopExtUtil.RespawnOverride   <- PopExtUtil.SpawnEnt( "trigger_player_respawn_override", "__popext_respawnoverride" )
 PopExtUtil.TriggerParticle   <- PopExtUtil.SpawnEnt( "trigger_particle", "__popext_triggerparticle" )
 
-PopExtUtil.CommentaryNode	 <- @() FindByName( null, "__popext_hide_fcvar_notify" ) ||
-								PopExtUtil.SpawnEnt( "point_commentary_node", "__popext_hide_fcvar_notify", true, "commentaryfile", " ", "commentaryfilenohdr", " " )
+PopExtUtil.CommentaryNode	 <- @() FindByName( null, "__popext_commentary_node" ) ||
+								PopExtUtil.SpawnEnt( "point_commentary_node", "__popext_commentary_node", true, "commentaryfile", " ", "commentaryfilenohdr", " " )
 
 PopExtUtil.PopInterface 	 <- FindByClassname( null, "point_populator_interface" ) ||
 								PopExtUtil.SpawnEnt( "point_populator_interface", "__popext_pop_interface" )
@@ -2803,10 +2803,10 @@ function PopExtUtil::SetRedMoney( value ) {
 	}, EVENT_WRAPPER_UTIL )
 }
 
-function PopExtUtil::SetConvar( convar, value, duration = 0, hide_chat_message = true ) {
+function PopExtUtil::SetConvar( convar, value, duration = 0, hide_chat_message = false ) {
 
 	// TODO: this hack doesn't seem to work.
-	local hide_fcvar_notify = hide_chat_message ? CommentaryNode() : null
+	local commentary_node = hide_chat_message ? CommentaryNode() : null
 
 	// save original values to restore later
 	if ( !( convar in ConVars ) ) ConVars[convar] <- GetStr( convar )
@@ -2816,23 +2816,23 @@ function PopExtUtil::SetConvar( convar, value, duration = 0, hide_chat_message =
 		ScriptEntFireSafe( "__popext_util", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
 
 	if ( duration > 0 )
-		ScriptEntFireSafe( "__popext_util", format( "PopExtUtil.SetConvar( `%s`,`%s` )", convar, ConVars[convar].tostring() ), duration )
+		ScriptEntFireSafe( "__popext_util", format( "SetConvar( `%s`,`%s` )", convar, ConVars[convar].tostring() ), duration )
 
-	if ( hide_fcvar_notify )
-		EntFireByHandle( hide_fcvar_notify, "Kill", "", 1, null, null )
+	if ( commentary_node )
+		EntFireByHandle( commentary_node, "Kill", "", 1, null, null )
 }
 
 function PopExtUtil::ResetConvars( hide_chat_message = true ) {
 
-	local hide_fcvar_notify = hide_chat_message ? CommentaryNode() : null
+	local commentary_node = hide_chat_message ? CommentaryNode() : null
 
 	foreach ( convar, value in ConVars )
 		ScriptEntFireSafe( "BigNet", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
 
 	ConVars.clear()
 
-	if ( hide_fcvar_notify )
-		EntFireByHandle( hide_fcvar_notify, "Kill", "", -1, null, null )
+	if ( commentary_node )
+		EntFireByHandle( commentary_node, "Kill", "", -1, null, null )
 }
 
 function PopExtUtil::ValidatePlayerTables() {
