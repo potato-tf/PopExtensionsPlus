@@ -35,7 +35,7 @@ function PopGameStrings::_OnDestroy() {
 
     foreach ( func in entio_funcs ) {
 
-        local copy_name = format( "_%s", func )
+        local copy_name = "_" + func
         ROOT[ func ] <- ROOT[ copy_name ]
         delete ROOT[ copy_name ]
     }
@@ -51,16 +51,16 @@ function PopGameStrings::_OnDestroy() {
     if ( "_SpawnEntityFromTable" in ROOT ) {
 
         ::SpawnEntityFromTable <- _SpawnEntityFromTable
-        delete _SpawnEntityFromTable
+        // delete _SpawnEntityFromTable
     }
-
-    if ( "PURGE_STRINGS" in ROOT )
-        delete PURGE_STRINGS
 }
 
 function PopGameStrings::AddStrings( ... ) {
 
     local arg_len = vargv.len()
+
+    if ( arg_len == 1 && typeof vargv[0] == "array" )
+        vargv = vargv[0]
 
     for ( local i = 0, str; i < arg_len; str = vargv[i], i += 2 ) {
 
@@ -83,6 +83,7 @@ function PopGameStrings::PurgeString( str ) {
     SetPropString( temp, STRING_NETPROP_NAME, str )
     SetPropBool( temp, STRING_NETPROP_PURGESTRINGS, true )
     temp.Kill()
+
     if ( "StringTable" in this && str in StringTable )
         delete StringTable[ str ]
 }
@@ -150,7 +151,7 @@ function PopGameStrings::StringFixGenerator() {
         local classname = ent.GetClassname()
         SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
         PopExtMain.Error.DebugLog(format( "GAME STRINGS : %s : %d", ent.tostring(), i ))
-        StringTable[ ent.GetScriptId() ] <- null
+        AddStrings( ent.GetScriptId() )
     }
 }
 

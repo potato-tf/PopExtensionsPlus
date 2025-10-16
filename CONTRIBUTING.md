@@ -95,7 +95,7 @@ Only use ternaries and lambda functions where appropriate.  E.g. simple yes/no c
 - various strings are cached as constants for performance or ease of writing, notably netprop strings
 - `PopExtUtil.AllNavAreas`, a pre-collected table of all nav areas for nav related code
 - Always use folded constant names and API functions (e.g. SetPropString instead of NetProps.SetPropString)
-- format() > string concatenation
+- format() > string concatenation ONLY if > 2 concatenations are required.
 
 
 ### Single-line control flow:

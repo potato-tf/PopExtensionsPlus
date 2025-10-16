@@ -391,7 +391,7 @@ function PopExtUtil::SpawnEnt( ... ) {
 
 	SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
 	if ( "PopGameStrings" in ROOT ) {
-		PopGameStrings.StringTable[ ent.GetClassname() ] <- ent.GetScriptId()
+		PopGameStrings.AddStrings( ent.GetClassname(), ent.GetScriptId() )
 	}
 
 	return ent
@@ -1049,7 +1049,7 @@ function PopExtUtil::DoExplanation( message, print_color = COLOR_YELLOW, message
 	local newlines = split( message, "|" )
 
 	foreach ( n in newlines )
-		if ( n.len() > 0 ) {
+		if ( n.len() ) {
 			strarray.append( n )
 			if ( !startswith( n, "PAUSE" ) && !sync_chat_with_game_text )
 				ClientPrint( null, 3, format( "\x07%s %s\x07%s %s", print_color, message_prefix, TF_COLOR_DEFAULT, n ) )
@@ -1062,12 +1062,12 @@ function PopExtUtil::DoExplanation( message, print_color = COLOR_YELLOW, message
 		if ( textcooldown > Time() ) return
 
 		i++
-		if ( i == strarray.len() ) {
+		if ( !(i in strarray) ) {
 
 			SetPropString( txtent, "m_iszMessage", "" )
 			txtent.AcceptInput( "Display", "", null, null )
 
-			strarray.apply( @( str ) PopGameStrings.StringTable[ str ] <- "game_text" )
+			PopGameStrings.AddStrings( strarray )
 			txtent.Kill()
 			return
 		}
@@ -2044,19 +2044,35 @@ function PopExtUtil::StringReplace( str, findwhat, replace ) {
 	return returnstring
 }
 
-function PopExtUtil::CharReplace(str, findwhat, replace, firstonly = false) {
+function PopExtUtil::CharReplace( str, findwhat, replace, firstonly = false ) {
 
 	local returnstring = ""
 	local strlen = str.len()
-	local type = typeof findwhat
-	if ( 6 in type && type[0] == 'i' && type[6] == 'r' )
-		findwhat = findwhat.tochar()
 
-	// local charlist 	= array(strlen, "").apply( @(c, i) c = str[i] == findwhat[0] ? replace[0] : c )
-	local charlist 	= array(strlen, "").map( @(i, c) str[i] == findwhat[0] ? replace[0] : c )
+	if ( typeof findwhat == "string" )
+		findwhat = findwhat[0]
+	
+	if ( typeof replace == "integer" )
+		replace = replace.tochar()
 
-	foreach( c in charlist )
+	// one-liner version
+	// ( array(strlen, "").apply( @(i, c) str[i] == findwhat ? replace : c ) ).apply( @(c) returnstring += c.tochar() )
+
+	// local charlist = array(strlen, "").apply( @(c, i) str[i] == findwhat ? replace : c )
+
+	foreach( i, c in str ) {
+
+		if ( c == findwhat ) {
+
+			returnstring += replace
+
+			if ( firstonly )
+				return returnstring + str.slice( i + 1 )
+
+			continue
+		}
 		returnstring += c.tochar()
+	}
 
 	return returnstring
 }

@@ -145,7 +145,10 @@ if ( !( "EntAdditions" in ROOT ) ) {
 
                         local takedamage = GetPropInt( activator, "m_takedamage" )
                         SetPropEntity( ent, "m_hPlayer", null )
-                        EntFireByHandle( activator, "RunScriptCode", format( "SetPropInt( self, `m_takedamage`, %d )", takedamage ), SINGLE_TICK, null, null )
+                        local cmd = "SetPropInt( self, `m_takedamage`, " + takedamage + " )"
+                        EntFireByHandle( activator, "RunScriptCode", cmd, SINGLE_TICK, null, null )
+                        if ( "PopGameStrings" in ROOT )
+                            PopGameStrings.AddStrings( cmd )
                     }
                     if ( ent.IsEFlagSet( EFL_IS_BEING_LIFTED_BY_BARNACLE ) )
                         return true
@@ -177,7 +180,12 @@ if ( !( "EntAdditions" in ROOT ) ) {
                         SetPropEntity( ent, "m_hPlayer", activator )
                         local life_state = GetPropInt( activator, "m_lifeState" )
                         SetPropInt( activator, "m_lifeState", LIFE_ALIVE )
-                        EntFireByHandle( activator, "RunScriptCode", format( "SetPropInt( self, `m_lifeState`, %d )", life_state ), SINGLE_TICK, null, null )
+
+                        local cmd = "SetPropInt( self, `m_lifeState`, " + life_state + " )"
+                        EntFireByHandle( activator, "RunScriptCode", cmd, SINGLE_TICK, null, null )
+
+                        if ( "PopGameStrings" in ROOT )
+                            PopGameStrings.AddStrings( cmd )
                     }
 
                     if ( spawnflags & 256 ) {
@@ -192,7 +200,12 @@ if ( !( "EntAdditions" in ROOT ) ) {
                             local life_state = GetPropInt( player, "m_lifeState" )
                             SetPropInt( player, "m_lifeState", LIFE_ALIVE )
                             ent.AcceptInput( "Disable", "", player, player )
-                            EntFireByHandle( player, "RunScriptCode", format( "SetPropInt( self, `m_lifeState`, %d )", life_state ), SINGLE_TICK, null, null )
+
+                            local cmd = "SetPropInt( self, `m_lifeState`, " + life_state + " )"
+                            EntFireByHandle( player, "RunScriptCode", cmd, SINGLE_TICK, null, null )
+
+                            if ( "PopGameStrings" in ROOT )
+                                PopGameStrings.AddStrings( cmd )
 
                         }
                         ent.RemoveEFlags( EFL_IS_BEING_LIFTED_BY_BARNACLE )
@@ -279,19 +292,18 @@ if ( !( "EntAdditions" in ROOT ) ) {
         }
         Events = {
 
-            function OnGameEvent_recalculate_holidays( _ ) {
+            function _DisableAll() {
 
-                if ( GetRoundState() == GR_STATE_GAME_OVER )
-                    EntFire( "player", "RunScriptCode", "DoEntFire( `point_viewcontrol`, `Disable`, ``, -1, self, self )" )
+                local cmd = "DoEntFire( `point_viewcontrol`, `Disable`, ``, -1, self, self )"
+                EntFire( "player", "RunScriptCode", cmd )
+
+                if ( "PopGameStrings" in ROOT )
+                    PopGameStrings.AddStrings( cmd )
             }
 
-            function OnGameEvent_round_start( _ ) {
-                EntFire( "player", "RunScriptCode", "DoEntFire( `point_viewcontrol`, `Disable`, ``, -1, self, self )" )
-            }
-
-            function OnGameEvent_teamplay_round_start( _ ) {
-                EntFire( "player", "RunScriptCode", "DoEntFire( `point_viewcontrol`, `Disable`, ``, -1, self, self )" )
-            }
+            function OnGameEvent_recalculate_holidays( _ ) { if ( GetRoundState() == GR_STATE_GAME_OVER ) _DisableAll() }
+            function OnGameEvent_round_start( _ ) { _DisableAll() }
+            function OnGameEvent_teamplay_round_start( _ ) { _DisableAll() }
         }
     }
     __CollectGameEventCallbacks( EntAdditions.Events )
@@ -310,6 +322,7 @@ function OnPostSpawn() {
 
     local classname = self.GetClassname()
     local spawnflags = GetPropInt( self, "m_spawnflags" )
+
     if ( classname in EntAdditions.OnPostSpawn )
         EntAdditions.OnPostSpawn[classname]( self, spawnflags )
 }

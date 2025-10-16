@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "10.01.2025.1"
+::POPEXT_VERSION <- "10.16.2025.1"
 
 local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -14,12 +14,12 @@ local function Include( path, continue_on_error = false, include_only_if_missing
 
 	try {
 
-		IncludeScript( format( "popextensions/%s", path ), getroottable() )
+		IncludeScript( "popextensions/" + path, getroottable() )
 		return true
 	}
 	catch( e ) {
 
-		local msg = format( "%s\n", e )
+		local msg = e + "\n"
 		continue_on_error ? error( msg ) : Assert( false, msg )
 		return false
 	}
@@ -68,8 +68,8 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 
 	local scope = ent.GetScriptScope()
 
-	scope_ref  =  scope_ref  || format( "%sScope", name )
-	entity_ref =  entity_ref || format( "%sEntity", name )
+	scope_ref  =  scope_ref  || name + "Scope"
+	entity_ref =  entity_ref || name + "Entity"
 	ROOT[ scope_ref ]  <- scope
 	ROOT[ entity_ref ] <- ent
 
@@ -78,7 +78,7 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 		// Add the think function directly to the entity
 		if ( endswith( typeof think_func, "function" ) ) {
 
-			local think_name = think_func.getinfos().name || format( "%s_Think", name )
+			local think_name = think_func.getinfos().name || name + "_Think"
 
 			scope[ think_name ] <- think_func
 			try { _AddThinkToEnt( ent, think_name ) } catch (_) { AddThinkToEnt( ent, think_name ) }
@@ -88,7 +88,7 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 		scope.ThinkTable <- {}
 
 		// Always create a named function to satisfy the perf counter
-		compilestring( format( @"function %s() { foreach ( func in ThinkTable || {} ) func(); return -1 }", think_func ) ).call( scope )
+		compilestring( "function " + think_func + "() { foreach ( func in ThinkTable || {} ) func(); return -1 }" ).call( scope )
 
 		try { _AddThinkToEnt( ent, think_func ) } catch (_) { AddThinkToEnt( ent, think_func ) }
 	}
@@ -163,6 +163,9 @@ POPEXT_CREATE_SCOPE( "__popext_main", "PopExtMain", "PopExtMainEntity", "PopExtM
 local objres = FindByClassname( null, "tf_objective_resource" )
 ::__popname <- GetPropString( objres, STRING_NETPROP_POPNAME )
 
+// wrapper so it shows up in the perf warnings instead of just "main"
+function PopExtMain::_popext_collectgarbage() { collectgarbage() }
+
 local unload_cleanup = [
 	"__popname"
 	"PopExtItems"
@@ -205,7 +208,7 @@ PopExtMain.Error <- {
 			ClientPrint( null, HUD_PRINTTALK, POPEXT_LOG_PARSE_ERROR )
 		}
 		if ( error_level == POPEXT_LOG_FATAL || assert ) {
-			RaiseException( format( "%s.\n", error_msg ) )
+			RaiseException( error_msg + ".\n" )
 		}
 		else {
 			ClientPrint( null, HUD_PRINTTALK, format( "%s %s.\n", POPEXT_LOG_ERROR, error_msg ) )
@@ -504,7 +507,9 @@ POP_EVENT_HOOK( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
 		if ( bot.IsValid() && bot.GetTeam() == TF_TEAM_PVE_DEFENDERS )
 			bot.ForceChangeTeam( TEAM_SPECTATOR, true )
 
-	collectgarbage()
+	// TODO: this seemingly helps with script performance slowly drifting up on a long-running map
+	// There were also other times when this hurt performance, memory caching stuff maybe?
+	EntFire( "__popext_main", "CallScriptFunction", "_popext_collectgarbage" )
 
 	// same pop or manual cleanup flag set, don't run
 	if ( __popname == GetPropString( objres, STRING_NETPROP_POPNAME ) || PopExtConfig.ManualCleanup )
