@@ -57,7 +57,8 @@ function PopExtPopulator::DoEntityIO( type, WaveSchedule = ::WaveSchedule ) {
 	if ( "Activator" in WaveSchedule[PopExtUtil.CurrentWaveNum][type] ) activator = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Activator
 	if ( "Caller" in WaveSchedule[PopExtUtil.CurrentWaveNum][type] ) caller = WaveSchedule[PopExtUtil.CurrentWaveNum][type].Caller
 
-	typeof target == "instance" ? EntFireByHandle( target, action, param, delay, activator, caller ) : DoEntFire( target, action, param, delay, activator, caller )
+	local entfirefunc = typeof target == "instance" ? EntFireByHandle : DoEntFire
+	entfirefunc( target, action, param, delay, activator, caller )
 }
 
 function PopExtPopulator::InitializeWave( WaveSchedule = ::WaveSchedule ) {
