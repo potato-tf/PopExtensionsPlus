@@ -2116,7 +2116,7 @@ PopExtTags.TagFunctions <- {
 		}
 		PopExtUtil.AddThink( bot, SuicideCounterThink )
 		if ( duration )
-			PopExtUtil.ScriptEntFireSafe( bot, "PopExtUtil.RemoveThink( bot, `SuicideCounterThink` )", duration )
+			PopExtUtil.ScriptEntFireSafe( bot, "PopExtUtil.RemoveThink( self, `SuicideCounterThink` )", duration )
 	}
 
 	/***********************************************************************************************************************

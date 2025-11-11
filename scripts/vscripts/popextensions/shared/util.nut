@@ -273,18 +273,16 @@ function PopExtUtil::_OnDestroy() {
 
 function PopExtUtil::EntityManager() {
 
-	local tempent_snapshot = clone EntShredder
-
-	foreach( ent in tempent_snapshot.keys() ) {
+	foreach( i, ent in EntShredder.keys() ) {
 
 		if ( ent && ent.IsValid() ) {
 
 			SetPropBool( ent, STRING_NETPROP_PURGESTRINGS, true )
-			EntFireByHandle( ent, "Kill", "", -1, null, null )
+			EntFireByHandle( ent, "Kill", null, -1, null, null )
 		}
 		delete EntShredder[ent]
 
-		if ( EntShredder.len() < ( MAX_EDICTS / 4 ) )
+		if ( !(i % 150 ) && i < ( MAX_EDICTS / 4 ) )
 			yield ent
 	}
 
@@ -322,7 +320,7 @@ function PopExtUtil::GetEntScope( ent ) {
 	return scope
 }
 
-function PopExtUtil::TouchCrashFix() { return activator != null && activator.IsValid() }
+function PopExtUtil::TouchCrashFix() { return activator && activator.IsValid() }
 
 function PopExtUtil::SetTargetname( ent, name ) {
 
@@ -814,9 +812,7 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null, on_death =
 
 	// avoid infinite loops from post_inventory_application hooks
 	player.AddEFlags( EFL_CUSTOM_WEARABLE )
-
-	SendGlobalGameEvent( "post_inventory_application",  { userid = PlayerTable[ player ] } )
-
+	SendGlobalGameEvent( "post_inventory_application", { userid = PlayerTable[ player ] } )
 	player.RemoveEFlags( EFL_CUSTOM_WEARABLE )
 
 	wearable.SetOwner( player )
@@ -828,17 +824,15 @@ function PopExtUtil::GiveWearableItem( player, item_id, model = null, on_death =
 
 function PopExtUtil::StripWeapon( player, slot = -1 ) {
 
-	if ( slot == -1 ) slot = player.GetActiveWeapon().GetSlot()
+	if ( slot == -1 ) 
+		slot = player.GetActiveWeapon().GetSlot()
 
-	for ( local i = 0; i < SLOT_COUNT; i++ ) {
+	local weapon = GetItemInSlot( player, slot )
 
-		local weapon = GetItemInSlot( player, i )
-
-		if ( weapon == null || weapon.GetSlot() != slot ) continue
-
+	if ( weapon && weapon.IsValid() )
 		weapon.Kill()
-		break
-	}
+	
+	return weapon
 }
 
 // big function for applying both custom and vanilla attributes to either a player or weapon
@@ -1762,7 +1756,7 @@ function PopExtUtil::GetEntityColor( entity ) {
 
 function PopExtUtil::AddAttributeToLoadout( player, attribute, value, duration = -1 ) {
 
-	ForEachItem( player, @( item ) item.AddAttribute( attribute, value, duration ), item.ReapplyProvision() )
+	ForEachItem( player, function( item ) { item.AddAttribute( attribute, value, duration ); item.ReapplyProvision() }, true )
 }
 
 function PopExtUtil::ShowModelToPlayer( player, model = ["models/player/heavy.mdl", 0], pos = Vector(), ang = QAngle(), duration = INT_MAX, bodygroup = null ) {
@@ -1922,13 +1916,13 @@ function PopExtUtil::GiveWeapon( player, class_name, item_id ) {
 	SetPropBool( weapon, STRING_NETPROP_PURGESTRINGS, true )
 
 	// remove existing weapon in same slot
-	ForEachItem( player, function( child ) {
+	ForEachItem( player, function( item ) {
 
-		if ( child.GetSlot() != weapon.GetSlot() )
+		if ( item.GetSlot() != weapon.GetSlot() )
 			return
 
-		SetPropBool( child, STRING_NETPROP_PURGESTRINGS, true )
-		EntFireByHandle( child, "Kill", "", -1, null, null )
+		SetPropBool( item, STRING_NETPROP_PURGESTRINGS, true )
+		EntFireByHandle( item, "Kill", "", -1, null, null )
 		// SetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, null, slot )
 	}, true)
 
@@ -2543,6 +2537,27 @@ function PopExtUtil::ScriptEntFireSafe( target, code, delay = -1, activator = nu
 	PURGE_STRINGS( code )
 }
 
+function PopExtUtil::RunWithDelay( delay, func, bindto = this, preserved = false ) {
+
+	local ent = preserved ? self : Worldspawn
+	local scope = GetEntScope( ent )
+
+	local funcname = func.getinfos().name || "PopExtUtil_RunWithDelay_" + UniqueString()
+
+	scope[ funcname ] <- function[bindto]() { 
+		
+		func()
+		PURGE_STRINGS( funcname )
+		delete this[ funcname ]
+	}
+
+	// anonymous func, redefine to avoid '<lambda or free run script>' in console
+	compilestring( format( "local _%s = %s; function %s() { _%s() }", funcname, funcname, funcname, funcname ) ).call( scope )
+
+	EntFireByHandle( ent, "CallScriptFunction", funcname, delay, null, null )
+	return funcname
+}
+
 function PopExtUtil::SetDestroyCallback( entity, callback ) {
 
 	local scope = GetEntScope( entity )
@@ -2813,10 +2828,10 @@ function PopExtUtil::SetConvar( convar, value, duration = 0, hide_chat_message =
 
 	// delay to ensure its set after any server configs
 	if ( GetStr( convar ) != value )
-		ScriptEntFireSafe( "__popext_util", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
+		RunWithDelay( 0.1, @() SetValue( convar, value.tostring() ) )
 
 	if ( duration > 0 )
-		ScriptEntFireSafe( "__popext_util", format( "SetConvar( `%s`,`%s` )", convar, ConVars[convar].tostring() ), duration )
+		RunWithDelay( duration, @() SetValue( convar, ConVars[convar].tostring() ) )
 
 	if ( commentary_node )
 		EntFireByHandle( commentary_node, "Kill", "", 1, null, null )
@@ -2827,7 +2842,7 @@ function PopExtUtil::ResetConvars( hide_chat_message = true ) {
 	local commentary_node = hide_chat_message ? CommentaryNode() : null
 
 	foreach ( convar, value in ConVars )
-		ScriptEntFireSafe( "BigNet", format( "SetValue( `%s`, `%s` )", convar, value.tostring() ) )
+		SetValue( convar, value.tostring() )
 
 	ConVars.clear()
 
@@ -3169,4 +3184,4 @@ function Explanation( message, print_color = COLOR_YELLOW, message_prefix = "Exp
 }
 
 GetAllAreas( PopExtUtil.AllNavAreas )
-PopExtUtil.ForEachEnt( null, null, null, null, true )
+// PopExtUtil.ForEachEnt( null, null, null, null, true )

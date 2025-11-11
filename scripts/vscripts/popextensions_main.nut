@@ -164,7 +164,7 @@ local objres = FindByClassname( null, "tf_objective_resource" )
 ::__popname <- GetPropString( objres, STRING_NETPROP_POPNAME )
 
 // wrapper so it shows up in the perf warnings instead of just "main"
-function PopExtMain::_popext_collectgarbage() { collectgarbage() }
+function PopExtMain::collectgarbage() { ::collectgarbage() }
 
 local unload_cleanup = [
 	"__popname"
@@ -509,7 +509,7 @@ POP_EVENT_HOOK( "teamplay_round_start", "MainRoundStartCleanup", function( _ ) {
 
 	// TODO: this seemingly helps with script performance slowly drifting up on a long-running map
 	// There were also other times when this hurt performance, memory caching stuff maybe?
-	EntFire( "__popext_main", "CallScriptFunction", "_popext_collectgarbage" )
+	EntFire( "__popext_main", "CallScriptFunction", "collectgarbage", 0.2 )
 
 	// same pop or manual cleanup flag set, don't run
 	if ( __popname == GetPropString( objres, STRING_NETPROP_POPNAME ) || PopExtConfig.ManualCleanup )
@@ -541,6 +541,9 @@ if ( PopExtConfig.IncludeAllModules ) {
 }
 
 //HACK: forces post_inventory_application to fire on pop load
-for ( local i = 1, player; i <= MAX_CLIENTS; player = PlayerInstanceFromIndex( i ), i++ )
-	if ( player )
-		PopExtUtil.ScriptEntFireSafe( player, "self.Regenerate( true )", SINGLE_TICK )
+PopExtUtil.RunWithDelay( SINGLE_TICK, function() {
+
+	for ( local i = 1, player; i <= MAX_CLIENTS; i++ )
+		if ( player = PlayerInstanceFromIndex( i ) ) 
+			player.Regenerate( true )
+})

@@ -36,6 +36,10 @@ MissionAttributes.OptimizedTracks <- {}
 MissionAttributes.PathNum 		  <- 0
 MissionAttributes.RedMoneyValue   <- 0
 
+ // legacy compatibility, use PopExtUtil versions instead
+MissionAttributes.SetConvar    <- PopExtUtil
+MissionAttributes.ResetConvars <- PopExtUtil
+
 MissionAttributes.Attrs <- {
 
 	// =========================================
@@ -1011,6 +1015,7 @@ MissionAttributes.Attrs <- {
 
 			params.damage_type = params.damage_type | DMG_CRITICAL //DMG_USE_HITLOCATIONS doesn't actually work here, no headshot icon.
 			params.damage_stats = TF_DMG_CUSTOM_HEADSHOT
+
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 
@@ -2913,6 +2918,9 @@ MissionAttributes.Attrs <- {
 
 		function RespawnTextThink() {
 
+			if ( !("PopExtUtil" in ROOT) )
+				return SetPropString( self, "m_iszScriptThinkFunction", "" )
+
 			foreach ( player in PopExtUtil.HumanArray ) {
 				if ( player.IsAlive() == true ) continue
 				SetPropFloatArray( PopExtUtil.PlayerManager, "m_flNextRespawnTime", rtime, player.entindex() )
@@ -3205,8 +3213,8 @@ MissionAttributes.Attrs <- {
 // =========================================================
 // Function is called in popfile by mission maker to modify mission attributes.
 
-MissionAttributes.SetConvar    <- PopExtUtil.SetConvar // legacy compatibility, people should use PopExtUtil.SetConvar instead
-MissionAttributes.ResetConvars <- PopExtUtil.ResetConvars // legacy compatibility, people should use PopExtUtil.ResetConvars instead
+MissionAttributes.SetConvar    <- PopExtUtil.SetConvar.bindenv( PopExtUtil ) // legacy compatibility, people should use PopExtUtil.SetConvar instead
+MissionAttributes.ResetConvars <- PopExtUtil.ResetConvars.bindenv( PopExtUtil ) // legacy compatibility, people should use PopExtUtil.ResetConvars instead
 
 function MissionAttributes::MissionAttr( ... ) {
 

@@ -276,7 +276,7 @@ POP_EVENT_HOOK( "teamplay_round_start", "InitializeWave", function( params ) {
 
 	PopExtPopulator.DoEntityIO( "InitWaveOutput" )
 
-}, EVENT_WRAPPER_POPULATOR)
+}, EVENT_WRAPPER_POPULATOR )
 
 POP_EVENT_HOOK( "mvm_begin_wave", "StartWave", function( params ) {
 
@@ -286,13 +286,13 @@ POP_EVENT_HOOK( "mvm_begin_wave", "StartWave", function( params ) {
 
 	PopExtPopulator.DoEntityIO( "StartWaveOutput" )
 
-}, EVENT_WRAPPER_POPULATOR)
+}, EVENT_WRAPPER_POPULATOR )
 
 POP_EVENT_HOOK( "mvm_wave_complete", "DoneOutput", function( params ) {
 
 	PopExtPopulator.DoEntityIO( "DoneOutput" )
 
-}, EVENT_WRAPPER_POPULATOR)
+}, EVENT_WRAPPER_POPULATOR )
 
 POP_EVENT_HOOK( "player_death", "RemoveIcon", function( params ) {
 
@@ -305,7 +305,7 @@ POP_EVENT_HOOK( "player_death", "RemoveIcon", function( params ) {
 	local spawner = FindByName( null, scope.spawner )
 
 	PopExtWavebar.DecrementWaveIcon( spawner.GetScriptScope().WaveSpawn.TFBot.ClassIcon, 0, 1 )
-}, EVENT_WRAPPER_POPULATOR)
+}, EVENT_WRAPPER_POPULATOR )
 
 POP_EVENT_HOOK( "player_death", "WaitBetweenSpawnsAfterDeath", function( params ) {
 
@@ -320,15 +320,13 @@ POP_EVENT_HOOK( "player_death", "WaitBetweenSpawnsAfterDeath", function( params 
 		EntFireByHandle( spawner, "Enable", "", -1, null, null )
 		EntFireByHandle( spawner, "SpawnBot", "", -1, null, null )
 	}
-}, EVENT_WRAPPER_POPULATOR)
+}, EVENT_WRAPPER_POPULATOR )
 
 POP_EVENT_HOOK( "player_death", "DoneOutput", function( params ) {
 
 	local player = GetPlayerFromUserID( params.userid )
 
 	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
-
-	local spawner = FindByName( null, player.GetScriptScope().spawner )
 
 	PopExtPopulator.DoEntityIO( "DoneOutput" )
 
@@ -341,14 +339,14 @@ POP_EVENT_HOOK( "player_spawn", "WaitBetweenSpawnsAfterDeath", function( params 
 	if ( !player.IsBotOfType( TF_BOT_TYPE ) ) return
 
 	//disable our spawner if we have WaitBetweenSpawnsAfterDeath
-	PopExtUtil.ScriptEntFireSafe( player, @"
+	PopExtUtil.RunWithDelay( SINGLE_TICK, function() {
 
-		if ( `WaitBetweenSpawnsAfterDeath` in spawner.GetScriptScope().WaveSpawn )
-			EntFireByHandle(spawner, `Disable`, ``, -1, null, null )
+		if ( "WaitBetweenSpawnsAfterDeath" in spawner.GetScriptScope().WaveSpawn )
+			EntFireByHandle(spawner, "Disable", "", -1, null, null )
 
-	", SINGLE_TICK )
+	}, player.GetScriptScope() )
 
-}, EVENT_WRAPPER_POPULATOR)
+}, EVENT_WRAPPER_POPULATOR )
 
 POP_EVENT_HOOK( "player_spawn", "SetSpawner", function( params ) {
 
