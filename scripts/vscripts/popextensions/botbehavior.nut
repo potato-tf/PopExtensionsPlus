@@ -542,6 +542,9 @@ class PopExtBotBehavior {
 		// if ( !(path_index in path_points) )
 		// 	__DumpScope( 0, path_points )
 
+		if ( !threat || !threat.IsValid() )
+			return
+
 		// we're underwater or very close and can see our target, just move directly at them
 		if ( ( bot.GetWaterLevel() >= 2 || threat_dist <= MAX_THREAT_DISTANCE ) && IsVisible( threat ) ) {
 
