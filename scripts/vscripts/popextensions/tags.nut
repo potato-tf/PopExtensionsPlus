@@ -688,7 +688,6 @@ PopExtTags.TagFunctions <- {
 					if ( !threats.len() ) return
 					aibot.SetThreat( threats[ RandomInt( 0, threats.len() - 1 ) ] )
 				}
-
 			}
 
 			aibot.FindPathToThreat()
