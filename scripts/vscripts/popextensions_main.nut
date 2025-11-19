@@ -321,7 +321,7 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 		player.TerminateScriptScope()
 		return
 	}
-	else
+	else if ( scope )
 		foreach ( k in scope.keys() )
 			if ( !( k in PopExtConfig.IgnoreTable ) )
 				delete scope[k]
