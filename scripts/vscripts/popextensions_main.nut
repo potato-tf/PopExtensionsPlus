@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "11.19.2025.3"
+::POPEXT_VERSION <- "11.19.2025.4"
 
 local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -321,10 +321,10 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 		player.TerminateScriptScope()
 		return
 	}
-
-	foreach ( k in scope.keys() )
-		if ( !( k in PopExtConfig.IgnoreTable ) )
-			delete scope[k]
+	else
+		foreach ( k in scope.keys() )
+			if ( !( k in PopExtConfig.IgnoreTable ) )
+				delete scope[k]
 
 	_AddThinkToEnt( player, null )
 }
