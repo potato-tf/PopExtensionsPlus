@@ -3154,8 +3154,6 @@ POP_EVENT_HOOK( "post_inventory_application", "UtilPostInventoryApplication", fu
 			player_table[ player ] <- userid
 		}
 
-		PopExtUtil.ValidatePlayerTables()
-
 		return
 	}
 
@@ -3167,6 +3165,8 @@ POP_EVENT_HOOK( "post_inventory_application", "UtilPostInventoryApplication", fu
 
 	if ( !( player in player_table ) )
 		player_table[ player ] <- params.userid
+
+	PopExtUtil.ValidatePlayerTables()
 
 	PopExtUtil.HumanArray  = human_table.keys()
 	PopExtUtil.BotArray    = bot_table.keys()
