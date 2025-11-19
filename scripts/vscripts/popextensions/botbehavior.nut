@@ -85,10 +85,12 @@ class PopExtBotBehavior {
 		this.aim_time           = FLT_MAX
 		this.random_aim_time    = 0.0
 
-		this.path_points = []
-		this.path_index = 0
-		this.path_areas = {}
-		this.path_goalpoint = null
+		this.path_points 		 = []
+		this.path_index 		 = 0
+		this.path_count 		 = 0
+		this.path_areas 		 = {}
+		this.skip_corners		 = false
+		this.path_goalpoint 	 = null
 		this.path_recompute_time = 0.0
 
 		this.bot_level = bot.GetDifficulty()
