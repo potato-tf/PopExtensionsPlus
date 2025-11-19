@@ -641,7 +641,7 @@ PopExtTags.TagFunctions <- {
 			}
 
 			if ( !bot.HasBotTag( "popext_mobber" ) )
-				aibot.UpdatePathAndMove( t.GetOrigin() )
+				aibot.FindPathToThreat(), aibot.MoveToThreat()
 		}
 		PopExtUtil.AddThink( bot, MeleeAIThink )
 	}
@@ -676,7 +676,7 @@ PopExtTags.TagFunctions <- {
 
 				if ( ( threat && !threat.IsAlive() ) || Time() > cooldown ) {
 
-					aibot.threat = aibot.FindClosestThreat( INT_MAX, false )
+					aibot.SetThreat( aibot.FindClosestThreat( INT_MAX, false ) )
 					cooldown = Time() + threat_cooldown //find new threat every threat_cooldown seconds
 				}
 			}
@@ -686,18 +686,13 @@ PopExtTags.TagFunctions <- {
 
 					local threats = aibot.CollectThreats( INT_MAX, true, true )
 					if ( !threats.len() ) return
-					aibot.threat = threats[RandomInt( 0, threats.len() - 1 )]
+					aibot.SetThreat( threats[ RandomInt( 0, threats.len() - 1 ) ] )
 				}
 
 			}
-			if ( threat && threat.IsValid() && threat.IsAlive() ) {
 
-				local distance = ( bot.GetOrigin() - threat.GetOrigin() ).Length()
-				if ( distance > threat_dist )
-					aibot.UpdatePathAndMove( threat.GetOrigin(), lookat, turnrate, turnrate )
-				else
-					aibot.LookAt( threat.EyePosition() - Vector( 0, 0, 20 ), 1500, 1500 )
-			}
+			aibot.FindPathToThreat()
+			aibot.MoveToThreat()
 		}
 		PopExtUtil.AddThink( bot, MobberThink )
 	}
@@ -785,7 +780,7 @@ PopExtTags.TagFunctions <- {
 
 			if ( !bot.HasBotTag( "popext_generatorbot" ) && action_point && ( bot.GetOrigin() - action_point.GetOrigin() ).Length() > distance ) {
 
-				aibot.UpdatePathAndMove( action_point.GetOrigin() )
+				aibot.UpdatePath( action_point.GetOrigin(), true, true )
 			}
 
 			if ( waituntildone && action_point && ( bot.GetOrigin() - action_point.GetOrigin() ).Length() > distance ) {
