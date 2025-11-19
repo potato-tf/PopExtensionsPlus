@@ -84,16 +84,15 @@ function PopExtHoming::IsValidTarget( victim, distance, min_distance, projectile
             return false
 
         // Check for stealth and disguise conditions if not ignored
-        if ( !projectile_scope.ignore_stealthed_spies && ( victim.IsStealthed() || victim.IsFullyInvisible() ) )
+        if ( projectile_scope.ignore_stealthed_spies && ( victim.IsStealthed() || victim.IsFullyInvisible() ) )
             return false
 
-        if ( !projectile_scope.ignore_disguised_spies && victim.GetDisguiseTarget() != null )
+        if ( projectile_scope.ignore_disguised_spies && victim.GetDisguiseTarget() )
             return false
     }
 
     return true
 }
-
 
 function PopExtHoming::FaceTowards( new_target, projectile, projectile_speed ) {
 
@@ -131,7 +130,4 @@ function PopExtHoming::IsLookingAt( projectile, new_target ) {
     return false
 }
 
-function PopExtHoming::IsValidProjectile( projectile, table ) {
-
-    return ( projectile.GetClassname() in table )
-}
+function PopExtHoming::IsValidProjectile( projectile, table ) { return ( projectile.GetClassname() in table ) }
