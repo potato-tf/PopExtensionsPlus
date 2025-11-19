@@ -674,7 +674,7 @@ PopExtTags.TagFunctions <- {
 
 			if ( threat_type == "closest" ) {
 
-				if ( ( threat && !threat.IsAlive() ) || Time() > cooldown ) {
+				if ( !threat || !threat.IsValid() || !threat.IsAlive() || Time() > cooldown ) {
 
 					aibot.SetThreat( aibot.FindClosestThreat( INT_MAX, false ) )
 					cooldown = Time() + threat_cooldown //find new threat every threat_cooldown seconds
