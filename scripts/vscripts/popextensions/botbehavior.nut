@@ -36,17 +36,19 @@ class PopExtBotBehavior {
 	cur_ammo    = null
 	cur_melee   = null
 
-	threat             = null
-	threat_time        = null
-	threat_lost_time   = null
-	threat_aim_time    = null
-	threat_behind_time = null
-	threat_visible     = null
-	threat_pos         = null
-	threat_dist        = null
+	threat              = null
+	threat_dist         = null
+	threat_time         = null
+	threat_lost_time    = null
+	threat_aim_time     = null
+	threat_behind_time  = null
+	threat_visible      = null
+	threat_pos          = null
 
 	path_points		    = null
+	skip_corners		= null
 	path_index			= null
+	path_count			= null
 	path_areas			= null
 	path_goalpoint      = null
 	path_recompute_time	= null
