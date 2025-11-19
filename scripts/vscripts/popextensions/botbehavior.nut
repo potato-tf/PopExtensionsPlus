@@ -665,8 +665,6 @@ POP_EVENT_HOOK( "player_hurt", "BotBehaviorPlayerHurt", function( params ) {
 	local attacker = GetPlayerFromUserID( params.attacker )
 	local scope = GetPlayerFromUserID( params.userid ).GetScriptScope()
 
-	local scope = victim.GetScriptScope()
-
 	if ( attacker && attacker.IsPlayer() )
 		scope.aibot.OnTakeDamage( attacker )
 
