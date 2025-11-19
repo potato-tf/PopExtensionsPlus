@@ -58,7 +58,7 @@ class PopExtBotBehavior {
 
 	cosmetic = null
 
-	navdebug = null
+	path_debug = null
 
 	constructor( bot ) {
 
@@ -91,7 +91,7 @@ class PopExtBotBehavior {
 
 		this.bot_level = bot.GetDifficulty()
 
-		this.navdebug = false
+		this.path_debug = false
 	}
 
 	function IsLookingTowards( target, cos_tolerance ) {
