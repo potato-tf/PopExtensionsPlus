@@ -47,16 +47,9 @@ function PopExtHoming::HomingProjectileThink() {
 
 function PopExtHoming::SelectVictim( projectile ) {
 
-    local min_distance = 32768.0, target = null, player_array = {}
+    local min_distance = 32768.0, target
 
-    local owner = projectile.GetOwner()
-
-    if ( !owner || !owner.IsValid() )
-        player_array = PopExtUtil.PlayerArray
-    else
-        player_array = owner.IsBotOfType( 1337 ) ? PopExtUtil.HumanArray : PopExtUtil.BotArray
-
-    foreach ( player in player_array ) {
+    foreach ( player in PopExtUtil.PlayerArray ) {
 
         local distance = ( projectile.GetOrigin() - player.GetOrigin() ).Length()
 
