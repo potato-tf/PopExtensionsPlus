@@ -214,7 +214,7 @@ PopExtTanks.tank_funcs <- {
         function BlimpThink() {
 
             // this is normally not possible, however we need to do a pretty gross hack that will turn the tank into a null instance sometimes
-            if ( self == null ) return
+            if ( !self ) return
 
             self.SetAbsOrigin( blimp_train.GetOrigin() )
             self.GetLocomotionInterface().Reset()

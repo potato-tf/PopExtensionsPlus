@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "11.19.2025.4"
+::POPEXT_VERSION <- "11.19.2025.5"
 
 local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 
@@ -108,7 +108,7 @@ function POPEXT_CREATE_SCOPE( name, scope_ref = null, entity_ref = null, think_f
 					_OnCreate()
 
 				// fix anonymous function declarations in perf counter
-				else if ( v.getinfos().name == null )
+				else if ( !v.getinfos().name )
 					compilestring( format( @"local _%s = %s; function %s() { _%s() }", k, k, k, k ) ).call(scope)
 			}
 		}

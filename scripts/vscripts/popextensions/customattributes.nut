@@ -94,7 +94,7 @@ PopExtAttributes.Attrs <- {
 
 		function FiresMilkBoltThink() {
 
-			if ( item == null || player.GetActiveWeapon() != item )
+			if ( !item || player.GetActiveWeapon() != item )
 				return
 
 			if ( PopExtUtil.InButton( player, IN_ATTACK2 ) && Time() - scope.milk_bolt_last_fire_time > recharge ) {
@@ -144,12 +144,12 @@ PopExtAttributes.Attrs <- {
 			local attacker = params.attacker
 
 			if (
-				victim == null
+				!victim
 				|| !victim.IsPlayer()
 				|| victim.IsInvulnerable()
 				|| ( typeof value == "array" && victim.InCond( value[ 0 ] ) )
 				|| ( typeof value == "integer" && victim.InCond( value ) )
-				|| attacker == null
+				|| !attacker
 				|| attacker != player
 				|| params.weapon != item
 			) return
@@ -171,8 +171,15 @@ PopExtAttributes.Attrs <- {
 			local victim = GetPlayerFromUserID( params.userid )
 			local attacker = GetPlayerFromUserID( params.attacker )
 
-			if ( victim == null || attacker == null || !victim.IsPlayer() || !victim.InCond( value ) || victim.IsInvulnerable() || attacker != player || params.weapon != item )
-				return
+			if ( 
+				!victim 
+				|| !attacker 
+				|| !victim.IsPlayer() 
+				|| !victim.InCond( value ) 
+				|| victim.IsInvulnerable() 
+				|| attacker != player 
+				|| params.weapon != item 
+			) return
 
 			victim.RemoveCondEx( value, true )
 		}, EVENT_WRAPPER_CUSTOMATTR )
@@ -188,8 +195,13 @@ PopExtAttributes.Attrs <- {
 			local victim = params.const_entity
 			local attacker = params.attacker
 
-			if ( attacker == null || !attacker.IsPlayer() || victim.IsInvulnerable() || ( typeof value == "array" && attacker.InCond( value[ 0 ] ) ) || ( typeof value == "integer" && attacker.InCond( value ) ) )
-				return
+			if ( 
+				!attacker 
+				|| !attacker.IsPlayer() 
+				|| victim.IsInvulnerable() 
+				|| ( typeof value == "array" && attacker.InCond( value[ 0 ] ) ) 
+				|| ( typeof value == "integer" && attacker.InCond( value ) ) 
+			) return
 
 			typeof value == "array" ? attacker.AddCondEx( value[ 0 ], value[ 1 ], attacker ) : attacker.AddCond( value )
 		}, EVENT_WRAPPER_CUSTOMATTR )
@@ -208,7 +220,7 @@ PopExtAttributes.Attrs <- {
 			local attacker = GetPlayerFromUserID( params.attacker )
 			local victim = GetPlayerFromUserID( params.userid )
 
-			if ( victim == null || attacker == null || !attacker.IsPlayer() )
+			if ( !victim || !attacker || !attacker.IsPlayer() )
 				return
 
 			typeof value == "array" ? attacker.AddCondEx( value[ 0 ], value[ 1 ], attacker ) : attacker.AddCond( value )
@@ -321,8 +333,12 @@ PopExtAttributes.Attrs <- {
 		POP_EVENT_HOOK( "OnTakeDamage", event_hook_string, function( params ) {
 
 			local victim = params.const_entity
-			if ( victim != null && victim.IsPlayer() && GetPropEntity( victim, "m_hGroundEntity" ) == null )
+
+			if ( !victim || !victim.IsPlayer() || GetPropEntity( victim, "m_hGroundEntity" ) )
+				return
+
 			params.damage *= value
+
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
 	}
@@ -419,7 +435,7 @@ PopExtAttributes.Attrs <- {
 			local mult = scope.teleporterrechargetimemult
 			local teleporter = FindByClassnameNearest( "obj_teleporter", player.GetOrigin(), 16 )
 
-			if ( teleporter == null || teleporter.GetScriptThinkFunc() != "" )
+			if ( !teleporter || teleporter.GetScriptThinkFunc() != "" )
 				return
 
 			local chargetime = GetPropFloat( teleporter, "m_flCurrentRechargeDuration" )
@@ -2012,7 +2028,7 @@ function PopExtAttributes::AddAttr( player, attr_string, value = 0, item = null 
 	local item_table = {}
 
 	// no item, just apply to the active weapon
-	if ( item == null ) item = player.GetActiveWeapon()
+	if ( !item ) item = player.GetActiveWeapon()
 
 	switch ( typeof item ) {
 
@@ -2060,7 +2076,7 @@ function PopExtAttributes::AddAttr( player, attr_string, value = 0, item = null 
 
 		local item = PopExtUtil.HasItemInLoadout( player, item )
 
-		if ( item == null || !( attr in PopExtAttributes.Attrs ) )
+		if ( !item || !( attr in PopExtAttributes.Attrs ) )
 			continue
 
 		PopExtAttributes.Attrs[ attr ]( player, item, value )

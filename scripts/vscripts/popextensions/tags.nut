@@ -430,7 +430,7 @@ PopExtTags.TagFunctions <- {
 		local spellbook = PopExtUtil.HasItemInLoadout( bot, "tf_weapon_spellbook" )
 
 		//equip a spellbook if the bot doesn't have one
-		if ( spellbook == null ) {
+		if ( !spellbook ) {
 
 			local book = PopExtUtil.SpawnEnt( "tf_weapon_spellbook", "__popext_spellbook" )
 			PopExtUtil.InitEconItem( book, ID_BASIC_SPELLBOOK )
@@ -559,7 +559,7 @@ PopExtTags.TagFunctions <- {
 		if ( wep == "ActiveWeapon" )
 			weapon = bot.GetActiveWeapon()
 
-		if ( weapon == null )
+		if ( !weapon )
 			weapon = -1
 
 		if ( !delay || typeof value == "array" || typeof value == "table" ) {
@@ -630,7 +630,7 @@ PopExtTags.TagFunctions <- {
 
 			local t = aibot.FindClosestThreat( visionoverride, false )
 
-			if ( t == null || t.IsFullyInvisible() || t.IsStealthed() ) return
+			if ( !t || t.IsFullyInvisible() || t.IsStealthed() ) return
 
 			if ( aibot.threat != t ) {
 
@@ -1821,7 +1821,7 @@ PopExtTags.TagFunctions <- {
 
 			local slot = args.type ? args.type.tointeger() : -1
 			local wep  = ( slot == -1 ) ? _bot.GetActiveWeapon() : PopExtUtil.GetItemInSlot( _bot, slot )
-			if ( wep == null ) return
+			if ( !wep ) return
 
 			local itemid = PopExtUtil.GetItemIndex( wep )
 			local wearable = CreateByClassname( "tf_wearable" )
@@ -1986,7 +1986,7 @@ PopExtTags.TagFunctions <- {
 					}
 				}
 
-				if ( victim == null ) {
+				if ( !victim ) {
 					bot_scope.NextTeleportTime = Time() + 1.0
 					bot_scope.TeleportAttempt++
 					return
