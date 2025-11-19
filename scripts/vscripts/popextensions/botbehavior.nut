@@ -124,6 +124,10 @@ class PopExtBotBehavior {
 	}
 
 	function IsVisible( target ) {
+
+		if ( !target || !target.IsValid() )
+			return false
+
 		local trace = {
 			start  = bot.EyePosition(),
 			end    = target.EyePosition(),
