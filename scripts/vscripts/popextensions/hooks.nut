@@ -428,6 +428,8 @@ function PopExtHooks::PopHooksThink() {
 
 	foreach ( player in PopExtUtil.BotArray ) {
 
+		if ( !player || !player.IsValid() ) continue
+
 		local scope = PopExtUtil.GetEntScope( player )
 
 		local alive = player.IsAlive()
