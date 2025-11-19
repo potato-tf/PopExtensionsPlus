@@ -533,7 +533,7 @@ class PopExtBotBehavior {
 			}
 		}
 
-		if ( move )
+		if ( move && threat && threat.IsValid() )
 			MoveToThreat( lookat )			
 	}
 
