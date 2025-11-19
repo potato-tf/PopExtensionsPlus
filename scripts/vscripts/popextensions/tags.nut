@@ -727,7 +727,7 @@ PopExtTags.TagFunctions <- {
 		}
 
 		function MoveToPointThink() {
-			aibot.UpdatePathAndMove( pos )
+			aibot.UpdatePath( pos, true, true )
 		}
 		PopExtUtil.AddThink( bot, MoveToPointThink )
 	}
