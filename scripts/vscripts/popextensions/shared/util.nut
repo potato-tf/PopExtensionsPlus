@@ -2547,8 +2547,8 @@ function PopExtUtil::RunWithDelay( delay, func, bindto = this, preserved = false
 	scope[ funcname ] <- function[bindto]() { 
 		
 		func()
-		delete scope[ funcname ]
 		PURGE_STRINGS( funcname )
+		delete scope[ funcname ]
 	}
 
 	// anonymous func, redefine to avoid '<lambda or free run script>' in console
