@@ -34,8 +34,6 @@ function SpawnTemplates::_OnDestroy() {
 			delete ROOT[ key ]
 }
 
-// vargs will get rid of the invisible "this" parameter
-// if you remove this you will get mysterious "wrong number of arguments" errors with no stack trace.
 function SpawnTemplates::TemplatePostSpawn( ... ) {
 
 	// can only set bounding box size for brush entities after they spawn
@@ -86,14 +84,17 @@ function SpawnTemplates::TemplatePostSpawn( ... ) {
 
 		if ( parent && parent.IsValid() ) {
 
-			if ( typeof parent == "string" ) parent = FindByName( null, parent )
+			if ( typeof parent == "string" ) 
+				parent = FindByName( null, parent )
+
 			if ( parentabsorigin ) {
 
 				entity.AcceptInput( "SetParent", "!activator", parent, parent )
 				if ( attachment ) entity.AcceptInput( "SetParentAttachment", attachment, null, null )
-			} else {
-				PopExtUtil.SetParentLocalOrigin( entity, parent, attachment )
+
 			}
+			else
+				PopExtUtil.SetParentLocalOrigin( entity, parent, attachment )
 
 			// don't make trigger brushes non-solid.
 			if ( nonsolidchildren && !HasProp( entity, "m_iFilterName" ) )
@@ -219,6 +220,9 @@ function SpawnTemplates::SpawnTemplate( pointtemplate, parent = null, origin = "
 	scope.parent 					<- parent
 	scope.origin 					<- origin
 	scope.angles 					<- angles
+	scope.parentabsorigin 			<- parentabsorigin
+	scope.nonsolidchildren 			<- nonsolidchildren
+	scope.attachment 				<- attachment
 	scope.Entities 					<- []
 	scope.SpawnedEntities 			<- {}
 	scope.OnSpawnOutputArray 		<- []
