@@ -42,7 +42,7 @@
 - Comments should always be above the code they are meant to explain
 
 ### function declarations
-Functions must be declared in a way the performance counter can see them, we never want to see "<lambda or free run script>" in console if we can avoid it.
+Functions must be declared in a way the performance counter can see them, we never want to see `<lambda or free run script>` in console if we can avoid it.
 
 DO NOT DO THIS, THESE ARE ANONYMOUS FUNCTIONS:
 
