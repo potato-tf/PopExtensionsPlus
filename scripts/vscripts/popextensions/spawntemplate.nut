@@ -97,8 +97,14 @@ function SpawnTemplates::TemplatePostSpawn( ... ) {
 				PopExtUtil.SetParentLocalOrigin( entity, parent, attachment )
 
 			// don't make trigger brushes non-solid.
-			if ( nonsolidchildren && !HasProp( entity, "m_iFilterName" ) )
+			// env_beam and filter_multi are the only two non-trigger ents with an m_hFilter prop
+			if ( nonsolidchildren 
+				&& !HasProp( entity, "m_hFilter" ) 
+				&& entity.GetClassname() != "env_beam" 
+				&& entity.GetClassname() != "filter_multi" 
+			) {
 				entity.SetSolid( 0 )
+			}
 
 			//entities parented to players do not kill itself when the player dies as the player entity is not considered killed
 			if ( parent.IsPlayer() ) {
