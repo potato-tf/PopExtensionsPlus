@@ -285,7 +285,7 @@ PopExtTags.TagFunctions <- {
 
 		local glow = SpawnEntityFromTable("tf_glow", {
 
-			targetname = format( "__popext_alwaysglow_%d", bot.entindex() )
+			targetname = "__popext_alwaysglow_" + bot.entindex()
 			target = "__popext_tags"
 			GlowColor = format( "%d %d %d %d", color[0], color[1], color[2], color[3] )
 		})
@@ -297,7 +297,7 @@ PopExtTags.TagFunctions <- {
 			local _bot = GetPlayerFromUserID( params.userid )
 			if ( _bot != bot ) return
 
-			EntFire(format( "__popext_alwaysglow_%d", bot.entindex()), "Kill")
+			EntFire("__popext_alwaysglow_" + bot.entindex(), "Kill")
 
 		}, EVENT_WRAPPER_TAGS)
 	}
@@ -468,7 +468,7 @@ PopExtTags.TagFunctions <- {
 				spellbook.AddAttribute( "disable weapon switch", 1, 1 ) // duration doesn't work here?
 				spellbook.ReapplyProvision()
 			} catch( e ) {
-				PopExtMain.Error.DebugLog( format( "popext_spell: Can't find spellbook!\n %s", e ) )
+				PopExtMain.Error.DebugLog( "popext_spell: Can't find spellbook!\n" + e )
 			}
 
 			PopExtUtil.ScriptEntFireSafe( spellbook, "self.RemoveAttribute( `disable weapon switch` )", 1 )
@@ -520,13 +520,13 @@ PopExtTags.TagFunctions <- {
 			if ( bot.GetModelName() == "models/bots/demo/bot_sentry_buster.mdl" ) {
 
 				local wearable = PopExtUtil.GiveWearableItem( bot, 9911, PopExtUtil.ROMEVISION_MODELS[bot.GetPlayerClass()][2] )
-				SetPropString( wearable, STRING_NETPROP_NAME, format( "__popext_romevision_%d", wearable.entindex() ) )
+				SetPropString( wearable, STRING_NETPROP_NAME, "__popext_romevision_" + wearable.entindex() )
 				return
 			}
 			foreach ( i, cosmetic in cosmetics ) {
 
 				local wearable = PopExtUtil.GiveWearableItem( bot, 9911, cosmetic )
-				SetPropString( wearable, STRING_NETPROP_NAME, format( "__popext_romevision_%d", wearable.entindex() ) )
+				SetPropString( wearable, STRING_NETPROP_NAME, "__popext_romevision_" + wearable.entindex() )
 			}
 	}
 

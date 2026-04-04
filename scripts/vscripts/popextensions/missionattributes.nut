@@ -530,7 +530,7 @@ MissionAttributes.Attrs <- {
 	// OBSOLETE
 	// ========
 
-	HuntsmanDamageFix = @() PopExtMain.Error.GenericWarning( "HuntsmanDamageFix is obsolete" )
+	HuntsmanDamageFix = @( ... ) PopExtMain.Error.GenericWarning( "HuntsmanDamageFix is obsolete" )
 
 	// =========================================================
 	// UNFINISHED
