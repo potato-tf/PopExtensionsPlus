@@ -535,17 +535,17 @@ function PopExtUtil::ShowChatMessage( target, fmt, ... ) {
 
 function PopExtUtil::CopyTable( table, keyfunc = null, valuefunc = null ) {
 
-	if ( table == null || typeof table != "table" ) return
+	if ( !table || typeof table != "table" ) return
 
 	local newtable = {}
 
 	foreach ( key, value in table ) {
 
 		//run optional functions on the key and value
-		if ( keyfunc != null )
+		if ( keyfunc )
 			key = keyfunc( key )
 
-		if ( valuefunc != null )
+		if ( valuefunc )
 			value = valuefunc( value )
 
 		newtable[key] <- value
@@ -664,7 +664,7 @@ function PopExtUtil::SetParentLocalOriginDo( child, parent, attachment = null ) 
 	child.SetAbsVelocity( orig_vel )
 
 	EntFireByHandle( child, "SetParent", "!activator", -1, parent, parent )
-	if ( attachment != null ) {
+	if ( attachment ) {
 		SetPropEntity( child, "m_iParentAttachment", parent.LookupAttachment( attachment ) )
 		EntFireByHandle( child, "SetParentAttachmentMaintainOffset", attachment, -1, parent, parent )
 	}
@@ -687,11 +687,11 @@ function PopExtUtil::SetupTriggerBounds( trigger, mins = null, maxs = null ) {
 
 	trigger.SetModel( "models/weapons/w_models/w_rocket.mdl" )
 
-	if ( mins != null ) {
+	if ( mins ) {
 		SetPropVector( trigger, "m_Collision.m_vecMinsPreScaled", mins )
 		SetPropVector( trigger, "m_Collision.m_vecMins", mins )
 	}
-	if ( maxs != null ) {
+	if ( maxs ) {
 		SetPropVector( trigger, "m_Collision.m_vecMaxsPreScaled", maxs )
 		SetPropVector( trigger, "m_Collision.m_vecMaxs", maxs )
 	}
@@ -701,7 +701,7 @@ function PopExtUtil::SetupTriggerBounds( trigger, mins = null, maxs = null ) {
 
 function PopExtUtil::PrintTable( table ) {
 
-	if ( table == null || ( typeof table != "table" && typeof table != "array" ) ) {
+	if ( !table || ( typeof table != "table" && typeof table != "array" ) ) {
 		ClientPrint( null, 2, ""+table )
 		return
 	}
@@ -979,9 +979,9 @@ function PopExtUtil::SetPlayerAttributesMulti( player, item, attributes, customw
 
 			local idx = ToStrictNum(_item)
 
-			local wep = HasItemInLoadout( player, idx != null ? idx : _item )
+			local wep = HasItemInLoadout( player, idx || _item )
 
-			if ( wep == null ) continue
+			if ( !wep ) continue
 
 			weps.append( wep )
 		}
@@ -990,7 +990,7 @@ function PopExtUtil::SetPlayerAttributesMulti( player, item, attributes, customw
 
 		local wep = HasItemInLoadout( player, item )
 
-		if ( wep == null ) return
+		if ( !wep ) return
 
 		weps.append( wep )
 	}
@@ -1147,7 +1147,7 @@ function PopExtUtil::GetAllEnts( count_players = false, callback = null ) {
 		if ( ent )
 			entlist.append( ent )
 
-	if ( callback != null ) {
+	if ( callback ) {
 		PopExtMain.Error.DeprecationWarning( "PopExtUtil.GetAllEnts callback feature", "PopExtUtil.ForEachEnt" )
 		foreach ( ent in entlist )
 			callback( ent )
@@ -1518,7 +1518,7 @@ function PopExtUtil::SwitchToFirstValidWeapon( player ) {
 
 	for ( local i = 0; i < SLOT_COUNT; i++ ) {
 		local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
-		if ( wep == null ) continue
+		if ( !wep ) continue
 
 		player.Weapon_Switch( wep )
 		return wep
@@ -2320,12 +2320,12 @@ function PopExtUtil::RemoveThink( ent, func = null ) {
 	if ( !( func in scope[ thinktable_name ] ) )
 		return
 
-	func == null ? scope[ thinktable_name ].clear() : delete scope[ thinktable_name ][ func ]
+	func ? delete scope[ thinktable_name ][ func ] : scope[ thinktable_name ].clear()
 }
 
 function PopExtUtil::SilentDisguise( player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT ) {
 
-	if ( player == null || !player.IsPlayer() ) return
+	if ( !player || !player.IsPlayer() ) return
 
 	function FindTargetPlayer( passcond ) {
 
@@ -2340,16 +2340,18 @@ function PopExtUtil::SilentDisguise( player, target = null, tfteam = TF_TEAM_PVE
 		return target
 	}
 
-	if ( target == null ) {
+	if ( !target ) {
+
 		// Find disguise target
 		target = FindTargetPlayer( @( p ) p.GetTeam() == tfteam && p.GetPlayerClass() == tfclass )
 		// Couldn't find any targets of tfclass, look for any class this time
-		if ( target == null )
+		if ( !target )
 			target = FindTargetPlayer( @( p ) p.GetTeam() == tfteam )
 	}
 
 	// Disguise as this player
-	if ( target != null ) {
+	if ( target ) {
+
 		SetPropInt( player, "m_Shared.m_nDisguiseTeam", target.GetTeam() )
 		SetPropInt( player, "m_Shared.m_nDisguiseClass", target.GetPlayerClass() )
 		SetPropInt( player, "m_Shared.m_iDisguiseHealth", target.GetHealth() )
@@ -2359,6 +2361,7 @@ function PopExtUtil::SilentDisguise( player, target = null, tfteam = TF_TEAM_PVE
 	}
 	// No valid targets, just give us a generic disguise
 	else {
+
 		SetPropInt( player, "m_Shared.m_nDisguiseTeam", tfteam )
 		SetPropInt( player, "m_Shared.m_nDisguiseClass", tfclass )
 	}
@@ -2388,7 +2391,7 @@ function PopExtUtil::GetPlayerReadyCount() {
 
 function PopExtUtil::GetWeaponMaxAmmo( player, wep ) {
 
-	if ( wep == null ) return
+	if ( !wep ) return
 
 	local slot      = wep.GetSlot()
 	local classname = wep.GetClassname()
@@ -2427,10 +2430,10 @@ function PopExtUtil::GetWeaponMaxAmmo( player, wep ) {
 
 function PopExtUtil::TeleportNearVictim( ent, victim, attempt ) {
 
-	if ( victim == null )
+	if ( !victim )
 		return false
 
-	if ( victim.GetLastKnownArea() == null )
+	if ( !victim.GetLastKnownArea() )
 		return
 
 	const max_surround_travel_range = 6000.0
@@ -2597,7 +2600,7 @@ function PopExtUtil::SetDestroyCallback( entity, callback ) {
 
 function PopExtUtil::OnWeaponFire( wep, func ) {
 
-	if ( wep == null ) return
+	if ( !wep ) return
 
 	local scope = GetEntScope( wep )
 
@@ -2721,7 +2724,7 @@ function PopExtUtil::SetRedMoney( value ) {
 
 					local weapon = GetPropEntityArray( attacker, STRING_NETPROP_MYWEAPONS, i )
 
-					if ( weapon == null )
+					if ( !weapon )
 						continue
 
 					if ( GetItemIndex( weapon ) != params.weapon_def_index )

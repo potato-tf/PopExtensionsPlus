@@ -46,13 +46,14 @@ function PopExtWeapons::GiveItem( itemname, player ) {
 	if ( !player || player.GetPlayerClass() < 1 ) return
 	local playerclass = PopExtUtil.Classes[player.GetPlayerClass()]
 
-	local extraitem = null
-	local model = null
+	local extraitem	 = null
+	local model	 	 = null
 	local modelindex = null
-	local animset = null
-	local id = null
+	local animset	 = null
+	local id		 = null
 	local item_class = null
-	local item_slot = null
+	local item_slot	 = null
+
 	local original_itemname = "OriginalItemName" in ExtraItems[itemname] ? ExtraItems[itemname].OriginalItemName : itemname
 	local player_scope = PopExtUtil.GetEntScope( player )
 
@@ -94,7 +95,7 @@ function PopExtWeapons::GiveItem( itemname, player ) {
 	else return
 
 	// replace overrides if they exist in extraitems
-	if ( extraitem != null ) {
+	if ( extraitem ) {
 
 		if ( "ItemClass" in extraitem ) item_class = extraitem.ItemClass
 		if ( "Model" in extraitem ) model = extraitem.Model; modelindex = PrecacheModel( model )
@@ -299,7 +300,7 @@ function PopExtWeapons::EquipItem( itemname, player, playerclass = null ) {
 		local ExtraLoadout = array( 10 )
 		player_scope.PRESERVED.ExtraLoadout <- ExtraLoadout
 	}
-	if ( player_scope.PRESERVED.ExtraLoadout[playerclass] == null )
+	if ( !player_scope.PRESERVED.ExtraLoadout[playerclass] )
 		player_scope.PRESERVED.ExtraLoadout[playerclass] = []
 
 	if ( player_scope.PRESERVED.ExtraLoadout[playerclass].find( itemname ) == null )
@@ -315,7 +316,7 @@ function PopExtWeapons::UnequipItem( itemname, player, playerclass = null ) {
 	if ( playerclass == null ) playerclass = player.GetPlayerClass()
 
 	if ( "ExtraLoadout" in player_scope.PRESERVED )
-		if ( player_scope.PRESERVED.ExtraLoadout[playerclass] != null )
+		if ( player_scope.PRESERVED.ExtraLoadout[playerclass] )
 			if ( player_scope.PRESERVED.ExtraLoadout[playerclass].find( itemname ) != null )
 				player_scope.PRESERVED.ExtraLoadout[playerclass].remove( player_scope.PRESERVED.ExtraLoadout[playerclass].find( itemname ) )
 
@@ -444,7 +445,7 @@ POP_EVENT_HOOK("post_inventory_application", "RegenerateCustomWeapons", function
 		}
 		local playerclass = player.GetPlayerClass()
 
-		if ( player_scope.PRESERVED.ExtraLoadout[playerclass] != null )
+		if ( player_scope.PRESERVED.ExtraLoadout[playerclass] )
 			foreach ( item in player_scope.PRESERVED.ExtraLoadout[playerclass] )
 				PopExtWeapons.GiveItem( item, player )
 

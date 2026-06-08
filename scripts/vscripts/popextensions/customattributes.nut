@@ -1831,7 +1831,7 @@ PopExtAttributes.Attrs <- {
 							player.AddCondEx( value, 0.33, player )
 							local heal_target = player.GetHealTarget()
 
-							if ( heal_target != null ) {
+							if ( heal_target ) {
 
 								heal_target.RemoveCondEx( cond, true )
 								heal_target.AddCondEx( value, 0.33, player )

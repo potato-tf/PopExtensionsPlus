@@ -41,7 +41,7 @@ function PopExtHoming::HomingProjectileThink() {
 
     local new_target = PopExtHoming.SelectVictim( self )
 
-    if ( new_target != null && PopExtHoming.IsLookingAt( self, new_target ) )
+    if ( new_target && PopExtHoming.IsLookingAt( self, new_target ) )
         PopExtHoming.FaceTowards( new_target, self, projectile_speed )
 }
 

@@ -75,7 +75,7 @@ MissionAttributes.Attrs <- {
 		if ( value == kHoliday_None ) return
 
 		local ent = FindByName( null, "__popext_missionattr_holiday" )
-		if ( ent != null ) ent.Kill()
+		if ( ent ) ent.Kill()
 
 		SpawnEntityFromTable( "tf_logic_holiday", {
 			targetname   = "__popext_missionattr_holiday",
@@ -106,7 +106,7 @@ MissionAttributes.Attrs <- {
 			local attacker = params.inflictor
 
 			if ( victim.IsPlayer() && params.damage_custom == TF_DMG_CUSTOM_BACKSTAB &&
-				attacker != null && !attacker.IsBotOfType( TF_BOT_TYPE ) &&
+				attacker && !attacker.IsBotOfType( TF_BOT_TYPE ) &&
 				( PopExtUtil.GetItemIndex( params.weapon ) == ID_YOUR_ETERNAL_REWARD || PopExtUtil.GetItemIndex( params.weapon ) == ID_WANGA_PRICK )
 			) {
 				attacker.GetScriptScope().stabvictim <- victim
@@ -162,7 +162,7 @@ MissionAttributes.Attrs <- {
 			if ( index != ID_HOLIDAY_PUNCH || !( params.damage_type & DMG_CRITICAL ) ) return
 
 			local victim = params.const_entity
-			if ( victim != null && victim.IsPlayer() && victim.IsBotOfType( TF_BOT_TYPE ) ) {
+			if ( victim && victim.IsPlayer() && victim.IsBotOfType( TF_BOT_TYPE ) ) {
 				victim.Taunt( TAUNT_MISC_ITEM, MP_CONCEPT_TAUNT_LAUGH )
 
 				local tfclass = victim.GetPlayerClass()
@@ -180,7 +180,7 @@ MissionAttributes.Attrs <- {
 				function BotModelThink() {
 
 					if ( Time() > victim.GetTauntRemoveTime() ) {
-						if ( wearable != null ) wearable.Kill()
+						if ( wearable ) wearable.Kill()
 
 						SetPropInt( self, "m_clrRender", 0xFFFFFF )
 						SetPropInt( self, "m_nRenderMode", kRenderNormal )
@@ -284,7 +284,7 @@ MissionAttributes.Attrs <- {
 				if ( !player.HasBotAttribute( HOLD_FIRE_UNTIL_FULL_RELOAD ) ) return
 
 				local activegun = player.GetActiveWeapon()
-				if ( activegun == null ) return
+				if ( !activegun ) return
 				local clip = activegun.Clip1()
 				if ( clip == 0 ) {
 
@@ -335,7 +335,7 @@ MissionAttributes.Attrs <- {
 				local velocity = player.GetAbsVelocity()
 
 				local wep       = player.GetActiveWeapon()
-				local classname = ( wep != null ) ? wep.GetClassname() : ""
+				local classname = wep ? wep.GetClassname() : ""
 				local lastfire  = GetPropFloat( wep, "m_flLastFireTime" )
 
 				// We might have been pushed by an engineer building something, lets double check
@@ -358,11 +358,11 @@ MissionAttributes.Attrs <- {
 						break
 					}
 
-					if ( engie != null )
+					if ( engie )
 						hint = Entities.FindByClassnameWithin( null, "bot_hint_*", engie.GetOrigin(), 200 )
 
 					// Counteract impulse velocity
-					if ( hint != null && engie != null ) {
+					if ( hint && engie ) {
 						// ClientPrint( null, 3, "COUNTERACTING VELOCITY" )
 						local dir =  player.EyePosition() - hint.GetOrigin()
 
@@ -947,7 +947,7 @@ MissionAttributes.Attrs <- {
 			local sentry = EntIndexToHScript( params.inflictor_entindex )
 			local victim = GetPlayerFromUserID( params.userid )
 
-			if ( sentry == null ) return
+			if ( !sentry ) return
 
 			if ( sentry.GetClassname() != "obj_sentrygun" || !victim.IsMiniBoss() ) return
 			local kills = GetPropInt( sentry, "m_iKills" )
@@ -1044,7 +1044,7 @@ MissionAttributes.Attrs <- {
 
 			local scope = player.GetScriptScope()
 
-			if ( "wearable" in scope && scope.wearable != null ) {
+			if ( "wearable" in scope && scope.wearable ) {
 				scope.wearable.Kill()
 				scope.wearable <- null
 			}
@@ -1104,7 +1104,7 @@ MissionAttributes.Attrs <- {
 						ent.AddEFlags( EFL_USER )
 
 						local owner = GetPropEntity( ent, "m_hOwner" )
-						if ( owner != null && !owner.IsBotOfType( TF_BOT_TYPE ) ) {
+						if ( owner && !owner.IsBotOfType( TF_BOT_TYPE ) ) {
 
 							local vcdpath = GetPropString( ent, "m_szInstanceFilename" )
 							if ( !vcdpath || vcdpath == "" ) return -1
@@ -1149,17 +1149,17 @@ MissionAttributes.Attrs <- {
 
 					local vmodel   = PopExtUtil.ROBOT_ARM_PATHS[self.GetPlayerClass()]
 					local playervm = GetPropEntity( self, `m_hViewModel` )
-					if ( playervm == null ) return
+					if ( !playervm ) return
 					playervm.GetOrigin()
 
-					if ( playervm == null ) return
+					if ( !playervm ) return
 
 					if ( playervm.GetModelName() != vmodel ) playervm.SetModelSimple( vmodel )
 
 					for ( local i = 0; i < SLOT_COUNT; i++ ) {
 
 						local wep = GetPropEntityArray( self, `m_hMyWeapons`, i )
-						if ( wep == null || wep.GetModelName() == vmodel ) continue
+						if ( !wep || wep.GetModelName() == vmodel ) continue
 
 						wep.SetModelSimple( vmodel )
 						wep.SetCustomViewModel( vmodel )
@@ -1261,7 +1261,7 @@ MissionAttributes.Attrs <- {
 			// some maps have a targetname for it
 			local carrier = FindByName( null, "botship_dynamic" )
 
-			if ( carrier == null ) {
+			if ( !carrier ) {
 
 				for ( local props; props = FindByClassname( props, "prop_dynamic" ); ) {
 
@@ -1611,13 +1611,13 @@ MissionAttributes.Attrs <- {
 					return false
 				}
 
-				if ( vmodel == null ) return
+				if ( !vmodel ) return
 
 				if ( playervm.GetModelName() != vmodel ) playervm.SetModelSimple( vmodel )
 
 				for ( local i = 0; i < SLOT_COUNT; i++ ) {
 					local wep = GetPropEntityArray( player, STRING_NETPROP_MYWEAPONS, i )
-					if ( wep == null || ( wep.GetModelName() == vmodel ) ) continue
+					if ( !wep || ( wep.GetModelName() == vmodel ) ) continue
 
 					wep.SetModelSimple( vmodel )
 					wep.SetCustomViewModel( vmodel )
@@ -2029,14 +2029,14 @@ MissionAttributes.Attrs <- {
 				local classname = wep.GetClassname()
 
 				// Lose the crits if we switch weapons
-				if ( scope.crit_weapon != null && scope.crit_weapon != wep )
+				if ( scope.crit_weapon && scope.crit_weapon != wep )
 					player.RemoveCond( TF_COND_CRITBOOSTED_CTF_CAPTURE )
 
 				// Wait for bot to use its crits
-				if ( scope.crit_weapon != null && player.InCond( TF_COND_CRITBOOSTED_CTF_CAPTURE ) ) continue
+				if ( scope.crit_weapon && player.InCond( TF_COND_CRITBOOSTED_CTF_CAPTURE ) ) continue
 
 				// We handle melee weapons elsewhere in OnTakeDamage
-				if ( wep == null || wep.IsMeleeWeapon() ) continue
+				if ( !wep || wep.IsMeleeWeapon() ) continue
 				// Certain weapon types never receive random crits
 				if ( classname in no_crit_weapons || wep.GetSlot() > 2 ) continue
 				// Ignore weapons with certain attributes
@@ -2089,7 +2089,7 @@ MissionAttributes.Attrs <- {
 		POP_EVENT_HOOK( "player_death", "EnableRandomCritsKill", function( params ) {
 
 			local attacker = GetPlayerFromUserID( params.attacker )
-			if ( attacker == null || !attacker.IsBotOfType( TF_BOT_TYPE ) ) return
+			if ( !attacker || !attacker.IsBotOfType( TF_BOT_TYPE ) ) return
 
 			local scope = PopExtUtil.GetEntScope( attacker )
 			if ( !( "ranged_crit_chance" in scope ) || !( "melee_crit_chance" in scope ) ) return
@@ -2111,7 +2111,7 @@ MissionAttributes.Attrs <- {
 			if ( !( "inflictor" in params ) ) return
 
 			local attacker = params.inflictor
-			if ( attacker == null || !attacker.IsPlayer() || !attacker.IsBotOfType( TF_BOT_TYPE ) ) return
+			if ( !attacker || !attacker.IsPlayer() || !attacker.IsBotOfType( TF_BOT_TYPE ) ) return
 
 			local scope = PopExtUtil.GetEntScope( attacker )
 			if ( !( "melee_crit_chance" in scope ) ) return
@@ -2324,7 +2324,7 @@ MissionAttributes.Attrs <- {
 					local builder = GetPropEntity( ent, "m_hBuilder" )
 					if ( builder != player ) continue
 
-					if ( !GetPropBool( ent, "m_bPlayerControlled" ) || laser == null ) continue
+					if ( !GetPropBool( ent, "m_bPlayerControlled" ) || !laser ) continue
 
 					originalposition <- player.GetOrigin()
 					originalvelocity <- player.GetAbsVelocity()
@@ -2339,7 +2339,7 @@ MissionAttributes.Attrs <- {
 					return
 				}
 
-				if ( !handled_laser && laser != null )
+				if ( !handled_laser && laser )
 					laser.Kill()
 			}
 
@@ -2494,7 +2494,7 @@ MissionAttributes.Attrs <- {
 				local buttons = GetPropInt( player, "m_nButtons" )
 
 				local wep = player.GetActiveWeapon()
-				if ( wep == null || wep.IsMeleeWeapon() ) return
+				if ( !wep || wep.IsMeleeWeapon() ) return
 
 				local scope = PopExtUtil.GetEntScope( wep )
 				if ( !( "nextattack" in scope ) ) {

@@ -175,7 +175,7 @@ function PopExtHooks::PopHooksThink() {
 
 							EmitSoundEx({ sound_name = deploysound, entity = tank })
 
-							if ( tank == null ) {
+							if ( !tank ) {
 
 								PopExtUtil.RemoveThink( tank, "DeploySound" )
 								return
@@ -262,7 +262,7 @@ function PopExtHooks::PopHooksThink() {
 					function BlimpThink() {
 
 						// this is normally not possible, however we need to do a pretty gross hack that will turn the tank into a null instance sometimes
-						if ( self == null ) return
+						if ( !self ) return
 
 						self.SetAbsOrigin( blimp_train.GetOrigin() )
 						self.GetLocomotionInterface().Reset()
@@ -465,16 +465,16 @@ POP_EVENT_HOOK( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 	local victim = params.const_entity
 	local attacker = params.attacker
 
-	if ( victim != null ) {
+	if ( victim ) {
 
 		local scope = victim.GetScriptScope()
-		if ( attacker != null ) local attackerscope = attacker.GetScriptScope()
+		if ( attacker ) local attackerscope = attacker.GetScriptScope()
 
 		if ( victim.GetClassname() == "tank_boss" && "pop_property" in scope )
 			if ( "CritImmune" in scope.pop_property && scope.pop_property.CritImmune && params.damage_type & DMG_CRITICAL )
 				params.damage_type = params.damage_type &~ DMG_CRITICAL
 
-		else if ( attacker != null && attacker.GetClassname() == "tank_boss" && "pop_property" in attackerscope && victim.IsPlayer() )
+		else if ( attacker && attacker.GetClassname() == "tank_boss" && "pop_property" in attackerscope && victim.IsPlayer() )
 			if ( "CrushDamageMult" in attackerscope.pop_property )
 				params.damage *= attackerscope.pop_property.CrushDamageMult
 
@@ -482,7 +482,7 @@ POP_EVENT_HOOK( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 	}
 
 	local attacker = params.attacker
-	if ( attacker != null && attacker.IsPlayer() ) {
+	if ( attacker && attacker.IsPlayer() ) {
 		local scope = attacker.GetScriptScope()
 		PopExtHooks.FireHooksParam( attacker, scope, "OnDealDamage", params )
 	}
@@ -540,7 +540,7 @@ POP_EVENT_HOOK( "player_hurt", "PopHooksPlayerHurt", function( params ) {
 
 	local attacker = GetPlayerFromUserID( params.attacker )
 
-	if ( attacker != null ) {
+	if ( attacker ) {
 		local scope = attacker.GetScriptScope()
 		PopExtHooks.FireHooksParam( attacker, scope, "OnDealDamagePost", params )
 	}
@@ -555,7 +555,7 @@ POP_EVENT_HOOK( "player_death", "PopHooksPlayerDeath", function( params ) {
 
 
 	local attacker = GetPlayerFromUserID( params.attacker )
-	if ( attacker != null ) {
+	if ( attacker ) {
 		local scope = attacker.GetScriptScope()
 		PopExtHooks.FireHooksParam( attacker, scope, "OnKill", params )
 	}

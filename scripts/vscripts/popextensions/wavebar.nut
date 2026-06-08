@@ -456,7 +456,7 @@ function PopExtWavebar::GetWaveIconActive( name, flags ) {
 
 POP_EVENT_HOOK( "mvm_begin_wave", "WavebarWaveStart", function( params ) {
 
-	if ( PopExtWavebar.wave_icons_function != null )
+	if ( PopExtWavebar.wave_icons_function )
 		PopExtWavebar.wave_icons_function()
 
 	foreach( v in PopExtWavebar.icons )

@@ -239,7 +239,7 @@ class PopExtBotBehavior {
 
 				case 3: // Expert skill, deflect regardless of FOV back to Sender
 					local owner = projectile.GetOwner()
-					if ( owner != null ) {
+					if ( owner ) {
 						// local owner_head = owner.GetAttachmentOrigin( owner.LookupAttachment( "head" ) )
 						// LookAt( owner_head, INT_MAX, INT_MAX )
 						LookAt( owner.EyePosition(), INT_MAX, INT_MAX )
@@ -279,7 +279,7 @@ class PopExtBotBehavior {
 	function FireWeapon() {
 
 		if ( cur_melee ) {
-			if ( threat != null ) {
+			if ( threat ) {
 				if ( threat_dist < 16384.0 ) // 128
 					bot.PressFireButton( 0.2 )
 			}

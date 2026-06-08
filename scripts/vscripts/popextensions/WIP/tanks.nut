@@ -102,7 +102,7 @@ PopExtTanks.sound_funcs <- {
 
             EmitSoundEx({ sound_name = deploysound, entity = tank })
 
-            if ( tank == null ) {
+            if ( !tank ) {
 
                 PopExtUtil.RemoveThink( tank, "DeploySound" )
                 return
@@ -159,7 +159,7 @@ PopExtTanks.tank_funcs <- {
     function NoScreenShake ( scope ) {
 
         if ( scope.pop_property.NoScreenShake )
-            PopExtUtil.AddThink( tank, function NoScreenShake() { ScreenShake( self.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true ) })
+            PopExtUtil.AddThink( tank, @() ScreenShake( self.GetOrigin(), 25.0, 5.0, 5.0, 1000.0, SHAKE_STOP, true ) )
     },
 
     function IsBlimp ( scope ) {
@@ -243,7 +243,7 @@ PopExtTanks.tank_funcs <- {
 
         if ( !scope.pop_property.DisableTracks ) return
 
-        for ( local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer() )
+        for ( local child = tank.FirstMoveChild(); child; child = child.NextMovePeer() )
             if ( child.GetClassname() == "prop_dynamic" )
                 if ( child.GetModelName() == "models/bots/boss_bot/tank_track_L.mdl" || child.GetModelName() == "models/bots/boss_bot/tank_track_R.mdl" )
                     child.DisableDraw()
@@ -253,7 +253,7 @@ PopExtTanks.tank_funcs <- {
 
         if ( !scope.pop_property.DisableBomb ) return
 
-        for ( local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer() )
+        for ( local child = tank.FirstMoveChild(); child; child = child.NextMovePeer() )
             if ( child.GetClassname() == "prop_dynamic" )
                 if ( child.GetModelName() == "models/bots/boss_bot/bomb_mechanism.mdl" )
                     child.DisableDraw()
@@ -361,7 +361,7 @@ PopExtTanks.tank_funcs <- {
             delete scope.pop_property.ModelPrecached.RightTrack
         }
 
-        for ( local child = tank.FirstMoveChild(); child != null; child = child.NextMovePeer() ) {
+        for ( local child = tank.FirstMoveChild(); child; child = child.NextMovePeer() ) {
 
             if ( child.GetClassname() != "prop_dynamic" ) continue
 

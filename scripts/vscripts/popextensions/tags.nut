@@ -715,7 +715,7 @@ PopExtTags.TagFunctions <- {
 		if ( !PopExtMain.IncludeModules( "botbehavior" ) )
 			return
 
-		if ( FindByName( null, point ) != null )
+		if ( FindByName( null, point ) )
 			pos = FindByName( null, point ).GetOrigin()
 		else {
 
@@ -1046,7 +1046,7 @@ PopExtTags.TagFunctions <- {
 
 			weapon = PopExtUtil.HasItemInLoadout( player, weapon )
 
-			if ( params.const_entity != bot || params.weapon == null || params.weapon != weapon ) return
+			if ( params.const_entity != bot || !params.weapon || params.weapon != weapon ) return
 
 			params.damage *= amount
 
@@ -1625,7 +1625,7 @@ PopExtTags.TagFunctions <- {
 						case 3: // Expert Airblast, deflect regardless of FOV back to Sender
 
 							local owner = projectile.GetOwner()
-							if ( owner != null ) {
+							if ( owner ) {
 
 								local owner_head = owner.GetAttachmentOrigin( owner.LookupAttachment( "head" ) )
 								aibot.LookAt( owner_head, INT_MAX, INT_MAX )

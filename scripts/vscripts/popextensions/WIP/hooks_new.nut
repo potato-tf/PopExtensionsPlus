@@ -28,13 +28,13 @@ function PopExtHooks::AddHooksToScope( name, table, scope ) {
 
 function PopExtHooks::FireHooks( entity, scope, name ) {
 
-	if ( scope != null && "popext_hooks" in scope && name in scope.popext_hooks )
+	if ( scope && "popext_hooks" in scope && name in scope.popext_hooks )
 		foreach( index, func in scope.popext_hooks[name] )
 			func( entity )
 }
 function PopExtHooks::FireHooksParam( entity, scope, name, param ) {
 
-	if ( scope != null && "popext_hooks" in scope && name in scope.popext_hooks )
+	if ( scope && "popext_hooks" in scope && name in scope.popext_hooks )
 		foreach( index, func in scope.popext_hooks[name] )
 			func( entity, param )
 }
@@ -69,16 +69,16 @@ POP_EVENT_HOOK( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 	local victim = params.const_entity
 	local attacker = params.attacker
 
-	if ( victim != null ) {
+	if ( victim ) {
 
 		local scope = victim.GetScriptScope()
-		if ( attacker != null ) local attackerscope = attacker.GetScriptScope()
+		if ( attacker ) local attackerscope = attacker.GetScriptScope()
 
 		if ( victim.GetClassname() == "tank_boss" && "pop_property" in scope )
 			if ( "CritImmune" in scope.pop_property && scope.pop_property.CritImmune && params.damage_type & DMG_CRITICAL )
 				params.damage_type = params.damage_type &~ DMG_CRITICAL
 
-		else if ( attacker != null && attacker.GetClassname() == "tank_boss" && "pop_property" in attackerscope && victim.IsPlayer() )
+		else if ( attacker && attacker.GetClassname() == "tank_boss" && "pop_property" in attackerscope && victim.IsPlayer() )
 			if ( "CrushDamageMult" in attackerscope.pop_property )
 				params.damage *= attackerscope.pop_property.CrushDamageMult
 
@@ -86,7 +86,7 @@ POP_EVENT_HOOK( "OnTakeDamage", "PopHooksTakeDamage", function( params ) {
 	}
 
 	local attacker = params.attacker
-	if ( attacker != null && attacker.IsPlayer() ) {
+	if ( attacker && attacker.IsPlayer() ) {
 		local scope = attacker.GetScriptScope()
 		PopExtHooks.FireHooksParam( attacker, scope, "OnDealDamage", params )
 	}
@@ -97,7 +97,7 @@ POP_EVENT_HOOK( "player_spawn", "PopHooksPlayerSpawn", function( params ) {
 	local player = GetPlayerFromUserID( params.userid )
 	local scope = player.GetScriptScope()
 
-	if ( scope != null && "wearables_to_kill" in scope ) {
+	if ( scope && "wearables_to_kill" in scope ) {
 		foreach( wearable in scope.wearables_to_kill )
 			if ( wearable.IsValid() )
 				EntFireByHandle( wearable, "Kill", "", -1, null, null )
@@ -128,7 +128,7 @@ POP_EVENT_HOOK( "player_team", "PopHooksPlayerTeam", function( params ) {
 
 	local scope = player.GetScriptScope()
 
-	if ( scope != null && "wearables_to_kill" in scope ) {
+	if ( scope && "wearables_to_kill" in scope ) {
 		foreach( wearable in scope.wearables_to_kill )
 			if ( wearable.IsValid() )
 				EntFireByHandle( wearable, "Kill", "", -1, null, null )
@@ -159,7 +159,7 @@ POP_EVENT_HOOK( "player_hurt", "PopHooksPlayerHurt", function( params ) {
 
 	local attacker = GetPlayerFromUserID( params.attacker )
 
-	if ( attacker != null ) {
+	if ( attacker ) {
 		local scope = attacker.GetScriptScope()
 		PopExtHooks.FireHooksParam( attacker, scope, "OnDealDamagePost", params )
 	}
@@ -174,7 +174,7 @@ POP_EVENT_HOOK( "player_death", "PopHooksPlayerDeath", function( params ) {
 
 
 	local attacker = GetPlayerFromUserID( params.attacker )
-	if ( attacker != null ) {
+	if ( attacker ) {
 		local scope = attacker.GetScriptScope()
 		PopExtHooks.FireHooksParam( attacker, scope, "OnKill", params )
 	}
