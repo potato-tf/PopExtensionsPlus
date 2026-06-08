@@ -410,6 +410,7 @@ PopExtUtil.GameRoundWin 	 <- PopExtUtil.SpawnEnt( "game_round_win", "__popext_ro
 PopExtUtil.RespawnOverride   <- PopExtUtil.SpawnEnt( "trigger_player_respawn_override", "__popext_respawnoverride" )
 PopExtUtil.TriggerParticle   <- PopExtUtil.SpawnEnt( "trigger_particle", "__popext_triggerparticle" )
 
+// TODO: EntShredder seems to be failing to kill this, leaks across mission changes.
 PopExtUtil.CommentaryNode	 <- @() FindByName( null, "__popext_commentary_node" ) ||
 								PopExtUtil.SpawnEnt( "point_commentary_node", "__popext_commentary_node", true, "commentaryfile", " ", "commentaryfilenohdr", " " )
 
@@ -2821,7 +2822,7 @@ function PopExtUtil::SetRedMoney( value ) {
 function PopExtUtil::SetConvar( convar, value, duration = 0, hide_chat_message = false ) {
 
 	// TODO: this hack doesn't seem to work.
-	local commentary_node = hide_chat_message ? CommentaryNode() : null
+	// local commentary_node = hide_chat_message ? CommentaryNode() : null
 
 	// save original values to restore later
 	if ( !( convar in ConVars ) ) ConVars[convar] <- GetStr( convar )
@@ -2833,21 +2834,21 @@ function PopExtUtil::SetConvar( convar, value, duration = 0, hide_chat_message =
 	if ( duration > 0 )
 		RunWithDelay( duration, @() SetValue( convar, ConVars[convar].tostring() ) )
 
-	if ( commentary_node )
-		EntFireByHandle( commentary_node, "Kill", "", 1, null, null )
+	// if ( commentary_node )
+		// EntFireByHandle( commentary_node, "Kill", "", 1, null, null )
 }
 
 function PopExtUtil::ResetConvars( hide_chat_message = true ) {
 
-	local commentary_node = hide_chat_message ? CommentaryNode() : null
+	// local commentary_node = hide_chat_message ? CommentaryNode() : null
 
 	foreach ( convar, value in ConVars )
 		SetValue( convar, value.tostring() )
 
 	ConVars.clear()
 
-	if ( commentary_node )
-		EntFireByHandle( commentary_node, "Kill", "", -1, null, null )
+	// if ( commentary_node )
+		// EntFireByHandle( commentary_node, "Kill", "", -1, null, null )
 }
 
 function PopExtUtil::ValidatePlayerTables() {

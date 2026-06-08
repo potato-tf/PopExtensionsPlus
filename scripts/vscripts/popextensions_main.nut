@@ -2,7 +2,7 @@
 // Error handling, think table management, cleanup management, etc.
 
 local ROOT = getroottable()
-::POPEXT_VERSION <- "04.04.2026.1"
+::POPEXT_VERSION <- "06.08.2026.1"
 
 local function Include( path, continue_on_error = false, include_only_if_missing = null, scope_to_check = ROOT ) {
 

@@ -573,6 +573,7 @@ MissionAttributes.Attrs <- {
 				SetPropBool( sapper, "m_bDisposableBuilding", true )
 
 			}, EVENT_WRAPPER_MISSIONATTR )
+
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 
@@ -587,14 +588,15 @@ MissionAttributes.Attrs <- {
 		// Afterburn damage and duration varies from weapon to weapon, we don't want to override those
 		// This list leaves out only the volcano fragment and the heater
 		local igniting_weapons_classname = {
-			"tf_weapon_particle_cannon" : null,
-			"tf_weapon_flamethrower" : null,
-			"tf_weapon_rocketlauncher_fireball" : null,
-			"tf_weapon_flaregun" : null,
-			"tf_weapon_flaregun_revenge" : null,
-			"tf_weapon_compound_bow" : null,
-			[ID_HUO_LONG_HEATMAKER] = null,
-			[ID_SHARPENED_VOLCANO_FRAGMENT] = null
+
+			tf_weapon_flaregun 				  = null,
+			tf_weapon_flamethrower 			  = null,
+			tf_weapon_compound_bow 			  = null,
+			tf_weapon_particle_cannon 		  = null,
+			tf_weapon_flaregun_revenge 		  = null,
+			tf_weapon_rocketlauncher_fireball = null,
+			[ID_HUO_LONG_HEATMAKER] 		  = null,
+			[ID_SHARPENED_VOLCANO_FRAGMENT]   = null
 		}
 
 		POP_EVENT_HOOK( "OnTakeDamage", "SetDamageTypeIgniteFix", function( params ) {
@@ -603,13 +605,14 @@ MissionAttributes.Attrs <- {
 			local victim = params.const_entity
 			local attacker = params.inflictor
 
-			if ( wep == null || attacker == null || attacker == victim
+			if ( !wep || !attacker || attacker == victim
 				|| wep.GetClassname() in igniting_weapons_classname
 				|| PopExtUtil.GetItemIndex( wep ) in igniting_weapons_classname
 				|| wep.GetAttribute( "Set DamageType Ignite", 10 ) == 10
 			) return
 
 			PopExtUtil.Ignite( victim )
+
 		}, EVENT_WRAPPER_MISSIONATTR )
 	}
 
