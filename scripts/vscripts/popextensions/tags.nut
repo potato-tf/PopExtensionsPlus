@@ -2520,9 +2520,16 @@ POP_EVENT_HOOK( "player_death", "TagsPlayerDeath", function( params ) {
 
 POP_EVENT_HOOK( "teamplay_round_start", "TagsTeamplayRoundStart", function( params ) {
 
-	foreach ( bot in PopExtUtil.BotArray )
-		if ( bot.IsValid() && bot.GetTeam() != TEAM_SPECTATOR )
+	foreach ( bot in PopExtUtil.BotArray ) {
+
+		if ( !bot.IsValid() ) continue
+
+		if ( bot.GetTeam() != TEAM_SPECTATOR )
 			bot.ForceChangeTeam( TEAM_SPECTATOR, true )
+
+		bot.ClearAllBotTags()
+		PopExtUtil.RemoveThink( bot )
+	}
 
 }, EVENT_WRAPPER_TAGS)
 

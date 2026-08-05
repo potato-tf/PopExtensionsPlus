@@ -869,9 +869,11 @@ MissionAttributes.Attrs <- {
 			PopExtMain.Error.RaiseValueError( "RobotLimit", value, "MAX INVADERS > MAX PLAYERS! Update your servers maxplayers!" )
 			return false
 		}
-		if (!IsConVarOnAllowList("tf_mvm_max_invaders"))
+		if (!IsConVarOnAllowList("tf_mvm_max_invaders")) {
+
 			PopExtMain.Error.RaiseValueError( "RobotLimit", value, "tf_mvm_max_invaders is not on the allow list!" )
 			return false
+		}
 
 		PopExtUtil.SetConvar( "tf_mvm_max_invaders", value )
 	}
@@ -1291,9 +1293,9 @@ MissionAttributes.Attrs <- {
 
 			if ( !bot.IsBotOfType( TF_BOT_TYPE ) || bot.IsMiniBoss() ) return
 
-			local spell = SpawnEntityFromTable( "tf_spell_pickup", {
+			SpawnEntityFromTable( "tf_spell_pickup", {
 
-				targetname = "__popext_commonspell"
+				targetname = "__popext_spell_" + bot.entindex()
 				origin = bot.GetLocalOrigin()
 				TeamNum = TF_TEAM_PVE_DEFENDERS
 				tier = 0 
@@ -1317,9 +1319,9 @@ MissionAttributes.Attrs <- {
 
 			if ( !bot.IsBotOfType( TF_BOT_TYPE ) || !bot.IsMiniBoss() ) return
 
-			local spell = SpawnEntityFromTable( "tf_spell_pickup", {
+			SpawnEntityFromTable( "tf_spell_pickup", {
 
-				targetname = format( "__popext_giantspell_%d", bot.entindex() )
+				targetname = "__popext_spell_" + bot.entindex()
 				origin = bot.GetLocalOrigin()
 				TeamNum = TF_TEAM_PVE_DEFENDERS
 				tier = 0
@@ -1342,8 +1344,8 @@ MissionAttributes.Attrs <- {
 			local bot = GetPlayerFromUserID( params.userid )
 			if ( !bot.IsBotOfType( TF_BOT_TYPE ) || bot.IsMiniBoss() ) return
 
-			local spell = SpawnEntityFromTable( "tf_spell_pickup", {
-				targetname = format( "__popext_commonspell_%d", bot.entindex() )
+			SpawnEntityFromTable( "tf_spell_pickup", {
+				targetname = "__popext_rarespell_" + bot.entindex()
 				origin = bot.GetLocalOrigin()
 				TeamNum = TF_TEAM_PVE_DEFENDERS
 				tier = 1
@@ -1366,9 +1368,9 @@ MissionAttributes.Attrs <- {
 			local bot = GetPlayerFromUserID( params.userid )
 			if ( !bot.IsBotOfType( TF_BOT_TYPE ) || !bot.IsMiniBoss() ) return
 
-			local spell = SpawnEntityFromTable( "tf_spell_pickup", {
+			SpawnEntityFromTable( "tf_spell_pickup", {
 
-				targetname = format( "__popext_giantspell_%d", bot.entindex() )
+				targetname = "__popext_rarespell_" + bot.entindex()
 				origin = bot.GetLocalOrigin()
 				TeamNum = TF_TEAM_PVE_DEFENDERS
 				tier = 1
@@ -1528,7 +1530,7 @@ MissionAttributes.Attrs <- {
 
 		// we get silly
 		// converts a mixed array of space/comma separated xyz values, or Vectors, into an array of Vectors
-		local paths = value.map( @( path )( path.map( @( pos ) typeof pos == "Vector" ? pos : ( ( ( pos.find( "," ) ? split( pos, "," ) : split( pos, " " ) ).apply( @( val ) val.tofloat() ) ).apply( @( _, _, val ) Vector( val[0], val[1], val[2] ) )[0] ) ) ) )
+		local paths = value.map( @( path )( path.map( @( pos ) typeof pos == "Vector" ? pos : ( ( ( split( pos, pos.find( "," ) ? "," : " " ) ).apply( @( val ) val.tofloat() ) ).apply( @( _, _, val ) Vector( val[0], val[1], val[2] ) )[0] ) ) ) )
 
 		local spawner = CreateByClassname( "point_script_template" )
 		local scope = PopExtUtil.GetEntScope( spawner )

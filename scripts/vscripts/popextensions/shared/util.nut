@@ -2317,10 +2317,13 @@ function PopExtUtil::RemoveThink( ent, func = null ) {
 	if ( typeof func == "function" )
 		func = func.getinfos().name || format( "__%s_ANONYMOUS_THINK", ent.GetName() )
 
-	if ( !( func in scope[ thinktable_name ] ) )
+	if ( !func )
+		return scope[ thinktable_name ].clear()
+
+	else if ( !( func in scope[ thinktable_name ] ) )
 		return
 
-	func ? delete scope[ thinktable_name ][ func ] : scope[ thinktable_name ].clear()
+	delete scope[ thinktable_name ][ func ]
 }
 
 function PopExtUtil::SilentDisguise( player, target = null, tfteam = TF_TEAM_PVE_INVADERS, tfclass = TF_CLASS_SCOUT ) {

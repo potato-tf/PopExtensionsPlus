@@ -91,7 +91,10 @@ WaveSchedule
 					BotHeadshots 	   	 = 1
 					BotsAreHumans 	   	 = 2
 					WaveStartCountdown 	 = 3
-					SpellRateCommon    	 = 0.5
+					SpellRateCommon    	 = 0.2
+					SpellRateGiant    	 = 0.5
+					RareSpellRateCommon  = 0.05
+					RareSpellRateGiant   = 0.3
 					NoSkeleSplit 	   	 = 1
 					WaveNum 		   	 = 3
 					MaxWaveNum 		   	 = 60
@@ -194,7 +197,7 @@ WaveSchedule
 		{
 			Name "Wave1"
 			ClosestPoint spawnbot
-			TotalCount 10
+			TotalCount 100
 			MaxActive 5
 			SpawnCount 5
 			WaitBeforeStarting 1
@@ -254,7 +257,7 @@ WaveSchedule
 			MaxActive 1
 			SpawnCount 1
 			WaitBeforeStarting 0
-			WaitBetweenSpawns 5
+			WaitBetweenSpawns 1
 			TFBot
 			{
 				Template T_TFBot_Giant_Soldier
