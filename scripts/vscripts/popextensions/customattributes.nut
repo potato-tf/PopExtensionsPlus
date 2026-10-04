@@ -291,7 +291,7 @@ PopExtAttributes.Attrs <- {
 
 		POP_EVENT_HOOK( "player_death", event_hook_string, function( params ) {
 
-			if ( GetPlayerFromUserID( params.attacker ) != player || params.weapon != item )
+			if ( GetPlayerFromUserID( params.attacker ) != player || player.GetActiveWeapon() != item )
 				return
 
 			targetname = "!self" ? EntFireByHandle( GetPlayerFromUserID( params.attacker ), input, param, delay, activator, caller ) : DoEntFire( targetname, input, param, delay, activator, caller )
@@ -1692,7 +1692,7 @@ PopExtAttributes.Attrs <- {
 
 		}, EVENT_WRAPPER_CUSTOMATTR )
 
-		player.GetScriptScope().kill_on_death.append( killicon_dummy )
+		player.GetScriptScope().PRESERVED.kill_on_death.append( killicon_dummy )
 
 	}
 
