@@ -317,7 +317,7 @@ function PopExtMain::PlayerCleanup( player, full_cleanup = false ) {
 		foreach ( ent in scope.PRESERVED.kill_on_death )
 			if ( ent && ent.IsValid() && ent.GetOwner() == player )
 				ent.Kill()
-		
+
 		player.TerminateScriptScope()
 		return
 	}
@@ -484,14 +484,14 @@ POP_EVENT_HOOK( "player_death", "MainDeathCleanup", function( params ) {
 
 	// clean up all entities that should be killed on death
 	local scope = player.GetScriptScope()
-	if ( "PRESERVED" in scope ) 
+	if ( "PRESERVED" in scope )
 		foreach ( ent in scope.PRESERVED.kill_on_death )
 			if ( ent && ent.IsValid() && ent.GetOwner() == player )
 				ent.Kill()
 
 	PopExtMain.PlayerCleanup( player )
 
-}, EVENT_WRAPPER_MAIN)
+}, /* EVENT_WRAPPER_MAIN */ MAX_EVENT_FUNCTABLES - 1) // HACK: This must run last, otherwise we cleanup the script scope before OnDeath hooks run.
 
 /*************************************
  * FINAL CLEANUP STEP, MUST RUN LAST *
@@ -544,6 +544,6 @@ if ( PopExtConfig.IncludeAllModules ) {
 PopExtUtil.RunWithDelay( SINGLE_TICK, function() {
 
 	for ( local i = 1, player; i <= MAX_CLIENTS; i++ )
-		if ( player = PlayerInstanceFromIndex( i ) ) 
+		if ( player = PlayerInstanceFromIndex( i ) )
 			player.Regenerate( true )
 })
